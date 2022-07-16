@@ -35,6 +35,16 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
 
+  for (NSString* family in [UIFont familyNames])
+  {
+      NSLog(@"%@", family);
+
+      for (NSString* name in [UIFont fontNamesForFamilyName: family])
+      {
+          NSLog(@"Family name:  %@", name);
+      }
+  }
+  
 #if RCT_NEW_ARCH_ENABLED
   _contextContainer = std::make_shared<facebook::react::ContextContainer const>();
   _reactNativeConfig = std::make_shared<facebook::react::EmptyReactNativeConfig const>();
@@ -59,6 +69,8 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   [self.window makeKeyAndVisible];
   return YES;
 }
+
+
 
 /// This method controls whether the `concurrentRoot`feature of React18 is turned on or off.
 ///
