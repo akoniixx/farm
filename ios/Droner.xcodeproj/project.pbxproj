@@ -12,6 +12,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		60AC83AD28858DCD00CED949 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 60AC83AC28858DCD00CED949 /* AntDesign.ttf */; };
 		60F03EE22883795100CFC2C7 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE12883795100CFC2C7 /* fonts */; };
 		60F03EE4288380D400CFC2C7 /* Anuphan-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE3288380D400CFC2C7 /* Anuphan-Bold.otf */; };
 		60F03EE6288380E700CFC2C7 /* Anuphan-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE5288380E700CFC2C7 /* Anuphan-Light.otf */; };
@@ -45,6 +46,7 @@
 		5709B34CF0A7D63546082F79 /* Pods-Droner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner.release.xcconfig"; path = "Target Support Files/Pods-Droner/Pods-Droner.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-Droner-DronerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner-DronerTests.debug.xcconfig"; path = "Target Support Files/Pods-Droner-DronerTests/Pods-Droner-DronerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-Droner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Droner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		60AC83AC28858DCD00CED949 /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = ../src/assets/fonts/AntDesign.ttf; sourceTree = "<group>"; };
 		60F03EE12883795100CFC2C7 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../src/assets/fonts; sourceTree = "<group>"; };
 		60F03EE3288380D400CFC2C7 /* Anuphan-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Anuphan-Bold.otf"; path = "../src/assets/fonts/Anuphan-Bold.otf"; sourceTree = "<group>"; };
 		60F03EE5288380E700CFC2C7 /* Anuphan-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Anuphan-Light.otf"; path = "../src/assets/fonts/Anuphan-Light.otf"; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				60AC83AC28858DCD00CED949 /* AntDesign.ttf */,
 				60F03EEB2883813700CFC2C7 /* Anuphan-Medium.otf */,
 				60F03EEA2883812300CFC2C7 /* Anuphan-Light.otf */,
 				60F03EE92883810900CFC2C7 /* Anuphan-Bold.otf */,
@@ -260,6 +263,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60AC83AD28858DCD00CED949 /* AntDesign.ttf in Resources */,
 				60F03EE8288380FA00CFC2C7 /* Anuphan-Medium.otf in Resources */,
 				60F03EE6288380E700CFC2C7 /* Anuphan-Light.otf in Resources */,
 				60F03EE4288380D400CFC2C7 /* Anuphan-Bold.otf in Resources */,

@@ -24,15 +24,11 @@ import {
   
     const [message, setMessage] = React.useState<string>('');
     return (
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{flex: 1}}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      
           <SafeAreaView style={stylesCentral.container}>
-           
+           <Text>dsds</Text>
           </SafeAreaView>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+       
     );
   };
   export default PinScreen;

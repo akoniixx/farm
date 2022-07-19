@@ -22,6 +22,7 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 import Icon from 'react-native-vector-icons/AntDesign';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CELL_COUNT = 6;
 
@@ -60,8 +61,12 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
   const onFufill = async (value: string) => {
     setValue(value);
     if (value.length >= CELL_COUNT) {
-      console.log(value);
-      navigation.navigate('LoginSuccess')
+      try {
+        await AsyncStorage.setItem('token', '_token');
+        await navigation.navigate('PinScreen');
+      } catch (e) {
+        console.log(e, 'AsyncStorage.setItem');
+      }
     }
   };
 
@@ -80,9 +85,13 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
             <View style={styles.headContainer}>
               <View style={styles.rowDirection}>
                 <Text style={styles.text}>รหัส OTP ถูกส่งไปยัง </Text>
-                <Text style={[styles.text,{color:colors.orange}]}>{route.params.telNumber}</Text>
+                <Text style={[styles.text, {color: colors.orange}]}>
+                  {route.params.telNumber}
+                </Text>
               </View>
-              <Text style={[styles.text,{color:colors.gray}]}>รหัสอ้างอิง OTP: NIAA</Text>
+              <Text style={[styles.text, {color: colors.gray}]}>
+                รหัสอ้างอิง OTP: NIAA
+              </Text>
             </View>
             <CodeField
               ref={ref}
@@ -94,10 +103,12 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
               textContentType="oneTimeCode"
               renderCell={renderCell}
             />
-             <View style={styles.headContainer}>
+            <View style={styles.headContainer}>
               <View style={styles.rowDirection}>
                 <Text style={styles.text}>ไม่ได้รับรหัส OTP? </Text>
-                <Text style={[styles.text,{color:colors.orange}]}>ส่งอีกครั้ง</Text>
+                <Text style={[styles.text, {color: colors.orange}]}>
+                  ส่งอีกครั้ง
+                </Text>
               </View>
             </View>
           </View>
@@ -152,5 +163,9 @@ const styles = StyleSheet.create({
     fontSize: normalize(16),
     color: colors.fontBlack,
   },
-  rowDirection:{flexDirection:'row',alignItems:'baseline',marginVertical:normalize(10)}
+  rowDirection: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginVertical: normalize(10),
+  },
 });

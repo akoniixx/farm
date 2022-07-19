@@ -7,7 +7,7 @@ export default {
     transSubOrange: '#FFFBF6',
     green:'#2EC66E',
     white:'#FFFFFF',
-
+    grayBg: '#FAFAFB',
 
 
 }
