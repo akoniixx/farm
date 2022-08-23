@@ -41,7 +41,8 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
     setValue,
   });
   useEffect(() => {
-    console.log(route);
+    console.log(navigation,'navi');
+    console.log(route,'route');
   }, []);
 
   const renderCell: React.FC<props> = ({index, symbol, isFocused}) => {
@@ -59,15 +60,24 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   const onFufill = async (value: string) => {
-    setValue(value);
-    if (value.length >= CELL_COUNT) {
-      try {
-        await AsyncStorage.setItem('token', '_token');
-        await navigation.navigate('PinScreen');
-      } catch (e) {
-        console.log(e, 'AsyncStorage.setItem');
+    if(route.params.isRegisterScreen){
+      setValue(value);
+      if (value.length >= CELL_COUNT) {
+          navigation.navigate('FirstFormScreen');
+      }
+      
+    }else{
+      setValue(value);
+      if (value.length >= CELL_COUNT) {
+        try {
+          await AsyncStorage.setItem('token', '_token');
+          await navigation.navigate('Main');
+        } catch (e) {
+          console.log(e, 'AsyncStorage.setItem');
+        }
       }
     }
+    
   };
 
   return (

@@ -7,8 +7,9 @@ import {normalize} from '../../function/Normalize';
 import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
 import {stylesCentral} from '../../styles/StylesCentral';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const MainScreen: React.FC = () => {
+const MainScreen: React.FC<any> = ({navigation, route}) => {
     const insets = useSafeAreaInsets();
   const [active, setActive] = useState<boolean>(false);
   const [arr] = useState([1,2,3,4])
@@ -30,7 +31,10 @@ const MainScreen: React.FC = () => {
             </View>
           </View>
           <View>
+            <TouchableOpacity onPress={()=>{ navigation.navigate('ProfileScreen')}}>
             <Text>dsd</Text>
+            </TouchableOpacity>
+            
           </View>
         </View>
         <View style={{flex:4,justifyContent:'center',alignItems:'center'}}>

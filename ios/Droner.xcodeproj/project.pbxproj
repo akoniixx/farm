@@ -12,7 +12,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		602C8F7128A261A5007D6E25 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 602C8F7028A261A5007D6E25 /* FontAwesome.ttf */; };
 		60AC83AD28858DCD00CED949 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 60AC83AC28858DCD00CED949 /* AntDesign.ttf */; };
+		60DC076C28AB7E5E000756CF /* geolocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DC076B28AB7E5E000756CF /* geolocation.swift */; };
 		60F03EE22883795100CFC2C7 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE12883795100CFC2C7 /* fonts */; };
 		60F03EE4288380D400CFC2C7 /* Anuphan-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE3288380D400CFC2C7 /* Anuphan-Bold.otf */; };
 		60F03EE6288380E700CFC2C7 /* Anuphan-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE5288380E700CFC2C7 /* Anuphan-Light.otf */; };
@@ -46,7 +48,10 @@
 		5709B34CF0A7D63546082F79 /* Pods-Droner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner.release.xcconfig"; path = "Target Support Files/Pods-Droner/Pods-Droner.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-Droner-DronerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner-DronerTests.debug.xcconfig"; path = "Target Support Files/Pods-Droner-DronerTests/Pods-Droner-DronerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-Droner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Droner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		602C8F7028A261A5007D6E25 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
 		60AC83AC28858DCD00CED949 /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = ../src/assets/fonts/AntDesign.ttf; sourceTree = "<group>"; };
+		60DC076A28AB7E5E000756CF /* Droner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Droner-Bridging-Header.h"; sourceTree = "<group>"; };
+		60DC076B28AB7E5E000756CF /* geolocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = geolocation.swift; sourceTree = "<group>"; };
 		60F03EE12883795100CFC2C7 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../src/assets/fonts; sourceTree = "<group>"; };
 		60F03EE3288380D400CFC2C7 /* Anuphan-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Anuphan-Bold.otf"; path = "../src/assets/fonts/Anuphan-Bold.otf"; sourceTree = "<group>"; };
 		60F03EE5288380E700CFC2C7 /* Anuphan-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Anuphan-Light.otf"; path = "../src/assets/fonts/Anuphan-Light.otf"; sourceTree = "<group>"; };
@@ -129,6 +134,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				60DC076B28AB7E5E000756CF /* geolocation.swift */,
+				602C8F7028A261A5007D6E25 /* FontAwesome.ttf */,
 				60AC83AC28858DCD00CED949 /* AntDesign.ttf */,
 				60F03EEB2883813700CFC2C7 /* Anuphan-Medium.otf */,
 				60F03EEA2883812300CFC2C7 /* Anuphan-Light.otf */,
@@ -143,6 +150,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				60DC076A28AB7E5E000756CF /* Droner-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -228,7 +236,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1340;
 					};
 				};
 			};
@@ -263,6 +271,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				602C8F7128A261A5007D6E25 /* FontAwesome.ttf in Resources */,
 				60AC83AD28858DCD00CED949 /* AntDesign.ttf in Resources */,
 				60F03EE8288380FA00CFC2C7 /* Anuphan-Medium.otf in Resources */,
 				60F03EE6288380E700CFC2C7 /* Anuphan-Light.otf in Resources */,
@@ -440,6 +449,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				60DC076C28AB7E5E000756CF /* geolocation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -458,6 +468,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-Droner-DronerTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -485,6 +496,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-Droner-DronerTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = DronerTests/Info.plist;
@@ -525,6 +537,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Droner;
+				SWIFT_OBJC_BRIDGING_HEADER = "Droner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -550,6 +563,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Droner;
+				SWIFT_OBJC_BRIDGING_HEADER = "Droner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

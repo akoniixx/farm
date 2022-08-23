@@ -4,33 +4,31 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import HomeCarousel from '../../components/Carousel/HomeCarousel';
 import {MainButton} from '../../components/Button/MainButton';
-import {colors} from '../../assets';
+import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
 
 const HomeScreen: React.FC<any> = ({navigation}) => {
   return (
     <SafeAreaView style={stylesCentral.container}>
       <View style={styles.inner}>
-        <View style={{flex:1}}>
+        <View style={{flex: 1}}>
           <HomeCarousel />
         </View>
         <View>
-        <MainButton
-          label="เข้าสู่ระบบ"
-          color={colors.orange}
-          onPress={() => navigation.navigate('LoginScreen')}
-        />
+          <MainButton
+            label="เข้าสู่ระบบ"
+            color={colors.orange}
+            onPress={() => navigation.navigate('LoginScreen')}
+          />
 
-        <MainButton
-          label="ลงทะเบียนนักบินโดรน"
-          color={colors.white}
-          fontColor={'black'}
-          onPress={() => console.log('2')}
-        />
+          <MainButton
+            label="ลงทะเบียนนักบินโดรน"
+            color={colors.white}
+            fontColor={'black'}
+            onPress={() => navigation.navigate('ConditionScreen')}
+          />
+        </View>
       </View>
-      </View>
-
-    
     </SafeAreaView>
   );
 };
