@@ -3,7 +3,7 @@ import React from "react"
 import { useState } from 'react';
 import { View, useWindowDimensions, Text, StyleSheet } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import font from "../../../android/app/build/intermediates/assets/debug/mergeDebugAssets/fonts/font";
+// import font from "../../../android/app/build/intermediates/assets/debug/mergeDebugAssets/fonts/font";
 import { colors } from '../../assets';
 import NewTaskScreen from "../../screens/MainScreen/NewTaskScreen";
 import TaskScreen from "../../screens/MainScreen/TaskScreen";
@@ -53,7 +53,7 @@ export default TaskTapNavigator
 
 const styles = StyleSheet.create({
   label:{
-    fontFamily:font.bold,
+    // fontFamily:font.bold,
     fontSize:normalize(16)
   }
 });

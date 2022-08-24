@@ -17,6 +17,7 @@ import {normalize} from '../../function/Normalize';
 import CustomHeader from '../../components/CustomHeader';
 import {InputPhone} from '../../components/InputPhone';
 import {MainButton} from '../../components/Button/MainButton';
+import axios from 'axios';
 
 const LoginScreen: React.FC<any> = ({navigation}) => {
   const [value, setValue] = useState<string>('');
@@ -24,9 +25,18 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
 
   const [message, setMessage] = React.useState<string>('');
   const login = () => {
-    console.log(value)
-    navigation.navigate('OtpScreen',{
-      telNumber: value
+    axios.post("https://api-dev-dnds.iconkaset.com/auth/droner/request-login-otp",{
+      telephoneNo : value,
+      refCode : value
+    }).then((res)=>{
+      console.log(res.data);
+      navigation.navigate('OtpScreen',{
+        telNumber: value,
+        token : res.data.result.token,
+        refCode : res.data.result.refCode
+      })
+    }).catch((err)=>{
+      console.log(err)
     })
   }
   return (

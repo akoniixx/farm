@@ -23,6 +23,7 @@ import {
 } from 'react-native-confirmation-code-field';
 import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const CELL_COUNT = 6;
 
@@ -41,8 +42,8 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
     setValue,
   });
   useEffect(() => {
-    console.log(navigation,'navi');
-    console.log(route,'route');
+    // console.log(navigation,'navi');
+    console.log(route.params);
   }, []);
 
   const renderCell: React.FC<props> = ({index, symbol, isFocused}) => {
@@ -61,6 +62,7 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
 
   const onFufill = async (value: string) => {
     if(route.params.isRegisterScreen){
+      console.log("step one")
       setValue(value);
       if (value.length >= CELL_COUNT) {
           navigation.navigate('FirstFormScreen');
@@ -70,8 +72,19 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
       setValue(value);
       if (value.length >= CELL_COUNT) {
         try {
-          await AsyncStorage.setItem('token', '_token');
-          await navigation.navigate('Main');
+          axios.post("https://api-dev-dnds.iconkaset.com/auth/droner/verify-otp",{
+            telephoneNo: route.params.telNumber,
+            otpCode: value,
+            token: route.params.token,
+            refCode: route.params.refCode
+          })
+          .then(async(res)=>{
+            console.log(res.data)
+            await AsyncStorage.setItem('token', res.data.accessToken);
+            await navigation.navigate('Main');
+          }).catch((err)=>{
+            console.log(err)
+          })
         } catch (e) {
           console.log(e, 'AsyncStorage.setItem');
         }

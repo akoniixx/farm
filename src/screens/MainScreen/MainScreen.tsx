@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
-    const insets = useSafeAreaInsets();
+  const insets = useSafeAreaInsets();
   const [active, setActive] = useState<boolean>(false);
   const [arr] = useState([1,2,3,4])
   return (
