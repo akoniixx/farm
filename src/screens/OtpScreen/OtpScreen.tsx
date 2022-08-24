@@ -79,8 +79,8 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
             refCode: route.params.refCode
           })
           .then(async(res)=>{
-            console.log(res.data)
             await AsyncStorage.setItem('token', res.data.accessToken);
+            await AsyncStorage.setItem('droner_id', res.data.data.id);
             await navigation.navigate('Main');
           }).catch((err)=>{
             console.log(err)

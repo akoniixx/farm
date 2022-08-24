@@ -25,8 +25,6 @@ const AppAuthNavigator: React.FC = () => {
       <Stack.Screen name="FirstFormScreen" component={FirstFormScreen} />
       <Stack.Screen name="SecondFormScreen" component={SecondFormScreen} />
       <Stack.Screen name="ThirdFormScreen" component={ThirdFormScreen} />
-
-      
     </Stack.Navigator>
   )
 }
