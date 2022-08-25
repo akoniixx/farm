@@ -8,6 +8,7 @@ export default {
     green:'#2EC66E',
     white:'#FFFFFF',
     grayBg: '#FAFAFB',
+    greyWhite: '#F2F2F2',
 
 
 }

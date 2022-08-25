@@ -6,5 +6,7 @@ export default {
     blankTask: require('./blankTask.png'),
     idcard: require('./idcard.png'),
     pirotcer: require('./pirotcer.png'),
-    dronecer: require('./dronecer.png')
+    dronecer: require('./dronecer.png'),
+    marker: require('./marker.png'),
+    map: require('./map.png')
 }
