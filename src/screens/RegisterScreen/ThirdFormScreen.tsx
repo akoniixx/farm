@@ -22,8 +22,8 @@ import {ProgressBar} from '../../components/ProgressBar';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import fonts from '../../assets/fonts';
-import { plantList } from '../../definitions/plants';
-import { PlantSelect } from '../../components/PlantSelect';
+import {plantList} from '../../definitions/plants';
+import {PlantSelect} from '../../components/PlantSelect';
 
 const ThirdFormScreen: React.FC<any> = ({navigation}) => {
   const [position, setPosition] = useState({
@@ -33,13 +33,17 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
     longitudeDelta: 0,
   });
   const [address, setAddress] = useState('');
-  const [selected,setSelected] = useState(false)
+  const [plantListSelect, setPlantListSelect] = useState(plantList);
   useEffect(() => {
     getNameFormLat();
   }, [position]);
   useEffect(() => {
     getLocation();
   }, []);
+
+  const handleSelect = (value:any) => {
+    console.log(value)
+  };
 
   const getNameFormLat = () => {
     let myApiKey = 'AIzaSyDg4BI3Opn-Bo2Pnr40Z7PKlC6MOv8T598';
@@ -220,26 +224,36 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
               </View>
             </View>
 
-           
-              <View
-                style={{
-                  marginTop: normalize(39),
-                  marginBottom: normalize(20),
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Text style={[styles.h1]}>พืชที่เคยฉีดพ่น</Text>
-                <Text style={[styles.h2, {color: colors.gray}]}>
-                  (กรุณาเลือกอย่างน้อย 1 อย่าง)
-                </Text>
-                
-               
-              </View>
-              <View style={{flex:1,height:normalize(140),flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between',alignContent:'space-between'}}>
-                {plantList.map((v)=>
-                  <PlantSelect label={v.value} active={v.active} />
-                )}
-                </View>
+            <View
+              style={{
+                marginTop: normalize(39),
+                marginBottom: normalize(20),
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Text style={[styles.h1]}>พืชที่เคยฉีดพ่น</Text>
+              <Text style={[styles.h2, {color: colors.gray}]}>
+                (กรุณาเลือกอย่างน้อย 1 อย่าง)
+              </Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                height: normalize(140),
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                alignContent: 'space-between',
+              }}>
+              {plantListSelect.map((v, i) => (
+                <PlantSelect
+                  key={i}
+                  label={v.value}
+                  active={v.active}
+                  onPress={() => handleSelect(v)}
+                />
+              ))}
+            </View>
           </ScrollView>
         </View>
 

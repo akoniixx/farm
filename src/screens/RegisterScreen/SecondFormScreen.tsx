@@ -1,5 +1,13 @@
-import {View, Text, StyleSheet, Image, Touchable, TouchableOpacity, TextInput} from 'react-native';
-import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Touchable,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font, image} from '../../assets';
@@ -9,16 +17,25 @@ import {InputPhone} from '../../components/InputPhone';
 import {MainButton} from '../../components/Button/MainButton';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ProgressBar} from '../../components/ProgressBar';
-import { Avatar } from '@rneui/themed';
+import {Avatar} from '@rneui/themed';
 import DropDownPicker from 'react-native-dropdown-picker';
+import {LocationDatasource } from '../../datasource/LocationDatasource';
 
 const SecondFormScreen: React.FC<any> = ({navigation}) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
     {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'}
+    {label: 'Banana', value: 'banana'},
   ]);
+  const getProvince =  async() => {
+  await  LocationDatasource.getProvince().then((res)=>{
+    console.log('ressss',res)
+  })
+  }
+  useEffect(()=>{
+    getProvince()
+  },[])
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -35,36 +52,70 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
           <Text style={styles.label}>ขั้นตอนที่ 2 จาก 4</Text>
           <Text style={styles.h1}>กรอกข้อมูลทั่วไป</Text>
           <ScrollView>
-            <View style={{justifyContent:'center',alignItems:'center',marginTop:normalize(40)}}>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: normalize(40),
+              }}>
               <TouchableOpacity>
-            <Avatar
-              size={100}
-              rounded
-              source={image.idcard}
-            />
-            </TouchableOpacity>
+                <Avatar size={100} rounded source={image.idcard} />
+              </TouchableOpacity>
             </View>
-            <View style={{marginTop:normalize(40)}}>
+            <View style={{marginTop: normalize(40)}}>
               <Text style={styles.h1}>ข้อมูลทั่วไป (โปรดระบุ)</Text>
             </View>
-            <TextInput style={styles.input} editable={true} placeholder={'ชื่อ'} />
-            <TextInput style={styles.input} editable={true} placeholder={'นามสกุล'} />
-            <TextInput style={styles.input} editable={true} placeholder={'เบอร์โทรศัพท์'} />
-            <View style={{marginTop:normalize(40)}}>
+            <TextInput
+              style={styles.input}
+              editable={true}
+              placeholder={'ชื่อ'}
+            />
+            <TextInput
+              style={styles.input}
+              editable={true}
+              placeholder={'นามสกุล'}
+            />
+            <TextInput
+              style={styles.input}
+              editable={true}
+              placeholder={'เบอร์โทรศัพท์'}
+            />
+            <View style={{marginTop: normalize(40)}}>
               <Text style={styles.h1}>ที่อยู่</Text>
             </View>
-            <TextInput style={styles.input} editable={true} placeholder={'บ้านเลขที่'} />
-            <TextInput style={styles.input} editable={true} placeholder={'รายละเอียดที่อยู่ (หมู่, ถนน)'} />
+            <TextInput
+              style={styles.input}
+              editable={true}
+              placeholder={'บ้านเลขที่'}
+            />
+            <TextInput
+              style={styles.input}
+              editable={true}
+              placeholder={'รายละเอียดที่อยู่ (หมู่, ถนน)'}
+            />
             <DropDownPicker
-            style={{borderColor:colors.disable}}
-      open={open}
-      value={value}
-      items={items}
-      setOpen={setOpen}
-      setValue={setValue}
-      setItems={setItems}
-    />
-    <TextInput style={styles.input} editable={true} placeholder={'รหัสไปรษณีย์'} />
+              style={{borderColor: colors.disable}}
+              placeholder="จังหวัด"
+              placeholderStyle={{
+                color: colors.disable,
+              }}
+              open={open}
+              value={value}
+              items={items}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              dropDownDirection="BOTTOM"
+              dropDownContainerStyle={{
+                borderColor: colors.disable,
+              }}
+            />
+
+            <TextInput
+              style={styles.input}
+              editable={true}
+              placeholder={'รหัสไปรษณีย์'}
+            />
           </ScrollView>
         </View>
 
@@ -106,12 +157,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  input:{
+  input: {
     height: normalize(56),
     marginVertical: 12,
-    padding:10,
+    padding: 10,
     borderColor: colors.disable,
     borderWidth: 1,
-    borderRadius: normalize(10)
-  }
+    borderRadius: normalize(10),
+  },
 });
