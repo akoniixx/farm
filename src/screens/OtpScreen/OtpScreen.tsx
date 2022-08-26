@@ -24,6 +24,7 @@ import {
 import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { Authentication } from '../../datasource/TaskDatasource';
 
 const CELL_COUNT = 6;
 
@@ -72,15 +73,9 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
       setValue(value);
       if (value.length >= CELL_COUNT) {
         try {
-          axios.post("https://api-dev-dnds.iconkaset.com/auth/droner/verify-otp",{
-            telephoneNo: route.params.telNumber,
-            otpCode: value,
-            token: route.params.token,
-            refCode: route.params.refCode
-          })
-          .then(async(res)=>{
-            await AsyncStorage.setItem('token', res.data.accessToken);
-            await AsyncStorage.setItem('droner_id', res.data.data.id);
+          Authentication.login(route.params.telNumber,value,route.params.token,route.params.refCode).then(async(result)=>{
+            await AsyncStorage.setItem('token', result.accessToken);
+            await AsyncStorage.setItem('droner_id', result.data.id);
             await navigation.navigate('Main');
           }).catch((err)=>{
             console.log(err)
