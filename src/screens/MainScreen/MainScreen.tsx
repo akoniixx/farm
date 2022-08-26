@@ -1,5 +1,5 @@
 import {Switch} from '@rneui/themed';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, font} from '../../assets';
@@ -8,9 +8,10 @@ import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
 import {stylesCentral} from '../../styles/StylesCentral';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
-    const insets = useSafeAreaInsets();
+  const insets = useSafeAreaInsets();
   const [active, setActive] = useState<boolean>(false);
   const [arr] = useState([1,2,3,4])
   return (
