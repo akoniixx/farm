@@ -7,14 +7,16 @@ import {MainButton} from '../../components/Button/MainButton';
 import {colors} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Authentication } from '../../datasource/TaskDatasource';
 
 const ProfileScreen: React.FC<any> = ({navigation}) => {
   return (
     <SafeAreaView style={stylesCentral.container}>
-      
-     
-
-    <TouchableOpacity onPress={()=>{ navigation.navigate('HomeScreen')}}>
+    <TouchableOpacity onPress={async()=>{ 
+      await Authentication.logout()
+      await navigation.navigate('HomeScreen')
+      }}>
         <Text>Logout</Text>
     </TouchableOpacity>
     </SafeAreaView>

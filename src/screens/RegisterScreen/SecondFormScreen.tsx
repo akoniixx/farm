@@ -62,7 +62,7 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
           <MainButton
             label="ถัดไป"
             color={colors.orange}
-            onPress={() => navigation.navigate('SecondFormScreen')}
+            onPress={() => navigation.navigate('ThirdFormScreen')}
           />
         </View>
       </View>
