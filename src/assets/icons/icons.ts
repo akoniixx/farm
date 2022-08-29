@@ -7,5 +7,11 @@ export default {
     jobCard: require('./jobcardsolid.png'),
     jobDistance: require('./jobcarddistance.png'),
     calling: require('./calling.png'),
-    note: require('./note.png')
+    note: require('./note.png'),
+    home: require('./home.png'),
+    home_active: require('./home_active.png'),
+    task: require('./task.png'),
+    task_active: require('./task_active.png'),
+    pocket: require('./pocket.png'),
+    pocket_active: require('./pocket_active.png'),
 }

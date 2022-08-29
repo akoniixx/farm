@@ -1,0 +1,65 @@
+import { normalize } from "@rneui/themed";
+import React from "react"
+import { useState } from 'react';
+import { View, useWindowDimensions, Text, StyleSheet } from 'react-native';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import fonts from "../../assets/fonts";
+// import font from "../../../android/app/build/intermediates/assets/debug/mergeDebugAssets/fonts/font";
+import { colors } from '../../assets';
+import NewTaskScreen from "../../screens/MainScreen/NewTaskScreen";
+import TaskScreen from "../../screens/MainScreen/TaskScreen";
+import FinishTask from "../../screens/MainTaskScreen/FinishTask";
+import OpenTask from "../../screens/MainTaskScreen/OpenTask";
+import InprogressTask from "../../screens/MainTaskScreen/InprogressTask";
+
+const renderTabBar = (props:any) => (
+  <TabBar
+    {...props}
+    indicatorStyle={{ backgroundColor:colors.orange }}
+    style={{ backgroundColor: colors.white }}
+    renderLabel={({ route, focused, color }) => (
+      <Text style={[styles.label,{color: focused ? colors.orange : colors.gray }]}>
+        {route.title}
+      </Text>
+    )}
+  />
+);
+
+
+
+
+const renderScene = SceneMap({
+  inprogress: InprogressTask,
+  open: OpenTask,
+  finish: FinishTask,
+});
+
+const MainTaskTapNavigator:React.FC =()=> {
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'open', title: 'กำลังดำเนินการ' },
+    { key: 'inprogress', title: 'รอเริ่มงาน' },
+    { key: 'finish', title: 'งานเสร็จสิ้น' }
+  ]);
+
+  return (
+    <TabView
+      navigationState={{ index, routes }}
+      renderTabBar={renderTabBar}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={{ width: layout.width }}
+    />
+  );
+}
+
+export default MainTaskTapNavigator
+
+const styles = StyleSheet.create({
+  label:{
+    fontFamily:fonts.bold,
+    fontSize:normalize(14)
+  }
+});

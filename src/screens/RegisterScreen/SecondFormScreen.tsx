@@ -19,7 +19,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {ProgressBar} from '../../components/ProgressBar';
 import {Avatar} from '@rneui/themed';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {LocationDatasource } from '../../datasource/LocationDatasource';
+
 
 const SecondFormScreen: React.FC<any> = ({navigation}) => {
   const [open, setOpen] = useState(false);
@@ -28,13 +28,9 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
     {label: 'Apple', value: 'apple'},
     {label: 'Banana', value: 'banana'},
   ]);
-  const getProvince =  async() => {
-  await  LocationDatasource.getProvince().then((res)=>{
-    console.log('ressss',res)
-  })
-  }
+ 
   useEffect(()=>{
-    getProvince()
+   
   },[])
   return (
     <SafeAreaView style={stylesCentral.container}>

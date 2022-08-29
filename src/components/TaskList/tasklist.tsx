@@ -3,10 +3,16 @@ import { normalize } from "@rneui/themed"
 import fonts from "../../assets/fonts"
 import { colors, image, icons } from "../../assets"
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { numberWithCommas } from "../../function/utility";
 
 const TaskMenu:React.FC<any> = (props : any)=>{
     const date = new Date(props.date)
-    return <View style={styles.taskMenu}>
+    const call = (tel:string) => {
+        props.setTel(tel)
+        props.callFunc()
+    }
+    return <TouchableOpacity onPress={()=>console.log('test')}>
+    <View style={styles.taskMenu}>
         <View style={styles.listTile}>
             <Text style={{
                 fontFamily : fonts.medium,
@@ -38,13 +44,13 @@ const TaskMenu:React.FC<any> = (props : any)=>{
                 fontFamily : fonts.medium,
                 color : '#2EC66E',
                 fontSize : normalize(17)
-            }}>฿ {props.price}</Text>
+            }}>฿ {props.price? numberWithCommas(props.price): null}</Text>
         </View>
         <View style={{
             display : 'flex',
             alignItems : 'center',
             flexDirection : 'row',
-            paddingVertical : normalize(5)
+            paddingVertical : normalize(5),
         }}>
             <Image source={icons.jobCard} style={{
                 width : normalize(20),
@@ -111,7 +117,11 @@ const TaskMenu:React.FC<any> = (props : any)=>{
                 display : 'flex',
                 justifyContent : 'center',
                 alignItems : 'center'
-            }}>
+            }}
+            onPress ={()=>{
+                call(props.tel)
+            }}
+            >
                 <Image source={icons.calling} style={{
                     width : normalize(24),
                     height: normalize(24)
@@ -170,12 +180,14 @@ const TaskMenu:React.FC<any> = (props : any)=>{
             </View>
         </View>
     </View>
+    </TouchableOpacity> 
 }
 
 const styles = StyleSheet.create({
     taskMenu : {
       backgroundColor : '#fff',
-      padding : 15
+      padding : normalize(15),
+      marginVertical: normalize(5)
     },
     listTile : {
       display : 'flex',
