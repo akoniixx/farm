@@ -66,14 +66,26 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
       console.log("step one")
       setValue(value);
       if (value.length >= CELL_COUNT) {
-          navigation.navigate('FirstFormScreen');
+        try {
+          Authentication.login(route.params.telNumber,value,route.params.token,route.params.refCode).then(async(result)=>{
+            console.log(`result= ${result.data}`)
+            await AsyncStorage.setItem('token_register', result.accessToken);
+            navigation.navigate('FirstFormScreen');
+          }).catch((err)=>{
+            console.log(err)
+          })
+        } catch (e) {
+          console.log(e, 'AsyncStorage.setItem');
+        }
       }
       
     }else{
+      console.log("step two")
       setValue(value);
       if (value.length >= CELL_COUNT) {
         try {
           Authentication.login(route.params.telNumber,value,route.params.token,route.params.refCode).then(async(result)=>{
+            console.log(`token= ${result.accessToken}`)
             await AsyncStorage.setItem('token', result.accessToken);
             await AsyncStorage.setItem('droner_id', result.data.id);
             await navigation.navigate('Main');

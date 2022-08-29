@@ -23,18 +23,8 @@ const TaskScreen:React.FC = () =>{
             setLoading(false);
             const droner_id = await AsyncStorage.getItem('droner_id')??""
             TaskDatasource.getTaskById(droner_id,["WAIT_START","IN_PROGRESS"],page,4).then((res)=>{
-                setData(res)
+                setData(data.concat(res))
             }).catch(err => console.log(err))
-
-            // setData(info)
-            
-            // axios.interceptors.request.use((config: any) => {
-            //     config.headers["Authorization"] = `Bearer ${token}`;
-            //     return config;
-            //   });
-            // axios.post(`https://api-dev-dnds.iconkaset.com/tasks/task/task-droner?dronerId=${droner_id}&taskStatus=WAIT_START&taskStatus=IN_PROGRESS&page=${page}&take=4`).then((res)=>{
-            //     setData(data.concat(res.data))
-            // }).catch(err=> console.log(err))
         }
         getData();
     },[loading,page])

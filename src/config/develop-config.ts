@@ -9,4 +9,13 @@ axios.interceptors.request.use(async (config: any) => {
     return config;
 });
 
+const registerInstance = axios.create({})
+
+registerInstance.interceptors.request.use(async (config: any) => {
+    const token = await AsyncStorage.getItem('token_register')
+    config.headers["Authorization"] = `Bearer ${token}`;
+    return config;
+});
+
+export const registerClient = registerInstance;
 export const httpClient = axios;

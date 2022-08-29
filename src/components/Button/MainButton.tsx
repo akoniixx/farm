@@ -7,6 +7,8 @@ import {normalize} from '../../function/Normalize';
 interface MainButtonProps {
   label: string;
   color: string;
+  fontSize? : number;
+  fontWeight?: string;
   fontColor?: string;
   disable?: boolean;
   onPress?: () => void;
@@ -20,7 +22,7 @@ export const MainButton: React.FC<MainButtonProps> = props => {
         title={props.label}
         titleStyle={{
           color: props.fontColor ? props.fontColor : colors.white,
-          fontSize: normalize(18),
+          fontSize: props.fontSize??normalize(18),
           fontFamily: font.medium
         }}
         buttonStyle={[styles.mainButton, {backgroundColor: props.color}]}
