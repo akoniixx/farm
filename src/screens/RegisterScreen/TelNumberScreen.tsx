@@ -17,17 +17,21 @@ import {
   import CustomHeader from '../../components/CustomHeader';
   import {InputPhone} from '../../components/InputPhone';
   import {MainButton} from '../../components/Button/MainButton';
+import { Authentication } from '../../datasource/TaskDatasource';
   
   const LoginScreen: React.FC<any> = ({navigation}) => {
     const [value, setValue] = useState<string>('');
     const [isError, setIsError] = React.useState(false);
     const [message, setMessage] = React.useState<string>('');
     const login = () => {
-      console.log(value)
-      navigation.navigate('OtpScreen',{
-        telNumber: value,
-        isRegisterScreen: true
-      })
+      Authentication.generateOtpRegister(value).then((result)=>{
+        navigation.navigate('OtpScreen',{
+          telNumber: value,
+          token : result.result.token,
+          refCode : result.result.refCode,
+          isRegisterScreen : true
+        })
+      }).catch(err => console.log(err))
     }
     return (
       <KeyboardAvoidingView

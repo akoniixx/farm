@@ -23,6 +23,7 @@ import {TaskDatasource} from '../../datasource/TaskDatasource';
 import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
 import {stylesCentral} from '../../styles/StylesCentral';
 
+
 const TaskScreen: React.FC = () => {
   const [data, setData] = useState<any>([]);
   const [page, setPage] = useState(1);

@@ -30,7 +30,8 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
       navigation.navigate('OtpScreen',{
         telNumber: value,
         token : result.result.token,
-        refCode : result.result.refCode
+        refCode : result.result.refCode,
+        isRegisterScreen : false
       })
     }).catch(err => console.log(err))
   }

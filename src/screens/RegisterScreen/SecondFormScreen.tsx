@@ -2,36 +2,72 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
-  Touchable,
   TouchableOpacity,
   TextInput,
+  Button,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font, image} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import CustomHeader from '../../components/CustomHeader';
-import {InputPhone} from '../../components/InputPhone';
 import {MainButton} from '../../components/Button/MainButton';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ProgressBar} from '../../components/ProgressBar';
 import {Avatar} from '@rneui/themed';
 import DropDownPicker from 'react-native-dropdown-picker';
-
+import { QueryLocation } from '../../datasource/Location';
+import { initialFormRegisterState, registerReducer } from '../../hooks/registerfield';
+import { Register } from '../../datasource/TaskDatasource';
 
 const SecondFormScreen: React.FC<any> = ({navigation}) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'},
-  ]);
- 
+  const [items, setItems] = useState([]);
+  const [openDistrict, setOpenDistrict] = useState(false);
+  const [valueDistrict, setValueDistrict] = useState(null);
+  const [itemsDistrict,setItemDistrict] = useState([])
+  const [openSubDistrict, setOpenSubDistrict] = useState(false);
+  const [valueSubDistrict, setSubValueDistrict] = useState(null);
+  const [itemsSubDistrict,setItemSubDistrict] = useState([])
+  const [province,setProvince] = useState<any>(null)
+  const [district,setDistrict] = useState<any>(null)
+
+  const [subdistrict,setSubdistrict] = useState<any>(null)
+
   useEffect(()=>{
-   
+    QueryLocation.QueryProvince().then(res => {
+      const Province = res.map((item : any) => {
+        return {label : item.provinceName, value : item.provinceId}
+      })
+      setItems(Province)
+    })
   },[])
+
+  useEffect(()=>{
+    if(province != null){
+      QueryLocation.QueryDistrict(province.value).then(res => {
+        const District = res.map((item : any) => {
+          return {label : item.districtName, value : item.districtId}
+        })
+        setItemDistrict(District)
+      })
+    }
+  },[province])
+
+  useEffect(()=>{
+    if(province != null && district != null){
+      QueryLocation.QuerySubDistrict(district.value,district.label).then(res =>{
+        const SubDistrict = res.map((item : any) => {
+          return {label : item.subdistrictName,value : item.subdistrictId, postcode : item.postcode}
+        })
+        setItemSubDistrict(SubDistrict)
+      })
+    }
+  },[province,district])
+
+  const [formState,dispatch] = useReducer(registerReducer,initialFormRegisterState);
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -62,16 +98,40 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
               <Text style={styles.h1}>ข้อมูลทั่วไป (โปรดระบุ)</Text>
             </View>
             <TextInput
+              onChangeText={(value)=>{
+                dispatch({
+                  type : "Handle Input",
+                  field : "name",
+                  payload : value
+                })
+              }}
+              value={formState.name}
               style={styles.input}
               editable={true}
               placeholder={'ชื่อ'}
             />
             <TextInput
+              onChangeText={(value)=>{
+                dispatch({
+                  type : "Handle Input",
+                  field : "surname",
+                  payload : value
+                })
+              }}
+              value={formState.surname}
               style={styles.input}
               editable={true}
               placeholder={'นามสกุล'}
             />
             <TextInput
+              onChangeText={(value)=>{
+                dispatch({
+                  type : "Handle Input",
+                  field : "tel",
+                  payload : value
+                })
+              }}
+              value={formState.tel}
               style={styles.input}
               editable={true}
               placeholder={'เบอร์โทรศัพท์'}
@@ -80,36 +140,131 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
               <Text style={styles.h1}>ที่อยู่</Text>
             </View>
             <TextInput
+              onChangeText={(value)=>{
+                dispatch({
+                  type : "Handle Input",
+                  field : "no",
+                  payload : value
+                })
+              }}
+              value={formState.no}
               style={styles.input}
               editable={true}
               placeholder={'บ้านเลขที่'}
             />
             <TextInput
+              onChangeText={(value)=>{
+                dispatch({
+                  type : "Handle Input",
+                  field : "address",
+                  payload : value
+                })
+              }}
+              value={formState.address}
               style={styles.input}
               editable={true}
               placeholder={'รายละเอียดที่อยู่ (หมู่, ถนน)'}
             />
-            <DropDownPicker
-              style={{borderColor: colors.disable}}
-              placeholder="จังหวัด"
-              placeholderStyle={{
-                color: colors.disable,
-              }}
-              open={open}
-              value={value}
-              items={items}
-              setOpen={setOpen}
-              setValue={setValue}
-              setItems={setItems}
-              dropDownDirection="BOTTOM"
-              dropDownContainerStyle={{
-                borderColor: colors.disable,
-              }}
-            />
-
+              <DropDownPicker
+                zIndex={3000}
+                zIndexInverse={1000}
+                style={{
+                  marginVertical : 10,
+                  backgroundColor : colors.white,
+                  borderColor: colors.disable,
+                }}
+                placeholder="จังหวัด"
+                placeholderStyle={{
+                  color: colors.disable,
+                }}
+                open={open}
+                value={value}
+                items={items}
+                setOpen={setOpen}
+                onSelectItem={(value)=>{
+                  setProvince(value)
+                  dispatch({
+                    type : "Handle Input",
+                    field : "province",
+                    payload : value
+                  })
+                }}
+                setValue={setValue}
+                dropDownDirection="BOTTOM"
+                dropDownContainerStyle={{
+                  borderColor: colors.disable,
+                }}
+              />
+              <DropDownPicker
+                zIndex={2000}
+                zIndexInverse={2000}
+                disabled={(!province)?true:false}
+                style={{
+                  borderColor: colors.disable,
+                  marginVertical : 10
+                }}
+                placeholder="อำเภอ"
+                placeholderStyle={{
+                  color: colors.disable,
+                }}
+                open={openDistrict}
+                value={valueDistrict}
+                items={itemsDistrict}
+                setOpen={setOpenDistrict}
+                onSelectItem={(value)=>{
+                  setDistrict(value)
+                  dispatch({
+                    type : "Handle Input",
+                    field : "district",
+                    payload : value
+                  })
+                }}
+                setValue={setValueDistrict}
+                dropDownDirection="BOTTOM"
+                dropDownContainerStyle={{
+                  borderColor: colors.disable,
+                }}
+              />
+              <DropDownPicker
+                zIndex={1000}
+                zIndexInverse={3000}
+                disabled={(!province && !district)?true:false}
+                style={{
+                  borderColor: colors.disable,
+                  marginVertical : 10
+                }}
+                placeholder="ตำบล"
+                placeholderStyle={{
+                  color: colors.disable,
+                }}
+                open={openSubDistrict}
+                value={valueSubDistrict}
+                items={itemsSubDistrict}
+                setOpen={setOpenSubDistrict}
+                onSelectItem={(value:any)=>{
+                  setSubdistrict(value)
+                  
+                  dispatch({
+                    type : "Handle Input",
+                    field : "subdistrict",
+                    payload : value
+                  })
+                  dispatch({
+                    type : "Handle Input",
+                    field : "postal",
+                    payload : value.postcode
+                  })
+                }}
+                setValue={setSubValueDistrict}
+                dropDownDirection="BOTTOM"
+                dropDownContainerStyle={{
+                  borderColor: colors.disable,
+                }}
+              />
             <TextInput
+              value={formState.postal}
               style={styles.input}
-              editable={true}
+              editable={false}
               placeholder={'รหัสไปรษณีย์'}
             />
           </ScrollView>
@@ -119,7 +274,19 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
           <MainButton
             label="ถัดไป"
             color={colors.orange}
-            onPress={() => navigation.navigate('ThirdFormScreen')}
+            onPress={() => {
+              // console.log(formState)
+              // Register.registerStep2(formState.name,formState.surname,formState.tel,
+              //   formState.no,
+              //   formState.address,
+              //   formState.province.value,
+              //   formState.district.value,
+              //   formState.subdistrict.value,
+              //   formState.postal).then((res)=>{
+              //     console.log(res);
+                  navigation.navigate('ThirdFormScreen');
+              //   }).catch(err => console.log(err))
+            }}
           />
         </View>
       </View>
