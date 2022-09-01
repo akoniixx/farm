@@ -2,13 +2,16 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MainScreen from '../../screens/MainScreen/MainScreen';
 import IncomeScreen from '../../screens/IncomeScreen/IncomScreen';
-import TaskScreen from '../../screens/TaskScreen/TaskScreen';
+import TaskScreen from '../../screens/MainTaskScreen/MainTaskScreen';
 import fontistoIcon from 'react-native-vector-icons/Foundation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import {colors, font} from '../../assets';
+import {colors, font, icons} from '../../assets';
 import {Text} from '@rneui/base';
 import fonts from '../../assets/fonts';
 import {normalize} from '@rneui/themed';
+import { Image } from 'react-native';
+import MainTaskScreen from '../../screens/MainTaskScreen/MainTaskScreen';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -32,11 +35,15 @@ const MainTapNavigator: React.FC = () => {
               หน้าหลัก
             </Text>
           ),
+          tabBarIcon:(i)=> i.focused?(
+            <Image source={icons.home_active} style={{width:20,height:20}} />
+          ):
+          ( <Image source={icons.home} style={{width:20,height:20}} />)
         }}
       />
       <Tab.Screen
         name="งานของฉัน"
-        component={TaskScreen}
+        component={MainTaskScreen}
         options={{
           tabBarLabelStyle: {
             fontFamily: font.medium,
@@ -51,6 +58,10 @@ const MainTapNavigator: React.FC = () => {
               งานของฉัน
             </Text>
           ),
+          tabBarIcon:(i)=> i.focused?(
+            <Image source={icons.task_active} style={{width:20,height:20}} />
+          ):
+          ( <Image source={icons.task} style={{width:20,height:20}} />)
         }}
       />
       <Tab.Screen
@@ -70,6 +81,10 @@ const MainTapNavigator: React.FC = () => {
               รายได้
             </Text>
           ),
+          tabBarIcon:(i)=> i.focused?(
+            <Image source={icons.pocket_active} style={{width:20,height:20}} />
+          ):
+          ( <Image source={icons.pocket} style={{width:20,height:20}} />)
         }}
       />
     </Tab.Navigator>

@@ -2,13 +2,13 @@ import React from "react"
 import { Text } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
-const TaskScreen:React.FC = () =>{
+const OpenTask:React.FC = () =>{
     return (
         <SafeAreaView>
             <Text>
-            TaskScreen
+            OpenTask
             </Text>
         </SafeAreaView>
     )
 }
-export default TaskScreen
+export default OpenTask
