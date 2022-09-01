@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Image, TextInput } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Image, TextInput, Modal } from 'react-native'
 import {stylesCentral} from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
 import React, { useCallback, useState } from 'react'
@@ -8,13 +8,17 @@ import colors from '../../assets/colors/colors';
 import { font, icons } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
 import * as ImagePicker from 'react-native-image-picker';
+import { Register } from '../../datasource/TaskDatasource';
+import { ProgressBar } from '../../components/ProgressBar';
 
 const width = Dimensions.get('window').width;
 
-const AddIDcardScreen:React.FC<any> = ({navigation}) => {
+const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
+  const telNo = route.params
+  const width = Dimensions.get('window').width
   const [image,setImage] = useState<any>(null)
   const [idcard,setIdCard] = useState<any>("")
-
+  const [openModal,setOpenModal] = useState(false);
   const onAddImage = useCallback(async()=>{
     const result = await ImagePicker.launchImageLibrary({
         mediaType : 'photo',
@@ -33,17 +37,11 @@ const AddIDcardScreen:React.FC<any> = ({navigation}) => {
         />
         <View style={styles.inner}>
             <View>
-                <View style={styles.page4}>
-                    <View style={styles.circle}>
-                        <View style={styles.circle2}/>
-                    </View>
-                    <View style={{
-                        paddingLeft : normalize(10)
-                    }}>
-                        <Text style={[styles.h2,{color : '#9BA1A8'}]}>4/4</Text>
-                        <Text style={styles.h1}>ยืนยันเอกสาร</Text>
-                    </View>
-                </View>
+            <View style={{marginBottom: normalize(10)}}>
+              <ProgressBar index={4} />
+            </View>
+            <Text style={styles.label}>ขั้นตอนที่ 4 จาก 4</Text>
+            <Text style={styles.h1}>ยืนยันเอกสาร</Text>
                 <View style={{paddingTop : 20}}>
                     <Text style={styles.h2}>รูปถ่ายผู้สมัคร คู่บัตรประชาชน</Text>
                     <TouchableOpacity style={{
@@ -101,7 +99,53 @@ const AddIDcardScreen:React.FC<any> = ({navigation}) => {
                     <Text style={[styles.h3, {color : colors.gray}]}>ใส่เลข 13 หลักโดยไม่ต้องเว้นวรรค</Text>
                 </View>
             </View>
-            <MainButton label='ยืนยันการสมัคร' color={(idcard.length === 13 && image != null)?colors.orange:colors.disable} disable={(idcard.length === 13 && image != null)?false:true}/>
+            <MainButton label='ยืนยันการสมัคร' color={(idcard.length === 13 && image != null)?colors.orange:colors.disable} disable={(idcard.length === 13 && image != null)?false:true} onPress={()=>{
+                if(idcard.length === 13 && image != null){
+                    setOpenModal(true)
+                }
+            }}/>
+            <Modal
+            transparent={true}
+            visible={openModal}>
+                <View style={{
+                    flex : 1,
+                    backgroundColor : 'rgba(0,0,0,0.5)',
+                    justifyContent : 'center',
+                    alignItems : 'center'
+                }}
+                >
+                    <View style={{
+                        padding : normalize(20),
+                        backgroundColor : colors.white,
+                        width : width*0.9,
+                        display : 'flex',
+                        justifyContent : 'center',
+                        borderRadius : normalize(8)
+                    }}>
+                        <Text style={[styles.h2,{textAlign : 'center'}]}>
+                            คุณต้องการยืนยันการสมัครใช่ไหม?
+                        </Text>
+                        <Text style={[styles.label,{textAlign : 'center',marginVertical : 5}]}>
+                        กรุณาตรวจสอบรายละเอียดการสมัครสมาชิก
+                        ของคุณให้ครบถ้วน หากมีการข้ามบางขั้นตอน
+                        ในการสมัครอาจทำให้ใช้งานระบบได้เพียงบางส่วน?
+                        </Text>
+                        <MainButton label='ถัดไป' color={colors.orange} onPress={()=>{
+                            Register.registerStep4(
+                                telNo.tele,
+                                idcard
+                            ).then(res=>{
+                                console.log(res)
+                                navigation.navigate('SuccessScreen')
+                            })
+                            .catch(err => console.log(err))
+                        }}/>
+                        <MainButton label='ย้อนกลับ' fontColor={colors.fontBlack} color={colors.white} onPress={()=>{
+                            setOpenModal(false)
+                        }}/>
+                    </View>
+                </View>
+            </Modal>
         </View>
     </SafeAreaView>
   )

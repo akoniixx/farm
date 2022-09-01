@@ -15,7 +15,7 @@ export class Authentication {
             console.log(err)
           )
     }
-    static generateOtpRegister(
+    static async generateOtpRegister(
       telNumber : String
     ): Promise<any>{
       return axios.post(BASE_URL + "/auth/droner/request-register-otp",{
@@ -80,7 +80,7 @@ export class Register{
     subdistrictId : string,
     postcode : string
   ): Promise<any> {
-    return registerClient.post(BASE_URL + `/auth/droner/register`,{
+    console.log({
       firstname : firstname,
       lastname : lastname,
       telephoneNo : telephoneNo,
@@ -93,8 +93,72 @@ export class Register{
         districtId : districtId,
         subdistrictId : subdistrictId,
         postcode : postcode,
-        id : id
       }
+    })
+    return axios.post(BASE_URL + `/auth/droner/register`,{
+      firstname : firstname,
+      lastname : lastname,
+      telephoneNo : telephoneNo,
+      status: "OPEN",
+      address : {
+        address1 : address1,
+        address2 : "",
+        address3 : "",
+        provinceId : provinceId,
+        districtId : districtId,
+        subdistrictId : subdistrictId,
+        postcode : postcode,
+      }
+    }).then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+
+  static registerStep3(
+    telephoneNo : string,
+    provinceId : number,
+    districtId : number,
+    subdistrictId: number,
+    locationName : string,
+    dronerDrone : any,
+    expPlant : string[],
+    lat : string,
+    long : string,
+  ): Promise<any> {
+    return axios.post(BASE_URL + `/auth/droner/register`,{
+      status: "PENDING",
+      telephoneNo : telephoneNo,
+      expPlant : expPlant,
+      dronerDrone : dronerDrone,
+      dronerArea : {
+        lat : lat,
+        long : long,
+        provinceId : provinceId,
+        districtId : districtId,
+        subdistrictId: subdistrictId,
+        locationName : locationName,
+      }
+    }).then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+
+  static async registerStep4(
+    telephoneNo : string,
+    idNo : string
+  ): Promise<any> {
+    const token = await AsyncStorage.getItem('token_register');
+    console.log(token);
+    return axios.post(BASE_URL + `/auth/droner/register`,{
+      status: "ACTIVE",
+      telephoneNo : telephoneNo,
+      idNo : idNo
     }).then(response => {
       return response.data;
     })

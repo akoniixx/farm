@@ -5,10 +5,12 @@ import CustomHeader from '../../components/CustomHeader';
 import { normalize } from '@rneui/themed';
 import { colors, font, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
+import { ProgressBar } from '../../components/ProgressBar';
 
 const width = Dimensions.get('window').width;
 
-const FourthFormScreen: React.FC<any>  = ({navigation})=>{
+const FourthFormScreen: React.FC<any>  = ({route,navigation})=>{
+  const telNo = route.params
   return (
     <SafeAreaView style={stylesCentral.container}>
         <CustomHeader
@@ -17,18 +19,11 @@ const FourthFormScreen: React.FC<any>  = ({navigation})=>{
           onPressBack={() => navigation.goBack()}
         />
         <View style={styles.inner}>
-            <View>
-              <View style={styles.page4}>
-                  <View style={styles.circle}>
-                      <View style={styles.circle2}/>
-                  </View>
-                  <View style={{
-                      paddingLeft : normalize(10)
-                  }}>
-                      <Text style={[styles.h2,{color : '#9BA1A8'}]}>4/4</Text>
-                      <Text style={styles.h1}>ยืนยันเอกสาร</Text>
-                  </View>
-              </View>
+            <View style={{marginBottom: normalize(10)}}>
+              <ProgressBar index={4} />
+            </View>
+            <Text style={styles.label}>ขั้นตอนที่ 4 จาก 4</Text>
+            <Text style={styles.h1}>ยืนยันเอกสาร</Text>
               <View style={{
                   display : 'flex',
                   alignItems : 'center',
@@ -45,10 +40,9 @@ const FourthFormScreen: React.FC<any>  = ({navigation})=>{
                   <Text style={styles.h3}>พร้อมถือบัตรประชาชนของคุณโดยให้เห็นใบหน้าชัดเจน</Text>
                   <Text style={styles.h3}>และบัตรประชาชนอย่างชัดเจน</Text>
               </View>
-            </View>
             <View>
               <MainButton label='ถัดไป' color={colors.orange} onPress={()=>{
-                navigation.navigate("AddIDCardScreen")
+                navigation.navigate("AddIDCardScreen",{tele : telNo.tele})
               }}/>
               <MainButton label='ข้ามขั้นตอนนี้' color={colors.white} fontColor={colors.fontBlack}/>
             </View>

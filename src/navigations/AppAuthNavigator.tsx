@@ -12,6 +12,7 @@ import SecondFormScreen from '../screens/RegisterScreen/SecondFormScreen';
 import ThirdFormScreen from '../screens/RegisterScreen/ThirdFormScreen';
 import FourthFormScreen from '../screens/RegisterScreen/FourthFormScreen';
 import AddIDcardScreen from '../screens/RegisterScreen/AddIDcardScreen';
+import SuccessRegister from '../screens/RegisterScreen/SuccessRegister';
 
 const Stack = createStackNavigator()
 
@@ -29,6 +30,7 @@ const AppAuthNavigator: React.FC = () => {
       <Stack.Screen name="ThirdFormScreen" component={ThirdFormScreen} />
       <Stack.Screen name="FourthFormScreen" component={FourthFormScreen} />
       <Stack.Screen name="AddIDCardScreen" component={AddIDcardScreen} />
+      <Stack.Screen name="SuccessScreen" component={SuccessRegister} />
     </Stack.Navigator>
   )
 }

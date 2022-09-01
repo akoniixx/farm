@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Dimensions, useWindowDimensions} from 'react-native';
 
 import {normalize} from '@rneui/themed';
 import colors from '../assets/colors/colors';
@@ -16,12 +16,16 @@ export const PlantSelect: React.FC<PrantSelectProps> = ({
   active,
   onPress,
 }) => {
+  const width = Dimensions.get('window').width;
   return (
     <View
       style={{
+        marginRight : (width-normalize(40)-3*normalize(103))/3,
+        marginBottom : (width-normalize(40)-3*normalize(103))/3,
         width: normalize(103),
         height: normalize(37),
-        backgroundColor: active ? colors.orange : colors.greyWhite,
+        borderRadius : normalize(6),
+        backgroundColor: active ? '#2BB0ED' : colors.greyWhite,
         justifyContent: 'center',
         alignItems: 'center',
       }}>
