@@ -4,6 +4,7 @@ import fonts from "../../assets/fonts"
 import { colors, image, icons } from "../../assets"
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { numberWithCommas } from "../../function/utility";
+import * as RootNavigation from '../../navigations/RootNavigation';
 
 const TaskMenu:React.FC<any> = (props : any)=>{
     const date = new Date(props.date)
@@ -11,14 +12,17 @@ const TaskMenu:React.FC<any> = (props : any)=>{
         props.setTel(tel)
         props.callFunc()
     }
-    return <TouchableOpacity onPress={()=>console.log('test')}>
+    return <TouchableOpacity onPress={()=>RootNavigation.navigate('Main', {
+        screen: 'TaskDetailScreen',
+        params: {taskId: props.taskId}
+      })}>
     <View style={styles.taskMenu}>
         <View style={styles.listTile}>
             <Text style={{
                 fontFamily : fonts.medium,
                 fontSize : normalize(14),
                 color : '#9BA1A8'
-            }}>{props.id}</Text>
+            }}>#{props.id}</Text>
             <View style={{
                 display : 'flex',
                 justifyContent : 'center',
@@ -60,6 +64,7 @@ const TaskMenu:React.FC<any> = (props : any)=>{
                 fontFamily : fonts.medium,
                 paddingLeft : normalize(8),
                 fontSize : normalize(14),
+                color: colors.fontBlack
             }}>{`${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()+543},${date.getHours()}:${date.getMinutes()} น.`}</Text>
         </View>
         <View style={{

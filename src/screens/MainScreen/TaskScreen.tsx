@@ -41,9 +41,7 @@ const TaskScreen: React.FC = () => {
     bottomSheetModalRef.current?.present();
    
   }, []);
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
-  }, []);
+  
   const getData = async () => {
     setLoading(false);
     const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
@@ -87,9 +85,8 @@ const TaskScreen: React.FC = () => {
             id={item.item.taskNo}
             status={item.item.status}
             title={
-              item.item.purposeSpray != null
-                ? item.item.purposeSpray.crop.cropName
-                : 'นาข้าว'
+              item.item.farmerPlot.plantName
+               
             }
             price={item.item.totalPrice}
             date={item.item.dateAppointment}
@@ -101,6 +98,7 @@ const TaskScreen: React.FC = () => {
             tel={item.item.farmer.telephoneNo}
             callFunc={handlePresentModalPress}
             setTel={setTelNum}
+            taskId={item.item.id}
           />
         )}
       />
@@ -109,7 +107,7 @@ const TaskScreen: React.FC = () => {
           ref={bottomSheetModalRef}
           index={1}
           snapPoints={snapPoints}
-          onChange={handleSheetChanges}
+        
         >
          < CallingModal tel={telNum} />
         </BottomSheetModal>

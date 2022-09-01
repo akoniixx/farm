@@ -34,6 +34,8 @@ axios.interceptors.response.use(
   },
 );
 
+export const httpClient = axios;
+
 const registerInstance = axios.create({});
 
 registerInstance.interceptors.request.use(async (config: any) => {
@@ -44,4 +46,4 @@ registerInstance.interceptors.request.use(async (config: any) => {
 
 export const registerClient = registerInstance;
 
-export const httpClient = axios;
+

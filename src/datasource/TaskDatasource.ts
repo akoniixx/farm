@@ -22,11 +22,8 @@ export class Authentication {
         telephoneNo : telNumber,
         refCode: telNumber
       }).then(res=>{
-        console.log(res.data)
         return res.data;
-      }).catch(err=>
-        console.log(err)
-      )
+      }).catch(err=> {throw err})
     }
     static login(
         telephoneNo: string,
@@ -126,5 +123,40 @@ export class TaskDatasource {
       .catch(error => {
         console.log(error);
       });
+  }
+
+  static getTaskDetail(
+    taskId:string
+  ):Promise<any>{
+    return httpClient
+    .get(BASE_URL + `/tasks/task/${taskId}`)
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+
+  static updateTaskStatus(
+    id:string,
+    dronerId:string,
+    status:string,
+    statusRemark?:string,
+    updateBy?:string
+  ):Promise<any>{
+    const data ={
+      id:id,
+      dronerId:dronerId,
+      status:status,
+      statusRemark:statusRemark,
+      updateBy:updateBy
+    }
+    return httpClient
+    .post(BASE_URL + `/tasks/task/update-task-status`,data)
+    .then(response => {
+      return response.data;
+    })
+    .catch(err=> {throw err})
   }
 }

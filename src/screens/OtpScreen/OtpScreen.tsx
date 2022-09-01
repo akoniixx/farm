@@ -120,7 +120,7 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
                 </Text>
               </View>
               <Text style={[styles.text, {color: colors.gray}]}>
-                รหัสอ้างอิง OTP: NIAA
+                รหัสอ้างอิง OTP: {route.params.refCode}
               </Text>
             </View>
             <CodeField

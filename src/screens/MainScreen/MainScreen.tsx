@@ -59,7 +59,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 onPress={() => {
                   navigation.navigate('ProfileScreen');
                 }}>
-                <Text>dsd</Text>
+                <Text>menu</Text>
               </TouchableOpacity>
             </View>
           </View>

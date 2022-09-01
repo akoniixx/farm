@@ -13,22 +13,12 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import {normalize} from '@rneui/themed';
 import {MainButton} from '../Button/MainButton';
 import {colors} from '../../assets';
+import { dialCall } from '../../function/utility';
 
 interface CallingModalProps {
   tel: string;
 }
 export const CallingModal: React.FC<CallingModalProps> = ({tel}) => {
-  const dialCall = (number?: string) => {
-    let telNumber = number ?  number:'0864968126'
-    let phoneNumber = '';
-    if (Platform.OS === 'android') {
-      phoneNumber = `tel:${telNumber}`;
-    } else {
-      phoneNumber = `telprompt:${telNumber}`;
-    }
-    Linking.openURL(phoneNumber);
-  };
-
   return (
     <View style={styles.container}>
       <View style={{alignItems: 'center'}}>

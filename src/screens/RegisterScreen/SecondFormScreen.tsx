@@ -17,7 +17,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {ProgressBar} from '../../components/ProgressBar';
 import {Avatar} from '@rneui/themed';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { QueryLocation } from '../../datasource/Location';
+import { QueryLocation } from '../../datasource/LocationDatasource';
 import { initialFormRegisterState, registerReducer } from '../../hooks/registerfield';
 import { Register } from '../../datasource/TaskDatasource';
 

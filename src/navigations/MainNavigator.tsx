@@ -6,6 +6,7 @@ import PinScreen from '../screens/PinScreen/PinScreen';
 import OtpScreen from '../screens/OtpScreen/OtpScreen';
 import MainTapNavigator from './bottomTabs/MainTapNavigator';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
+import TaskDetailScreen from '../screens/TaskDetailScreen.tsx/TaskDetailScreen';
 const Stack = createStackNavigator()
 
 const MainNavigator: React.FC = () => {
@@ -14,6 +15,7 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="MainScreen" component={MainTapNavigator} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen} />
     </Stack.Navigator>
   )
 }

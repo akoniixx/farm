@@ -9,6 +9,7 @@ export default {
     white:'#FFFFFF',
     grayBg: '#FAFAFB',
     greyWhite: '#F2F2F2',
-
+    primaryBlue: '#2BB0ED',
+    darkBlue: '#036EAF',
 
 }

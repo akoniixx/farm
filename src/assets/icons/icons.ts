@@ -17,4 +17,6 @@ export default {
   pocket_active: require('./pocket_active.png'),
   close: require('./x.png'),
   register: require('./register.png'),
+  direction: require('./direction.png'),
+  callSolid: require('./Calling-solid.png')
 };
