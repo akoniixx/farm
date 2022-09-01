@@ -60,7 +60,7 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
     if(province != null && district != null){
       QueryLocation.QuerySubDistrict(district.value,district.label).then(res =>{
         const SubDistrict = res.map((item : any) => {
-          return {label : item.subdistrictName,value : item.subdistrictId, postcode : item.postcode}
+          return {label : item.subdistrictName,value : item.subdistrictId, postcode : item.postcode, }
         })
         setItemSubDistrict(SubDistrict)
       })
@@ -275,17 +275,16 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
             label="ถัดไป"
             color={colors.orange}
             onPress={() => {
-              // console.log(formState)
-              // Register.registerStep2(formState.name,formState.surname,formState.tel,
-              //   formState.no,
-              //   formState.address,
-              //   formState.province.value,
-              //   formState.district.value,
-              //   formState.subdistrict.value,
-              //   formState.postal).then((res)=>{
-              //     console.log(res);
-                  navigation.navigate('ThirdFormScreen');
-              //   }).catch(err => console.log(err))
+              Register.registerStep2(formState.name,formState.surname,formState.tel,
+                formState.no,
+                formState.address,
+                formState.province.value,
+                formState.district.value,
+                formState.subdistrict.value,
+                formState.postal).then((res)=>{
+                  console.log(res);
+                  navigation.navigate('ThirdFormScreen',{tele : formState.tel});
+                }).catch(err => console.log(err))
             }}
           />
         </View>

@@ -4,7 +4,6 @@ import { BASE_URL,httpClient,registerClient } from "../config/develop-config";
 export class QueryLocation{
     static async QueryProvince() : Promise<any>{
         const token  = await AsyncStorage.getItem('token_register')
-        console.log(`district = ${token}`)
         return registerClient.get(BASE_URL + '/location/province').then(
             res => {
                 return res.data

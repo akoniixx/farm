@@ -32,8 +32,10 @@ import Animated from 'react-native-reanimated';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DocumentPicker, { types } from 'react-native-document-picker';
 import { Register } from '../../datasource/TaskDatasource';
+import * as ImagePicker from 'react-native-image-picker';
+import { QueryLocation } from '../../datasource/Location';
 
-const ThirdFormScreen: React.FC<any> = ({navigation}) => {
+const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const fall = new Animated.Value(1)
   const windowWidth = Dimensions.get('window').width;
   const [position, setPosition] = useState({
@@ -42,6 +44,7 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
+  const telNo = route.params
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState<any>([]);
@@ -53,7 +56,18 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
   const [address, setAddress] = useState('');
   const [plantListSelect, setPlantListSelect] = useState(plantList);
   const [result,setResult] = useState<string[]>([])
+  const [addPlant,setAddPlant] = useState<string>("");
   const sheetRef = useRef<any>(null)
+  const [dronedataUI,setDronedataUI] = useState<any>([]);
+  const [dronedata,setDronedata] = useState<any>([]);
+  const [droneno,setdroneno] = useState<any>(null)
+  const [province,setProvince] = useState<any>(null)
+  const [provinceId,setProvinceId] = useState<any>(null)
+  const [districtId,setDistrictId] = useState<any>(null)
+  const [subdistrictId,setSubdistrictId] = useState<any>(null)
+  const [lat,setlat] = useState<any>(null)
+  const [long,setlong] = useState<any>(null)
+  
   useEffect(() => {
     getNameFormLat();
   }, [position]);
@@ -62,7 +76,7 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
     Register.getDroneBrand(1,14).then(
       (result)=> {
         const data = result.data.map((item: any)=>{
-          return {label : item.name , value : item.id}
+          return {label : item.name , value : item.id, image : item.logoImagePath, icon : ()=> (item.logoImagePath != null)?<Image source={{uri : item.logoImagePath}} style={{width : 30, height : 30, borderRadius : 15}}/>:<></>}
         })
         setItems(data)
       })
@@ -73,7 +87,8 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
       Register.getDroneBrandType(brand.value).then(
         (result) => {
           const data = result.drone.map((item : any)=>{
-            return {label : item.series, value: item.series}
+            console.log(item)
+            return {label : item.series, value: item.id}
           })
           setItemstype(data)
         }
@@ -104,6 +119,16 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
     setPlantListSelect(data)
   };
 
+  const addSelect = (value:string) =>{
+    const data = [...plantListSelect];
+    const resultarray = data.findIndex(e => e.value === value)
+    if(resultarray === -1){
+      const newplant = {value: value, active: true};
+      data.push(newplant);
+      setPlantListSelect(data);
+    }
+  }
+
   const getNameFormLat = () => {
     let myApiKey = 'AIzaSyDg4BI3Opn-Bo2Pnr40Z7PKlC6MOv8T598';
     let myLat = position.latitude;
@@ -118,7 +143,8 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
     )
       .then(response => response.json())
       .then(responseJson => {
-        // console.log(responseJson.results[0])
+        setlat(responseJson.results[0].geometry.location.lat)
+        setlong(responseJson.results[0].geometry.location.lng)
         setAddress(
           responseJson.results[0].address_components[0].long_name +
             ' ' +
@@ -128,6 +154,34 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
             ' ' +
             responseJson.results[0].address_components[4].long_name,
         );
+        QueryLocation.QueryProvince().then(
+          (item)=>{
+            item.map((Province: any)=>{
+              if(Province.provinceName == `จังหวัด${responseJson.results[0].address_components[3].long_name}`){
+                // console.log(Province.provinceName)
+                setProvinceId(Province.provinceId)
+                QueryLocation.QueryDistrict(Province.provinceId).then(
+                  (itemDistrict : any)=>{
+                    itemDistrict.map((District: any)=>{
+                      if(District.districtName === `${responseJson.results[0].address_components[2].long_name.split(" ")[0]}${responseJson.results[0].address_components[2].long_name.split(" ")[1]}`){
+                        setDistrictId(District.districtId)
+                        QueryLocation.QuerySubDistrict(District.districtId,District.districtName).then(
+                          (itemSubDistrict)=>{
+                              itemSubDistrict.map((SubDistrict : any)=>{
+                                if(SubDistrict.districtName === `${responseJson.results[0].address_components[2].long_name.split(" ")[0]}${responseJson.results[0].address_components[2].long_name.split(" ")[1]}`){
+                                  setSubdistrictId(SubDistrict.subdistrictId);
+                                }
+                              })
+                          }
+                        ).catch(err => console.log(err))
+                      }
+                    })
+                  }
+                ).catch(err => console.log(err))
+              }
+            })
+          }
+        ).catch(err => console.log(err))
       });
   };
 
@@ -223,6 +277,29 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
     }
   };
 
+  const addDrone = ()=>{
+    const drones = [...dronedata];
+    const dronesUI = [...dronedataUI]
+    const newDrone = {
+      droneId : brandtype.value,
+      serialNo : droneno,
+      status : "PENDING",
+    }
+    const newDroneUI = {
+      img : brand.image,
+      droneBrand : brandtype.label,
+      serialBrand : droneno,
+    }
+    drones.push(newDrone);
+    dronesUI.push(newDroneUI)
+    setDronedata(drones);
+    setDronedataUI(dronesUI)
+    setBrand(null)
+    setBrandType(null)
+    setdroneno(null)
+    sheetRef.current.snapTo(1)
+  }
+
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -300,11 +377,8 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
               <View
                 style={{
                   flex: 1,
-                  height: normalize(140),
                   flexDirection: 'row',
                   flexWrap: 'wrap',
-                  justifyContent: 'space-between',
-                  alignContent: 'space-between',
                 }}>
                 {plantListSelect.map((v, i) => (
                   <PlantSelect
@@ -315,6 +389,79 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
                   />
                 ))}
               </View>
+              <View style={styles.input}>
+                <TextInput placeholder='พืชอื่นๆ' onChangeText={(value)=> setAddPlant(value)}/>
+                {
+                  (addPlant.length != 0)?
+                  <TouchableOpacity style={{ 
+                    marginBottom : normalize(10),
+                    width : normalize(60),
+                    height : normalize(30),
+                    borderRadius : 6,
+                    display : 'flex',
+                    justifyContent : 'center',
+                    alignItems : 'center',
+                    backgroundColor : '#2BB0ED'
+                  }} onPress={()=>addSelect(addPlant)}>
+                    <Text style={[styles.h2,{color : colors.white}]}>เพิ่ม</Text>
+                  </TouchableOpacity>:<></>
+                }
+              </View>
+              {
+                (dronedataUI.length === 0 && dronedata.length === 0) ? <>
+                </>:<View style={{
+                  marginTop: normalize(20),
+                  display : 'flex',
+                  justifyContent : 'center'
+                }}>
+                  {
+                    dronedataUI.map((item : any)=>(
+                      <View style={{
+                        height : normalize(104),
+                        borderWidth : 0.5,
+                        borderColor : colors.disable,
+                        borderRadius : normalize(20),
+                        paddingVertical : normalize(10),
+                        paddingHorizontal : normalize(20),
+                        display : 'flex',
+                        flexDirection : 'row',
+                        justifyContent : 'space-between',
+                        alignItems : 'center',
+                        marginBottom: normalize(10),
+                      }}>
+                        <View style={{
+                          display : 'flex',
+                          justifyContent : 'space-between'
+                        }}>
+                          <View>
+                            <Text style={[styles.h1,{fontSize : normalize(17)}]}>
+                              {item.droneBrand}
+                            </Text>
+                            <Text style={styles.label}>
+                              {item.serialBrand}
+                            </Text>
+                          </View>
+                          <View style={{
+                            width : normalize(109),
+                            height : normalize(24),
+                            borderRadius : normalize(12),
+                            display : 'flex',
+                            justifyContent : 'center',
+                            alignItems : 'center',
+                            backgroundColor : '#FDF0E3'
+                            }}>
+                              <Text style={[styles.label,{color: '#AE5700'}]}>รอการตรวจสอบ</Text>
+                          </View>
+                        </View>
+                        <Image source={{uri : item.img}} style={{
+                          width : normalize(60),
+                          height : normalize(60)
+                        }}/>
+                      </View>
+                    ))
+                  }
+                </View>
+              }
               <View>
                 <View
                   style={{
@@ -331,7 +478,6 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
                 <View style={{backgroundColor: colors.white}}>
                   <MainButton label="+ เพิ่มโดรน" fontColor={colors.orange} color={'#FFEAD1'} onPress={()=>{
                     sheetRef.current.snapTo(0)
-                    // console.log(result)
                   }}/>
                 </View>
               </View>
@@ -339,8 +485,27 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
           </View>
           <View style={{backgroundColor: colors.white}}>
             <MainButton label="ถัดไป" color={colors.orange} onPress={()=>{
-              console.log(result)
-              navigation.navigate('FourthFormScreen')
+              let plant : string[] = [];
+               plantListSelect.map((item) => {
+                if(item.active)
+                { 
+                  plant.push(item.value)
+                }
+              })
+              Register.registerStep3(
+                telNo.tele,
+                provinceId,
+                districtId,
+                subdistrictId,
+                address,
+                dronedata,
+                plant,
+                lat,
+                long
+              ).then((res)=>{
+                console.log(res);
+                navigation.navigate('FourthFormScreen',{tele : telNo.tele});
+              }).catch(err => console.log(err))
             }}/>
           </View>
         </View>
@@ -459,9 +624,9 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
                   <TextInput
                     placeholderTextColor={colors.gray}
                     onChangeText={(value)=>{
-                    
+                      setdroneno(value)
                     }}
-                    value=""
+                    value={droneno}
                     style={styles.input}
                     editable={true}
                     placeholder={'เลขตัวถังโดรน'}
@@ -524,9 +689,7 @@ const ThirdFormScreen: React.FC<any> = ({navigation}) => {
                   </View>
               </View>
               </View>
-              <MainButton disable={true} label='ถัดไป' color={colors.orange} onPress={()=>{
-                console.log(result)
-              }}/>
+              <MainButton disable={(!brand || !brandtype || !droneno)?true:false} label='ถัดไป' color={colors.orange} onPress={addDrone}/>
             </View>
           </View>)}
         />
@@ -555,6 +718,11 @@ const styles = StyleSheet.create({
     fontFamily: font.medium,
     fontSize: normalize(16),
     color: colors.fontBlack,
+  },
+  varidate : {
+    fontFamily: font.medium,
+    fontSize: normalize(12),
+    color : 'red'
   },
   hSheet:{
     fontFamily: font.bold,
@@ -586,9 +754,13 @@ const styles = StyleSheet.create({
     width: normalize(26),
   },
   input: {
+    display : 'flex',
+    paddingHorizontal : normalize(10),
+    justifyContent : 'space-between',
+    alignItems : 'center',
+    flexDirection : 'row',
     height: normalize(56),
     marginVertical: 12,
-    padding: 10,
     borderColor: colors.gray,
     borderWidth: 1,
     borderRadius: normalize(10),
