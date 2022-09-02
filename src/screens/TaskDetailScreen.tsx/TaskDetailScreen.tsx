@@ -75,7 +75,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const getTaskDetail = () => {
     TaskDatasource.getTaskDetail(taskId)
       .then(res => {
-        console.log(res);
         setData(res.data);
         setPosition({
           latitude: parseFloat(res.data.farmerPlot.lat),

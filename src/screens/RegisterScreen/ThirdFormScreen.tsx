@@ -61,12 +61,13 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const [dronedataUI,setDronedataUI] = useState<any>([]);
   const [dronedata,setDronedata] = useState<any>([]);
   const [droneno,setdroneno] = useState<any>(null)
-  const [province,setProvince] = useState<any>(null)
   const [provinceId,setProvinceId] = useState<any>(null)
   const [districtId,setDistrictId] = useState<any>(null)
   const [subdistrictId,setSubdistrictId] = useState<any>(null)
   const [lat,setlat] = useState<any>(null)
   const [long,setlong] = useState<any>(null)
+  const [image1,setImage1] = useState<any>(null)
+  const [image2,setImage2] = useState<any>(null)
   
   useEffect(() => {
     getNameFormLat();
@@ -87,7 +88,6 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
       Register.getDroneBrandType(brand.value).then(
         (result) => {
           const data = result.drone.map((item : any)=>{
-            console.log(item)
             return {label : item.series, value: item.id}
           })
           setItemstype(data)
@@ -95,14 +95,21 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
       ).catch(err => console.log(err))
     }
   }, [brand]);
-  const uploadFile = async()=>{
-    const result = await DocumentPicker.pickSingle({
-      mode : "import",
-      copyTo : 'documentDirectory',
-      presentationStyle : 'fullScreen',
-      type : [types.allFiles]
-    })
-    console.log(result)
+  const uploadFile1 = async()=>{
+    const result = await ImagePicker.launchImageLibrary({
+      mediaType : 'photo',
+    });
+    if(!result.didCancel){
+        setImage1(result)
+    }
+  }
+  const uploadFile2 = async()=>{
+    const result = await ImagePicker.launchImageLibrary({
+      mediaType : 'photo',
+    });
+    if(!result.didCancel){
+        setImage2(result)
+    }
   }
 
   const handleSelect = (value:any,index:number,label:string,status:boolean) => {
@@ -503,7 +510,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 lat,
                 long
               ).then((res)=>{
-                console.log(res);
+
                 navigation.navigate('FourthFormScreen',{tele : telNo.tele});
               }).catch(err => console.log(err))
             }}/>
@@ -652,9 +659,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                         เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF
                       </Text>
                     </View>
-                    <MainButton fontSize={normalize(14)} label="เพิ่มเอกสาร" color={colors.orange} onPress={()=>{
-                      console.log(result)
-                    }}/>
+                    <MainButton fontSize={normalize(14)} label="เพิ่มเอกสาร" color={colors.orange} onPress={uploadFile1}/>
                   </View>
                   <View
                     style={{
@@ -684,7 +689,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                         เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF
                       </Text>
                     </View>
-                    <MainButton fontSize={normalize(14)} label="เพิ่มเอกสาร" color={colors.orange} onPress={uploadFile}/>
+                    <MainButton fontSize={normalize(14)} label="เพิ่มเอกสาร" color={colors.orange} onPress={uploadFile2}/>
                   </View>
                   </View>
               </View>
@@ -766,3 +771,7 @@ const styles = StyleSheet.create({
     borderRadius: normalize(10),
   }
 });
+function useCallback(arg0: () => Promise<void>, arg1: { onboard1: any; onboard2: any; onboard3: any; blankNewTask: any; blankTask: any; idcard: any; pirotcer: any; dronecer: any; marker: any; map: any; }[]) {
+  throw new Error('Function not implemented.');
+}
+

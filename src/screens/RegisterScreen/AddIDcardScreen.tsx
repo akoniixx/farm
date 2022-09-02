@@ -25,7 +25,6 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
     });
     if(!result.didCancel){
         setImage(result)
-        console.log(idcard)
     }
   },[image]);
   return (
@@ -107,7 +106,7 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
             <Modal
             transparent={true}
             visible={openModal}>
-                <View style={{
+                <View  style={{
                     flex : 1,
                     backgroundColor : 'rgba(0,0,0,0.5)',
                     justifyContent : 'center',
@@ -135,7 +134,7 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
                                 telNo.tele,
                                 idcard
                             ).then(res=>{
-                                console.log(res)
+                                setOpenModal(false);
                                 navigation.navigate('SuccessScreen')
                             })
                             .catch(err => console.log(err))

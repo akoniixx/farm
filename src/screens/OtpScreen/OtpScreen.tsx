@@ -68,8 +68,6 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
       if (value.length >= CELL_COUNT) {
         try {
           Authentication.login(route.params.telNumber,value,route.params.token,route.params.refCode).then(async(result)=>{
-            console.log(`result= ${result.data}`)
-            await AsyncStorage.setItem('token_register', result.accessToken);
             navigation.navigate('FirstFormScreen');
           }).catch((err)=>{
             console.log(err)

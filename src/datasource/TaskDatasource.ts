@@ -52,7 +52,7 @@ export class Register{
     page : number,
     take : number,
   ): Promise<any> {
-    return registerClient.get(BASE_URL + `/drone-brand?isActive=true&page=${page}&take=${take}`).then(response => {
+    return axios.get(BASE_URL + `/drone-brand?isActive=true&page=${page}&take=${take}`).then(response => {
       return response.data;
     })
     .catch(error => {
@@ -62,7 +62,7 @@ export class Register{
   static getDroneBrandType(
     id : string
   ): Promise<any> {
-    return registerClient.get(BASE_URL + `/drone-brand/${id}`).then(response => {
+    return axios.get(BASE_URL + `/drone-brand/${id}`).then(response => {
       return response.data;
     })
     .catch(error => {
@@ -80,21 +80,6 @@ export class Register{
     subdistrictId : string,
     postcode : string
   ): Promise<any> {
-    console.log({
-      firstname : firstname,
-      lastname : lastname,
-      telephoneNo : telephoneNo,
-      status: "OPEN",
-      address : {
-        address1 : address1,
-        address2 : "",
-        address3 : "",
-        provinceId : provinceId,
-        districtId : districtId,
-        subdistrictId : subdistrictId,
-        postcode : postcode,
-      }
-    })
     return axios.post(BASE_URL + `/auth/droner/register`,{
       firstname : firstname,
       lastname : lastname,
@@ -109,7 +94,10 @@ export class Register{
         subdistrictId : subdistrictId,
         postcode : postcode,
       }
-    }).then(response => {
+    }).then(async(response) => {
+      const droner_id = response.data.id;
+      console.log(droner_id);
+      await AsyncStorage.setItem('droner_id',droner_id)
       return response.data;
     })
     .catch(error => {
@@ -117,7 +105,7 @@ export class Register{
     });
   }
 
-  static registerStep3(
+  static async registerStep3(
     telephoneNo : string,
     provinceId : number,
     districtId : number,
@@ -128,7 +116,10 @@ export class Register{
     lat : string,
     long : string,
   ): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id')
+    console.log(droner_id);
     return axios.post(BASE_URL + `/auth/droner/register`,{
+      id : droner_id,
       status: "PENDING",
       telephoneNo : telephoneNo,
       expPlant : expPlant,
@@ -153,9 +144,10 @@ export class Register{
     telephoneNo : string,
     idNo : string
   ): Promise<any> {
-    const token = await AsyncStorage.getItem('token_register');
-    console.log(token);
+    const droner_id = await AsyncStorage.getItem('droner_id')
+    console.log(droner_id);
     return axios.post(BASE_URL + `/auth/droner/register`,{
+      id : droner_id,
       status: "ACTIVE",
       telephoneNo : telephoneNo,
       idNo : idNo
