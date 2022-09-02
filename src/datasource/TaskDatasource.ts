@@ -39,7 +39,7 @@ export class Authentication {
           })
           .then(res=>{
             return res.data
-          }).catch(err=> console.log(err))
+          }).catch(err=> {throw err})
     }
     static async logout(){
         await AsyncStorage.removeItem('token')

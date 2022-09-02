@@ -92,10 +92,18 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   const openGps = (lat: number, lng: number) => {
-    var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
+   /*  var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
     var url = scheme + `${lat},${lng}`;
-    Linking.openURL(url);
-  };
+    Linking.openURL(url); */
+    const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+const latLng = `${lat},${lng}`;
+const label = 'Custom Label';
+const url = Platform.select({
+  ios: `${scheme}${label}@${latLng}`,
+  android: `${scheme}${latLng}(${label})`
+});
+Linking.openURL(url);
+  }
 
   // variables
   const snapPoints = useMemo(() => ['25%', '25%'], []);
@@ -304,8 +312,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   provider={PROVIDER_GOOGLE}
                   initialRegion={position}>
                   <Marker coordinate={position} />
-
-                  <TouchableOpacity
+                </MapView.Animated>
+                <View>
+                <TouchableOpacity
                     style={styles.viewMap}
                     onPress={() =>
                       openGps(position.latitude, position.longitude)
@@ -323,7 +332,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                       ดูแผนที่
                     </Text>
                   </TouchableOpacity>
-                </MapView.Animated>
+                </View>
               </View>
             </ScrollView>
 
@@ -385,8 +394,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     flexDirection: 'row',
-    top: '40%',
+    marginTop: 10,
     backgroundColor: 'white',
+    borderColor: colors.primaryBlue,
+    borderWidth:1,
     paddingVertical: normalize(5),
     paddingHorizontal: normalize(10),
     borderRadius: normalize(50),

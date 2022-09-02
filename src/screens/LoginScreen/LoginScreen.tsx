@@ -18,23 +18,30 @@ import CustomHeader from '../../components/CustomHeader';
 import {InputPhone} from '../../components/InputPhone';
 import {MainButton} from '../../components/Button/MainButton';
 import axios from 'axios';
-import { Authentication } from '../../datasource/TaskDatasource';
+import {Authentication} from '../../datasource/TaskDatasource';
 
 const LoginScreen: React.FC<any> = ({navigation}) => {
   const [value, setValue] = useState<string>('');
   const [isError, setIsError] = React.useState(false);
+  const [errMessage, setErrMessage] = useState<string>('');
 
   const [message, setMessage] = React.useState<string>('');
   const login = () => {
-    Authentication.generateOtp(value).then((result)=>{
-      navigation.navigate('OtpScreen',{
-        telNumber: value,
-        token : result.result.token,
-        refCode : result.result.refCode,
-        isRegisterScreen : false
+    Authentication.generateOtp(value)
+      .then(result => {
+        navigation.navigate('OtpScreen', {
+          telNumber: value,
+          token: result.result.token,
+          refCode: result.result.refCode,
+          isRegisterScreen: false,
+        });
       })
-    }).catch(err => console.log(err))
-  }
+      .catch(err => {
+        if (err.response.data.statusCode === 409) {
+          setErrMessage('เบอร์นี้ถูกลงทะเบียนเรียบร้อยแล้ว');
+        }
+      });
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -58,6 +65,12 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
                 onError={isError}
                 errorMessage={message}
               />
+              {errMessage.length > 0 ? (
+                <Text
+                  style={{marginTop: 5, color: 'red', fontFamily: font.medium}}>
+                  {errMessage}
+                </Text>
+              ) : null}
               <Text style={styles.label}>
                 โปรดใช้หมายเลขโทรศัพท์ที่ลงทะเบียนไว้กับแอปพลิเคชั่น DnDs
               </Text>
@@ -68,7 +81,7 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
                 label="ถัดไป"
                 color={colors.orange}
                 onPress={() => login()}
-                disable={value.length!=10}
+                disable={value.length != 10}
               />
 
               <MainButton

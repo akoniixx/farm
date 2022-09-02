@@ -33,7 +33,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import DocumentPicker, { types } from 'react-native-document-picker';
 import { Register } from '../../datasource/TaskDatasource';
 import * as ImagePicker from 'react-native-image-picker';
-import { QueryLocation } from '../../datasource/Location';
+import { QueryLocation } from '../../datasource/LocationDatasource';
 
 const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const fall = new Animated.Value(1)
