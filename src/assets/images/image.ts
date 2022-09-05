@@ -8,5 +8,6 @@ export default {
     pirotcer: require('./pirotcer.png'),
     dronecer: require('./dronecer.png'),
     marker: require('./marker.png'),
-    map: require('./map.png')
+    map: require('./map.png'),
+    loading : require('./loading.json')
 }

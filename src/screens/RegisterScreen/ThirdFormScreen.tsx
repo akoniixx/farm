@@ -108,6 +108,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
       mediaType : 'photo',
     });
     if(!result.didCancel){
+        console.log(result);
         setImage2(result)
     }
   }
@@ -510,9 +511,10 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 lat,
                 long
               ).then((res)=>{
-
                 navigation.navigate('FourthFormScreen',{tele : telNo.tele});
-              }).catch(err => console.log(err))
+              }).catch(err => {
+                console.log(err)
+              })
             }}/>
           </View>
         </View>
@@ -645,19 +647,56 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     justifyContent : 'space-between',
                     alignItems : 'center'
                   }}>
-                    <View style={{
-                      display : 'flex',
-                      flexDirection : 'row',
-                      alignItems : 'center',
-                      paddingVertical : 10
-                    }}>
-                      <Image source={icons.register} style={{
-                        width : normalize(12),
-                        height : normalize(15)
-                      }}/>
-                      <Text style={[styles.label,{paddingLeft : 4}]}>
-                        เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF
-                      </Text>
+                    <View>
+                      <View style={{
+                        display : 'flex',
+                        flexDirection : 'row',
+                        alignItems : 'center',
+                        paddingVertical : 10
+                      }}>
+                        <Image source={icons.register} style={{
+                          width : normalize(12),
+                          height : normalize(15)
+                        }}/>
+                        <Text style={[styles.label,{paddingLeft : 4}]}>
+                            เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF
+                        </Text>
+                      </View>
+                      <View>
+                        {
+                          (image1 != null)?
+                          <View style={{
+                            display : 'flex',
+                            flexDirection : 'row',
+                            alignItems : 'center',
+                            paddingVertical : 5,
+                            width : windowWidth*0.5,
+                          }}>
+                            <Text numberOfLines={1} style={[styles.label,{paddingLeft : 4,color : colors.orange}]}>
+                              {image1.assets[0].fileName}
+                            </Text>
+                            <TouchableOpacity onPress={()=>{
+                              setImage1(null)
+                            }}>
+                              <View style={{
+                                width : normalize(16),
+                                height : normalize(16),
+                                marginLeft : normalize(8),
+                                borderRadius : normalize(8),
+                                backgroundColor : colors.fontBlack,
+                                display : 'flex',
+                                justifyContent :'center',
+                                alignItems : 'center'
+                              }}>
+                                <Text style={{
+                                  fontSize : 10,
+                                  color : colors.white
+                                }}>x</Text>
+                              </View>
+                            </TouchableOpacity>
+                          </View>:<></>
+                        }
+                      </View>
                     </View>
                     <MainButton fontSize={normalize(14)} label="เพิ่มเอกสาร" color={colors.orange} onPress={uploadFile1}/>
                   </View>
@@ -675,19 +714,56 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     justifyContent : 'space-between',
                     alignItems : 'center'
                   }}>
-                    <View style={{
+                    <View>
+                      <View style={{
                       display : 'flex',
                       flexDirection : 'row',
                       alignItems : 'center',
                       paddingVertical : 10
                     }}>
-                      <Image source={icons.register} style={{
-                        width : normalize(12),
-                        height : normalize(15)
-                      }}/>
-                      <Text style={[styles.label,{paddingLeft : 4}]}>
-                        เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF
-                      </Text>
+                        <Image source={icons.register} style={{
+                          width : normalize(12),
+                          height : normalize(15)
+                        }}/>
+                        <Text style={[styles.label,{paddingLeft : 4}]}>
+                          เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF
+                        </Text>
+                      </View>
+                      <View>
+                        {
+                          (image2 != null)?
+                          <View style={{
+                            display : 'flex',
+                            flexDirection : 'row',
+                            alignItems : 'center',
+                            paddingVertical : 5,
+                            width : windowWidth*0.5,
+                          }}>
+                            <Text numberOfLines={1} style={[styles.label,{paddingLeft : 4,color : colors.orange}]}>
+                              {image2.assets[0].fileName}
+                            </Text>
+                            <TouchableOpacity onPress={()=>{
+                              setImage2(null)
+                            }}>
+                              <View style={{
+                                width : normalize(16),
+                                height : normalize(16),
+                                marginLeft : normalize(8),
+                                borderRadius : normalize(8),
+                                backgroundColor : colors.fontBlack,
+                                display : 'flex',
+                                justifyContent :'center',
+                                alignItems : 'center'
+                              }}>
+                                <Text style={{
+                                  fontSize : 10,
+                                  color : colors.white
+                                }}>x</Text>
+                              </View>
+                            </TouchableOpacity>
+                          </View>:<></>
+                        }
+                      </View>
                     </View>
                     <MainButton fontSize={normalize(14)} label="เพิ่มเอกสาร" color={colors.orange} onPress={uploadFile2}/>
                   </View>

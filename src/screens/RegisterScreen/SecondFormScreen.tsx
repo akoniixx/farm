@@ -201,11 +201,12 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
                 disabled={(!province)?true:false}
                 style={{
                   borderColor: colors.disable,
-                  marginVertical : 10
+                  marginVertical : 10,
+                  backgroundColor : (!province)?colors.disable:colors.white
                 }}
                 placeholder="อำเภอ"
                 placeholderStyle={{
-                  color: colors.disable,
+                  color: (!province)?colors.gray:colors.disable,
                 }}
                 open={openDistrict}
                 value={valueDistrict}
@@ -228,14 +229,15 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
               <DropDownPicker
                 zIndex={1000}
                 zIndexInverse={3000}
-                disabled={(!province && !district)?true:false}
+                disabled={(!district)?true:false}
                 style={{
                   borderColor: colors.disable,
-                  marginVertical : 10
+                  marginVertical : 10,
+                  backgroundColor : (!district)?colors.disable:colors.white
                 }}
                 placeholder="ตำบล"
                 placeholderStyle={{
-                  color: colors.disable,
+                  color: (!district)?colors.gray:colors.disable,
                 }}
                 open={openSubDistrict}
                 value={valueSubDistrict}
@@ -243,7 +245,6 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
                 setOpen={setOpenSubDistrict}
                 onSelectItem={(value:any)=>{
                   setSubdistrict(value)
-                  
                   dispatch({
                     type : "Handle Input",
                     field : "subdistrict",
@@ -263,7 +264,7 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
               />
             <TextInput
               value={formState.postal}
-              style={styles.input}
+              style={[styles.input,{backgroundColor : colors.disable}]}
               editable={false}
               placeholder={'รหัสไปรษณีย์'}
             />

@@ -44,6 +44,17 @@ registerInstance.interceptors.request.use(async (config: any) => {
   return config;
 });
 
+const uploadFileregisterInstance = axios.create({})
+
+uploadFileregisterInstance.interceptors.request.use(async (config: any) => {
+  const token = await AsyncStorage.getItem('token_register');
+  config.headers['Content-Type'] = 'multipart/form-data';
+  config.headers['Authorization'] = `Bearer ${token}`;
+  console.log(config);
+  return config;
+});
+
 export const registerClient = registerInstance;
+export const uploadFileClient = uploadFileregisterInstance;
 
 

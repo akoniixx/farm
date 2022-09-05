@@ -6,7 +6,7 @@ export class QueryLocation {
   static async QueryProvince(): Promise<any> {
     const token = await AsyncStorage.getItem('token_register');
     console.log(`district = ${token}`);
-    return axios
+    return registerClient
       .get(BASE_URL + '/location/province')
       .then(res => {
         return res.data;
@@ -15,7 +15,7 @@ export class QueryLocation {
   }
 
   static async QueryDistrict(provinceId: number): Promise<any> {
-    return axios
+    return registerClient
       .get(BASE_URL + `/location/district?provinceId=${provinceId}`)
       .then(res => {
         return res.data;
@@ -27,7 +27,7 @@ export class QueryLocation {
     districtId: number,
     districtName: string,
   ): Promise<any> {
-    return axios
+    return registerClient
       .get(
         BASE_URL +
           `/location/sub-district?districtId=${districtId}&search=${districtName}`,

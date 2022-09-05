@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {BASE_URL, httpClient, registerClient} from '../config/develop-config';
+import {BASE_URL, httpClient, registerClient, uploadFileClient} from '../config/develop-config';
 
 export class Authentication {
     static generateOtp(
@@ -52,7 +52,7 @@ export class Register{
     page : number,
     take : number,
   ): Promise<any> {
-    return axios.get(BASE_URL + `/drone-brand?isActive=true&page=${page}&take=${take}`).then(response => {
+    return registerClient.get(BASE_URL + `/drone-brand?isActive=true&page=${page}&take=${take}`).then(response => {
       return response.data;
     })
     .catch(error => {
@@ -62,7 +62,7 @@ export class Register{
   static getDroneBrandType(
     id : string
   ): Promise<any> {
-    return axios.get(BASE_URL + `/drone-brand/${id}`).then(response => {
+    return registerClient.get(BASE_URL + `/drone-brand/${id}`).then(response => {
       return response.data;
     })
     .catch(error => {
@@ -80,7 +80,7 @@ export class Register{
     subdistrictId : string,
     postcode : string
   ): Promise<any> {
-    return axios.post(BASE_URL + `/auth/droner/register`,{
+    return registerClient.post(BASE_URL + `/auth/droner/register`,{
       firstname : firstname,
       lastname : lastname,
       telephoneNo : telephoneNo,
@@ -96,7 +96,6 @@ export class Register{
       }
     }).then(async(response) => {
       const droner_id = response.data.id;
-      console.log(droner_id);
       await AsyncStorage.setItem('droner_id',droner_id)
       return response.data;
     })
@@ -117,8 +116,7 @@ export class Register{
     long : string,
   ): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id')
-    console.log(droner_id);
-    return axios.post(BASE_URL + `/auth/droner/register`,{
+    return registerClient.post(BASE_URL + `/auth/droner/register`,{
       id : droner_id,
       status: "PENDING",
       telephoneNo : telephoneNo,
@@ -145,13 +143,76 @@ export class Register{
     idNo : string
   ): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id')
-    console.log(droner_id);
-    return axios.post(BASE_URL + `/auth/droner/register`,{
+    return registerClient.post(BASE_URL + `/auth/droner/register`,{
       id : droner_id,
       status: "ACTIVE",
       telephoneNo : telephoneNo,
       idNo : idNo
     }).then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+
+  static async uploadDronerLicense(
+    file : any
+  ): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id')
+    const data = new FormData();
+    data.append('file',{
+      uri : file.assets[0].uri,
+      name : file.assets[0].fileName,
+      type : file.assets[0].type
+    })
+    data.append('resourceId',droner_id)
+    data.append('resource',"DRONER_DRONE")
+    data.append('category',"DRONER_LICENSE");
+    console.log(data)
+    return uploadFileClient.post(BASE_URL + '/file/upload', data).then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+  static async uploadDroneLicense(
+    file : any
+  ): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id')
+    const data = new FormData();
+    data.append('file',{
+      uri : file.assets[0].uri,
+      name : file.assets[0].fileName,
+      type : file.assets[0].type
+    })
+    data.append('resourceId',droner_id)
+    data.append('resource',"DRONER_DRONE")
+    data.append('category',"DRONE_LICENSE");
+    return uploadFileClient.post(BASE_URL + '/file/upload', data).then(response => {
+      console.log(response.data)
+      return response.data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+  static async uploadDronerIDCard(
+    file : any
+  ): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id')
+    const data = new FormData();
+    data.append('file',{
+      uri : file.assets[0].uri,
+      name : file.assets[0].fileName,
+      type : file.assets[0].type
+    })
+    data.append('resourceId',droner_id)
+    data.append('resource',"DRONER")
+    data.append('category',"ID_CARD_IMAGE");
+    return uploadFileClient.post(BASE_URL + '/file/upload', data).then(response => {
+      console.log(response.data)
       return response.data;
     })
     .catch(error => {

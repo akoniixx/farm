@@ -42,10 +42,6 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
     value,
     setValue,
   });
-  useEffect(() => {
-    // console.log(navigation,'navi');
-    console.log(route.params);
-  }, []);
 
   const renderCell: React.FC<props> = ({index, symbol, isFocused}) => {
     return (
@@ -63,11 +59,11 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
 
   const onFufill = async (value: string) => {
     if(route.params.isRegisterScreen){
-      console.log("step one")
       setValue(value);
       if (value.length >= CELL_COUNT) {
         try {
           Authentication.login(route.params.telNumber,value,route.params.token,route.params.refCode).then(async(result)=>{
+            await AsyncStorage.setItem('token_register',result.accessToken);
             navigation.navigate('FirstFormScreen');
           }).catch((err)=>{
             console.log(err)
@@ -78,12 +74,10 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
       }
       
     }else{
-      console.log("step two")
       setValue(value);
       if (value.length >= CELL_COUNT) {
         try {
           Authentication.login(route.params.telNumber,value,route.params.token,route.params.refCode).then(async(result)=>{
-            console.log(`token= ${result.accessToken}`)
             await AsyncStorage.setItem('token', result.accessToken);
             await AsyncStorage.setItem('droner_id', result.data.id);
             await navigation.navigate('Main');

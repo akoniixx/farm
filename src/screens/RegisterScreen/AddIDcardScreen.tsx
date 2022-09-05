@@ -5,11 +5,12 @@ import React, { useCallback, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { normalize } from '@rneui/themed';
 import colors from '../../assets/colors/colors';
-import { font, icons } from '../../assets';
+import { font, icons,image as img } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
 import * as ImagePicker from 'react-native-image-picker';
 import { Register } from '../../datasource/TaskDatasource';
 import { ProgressBar } from '../../components/ProgressBar';
+import Lottie from 'lottie-react-native';
 
 const width = Dimensions.get('window').width;
 
@@ -134,8 +135,12 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
                                 telNo.tele,
                                 idcard
                             ).then(res=>{
-                                setOpenModal(false);
-                                navigation.navigate('SuccessScreen')
+                                Register.uploadDronerIDCard(image).then(
+                                    (res)=>{
+                                        setOpenModal(false);
+                                        navigation.navigate('SuccessScreen')
+                                    }
+                                ).catch(err => console.log(err))
                             })
                             .catch(err => console.log(err))
                         }}/>
