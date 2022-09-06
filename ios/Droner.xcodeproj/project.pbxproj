@@ -539,7 +539,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.droner;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.dev.droner;
 				PRODUCT_NAME = Droner;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Droner-Bridging-Header.h";
@@ -570,7 +570,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.droner;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.dev.droner;
 				PRODUCT_NAME = Droner;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Droner-Bridging-Header.h";

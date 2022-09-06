@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Droner</string>
+	<string>IconKaset Droner</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -36,15 +36,15 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>IconKaset Droner requires access to your phone’s camera</string>
+	<string>IconKaset Droner would like to use access camera to take your photo for your profile.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string></string>
+	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string></string>
+	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
+	<string>IconKaset Droner would like access to your photo gallery, so you can use it as your profile.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Anuphan-Bold.otf</string>
