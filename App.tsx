@@ -5,6 +5,7 @@ import AppNavigator from './src/navigations/AppNavigator';
 import { navigationRef } from './src/navigations/RootNavigation';
 import SplashScreen from 'react-native-splash-screen'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 
 const App = () => {
@@ -12,10 +13,12 @@ const App = () => {
     SplashScreen.hide();
   },[])
   return (
-    <NavigationContainer>
-    {/* <NavigationContainer ref={navigationRef}> */}
+    <>
+    <NavigationContainer ref={navigationRef}>
       <AppNavigator/>
     </NavigationContainer>
+     <Toast />
+     </>
   );
 };
 

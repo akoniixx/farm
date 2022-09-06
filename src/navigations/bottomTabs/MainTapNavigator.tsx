@@ -25,6 +25,7 @@ const MainTapNavigator: React.FC = () => {
           tabBarLabelStyle: {
             fontFamily: font.medium,
           },
+          lazy:true,
           tabBarLabel: ({focused}) => (
             <Text
               style={{
@@ -48,6 +49,7 @@ const MainTapNavigator: React.FC = () => {
           tabBarLabelStyle: {
             fontFamily: font.medium,
           },
+          lazy:true,
           tabBarLabel: ({focused}) => (
             <Text
               style={{

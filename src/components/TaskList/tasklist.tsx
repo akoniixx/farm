@@ -6,7 +6,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { numberWithCommas } from "../../function/utility";
 import * as RootNavigation from '../../navigations/RootNavigation';
 
-const TaskMenu:React.FC<any> = (props : any)=>{
+const Tasklist:React.FC<any> = (props : any)=>{
     const date = new Date(props.date)
     const call = (tel:string) => {
         props.setTel(tel)
@@ -132,7 +132,7 @@ const TaskMenu:React.FC<any> = (props : any)=>{
                     height: normalize(24)
                 }}/>
             </TouchableOpacity>
-            <TouchableOpacity style={{
+            <TouchableOpacity  style={{
                 width : normalize(127.5),
                 height : normalize(49),
                 borderRadius : normalize(8),
@@ -148,7 +148,9 @@ const TaskMenu:React.FC<any> = (props : any)=>{
                     color : '#fff'
                 }}>ขยายเวลา</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{
+            <TouchableOpacity
+             onPress={props.updateTask}
+            style={{
                 width : normalize(127.5),
                 height : normalize(49),
                 borderRadius : normalize(8),
@@ -203,4 +205,4 @@ const styles = StyleSheet.create({
     }
   })
 
-export default TaskMenu
+export default Tasklist

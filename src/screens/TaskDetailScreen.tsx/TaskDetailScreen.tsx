@@ -6,6 +6,7 @@ import {
   Image,
   Linking,
   Platform,
+  Alert,
 } from 'react-native';
 import React, {
   useCallback,
@@ -35,6 +36,7 @@ import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {CallingModal} from '../../components/Modal/CallingModal';
 import {WaitStartFooter} from '../../components/Footer/WaitStartFooter';
 import {InprogressFooter} from '../../components/Footer/InprogressFooter';
+import Toast from 'react-native-toast-message';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -61,15 +63,18 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   }, []);
 
   const updateTask = (status: string) => {
-    TaskDatasource.updateTaskStatus(
-      data.id,
-      data.droner.id,
-      status === 'WAIT_START' ? 'IN_PROGRESS' : 'DONE',
-    )
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => console.log(err.response.data));
+    if (status === 'WAIT_START') {
+      TaskDatasource.updateTaskStatus(data.id, data.droner.id, 'IN_PROGRESS')
+        .then(res => {
+          Toast.show({
+            type: 'success',
+            text1: `งาน ${data.taskNo}`,
+            text2: 'อัพเดทสถานะเรียบร้อยแล้ว',
+          });
+          getTaskDetail();
+        })
+        .catch(err => console.log(err.response.data));
+    }
   };
 
   const getTaskDetail = () => {
@@ -91,18 +96,18 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   const openGps = (lat: number, lng: number) => {
-   /*  var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
+    /*  var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
     var url = scheme + `${lat},${lng}`;
     Linking.openURL(url); */
-    const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
-const latLng = `${lat},${lng}`;
-const label = 'Custom Label';
-const url = Platform.select({
-  ios: `${scheme}${label}@${latLng}`,
-  android: `${scheme}${latLng}(${label})`
-});
-Linking.openURL(url);
-  }
+    const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
+    const latLng = `${lat},${lng}`;
+    const label = 'Custom Label';
+    const url = Platform.select({
+      ios: `${scheme}${label}@${latLng}`,
+      android: `${scheme}${latLng}(${label})`,
+    });
+    Linking.openURL(url);
+  };
 
   // variables
   const snapPoints = useMemo(() => ['25%', '25%'], []);
@@ -288,7 +293,9 @@ Linking.openURL(url);
                         color: 'black',
                         fontSize: normalize(15),
                       }}>
-                      {data.farmerPlot.plotArea}
+                      {data.farmerPlot.plotArea
+                        ? data.farmerPlot.plotArea
+                        : '-'}
                       {/*  {`เทส` + `` + ``} */}
                     </Text>
                     <Text
@@ -312,25 +319,74 @@ Linking.openURL(url);
                   initialRegion={position}>
                   <Marker coordinate={position} />
                 </MapView.Animated>
-                <View>
+
                 <TouchableOpacity
-                    style={styles.viewMap}
-                    onPress={() =>
-                      openGps(position.latitude, position.longitude)
-                    }>
-                    <Image
-                      source={icons.direction}
-                      style={{width: normalize(24), height: normalize(24)}}
-                    />
-                    <Text
-                      style={{
-                        marginLeft: 5,
-                        fontFamily: font.medium,
-                        color: 'black',
-                      }}>
-                      ดูแผนที่
+                  style={styles.viewMap}
+                  onPress={() =>
+                    openGps(position.latitude, position.longitude)
+                  }>
+                  <Image
+                    source={icons.direction}
+                    style={{width: normalize(24), height: normalize(24)}}
+                  />
+                  <Text
+                    style={{
+                      marginLeft: 5,
+                      fontFamily: font.medium,
+                      color: 'black',
+                    }}>
+                    ดูแผนที่
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.taskMenu}>
+                <Text style={[styles.font16, {color: 'black'}]}>รายได้</Text>
+
+                <View
+                  style={[
+                    stylesCentral.flexRowBetwen,
+                    {marginVertical: normalize(5)},
+                  ]}>
+                  <Text style={styles.fontGray}>ค่าจ้าง</Text>
+                  <Text style={styles.fontGray}>{data.price} ฿</Text>
+                </View>
+                <View
+                  style={[
+                    stylesCentral.flexRowBetwen,
+                    {marginVertical: normalize(5)},
+                  ]}>
+                  <Text style={styles.fontGray}>
+                    ค่าธรรมเนียม (5% ของราคารวม)
+                  </Text>
+                  <Text style={styles.fontGray}>{data.fee} ฿</Text>
+                </View>
+
+                {data.discountFee ? (
+                  <View
+                    style={[
+                      stylesCentral.flexRowBetwen,
+                      {marginVertical: normalize(5)},
+                    ]}>
+                    <Text style={[styles.fontGray, {color: colors.green}]}>
+                      ส่วนลดค่าธรรมเนียม
                     </Text>
-                  </TouchableOpacity>
+                    <Text style={[styles.fontGray, {color: colors.green}]}>
+                      {data.discountFee} ฿
+                    </Text>
+                  </View>
+                ) : null}
+
+                <View
+                  style={[
+                    stylesCentral.flexRowBetwen,
+                    {marginVertical: normalize(5)},
+                  ]}>
+                  <Text style={[styles.fontGray, {color: 'black'}]}>
+                    รายได้ (หลังจ่ายค่าธรรมเนียม)
+                  </Text>
+                  <Text style={[styles.fontGray, {color: 'black'}]}>
+                    {data.totalPrice} ฿
+                  </Text>
                 </View>
               </View>
             </ScrollView>
@@ -391,13 +447,13 @@ const styles = StyleSheet.create({
   },
   viewMap: {
     alignItems: 'center',
-    alignSelf: 'center',
+    justifyContent: 'center',
     flexDirection: 'row',
     marginTop: 10,
     backgroundColor: 'white',
     borderColor: colors.primaryBlue,
-    borderWidth:1,
-    paddingVertical: normalize(5),
+    borderWidth: 1,
+    paddingVertical: normalize(10),
     paddingHorizontal: normalize(10),
     borderRadius: normalize(50),
   },

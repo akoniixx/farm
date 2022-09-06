@@ -25,4 +25,9 @@ export const stylesCentral = StyleSheet.create({
     backgroundColor: colors.grayBg,
     paddingTop: normalize(10),
   },
+  flexRowBetwen:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center'
+  }
 });
