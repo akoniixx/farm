@@ -48,7 +48,7 @@ const TaskScreen: React.FC = () => {
     bottomSheetModalRef.current?.present();
   }, []);
 
-  const updateTask = (id:string,dronerId:string,status: string) => {
+  const updateTask = (id: string, dronerId: string, status: string) => {
     if (status === 'WAIT_START') {
       TaskDatasource.updateTaskStatus(id, dronerId, 'IN_PROGRESS')
         .then(res => {
@@ -57,7 +57,7 @@ const TaskScreen: React.FC = () => {
             text1: `งาน ${data.taskNo}`,
             text2: 'อัพเดทสถานะเรียบร้อยแล้ว',
           });
-          getData();
+          refreshData();
         })
         .catch(err => console.log(err.response.data));
     }
@@ -75,6 +75,23 @@ const TaskScreen: React.FC = () => {
       .then(res => {
         if (res !== undefined) {
           setData(data.concat(res));
+          setCheckResIsComplete(true);
+        }
+      })
+      .catch(err => console.log(err));
+  };
+
+  const refreshData = async () => {
+    const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
+    TaskDatasource.getTaskById(
+      droner_id,
+      ['WAIT_START', 'IN_PROGRESS'],
+      page,
+      4,
+    )
+      .then(res => {
+        if (res !== undefined) {
+          setData(res);
           setCheckResIsComplete(true);
         }
       })
@@ -98,6 +115,7 @@ const TaskScreen: React.FC = () => {
         }}
         keyExtractor={element => element.item.id}
         data={data}
+        extraData={data}
         renderItem={({item}: any) => (
           <Tasklist
             id={item.item.taskNo}
@@ -114,7 +132,9 @@ const TaskScreen: React.FC = () => {
             callFunc={handlePresentModalPress}
             setTel={setTelNum}
             taskId={item.item.id}
-            updateTask={()=>updateTask(item.item.id,item.item.dronerId,item.item.status)}
+            updateTask={() =>
+              updateTask(item.item.id, item.item.dronerId, item.item.status)
+            }
           />
         )}
       />

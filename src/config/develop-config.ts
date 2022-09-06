@@ -15,6 +15,7 @@ axios.interceptors.response.use(
     return response;
   },
   async function (error) {
+    
     /*  if (500 === error.response.status) {
         RootNavigation.navigate('Auth', {
           screen: 'InternalServerError',
@@ -30,6 +31,11 @@ axios.interceptors.response.use(
         screen: 'HomeScreen',
       });
     }
+    /* if (201 === error.response.status) {
+      RootNavigation.navigate('Auth', {
+        screen: 'HomeScreen',
+      });
+    } */
     return Promise.reject(error);
   },
 );
