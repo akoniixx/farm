@@ -6,19 +6,23 @@ import {stylesCentral} from '../../styles/StylesCentral';
 import {MainButton} from '../../components/Button/MainButton';
 import {colors} from '../../assets';
 import {normalize} from '../../function/Normalize';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Authentication } from '../../datasource/TaskDatasource';
+import {Authentication} from '../../datasource/TaskDatasource';
+import * as RootNavigation from '../../navigations/RootNavigation';
 
 const ProfileScreen: React.FC<any> = ({navigation}) => {
   return (
     <SafeAreaView style={stylesCentral.container}>
-    <TouchableOpacity onPress={async()=>{ 
-      await Authentication.logout()
-      await navigation.navigate('HomeScreen')
-      }}>
+      <TouchableOpacity
+        onPress={async () => {
+          await Authentication.logout();
+          await RootNavigation.navigate('Auth', {
+            screen: 'HomeScreen',
+          });
+        }}>
         <Text>Logout</Text>
-    </TouchableOpacity>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

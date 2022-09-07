@@ -10,9 +10,12 @@ const Stack = createStackNavigator()
 
 const AppNavigator: React.FC = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false, }}>
 
-        <Stack.Screen name="initPage" component={LoadingNavigator} />
+        <Stack.Screen name="initPage" component={LoadingNavigator} options={{
+            gestureEnabled: false,
+            headerLeft: () => null,
+          }} />
         <Stack.Screen name="Auth" component={AppAuthNavigator} />
         <Stack.Screen name="Main" component={MainNavigator} />
 

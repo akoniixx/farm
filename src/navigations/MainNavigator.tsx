@@ -11,10 +11,12 @@ const Stack = createStackNavigator()
 
 const MainNavigator: React.FC = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="MainScreen" component={MainTapNavigator} />
+    <Stack.Navigator screenOptions={{ headerShown: false }} >
+      <Stack.Screen name="MainScreen" component={MainTapNavigator} options={{
+            gestureEnabled: false,
+            headerLeft: () => null,
+          }} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen} />
     </Stack.Navigator>
   )

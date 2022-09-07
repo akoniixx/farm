@@ -16,7 +16,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font, icons, image} from '../../assets';
 import {normalize} from '../../function/Normalize';
@@ -39,7 +38,6 @@ import {InprogressFooter} from '../../components/Footer/InprogressFooter';
 import Toast from 'react-native-toast-message';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
-  const insets = useSafeAreaInsets();
   const taskId = route.params.taskId;
   const [data, setData] = useState<any>();
   const [position, setPosition] = useState({
@@ -95,7 +93,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     return cdate;
   };
 
-  const openGps = (lat: number, lng: number) => {
+  const openGps = (lat: number, lng: number, name: string) => {
     /*  var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
     var url = scheme + `${lat},${lng}`;
     Linking.openURL(url); */
@@ -294,9 +292,8 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                         fontSize: normalize(15),
                       }}>
                       {data.farmerPlot.plotArea
-                        ? data.farmerPlot.plotArea
+                        ? `${data.farmerPlot.plotArea.subdistrictName}/ ${data.farmerPlot.plotArea.districtName}/ ${data.farmerPlot.plotArea.provinceName}`
                         : '-'}
-                      {/*  {`เทส` + `` + ``} */}
                     </Text>
                     <Text
                       style={{
@@ -323,7 +320,11 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 <TouchableOpacity
                   style={styles.viewMap}
                   onPress={() =>
-                    openGps(position.latitude, position.longitude)
+                    openGps(
+                      position.latitude,
+                      position.longitude,
+                      data.farmerPlot.plotName,
+                    )
                   }>
                   <Image
                     source={icons.direction}
