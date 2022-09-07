@@ -84,7 +84,7 @@ export class Register{
       firstname : firstname,
       lastname : lastname,
       telephoneNo : telephoneNo,
-      status: "OPEN",
+      status: "PENDING",
       address : {
         address1 : address1,
         address2 : "",
@@ -111,7 +111,7 @@ export class Register{
     return registerClient.post(BASE_URL + `/auth/droner/register`,{
       id : droner_id,
       dronerDrone : dronerDrone,
-      status: "OPEN",
+      status: "PENDING",
       
     }).then(async(response) => {
       const index = response.data.dronerDrone.length;
@@ -159,7 +159,7 @@ export class Register{
     const droner_id = await AsyncStorage.getItem('droner_id')
     return registerClient.post(BASE_URL + `/auth/droner/register`,{
       id : droner_id,
-      status: "ACTIVE",
+      status: "PENDING",
     }).then(response => {
       return response.data;
     })
@@ -175,7 +175,7 @@ export class Register{
     const droner_id = await AsyncStorage.getItem('droner_id')
     return registerClient.post(BASE_URL + `/auth/droner/register`,{
       id : droner_id,
-      status: "ACTIVE",
+      status: "PENDING",
       telephoneNo : telephoneNo,
       idNo : idNo
     }).then(response => {
