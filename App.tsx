@@ -6,16 +6,10 @@ import { navigationRef } from './src/navigations/RootNavigation';
 import SplashScreen from 'react-native-splash-screen'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
-import AddIDcardScreen from './src/screens/RegisterScreen/AddIDcardScreen';
 
 
 const App = () => {
-  const droner_id = async () =>{
-    const dronerid = await AsyncStorage.getItem('droner_id')
-    console.log(dronerid)
-  }
   useEffect(()=>{
-    droner_id()
     SplashScreen.hide();
   },[])
   return (

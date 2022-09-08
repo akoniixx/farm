@@ -30,9 +30,6 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
-        style={{
-          
-        }}
         title="ลงทะเบียนนักบินโดรน"
         showBackBtn
         onPressBack={() => navigation.goBack()}
