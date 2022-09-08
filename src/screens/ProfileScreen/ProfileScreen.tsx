@@ -21,7 +21,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
             screen: 'HomeScreen',
           });
         }}>
-        <Text>Logout</Text>
+        <Text style={{color : colors.fontBlack}}>Logout</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
