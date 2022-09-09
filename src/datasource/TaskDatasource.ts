@@ -11,8 +11,7 @@ export class Authentication {
             refCode : telNumber
           }).then(res=>{
             return res.data;
-          }).catch(err=>
-            console.log(err)
+          }).catch(err=> {throw err}
           )
     }
     static async generateOtpRegister(
@@ -69,7 +68,7 @@ export class Register{
       console.log(error);
     });
   }
-  static registerStep2(
+  static async registerStep2(
     firstname : string,
     lastname : string,
     telephoneNo : string,
@@ -80,28 +79,56 @@ export class Register{
     subdistrictId : string,
     postcode : string
   ): Promise<any> {
-    return registerClient.post(BASE_URL + `/auth/droner/register`,{
-      firstname : firstname,
-      lastname : lastname,
-      telephoneNo : telephoneNo,
-      status: "PENDING",
-      address : {
-        address1 : address1,
-        address2 : "",
-        address3 : "",
-        provinceId : provinceId,
-        districtId : districtId,
-        subdistrictId : subdistrictId,
-        postcode : postcode,
-      }
-    }).then(async(response) => {
-      const droner_id = response.data.id;
-      await AsyncStorage.setItem('droner_id',droner_id)
-      return response.data;
-    })
-    .catch(error => {
-      console.log(error);
-    });
+    const droner_id = await AsyncStorage.getItem('droner_id')
+    if(!droner_id){
+      return registerClient.post(BASE_URL + `/auth/droner/register`,{
+        firstname : firstname,
+        lastname : lastname,
+        telephoneNo : telephoneNo,
+        status: "PENDING",
+        address : {
+          address1 : address1,
+          address2 : "",
+          address3 : "",
+          provinceId : provinceId,
+          districtId : districtId,
+          subdistrictId : subdistrictId,
+          postcode : postcode,
+        }
+      }).then(async(response) => {
+        const droner_id = response.data.id;
+        await AsyncStorage.setItem('droner_id',droner_id)
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+    else{
+      return registerClient.post(BASE_URL + `/auth/droner/register`,{
+        id : droner_id,
+        firstname : firstname,
+        lastname : lastname,
+        telephoneNo : telephoneNo,
+        status: "PENDING",
+        address : {
+          address1 : address1,
+          address2 : "",
+          address3 : "",
+          provinceId : provinceId,
+          districtId : districtId,
+          subdistrictId : subdistrictId,
+          postcode : postcode,
+        }
+      }).then(async(response) => {
+        const droner_id = response.data.id;
+        await AsyncStorage.setItem('droner_id',droner_id)
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
   }
 
   static async uploadDronerdrone(

@@ -315,19 +315,6 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
     // sheetRef.current.snapTo(1)
   }
 
-  const uploadDroneLicense = ()=>{
-    Register.uploadDroneLicense(image2).then(res => console.log(res)).catch(
-      err => console.log(err)
-    )
-  }
-
-  const uploadDronerLicense = ()=>{
-    Register.uploadDronerLicense(image1).then(res => console.log(res)).catch(
-      err => console.log(err)
-    )
-  }
-
-
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -421,6 +408,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 <TextInput placeholder='พืชอื่นๆ'
                  placeholderTextColor={colors.disable}
                  style={{
+                  width : '100%',
                   color : colors.fontBlack
                 }} onChangeText={(value)=> setAddPlant(value)}/>
                 {
@@ -695,7 +683,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                       </Text>
                       <View></View>
                     </View>
-                    <Text style={[styles.h2, {paddingTop : 12}]}>อัพโหลดใบอณุญาตินักบิน</Text>
+                    <Text style={[styles.h2, {paddingTop : 12}]}>อัพโหลดใบอนุญาตนักบิน</Text>
                       <View style={{
                         display : 'flex',
                         flexDirection : 'row',
@@ -762,7 +750,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                           marginVertical : 10
                         }}
                       />
-                      <Text style={[styles.h2, {paddingTop : 12}]}>อัพโหลดใบอณุญาติโดรนจาก กสทช.</Text>
+                      <Text style={[styles.h2, {paddingTop : 12}]}>อัพโหลดใบอนุญาตโดรนจาก กสทช.</Text>
                         <View style={{
                           display : 'flex',
                           flexDirection : 'row',

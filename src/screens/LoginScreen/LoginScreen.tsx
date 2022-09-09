@@ -29,18 +29,21 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
   const login = () => {
     Authentication.generateOtp(value)
       .then(result => {
-        const telNumber = value;
-        setValue('')
-        navigation.navigate('OtpScreen', {
-          telNumber: telNumber,
-          token: result.result.token,
-          refCode: result.result.refCode,
-          isRegisterScreen: false,
-        });
+          const telNumber = value;
+          setValue('')
+          navigation.navigate('OtpScreen', {
+            telNumber: telNumber,
+            token: result.result.token,
+            refCode: result.result.refCode,
+            isRegisterScreen: false,
+          });
       })
       .catch(err => {
         if (err.response.data.statusCode === 409) {
           setErrMessage('เบอร์นี้ถูกลงทะเบียนเรียบร้อยแล้ว');
+        }
+        else if(err.response.data.statusCode === 400){
+          setErrMessage('ไม่พบเบอร์โทรนี้ในระบบโปรดลงทะเบียนอีกครั้ง')
         }
       });
   };

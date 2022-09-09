@@ -18,10 +18,22 @@ import {ProgressBar} from '../../components/ProgressBar';
 import {Avatar} from '@rneui/themed';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { QueryLocation } from '../../datasource/LocationDatasource';
-import { initialFormRegisterState, registerReducer } from '../../hooks/registerfield';
+import { registerReducer } from '../../hooks/registerfield';
 import { Register } from '../../datasource/TaskDatasource';
 
-const SecondFormScreen: React.FC<any> = ({navigation}) => {
+const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
+  const initialFormRegisterState = {
+    name : "",
+    surname : "",
+    tel : route.params.tele,
+    no : "",
+    address : "",
+    province : "",
+    district : "",
+    subdistrict : "",
+    postal : ""
+}
+  const tele = route.params.tele
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
@@ -126,16 +138,9 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
               placeholderTextColor={colors.disable}
             />
             <TextInput
-              onChangeText={(value)=>{
-                dispatch({
-                  type : "Handle Input",
-                  field : "tel",
-                  payload : value
-                })
-              }}
-              value={formState.tel}
-              style={styles.input}
-              editable={true}
+              value={tele}
+              style={[styles.input,{backgroundColor : colors.disable}]}
+              editable={false}
               placeholder={'เบอร์โทรศัพท์'}
               placeholderTextColor={colors.disable}
             />
