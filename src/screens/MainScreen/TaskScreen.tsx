@@ -27,6 +27,7 @@ import {colors, image, icons} from '../../assets';
 import fonts from '../../assets/fonts';
 import {CallingModal} from '../../components/Modal/CallingModal';
 import Tasklist from '../../components/TaskList/Tasklist';
+
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
 import {stylesCentral} from '../../styles/StylesCentral';
@@ -113,7 +114,7 @@ const TaskScreen: React.FC = () => {
           setLoading(true);
           setPage(page + 1);
         }}
-        keyExtractor={element => element.item.id}
+        keyExtractor={element => element.item.taskNo}
         data={data}
         extraData={data}
         renderItem={({item}: any) => (

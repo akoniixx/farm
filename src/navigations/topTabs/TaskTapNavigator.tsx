@@ -22,9 +22,6 @@ const renderTabBar = (props:any) => (
   />
 );
 
-
-
-
 const renderScene = SceneMap({
   task: TaskScreen,
   newTask: NewTaskScreen,

@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
-import { icons } from '../assets'
+import { colors, icons } from '../assets'
 import Icon from 'react-native-vector-icons/AntDesign';
 import { normalize } from '@rneui/themed';
 
@@ -34,9 +34,6 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
       <View style={!onError ? styles.flagBorder : styles.flagBorderError}>
       <Image source={icons.th} />
       </View>
-        
-        
-       
         <TextInput
           style={styles.numberText}
           keyboardType="number-pad"
@@ -117,7 +114,8 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     fontSize: 16,
     flex: 1,
-    width:'100%'
+    width:'100%',
+    color : colors.fontBlack
   },
   textError: {
     color: '#EB2C21',

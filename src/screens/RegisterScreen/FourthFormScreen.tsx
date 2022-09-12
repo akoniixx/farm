@@ -6,6 +6,7 @@ import { normalize } from '@rneui/themed';
 import { colors, font, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
 import { ProgressBar } from '../../components/ProgressBar';
+import { Register } from '../../datasource/TaskDatasource';
 
 const width = Dimensions.get('window').width;
 
@@ -44,7 +45,9 @@ const FourthFormScreen: React.FC<any>  = ({route,navigation})=>{
               <MainButton label='ถัดไป' color={colors.orange} onPress={()=>{
                 navigation.navigate("AddIDCardScreen",{tele : telNo.tele})
               }}/>
-              <MainButton label='ข้ามขั้นตอนนี้' color={colors.white} fontColor={colors.fontBlack}/>
+              <MainButton label='ข้ามขั้นตอนนี้' color={colors.white} fontColor={colors.fontBlack} onPress={()=>{
+                Register.registerSkipStep4().then((res)=> navigation.navigate("SuccessScreen")).catch(err => console.log(err))
+              }}/>
             </View>
         </View>
     </SafeAreaView>

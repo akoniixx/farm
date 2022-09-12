@@ -18,10 +18,23 @@ import {ProgressBar} from '../../components/ProgressBar';
 import {Avatar} from '@rneui/themed';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { QueryLocation } from '../../datasource/LocationDatasource';
-import { initialFormRegisterState, registerReducer } from '../../hooks/registerfield';
+import { registerReducer } from '../../hooks/registerfield';
 import { Register } from '../../datasource/TaskDatasource';
+import Geolocation from 'react-native-geolocation-service';
 
-const SecondFormScreen: React.FC<any> = ({navigation}) => {
+const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
+  const initialFormRegisterState = {
+    name : "",
+    surname : "",
+    tel : route.params.tele,
+    no : "",
+    address : "",
+    province : "",
+    district : "",
+    subdistrict : "",
+    postal : ""
+}
+  const tele = route.params.tele
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
@@ -109,6 +122,7 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
               style={styles.input}
               editable={true}
               placeholder={'ชื่อ'}
+              placeholderTextColor={colors.disable}
             />
             <TextInput
               onChangeText={(value)=>{
@@ -122,19 +136,14 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
               style={styles.input}
               editable={true}
               placeholder={'นามสกุล'}
+              placeholderTextColor={colors.disable}
             />
             <TextInput
-              onChangeText={(value)=>{
-                dispatch({
-                  type : "Handle Input",
-                  field : "tel",
-                  payload : value
-                })
-              }}
-              value={formState.tel}
-              style={styles.input}
-              editable={true}
+              value={tele}
+              style={[styles.input,{backgroundColor : colors.disable}]}
+              editable={false}
               placeholder={'เบอร์โทรศัพท์'}
+              placeholderTextColor={colors.disable}
             />
             <View style={{marginTop: normalize(40)}}>
               <Text style={styles.h1}>ที่อยู่</Text>
@@ -151,6 +160,7 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
               style={styles.input}
               editable={true}
               placeholder={'บ้านเลขที่'}
+              placeholderTextColor={colors.disable}
             />
             <TextInput
               onChangeText={(value)=>{
@@ -164,8 +174,13 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
               style={styles.input}
               editable={true}
               placeholder={'รายละเอียดที่อยู่ (หมู่, ถนน)'}
+              placeholderTextColor={colors.disable}
             />
               <DropDownPicker
+                listMode='SCROLLVIEW'
+                scrollViewProps={{
+                  nestedScrollEnabled : true
+                }}
                 zIndex={3000}
                 zIndexInverse={1000}
                 style={{
@@ -196,6 +211,10 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
                 }}
               />
               <DropDownPicker
+                listMode='SCROLLVIEW'
+                scrollViewProps={{
+                  nestedScrollEnabled : true
+                }}
                 zIndex={2000}
                 zIndexInverse={2000}
                 disabled={(!province)?true:false}
@@ -227,6 +246,10 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
                 }}
               />
               <DropDownPicker
+                listMode='SCROLLVIEW'
+                scrollViewProps={{
+                  nestedScrollEnabled : true
+                }}
                 zIndex={1000}
                 zIndexInverse={3000}
                 disabled={(!district)?true:false}
@@ -274,17 +297,38 @@ const SecondFormScreen: React.FC<any> = ({navigation}) => {
         <View style={{backgroundColor: colors.white}}>
           <MainButton
             label="ถัดไป"
+            disable={(
+              !formState.name || 
+              !formState.surname ||
+              !formState.tel ||
+              !formState.no || 
+              !formState.address ||
+              !formState.province.value ||
+              !formState.district.value ||
+              !formState.subdistrict.value ||
+              !formState.postal)?true : false
+            }
             color={colors.orange}
             onPress={() => {
-              Register.registerStep2(formState.name,formState.surname,formState.tel,
+              Register.registerStep2(
+                formState.name,
+                formState.surname,
+                formState.tel,
                 formState.no,
                 formState.address,
                 formState.province.value,
                 formState.district.value,
                 formState.subdistrict.value,
                 formState.postal).then((res)=>{
-                  console.log(res);
-                  navigation.navigate('ThirdFormScreen',{tele : formState.tel});
+                  Geolocation.getCurrentPosition(
+                    (position) => {
+                      navigation.navigate('ThirdFormScreen',{tele : formState.tel,latitude : position.coords.latitude,longitude : position.coords.longitude});
+                    },
+                    (error) => {
+                      console.log(error.code, error.message);
+                    },
+                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                );
                 }).catch(err => console.log(err))
             }}
           />
@@ -327,5 +371,6 @@ const styles = StyleSheet.create({
     borderColor: colors.disable,
     borderWidth: 1,
     borderRadius: normalize(10),
+    color : colors.fontBlack
   },
 });

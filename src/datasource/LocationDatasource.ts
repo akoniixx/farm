@@ -30,7 +30,7 @@ export class QueryLocation {
     return registerClient
       .get(
         BASE_URL +
-          `/location/sub-district?districtId=${districtId}&search=${districtName}`,
+          `/location/sub-district?districtId=${districtId}`,
       )
       .then(res => {
         return res.data;

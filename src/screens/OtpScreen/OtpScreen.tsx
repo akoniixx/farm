@@ -9,7 +9,7 @@ import {
   Platform,
   Button,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font} from '../../assets';
@@ -25,8 +25,13 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Authentication } from '../../datasource/TaskDatasource';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const CELL_COUNT = 6;
+
+interface propsOTP{
+  toggle: boolean
+}
 
 interface props {
   index: number;
@@ -38,10 +43,21 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
   const [value, setValue] = useState<string>('');
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
   const [isError, setIsError] = useState(false);
+  const [otpCalling,setOtpCalling] = useState(false)
+  const [tokenOtp,setTokenOtp] = useState(route.params.token)
+  const [codeRef,setCodeRef] = useState(route.params.refCode)
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
+  const [errOTP, setErrOTP] = useState(false);
+  const newTokenOtp = useCallback((value : any)=>{
+    setTokenOtp(value)
+  },[tokenOtp])
+
+  const newCodeRef = useCallback((value : any)=>{
+    setCodeRef(value)
+  },[codeRef])
 
   const renderCell: React.FC<props> = ({index, symbol, isFocused}) => {
     return (
@@ -49,7 +65,9 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
         key={index}
         style={[
           !isError ? styles.cell : styles.cellError,
-          isFocused || symbol ? styles.focusCell : null,
+          isFocused || symbol ? styles.focusCell : null,{
+            color : colors.fontBlack
+          }
         ]}
         onLayout={getCellOnLayoutHandler(index)}>
         {symbol || (isFocused ? <Cursor /> : null)}
@@ -62,13 +80,16 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
       setValue(value);
       if (value.length >= CELL_COUNT) {
         try {
-          Authentication.login(route.params.telNumber,value,route.params.token,route.params.refCode).then(async(result)=>{
+          Authentication.login(route.params.telNumber,value,tokenOtp,codeRef).then(async(result)=>{
+            setErrOTP(false)
             await AsyncStorage.setItem('token_register',result.accessToken);
-            navigation.navigate('FirstFormScreen');
+            navigation.navigate('FirstFormScreen',{tele : route.params.telNumber});
           }).catch((err)=>{
+            setErrOTP(true)
             console.log(err)
           })
         } catch (e) {
+          setErrOTP(true)
           console.log(e, 'AsyncStorage.setItem');
         }
       }
@@ -77,19 +98,21 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
       setValue(value);
       if (value.length >= CELL_COUNT) {
         try {
-          Authentication.login(route.params.telNumber,value,route.params.token,route.params.refCode).then(async(result)=>{
+          Authentication.login(route.params.telNumber,value,tokenOtp,codeRef).then(async(result)=>{
+            setErrOTP(false)
             await AsyncStorage.setItem('token', result.accessToken);
             await AsyncStorage.setItem('droner_id', result.data.id);
             await navigation.navigate('Main');
           }).catch((err)=>{
+            setErrOTP(true)
             console.log(err)
           })
         } catch (e) {
+          setErrOTP(true)
           console.log(e, 'AsyncStorage.setItem');
         }
       }
     }
-    
   };
 
   return (
@@ -112,7 +135,7 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
                 </Text>
               </View>
               <Text style={[styles.text, {color: colors.gray}]}>
-                รหัสอ้างอิง OTP: {route.params.refCode}
+                รหัสอ้างอิง OTP: {codeRef}
               </Text>
             </View>
             <CodeField
@@ -125,12 +148,45 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
               textContentType="oneTimeCode"
               renderCell={renderCell}
             />
-            <View style={styles.headContainer}>
+            {
+              (errOTP)?<Text style={
+                styles.textError
+              }>
+                รหัส OTP ไม่ถูกต้องกรณุาลองอีกครั้ง
+              </Text>:<></>
+            }
+            <View style={styles.otpQuestion}>
               <View style={styles.rowDirection}>
                 <Text style={styles.text}>ไม่ได้รับรหัส OTP? </Text>
-                <Text style={[styles.text, {color: colors.orange}]}>
-                  ส่งอีกครั้ง
-                </Text>
+                <TouchableOpacity onPress={()=>{
+                  if(route.params.isRegisterScreen){
+                    Authentication.generateOtpRegister(route.params.telNumber).then(
+                      (res)=>{
+                        newTokenOtp(res.result.token)
+                        newCodeRef(res.result.refCode)
+                      }
+                    ).catch(err => console.log(err))
+                  }
+                  else{
+                    Authentication.generateOtp(route.params.telNumber).then(
+                      (res)=>{
+                        newTokenOtp(res.result.token)
+                        newCodeRef(res.result.refCode)
+                      }
+                    ).catch(err => console.log(err))
+                  }
+                  setOtpCalling(!otpCalling);
+                }}>
+                  <Text style={[styles.text, {color: colors.orange}]}>
+                    ส่งอีกครั้ง
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.timeCount}>
+              <View style={styles.rowDirection}>
+                <Text style={styles.text}>รหัส OTP จะหมดอายุภายใน </Text>
+                <OtpTimerCount toggle={otpCalling}/>
               </View>
             </View>
           </View>
@@ -168,9 +224,9 @@ const styles = StyleSheet.create({
   },
   textError: {
     color: '#EB2C21',
-    alignSelf: 'center',
+    fontFamily: font.medium,
     marginTop: 15,
-    fontSize: 12,
+    fontSize: 16,
   },
   inner: {
     flex: 1,
@@ -178,6 +234,14 @@ const styles = StyleSheet.create({
   },
   headContainer: {
     marginVertical: normalize(38),
+    alignItems: 'center',
+  },
+  otpQuestion:{
+    marginTop: normalize(38),
+    alignItems: 'center',
+  },
+  timeCount : {
+    marginTop: normalize(12),
     alignItems: 'center',
   },
   text: {
@@ -191,3 +255,28 @@ const styles = StyleSheet.create({
     marginVertical: normalize(10),
   },
 });
+
+const OtpTimerCount: React.FC<propsOTP> = ({toggle}) => {
+  const [otpTimeOut,setOTPtimeout] = useState(300);
+  const [time,setTime] = useState("05:00")
+  useEffect(()=>{
+    setOTPtimeout(300)
+    setTime("05:00")
+  },[toggle])
+  useEffect(()=>{
+    let timer = setInterval(()=>{
+      if(otpTimeOut === 0){
+
+      }
+      else{
+        let second = otpTimeOut-1;
+        setOTPtimeout(second)
+        setTime(`0${parseInt((second/60).toString())}:${(second%60 < 10)? '0'+second%60:second%60}`)
+      }
+    },1000)
+    return ()=> clearInterval(timer)
+  })
+  return (
+      <Text>{time}</Text>
+  )
+}

@@ -42,7 +42,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
         <View style={{flex: 2}}>
           <View style={styles.headCard}>
             <View>
-              <Text style={{fontFamily: font.bold, fontSize: normalize(24)}}>
+              <Text style={{fontFamily: font.bold, fontSize: normalize(24),color : colors.fontBlack}}>
                 สวัสดี, {profile.name}
               </Text>
               <View style={styles.activeContainer}>
@@ -59,7 +59,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 onPress={() => {
                   navigation.navigate('ProfileScreen');
                 }}>
-                <Text>menu</Text>
+                <Text style={{color : colors.fontBlack}}>menu</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     fontFamily: font.medium,
     fontSize: normalize(14),
     marginLeft: normalize(18),
+    color : colors.fontBlack
   },
   font: {
     fontFamily: font.medium,

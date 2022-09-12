@@ -11,6 +11,10 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
+  Modal,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -34,13 +38,14 @@ import DocumentPicker, { types } from 'react-native-document-picker';
 import { Register } from '../../datasource/TaskDatasource';
 import * as ImagePicker from 'react-native-image-picker';
 import { QueryLocation } from '../../datasource/LocationDatasource';
+import Lottie from 'lottie-react-native';
 
 const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const fall = new Animated.Value(1)
   const windowWidth = Dimensions.get('window').width;
   const [position, setPosition] = useState({
-    latitude: 0,
-    longitude: 0,
+    latitude: route.params.latitude,
+    longitude: route.params.longitude,
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
@@ -68,6 +73,10 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const [long,setlong] = useState<any>(null)
   const [image1,setImage1] = useState<any>(null)
   const [image2,setImage2] = useState<any>(null)
+  const [popupPage,setpopupPage] = useState(1)
+  const [loading,setLoading] = useState(false);
+  const [arrayFile1,setArrayFile1] = useState<any>([])
+  const [arrayFile2,setArrayFile2] = useState<any>([])
   
   useEffect(() => {
     getNameFormLat();
@@ -305,7 +314,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
     setBrand(null)
     setBrandType(null)
     setdroneno(null)
-    sheetRef.current.snapTo(1)
+    setpopupPage(2)
   }
 
   return (
@@ -398,7 +407,14 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 ))}
               </View>
               <View style={styles.input}>
-                <TextInput placeholder='พืชอื่นๆ' onChangeText={(value)=> setAddPlant(value)}/>
+                <TextInput placeholder='พืชอื่นๆ'
+                 placeholderTextColor={colors.disable}
+                 style={{
+                  display : 'flex',
+                  alignItems : 'center',
+                  width : (addPlant.length != 0)?'80%':'100%',
+                  color : colors.fontBlack
+                }} onChangeText={(value)=> setAddPlant(value)}/>
                 {
                   (addPlant.length != 0)?
                   <TouchableOpacity style={{ 
@@ -492,7 +508,8 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
             </ScrollView>
           </View>
           <View style={{backgroundColor: colors.white}}>
-            <MainButton label="ถัดไป" color={colors.orange} onPress={()=>{
+            <MainButton  disable={plantListSelect.every(item => item.active === false)} label="ถัดไป" color={colors.orange} onPress={()=>{
+              setLoading(true)
               let plant : string[] = [];
                plantListSelect.map((item) => {
                 if(item.active)
@@ -506,12 +523,34 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 districtId,
                 subdistrictId,
                 address,
-                dronedata,
                 plant,
                 lat,
                 long
               ).then((res)=>{
-                navigation.navigate('FourthFormScreen',{tele : telNo.tele});
+                Register.uploadDronerdrone(dronedata).then((res)=>{
+                  for(let i=0; i<res.dronerDrone.length;i++){
+                    if(arrayFile1[i]){
+                      console.log(res)
+                      Register.uploadDronerLicense(res.dronerDrone[i].id,arrayFile1[i]).then(
+                        (res) => {
+                        }
+                      ).catch(
+                        err => console.log(err)
+                      )
+                    }
+                    if(arrayFile2[i]){
+                      console.log(res)
+                       Register.uploadDroneLicense(res.dronerDrone[i].id,arrayFile2[i]).then(
+                         (res) => {
+                         }
+                       ).catch(
+                         err => console.log(err)
+                       )
+                    }
+                  }
+                  setLoading(false);
+                  navigation.navigate('FourthFormScreen',{tele : telNo.tele});
+                }).catch(err => console.log(err))
               }).catch(err => {
                 console.log(err)
               })
@@ -526,7 +565,8 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
           snapPoints={[750,0]}
           borderRadius={8}
           renderHeader={()=>(<></>)}
-          renderContent={()=>(<View
+          renderContent={()=>(
+          <View
             style={{
               backgroundColor: 'white',
               paddingVertical: 30,
@@ -535,246 +575,341 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
               height: 750,
             }}
           >
-            <View style={{
+            <View style={[stylesCentral.container,{
               flex : 1,
               display : 'flex',
               flexDirection : 'column',
               justifyContent : 'space-between'
-            }}>
-              <View>
-                <View style={{
-                padding : 8,
-                display : 'flex',
-                flexDirection : 'row',
-                justifyContent : 'space-between',
-                alignItems : 'center'
-              }}>
-                <TouchableOpacity onPress={()=>{
-                  sheetRef.current.snapTo(1)
+            }]}>
+              {
+                (popupPage == 1)?
+                (<View style={{
+                  flex : 1,
+                  justifyContent: 'space-between',
                 }}>
-                   <Image source={icons.close} style={{
-                    width : normalize(14),
-                    height : normalize(14)
-                   }}/>
-                </TouchableOpacity>
-                <Text style={styles.hSheet}>
-                  เพิ่มโดรน
-                </Text>
-                <View></View>
-              </View>
-              <View style={{
-                paddingHorizontal : 8,
-                paddingVertical : 16
-              }}>
+                  <ScrollView>
                   <View style={{
-                    display : 'flex',
-                    flexDirection : 'row'
-                  }}>
-                    <Text style={styles.h2}>
-                      ยี่ห้อโดรนฉีดพ่น
-                    </Text>
-                    <Text style={[styles.h2,{color : colors.gray,paddingLeft : 4}]}>
-                       (กรุณาเพิ่มอย่างน้อย 1 รุ่น)
-                    </Text>
-                  </View>
+                      padding: 8,
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
+                    }}>
+                      <TouchableOpacity onPress={() => {
+                        sheetRef.current.snapTo(1);
+                      } }>
+                        <Image source={icons.close} style={{
+                          width: normalize(14),
+                          height: normalize(14)
+                        }} />
+                      </TouchableOpacity>
+                      <Text style={styles.hSheet}>
+                        เพิ่มโดรน
+                      </Text>
+                      <View></View>
+                    </View>
+                    <View style={{
+                      paddingHorizontal: 8,
+                      paddingVertical: 16
+                    }}>
+                      <View style={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                      }}>
+                        <Text style={styles.h2}>
+                          ยี่ห้อโดรนฉีดพ่น
+                        </Text>
+                        <Text style={[styles.h2, { color: colors.gray, paddingLeft: 4 }]}>
+                          (กรุณาเพิ่มอย่างน้อย 1 รุ่น)
+                        </Text>
+                      </View>
+                      <View style={{
+                        paddingTop: 12
+                      }}>
+                        <DropDownPicker
+                          zIndex={3000}
+                          zIndexInverse={1000}
+                          style={{
+                            marginVertical: 10,
+                            backgroundColor: colors.white,
+                            borderColor: colors.gray,
+                          }}
+                          placeholder="เลือกยี่ห้อโดรน"
+                          placeholderStyle={{
+                            color: colors.gray,
+                          }}
+                          open={open}
+                          value={value}
+                          items={items}
+                          setOpen={setOpen}
+                          onSelectItem={(value) => {
+                            setBrand(value);
+                          } }
+                          setValue={setValue}
+                          dropDownDirection="BOTTOM"
+                          dropDownContainerStyle={{
+                            borderColor: colors.disable,
+                          }} />
+                        <DropDownPicker
+                          zIndex={2000}
+                          zIndexInverse={2000}
+                          style={{
+                            marginVertical: 10,
+                            backgroundColor: colors.white,
+                            borderColor: colors.gray,
+                          }}
+                          placeholder="รุ่น"
+                          placeholderStyle={{
+                            color: colors.gray,
+                          }}
+                          open={opentype}
+                          value={valuetype}
+                          items={itemstype}
+                          setOpen={setOpentype}
+                          onSelectItem={(value) => {
+                            setBrandType(value);
+                          } }
+                          setValue={setValuetype}
+                          dropDownDirection="BOTTOM"
+                          dropDownContainerStyle={{
+                            borderColor: colors.disable,
+                          }} />
+                        <TextInput
+                          placeholderTextColor={colors.gray}
+                          onChangeText={(value) => {
+                            setdroneno(value);
+                          } }
+                          value={droneno}
+                          style={styles.input}
+                          editable={true}
+                          placeholder={'เลขตัวถังโดรน'} />
+                      </View>
+                    </View>
+                  </ScrollView>
+                  <MainButton disable={(!brand || !brandtype || !droneno) ? true : false} label='ถัดไป' color={colors.orange} onPress={addDrone} />
+                  </View>):
+                  (
                   <View style={{
-                    paddingTop : 12
-                  }}>
-                  <DropDownPicker
-                    zIndex={3000}
-                    zIndexInverse={1000}
-                    style={{
-                      marginVertical : 10,
-                      backgroundColor : colors.white,
-                      borderColor: colors.gray,
-                    }}
-                    placeholder="เลือกยี่ห้อโดรน"
-                    placeholderStyle={{
-                      color: colors.gray,
-                    }}
-                    open={open}
-                    value={value}
-                    items={items}
-                    setOpen={setOpen}
-                    onSelectItem={(value)=>{
-                      setBrand(value);
-                    }}
-                    setValue={setValue}
-                    dropDownDirection="BOTTOM"
-                    dropDownContainerStyle={{
-                      borderColor: colors.disable,
-                    }}
-                  />
-                  <DropDownPicker
-                    zIndex={2000}
-                    zIndexInverse={2000}
-                    style={{
-                      marginVertical : 10,
-                      backgroundColor : colors.white,
-                      borderColor: colors.gray,
-                    }}
-                    placeholder="รุ่น"
-                    placeholderStyle={{
-                      color: colors.gray,
-                    }}
-                    open={opentype}
-                    value={valuetype}
-                    items={itemstype}
-                    setOpen={setOpentype}
-                    onSelectItem={(value)=>{
-                      setBrandType(value)
-                    }}
-                    setValue={setValuetype}
-                    dropDownDirection="BOTTOM"
-                    dropDownContainerStyle={{
-                      borderColor: colors.disable,
-                    }}
-                  />
-                  <TextInput
-                    placeholderTextColor={colors.gray}
-                    onChangeText={(value)=>{
-                      setdroneno(value)
-                    }}
-                    value={droneno}
-                    style={styles.input}
-                    editable={true}
-                    placeholder={'เลขตัวถังโดรน'}
-                  />
-                  <Text style={[styles.h2, {paddingTop : 12}]}>อัพโหลดใบอณุญาตินักบิน</Text>
-                  <View style={{
-                    display : 'flex',
-                    flexDirection : 'row',
-                    justifyContent : 'space-between',
-                    alignItems : 'center'
+                    flex : 1,
+                    display: 'flex',
+                    justifyContent: 'space-between',
                   }}>
                     <View>
+                    <View>
+                    <View style={{
+                      padding: 8,
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
+                    }}>
+                      <TouchableOpacity onPress={() => {
+                        sheetRef.current.snapTo(1);
+                      } }>
+                        <Image source={icons.close} style={{
+                          width: normalize(14),
+                          height: normalize(14)
+                        }} />
+                      </TouchableOpacity>
+                      <Text style={styles.hSheet}>
+                        เพิ่มเอกสาร
+                      </Text>
+                      <View></View>
+                    </View>
+                    <Text style={[styles.h2, {paddingTop : 12}]}>อัพโหลดใบอนุญาตนักบิน</Text>
                       <View style={{
                         display : 'flex',
                         flexDirection : 'row',
-                        alignItems : 'center',
-                        paddingVertical : 10
+                        justifyContent : 'space-between',
+                        alignItems : 'center'
                       }}>
-                        <Image source={icons.register} style={{
-                          width : normalize(12),
-                          height : normalize(15)
-                        }}/>
-                        <Text style={[styles.label,{paddingLeft : 4}]}>
-                            เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF
-                        </Text>
-                      </View>
-                      <View>
-                        {
-                          (image1 != null)?
+                        <View>
                           <View style={{
                             display : 'flex',
                             flexDirection : 'row',
                             alignItems : 'center',
-                            paddingVertical : 5,
-                            width : windowWidth*0.5,
+                            paddingVertical : 10
                           }}>
-                            <Text numberOfLines={1} style={[styles.label,{paddingLeft : 4,color : colors.orange}]}>
-                              {image1.assets[0].fileName}
+                            <Image source={icons.register} style={{
+                              width : normalize(12),
+                              height : normalize(15)
+                            }}/>
+                            <Text style={[styles.label,{paddingLeft : 4}]}>
+                                เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF
                             </Text>
-                            <TouchableOpacity onPress={()=>{
-                              setImage1(null)
-                            }}>
+                          </View>
+                          <View>
+                            {
+                              (image1 != null)?
                               <View style={{
-                                width : normalize(16),
-                                height : normalize(16),
-                                marginLeft : normalize(8),
-                                borderRadius : normalize(8),
-                                backgroundColor : colors.fontBlack,
                                 display : 'flex',
-                                justifyContent :'center',
-                                alignItems : 'center'
+                                flexDirection : 'row',
+                                alignItems : 'center',
+                                paddingVertical : 5,
+                                width : windowWidth*0.5,
                               }}>
-                                <Text style={{
-                                  fontSize : 10,
-                                  color : colors.white
-                                }}>x</Text>
-                              </View>
-                            </TouchableOpacity>
-                          </View>:<></>
-                        }
+                                <Text numberOfLines={1} style={[styles.label,{paddingLeft : 4,color : colors.orange}]}>
+                                  {image1.assets[0].fileName}
+                                </Text>
+                                <TouchableOpacity onPress={()=>{
+                                  setImage1(null)
+                                }}>
+                                  <View style={{
+                                    width : normalize(16),
+                                    height : normalize(16),
+                                    marginLeft : normalize(8),
+                                    borderRadius : normalize(8),
+                                    backgroundColor : colors.fontBlack,
+                                    display : 'flex',
+                                    justifyContent :'center',
+                                    alignItems : 'center'
+                                  }}>
+                                    <Text style={{
+                                      fontSize : 10,
+                                      color : colors.white
+                                    }}>x</Text>
+                                  </View>
+                                </TouchableOpacity>
+                              </View>:<></>
+                            }
+                          </View>
+                        </View>
+                        <MainButton fontSize={normalize(14)} label={(!image1)?"เพิ่มเอกสาร":"เปลี่ยน"} color={(!image1)?colors.orange:colors.gray} onPress={uploadFile1}/>
+                      </View>
+                      <View
+                        style={{
+                          borderBottomColor: colors.gray,
+                          borderBottomWidth: StyleSheet.hairlineWidth,
+                          marginVertical : 10
+                        }}
+                      />
+                      <Text style={[styles.h2, {paddingTop : 12}]}>อัพโหลดใบอนุญาตโดรนจาก กสทช.</Text>
+                        <View style={{
+                          display : 'flex',
+                          flexDirection : 'row',
+                          justifyContent : 'space-between',
+                          alignItems : 'center'
+                        }}>
+                          <View>
+                            <View style={{
+                            display : 'flex',
+                            flexDirection : 'row',
+                            alignItems : 'center',
+                            paddingVertical : 10
+                          }}>
+                              <Image source={icons.register} style={{
+                                width : normalize(12),
+                                height : normalize(15)
+                              }}/>
+                              <Text style={[styles.label,{paddingLeft : 4}]}>
+                                เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF
+                              </Text>
+                            </View>
+                            <View>
+                              {
+                                (image2 != null)?
+                                <View style={{
+                                  display : 'flex',
+                                  flexDirection : 'row',
+                                  alignItems : 'center',
+                                  paddingVertical : 5,
+                                  width : windowWidth*0.5,
+                                }}>
+                                  <Text numberOfLines={1} style={[styles.label,{paddingLeft : 4,color : colors.orange}]}>
+                                    {image2.assets[0].fileName}
+                                  </Text>
+                                  <TouchableOpacity onPress={()=>{
+                                    setImage2(null)
+                                  }}>
+                                    <View style={{
+                                      width : normalize(16),
+                                      height : normalize(16),
+                                      marginLeft : normalize(8),
+                                      borderRadius : normalize(8),
+                                      backgroundColor : colors.fontBlack,
+                                      display : 'flex',
+                                      justifyContent :'center',
+                                      alignItems : 'center'
+                                    }}>
+                                      <Text style={{
+                                        fontSize : 10,
+                                        color : colors.white
+                                      }}>x</Text>
+                                    </View>
+                                  </TouchableOpacity>
+                                </View>:<></>
+                              }
+                            </View>
+                          </View>
+                        <MainButton fontSize={normalize(14)} label={(!image2)?"เพิ่มเอกสาร":"เปลี่ยน"} color={(!image2)?colors.orange:colors.gray} onPress={uploadFile2}/>
                       </View>
                     </View>
-                    <MainButton fontSize={normalize(14)} label="เพิ่มเอกสาร" color={colors.orange} onPress={uploadFile1}/>
-                  </View>
-                  <View
-                    style={{
-                      borderBottomColor: colors.gray,
-                      borderBottomWidth: StyleSheet.hairlineWidth,
-                      marginVertical : 10
-                    }}
-                  />
-                  <Text style={[styles.h2, {paddingTop : 12}]}>อัพโหลดใบอณุญาติโดรนจาก กสทช.</Text>
-                  <View style={{
-                    display : 'flex',
-                    flexDirection : 'row',
-                    justifyContent : 'space-between',
-                    alignItems : 'center'
-                  }}>
+                    </View>
                     <View>
-                      <View style={{
-                      display : 'flex',
-                      flexDirection : 'row',
-                      alignItems : 'center',
-                      paddingVertical : 10
-                    }}>
-                        <Image source={icons.register} style={{
-                          width : normalize(12),
-                          height : normalize(15)
-                        }}/>
-                        <Text style={[styles.label,{paddingLeft : 4}]}>
-                          เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF
-                        </Text>
-                      </View>
-                      <View>
-                        {
-                          (image2 != null)?
-                          <View style={{
-                            display : 'flex',
-                            flexDirection : 'row',
-                            alignItems : 'center',
-                            paddingVertical : 5,
-                            width : windowWidth*0.5,
-                          }}>
-                            <Text numberOfLines={1} style={[styles.label,{paddingLeft : 4,color : colors.orange}]}>
-                              {image2.assets[0].fileName}
-                            </Text>
-                            <TouchableOpacity onPress={()=>{
-                              setImage2(null)
-                            }}>
-                              <View style={{
-                                width : normalize(16),
-                                height : normalize(16),
-                                marginLeft : normalize(8),
-                                borderRadius : normalize(8),
-                                backgroundColor : colors.fontBlack,
-                                display : 'flex',
-                                justifyContent :'center',
-                                alignItems : 'center'
-                              }}>
-                                <Text style={{
-                                  fontSize : 10,
-                                  color : colors.white
-                                }}>x</Text>
-                              </View>
-                            </TouchableOpacity>
-                          </View>:<></>
-                        }
-                      </View>
+                    <MainButton disable={(!image2)?true : false} label='ถัดไป' color={colors.orange} onPress={()=>{
+                          if(image1 == null && image2 != null){
+                            const arrayfile2 = [...arrayFile2];
+                            arrayFile2.push(image2)
+                            setArrayFile2(arrayFile2)
+                            setImage2(null)
+                            setBrand(null)
+                            setBrandType(null)
+                            setpopupPage(1)
+                            setValue(null)
+                            setValuetype(null)
+                            setdroneno(null);
+                            sheetRef.current.snapTo(1)
+                          }
+                          else if(image1 != null && image2 != null){
+                            const arrayfile1 = [...arrayFile1];
+                            arrayFile1.push(image1)
+                            setArrayFile1(arrayFile1)
+                            const arrayfile2 = [...arrayFile2];
+                            arrayFile2.push(image2)
+                            setImage1(null)
+                            setImage2(null)
+                            setArrayFile2(arrayFile2)
+                            setBrand(null)
+                            setBrandType(null)
+                            setpopupPage(1)
+                            setdroneno(null);
+                            setValue(null)
+                            setValuetype(null)
+                            sheetRef.current.snapTo(1)
+                          }
+                      }} />
                     </View>
-                    <MainButton fontSize={normalize(14)} label="เพิ่มเอกสาร" color={colors.orange} onPress={uploadFile2}/>
-                  </View>
-                  </View>
-              </View>
-              </View>
-              <MainButton disable={(!brand || !brandtype || !droneno)?true:false} label='ถัดไป' color={colors.orange} onPress={addDrone}/>
+                  </View>)
+              }
             </View>
           </View>)}
         />
       </View>
+      <Modal 
+            transparent={true}
+            visible={loading}>
+                <View style={{
+                    flex : 1,
+                    backgroundColor : 'rgba(0,0,0,0.5)',
+                    justifyContent : 'center',
+                    alignItems : 'center'
+                }}>
+                    <View style={{
+                        backgroundColor : colors.white,
+                        width : normalize(50),
+                        height : normalize(50),
+                        display : 'flex',
+                        justifyContent : 'center',
+                        alignItems : 'center',
+                        borderRadius : normalize(8)
+                    }}>
+                        <Lottie source={image.loading} autoPlay loop style={{
+                            width : normalize(50),
+                            height : normalize(50)
+                        }}/>
+                    </View>
+                </View>
+            </Modal>
     </SafeAreaView>
   );
 };
@@ -845,6 +980,7 @@ const styles = StyleSheet.create({
     borderColor: colors.gray,
     borderWidth: 1,
     borderRadius: normalize(10),
+    color : colors.fontBlack
   }
 });
 function useCallback(arg0: () => Promise<void>, arg1: { onboard1: any; onboard2: any; onboard3: any; blankNewTask: any; blankTask: any; idcard: any; pirotcer: any; dronecer: any; marker: any; map: any; }[]) {

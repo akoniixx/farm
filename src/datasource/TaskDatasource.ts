@@ -11,8 +11,7 @@ export class Authentication {
             refCode : telNumber
           }).then(res=>{
             return res.data;
-          }).catch(err=>
-            console.log(err)
+          }).catch(err=> {throw err}
           )
     }
     static async generateOtpRegister(
@@ -69,34 +68,79 @@ export class Register{
       console.log(error);
     });
   }
-  static registerStep2(
+  static async registerStep2(
     firstname : string,
     lastname : string,
     telephoneNo : string,
-    id : string,
     address1 : string,
+    address2 : string,
     provinceId : string,
     districtId : string,
     subdistrictId : string,
     postcode : string
   ): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id')
+    if(!droner_id){
+      return registerClient.post(BASE_URL + `/auth/droner/register`,{
+        firstname : firstname,
+        lastname : lastname,
+        telephoneNo : telephoneNo,
+        status: "PENDING",
+        address : {
+          address1 : address1,
+          address2 : address2,
+          address3 : "",
+          provinceId : provinceId,
+          districtId : districtId,
+          subdistrictId : subdistrictId,
+          postcode : postcode,
+        }
+      }).then(async(response) => {
+        const droner_id = response.data.id;
+        await AsyncStorage.setItem('droner_id',droner_id)
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+    else{
+      return registerClient.post(BASE_URL + `/auth/droner/register`,{
+        id : droner_id,
+        firstname : firstname,
+        lastname : lastname,
+        telephoneNo : telephoneNo,
+        status: "PENDING",
+        address : {
+          address1 : address1,
+          address2 : address2,
+          address3 : "",
+          provinceId : provinceId,
+          districtId : districtId,
+          subdistrictId : subdistrictId,
+          postcode : postcode,
+        }
+      }).then(async(response) => {
+        const droner_id = response.data.id;
+        await AsyncStorage.setItem('droner_id',droner_id)
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  }
+
+  static async uploadDronerdrone(
+    dronerDrone : any
+  ):Promise<any>{
+    const droner_id = await AsyncStorage.getItem('droner_id')
     return registerClient.post(BASE_URL + `/auth/droner/register`,{
-      firstname : firstname,
-      lastname : lastname,
-      telephoneNo : telephoneNo,
-      status: "OPEN",
-      address : {
-        address1 : address1,
-        address2 : "",
-        address3 : "",
-        provinceId : provinceId,
-        districtId : districtId,
-        subdistrictId : subdistrictId,
-        postcode : postcode,
-      }
+      id : droner_id,
+      dronerDrone : dronerDrone,
+      status: "PENDING",
+      
     }).then(async(response) => {
-      const droner_id = response.data.id;
-      await AsyncStorage.setItem('droner_id',droner_id)
       return response.data;
     })
     .catch(error => {
@@ -110,7 +154,6 @@ export class Register{
     districtId : number,
     subdistrictId: number,
     locationName : string,
-    dronerDrone : any,
     expPlant : string[],
     lat : string,
     long : string,
@@ -121,7 +164,6 @@ export class Register{
       status: "PENDING",
       telephoneNo : telephoneNo,
       expPlant : expPlant,
-      dronerDrone : dronerDrone,
       dronerArea : {
         lat : lat,
         long : long,
@@ -137,6 +179,19 @@ export class Register{
       console.log(error);
     });
   }
+  static async registerSkipStep4(
+  ): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id')
+    return registerClient.post(BASE_URL + `/auth/droner/register`,{
+      id : droner_id,
+      status: "PENDING",
+    }).then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
 
   static async registerStep4(
     telephoneNo : string,
@@ -145,7 +200,7 @@ export class Register{
     const droner_id = await AsyncStorage.getItem('droner_id')
     return registerClient.post(BASE_URL + `/auth/droner/register`,{
       id : droner_id,
-      status: "ACTIVE",
+      status: "PENDING",
       telephoneNo : telephoneNo,
       idNo : idNo
     }).then(response => {
@@ -157,16 +212,16 @@ export class Register{
   }
 
   static async uploadDronerLicense(
+    drone_id : any,
     file : any
   ): Promise<any> {
-    const droner_id = await AsyncStorage.getItem('droner_id')
     const data = new FormData();
     data.append('file',{
       uri : file.assets[0].uri,
       name : file.assets[0].fileName,
       type : file.assets[0].type
     })
-    data.append('resourceId',droner_id)
+    data.append('resourceId',drone_id)
     data.append('resource',"DRONER_DRONE")
     data.append('category',"DRONER_LICENSE");
     console.log(data)
@@ -178,16 +233,16 @@ export class Register{
     });
   }
   static async uploadDroneLicense(
+    drone_id : any,
     file : any
   ): Promise<any> {
-    const droner_id = await AsyncStorage.getItem('droner_id')
     const data = new FormData();
     data.append('file',{
       uri : file.assets[0].uri,
       name : file.assets[0].fileName,
       type : file.assets[0].type
     })
-    data.append('resourceId',droner_id)
+    data.append('resourceId',drone_id)
     data.append('resource',"DRONER_DRONE")
     data.append('category',"DRONE_LICENSE");
     return uploadFileClient.post(BASE_URL + '/file/upload', data).then(response => {

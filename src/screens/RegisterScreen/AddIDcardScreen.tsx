@@ -20,6 +20,7 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
   const [image,setImage] = useState<any>(null)
   const [idcard,setIdCard] = useState<any>("")
   const [openModal,setOpenModal] = useState(false);
+  const [loading,setLoading] = useState(false);
   const onAddImage = useCallback(async()=>{
     const result = await ImagePicker.launchImageLibrary({
         mediaType : 'photo',
@@ -131,13 +132,15 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
                         ในการสมัครอาจทำให้ใช้งานระบบได้เพียงบางส่วน?
                         </Text>
                         <MainButton label='ถัดไป' color={colors.orange} onPress={()=>{
+                            setOpenModal(false);
+                            setLoading(true);
                             Register.registerStep4(
                                 telNo.tele,
                                 idcard
                             ).then(res=>{
                                 Register.uploadDronerIDCard(image).then(
                                     (res)=>{
-                                        setOpenModal(false);
+                                        setLoading(false)
                                         navigation.navigate('SuccessScreen')
                                     }
                                 ).catch(err => console.log(err))
@@ -146,6 +149,31 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
                         }}/>
                         <MainButton label='ย้อนกลับ' fontColor={colors.fontBlack} color={colors.white} onPress={()=>{
                             setOpenModal(false)
+                        }}/>
+                    </View>
+                </View>
+            </Modal>
+            <Modal 
+            transparent={true}
+            visible={loading}>
+                <View style={{
+                    flex : 1,
+                    backgroundColor : 'rgba(0,0,0,0.5)',
+                    justifyContent : 'center',
+                    alignItems : 'center'
+                }}>
+                    <View style={{
+                        backgroundColor : colors.white,
+                        width : normalize(50),
+                        height : normalize(50),
+                        display : 'flex',
+                        justifyContent : 'center',
+                        alignItems : 'center',
+                        borderRadius : normalize(8)
+                    }}>
+                        <Lottie source={img.loading} autoPlay loop style={{
+                            width : normalize(50),
+                            height : normalize(50)
                         }}/>
                     </View>
                 </View>
@@ -230,6 +258,7 @@ const styles = StyleSheet.create({
       borderColor: colors.disable,
       borderWidth: 1,
       borderRadius: normalize(10),
+      color : colors.fontBlack
     },
     camera: {
         width : 50,

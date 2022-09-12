@@ -41,6 +41,7 @@ const Tasklist:React.FC<any> = (props : any)=>{
         </View>
         <View style={styles.listTile}>
             <Text style={{
+                color : colors.fontBlack,
                 fontFamily : fonts.medium,
                 fontSize : normalize(19)
             }}>{props.title}</Text>
@@ -81,6 +82,7 @@ const Tasklist:React.FC<any> = (props : any)=>{
             }}>
                 <Text style={{
                     fontFamily : fonts.medium,
+                    color: colors.fontBlack,
                     fontSize : normalize(14),
                 }}>{props.address}</Text>
                 <Text style={{
@@ -101,6 +103,7 @@ const Tasklist:React.FC<any> = (props : any)=>{
                 height: normalize(20)
             }}/>
             <Text style={{
+                color: colors.fontBlack,
                 fontFamily : fonts.medium,
                 paddingLeft : normalize(8),
                 fontSize : normalize(14),
@@ -145,7 +148,7 @@ const Tasklist:React.FC<any> = (props : any)=>{
                     fontFamily : fonts.medium,
                     fontWeight : "600",
                     fontSize : normalize(19),
-                    color : '#fff'
+                    color: colors.white
                 }}>ขยายเวลา</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -163,7 +166,7 @@ const Tasklist:React.FC<any> = (props : any)=>{
                     fontFamily : fonts.medium,
                     fontWeight : "600",
                     fontSize : normalize(19),
-                    color : '#fff'
+                    color: colors.white
                 }}>{(props.status === "WAIT_START")?'เริ่มทำงาน':'งานเสร็จสิ้น'}</Text>
             </TouchableOpacity>
         </View>
@@ -181,6 +184,7 @@ const Tasklist:React.FC<any> = (props : any)=>{
                 paddingLeft : normalize(8)
             }}>
                 <Text style={{
+                    color: colors.fontBlack,
                     fontFamily : fonts.medium,
                     fontSize : normalize(14),
                 }}>{props.preparation}</Text>
