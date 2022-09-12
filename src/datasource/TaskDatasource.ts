@@ -72,8 +72,8 @@ export class Register{
     firstname : string,
     lastname : string,
     telephoneNo : string,
-    id : string,
     address1 : string,
+    address2 : string,
     provinceId : string,
     districtId : string,
     subdistrictId : string,
@@ -88,7 +88,7 @@ export class Register{
         status: "PENDING",
         address : {
           address1 : address1,
-          address2 : "",
+          address2 : address2,
           address3 : "",
           provinceId : provinceId,
           districtId : districtId,
@@ -113,7 +113,7 @@ export class Register{
         status: "PENDING",
         address : {
           address1 : address1,
-          address2 : "",
+          address2 : address2,
           address3 : "",
           provinceId : provinceId,
           districtId : districtId,
@@ -141,8 +141,6 @@ export class Register{
       status: "PENDING",
       
     }).then(async(response) => {
-      const index = response.data.dronerDrone.length;
-      await AsyncStorage.setItem('drone_id',response.data.dronerDrone[index-1].id)
       return response.data;
     })
     .catch(error => {
@@ -214,9 +212,9 @@ export class Register{
   }
 
   static async uploadDronerLicense(
+    drone_id : any,
     file : any
   ): Promise<any> {
-    const drone_id = await AsyncStorage.getItem('drone_id')
     const data = new FormData();
     data.append('file',{
       uri : file.assets[0].uri,
@@ -235,9 +233,9 @@ export class Register{
     });
   }
   static async uploadDroneLicense(
+    drone_id : any,
     file : any
   ): Promise<any> {
-    const drone_id = await AsyncStorage.getItem('drone_id')
     const data = new FormData();
     data.append('file',{
       uri : file.assets[0].uri,

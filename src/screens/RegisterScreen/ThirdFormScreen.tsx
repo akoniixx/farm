@@ -12,6 +12,9 @@ import {
   Dimensions,
   TextInput,
   Modal,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -41,8 +44,8 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const fall = new Animated.Value(1)
   const windowWidth = Dimensions.get('window').width;
   const [position, setPosition] = useState({
-    latitude: 0,
-    longitude: 0,
+    latitude: route.params.latitude,
+    longitude: route.params.longitude,
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
@@ -72,6 +75,8 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const [image2,setImage2] = useState<any>(null)
   const [popupPage,setpopupPage] = useState(1)
   const [loading,setLoading] = useState(false);
+  const [arrayFile1,setArrayFile1] = useState<any>([])
+  const [arrayFile2,setArrayFile2] = useState<any>([])
   
   useEffect(() => {
     getNameFormLat();
@@ -304,15 +309,12 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
     }
     drones.push(newDrone);
     dronesUI.push(newDroneUI)
-    Register.uploadDronerdrone(drones).then((res)=>{
-      setDronedata(drones);
-      setDronedataUI(dronesUI)
-      setBrand(null)
-      setBrandType(null)
-      setdroneno(null)
-      setpopupPage(2)
-    }).catch(err => console.log(err))
-    // sheetRef.current.snapTo(1)
+    setDronedata(drones);
+    setDronedataUI(dronesUI)
+    setBrand(null)
+    setBrandType(null)
+    setdroneno(null)
+    setpopupPage(2)
   }
 
   return (
@@ -408,7 +410,9 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 <TextInput placeholder='พืชอื่นๆ'
                  placeholderTextColor={colors.disable}
                  style={{
-                  width : '100%',
+                  display : 'flex',
+                  alignItems : 'center',
+                  width : (addPlant.length != 0)?'80%':'100%',
                   color : colors.fontBlack
                 }} onChangeText={(value)=> setAddPlant(value)}/>
                 {
@@ -504,7 +508,8 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
             </ScrollView>
           </View>
           <View style={{backgroundColor: colors.white}}>
-            <MainButton label="ถัดไป" color={colors.orange} onPress={()=>{
+            <MainButton  disable={plantListSelect.every(item => item.active === false)} label="ถัดไป" color={colors.orange} onPress={()=>{
+              setLoading(true)
               let plant : string[] = [];
                plantListSelect.map((item) => {
                 if(item.active)
@@ -522,7 +527,30 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 lat,
                 long
               ).then((res)=>{
-                navigation.navigate('FourthFormScreen',{tele : telNo.tele});
+                Register.uploadDronerdrone(dronedata).then((res)=>{
+                  for(let i=0; i<res.dronerDrone.length;i++){
+                    if(arrayFile1[i]){
+                      console.log(res)
+                      Register.uploadDronerLicense(res.dronerDrone[i].id,arrayFile1[i]).then(
+                        (res) => {
+                        }
+                      ).catch(
+                        err => console.log(err)
+                      )
+                    }
+                    if(arrayFile2[i]){
+                      console.log(res)
+                       Register.uploadDroneLicense(res.dronerDrone[i].id,arrayFile2[i]).then(
+                         (res) => {
+                         }
+                       ).catch(
+                         err => console.log(err)
+                       )
+                    }
+                  }
+                  setLoading(false);
+                  navigation.navigate('FourthFormScreen',{tele : telNo.tele});
+                }).catch(err => console.log(err))
               }).catch(err => {
                 console.log(err)
               })
@@ -537,7 +565,8 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
           snapPoints={[750,0]}
           borderRadius={8}
           renderHeader={()=>(<></>)}
-          renderContent={()=>(<View
+          renderContent={()=>(
+          <View
             style={{
               backgroundColor: 'white',
               paddingVertical: 30,
@@ -546,16 +575,20 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
               height: 750,
             }}
           >
-            <View style={{
+            <View style={[stylesCentral.container,{
               flex : 1,
               display : 'flex',
               flexDirection : 'column',
               justifyContent : 'space-between'
-            }}>
+            }]}>
               {
                 (popupPage == 1)?
-                (<><View>
-                    <View style={{
+                (<View style={{
+                  flex : 1,
+                  justifyContent: 'space-between',
+                }}>
+                  <ScrollView>
+                  <View style={{
                       padding: 8,
                       display: 'flex',
                       flexDirection: 'row',
@@ -652,9 +685,9 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                           placeholder={'เลขตัวถังโดรน'} />
                       </View>
                     </View>
-                  </View>
+                  </ScrollView>
                   <MainButton disable={(!brand || !brandtype || !droneno) ? true : false} label='ถัดไป' color={colors.orange} onPress={addDrone} />
-                  </>):
+                  </View>):
                   (
                   <View style={{
                     flex : 1,
@@ -741,7 +774,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                             }
                           </View>
                         </View>
-                        <MainButton fontSize={normalize(14)} label="เพิ่มเอกสาร" color={colors.orange} onPress={uploadFile1}/>
+                        <MainButton fontSize={normalize(14)} label={(!image1)?"เพิ่มเอกสาร":"เปลี่ยน"} color={(!image1)?colors.orange:colors.gray} onPress={uploadFile1}/>
                       </View>
                       <View
                         style={{
@@ -808,28 +841,42 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                               }
                             </View>
                           </View>
-                        <MainButton fontSize={normalize(14)} label="เพิ่มเอกสาร" color={colors.orange} onPress={uploadFile2}/>
+                        <MainButton fontSize={normalize(14)} label={(!image2)?"เพิ่มเอกสาร":"เปลี่ยน"} color={(!image2)?colors.orange:colors.gray} onPress={uploadFile2}/>
                       </View>
                     </View>
                     </View>
                     <View>
-                    <MainButton disable={(!image1 || !image2)?true : false} label='ถัดไป' color={colors.orange} onPress={()=>{
-                          setLoading(true)
-                          Register.uploadDronerLicense(image1).then(
-                            (res) => {
-                              console.log(res)
-                              Register.uploadDroneLicense(image2).then(
-                                (res) => {
-                                  setLoading(false)
-                                  sheetRef.current.snapTo(1)
-                                }
-                              ).catch(
-                                err => console.log(err)
-                              )
-                            }
-                          ).catch(
-                            err => console.log(err)
-                          )
+                    <MainButton disable={(!image2)?true : false} label='ถัดไป' color={colors.orange} onPress={()=>{
+                          if(image1 == null && image2 != null){
+                            const arrayfile2 = [...arrayFile2];
+                            arrayFile2.push(image2)
+                            setArrayFile2(arrayFile2)
+                            setImage2(null)
+                            setBrand(null)
+                            setBrandType(null)
+                            setpopupPage(1)
+                            setValue(null)
+                            setValuetype(null)
+                            setdroneno(null);
+                            sheetRef.current.snapTo(1)
+                          }
+                          else if(image1 != null && image2 != null){
+                            const arrayfile1 = [...arrayFile1];
+                            arrayFile1.push(image1)
+                            setArrayFile1(arrayFile1)
+                            const arrayfile2 = [...arrayFile2];
+                            arrayFile2.push(image2)
+                            setImage1(null)
+                            setImage2(null)
+                            setArrayFile2(arrayFile2)
+                            setBrand(null)
+                            setBrandType(null)
+                            setpopupPage(1)
+                            setdroneno(null);
+                            setValue(null)
+                            setValuetype(null)
+                            sheetRef.current.snapTo(1)
+                          }
                       }} />
                     </View>
                   </View>)

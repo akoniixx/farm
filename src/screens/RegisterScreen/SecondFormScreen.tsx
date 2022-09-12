@@ -20,6 +20,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { QueryLocation } from '../../datasource/LocationDatasource';
 import { registerReducer } from '../../hooks/registerfield';
 import { Register } from '../../datasource/TaskDatasource';
+import Geolocation from 'react-native-geolocation-service';
 
 const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
   const initialFormRegisterState = {
@@ -319,8 +320,15 @@ const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
                 formState.district.value,
                 formState.subdistrict.value,
                 formState.postal).then((res)=>{
-                  console.log(res);
-                  navigation.navigate('ThirdFormScreen',{tele : formState.tel});
+                  Geolocation.getCurrentPosition(
+                    (position) => {
+                      navigation.navigate('ThirdFormScreen',{tele : formState.tel,latitude : position.coords.latitude,longitude : position.coords.longitude});
+                    },
+                    (error) => {
+                      console.log(error.code, error.message);
+                    },
+                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                );
                 }).catch(err => console.log(err))
             }}
           />
