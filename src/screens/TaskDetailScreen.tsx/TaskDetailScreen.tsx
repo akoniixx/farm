@@ -36,10 +36,12 @@ import {CallingModal} from '../../components/Modal/CallingModal';
 import {WaitStartFooter} from '../../components/Footer/WaitStartFooter';
 import {InprogressFooter} from '../../components/Footer/InprogressFooter';
 import Toast from 'react-native-toast-message';
+import { SheetManager } from 'react-native-actions-sheet';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
   const [data, setData] = useState<any>();
+  const [profileImg,setProfileImg] = useState<string>();
   const [position, setPosition] = useState({
     latitude: 0,
     longitude: 0,
@@ -79,6 +81,11 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     TaskDatasource.getTaskDetail(taskId)
       .then(res => {
         setData(res.data);
+       
+        if(Object.keys(res.image_profile_url).length!==0){
+          setProfileImg(res.image_profile_url)
+        }
+       
         setPosition({
           latitude: parseFloat(res.data.farmerPlot.lat),
           longitude: parseFloat(res.data.farmerPlot.long),
@@ -94,9 +101,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   const openGps = (lat: number, lng: number, name: string) => {
-    /*  var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
-    var url = scheme + `${lat},${lng}`;
-    Linking.openURL(url); */
     const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
     const latLng = `${lat},${lng}`;
     const label = 'Custom Label';
@@ -107,15 +111,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     Linking.openURL(url);
   };
 
-  // variables
-  const snapPoints = useMemo(() => ['25%', '25%'], []);
-
-  // callbacks
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
+  
   return (
-    <BottomSheetModalProvider>
+   
       <View style={{flex: 1}}>
         <CustomHeader
           title="รายละเอียดงาน"
@@ -255,7 +253,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   }}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Image
-                      source={icons.account}
+                      source={profileImg?{uri:profileImg}:icons.account}
                       style={{width: normalize(24), height: normalize(24)}}
                     />
                     <Text
@@ -395,27 +393,24 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
             {data.status === 'WAIT_START' ? (
               <WaitStartFooter
                 mainFunc={() => updateTask(data.status)}
-                togleModal={() => handlePresentModalPress()}
+                togleModal={() =>  SheetManager.show("CallingSheet", {
+                  payload: {tel: data.farmer.telephoneNo},
+                })}
               />
             ) : (
               <InprogressFooter
                 mainFunc={() => updateTask(data.status)}
-                togleModal={() => handlePresentModalPress()}
+                togleModal={() => SheetManager.show("CallingSheet", {
+                  payload: {tel: data.farmer.telephoneNo},
+                })}
               />
             )}
 
-            <View>
-              <BottomSheetModal
-                ref={bottomSheetModalRef}
-                index={1}
-                snapPoints={snapPoints}>
-                <CallingModal tel={data.farmer.telephoneNo} />
-              </BottomSheetModal>
-            </View>
+           
           </>
         ) : null}
       </View>
-    </BottomSheetModalProvider>
+  
   );
 };
 export default TaskDetailScreen;
@@ -482,3 +477,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+{/* data.farmer.telephoneNo */}

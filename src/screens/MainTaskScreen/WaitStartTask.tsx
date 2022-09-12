@@ -8,7 +8,7 @@ import { TaskDatasource } from "../../datasource/TaskDatasource";
 import { stylesCentral } from "../../styles/StylesCentral";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from "@react-navigation/native";
-const FinishTask:React.FC = () =>{
+const WaitStartTask:React.FC = () =>{
     const [data, setData] = useState<any>([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ const FinishTask:React.FC = () =>{
         const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
         TaskDatasource.getTaskById(
           droner_id,
-          ['DONE'],
+          ['WAIT_START'],
           page,
           4,
         )
@@ -79,8 +79,8 @@ const FinishTask:React.FC = () =>{
           source={image.blankTask}
           style={{width: normalize(136), height: normalize(111)}}
         />
-        <Text style={stylesCentral.blankFont}>ยังไม่มีงานที่เริ่มดำเนินการ</Text>
+        <Text style={stylesCentral.blankFont}>ยังไม่มีงานที่ต้องทำ</Text>
       </View>
     )
 }
-export default FinishTask
+export default WaitStartTask
