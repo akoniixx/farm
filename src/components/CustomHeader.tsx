@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontFamily: font.bold,
-    fontSize: normalize(20),
+    fontSize: normalize(18),
     color : colors.fontBlack,
     textAlign: 'center',
   },

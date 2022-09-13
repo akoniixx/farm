@@ -106,7 +106,7 @@ const TaskScreen: React.FC = () => {
             distance={item.item.distance}
             user={`${item.item.farmer.firstname} ${item.item.farmer.lastname}`}
             img={item.image_profile_url}
-            preparation={item.item.preparationBy}
+            preparation={item.item.comment}
             tel={item.item.farmer.telephoneNo}
             taskId={item.item.id}
             farmArea={item.item.farmAreaAmount}

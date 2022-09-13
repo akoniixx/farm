@@ -8,15 +8,17 @@ const insets = useSafeAreaInsets();
 interface WaitStartProp {
   mainFunc: () => void;
   togleModal: () => void;
+  disable: boolean;
 }
 
 export const WaitStartFooter: React.FC<WaitStartProp> = ({
   mainFunc,
   togleModal,
+  disable
 }) => {
   return (
     <View style={[styles.footer, {paddingBottom: insets.bottom}]}>
-      <TouchableOpacity style={styles.startButton} onPress={() => mainFunc()}>
+      <TouchableOpacity style={[styles.startButton,{backgroundColor: disable?colors.disable : colors.primaryBlue}]} disabled={disable} onPress={() => mainFunc()}>
         <Text
           style={{
             fontFamily: font.bold,
@@ -50,7 +52,6 @@ const styles = StyleSheet.create({
   startButton: {
     width: normalize(275),
     height: normalize(52),
-    backgroundColor: colors.primaryBlue,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: normalize(8),

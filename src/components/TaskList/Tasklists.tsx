@@ -258,7 +258,7 @@ const Tasklists: React.FC<any> = (props: any) => {
                 fontFamily: fonts.medium,
                 fontSize: normalize(14),
               }}>
-              {props.preparation}
+              {props.preparation?props.preparation:'-'}
             </Text>
           </View>
         </View>
