@@ -1,7 +1,6 @@
 import {Switch} from '@rneui/themed';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
@@ -10,6 +9,10 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import io from 'socket.io-client';
+import {SheetManager} from 'react-native-actions-sheet';
+import {BASE_URL} from '../../config/develop-config';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -19,14 +22,45 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     name: '',
     lastname: '',
   });
+  const [dronerId, setDronerId] = useState<string>('');
+
+  // const socket = io('http://localhost:3001/task');
+  const socket = io(BASE_URL + '/task');
+  const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
     getProfile();
+    getDronerId();
   }, []);
 
+  useEffect(() => {
+    socket.on(`new-task-${dronerId}`, ({data}) => {
+      SheetManager.show('NewTaskSheet', {
+        payload: {
+          data,
+          // taskId: data.id,
+          // taskNo: data.taskNo,
+          // status: data.status,
+          // title: data.farmerPlot.plantName,
+          // price: data.totalPrice,
+          // date: data.dateAppointment,
+          // address: data.farmerPlot.locationName,
+          // distance: data.distance,
+          // user: `${data.farmer.firstname} ${data.farmer.lastname}`,
+          // img: data.image_profile_url,
+          // preparation: data.preparationBy,
+          // tel: data.farmer.telephoneNo,
+          // farmArea: data.farmAreaAmount,
+        },
+      });
+    });
+    socket.on('disconnect', () => {
+      setIsConnected(false);
+    });
+  }, [dronerId]);
+
   const getProfile = async () => {
-    const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
-    ProfileDatasource.getProfile(droner_id)
+    ProfileDatasource.getProfile(dronerId)
       .then(res => {
         setProfile({
           ...profile,
@@ -35,70 +69,72 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
       })
       .catch(err => console.log(err));
   };
+
+  const getDronerId = async () => {
+    setDronerId((await AsyncStorage.getItem('droner_id')) ?? '');
+  };
   return (
-    <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
-      <View style={{flex: 2}}>
-        <View style={styles.headCard}>
-          <View>
-            <Text
-              style={{
-                fontFamily: font.bold,
-                fontSize: normalize(24),
-                color: colors.fontBlack,
-              }}>
-              สวัสดี, {profile.name}
-            </Text>
-            <View style={styles.activeContainer}>
-              <Switch
-                color={colors.green}
-                value={active}
-                onValueChange={value => setActive(value)}
-              />
-              <Text style={styles.activeFont}>เปิดรับงาน</Text>
+    <BottomSheetModalProvider>
+      <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
+        <View style={{flex: 2}}>
+          <View style={styles.headCard}>
+            <View>
+              <Text style={{fontFamily: font.bold, fontSize: normalize(24)}}>
+                สวัสดี, {profile.name}
+              </Text>
+              <View style={styles.activeContainer}>
+                <Switch
+                  color={colors.green}
+                  value={active}
+                  onValueChange={value => setActive(value)}
+                />
+                <Text style={styles.activeFont}>เปิดรับงาน</Text>
+              </View>
+            </View>
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('ProfileScreen');
+                }}>
+                <Text>menu</Text>
+              </TouchableOpacity>
             </View>
           </View>
-          <View>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('ProfileScreen');
-              }}>
-              <Text style={{color: colors.fontBlack}}>menu</Text>
-            </TouchableOpacity>
+          <View
+            style={{flex: 4, justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{height: normalize(95)}}>
+              <ScrollView
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                contentContainerStyle={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                {arr.map(index => (
+                  <View
+                    key={index}
+                    style={{
+                      backgroundColor: colors.orange,
+                      marginHorizontal: 5,
+                      paddingHorizontal: 10,
+                      justifyContent: 'center',
+                      width: 160,
+                      height: 75,
+                      borderRadius: 16,
+                    }}>
+                    <Text style={styles.font}>รายได้วันนี้</Text>
+                    <Text style={styles.font}>0</Text>
+                  </View>
+                ))}
+              </ScrollView>
+            </View>
           </View>
         </View>
-        <View style={{flex: 4, justifyContent: 'center', alignItems: 'center'}}>
-          <View style={{height: normalize(95)}}>
-            <ScrollView
-              showsHorizontalScrollIndicator={false}
-              horizontal
-              contentContainerStyle={{
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              {arr.map(index => (
-                <View
-                  key={index}
-                  style={{
-                    backgroundColor: colors.orange,
-                    marginHorizontal: 5,
-                    paddingHorizontal: 10,
-                    justifyContent: 'center',
-                    width: 160,
-                    height: 75,
-                    borderRadius: 16,
-                  }}>
-                  <Text style={styles.font}>รายได้วันนี้</Text>
-                  <Text style={styles.font}>0</Text>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
+        <View style={{flex: 4}}>
+          <TaskTapNavigator />
         </View>
       </View>
-      <View style={{flex: 4}}>
-        <TaskTapNavigator />
-      </View>
-    </View>
+    </BottomSheetModalProvider>
   );
 };
 export default MainScreen;

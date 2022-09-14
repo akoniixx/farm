@@ -7,14 +7,12 @@ import {
   Linking,
   Platform,
   Alert,
+  Modal,
 } from 'react-native';
-import React, {
-  useEffect,
-  useState,
-} from 'react';
+import React, {useEffect, useState} from 'react';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font, icons, image} from '../../assets';
-import {normalize} from '../../function/Normalize';
+import {normalize, width} from '../../function/Normalize';
 import CustomHeader from '../../components/CustomHeader';
 import {MainButton} from '../../components/Button/MainButton';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -32,6 +30,8 @@ import {WaitStartFooter} from '../../components/Footer/WaitStartFooter';
 import {InprogressFooter} from '../../components/Footer/InprogressFooter';
 import Toast from 'react-native-toast-message';
 import {SheetManager} from 'react-native-actions-sheet';
+import {WaitReceiveFooter} from '../../components/Footer/WaitReceiveFooter';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
@@ -44,7 +44,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
-
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const today = new Date();
 
   /* const tokyoRegion = {
@@ -89,9 +89,27 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         });
+        console.log(res.data.status);
       })
       .catch(err => console.log(err));
   };
+  const receiveTask = async () => {
+    const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
+    TaskDatasource.receiveTask(data.id, dronerId, true)
+      .then(res => {
+        getTaskDetail();
+      })
+      .catch(err => console.log(err));
+  };
+  const rejectTask = async () => {
+    const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
+    TaskDatasource.receiveTask(data.id, dronerId, false)
+      .then(res => {
+        getTaskDetail();
+      })
+      .catch(err => console.log(err));
+  };
+
   const convertDate = (date: string) => {
     const cdate = new Date(date);
     return cdate;
@@ -322,7 +340,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   openGps(
                     position.latitude,
                     position.longitude,
-                    data.farmerPlot.locationName,
+                    data.farmerPlot.plotName,
                   )
                 }>
                 <Image
@@ -391,7 +409,20 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
             </View>
           </ScrollView>
 
-          {data.status === 'WAIT_START' ? (
+          {data.status == 'WAIT_RECEIVE' ? (
+            <WaitReceiveFooter
+              mainFunc={() => {
+                setOpenConfirmModal(true);
+              }}
+              togleModal={
+                () => {}
+                //  SheetManager.show('CallingSheet', {
+                //    payload: {tel: data.farmer.telephoneNo},
+                //  })
+              }
+            />
+          ) : null}
+          {data.status == 'WAIT_START' ? (
             <WaitStartFooter
               disable={convertDate(data.dateAppointment) >= today}
               mainFunc={() => updateTask(data.status)}
@@ -401,7 +432,8 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 })
               }
             />
-          ) : (
+          ) : null}
+          {data.status == 'IN_PROGRESS' ? (
             <InprogressFooter
               mainFunc={() => updateTask(data.status)}
               togleModal={() =>
@@ -410,9 +442,111 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 })
               }
             />
-          )}
+          ) : null}
         </>
       ) : null}
+      <Modal transparent={true} visible={openConfirmModal}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              padding: normalize(20),
+              backgroundColor: colors.white,
+              width: width * 0.9,
+              display: 'flex',
+              justifyContent: 'center',
+              borderRadius: normalize(8),
+            }}>
+            <View>
+              <Text style={[styles.h2, {textAlign: 'center'}]}>
+                ยืนยันการรับงาน?
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setOpenConfirmModal(false);
+                }}
+                style={{
+                  position: 'absolute',
+                  top: normalize(4),
+                  right: normalize(0),
+                }}>
+                <Image
+                  source={icons.close}
+                  style={{
+                    width: normalize(14),
+                    height: normalize(14),
+                  }}
+                />
+              </TouchableOpacity>
+              <Text
+                style={[
+                  styles.label,
+                  {textAlign: 'center', marginVertical: 5},
+                ]}>
+                กรุณากดยืนยันหากคุณต้องการรับงานนี้
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={{
+                marginTop: normalize(10),
+                width: '100%',
+                height: normalize(50),
+                borderRadius: normalize(8),
+                backgroundColor: colors.orange,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                receiveTask().then(() => {
+                  setOpenConfirmModal(false);
+                });
+              }}>
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  fontWeight: '600',
+                  fontSize: normalize(19),
+                  color: '#ffffff',
+                }}>
+                รับงาน
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                marginTop: normalize(10),
+                width: '100%',
+                height: normalize(50),
+                borderRadius: normalize(8),
+                borderWidth: 0.2,
+                borderColor: 'grey',
+                // backgroundColor: '#FB8705',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                rejectTask().then(() => {
+                  setOpenConfirmModal(false);
+                });
+              }}>
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  fontWeight: '600',
+                  fontSize: normalize(19),
+                }}>
+                ไม่รับงาน
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -478,5 +612,15 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  h2: {
+    fontFamily: font.medium,
+    fontSize: normalize(16),
+    color: colors.fontBlack,
+  },
+  label: {
+    fontFamily: font.light,
+    fontSize: normalize(14),
+    color: colors.gray,
   },
 });
