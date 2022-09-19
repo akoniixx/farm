@@ -107,6 +107,7 @@ const NewTaskScreen: React.FC = () => {
                 img={item.image_profile_url}
                 preparation={item.item.preparationBy}
                 tel={item.item.farmer.telephoneNo}
+                updatedAt={item.item.updatedAt}
                 // callFunc={handlePresentModalPress}
                 // setTel={setTelNum}
                 farmArea={item.item.farmAreaAmount}
@@ -114,6 +115,7 @@ const NewTaskScreen: React.FC = () => {
                   setSelectedTaskId(item.item.id);
                   setOpenConfirmModal(true);
                 }}
+                fetchData={() => getData()}
               />
             )}
           />
