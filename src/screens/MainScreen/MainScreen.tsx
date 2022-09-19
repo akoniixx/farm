@@ -24,8 +24,9 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   });
   const [dronerId, setDronerId] = useState<string>('');
 
-  // const socket = io('http://localhost:3001/task');
-  const socket = io(BASE_URL + '/task');
+  const socket = io(BASE_URL, {
+    path: '/tasks/task/socket',
+  });
   const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
@@ -53,9 +54,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           // farmArea: data.farmAreaAmount,
         },
       });
-    });
-    socket.on('disconnect', () => {
-      setIsConnected(false);
     });
   }, [dronerId]);
 

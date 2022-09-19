@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {normalize} from '@rneui/themed';
 import fonts from '../../assets/fonts';
 import {colors, image, icons} from '../../assets';
@@ -11,7 +11,32 @@ const NewTask: React.FC<any> = (props: any) => {
   const onPressReceiveTask = props.receiveTask;
   const onPressviewDetails = props.viewDetails;
   const navigation = useNavigation<any>();
-  const {taskId} = props;
+  const {taskId, fetchData} = props;
+
+  const expire = new Date(new Date(props.updatedAt).getTime() + 30 * 60 * 1000);
+  const now = new Date();
+  const diff = new Date(expire.getTime() - now.getTime());
+  const [minutes, setMinutes] = useState(diff.getMinutes());
+  const [seconds, setSeconds] = useState(diff.getSeconds());
+  useEffect(() => {
+    let interval = setInterval(async () => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      }
+      if (seconds === 0) {
+        if (minutes === 0) {
+          clearInterval(interval);
+          fetchData();
+        } else {
+          setMinutes(minutes - 1);
+          setSeconds(59);
+        }
+      }
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  });
 
   return (
     <TouchableOpacity
@@ -209,21 +234,53 @@ const NewTask: React.FC<any> = (props: any) => {
               borderRadius: normalize(8),
               backgroundColor: '#2EC66E',
               display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
               margin: normalize(10),
               marginTop: normalize(0),
+              flexDirection: 'row',
             }}
             onPress={() => onPressReceiveTask()}>
-            <Text
+            <View
               style={{
-                fontFamily: fonts.medium,
-                fontWeight: '600',
-                fontSize: normalize(19),
-                color: '#ffffff',
+                width: '50%',
+                justifyContent: 'center',
               }}>
-              รับงาน
-            </Text>
+              <Text
+                style={{
+                  paddingLeft: '10%',
+                  fontFamily: fonts.medium,
+                  fontWeight: '600',
+                  fontSize: normalize(19),
+                  color: '#ffffff',
+                  textAlign: 'left',
+                  left: '10%',
+                }}>
+                รับงาน
+              </Text>
+            </View>
+            <View
+              style={{
+                width: '50%',
+                justifyContent: 'center',
+              }}>
+              <View
+                style={{
+                  padding: '4%',
+                  backgroundColor: '#014D40',
+                  width: '85%',
+                  borderRadius: 39,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fonts.medium,
+                    fontWeight: '600',
+                    fontSize: normalize(19),
+                    color: '#ffffff',
+                    textAlign: 'center',
+                  }}>
+                  {minutes + ':' + (seconds < 10 ? `0${seconds}` : seconds)}
+                </Text>
+              </View>
+            </View>
           </TouchableOpacity>
           {/* <TouchableOpacity
             style={{

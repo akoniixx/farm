@@ -420,6 +420,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 //    payload: {tel: data.farmer.telephoneNo},
                 //  })
               }
+              updatedAt={data.updatedAt}
             />
           ) : null}
           {data.status == 'WAIT_START' ? (
@@ -503,7 +504,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 alignItems: 'center',
               }}
               onPress={() => {
-                receiveTask().then(() => {
+                receiveTask().then(() => {    
                   setOpenConfirmModal(false);
                 });
               }}>

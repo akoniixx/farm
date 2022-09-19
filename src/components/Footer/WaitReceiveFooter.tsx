@@ -1,41 +1,90 @@
 import {normalize} from '@rneui/themed';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, font, icons} from '../../assets';
+import fonts from '../../assets/fonts';
 const insets = useSafeAreaInsets();
 
 interface WaitReceiveProp {
   mainFunc: () => void;
   togleModal: () => void;
-  // updatedAt: string;
+  updatedAt: string;
 }
 
 export const WaitReceiveFooter: React.FC<WaitReceiveProp> = ({
   mainFunc,
   togleModal,
+  updatedAt,
 }) => {
+  const expire = new Date(new Date(updatedAt).getTime() + 30 * 60 * 1000);
+  const now = new Date();
+  const diff = new Date(expire.getTime() - now.getTime());
+  const [minutes, setMinutes] = useState(diff.getMinutes());
+  const [seconds, setSeconds] = useState(diff.getSeconds());
+  useEffect(() => {
+    let interval = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      }
+      if (seconds === 0) {
+        if (minutes === 0) {
+          clearInterval(interval);
+        } else {
+          setMinutes(minutes - 1);
+          setSeconds(59);
+        }
+      }
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  });
+
   return (
     <View style={[styles.footer, {paddingBottom: insets.bottom}]}>
       <TouchableOpacity style={styles.receiveFooter} onPress={() => mainFunc()}>
-        <Text
+        <View
           style={{
-            fontFamily: font.bold,
-            fontSize: normalize(19),
-            color: colors.white,
+            width: '50%',
+            justifyContent: 'center',
           }}>
-          รับงานนี้
-        </Text>
-        {/* <View>
           <Text
             style={{
-              fontFamily: font.bold,
+              fontFamily: fonts.medium,
+              fontWeight: '600',
               fontSize: normalize(19),
-              color: colors.white,
+              color: '#ffffff',
+              textAlign: 'left',
+              left: '15%',
             }}>
-            {'เวลา'}
+            รับงาน
           </Text>
-        </View> */}
+        </View>
+        <View
+          style={{
+            width: '50%',
+            justifyContent: 'center',
+          }}>
+          <View
+            style={{
+              backgroundColor: '#014D40',
+              width: '40%',
+              borderRadius: 39,
+              left: '50%',
+            }}>
+            <Text
+              style={{
+                fontFamily: fonts.medium,
+                fontWeight: '600',
+                fontSize: normalize(19),
+                color: '#ffffff',
+                textAlign: 'center',
+              }}>
+              {minutes + ':' + (seconds < 10 ? `0${seconds}` : seconds)}
+            </Text>
+          </View>
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -43,12 +92,13 @@ export const WaitReceiveFooter: React.FC<WaitReceiveProp> = ({
 
 const styles = StyleSheet.create({
   receiveFooter: {
-    width: normalize(355),
-    height: normalize(52),
-    backgroundColor: colors.green,
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: '100%',
+    height: normalize(49),
     borderRadius: normalize(8),
+    backgroundColor: '#2EC66E',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   footer: {
     backgroundColor: colors.white,

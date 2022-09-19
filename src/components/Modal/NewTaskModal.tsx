@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -16,7 +16,10 @@ import {colors, font, icons} from '../../assets';
 import fonts from '../../assets/fonts';
 import {numberWithCommas} from '../../function/utility';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import ActionSheet, {SheetProps} from 'react-native-actions-sheet';
+import ActionSheet, {
+  SheetManager,
+  SheetProps,
+} from 'react-native-actions-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import Toast from 'react-native-toast-message';
@@ -53,10 +56,11 @@ export const NewTaskModal = (
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(data?.id, dronerId, true)
       .then(res => {
+        SheetManager.hide('NewTaskSheet');
         // Toast.show({
         //   type: 'success',
         //   text1: `งาน ${data.taskNo}`,
-        //   text2: 'อัพเดทสถานะเรียบร้อยแล้ว',
+        //   text2: 'ถูกรับแล้ว',
         // });
       })
       .catch(err => console.log(err));
@@ -65,14 +69,40 @@ export const NewTaskModal = (
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(data?.id, dronerId, false)
       .then(res => {
+        SheetManager.hide('NewTaskSheet');
         // Toast.show({
         //   type: 'success',
         //   text1: `งาน ${data.taskNo}`,
-        //   text2: 'อัพเดทสถานะเรียบร้อยแล้ว',
+        //   text2: 'ถูกรับแล้ว',
         // });
       })
       .catch(err => console.log(err));
   };
+
+  const expire = new Date(new Date(data.updatedAt).getTime() + 30 * 60 * 1000);
+  const now = new Date();
+  const diff = new Date(expire.getTime() - now.getTime());
+  const [minutes, setMinutes] = useState(diff.getMinutes());
+  const [seconds, setSeconds] = useState(diff.getSeconds());
+  useEffect(() => {
+    let interval = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      }
+      if (seconds === 0) {
+        if (minutes === 0) {
+          clearInterval(interval);
+          SheetManager.hide('NewTaskSheet');
+        } else {
+          setMinutes(minutes - 1);
+          setSeconds(59);
+        }
+      }
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  });
 
   return (
     <ActionSheet
@@ -280,21 +310,54 @@ export const NewTaskModal = (
               borderRadius: normalize(8),
               backgroundColor: '#2EC66E',
               display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+              flexDirection: 'row',
             }}
             onPress={() => {
               receiveTask();
             }}>
-            <Text
+            <View
               style={{
-                fontFamily: fonts.medium,
-                fontWeight: '600',
-                fontSize: normalize(19),
-                color: '#ffffff',
+                width: '50%',
+                justifyContent: 'center',
               }}>
-              รับงาน
-            </Text>
+              <Text
+                style={{
+                  paddingLeft: '10%',
+                  fontFamily: fonts.medium,
+                  fontWeight: '600',
+                  fontSize: normalize(19),
+                  color: '#ffffff',
+                  textAlign: 'left',
+                }}>
+                รับงาน
+              </Text>
+            </View>
+            <View
+              style={{
+                width: '50%',
+                justifyContent: 'center',
+              }}>
+              <View
+                style={{
+                  padding: 3,
+                  backgroundColor: '#014D40',
+                  width: '45%',
+                  left: '48%',
+                  borderRadius: 39,
+                }}>
+                <Text
+                  style={{
+                    paddingRight: '10%',
+                    fontFamily: fonts.medium,
+                    fontWeight: '600',
+                    fontSize: normalize(19),
+                    color: '#ffffff',
+                    textAlign: 'right',
+                  }}>
+                  {minutes + ':' + (seconds < 10 ? `0${seconds}` : seconds)}
+                </Text>
+              </View>
+            </View>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
