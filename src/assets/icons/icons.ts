@@ -18,5 +18,8 @@ export default {
   close: require('./x.png'),
   register: require('./register.png'),
   direction: require('./direction.png'),
-  callSolid: require('./Calling-solid.png')
+  callSolid: require('./Calling-solid.png'),
+  starfill: require('./starfill.png'),
+  starCorner: require('./starCorner.png'),
+  starBorder: require('./starBorder.png'),
 };

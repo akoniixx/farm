@@ -19,6 +19,7 @@ import {InputPhone} from '../../components/InputPhone';
 import {MainButton} from '../../components/Button/MainButton';
 import axios from 'axios';
 import {Authentication} from '../../datasource/TaskDatasource';
+import Toast from 'react-native-toast-message';
 
 const LoginScreen: React.FC<any> = ({navigation}) => {
   const [value, setValue] = useState<string>('');
@@ -44,6 +45,11 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
         }
         else if(err.response.data.statusCode === 400){
           setErrMessage('ไม่พบเบอร์โทรนี้ในระบบโปรดลงทะเบียนอีกครั้ง')
+        }else if(err){
+          Toast.show({
+            type: 'error',
+            text1: `ระบบเครือขายมีปัญหา กรุณาลองใหม่อีกครั้งในภายหลัง`,
+          });
         }
       });
   };

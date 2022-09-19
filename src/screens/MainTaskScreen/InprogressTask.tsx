@@ -30,6 +30,7 @@ const InprogressTask:React.FC = () =>{
         )
           .then(res => {
             if (res !== undefined) {
+              console.log(res)
               setData(data.concat(res));
               setCheckResIsComplete(true);
             }

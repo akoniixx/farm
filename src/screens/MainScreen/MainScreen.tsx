@@ -29,7 +29,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
-    getProfile();
     getDronerId();
   }, []);
 
@@ -57,10 +56,12 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     socket.on('disconnect', () => {
       setIsConnected(false);
     });
+
+    getProfile();
   }, [dronerId]);
 
   const getProfile = async () => {
-    ProfileDatasource.getProfile(dronerId)
+   await ProfileDatasource.getProfile(dronerId)
       .then(res => {
         setProfile({
           ...profile,

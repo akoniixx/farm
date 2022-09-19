@@ -4,6 +4,7 @@ import {
   BASE_URL,
   httpClient,
   registerClient,
+  taskFormDataClient,
   uploadFileClient,
 } from '../config/develop-config';
 
@@ -361,6 +362,26 @@ export class TaskDatasource {
 
     return httpClient
       .post(BASE_URL + `/tasks/task/receive-task`, data)
+      .then(response => {
+        return response.data;
+      })
+      .catch(err => {
+        throw err;
+      });
+  }
+
+  static async finishTask(file: any,taskId:string,reviewFarmerScore:number,reviewFarmerComment:string,): Promise<any> {
+    const data = new FormData();
+    data.append('taskId', taskId);
+    data.append('reviewFarmerScore', reviewFarmerScore);
+    data.append('reviewFarmerComment', reviewFarmerComment);
+    data.append('file', {
+      uri: file.assets[0].uri,
+      name: file.assets[0].fileName,
+      type: file.assets[0].type,
+    });
+    return taskFormDataClient
+      .post(BASE_URL + `/tasks/task/finish-task`, data)
       .then(response => {
         return response.data;
       })

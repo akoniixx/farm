@@ -24,7 +24,7 @@ const FinishTask:React.FC = () =>{
         const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
         TaskDatasource.getTaskById(
           droner_id,
-          ['DONE'],
+          ['DONE','WAIT_REVIEW','CANCELED'],
           page,
           4,
         )

@@ -114,7 +114,7 @@ const Tasklists: React.FC<any> = (props: any) => {
                   color: colors.fontBlack,
                   fontSize: normalize(14),
                 }}>
-                {props.address} dd
+                {props.address} 
               </Text>
               <Text
                 style={{

@@ -4,12 +4,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  Linking,
-  Platform,
-  Alert,
   Modal,
+  Dimensions,
+  TextInput,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font, icons, image} from '../../assets';
 import {normalize, width} from '../../function/Normalize';
@@ -22,6 +21,7 @@ import {
   dialCall,
   getStatusToText,
   numberWithCommas,
+  openGps,
 } from '../../function/utility';
 import Icon from 'react-native-vector-icons/AntDesign';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
@@ -32,6 +32,10 @@ import Toast from 'react-native-toast-message';
 import {SheetManager} from 'react-native-actions-sheet';
 import {WaitReceiveFooter} from '../../components/Footer/WaitReceiveFooter';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CModal from 'react-native-modal';
+import * as ImagePicker from 'react-native-image-picker';
+import {CanceledFooter} from '../../components/Footer/CanceledFooter';
+import {callcenterNumber} from '../../definitions/callCenterNumber';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
@@ -44,8 +48,47 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
-  const [openConfirmModal, setOpenConfirmModal] = useState(false);
+  const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
   const today = new Date();
+  const width = Dimensions.get('window').width;
+  const [togleModalUpload, setTogleModalUpload] = useState<boolean>(false);
+  const [togleModalReview, setTogleModalReview] = useState<boolean>(false);
+  const [imgUploaded, setImgUploaded] = useState<boolean>(false);
+  const [finishImg, setFinishImg] = useState<any>(null);
+  const [defaulRating, setDefaulRating] = useState<number>(0);
+  const [maxRatting, setMaxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
+  const [comment, setComment] = useState<string>('');
+  const starImgFilled = icons.starfill;
+  const starImgCorner = icons.starCorner;
+
+  const ReviewBar = () => {
+    return (
+      <View style={styles.reviewBar}>
+        {maxRatting.map((item, key) => {
+          return (
+            <TouchableOpacity
+              activeOpacity={0.9}
+              key={item}
+              onPress={() => setDefaulRating(item)}>
+              <Image
+                style={styles.star}
+                source={item <= defaulRating ? starImgFilled : starImgCorner}
+              />
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    );
+  };
+  const onAddImage = useCallback(async () => {
+    const result = await ImagePicker.launchImageLibrary({
+      mediaType: 'photo',
+    });
+    if (!result.didCancel) {
+      setFinishImg(result);
+      setImgUploaded(true);
+    }
+  }, [finishImg]);
 
   /* const tokyoRegion = {
     latitude: 35.6762,
@@ -57,6 +100,20 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   useEffect(() => {
     getTaskDetail();
   }, []);
+
+  const onFinishTask = () => {
+    TaskDatasource.finishTask(finishImg, data.id, defaulRating, comment).then(
+      res => {
+        setTogleModalReview(false);
+      },
+    );
+    /* console.log(finishImg,data.id,defaulRating,comment) */
+  };
+
+  const onChangImgFinish = () => {
+    setTogleModalUpload(false);
+    setTimeout(() => setTogleModalReview(true), 500);
+  };
 
   const updateTask = (status: string) => {
     if (status === 'WAIT_START') {
@@ -89,7 +146,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         });
-        console.log(res.data.status);
       })
       .catch(err => console.log(err));
   };
@@ -115,15 +171,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     return cdate;
   };
 
-  const openGps = (lat: number, lng: number, name: string) => {
-    const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
-    const latLng = `${lat},${lng}`;
-    const label = name;
-    const url = Platform.select({
-      ios: `${scheme}${label}@${latLng}`,
-      android: `${scheme}${latLng}(${label})`,
-    });
-    Linking.openURL(url);
+  const closeFinishModal = () => {
+    setTogleModalUpload(false);
+    setFinishImg(null);
   };
 
   return (
@@ -136,7 +186,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
 
       {data ? (
         <>
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false} persistentScrollbar={false}>
             <View style={styles.taskMenu}>
               <View style={styles.listTile}>
                 <Text
@@ -245,7 +295,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   style={{marginRight: 20}}
                 />
                 <Text style={styles.fontGray}>
-                  {data.statusRemark ? data.statusRemark : '-'}
+                  {data.comment ? data.comment : '-'}
                 </Text>
               </View>
             </View>
@@ -276,14 +326,15 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                       `${data.farmer.lastname}`}
                   </Text>
                 </View>
-                <TouchableOpacity
+                {data.status !== 'CANCELED'?  <TouchableOpacity
                   onPress={() => dialCall(data.farmer.telephoneNo)}
                   style={styles.callFarmer}>
                   <Image
                     source={icons.calling}
                     style={{height: 20, width: 20}}
                   />
-                </TouchableOpacity>
+                </TouchableOpacity>: null}
+               
               </View>
               <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
                 <Image
@@ -406,6 +457,31 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   {data.totalPrice} ฿
                 </Text>
               </View>
+              {data.status == 'CANCELED' ? (
+                <View
+                  style={{
+                    marginTop: normalize(20),
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Icon
+                    name="exclamationcircleo"
+                    size={24}
+                    color={colors.gray}
+                    style={{marginRight: 20}}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: font.light,
+                      fontSize: normalize(14),
+                      color: colors.gray,
+                      flexShrink: 1,
+                    }}>
+                    งานถูกยกเลิก หากต้องการสอบถามข้อมูลเพิ่มเติม
+                    กรุณาติดต่อเจ้าหน้าที่
+                  </Text>
+                </View>
+              ) : null}
             </View>
           </ScrollView>
 
@@ -422,6 +498,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               }
             />
           ) : null}
+
           {data.status == 'WAIT_START' ? (
             <WaitStartFooter
               disable={convertDate(data.dateAppointment) >= today}
@@ -433,9 +510,10 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               }
             />
           ) : null}
+
           {data.status == 'IN_PROGRESS' ? (
             <InprogressFooter
-              mainFunc={() => updateTask(data.status)}
+              mainFunc={() => setTogleModalUpload(true)}
               togleModal={() =>
                 SheetManager.show('CallingSheet', {
                   payload: {tel: data.farmer.telephoneNo},
@@ -443,8 +521,13 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               }
             />
           ) : null}
+
+          {data.status == 'CANCELED' ? (
+            <CanceledFooter mainFunc={() => dialCall(callcenterNumber)} />
+          ) : null}
         </>
       ) : null}
+
       <Modal transparent={true} visible={openConfirmModal}>
         <View
           style={{
@@ -547,6 +630,196 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           </View>
         </View>
       </Modal>
+      <CModal isVisible={togleModalUpload}>
+        <View
+          style={{
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            padding: normalize(15),
+            borderRadius: 12,
+          }}>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text
+              style={{
+                fontFamily: font.bold,
+                fontSize: normalize(19),
+                color: 'black',
+                marginBottom: normalize(10),
+              }}>
+              คุณต้องการเสร็จสิ้นการพ่น
+            </Text>
+            <Text style={styles.g19}>กรุณาตรวจสอบการพ่นและการบินโดรน</Text>
+            <Text style={styles.g19}>
+              หน้างานเสมอ โดยเจ้าหน้าที่จะทำการติดต่อสอบถาม
+            </Text>
+            <Text style={styles.g19}>เกษตรกรและคุณเพื่อความสมบูรณ์ของงาน</Text>
+            {imgUploaded && finishImg !== null ? (
+              <View style={[styles.uploadFrame]}>
+                <Image
+                  source={{uri: finishImg.assets[0].uri}}
+                  style={{
+                    width: normalize(316),
+                    height: normalize(136),
+                    borderRadius: 12,
+                  }}
+                />
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: colors.orange,
+                    padding: 10,
+                    borderRadius: 99,
+                    position: 'absolute',
+                  }}
+                  onPress={onAddImage}>
+                  <Text
+                    style={{
+                      fontFamily: font.bold,
+                      fontSize: normalize(14),
+                      color: 'white',
+                    }}>
+                    เปลี่ยนรูป
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View
+                style={[
+                  styles.uploadFrame,
+                  {
+                    borderStyle: 'dotted',
+                    borderColor: colors.orange,
+                    borderWidth: 2,
+                    borderRadius: 12,
+                    backgroundColor: colors.grayBg,
+                  },
+                ]}>
+                <Text
+                  style={{
+                    fontFamily: font.bold,
+                    fontSize: normalize(14),
+                    color: 'black',
+                  }}>
+                  อัพโหลดภาพงาน
+                </Text>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: colors.orange,
+                    padding: 10,
+                    borderRadius: 99,
+                    marginTop: 10,
+                  }}
+                  onPress={onAddImage}>
+                  <Text
+                    style={{
+                      fontFamily: font.bold,
+                      fontSize: normalize(14),
+                      color: 'white',
+                    }}>
+                    เปลี่ยนรูป
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: normalize(20),
+            }}>
+            <TouchableOpacity
+              style={[styles.modalBtn, {borderColor: colors.gray}]}
+              onPress={closeFinishModal}>
+              <Text
+                style={{
+                  fontFamily: font.bold,
+                  fontSize: normalize(19),
+                  color: 'black',
+                }}>
+                ปิด
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.modalBtn,
+                {
+                  backgroundColor: imgUploaded
+                    ? colors.orange
+                    : colors.greyWhite,
+                  borderColor: imgUploaded ? colors.orange : colors.greyWhite,
+                },
+              ]}
+              onPress={onChangImgFinish}
+              disabled={!imgUploaded}>
+              <Text
+                style={{
+                  fontFamily: font.bold,
+                  fontSize: normalize(19),
+                  color: 'white',
+                }}>
+                ยืนยัน
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </CModal>
+      <CModal isVisible={togleModalReview}>
+        <View
+          style={{
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            padding: normalize(15),
+            borderRadius: 12,
+          }}>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text
+              style={{
+                fontFamily: font.bold,
+                fontSize: normalize(19),
+                color: 'black',
+                marginBottom: normalize(10),
+              }}>
+              ให้คะแนนรีวิว
+            </Text>
+          </View>
+          <Text
+            style={{
+              fontFamily: font.medium,
+              fontSize: normalize(16),
+              color: 'black',
+              marginBottom: 15,
+            }}>
+            ภาพรวมของเกษตรกร
+          </Text>
+          <ReviewBar />
+          <Text
+            style={{
+              fontFamily: font.medium,
+              fontSize: normalize(16),
+              color: 'black',
+              marginVertical: 15,
+            }}>
+            ความคิดเห็นเพิ่มเติม
+          </Text>
+          <TextInput
+            style={{
+              borderWidth: 1,
+              borderRadius: normalize(8),
+              borderColor: colors.greyWhite,
+              height: normalize(45),
+            }}
+            placeholder="กรอกความคิดเห็นเพิ่มเติม"
+            onChangeText={setComment}
+            value={comment}
+          />
+          <MainButton
+            label="ยืนยัน"
+            color={colors.orange}
+            disable={defaulRating == 0}
+            onPress={onFinishTask}
+          />
+        </View>
+      </CModal>
     </View>
   );
 };
@@ -622,5 +895,35 @@ const styles = StyleSheet.create({
     fontFamily: font.light,
     fontSize: normalize(14),
     color: colors.gray,
+  },
+  g19: {
+    fontFamily: font.light,
+    fontSize: normalize(14),
+    color: colors.gray,
+  },
+  uploadFrame: {
+    width: normalize(316),
+    height: normalize(136),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: normalize(16),
+  },
+  modalBtn: {
+    width: normalize(142),
+    height: normalize(50),
+    borderWidth: 0.2,
+    borderRadius: normalize(8),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  reviewBar: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  star: {
+    width: normalize(40),
+    height: normalize(40),
+    resizeMode: 'cover',
+    marginHorizontal: 5,
   },
 });
