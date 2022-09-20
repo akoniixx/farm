@@ -9,5 +9,6 @@ export default {
     dronecer: require('./dronecer.png'),
     marker: require('./marker.png'),
     map: require('./map.png'),
-    loading : require('./loading.json')
+    loading : require('./loading.json'),
+    reviewSuccess: require('./reviewSuccess.png')
 }

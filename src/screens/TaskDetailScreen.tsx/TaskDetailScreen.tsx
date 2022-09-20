@@ -36,6 +36,7 @@ import CModal from 'react-native-modal';
 import * as ImagePicker from 'react-native-image-picker';
 import {CanceledFooter} from '../../components/Footer/CanceledFooter';
 import {callcenterNumber} from '../../definitions/callCenterNumber';
+import Spinner from 'react-native-loading-spinner-overlay'
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
@@ -53,6 +54,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const width = Dimensions.get('window').width;
   const [togleModalUpload, setTogleModalUpload] = useState<boolean>(false);
   const [togleModalReview, setTogleModalReview] = useState<boolean>(false);
+  const [togleModalSuccess, setTogleModalSuccess] = useState<boolean>(false);
   const [imgUploaded, setImgUploaded] = useState<boolean>(false);
   const [finishImg, setFinishImg] = useState<any>(null);
   const [defaulRating, setDefaulRating] = useState<number>(0);
@@ -60,6 +62,8 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const [comment, setComment] = useState<string>('');
   const starImgFilled = icons.starfill;
   const starImgCorner = icons.starCorner;
+  const [loading,setLoading] = useState<boolean>(false)
+  const [showModalStartTask,setShowModalStartTask] = useState<boolean>(false);
 
   const ReviewBar = () => {
     return (
@@ -102,12 +106,17 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   }, []);
 
   const onFinishTask = () => {
+    setTogleModalReview(false);
+    setTimeout(() =>   setLoading(true), 500);
+   
     TaskDatasource.finishTask(finishImg, data.id, defaulRating, comment).then(
       res => {
-        setTogleModalReview(false);
+        setLoading(false)
+        setTimeout(() => setTogleModalSuccess(true), 500);
+        setTimeout(() =>  receiveTask(), 600);
       },
     );
-    /* console.log(finishImg,data.id,defaulRating,comment) */
+    
   };
 
   const onChangImgFinish = () => {
@@ -117,6 +126,8 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
 
   const updateTask = (status: string) => {
     if (status === 'WAIT_START') {
+      setLoading(true)
+      setShowModalStartTask(false)
       TaskDatasource.updateTaskStatus(data.id, data.droner.id, 'IN_PROGRESS')
         .then(res => {
           Toast.show({
@@ -124,6 +135,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
             text1: `งาน ${data.taskNo}`,
             text2: 'อัพเดทสถานะเรียบร้อยแล้ว',
           });
+          setLoading(false)
           getTaskDetail();
         })
         .catch(err => console.log(err.response.data));
@@ -503,7 +515,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           {data.status == 'WAIT_START' ? (
             <WaitStartFooter
               disable={convertDate(data.dateAppointment) >= today}
-              mainFunc={() => updateTask(data.status)}
+              mainFunc={()=>setShowModalStartTask(true)}
               togleModal={() =>
                 SheetManager.show('CallingSheet', {
                   payload: {tel: data.farmer.telephoneNo},
@@ -821,6 +833,72 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           />
         </View>
       </CModal>
+      <CModal isVisible={togleModalSuccess}>
+        <View
+          style={{
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            padding: normalize(15),
+            borderRadius: 12,
+          }}>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text
+              style={{
+                fontFamily: font.bold,
+                fontSize: normalize(19),
+                color: 'black',
+                marginBottom: normalize(10),
+              }}>
+              รีวิวสำเร็จ
+            </Text>
+            <Image source={image.reviewSuccess} style={{width:normalize(170),height:normalize(168)}} />
+          </View> 
+          <MainButton
+            label="ตกลง"
+            color={colors.orange}
+            onPress={()=>setTogleModalSuccess(false)}
+          />
+        </View>
+      </CModal>
+      <CModal isVisible={showModalStartTask}>
+        <View
+          style={{
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            padding: normalize(15),
+            borderRadius: 12,
+          }}>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text
+              style={{
+                fontFamily: font.bold,
+                fontSize: normalize(19),
+                color: 'black',
+                marginBottom: normalize(10),
+              }}>
+              ยืนยันการเริ่มงาน?
+            </Text>
+            <Text
+            style={{
+              fontFamily: font.medium,
+              fontSize: normalize(14),
+              color: 'black',
+              marginBottom: 15,
+            }}>
+            กรุณากดยืนยันหากต้องการเริ่มงานนี้
+          </Text>
+          </View>
+          <MainButton label='เริ่มงาน' color={colors.orange} borderColor={colors.orange} fontColor='white' onPress={() => updateTask(data.status)}/>
+          <MainButton label='ยังไม่เริ่มงาน' color='white' borderColor={colors.gray} fontColor='black' onPress={()=>setShowModalStartTask(false)} />
+          
+         
+        </View>
+        </CModal>
+      <Spinner
+          visible={loading}
+          textContent={'Loading...'}
+          textStyle={{ color: '#FFF'}}
+        />
     </View>
   );
 };
