@@ -36,19 +36,19 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
   useEffect(() => {
     getProfile();
-    // getDronerId();
+    openSocket();
   }, []);
 
-  useEffect(() => {
-    getProfile();
-    socket.on(`new-task-${dronerId}`, ({data}) => {
+  const openSocket = async () => {
+    const dronerId = await AsyncStorage.getItem('droner_id');
+    socket.on(`new-task-${dronerId!}`, ({data}) => {
       SheetManager.show('NewTaskSheet', {
         payload: {
           data,
         },
       });
     });
-  }, [dronerId]);
+  };
 
   const getProfile = async () => {
     const droner_id = await AsyncStorage.getItem('droner_id');
@@ -81,12 +81,9 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
       .catch(err => console.log(err));
   };
 
-  const getDronerId = async () => {
-    setDronerId((await AsyncStorage.getItem('droner_id')) ?? '');
-  };
-
   const openReceiveTask = async (isOpen: boolean) => {
-    TaskDatasource.openReceiveTask(dronerId, isOpen)
+    const dronerId = await AsyncStorage.getItem('droner_id');
+    TaskDatasource.openReceiveTask(dronerId!, isOpen)
       .then(res => {
         setProfile({...profile, isOpenReceiveTask: res.isOpenReceiveTask});
       })
