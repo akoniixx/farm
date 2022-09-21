@@ -6,31 +6,35 @@ import { normalize } from '@rneui/themed';
 import { colors, font, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
 import { ProgressBar } from '../../components/ProgressBar';
-import { Register } from '../../datasource/TaskDatasource';
+import { Register } from '../../datasource/AuthDatasource';
 
 const width = Dimensions.get('window').width;
 
 const FourthFormScreen: React.FC<any>  = ({route,navigation})=>{
-  const telNo = route.params
+  const telNo = route.params.tele
+  const Profile = route.params.profile??false;
   return (
     <SafeAreaView style={stylesCentral.container}>
         <CustomHeader
-          title="ลงทะเบียนนักบินโดรน"
+          title={(Profile)?"ส่งเอกสารเพิ่มเติม":"ลงทะเบียนนักบินโดรน"}
           showBackBtn
           onPressBack={() => navigation.goBack()}
         />
         <View style={styles.inner}>
-            <View style={{marginBottom: normalize(10)}}>
-              <ProgressBar index={4} />
-            </View>
-            <Text style={styles.label}>ขั้นตอนที่ 4 จาก 4</Text>
-            <Text style={styles.h1}>ยืนยันเอกสาร</Text>
+              {
+                (Profile)?<></>:<>
+                <View style={{marginBottom: normalize(10)}}>
+                  <ProgressBar index={4} />
+                </View>
+                <Text style={styles.label}>ขั้นตอนที่ 4 จาก 4</Text>
+                <Text style={styles.h1}>ยืนยันเอกสาร</Text></>
+              }
               <View style={{
                   display : 'flex',
                   alignItems : 'center',
                   marginTop : normalize(20)
               }}>
-                  <Text style={styles.h1}>ขั้นตอนสุดท้าย!</Text>
+                  <Text style={styles.h1}>{(Profile)?"ยืนยันตัวตนนักบินโดรน":"ขั้นตอนสุดท้าย!"}</Text>
                   <Text style={[styles.h2,{color : colors.gray,paddingVertical : normalize(8)}]}>ยืนยันตัวตน ด้วยรูปถ่ายคู่ผู้สมัคร พร้อมบัตรประชาชน</Text>
                   <Image source={image.idcard} style={{
                       width : width*0.6,
@@ -43,11 +47,13 @@ const FourthFormScreen: React.FC<any>  = ({route,navigation})=>{
               </View>
             <View>
               <MainButton label='ถัดไป' color={colors.orange} onPress={()=>{
-                navigation.navigate("AddIDCardScreen",{tele : telNo.tele})
+                navigation.navigate("AddIDCardScreen",{tele : telNo,profile : Profile })
               }}/>
-              <MainButton label='ข้ามขั้นตอนนี้' color={colors.white} fontColor={colors.fontBlack} onPress={()=>{
-                Register.registerSkipStep4().then((res)=> navigation.navigate("SuccessScreen")).catch(err => console.log(err))
-              }}/>
+              {
+                (Profile)?<></>:<MainButton label='ข้ามขั้นตอนนี้' color={colors.white} fontColor={colors.fontBlack} onPress={()=>{
+                  Register.registerSkipStep4().then((res)=> navigation.navigate("SuccessScreen")).catch(err => console.log(err))
+                }}/>
+              }
             </View>
         </View>
     </SafeAreaView>

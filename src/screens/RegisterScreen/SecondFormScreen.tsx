@@ -5,11 +5,16 @@ import {
   TouchableOpacity,
   TextInput,
   Button,
+  PermissionsAndroid,
+  Platform,
+  Modal,
+  Image,
+  Dimensions,
 } from 'react-native';
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useCallback, useEffect, useReducer, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
-import {colors, font, image} from '../../assets';
+import {colors, font, icons, image as img} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import CustomHeader from '../../components/CustomHeader';
 import {MainButton} from '../../components/Button/MainButton';
@@ -19,13 +24,20 @@ import {Avatar} from '@rneui/themed';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { QueryLocation } from '../../datasource/LocationDatasource';
 import { registerReducer } from '../../hooks/registerfield';
-import { Register } from '../../datasource/TaskDatasource';
+import { Register } from '../../datasource/AuthDatasource';
 import Geolocation from 'react-native-geolocation-service';
+import * as ImagePicker from 'react-native-image-picker';
+import Lottie from 'lottie-react-native';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import CalendarCustom from '../../components/Calendar/Calendar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { build12Year, CalendarMode } from '../../hooks/calendar';
 
 const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
   const initialFormRegisterState = {
     name : "",
     surname : "",
+    birthDate : "",
     tel : route.params.tele,
     no : "",
     address : "",
@@ -34,7 +46,11 @@ const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
     subdistrict : "",
     postal : ""
 }
+
+  const windowWidth = Dimensions.get("window").width;
   const tele = route.params.tele
+  const [openCalendar,setOpenCalendar] = useState(false);
+  const [birthday,setBirthday] = useState("")
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
@@ -46,8 +62,17 @@ const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
   const [itemsSubDistrict,setItemSubDistrict] = useState([])
   const [province,setProvince] = useState<any>(null)
   const [district,setDistrict] = useState<any>(null)
-
   const [subdistrict,setSubdistrict] = useState<any>(null)
+  const [image,setImage] = useState<any>(null)
+  const [loading,setLoading] = useState(false);
+  const onAddImage = useCallback(async()=>{
+  const result = await ImagePicker.launchImageLibrary({
+        mediaType : 'photo',
+    });
+    if(!result.didCancel){
+        setImage(result)
+    }
+  },[image]);
 
   useEffect(()=>{
     QueryLocation.QueryProvince().then(res => {
@@ -88,7 +113,6 @@ const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
         showBackBtn
         onPressBack={() => navigation.goBack()}
       />
-
       <View style={styles.inner}>
         <View style={styles.container}>
           <View style={{marginBottom: normalize(10)}}>
@@ -103,12 +127,35 @@ const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
                 alignItems: 'center',
                 marginTop: normalize(40),
               }}>
-              <TouchableOpacity>
-                <Avatar size={100} rounded source={image.idcard} />
+              <TouchableOpacity onPress={onAddImage}>
+                <View style={{
+                  width : normalize(116),
+                  height : normalize(116),
+                  position : 'relative'
+                }}>
+                  <Avatar size={116} rounded source={(!image)?icons.account:{uri : image.assets[0].uri}} />
+                  <View style={{
+                    position : 'absolute',
+                    left : normalize(70.7),
+                    top : normalize(70.7),
+                    width : normalize(32),
+                    height : normalize(32),
+                    borderRadius : normalize(16),
+                    backgroundColor : colors.white,
+                    flex : 1,
+                    justifyContent : 'center',
+                    alignItems : 'center'
+                  }}>
+                    <Image source={icons.camera} style={{
+                      width : normalize(20),
+                      height : normalize(20)
+                    }}/>
+                  </View>
+                </View>
               </TouchableOpacity>
             </View>
             <View style={{marginTop: normalize(40)}}>
-              <Text style={styles.h1}>ข้อมูลทั่วไป (โปรดระบุ)</Text>
+                <Text style={styles.h1}>ข้อมูลทั่วไป (โปรดระบุ)</Text>
             </View>
             <TextInput
               onChangeText={(value)=>{
@@ -138,6 +185,23 @@ const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
               placeholder={'นามสกุล'}
               placeholderTextColor={colors.disable}
             />
+            <TouchableOpacity onPress={()=> setOpenCalendar(true)}>
+               <View style={[styles.input,{
+                alignItems : 'center',
+                flexDirection : 'row'
+               }]}>
+                <TextInput
+                 value={(birthday != "")?`${birthday.split('-')[2]}/${birthday.split('-')[1]}/${parseInt(birthday.split('-')[0])+543}`:birthday}
+                 editable={false} 
+                 placeholder={'วัน/เดือน/ปี เกิด'}
+                 style={{width : windowWidth*0.78}}
+                />
+                <Image source={icons.jobCard} style={{
+                  width : normalize(25),
+                  height : normalize(30)
+                }}/>
+               </View>
+            </TouchableOpacity>
             <TextInput
               value={tele}
               style={[styles.input,{backgroundColor : colors.disable}]}
@@ -301,6 +365,7 @@ const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
               !formState.name || 
               !formState.surname ||
               !formState.tel ||
+              !formState.birthDate ||
               !formState.no || 
               !formState.address ||
               !formState.province.value ||
@@ -310,29 +375,113 @@ const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
             }
             color={colors.orange}
             onPress={() => {
+              setLoading(true)
               Register.registerStep2(
                 formState.name,
                 formState.surname,
+                formState.birthDate,
                 formState.tel,
                 formState.no,
                 formState.address,
                 formState.province.value,
                 formState.district.value,
                 formState.subdistrict.value,
-                formState.postal).then((res)=>{
-                  Geolocation.getCurrentPosition(
-                    (position) => {
-                      navigation.navigate('ThirdFormScreen',{tele : formState.tel,latitude : position.coords.latitude,longitude : position.coords.longitude});
-                    },
-                    (error) => {
-                      console.log(error.code, error.message);
-                    },
-                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-                );
+                formState.postal).then(async(res)=>{
+                  if(!image){
+                    if (Platform.OS === 'ios') {
+                      await Geolocation.requestAuthorization('always');
+                    }
+                    else if(Platform.OS === 'android'){
+                      await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+                    }
+                    Geolocation.getCurrentPosition(
+                      (position) => {
+                        setLoading(false)
+                        navigation.navigate('ThirdFormScreen',{tele : formState.tel,latitude : position.coords.latitude,longitude : position.coords.longitude});
+                      },
+                      (error) => {
+                        console.log(error.code, error.message);
+                      },
+                      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                    );
+                  }
+                  else{
+                    Register.uploadProfileImage(image).then(
+                      async(res) => {
+                        if (Platform.OS === 'ios') {
+                          await Geolocation.requestAuthorization('always');
+                        }
+                        else if(Platform.OS === 'android'){
+                          await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+                        }
+                        Geolocation.getCurrentPosition(
+                          (position) => {
+                            setLoading(false)
+                            navigation.navigate('ThirdFormScreen',{tele : formState.tel,latitude : position.coords.latitude,longitude : position.coords.longitude});
+                          },
+                          (error) => {
+                            console.log(error.code, error.message);
+                          },
+                          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                        );
+                      }
+                    ).catch(err => console.log(err))
+                  }
                 }).catch(err => console.log(err))
             }}
           />
         </View>
+        <Modal 
+        transparent={true}
+        visible={loading}>
+            <View style={{
+                flex : 1,
+                backgroundColor : 'rgba(0,0,0,0.5)',
+                justifyContent : 'center',
+                alignItems : 'center'
+            }}>
+                <View style={{
+                    backgroundColor : colors.white,
+                    width : normalize(50),
+                    height : normalize(50),
+                    display : 'flex',
+                    justifyContent : 'center',
+                    alignItems : 'center',
+                    borderRadius : normalize(8)
+                }}>
+                    <Lottie source={img.loading} autoPlay loop style={{
+                        width : normalize(50),
+                        height : normalize(50)
+                    }}/>
+                </View>
+            </View>
+        </Modal>
+        <Modal transparent={true}
+        visible={openCalendar}>
+            <View style={{
+                flex : 1,
+                backgroundColor : 'rgba(0,0,0,0.5)',
+                justifyContent : 'center',
+                alignItems : 'center'
+            }}>
+              <View style={{
+                borderRadius : normalize(8),
+                backgroundColor : colors.white,
+                width : windowWidth*0.9,
+                padding : normalize(20)
+              }}>
+                <CalendarCustom value={birthday} onHandleChange={(day)=> {
+                  setBirthday(day.dateString)
+                  setOpenCalendar(false)
+                  dispatch({
+                    type : "Handle Input",
+                    field : "birthDate",
+                    payload : new Date(day.timestamp)
+                  })
+                }}/>
+              </View>
+            </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );

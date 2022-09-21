@@ -11,6 +11,7 @@ import fonts from '../../assets/fonts';
 import {normalize} from '@rneui/themed';
 import { Image } from 'react-native';
 import MainTaskScreen from '../../screens/MainTaskScreen/MainTaskScreen';
+import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -67,8 +68,8 @@ const MainTapNavigator: React.FC = () => {
         }}
       />
       <Tab.Screen
-        name="รายได้"
-        component={IncomeScreen}
+        name="โปรไฟล์"
+        component={ProfileScreen}
         options={{
           tabBarLabelStyle: {
             fontFamily: font.medium,
@@ -80,7 +81,7 @@ const MainTapNavigator: React.FC = () => {
                 fontSize: normalize(14),
                 color: focused ? colors.orange : colors.gray,
               }}>
-              รายได้
+              โปรไฟล์
             </Text>
           ),
           tabBarIcon:(i)=> i.focused?(

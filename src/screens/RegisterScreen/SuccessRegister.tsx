@@ -4,6 +4,8 @@ import { normalize } from '@rneui/themed'
 import { colors, font, image } from '../../assets'
 import { MainButton } from '../../components/Button/MainButton'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as RootNavigation from '../../navigations/RootNavigation';
+import { Register } from '../../datasource/AuthDatasource'
 
 const SuccessRegister :React.FC<any> = ({navigation}) =>{
   return (
@@ -27,8 +29,15 @@ const SuccessRegister :React.FC<any> = ({navigation}) =>{
               โปรดรอการยืนยันสถานะนักบินจากระบบ เพื่อรับงาน</Text>
         </View>
         <MainButton label='เริ่มใช้งาน' color={colors.orange} onPress={async()=>{
-            await AsyncStorage.clear()
-            navigation.navigate('HomeScreen')
+            const token_register = await AsyncStorage.getItem('token_register')
+            await AsyncStorage.setItem('token',token_register!)
+            Register.changeToPending().then(
+              res => {
+                RootNavigation.navigate('Main', {
+                  screen: 'MainScreen',
+                })
+              }
+            ).catch(err => console.log(err))
         }}/>
     </View>
   )

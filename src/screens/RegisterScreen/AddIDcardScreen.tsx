@@ -8,14 +8,16 @@ import colors from '../../assets/colors/colors';
 import { font, icons,image as img } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
 import * as ImagePicker from 'react-native-image-picker';
-import { Register } from '../../datasource/TaskDatasource';
+import { Register } from '../../datasource/AuthDatasource';
 import { ProgressBar } from '../../components/ProgressBar';
 import Lottie from 'lottie-react-native';
+import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 
 const width = Dimensions.get('window').width;
 
 const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
-  const telNo = route.params
+  const telNo = route.params.tele
+  const Profile = route.params.profile
   const width = Dimensions.get('window').width
   const [image,setImage] = useState<any>(null)
   const [idcard,setIdCard] = useState<any>("")
@@ -32,17 +34,22 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
   return (
     <SafeAreaView style={stylesCentral.container}>
         <CustomHeader
-          title="ลงทะเบียนนักบินโดรน"
+          title={(Profile)?"ส่งเอกสารเพิ่มเติม":"ลงทะเบียนนักบินโดรน"}
           showBackBtn
           onPressBack={() => navigation.goBack()}
         />
         <View style={styles.inner}>
             <View>
-            <View style={{marginBottom: normalize(10)}}>
-              <ProgressBar index={4} />
-            </View>
-            <Text style={styles.label}>ขั้นตอนที่ 4 จาก 4</Text>
-            <Text style={styles.h1}>ยืนยันเอกสาร</Text>
+                {
+                    (Profile)?<></>:
+                    <>
+                        <View style={{marginBottom: normalize(10)}}>
+                          <ProgressBar index={4} />
+                        </View>
+                        <Text style={styles.label}>ขั้นตอนที่ 4 จาก 4</Text>
+                        <Text style={styles.h1}>ยืนยันเอกสาร</Text>
+                    </>
+                }
                 <View style={{paddingTop : 20}}>
                     <Text style={styles.h2}>รูปถ่ายผู้สมัคร คู่บัตรประชาชน</Text>
                     <TouchableOpacity style={{
@@ -102,7 +109,22 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
             </View>
             <MainButton label='ยืนยันการสมัคร' color={(idcard.length === 13 && image != null)?colors.orange:colors.disable} disable={(idcard.length === 13 && image != null)?false:true} onPress={()=>{
                 if(idcard.length === 13 && image != null){
-                    setOpenModal(true)
+                    if(Profile){
+                        setLoading(true);
+                        ProfileDatasource.addIdCard(idcard).then(
+                            res => {
+                                ProfileDatasource.uploadDronerIDCard(image).then(
+                                    (res)=>{
+                                        setLoading(false)
+                                        navigation.navigate('MainScreen')
+                                    }
+                                ).catch(err => console.log(err))
+                            }
+                        ).catch(err => console.log(err))
+                    }
+                    else{
+                        setOpenModal(true)
+                    }
                 }
             }}/>
             <Modal
@@ -135,7 +157,7 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
                             setOpenModal(false);
                             setLoading(true);
                             Register.registerStep4(
-                                telNo.tele,
+                                telNo,
                                 idcard
                             ).then(res=>{
                                 Register.uploadDronerIDCard(image).then(
