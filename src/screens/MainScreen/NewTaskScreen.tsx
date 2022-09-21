@@ -9,11 +9,16 @@ import {stylesCentral} from '../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import NewTask from '../../components/TaskList/NewTask';
-import {MainButton} from '../../components/Button/MainButton';
+import Toast from 'react-native-toast-message';
 import icons from '../../assets/icons/icons';
 import fonts from '../../assets/fonts';
 
-const NewTaskScreen: React.FC = () => {
+interface Prop {
+  isOpenReceiveTask: boolean;
+}
+
+const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
+  const {isOpenReceiveTask} = props;
   const [data, setData] = useState<any>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -46,7 +51,13 @@ const NewTaskScreen: React.FC = () => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(selectedTaskId, dronerId, true)
       .then(res => {
-        getData();
+        const task = res.responseData.data;
+        setData(data.filter((x: any) => x.item.id != task.id));
+        Toast.show({
+          type: 'task',
+          text1: `งาน #${task.taskNo} ถูกรับแล้ว`,
+          text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
+        });
       })
       .catch(err => console.log(err));
   };
@@ -66,7 +77,7 @@ const NewTaskScreen: React.FC = () => {
 
   return (
     <View style={[{flex: 1, backgroundColor: colors.grayBg, padding: 8}]}>
-      {data.length == 0 && (
+      {data.length == 0 && !isOpenReceiveTask && (
         <View
           style={[
             stylesCentral.center,
@@ -76,10 +87,35 @@ const NewTaskScreen: React.FC = () => {
             source={image.blankNewTask}
             style={{width: normalize(136), height: normalize(111)}}
           />
-          <View style={{paddingHorizontal: normalize(40)}}>
+          <View
+            style={{
+              marginTop: normalize(20),
+              paddingHorizontal: normalize(40),
+            }}>
             <Text style={stylesCentral.blankFont}>
               ยังไม่มีงานใหม่ เนื่องจากคุณปิดรับงานอยู่
               กรุณากดเปิดรับงานเพื่อที่จะไม่พลาดงานสำหรับคุณ!
+            </Text>
+          </View>
+        </View>
+      )}
+      {data.length == 0 && isOpenReceiveTask && (
+        <View
+          style={[
+            stylesCentral.center,
+            {flex: 1, backgroundColor: colors.grayBg},
+          ]}>
+          <Image
+            source={image.blankNewTask}
+            style={{width: normalize(136), height: normalize(111)}}
+          />
+          <View
+            style={{
+              marginTop: normalize(20),
+              paddingHorizontal: normalize(40),
+            }}>
+            <Text style={stylesCentral.blankFont}>
+              โปรดรอเพื่อรับงานจากระบบ
             </Text>
           </View>
         </View>
