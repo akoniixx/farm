@@ -26,11 +26,11 @@ const FinishTask:React.FC = () =>{
           droner_id,
           ['DONE','WAIT_REVIEW','CANCELED'],
           page,
-          4,
+          99
         )
           .then(res => {
             if (res !== undefined) {
-              setData(data.concat(res));
+              setData(res);
               setCheckResIsComplete(true);
             }
           })
@@ -42,10 +42,6 @@ const FinishTask:React.FC = () =>{
     return data.length !== 0 && checkResIsComplete ?(
         <View style={[{flex: 1, backgroundColor: colors.grayBg, padding: 8}]}>
         <FlatList
-          onEndReached={() => {
-            setLoading(true);
-            setPage(page + 1);
-          }}
           keyExtractor={element => element.item.taskNo}
           data={data}
           extraData={data}

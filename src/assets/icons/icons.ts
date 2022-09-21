@@ -22,4 +22,5 @@ export default {
   starfill: require('./starfill.png'),
   starCorner: require('./starCorner.png'),
   starBorder: require('./starBorder.png'),
+  ssbaner: require('./ssbaner.png'),
 };
