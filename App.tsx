@@ -7,10 +7,18 @@ import SplashScreen from 'react-native-splash-screen'
 import Toast from 'react-native-toast-message';
 import { SheetProvider } from 'react-native-actions-sheet';
 import './src/sheet/Sheets'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const getToken = async() =>{
+  const droneid = await AsyncStorage.getItem('droner_id')
+  const token = await AsyncStorage.getItem('token');
+  console.log(droneid)
+  console.log(token)
+}
 
 const App = () => {
   useEffect(()=>{
+    getToken()
     SplashScreen.hide();
   },[])
   return (

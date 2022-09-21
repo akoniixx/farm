@@ -18,8 +18,8 @@ import CustomHeader from '../../components/CustomHeader';
 import {InputPhone} from '../../components/InputPhone';
 import {MainButton} from '../../components/Button/MainButton';
 import axios from 'axios';
-import {Authentication} from '../../datasource/TaskDatasource';
 import Toast from 'react-native-toast-message';
+import {Authentication} from '../../datasource/AuthDatasource';
 
 const LoginScreen: React.FC<any> = ({navigation}) => {
   const [value, setValue] = useState<string>('');

@@ -17,7 +17,7 @@ import {normalize} from '../../function/Normalize';
 import CustomHeader from '../../components/CustomHeader';
 import {InputPhone} from '../../components/InputPhone';
 import {MainButton} from '../../components/Button/MainButton';
-import {Authentication} from '../../datasource/TaskDatasource';
+import {Authentication} from '../../datasource/AuthDatasource';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -26,13 +26,6 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState<string>('');
   const [errMessage, setErrMessage] = useState<string>('');
-  const getdronerid = async() =>{
-    const droner_id = await AsyncStorage.getItem('droner_id');
-    console.log(droner_id);
-  }
-  useEffect(()=>{
-    getdronerid();
-  },[])
   const login = () => {
     Authentication.generateOtpRegister(value)
       .then(result => {

@@ -21,10 +21,8 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
-import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-import { Authentication } from '../../datasource/TaskDatasource';
+import { Authentication } from '../../datasource/AuthDatasource';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const CELL_COUNT = 6;
@@ -58,6 +56,29 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
   const newCodeRef = useCallback((value : any)=>{
     setCodeRef(value)
   },[codeRef])
+
+  const [otpTimeOut,setOTPtimeout] = useState(120);
+  const [time,setTime] = useState("02:00")
+  useEffect(()=>{
+    if(otpCalling){
+      setOTPtimeout(120)
+      setTime("02:00")
+      setOtpCalling(false)
+    }
+  },[otpCalling])
+
+  useEffect(()=>{
+    let timer = setInterval(()=>{
+      if(otpTimeOut === 0){
+      }
+      else{
+        let second = otpTimeOut-1;
+        setOTPtimeout(second)
+        setTime(`0${parseInt((second/60).toString())}:${(second%60 < 10)? '0'+second%60:second%60}`)
+      }
+    },1000)
+    return ()=> clearInterval(timer)
+  })
 
   const renderCell: React.FC<props> = ({index, symbol, isFocused}) => {
     return (
@@ -152,11 +173,13 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
               (errOTP)?<Text style={
                 styles.textError
               }>
-                รหัส OTP ไม่ถูกต้องกรณุาลองอีกครั้ง
+                รหัส OTP ไม่ถูกต้องกรุณาลองอีกครั้ง
               </Text>:<></>
             }
             <View style={styles.otpQuestion}>
-              <View style={styles.rowDirection}>
+              {
+                (otpTimeOut === 0)?
+                <View style={styles.rowDirection}>
                 <Text style={styles.text}>ไม่ได้รับรหัส OTP? </Text>
                 <TouchableOpacity onPress={()=>{
                   if(route.params.isRegisterScreen){
@@ -175,18 +198,19 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
                       }
                     ).catch(err => console.log(err))
                   }
-                  setOtpCalling(!otpCalling);
+                  setOtpCalling(true);
                 }}>
                   <Text style={[styles.text, {color: colors.orange}]}>
                     ส่งอีกครั้ง
                   </Text>
                 </TouchableOpacity>
-              </View>
+              </View>:<></>
+              }
             </View>
             <View style={styles.timeCount}>
               <View style={styles.rowDirection}>
                 <Text style={styles.text}>รหัส OTP จะหมดอายุภายใน </Text>
-                <OtpTimerCount toggle={otpCalling}/>
+                <Text>{time}</Text>
               </View>
             </View>
           </View>

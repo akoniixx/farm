@@ -1,4 +1,6 @@
 export default {
+  arrowLeft : require('./arrow_left.png'),
+  arrowRight : require('./arrow_right.png'),
   account: require('./account.png'),
   th: require('./TH.png'),
   deleteIcon: require('./deleteIcon.png'),
@@ -23,4 +25,6 @@ export default {
   starCorner: require('./starCorner.png'),
   starBorder: require('./starBorder.png'),
   ssbaner: require('./ssbaner.png'),
+  review: require('./review.png'),
+  logout: require('./logout.png')
 };

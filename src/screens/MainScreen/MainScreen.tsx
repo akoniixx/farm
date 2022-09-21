@@ -1,6 +1,7 @@
 import {Switch} from '@rneui/themed';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
@@ -9,10 +10,12 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
-import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import { Avatar } from '@rneui/base';
+import icons from '../../assets/icons/icons';
 import io from 'socket.io-client';
-import {SheetManager} from 'react-native-actions-sheet';
-import {BASE_URL} from '../../config/develop-config';
+import { BASE_URL } from '../../config/develop-config';
+import {SheetManager} from 'react-native-actions-sheet'
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -21,6 +24,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const [profile, setProfile] = useState({
     name: '',
     lastname: '',
+    image : ''
   });
   const [dronerId, setDronerId] = useState<string>('');
 
@@ -30,9 +34,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
-    getDronerId();
     getProfile()
-   
   }, []);
 
   useEffect(() => {
@@ -60,18 +62,33 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   }, [dronerId]);
 
   const getProfile = async () => {
-   await ProfileDatasource.getProfile(dronerId)
+    const droner_id = await AsyncStorage.getItem('droner_id')
+    ProfileDatasource.getProfile(droner_id!)
       .then(res => {
-        setProfile({
-          ...profile,
-          name: res.firstname,
-        });
+        const imgPath = res.file.filter((item : any) => {
+          if(item.category === "PROFILE_IMAGE"){
+            return item
+          }
+        })
+        if(imgPath.length !=0){
+          ProfileDatasource.getImgePathProfile(droner_id!,imgPath[0].path).then(
+            resImg => {
+              setProfile({
+                ...profile,
+                name: res.firstname,
+                image: resImg.url
+              });
+            }
+          ).catch(err => console.log(err));
+        }
+        else{
+          setProfile({
+            ...profile,
+            name: res.firstname,
+          });
+        }
       })
       .catch(err => console.log(err));
-  };
-
-  const getDronerId = async () => {
-    setDronerId((await AsyncStorage.getItem('droner_id')) ?? '');
   };
   return (
     <BottomSheetModalProvider>
@@ -79,7 +96,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
         <View style={{flex: 2}}>
           <View style={styles.headCard}>
             <View>
-              <Text style={{fontFamily: font.bold, fontSize: normalize(24)}}>
+              <Text style={{fontFamily: font.bold, fontSize: normalize(24),color : colors.fontBlack}}>
                 สวัสดี, {profile.name}
               </Text>
               <View style={styles.activeContainer}>
@@ -94,9 +111,11 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
             <View>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('ProfileScreen');
+                  navigation.navigate('ProfileScreen',{
+                    navbar : false
+                  });
                 }}>
-                <Text>menu</Text>
+                <Avatar size={50} rounded source={(profile.image != '')?{uri : profile.image}:icons.account}/>
               </TouchableOpacity>
             </View>
           </View>
@@ -159,7 +178,7 @@ const styles = StyleSheet.create({
     fontFamily: font.medium,
     fontSize: normalize(14),
     marginLeft: normalize(18),
-    color: colors.fontBlack,
+    color : colors.fontBlack
   },
   font: {
     fontFamily: font.medium,
