@@ -57,6 +57,15 @@ const ProfileScreen: React.FC<any> = ({navigation,route}) => {
       .catch(err => console.log(err))
   },[reload])
 
+const onLogout = () =>{
+  navigation.reset({
+    index: 0,
+    routes: [{ name: 'Main' }],
+  });
+  setTimeout(() =>  Authentication.logout(), 500);
+ 
+}
+
   useEffect(() => {
     if(brand != null){
       ProfileDatasource.getDroneBrandType(brand.value).then(
@@ -295,7 +304,7 @@ const ProfileScreen: React.FC<any> = ({navigation,route}) => {
             </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={async()=>{
-            await Authentication.logout();
+            await onLogout();
             RootNavigation.navigate('Auth', {
               screen: 'HomeScreen',
             });

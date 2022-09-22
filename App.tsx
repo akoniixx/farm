@@ -7,9 +7,11 @@ import Toast from 'react-native-toast-message';
 import {SheetProvider} from 'react-native-actions-sheet';
 import './src/sheet/Sheets';
 import {toastConfig} from './src/config/toast-config';
+import { BackHandler } from 'react-native';
 
 const App = () => {
   useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
   }, []);
   return (
