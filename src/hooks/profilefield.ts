@@ -4,7 +4,8 @@ export const initProfileState = {
     image : "",
     droneitem : [],
     status : "",
-    totalRevenue : 0
+    totalRevenue : 0,
+    rating : "0.00"
 }
 
 export const profileReducer = (state : any,action :any)=>{
@@ -16,7 +17,8 @@ export const profileReducer = (state : any,action :any)=>{
                 image : action.image,
                 droneitem : action.droneitem,
                 status : action.status,
-                totalRevenue : action.totalRevenue
+                totalRevenue : action.totalRevenue,
+                rating : action.rating
             }
     
         default:

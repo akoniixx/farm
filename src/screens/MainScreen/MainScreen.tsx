@@ -1,6 +1,6 @@
 import {Switch} from '@rneui/themed';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Button, Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
@@ -24,7 +24,12 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const [profile, setProfile] = useState({
     name: '',
     lastname: '',
-    image : ''
+    image : '',
+    totalRevenue : '0',
+    totalRevenueToday : '0',
+    totalArea : '0',
+    totalTask : '0',
+    ratingAvg : '0.00'
   });
   const [dronerId, setDronerId] = useState<string>('');
 
@@ -71,21 +76,41 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           }
         })
         if(imgPath.length !=0){
-          ProfileDatasource.getImgePathProfile(droner_id!,imgPath[0].path).then(
-            resImg => {
-              setProfile({
-                ...profile,
-                name: res.firstname,
-                image: resImg.url
-              });
+          ProfileDatasource.getTaskrevenuedroner().then(
+            resRev => {
+              console.log(resRev)
+              ProfileDatasource.getImgePathProfile(droner_id!,imgPath[0].path).then(
+                resImg => {
+                  setProfile({
+                    ...profile,
+                    name: res.firstname,
+                    image: resImg.url,
+                    totalRevenue : resRev.totalRevenue,
+                    totalRevenueToday : resRev.totalRevenueToday,
+                    totalArea : resRev.totalArea,
+                    totalTask : resRev.totalTask,
+                    ratingAvg : (!resRev.ratingAvg)?"0.00":((parseFloat(resRev.ratingAvg)).toFixed(2)).toString()
+                  });
+                }
+              ).catch(err => console.log(err));
             }
           ).catch(err => console.log(err));
         }
         else{
-          setProfile({
-            ...profile,
-            name: res.firstname,
-          });
+          ProfileDatasource.getTaskrevenuedroner().then(
+            resRev => {
+              console.log(resRev)
+              setProfile({
+                ...profile,
+                name: res.firstname,
+                totalRevenue : resRev.totalRevenue,
+                totalRevenueToday : resRev.totalRevenueToday,
+                totalArea : resRev.totalArea,
+                totalTask : resRev.totalTask,
+                ratingAvg : (!resRev.ratingAvg)?"0.00":((parseFloat(resRev.ratingAvg)).toFixed(2)).toString()
+              });
+            }
+          ).catch(err => console.log(err));
         }
       })
       .catch(err => console.log(err));
@@ -115,7 +140,37 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     navbar : false
                   });
                 }}>
-                <Avatar size={50} rounded source={(profile.image != '')?{uri : profile.image}:icons.account}/>
+                <View style={{
+                  width : normalize(50),
+                  height : normalize(55),
+                  position : 'relative'
+                }}>
+                  <Avatar size={normalize(50)} rounded source={(profile.image != '')?{uri : profile.image}:icons.account}/>
+                  <View style={{
+                    width : normalize(50),
+                    height : normalize(16),
+                    borderRadius : normalize(8),
+                    position : 'absolute',
+                    left : normalize(0),
+                    top : normalize(43),
+                    backgroundColor : colors.fontBlack,
+                    display : 'flex',
+                    flexDirection : 'row',
+                    alignItems : 'center',
+                    justifyContent : 'center'
+                  }}>
+                    <Text style={{
+                      fontFamily : font.medium,
+                      fontSize : normalize(12),
+                      color : colors.white,
+                      paddingRight : normalize(2)
+                    }}>{`${profile.ratingAvg}`}</Text>
+                    <Image source={icons.review} style={{
+                          width : normalize(12),
+                          height : normalize(12)
+                        }}/>
+                  </View>
+                </View>
               </TouchableOpacity>
             </View>
           </View>
@@ -129,22 +184,86 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                {arr.map(index => (
-                  <View
-                    key={index}
-                    style={{
-                      backgroundColor: colors.orange,
-                      marginHorizontal: 5,
-                      paddingHorizontal: 10,
-                      justifyContent: 'center',
-                      width: 160,
-                      height: 75,
-                      borderRadius: 16,
-                    }}>
+                <View
+                  style={{
+                    backgroundColor: colors.orange,
+                    marginHorizontal: 5,
+                    paddingHorizontal: 10,
+                    paddingVertical : normalize(10),
+                    justifyContent: 'space-between',
+                    width: 160,
+                    height: 75,
+                    borderRadius: 16,
+                  }}>
+                  <View style={{
+                    flexDirection : 'row',
+                    alignItems : 'center'
+                  }}>
+                    <Image source={icons.income} style={styles.iconsTask}/>
                     <Text style={styles.font}>รายได้วันนี้</Text>
-                    <Text style={styles.font}>0</Text>
                   </View>
-                ))}
+                  <Text style={styles.font}>{`฿${profile.totalRevenueToday}`}</Text>
+                </View>
+                <View
+                  style={{
+                    backgroundColor: '#6B7580',
+                    marginHorizontal: 5,
+                    paddingHorizontal: 10,
+                    paddingVertical : normalize(10),
+                    justifyContent: 'space-between',
+                    width: 160,
+                    height: 75,
+                    borderRadius: 16,
+                  }}>
+                    <View style={{
+                    flexDirection : 'row',
+                    alignItems : 'center'
+                    }}>
+                        <Image source={icons.income} style={styles.iconsTask}/>
+                        <Text style={styles.font}>รายได้ทั้งหมด</Text>
+                    </View>
+                  <Text style={styles.font}>{`฿${profile.totalRevenue}`}</Text>
+                </View>
+                <View
+                  style={{
+                    backgroundColor: '#37ABFF',
+                    marginHorizontal: 5,
+                    paddingHorizontal: 10,
+                    paddingVertical : normalize(10),
+                    justifyContent: 'space-between',
+                    width: 160,
+                    height: 75,
+                    borderRadius: 16,
+                  }}>
+                    <View style={{
+                    flexDirection : 'row',
+                    alignItems : 'center'
+                    }}>
+                      <Image source={icons.farm} style={styles.iconsTask}/>
+                      <Text style={styles.font}>ไร่สะสม</Text>
+                    </View>
+                  <Text style={styles.font}>{`${profile.totalArea} ไร่`}</Text>
+                </View>
+                <View
+                  style={{
+                    backgroundColor: '#3EBD93',
+                    marginHorizontal: 5,
+                    paddingHorizontal: 10,
+                    paddingVertical : normalize(10),
+                    justifyContent: 'space-between',
+                    width: 160,
+                    height: 75,
+                    borderRadius: 16,
+                  }}>
+                    <View style={{
+                    flexDirection : 'row',
+                    alignItems : 'center'
+                    }}>
+                      <Image source={icons.dronejob} style={styles.iconsTask}/>
+                      <Text style={styles.font}>งานที่บินเสร็จ</Text>
+                    </View>
+                  <Text style={styles.font}>{`${profile.totalTask} งาน`}</Text>
+                </View>
               </ScrollView>
             </View>
           </View>
@@ -182,7 +301,12 @@ const styles = StyleSheet.create({
   },
   font: {
     fontFamily: font.medium,
-    fontSize: normalize(20),
+    fontSize: normalize(16),
     color: colors.white,
   },
+  iconsTask : {
+    width : normalize(20),
+    height : normalize(20),
+    marginRight : normalize(5)
+  }
 });

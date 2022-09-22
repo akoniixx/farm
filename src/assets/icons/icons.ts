@@ -26,5 +26,8 @@ export default {
   starBorder: require('./starBorder.png'),
   ssbaner: require('./ssbaner.png'),
   review: require('./review.png'),
-  logout: require('./logout.png')
+  logout: require('./logout.png'),
+  income : require('./income.png'),
+  farm : require('./farm.png'),
+  dronejob : require('./dronejob.png')
 };
