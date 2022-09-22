@@ -128,7 +128,6 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
       mediaType: 'photo',
     });
     if (!result.didCancel) {
-      console.log(result);
       setImage2(result);
     }
   };
@@ -193,7 +192,6 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 Province.provinceName ==
                 `จังหวัด${responseJson.results[0].address_components[3].long_name}`
               ) {
-                // console.log(Province.provinceName)
                 setProvinceId(Province.provinceId);
                 QueryLocation.QueryDistrict(Province.provinceId)
                   .then((itemDistrict: any) => {
@@ -598,6 +596,11 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                       <Text style={styles.hSheet}>
                         เพิ่มโดรน
                       </Text>
+                      <View style={{
+                          width: normalize(14),
+                          height: normalize(14)
+                        }} >
+                      </View>
                     </View>
                     <View style={{
                       paddingHorizontal: 8,
