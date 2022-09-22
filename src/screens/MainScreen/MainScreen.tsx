@@ -143,8 +143,8 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 }}>
                 <View style={{
                   width : normalize(50),
-                  height : normalize(55),
-                  position : 'relative'
+                  height : normalize(65),
+                  position : 'relative',
                 }}>
                   <Avatar size={normalize(50)} rounded source={(profile.image != '')?{uri : profile.image}:icons.account}/>
                   <View style={{
