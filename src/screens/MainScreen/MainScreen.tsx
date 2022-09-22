@@ -11,15 +11,15 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import { Avatar } from '@rneui/base';
+import {Avatar} from '@rneui/base';
 import icons from '../../assets/icons/icons';
 import io from 'socket.io-client';
-import { BASE_URL } from '../../config/develop-config';
-import {SheetManager} from 'react-native-actions-sheet'
+import {SheetManager} from 'react-native-actions-sheet';
+import {BASE_URL} from '../../config/develop-config';
+import {TaskDatasource} from '../../datasource/TaskDatasource';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
-  const [active, setActive] = useState<boolean>(false);
   const [arr] = useState([1, 2, 3, 4]);
   const [profile, setProfile] = useState({
     name: '',
@@ -29,7 +29,8 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     totalRevenueToday : '0',
     totalArea : '0',
     totalTask : '0',
-    ratingAvg : '0.00'
+    ratingAvg : '0.00',
+    isOpenReceiveTask: false,
   });
   const [dronerId, setDronerId] = useState<string>('');
 
@@ -39,40 +40,28 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
-    getProfile()
+    getProfile();
+    openSocket();
   }, []);
 
-  useEffect(() => {
-    socket.on(`new-task-${dronerId}`, ({data}) => {
+  const openSocket = async () => {
+    const dronerId = await AsyncStorage.getItem('droner_id');
+    socket.on(`new-task-${dronerId!}`, ({data}) => {
       SheetManager.show('NewTaskSheet', {
         payload: {
           data,
-          // taskId: data.id,
-          // taskNo: data.taskNo,
-          // status: data.status,
-          // title: data.farmerPlot.plantName,
-          // price: data.totalPrice,
-          // date: data.dateAppointment,
-          // address: data.farmerPlot.locationName,
-          // distance: data.distance,
-          // user: `${data.farmer.firstname} ${data.farmer.lastname}`,
-          // img: data.image_profile_url,
-          // preparation: data.preparationBy,
-          // tel: data.farmer.telephoneNo,
-          // farmArea: data.farmAreaAmount,
         },
       });
     });
-    getProfile()
-  }, [dronerId]);
+  };
 
   const getProfile = async () => {
-    const droner_id = await AsyncStorage.getItem('droner_id')
+    const droner_id = await AsyncStorage.getItem('droner_id');
     ProfileDatasource.getProfile(droner_id!)
       .then(res => {
-        const imgPath = res.file.filter((item : any) => {
-          if(item.category === "PROFILE_IMAGE"){
-            return item
+        const imgPath = res.file.filter((item: any) => {
+          if (item.category === 'PROFILE_IMAGE') {
+            return item;
           }
         })
         if(imgPath.length !=0){
@@ -115,20 +104,35 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
       })
       .catch(err => console.log(err));
   };
+
+  const openReceiveTask = async (isOpen: boolean) => {
+    const dronerId = await AsyncStorage.getItem('droner_id');
+    TaskDatasource.openReceiveTask(dronerId!, isOpen)
+      .then(res => {
+        setProfile({...profile, isOpenReceiveTask: res.isOpenReceiveTask});
+      })
+      .catch(err => console.log(err));
+  };
+
   return (
     <BottomSheetModalProvider>
       <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
         <View style={{flex: 2}}>
           <View style={styles.headCard}>
             <View>
-              <Text style={{fontFamily: font.bold, fontSize: normalize(24),color : colors.fontBlack}}>
+              <Text
+                style={{
+                  fontFamily: font.bold,
+                  fontSize: normalize(24),
+                  color: colors.fontBlack,
+                }}>
                 สวัสดี, {profile.name}
               </Text>
               <View style={styles.activeContainer}>
                 <Switch
                   color={colors.green}
-                  value={active}
-                  onValueChange={value => setActive(value)}
+                  value={profile.isOpenReceiveTask}
+                  onValueChange={value => openReceiveTask(value)}
                 />
                 <Text style={styles.activeFont}>เปิดรับงาน</Text>
               </View>
@@ -136,8 +140,8 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
             <View>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('ProfileScreen',{
-                    navbar : false
+                  navigation.navigate('ProfileScreen', {
+                    navbar: false,
                   });
                 }}>
                 <View style={{
@@ -269,7 +273,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           </View>
         </View>
         <View style={{flex: 4}}>
-          <TaskTapNavigator />
+          <TaskTapNavigator isOpenReceiveTask={profile.isOpenReceiveTask} />
         </View>
       </View>
     </BottomSheetModalProvider>
@@ -297,7 +301,7 @@ const styles = StyleSheet.create({
     fontFamily: font.medium,
     fontSize: normalize(14),
     marginLeft: normalize(18),
-    color : colors.fontBlack
+    color: colors.fontBlack,
   },
   font: {
     fontFamily: font.medium,

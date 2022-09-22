@@ -22,19 +22,32 @@ const renderTabBar = (props:any) => (
   />
 );
 
-const renderScene = SceneMap({
-  task: TaskScreen,
-  newTask: NewTaskScreen,
-});
+// const renderScene = SceneMap({
+//   task: TaskScreen,
+//   newTask: NewTaskScreen,
+// });
 
-const TaskTapNavigator:React.FC =()=> {
+interface Prop {
+  isOpenReceiveTask: boolean
+}
+
+const TaskTapNavigator:React.FC<Prop> =(props: Prop)=> {
   const layout = useWindowDimensions();
-
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: 'task', title: 'งานที่ต้องทำ' },
     { key: 'newTask', title: 'งานใหม่สำหรับคุณ' },
   ]);
+  const renderScene = ({ route }: any) => {
+    switch (route.key) {
+      case "task":
+        return <TaskScreen />;
+      case "newTask":
+        return <NewTaskScreen isOpenReceiveTask={props.isOpenReceiveTask}/>;
+      default: 
+        return null;
+    }
+  };
 
   return (
     <TabView

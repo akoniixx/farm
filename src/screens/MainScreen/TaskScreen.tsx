@@ -63,8 +63,8 @@ const TaskScreen: React.FC = () => {
       TaskDatasource.updateTaskStatus(id, dronerId, 'IN_PROGRESS')
         .then(res => {
           Toast.show({
-            type: 'success',
-            text1: `งาน ${taskNo}`,
+            type: 'task',
+            text1: `งาน #${taskNo}`,
             text2: 'อัพเดทสถานะเรียบร้อยแล้ว',
           });
           setLoading(false);
