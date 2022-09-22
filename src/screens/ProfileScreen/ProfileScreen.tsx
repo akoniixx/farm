@@ -132,7 +132,8 @@ const ProfileScreen: React.FC<any> = ({navigation,route}) => {
                 image : "",
                 droneitem : res.dronerDrone,
                 status : res.status,
-                totalRevenue : resRev.totalRevenue
+                totalRevenue : resRev.totalRevenue,
+                rating : (!resRev.ratingAvg)?"0.00":((parseFloat(resRev.ratingAvg)).toFixed(2)).toString()
               })
             }
           ).catch(err => console.log(err))
@@ -149,7 +150,8 @@ const ProfileScreen: React.FC<any> = ({navigation,route}) => {
                     image : resImg.url,
                     droneitem : res.dronerDrone,
                     status : res.status,
-                    totalRevenue : resRev.totalRevenue
+                    totalRevenue : resRev.totalRevenue,
+                    rating : (!resRev.ratingAvg)?"0.00":((parseFloat(resRev.ratingAvg)).toFixed(2)).toString()
                   })
                 }
               ).catch(err => console.log(err))
@@ -179,7 +181,7 @@ const ProfileScreen: React.FC<any> = ({navigation,route}) => {
         <ScrollView>
         <View style={styles.profile}>
             <View style={styles.profileDescription}>
-                <Avatar size={normalize(80)} source={{uri : profilestate.image}} avatarStyle={{
+                <Avatar size={normalize(80)} source={(profilestate.image === "")?icons.account:{uri : profilestate.image}} avatarStyle={{
                   borderRadius : normalize(40)
                 }}/>
                 <View style={styles.profileName}>
@@ -196,10 +198,10 @@ const ProfileScreen: React.FC<any> = ({navigation,route}) => {
                     }}>{profilestate.id}</Text>
                     <View style={styles.review}>
                         <Text style={{
-                          fontFamily : font.light,
+                          fontFamily : font.medium,
                           color : colors.white,
                           fontSize : normalize(11)
-                        }}>0.00</Text>
+                        }}>{profilestate.rating}</Text>
                         <Image source={icons.review} style={{
                           width : normalize(12),
                           height : normalize(12)
@@ -270,39 +272,52 @@ const ProfileScreen: React.FC<any> = ({navigation,route}) => {
           </View>
           <Text style={styles.revenue}>{`฿${profilestate.totalRevenue}`}</Text>
         </View>
-        <View style={styles.listTile}>
-          <View style={{
-            flexDirection : 'row',
-            alignItems : 'center'
-          }}>
-             <Image source={icons.task} style={styles.listTileIcon}/>
-             <Text style={styles.listTileTitle}>ส่งเอกสารเพิ่มเติม</Text>
-          </View>
-          <TouchableOpacity onPress={()=>{
+        <TouchableOpacity onPress={()=>{
             navigation.navigate("ProfileDocument",{
               tele : profilestate.id
             })
           }}>
-            <Image source={icons.arrowRight} style={styles.listTileIcon}/>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.listTile}>
-          <View style={{
-            flexDirection : 'row',
-            alignItems : 'center'
-          }}>
-             <Image source={icons.logout} style={styles.listTileIcon}/>
-             <Text style={styles.listTileTitle}>ออกจากระบบ</Text>
-          </View>
-          <TouchableOpacity onPress={async()=>{
+            <View style={styles.listTile}>
+              <View style={{
+                flexDirection : 'row',
+                alignItems : 'center'
+              }}>
+                 <Image source={icons.task} style={styles.listTileIcon}/>
+                 <Text style={styles.listTileTitle}>ส่งเอกสารเพิ่มเติม</Text>
+              </View>
+              <TouchableOpacity onPress={()=>{
+                navigation.navigate("ProfileDocument",{
+                  tele : profilestate.id
+                })
+              }}>
+                <Image source={icons.arrowRight} style={styles.listTileIcon}/>
+              </TouchableOpacity>
+            </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={async()=>{
             await Authentication.logout();
             RootNavigation.navigate('Auth', {
               screen: 'HomeScreen',
             });
           }}>
-            <Image source={icons.arrowRight} style={styles.listTileIcon}/>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.listTile}>
+            <View style={{
+              flexDirection : 'row',
+              alignItems : 'center'
+            }}>
+               <Image source={icons.logout} style={styles.listTileIcon}/>
+               <Text style={styles.listTileTitle}>ออกจากระบบ</Text>
+            </View>
+            <TouchableOpacity onPress={async()=>{
+              await Authentication.logout();
+              RootNavigation.navigate('Auth', {
+                screen: 'HomeScreen',
+              });
+            }}>
+              <Image source={icons.arrowRight} style={styles.listTileIcon}/>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
         </ScrollView>
       </View>
       <ActionSheet 

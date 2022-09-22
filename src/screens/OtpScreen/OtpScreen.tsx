@@ -177,7 +177,36 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
               </Text>:<></>
             }
             <View style={styles.otpQuestion}>
-              {
+              <View style={styles.rowDirection}>
+                <Text style={styles.text}>ไม่ได้รับรหัส OTP? </Text>
+                {
+                  (otpTimeOut === 0)?
+                  <TouchableOpacity onPress={()=>{
+                    if(route.params.isRegisterScreen){
+                      Authentication.generateOtpRegister(route.params.telNumber).then(
+                        (res)=>{
+                          newTokenOtp(res.result.token)
+                          newCodeRef(res.result.refCode)
+                        }
+                      ).catch(err => console.log(err))
+                    }
+                    else{
+                      Authentication.generateOtp(route.params.telNumber).then(
+                        (res)=>{
+                          newTokenOtp(res.result.token)
+                          newCodeRef(res.result.refCode)
+                        }
+                      ).catch(err => console.log(err))
+                    }
+                    setOtpCalling(true);
+                  }}>
+                    <Text style={[styles.text, {color: colors.orange}]}>
+                      ส่งอีกครั้ง
+                    </Text>
+                  </TouchableOpacity>:<Text style={styles.text}>{time}</Text>
+                }
+              </View>
+              {/* {
                 (otpTimeOut === 0)?
                 <View style={styles.rowDirection}>
                 <Text style={styles.text}>ไม่ได้รับรหัส OTP? </Text>
@@ -205,14 +234,14 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
                   </Text>
                 </TouchableOpacity>
               </View>:<></>
-              }
+              } */}
             </View>
-            <View style={styles.timeCount}>
+            {/* <View style={styles.timeCount}>
               <View style={styles.rowDirection}>
                 <Text style={styles.text}>รหัส OTP จะหมดอายุภายใน </Text>
                 <Text>{time}</Text>
               </View>
-            </View>
+            </View> */}
           </View>
         </SafeAreaView>
       </TouchableWithoutFeedback>
