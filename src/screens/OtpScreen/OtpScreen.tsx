@@ -123,8 +123,8 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
             setErrOTP(false)
             await AsyncStorage.setItem('token', result.accessToken);
             await AsyncStorage.setItem('droner_id', result.data.id);
-            await RootNavigation.navigate('Main', {
-              screen: 'MainScreen',
+            await RootNavigation.navigate('MainScreen', {
+              screen: 'หน้าหลัก',
             })
           }).catch((err)=>{
             setErrOTP(true)

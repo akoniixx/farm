@@ -14,8 +14,7 @@ const MainTasklists: React.FC<any> = (props: any) => {
   const finishDate = new Date(
     props.finishTime.length ? props.finishTime[0].createdAt : null,
   );
-  console.log(finishDate);
-
+ 
   return (
     <View style={styles.taskMenu}>
       <View style={styles.listTile}>

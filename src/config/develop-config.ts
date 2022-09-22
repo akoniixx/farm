@@ -74,7 +74,6 @@ uploadFileProfileInstance.interceptors.request.use(async (config: any) => {
   const token = await AsyncStorage.getItem('token');
   config.headers['Content-Type'] = 'multipart/form-data';
   config.headers['Authorization'] = `Bearer ${token}`;
-  console.log(config);
   return config;
 });
 

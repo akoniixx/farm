@@ -8,11 +8,16 @@ import { TaskDatasource } from "../../datasource/TaskDatasource";
 import { stylesCentral } from "../../styles/StylesCentral";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from "@react-navigation/native";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 const FinishTask:React.FC = () =>{
     const [data, setData] = useState<any>([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [checkResIsComplete, setCheckResIsComplete] = useState(false);
+
+    useEffect(() => {
+      getData();
+    }, []);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -20,7 +25,7 @@ const FinishTask:React.FC = () =>{
         }, []),
       );
     const getData = async () => {
-        setLoading(false);
+        setLoading(true);
         const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
         TaskDatasource.getTaskById(
           droner_id,
@@ -32,52 +37,62 @@ const FinishTask:React.FC = () =>{
             if (res !== undefined) {
               setData(res);
               setCheckResIsComplete(true);
+              setLoading(false)
             }
           })
-          .catch(err => console.log(err));
+          .catch(err => {
+            setLoading(false)
+            console.log(err)});
       };
-      useEffect(() => {
-        getData();
-      }, [loading, page]);
-    return data.length !== 0 && checkResIsComplete ?(
-        <View style={[{flex: 1, backgroundColor: colors.grayBg, padding: 8}]}>
-        <FlatList
-          keyExtractor={element => element.item.taskNo}
-          data={data}
-          extraData={data}
-          renderItem={({item}: any) => (
-            <MainTasklist
-              id={item.item.taskNo}
-              status={item.item.status}
-              title={item.item.farmerPlot.plantName}
-              price={item.item.totalPrice}
-              date={item.item.dateAppointment}
-              address={item.item.farmerPlot.locationName}
-              distance={item.item.distance}
-              user={`${item.item.farmer.firstname} ${item.item.farmer.lastname}`}
-              img={item.image_profile_url}
-              preparation={item.item.preparationBy}
-              tel={item.item.farmer.telephoneNo}
-              taskId={item.item.id}
-              farmArea={item.item.farmAreaAmount}
-              finishTime={item.item.taskHistory}
-            />
-          )}
+     
+      return (
+        <>
+       { data.length !== 0 && checkResIsComplete ?(
+          <View style={[{flex: 1, backgroundColor: colors.grayBg, padding: 8}]}>
+          <FlatList
+            keyExtractor={element => element.item.taskNo}
+            data={data}
+            extraData={data}
+            renderItem={({item}: any) => (
+              <MainTasklist
+                id={item.item.taskNo}
+                status={item.item.status}
+                title={item.item.farmerPlot.plantName}
+                price={item.item.totalPrice}
+                date={item.item.dateAppointment}
+                address={item.item.farmerPlot.locationName}
+                distance={item.item.distance}
+                user={`${item.item.farmer.firstname} ${item.item.farmer.lastname}`}
+                img={item.image_profile_url}
+                preparation={item.item.preparationBy}
+                tel={item.item.farmer.telephoneNo}
+                taskId={item.item.id}
+                farmArea={item.item.farmAreaAmount}
+                finishTime={item.item.taskHistory}
+              />
+            )}
+          />
+          <View></View>
+        </View>
+      ) : (
+        <View
+          style={[
+            stylesCentral.center,
+            {flex: 1, backgroundColor: colors.grayBg, padding: 8},
+          ]}>
+          <Image
+            source={image.blankTask}
+            style={{width: normalize(136), height: normalize(111)}}
+          />
+          <Text style={stylesCentral.blankFont}>ยังไม่มีงานที่เริ่มดำเนินการ</Text>
+        </View>
+      )}
+       <Spinner
+          visible={loading}
+          textContent={'Loading...'}
+          textStyle={{color: '#FFF'}}
         />
-        <View></View>
-      </View>
-    ) : (
-      <View
-        style={[
-          stylesCentral.center,
-          {flex: 1, backgroundColor: colors.grayBg, padding: 8},
-        ]}>
-        <Image
-          source={image.blankTask}
-          style={{width: normalize(136), height: normalize(111)}}
-        />
-        <Text style={stylesCentral.blankFont}>ยังไม่มีงานที่เริ่มดำเนินการ</Text>
-      </View>
-    )
+        </>
+      )
 }
 export default FinishTask

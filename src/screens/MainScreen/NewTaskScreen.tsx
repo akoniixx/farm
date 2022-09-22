@@ -28,9 +28,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
-  }, []);
+ 
   const snapPoints = useMemo(() => ['25%', '25%'], []);
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const width = Dimensions.get('window').width;

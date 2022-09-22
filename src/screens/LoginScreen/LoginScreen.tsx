@@ -20,6 +20,7 @@ import {MainButton} from '../../components/Button/MainButton';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import {Authentication} from '../../datasource/AuthDatasource';
+import * as RootNavigation from '../../navigations/RootNavigation';
 
 const LoginScreen: React.FC<any> = ({navigation}) => {
   const [value, setValue] = useState<string>('');
@@ -99,7 +100,9 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
                 label="ลงทะเบียนนักบินโดรน"
                 color={colors.white}
                 fontColor={'black'}
-                onPress={() => console.log('2')}
+                onPress={() =>  RootNavigation.navigate('Auth', {
+                  screen: 'ConditionScreen',
+                })}
               />
             </View>
           </View>

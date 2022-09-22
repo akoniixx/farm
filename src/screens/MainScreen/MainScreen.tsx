@@ -66,7 +66,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
         if(imgPath.length !=0){
           ProfileDatasource.getTaskrevenuedroner().then(
             resRev => {
-              console.log(resRev)
               ProfileDatasource.getImgePathProfile(droner_id!,imgPath[0].path).then(
                 resImg => {
                   setProfile({
@@ -87,7 +86,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
         else{
           ProfileDatasource.getTaskrevenuedroner().then(
             resRev => {
-              console.log(resRev)
               setProfile({
                 ...profile,
                 name: res.firstname,
