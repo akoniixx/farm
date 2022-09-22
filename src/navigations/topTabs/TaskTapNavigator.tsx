@@ -51,11 +51,13 @@ const TaskTapNavigator:React.FC<Prop> =(props: Prop)=> {
 
   return (
     <TabView
+      key={index}
       navigationState={{ index, routes }}
       renderTabBar={renderTabBar}
       renderScene={renderScene}
       onIndexChange={setIndex}
       initialLayout={{ width: layout.width }}
+      lazy
     />
   );
 }
