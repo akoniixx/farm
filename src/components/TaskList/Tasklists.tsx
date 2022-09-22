@@ -512,7 +512,7 @@ const Tasklists: React.FC<any> = (props: any) => {
             label="ยืนยัน"
             color={colors.orange}
             disable={defaulRating == 0}
-            onPress={props.onFinishTask}
+            onPress={()=>props.onFinishTask(taskId)}
           />
         </View>
       </Modal>

@@ -114,7 +114,10 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
         setTimeout(() => setTogleModalSuccess(true), 500);
         setTimeout(() =>  receiveTask(), 600);
       },
-    );
+    ).catch((err)=>{
+      setLoading(false)
+      console.log(err)
+    })
     
   };
 
@@ -137,7 +140,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           setLoading(false)
           getTaskDetail();
         })
-        .catch(err => console.log(err.response.data));
+        .catch(err => {
+          setLoading(false)
+          console.log(err)});
     }
   };
 

@@ -38,6 +38,7 @@ const TaskScreen: React.FC = () => {
   const [defaulRating, setDefaulRating] = useState<number>(0);
   const [maxRatting, setMaxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
   const [comment, setComment] = useState<string>('');
+  const [idUpload,setIdUpload] = useState<string>('');
   const starImgFilled = icons.starfill;
   const starImgCorner = icons.starCorner;
 
@@ -63,7 +64,7 @@ const TaskScreen: React.FC = () => {
       TaskDatasource.updateTaskStatus(id, dronerId, 'IN_PROGRESS')
         .then(res => {
           Toast.show({
-            type: 'task',
+            type: 'success',
             text1: `งาน #${taskNo}`,
             text2: 'อัพเดทสถานะเรียบร้อยแล้ว',
           });
@@ -76,6 +77,11 @@ const TaskScreen: React.FC = () => {
     }
   };
 
+  const openModalUpload =(id:string) =>{
+    setIdUpload(id)
+    setTogleModalUpload(true)
+  }
+
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
       mediaType: 'photo',
@@ -85,16 +91,21 @@ const TaskScreen: React.FC = () => {
       setImgUploaded(true);
     }
   }, [finishImg]);
-  const onFinishTask = (id: string) => {
+  const onFinishTask = () => {
     setTogleModalReview(false);
     setTimeout(() => setLoading(true), 500);
-    TaskDatasource.finishTask(finishImg, id, defaulRating, comment).then(
+    TaskDatasource.finishTask(finishImg, idUpload, defaulRating, comment).then(
       res => {
         setLoading(false);
-        console.log(res);
         setTimeout(() => setTogleModalSuccess(true), 500);
       },
-    );
+    ).catch((err)=>{
+      console.log(err)
+      Toast.show({
+        type: 'error',
+        text1: `เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง`,
+      });
+    }) 
   };
 
   const getData = async () => {
@@ -108,7 +119,10 @@ const TaskScreen: React.FC = () => {
           setLoading(false);
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        setLoading(false);
+        console.log(err)
+      });
   };
 
   const closeFinishModal = () => {
@@ -175,8 +189,8 @@ const TaskScreen: React.FC = () => {
                 comment={comment}
                 togleModalSuccess={togleModalSuccess}
                 setTogleModalSuccess={setTogleModalSuccess}
-                onFinishTask={() => onFinishTask(item.item.id)}
-                setTogleModalUpload={setTogleModalUpload}
+                onFinishTask={onFinishTask}
+                setTogleModalUpload={()=>openModalUpload(item.item.id)}
                 onCloseSuccessModal={onCloseSuccessModal}
               />
             )}

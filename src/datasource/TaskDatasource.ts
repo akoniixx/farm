@@ -24,7 +24,7 @@ export class TaskDatasource {
         return response.data;
       })
       .catch(error => {
-        console.log(error);
+        throw error;
       });
   }
 
@@ -35,7 +35,7 @@ export class TaskDatasource {
         return response.data;
       })
       .catch(error => {
-        console.log(error);
+       throw(error);
       });
   }
 
