@@ -103,4 +103,17 @@ export class TaskDatasource {
         throw err;
       });
   }
+
+  static openReceiveTask(id: string, isOpen: boolean): Promise<any> {
+    const data = {id, isOpen};
+
+    return httpClient
+      .post(BASE_URL + `/droner/open-receive-task`, data)
+      .then(response => {
+        return response.data;
+      })
+      .catch(err => {
+        throw err;
+      });
+  }
 }

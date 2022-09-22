@@ -26,5 +26,6 @@ export default {
   starBorder: require('./starBorder.png'),
   ssbaner: require('./ssbaner.png'),
   review: require('./review.png'),
-  logout: require('./logout.png')
+  logout: require('./logout.png'),
+  checkSolid: require('./check_solid.png'),
 };

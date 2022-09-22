@@ -25,7 +25,6 @@ import {
 } from '../../function/utility';
 import Icon from 'react-native-vector-icons/AntDesign';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-
 import {WaitStartFooter} from '../../components/Footer/WaitStartFooter';
 import {InprogressFooter} from '../../components/Footer/InprogressFooter';
 import Toast from 'react-native-toast-message';
@@ -166,6 +165,11 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     TaskDatasource.receiveTask(data.id, dronerId, true)
       .then(res => {
         getTaskDetail();
+        Toast.show({
+          type: 'task',
+          text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
+          text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
+        });
       })
       .catch(err => console.log(err));
   };

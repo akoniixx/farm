@@ -57,11 +57,11 @@ export const NewTaskModal = (
     TaskDatasource.receiveTask(data?.id, dronerId, true)
       .then(res => {
         SheetManager.hide('NewTaskSheet');
-        // Toast.show({
-        //   type: 'success',
-        //   text1: `งาน ${data.taskNo}`,
-        //   text2: 'ถูกรับแล้ว',
-        // });
+        Toast.show({
+          type: 'task',
+          text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
+          text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
+        });
       })
       .catch(err => console.log(err));
   };
@@ -71,9 +71,9 @@ export const NewTaskModal = (
       .then(res => {
         SheetManager.hide('NewTaskSheet');
         // Toast.show({
-        //   type: 'success',
-        //   text1: `งาน ${data.taskNo}`,
-        //   text2: 'ถูกรับแล้ว',
+        //   type: 'task',
+        //   text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
+        //   text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
         // });
       })
       .catch(err => console.log(err));
