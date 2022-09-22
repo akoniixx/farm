@@ -60,6 +60,7 @@ const FinishTask:React.FC = () =>{
               tel={item.item.farmer.telephoneNo}
               taskId={item.item.id}
               farmArea={item.item.farmAreaAmount}
+              finishTime={item.item.taskHistory}
             />
           )}
         />

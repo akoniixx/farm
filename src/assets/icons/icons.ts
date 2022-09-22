@@ -27,11 +27,8 @@ export default {
   ssbaner: require('./ssbaner.png'),
   review: require('./review.png'),
   logout: require('./logout.png'),
-<<<<<<< HEAD
   income : require('./income.png'),
   farm : require('./farm.png'),
-  dronejob : require('./dronejob.png')
-=======
+  dronejob : require('./dronejob.png'),
   checkSolid: require('./check_solid.png'),
->>>>>>> develop
 };

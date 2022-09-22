@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {normalize} from '@rneui/themed';
 import fonts from '../../assets/fonts';
-import {colors, image, icons} from '../../assets';
+import {colors, image, icons, font} from '../../assets';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {getStatusToText, numberWithCommas} from '../../function/utility';
 import * as RootNavigation from '../../navigations/RootNavigation';
@@ -10,7 +10,11 @@ import {SheetManager} from 'react-native-actions-sheet';
 const MainTasklists: React.FC<any> = (props: any) => {
   const date = new Date(props.date);
   const today = new Date();
-  const ratting = [1,2,3,4,5]
+  const ratting = [1, 2, 3, 4, 5];
+  const finishDate = new Date(
+    props.finishTime.length ? props.finishTime[0].createdAt : null,
+  );
+  console.log(finishDate);
 
   return (
     <View style={styles.taskMenu}>
@@ -94,41 +98,71 @@ const MainTasklists: React.FC<any> = (props: any) => {
           },${date.getHours()}:${date.getMinutes()} น.`}</Text>
         </View>
 
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            paddingVertical: normalize(5),
-          }}>
-          <Image
-            source={icons.jobDistance}
-            style={{
-              width: normalize(20),
-              height: normalize(20),
-            }}
-          />
+        {props.status === 'WAIT_REVIEW' || props.status === 'DONE' ? (
           <View
             style={{
-              paddingLeft: normalize(8),
+              display: 'flex',
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingVertical: normalize(5),
             }}>
-            <Text
-              style={{
-                fontFamily: fonts.medium,
-                color: colors.fontBlack,
-                fontSize: normalize(14),
-              }}>
-              {props.address} dd
-            </Text>
-            <Text
-              style={{
-                fontFamily: fonts.medium,
-                color: '#9BA1A8',
-                fontSize: normalize(13),
-              }}>
-              ระยะทาง {props.distance} กม.
-            </Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text
+                style={{
+                  fontFamily: font.medium,
+                  fontSize: normalize(12),
+                  color: '#3EBD93',
+                }}>
+                งานเสร็จเมื่อ{' '}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: font.light,
+                  fontSize: normalize(12),
+                  color: 'black',
+                }}>{`${finishDate.getDate()}/${finishDate.getMonth() + 1}/${
+                finishDate.getFullYear() + 543
+              } ${finishDate.getHours()}:${finishDate.getMinutes()} น.`}</Text>
+            </View>
           </View>
-        </View>
+        ) : (
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              paddingVertical: normalize(5),
+            }}>
+            <Image
+              source={icons.jobDistance}
+              style={{
+                width: normalize(20),
+                height: normalize(20),
+              }}
+            />
+            <View
+              style={{
+                paddingLeft: normalize(8),
+              }}>
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  color: colors.fontBlack,
+                  fontSize: normalize(14),
+                }}>
+                {props.address}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  color: '#9BA1A8',
+                  fontSize: normalize(13),
+                }}>
+                ระยะทาง {props.distance} กม.
+              </Text>
+            </View>
+          </View>
+        )}
+
         <View
           style={{
             display: 'flex',
@@ -157,14 +191,31 @@ const MainTasklists: React.FC<any> = (props: any) => {
         </View>
       </TouchableOpacity>
 
-      {props.status==='WAIT_REVIEW'?<View style={styles.borderReview}>
-        <Text style={{fontFamily:fonts.medium,fontSize:normalize(14),color:'black'}}>รอเกษตรกรรีวิว</Text>
-        <View style={{flexDirection:'row'}}>
-         {ratting.map((i)=>(
-          <Image key={i} source={icons.starBorder} style={{width:normalize(15),height:(15),marginHorizontal:normalize(2)}} />
-         ))}
+      {props.status === 'WAIT_REVIEW' ? (
+        <View style={styles.borderReview}>
+          <Text
+            style={{
+              fontFamily: fonts.medium,
+              fontSize: normalize(14),
+              color: 'black',
+            }}>
+            รอเกษตรกรรีวิว
+          </Text>
+          <View style={{flexDirection: 'row'}}>
+            {ratting.map(i => (
+              <Image
+                key={i}
+                source={icons.starBorder}
+                style={{
+                  width: normalize(15),
+                  height: 15,
+                  marginHorizontal: normalize(2),
+                }}
+              />
+            ))}
+          </View>
         </View>
-      </View>:null}
+      ) : null}
     </View>
   );
 };
@@ -188,10 +239,10 @@ const styles = StyleSheet.create({
     borderColor: colors.greyWhite,
     borderRadius: 8,
     justifyContent: 'space-between',
-    alignItems:'center',
+    alignItems: 'center',
     marginTop: normalize(10),
     paddingHorizontal: normalize(20),
-    flexDirection:'row'
+    flexDirection: 'row',
   },
 });
 

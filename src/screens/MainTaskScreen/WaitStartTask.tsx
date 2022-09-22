@@ -14,6 +14,9 @@ const WaitStartTask:React.FC = () =>{
     const [loading, setLoading] = useState(false);
     const [checkResIsComplete, setCheckResIsComplete] = useState(false);
 
+    useEffect(() => {
+      getData();
+    }, []);
     useFocusEffect(
         React.useCallback(() => {
           getData();
@@ -26,19 +29,17 @@ const WaitStartTask:React.FC = () =>{
           droner_id,
           ['WAIT_START'],
           page,
-          4,
+          99,
         )
           .then(res => {
             if (res !== undefined) {
-              setData(data.concat(res));
+              setData(res);
               setCheckResIsComplete(true);
             }
           })
           .catch(err => console.log(err));
       };
-      useEffect(() => {
-        getData();
-      }, [loading, page]);
+      
     return data.length !== 0 && checkResIsComplete ?(
         <View style={[{flex: 1, backgroundColor: colors.grayBg, padding: 8}]}>
         <FlatList

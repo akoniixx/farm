@@ -24,6 +24,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Authentication } from '../../datasource/AuthDatasource';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import * as RootNavigation from '../../navigations/RootNavigation';
 
 const CELL_COUNT = 6;
 
@@ -114,7 +115,6 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
           console.log(e, 'AsyncStorage.setItem');
         }
       }
-      
     }else{
       setValue(value);
       if (value.length >= CELL_COUNT) {
@@ -123,7 +123,9 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
             setErrOTP(false)
             await AsyncStorage.setItem('token', result.accessToken);
             await AsyncStorage.setItem('droner_id', result.data.id);
-            await navigation.navigate('MainScreen');
+            await RootNavigation.navigate('Main', {
+              screen: 'MainScreen',
+            })
           }).catch((err)=>{
             setErrOTP(true)
             console.log(err)
@@ -185,6 +187,7 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
                     if(route.params.isRegisterScreen){
                       Authentication.generateOtpRegister(route.params.telNumber).then(
                         (res)=>{
+                          setValue('')
                           newTokenOtp(res.result.token)
                           newCodeRef(res.result.refCode)
                         }
@@ -193,6 +196,7 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
                     else{
                       Authentication.generateOtp(route.params.telNumber).then(
                         (res)=>{
+                          setValue('')
                           newTokenOtp(res.result.token)
                           newCodeRef(res.result.refCode)
                         }

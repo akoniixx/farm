@@ -43,8 +43,8 @@ export class TaskDatasource {
     id: string,
     dronerId: string,
     status: string,
+    updateBy: string,
     statusRemark?: string,
-    updateBy?: string,
   ): Promise<any> {
     const data = {
       id: id,
@@ -84,7 +84,7 @@ export class TaskDatasource {
       });
   }
 
-  static async finishTask(file: any,taskId:string,reviewFarmerScore:number,reviewFarmerComment:string,): Promise<any> {
+  static async finishTask(file: any,taskId:string,reviewFarmerScore:number,reviewFarmerComment:string,updateBy:string): Promise<any> {
     const data = new FormData();
     data.append('taskId', taskId);
     data.append('reviewFarmerScore', reviewFarmerScore);
@@ -94,6 +94,7 @@ export class TaskDatasource {
       name: file.assets[0].fileName,
       type: file.assets[0].type,
     });
+    data.append('updateBy', updateBy);
     return taskFormDataClient
       .post(BASE_URL + `/tasks/task/finish-task`, data)
       .then(response => {

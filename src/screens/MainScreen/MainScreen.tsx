@@ -20,7 +20,6 @@ import {TaskDatasource} from '../../datasource/TaskDatasource';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
-  const [arr] = useState([1, 2, 3, 4]);
   const [profile, setProfile] = useState({
     name: '',
     lastname: '',

@@ -39,6 +39,7 @@ const TaskScreen: React.FC = () => {
   const [maxRatting, setMaxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
   const [comment, setComment] = useState<string>('');
   const [idUpload,setIdUpload] = useState<string>('');
+  const [updateBy,setUpdateBy] = useState<string>('');
   const starImgFilled = icons.starfill;
   const starImgCorner = icons.starCorner;
 
@@ -57,11 +58,12 @@ const TaskScreen: React.FC = () => {
     dronerId: string,
     status: string,
     taskNo: string,
+    updateBy: string,
   ) => {
     if (status === 'WAIT_START') {
       setLoading(true);
       setShowModalStartTask(false);
-      TaskDatasource.updateTaskStatus(id, dronerId, 'IN_PROGRESS')
+      TaskDatasource.updateTaskStatus(id, dronerId, 'IN_PROGRESS',updateBy)
         .then(res => {
           Toast.show({
             type: 'success',
@@ -77,8 +79,9 @@ const TaskScreen: React.FC = () => {
     }
   };
 
-  const openModalUpload =(id:string) =>{
+  const openModalUpload =(id:string,updateBy:string) =>{
     setIdUpload(id)
+    setUpdateBy(updateBy)
     setTogleModalUpload(true)
   }
 
@@ -94,7 +97,7 @@ const TaskScreen: React.FC = () => {
   const onFinishTask = () => {
     setTogleModalReview(false);
     setTimeout(() => setLoading(true), 500);
-    TaskDatasource.finishTask(finishImg, idUpload, defaulRating, comment).then(
+    TaskDatasource.finishTask(finishImg, idUpload, defaulRating, comment,updateBy).then(
       res => {
         setLoading(false);
         setTimeout(() => setTogleModalSuccess(true), 500);
@@ -167,6 +170,7 @@ const TaskScreen: React.FC = () => {
                     item.item.dronerId,
                     item.item.status,
                     item.item.taskNo,
+                    `${item.item.droner.name} ${item.item.droner.lastname}`
                   )
                 }
                 showModalStartTask={showModalStartTask}
@@ -190,7 +194,7 @@ const TaskScreen: React.FC = () => {
                 togleModalSuccess={togleModalSuccess}
                 setTogleModalSuccess={setTogleModalSuccess}
                 onFinishTask={onFinishTask}
-                setTogleModalUpload={()=>openModalUpload(item.item.id)}
+                setTogleModalUpload={()=>openModalUpload(item.item.id, `${item.item.droner.name} ${item.item.droner.lastname}`)}
                 onCloseSuccessModal={onCloseSuccessModal}
               />
             )}

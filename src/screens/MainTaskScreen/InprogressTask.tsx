@@ -26,11 +26,11 @@ const InprogressTask:React.FC = () =>{
           droner_id,
           ['IN_PROGRESS'],
           page,
-          4,
+          99,
         )
           .then(res => {
             if (res !== undefined) {
-              setData(data.concat(res));
+              setData(res);
               setCheckResIsComplete(true);
             }
           })

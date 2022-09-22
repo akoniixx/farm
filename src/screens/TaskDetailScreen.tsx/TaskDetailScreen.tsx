@@ -93,13 +93,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     }
   }, [finishImg]);
 
-  /* const tokyoRegion = {
-    latitude: 35.6762,
-    longitude: 139.6503,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-  }; */
-
   useEffect(() => {
     getTaskDetail();
   }, []);
@@ -107,8 +100,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const onFinishTask = () => {
     setTogleModalReview(false);
     setTimeout(() =>   setLoading(true), 500);
-   
-    TaskDatasource.finishTask(finishImg, data.id, defaulRating, comment).then(
+    TaskDatasource.finishTask(finishImg, data.id, defaulRating, comment,`${data.name} ${data.lastname}`).then(
       res => {
         setLoading(false)
         setTimeout(() => setTogleModalSuccess(true), 500);
@@ -130,7 +122,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     if (status === 'WAIT_START') {
       setLoading(true)
       setShowModalStartTask(false)
-      TaskDatasource.updateTaskStatus(data.id, data.droner.id, 'IN_PROGRESS')
+      TaskDatasource.updateTaskStatus(data.id, data.droner.id, 'IN_PROGRESS',`${data.name} ${data.lastname}`)
         .then(res => {
           Toast.show({
             type: 'success',
@@ -208,6 +200,15 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
       {data ? (
         <>
           <ScrollView showsVerticalScrollIndicator={false} persistentScrollbar={false}>
+          {data.status == 'WAIT_REVIEW'||'DONE' ? <View style={{flex:1,backgroundColor:'#2EC66E'}}>
+            <View style={{ padding: normalize(18),flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
+              <View>
+              <Text style={{fontFamily:font.bold,fontSize:normalize(17),color:'white'}}>งานเสร็จสิ้น</Text>
+              <Text style={{fontFamily:font.light,fontSize:normalize(12),color:'white'}}>ยินดีด้วยคุณบินงานสำเร็จแล้ว</Text>
+              </View>
+                <Image source={icons.ssbaner} style={{width:normalize(54),height:normalize(54)}} />
+                </View>
+              </View>:null}
             <View style={styles.taskMenu}>
               <View style={styles.listTile}>
                 <Text
