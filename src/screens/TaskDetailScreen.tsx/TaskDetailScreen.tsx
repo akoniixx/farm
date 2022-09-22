@@ -177,7 +177,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(data.id, dronerId, false)
       .then(res => {
-        getTaskDetail();
+        navigation.goBack();
       })
       .catch(err => console.log(err));
   };
@@ -343,14 +343,14 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   </Text>
                 </View>
                 {data.status !== 'CANCELED'?  <TouchableOpacity
-                  onPress={() => dialCall(data.farmer.telephoneNo)}
-                  style={styles.callFarmer}>
-                  <Image
-                    source={icons.calling}
-                    style={{height: 20, width: 20}}
-                  />
+                    onPress={() => dialCall(data.farmer.telephoneNo)}
+                    style={styles.callFarmer}>
+                    <Image
+                      source={icons.calling}
+                      style={{height: 20, width: 20}}
+                    />
                 </TouchableOpacity>: null}
-               
+
               </View>
               <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
                 <Image
@@ -603,7 +603,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 alignItems: 'center',
               }}
               onPress={() => {
-                receiveTask().then(() => {    
+                receiveTask().then(() => {
                   setOpenConfirmModal(false);
                 });
               }}>
@@ -856,7 +856,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               รีวิวสำเร็จ
             </Text>
             <Image source={image.reviewSuccess} style={{width:normalize(170),height:normalize(168)}} />
-          </View> 
+          </View>
           <MainButton
             label="ตกลง"
             color={colors.orange}
@@ -883,26 +883,26 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               ยืนยันการเริ่มงาน?
             </Text>
             <Text
-            style={{
-              fontFamily: font.medium,
-              fontSize: normalize(14),
-              color: 'black',
-              marginBottom: 15,
-            }}>
-            กรุณากดยืนยันหากต้องการเริ่มงานนี้
-          </Text>
+              style={{
+                fontFamily: font.medium,
+                fontSize: normalize(14),
+                color: 'black',
+                marginBottom: 15,
+              }}>
+              กรุณากดยืนยันหากต้องการเริ่มงานนี้
+            </Text>
           </View>
           <MainButton label='เริ่มงาน' color={colors.orange} borderColor={colors.orange} fontColor='white' onPress={() => updateTask(data.status)}/>
           <MainButton label='ยังไม่เริ่มงาน' color='white' borderColor={colors.gray} fontColor='black' onPress={()=>setShowModalStartTask(false)} />
           
          
         </View>
-        </CModal>
+      </CModal>
       <Spinner
-          visible={loading}
-          textContent={'Loading...'}
-          textStyle={{ color: '#FFF'}}
-        />
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF'}}
+      />
     </View>
   );
 };
