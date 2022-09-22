@@ -65,7 +65,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(selectedTaskId, dronerId, false)
       .then(res => {
-        getData();
+        setData(data.filter((x: any) => x.item.id != selectedTaskId));
       })
       .catch(err => console.log(err));
   };
