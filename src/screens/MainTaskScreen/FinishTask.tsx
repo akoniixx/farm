@@ -34,11 +34,10 @@ const FinishTask:React.FC = () =>{
           99
         )
           .then(res => {
-            if (res !== undefined) {
+           
               setData(res);
               setCheckResIsComplete(true);
-              setLoading(false)
-            }
+            setTimeout(()=> setLoading(false),200)
           })
           .catch(err => {
             setLoading(false)

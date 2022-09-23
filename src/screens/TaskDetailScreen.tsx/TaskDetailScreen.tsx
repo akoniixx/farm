@@ -200,7 +200,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
       {data ? (
         <>
           <ScrollView showsVerticalScrollIndicator={false} persistentScrollbar={false}>
-          {data.status == 'WAIT_REVIEW'||'DONE' ? <View style={{flex:1,backgroundColor:'#2EC66E'}}>
+          {data.status == 'WAIT_REVIEW'||data.status == 'DONE' ? <View style={{flex:1,backgroundColor:'#2EC66E'}}>
             <View style={{ padding: normalize(18),flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
               <View>
               <Text style={{fontFamily:font.bold,fontSize:normalize(17),color:'white'}}>งานเสร็จสิ้น</Text>

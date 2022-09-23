@@ -28,11 +28,9 @@ const WaitStartTask: React.FC = () => {
     const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.getTaskById(droner_id, ['WAIT_START'], page, 99)
       .then(res => {
-        if (res !== undefined) {
+        setTimeout(()=> setLoading(false),200)
           setData(res);
           setCheckResIsComplete(true);
-          setLoading(false)
-        }
       })
       .catch(err => {
         setLoading(false)

@@ -127,7 +127,8 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
               </Text>
               <View style={styles.activeContainer}>
                 <Switch
-                  color={colors.green}
+                  trackColor={{ false: "#767577", true: colors.green }}
+                  thumbColor={profile.isOpenReceiveTask ? "white" : "#f4f3f4"}
                   value={profile.isOpenReceiveTask}
                   onValueChange={value => openReceiveTask(value)}
                 />

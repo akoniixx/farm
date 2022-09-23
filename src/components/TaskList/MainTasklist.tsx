@@ -12,7 +12,7 @@ const MainTasklists: React.FC<any> = (props: any) => {
   const today = new Date();
   const ratting = [1, 2, 3, 4, 5];
   const finishDate = new Date(
-    props.finishTime.length ? props.finishTime[0].createdAt : null,
+    props.finishTime?.length ? props.finishTime[0].createdAt : null,
   );
  
   return (
