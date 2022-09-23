@@ -11,16 +11,9 @@ import { BackHandler } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
-  const getToken = async () =>{
-    const droner_id = await AsyncStorage.getItem('droner_id');
-    const token = await AsyncStorage.getItem('token');
-    console.log(droner_id)
-    console.log(token)
-  }
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
-    getToken()
   }, []);
   return (
     <>

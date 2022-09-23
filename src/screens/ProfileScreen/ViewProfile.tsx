@@ -34,12 +34,6 @@ const ViewProfile: React.FC<any> = ({navigation,route})=>{
             return item
           }
         })
-        const addresssplit = res.address.address1.split(" ");
-        let address2 = "";
-        for(let i=1;i<addresssplit.length;i++){
-          address2 += addresssplit[i];
-          address2 += " ";
-        }
         if(imgPath.length === 0){
           QueryLocation.QueryProfileSubDistrict(res.address.districtId).then(
             resSub => {
@@ -54,8 +48,8 @@ const ViewProfile: React.FC<any> = ({navigation,route})=>{
                     birthDate : "",
                     telephone : res.telephoneNo,
                     image : "",
-                    address1 : res.address.address1.split(" ")[0],
-                    address2 : address2,
+                    address1 : res.address.address1,
+                    address2 : res.address.address2,
                     province : address[0].provinceName,
                     district : address[0].districtName,
                     subdistrict : address[0].subdistrictName,
@@ -71,8 +65,8 @@ const ViewProfile: React.FC<any> = ({navigation,route})=>{
                     birthDate : `${date.split("-")[2]}/${date.split("-")[1]}/${parseInt(date.split("-")[0])+543}`,
                     telephone : res.telephoneNo,
                     image : "",
-                    address1 : res.address.address1.split(" ")[0],
-                    address2 : address2,
+                    address1 : res.address.address1,
+                    address2 : res.address.address2,
                     province : address[0].provinceName,
                     district : address[0].districtName,
                     subdistrict : address[0].subdistrictName,
@@ -98,8 +92,8 @@ const ViewProfile: React.FC<any> = ({navigation,route})=>{
                           birthDate : "",
                           telephone : res.telephoneNo,
                           image : resImg.url,
-                          address1 : res.address.address1.split(" ")[0],
-                          address2 : address2,
+                          address1 : res.address.address1,
+                          address2 : res.address.address2,
                           province : address[0].provinceName,
                           district : address[0].districtName,
                           subdistrict : address[0].subdistrictName,
@@ -115,8 +109,8 @@ const ViewProfile: React.FC<any> = ({navigation,route})=>{
                           birthDate : `${date.split("-")[2]}/${date.split("-")[1]}/${parseInt(date.split("-")[0])+543}`,
                           telephone : res.telephoneNo,
                           image : resImg.url,
-                          address1 : res.address.address1.split(" ")[0],
-                          address2 : address2,
+                          address1 : res.address.address1,
+                          address2 : res.address.address2,
                           province : address[0].provinceName,
                           district : address[0].districtName,
                           subdistrict : address[0].subdistrictName,
