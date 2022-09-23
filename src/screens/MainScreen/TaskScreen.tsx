@@ -101,6 +101,8 @@ const TaskScreen: React.FC = () => {
       res => {
         setLoading(false);
         setTimeout(() => setTogleModalSuccess(true), 500);
+        setFinishImg(null);
+        setDefaulRating(0)
       },
     ).catch((err)=>{
       console.log(err)
@@ -170,7 +172,7 @@ const TaskScreen: React.FC = () => {
                     item.item.dronerId,
                     item.item.status,
                     item.item.taskNo,
-                    `${item.item.droner.name} ${item.item.droner.lastname}`
+                    `${item.item.droner.firstname} ${item.item.droner.lastname}`
                   )
                 }
                 showModalStartTask={showModalStartTask}
@@ -194,7 +196,7 @@ const TaskScreen: React.FC = () => {
                 togleModalSuccess={togleModalSuccess}
                 setTogleModalSuccess={setTogleModalSuccess}
                 onFinishTask={onFinishTask}
-                setTogleModalUpload={()=>openModalUpload(item.item.id, `${item.item.droner.name} ${item.item.droner.lastname}`)}
+                setTogleModalUpload={()=>openModalUpload(item.item.id, `${item.item.droner.firstname} ${item.item.droner.lastname}`)}
                 onCloseSuccessModal={onCloseSuccessModal}
               />
             )}

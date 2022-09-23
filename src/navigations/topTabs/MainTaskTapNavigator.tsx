@@ -4,7 +4,6 @@ import {useState} from 'react';
 import {View, useWindowDimensions, Text, StyleSheet} from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import fonts from '../../assets/fonts';
-// import font from "../../../android/app/build/intermediates/assets/debug/mergeDebugAssets/fonts/font";
 import {colors} from '../../assets';
 import NewTaskScreen from '../../screens/MainScreen/NewTaskScreen';
 import TaskScreen from '../../screens/MainScreen/TaskScreen';
@@ -44,11 +43,14 @@ const MainTaskTapNavigator: React.FC = () => {
 
   return (
     <TabView
+   
       navigationState={{index, routes}}
       renderTabBar={renderTabBar}
       renderScene={renderScene}
       onIndexChange={setIndex}
       initialLayout={{width: layout.width}}
+      lazy
+      
     />
   );
 };

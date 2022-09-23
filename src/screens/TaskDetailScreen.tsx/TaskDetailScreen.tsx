@@ -100,7 +100,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const onFinishTask = () => {
     setTogleModalReview(false);
     setTimeout(() =>   setLoading(true), 500);
-    TaskDatasource.finishTask(finishImg, data.id, defaulRating, comment,`${data.name} ${data.lastname}`).then(
+    TaskDatasource.finishTask(finishImg, data.id, defaulRating, comment,`${data.droner.firstname} ${data.droner.lastname}`).then(
       res => {
         setLoading(false)
         setTimeout(() => setTogleModalSuccess(true), 500);
@@ -122,7 +122,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     if (status === 'WAIT_START') {
       setLoading(true)
       setShowModalStartTask(false)
-      TaskDatasource.updateTaskStatus(data.id, data.droner.id, 'IN_PROGRESS',`${data.name} ${data.lastname}`)
+      TaskDatasource.updateTaskStatus(data.id, data.droner.id, 'IN_PROGRESS',`${data.droner.firstname} ${data.droner.lastname}`)
         .then(res => {
           Toast.show({
             type: 'success',

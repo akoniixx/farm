@@ -1,8 +1,9 @@
 import {Linking, Platform} from 'react-native';
 import { callcenterNumber } from '../definitions/callCenterNumber';
 
-export const numberWithCommas = (number: number) => {
-  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+export const numberWithCommas = (number: string) => {
+ let nub = parseFloat(number).toFixed(2)
+  return nub.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
 export const dialCall = (number?: string) => {
@@ -50,3 +51,7 @@ export const openGps = (lat: number, lng: number, name: string) => {
     })
     .catch(err => console.log('error', err));
 };
+
+export const decimalConvert = (string:string) =>(
+  String(parseFloat(string).toFixed(2))
+)

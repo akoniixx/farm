@@ -17,6 +17,7 @@ import io from 'socket.io-client';
 import {SheetManager} from 'react-native-actions-sheet';
 import {BASE_URL} from '../../config/develop-config';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
+import { useFocusEffect } from '@react-navigation/native';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -37,6 +38,12 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     path: '/tasks/task/socket',
   });
   const [isConnected, setIsConnected] = useState(socket.connected);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getProfile();
+    }, []),
+  );
 
   useEffect(() => {
     getProfile();
