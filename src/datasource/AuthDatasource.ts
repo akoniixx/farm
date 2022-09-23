@@ -103,8 +103,8 @@ export class Register {
           telephoneNo: telephoneNo,
           status: 'OPEN',
           address: {
-            address1: address1,
-            address2: address2,
+            address1: `${address1} ${address2}`,
+            address2: '',
             address3: '',
             provinceId: provinceId,
             districtId: districtId,

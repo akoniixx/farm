@@ -68,7 +68,8 @@ const styles = StyleSheet.create({
     },
     appBarHeader : {
       fontFamily: font.bold,
-      fontSize : normalize(19)
+      fontSize : normalize(19),
+      color: colors.fontBlack,
     },
     body:{
       flex : 9,
@@ -81,18 +82,21 @@ const styles = StyleSheet.create({
     },
     listTileIcon : {
       width : normalize(24),
-      height : normalize(24)
+      height : normalize(24),
+      color: colors.fontBlack,
     },
     header :{
         fontFamily : font.bold,
         paddingVertical : normalize(10),
         paddingHorizontal : normalize(5),
-        fontSize : normalize(18)
+        fontSize : normalize(18),
+        color: colors.fontBlack,
     },
     idcardheader:{
         fontFamily : font.medium,
         fontSize : normalize(14),
-        paddingTop : normalize(20)
+        paddingTop : normalize(20),
+        color: colors.fontBlack,
     },
     label: {
         fontFamily: font.light,

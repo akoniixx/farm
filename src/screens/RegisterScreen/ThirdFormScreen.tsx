@@ -174,6 +174,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
     )
       .then(response => response.json())
       .then(responseJson => {
+        console.log(responseJson)
         setlat(responseJson.results[0].geometry.location.lat);
         setlong(responseJson.results[0].geometry.location.lng);
         setAddress(

@@ -1,10 +1,9 @@
-import { View, Text, Dimensions } from 'react-native'
+import { View, Text, Dimensions,TouchableOpacity } from 'react-native'
 import {LocaleConfig, Calendar} from 'react-native-calendars';
 import React, { createContext, useEffect, useMemo, useReducer, useState } from 'react'
 import colors from '../../assets/colors/colors';
 import { normalize } from '@rneui/themed';
 import { font } from '../../assets';
-import {TouchableOpacity } from 'react-native-gesture-handler';
 import { CalendarReducer, CalendarMode, _monthNumber, build12Year, _monthName } from '../../hooks/calendar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -105,7 +104,8 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({onHandleChange,value}) =>
                   })}>
                       <Text style={{
                           fontFamily : font.medium,
-                          fontSize : normalize(18)
+                          fontSize : normalize(18),
+                          color: colors.fontBlack
                       }}>{calendarState.monthArray[calendarState.monthCurrent]}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={()=>dispatch({
@@ -115,7 +115,8 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({onHandleChange,value}) =>
                       <Text style={{
                           fontFamily : font.medium,
                           fontSize : normalize(18),
-                          paddingLeft : normalize(10)
+                          paddingLeft : normalize(10),
+                          color: colors.fontBlack
                       }}>{`${calendarState.yearCurrent+543}`}</Text>
                   </TouchableOpacity>
               </View>}

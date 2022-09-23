@@ -65,6 +65,7 @@ const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
   const [subdistrict,setSubdistrict] = useState<any>(null)
   const [image,setImage] = useState<any>(null)
   const [loading,setLoading] = useState(false);
+  const [bottompadding,setBottomPadding] = useState(0);
   const onAddImage = useCallback(async()=>{
   const result = await ImagePicker.launchImageLibrary({
         mediaType : 'photo',
@@ -194,7 +195,7 @@ const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
                  value={(birthday != "")?`${birthday.split('-')[2]}/${birthday.split('-')[1]}/${parseInt(birthday.split('-')[0])+543}`:birthday}
                  editable={false} 
                  placeholder={'วัน/เดือน/ปี เกิด'}
-                 style={{width : windowWidth*0.78}}
+                 style={{width : windowWidth*0.78,color : colors.fontBlack}}
                 />
                 <Image source={icons.jobCard} style={{
                   width : normalize(25),
@@ -291,6 +292,12 @@ const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
                 placeholderStyle={{
                   color: (!province)?colors.gray:colors.disable,
                 }}
+                onOpen={()=>{
+                  setBottomPadding(60)
+                }}
+                onClose={()=>{
+                  setBottomPadding(0)
+                }}
                 open={openDistrict}
                 value={valueDistrict}
                 items={itemsDistrict}
@@ -326,6 +333,12 @@ const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
                 placeholderStyle={{
                   color: (!district)?colors.gray:colors.disable,
                 }}
+                onOpen={()=>{
+                  setBottomPadding(120)
+                }}
+                onClose={()=>{
+                  setBottomPadding(0)
+                }}
                 open={openSubDistrict}
                 value={valueSubDistrict}
                 items={itemsSubDistrict}
@@ -351,14 +364,14 @@ const SecondFormScreen: React.FC<any> = ({navigation,route}) => {
               />
             <TextInput
               value={formState.postal}
-              style={[styles.input,{backgroundColor : colors.disable}]}
+              style={[styles.input,{backgroundColor : colors.disable,marginBottom : normalize(bottompadding)}]}
               editable={false}
               placeholder={'รหัสไปรษณีย์'}
             />
           </ScrollView>
         </View>
 
-        <View style={{backgroundColor: colors.white}}>
+        <View style={{backgroundColor: colors.white,zIndex : 0}}>
           <MainButton
             label="ถัดไป"
             disable={(
