@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Image, ScrollView, Dimensions, TextInput, Modal} from 'react-native';
+import {View, Text, StyleSheet, Image, ScrollView, Dimensions, TextInput, Modal, TouchableOpacity} from 'react-native';
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
@@ -7,7 +7,6 @@ import Animated from 'react-native-reanimated';
 import {MainButton} from '../../components/Button/MainButton';
 import {colors, font, icons, image} from '../../assets';
 import {normalize} from '../../function/Normalize';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Authentication} from '../../datasource/AuthDatasource';
 import * as RootNavigation from '../../navigations/RootNavigation';
@@ -17,7 +16,7 @@ import { initProfileState, profileReducer } from '../../hooks/profilefield';
 import DroneBrandingItem, { StatusObject } from '../../components/Drone/DroneBranding';
 import * as ImagePicker from 'react-native-image-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
-import ActionSheet from 'react-native-actions-sheet';
+import ActionSheet, { ActionSheetRef } from 'react-native-actions-sheet';
 import Lottie from 'lottie-react-native';
 
 const ProfileScreen: React.FC<any> = ({navigation,route}) => {
@@ -38,7 +37,7 @@ const ProfileScreen: React.FC<any> = ({navigation,route}) => {
   const [droneno,setdroneno] = useState<any>(null)
   const [popupPage,setpopupPage] = useState(1)
   const [dronedata,setDronedata] = useState<any>(null);
-  const actionSheet = useRef<any>()
+  const actionSheet = useRef<any>(null)
   const [reload,setReload] = useState(false)
   const [loading,setLoading] = useState(false)
   
@@ -197,7 +196,8 @@ const onLogout = () =>{
                     <Text style={{
                       fontFamily : font.medium,
                       fontSize : normalize(14),
-                      paddingBottom : normalize(2)
+                      paddingBottom : normalize(2),
+                      color : colors.fontBlack
                     }}>{profilestate.name}</Text>
                     <Text style={{
                       fontFamily : font.light,
@@ -238,16 +238,18 @@ const onLogout = () =>{
                 <Text style={{
                 fontFamily : font.medium,
                 fontSize : normalize(14),
-                paddingTop : normalize(8)
+                paddingTop : normalize(8),
+                color : colors.fontBlack
               }}>ดูข้อมูล</Text>
               </TouchableOpacity>:
               <TouchableOpacity onPress={()=>{
-                // navigation.navigate("EditProfile")
+                navigation.navigate("ViewProfile")
               }}>
               <Text style={{
                 fontFamily : font.medium,
                 fontSize : normalize(14),
-                paddingTop : normalize(8)
+                paddingTop : normalize(8),
+                color : colors.fontBlack
               }}>แก้ไข</Text>
               </TouchableOpacity>
             }
@@ -356,7 +358,7 @@ const onLogout = () =>{
                 }}>
                   <ScrollView>
                   <View style={{
-                      padding: 8,
+                      padding: normalize(8),
                       display: 'flex',
                       flexDirection: 'row',
                       justifyContent: 'space-between',
@@ -675,25 +677,30 @@ const styles = StyleSheet.create({
   },
   appBarHeader : {
     fontFamily: font.bold,
-    fontSize : normalize(19)
+    fontSize : normalize(19),
+    color : colors.fontBlack
   },
   body:{
     flex : 9,
     paddingTop : normalize(10),
-    paddingHorizontal : normalize(17)
+    paddingHorizontal : normalize(17),
+    color : colors.fontBlack
   },
   profile:{
     display : 'flex',
     flexDirection : 'row',
     justifyContent : 'space-between',
+    color : colors.fontBlack
   },
   profileDescription:{
     display : 'flex',
     flexDirection : 'row',
     justifyContent : 'center',
+    color : colors.fontBlack
   },
   profileName:{
-    padding : normalize(10)
+    padding : normalize(10),
+    color : colors.fontBlack
   },
   review: {
     width : normalize(52),
@@ -721,7 +728,8 @@ const styles = StyleSheet.create({
   listTileTitle : {
     fontFamily: font.medium,
     paddingLeft : normalize(15),
-    fontSize : normalize(15)
+    fontSize : normalize(15),
+    color : colors.fontBlack
   },
   h2: {
     fontFamily: font.medium,

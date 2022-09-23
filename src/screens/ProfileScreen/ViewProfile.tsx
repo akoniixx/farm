@@ -41,6 +41,22 @@ const ViewProfile: React.FC<any> = ({navigation,route})=>{
                     {if(item.subdistrictId === res.address.subdistrictId){
                       return item;
                     }})
+                if(!res.birthDate){
+                  setInitProfile({
+                    firstname : res.firstname,
+                    lastname : res.lastname,
+                    birthDate : "",
+                    telephone : res.telephoneNo,
+                    image : "",
+                    address1 : res.address.address1,
+                    address2 : res.address.address2,
+                    province : address[0].provinceName,
+                    district : address[0].districtName,
+                    subdistrict : address[0].subdistrictName,
+                    postal : res.address.postcode
+                  })
+                }
+                else{
                 const datetime = res.birthDate;
                 const date = datetime.split("T")[0]
                 setInitProfile({
@@ -56,6 +72,7 @@ const ViewProfile: React.FC<any> = ({navigation,route})=>{
                     subdistrict : address[0].subdistrictName,
                     postal : res.address.postcode
                 })
+                }
             }
         )
         }
@@ -68,6 +85,22 @@ const ViewProfile: React.FC<any> = ({navigation,route})=>{
                           {if(item.subdistrictId === res.address.subdistrictId){
                             return item;
                           }})
+                      if(!res.birthDate){
+                        setInitProfile({
+                          firstname : res.firstname,
+                          lastname : res.lastname,
+                          birthDate : "",
+                          telephone : res.telephoneNo,
+                          image : resImg.url,
+                          address1 : res.address.address1,
+                          address2 : res.address.address2,
+                          province : address[0].provinceName,
+                          district : address[0].districtName,
+                          subdistrict : address[0].subdistrictName,
+                          postal : res.address.postcode
+                        })
+                      }
+                      else{
                       const datetime = res.birthDate;
                       const date = datetime.split("T")[0]
                       setInitProfile({
@@ -83,6 +116,7 @@ const ViewProfile: React.FC<any> = ({navigation,route})=>{
                           subdistrict : address[0].subdistrictName,
                           postal : res.address.postcode
                       })
+                      }
                   }
               )
             }
@@ -110,77 +144,117 @@ const ViewProfile: React.FC<any> = ({navigation,route})=>{
                     <Image source={{uri : initProfile.image}} style={styles.imgProfile}/>
                 </View>
                 <Text style={styles.title}>ข้อมูลทั่วไป (โปรดระบุ)</Text>
-                <TextInput
-                  value={initProfile.firstname}
-                  style={[styles.input,{backgroundColor : colors.disable}]}
-                  editable={false}
-                  placeholder={'ชื่อ'}
-                  placeholderTextColor={colors.disable}
-                />
-                <TextInput
-                  value={initProfile.lastname}
-                  style={[styles.input,{backgroundColor : colors.disable}]}
-                  editable={false}
-                  placeholder={'นามสกุล'}
-                  placeholderTextColor={colors.disable}
-                />
-                <TextInput
-                  value={initProfile.birthDate}
-                  style={[styles.input,{backgroundColor : colors.disable}]}
-                  editable={false}
-                  placeholder={'วัน/เดือน/ปี เกิด'}
-                  placeholderTextColor={colors.disable}
-                />
-                <TextInput
-                  value={initProfile.telephone}
-                  style={[styles.input,{backgroundColor : colors.disable}]}
-                  editable={false}
-                  placeholder={'โทรศัพท์'}
-                  placeholderTextColor={colors.disable}
-                />
+                <View style={[styles.input,{backgroundColor : colors.disable}]}>
+                  <Text style={styles.label}>
+                      ชื่อ
+                  </Text>
+                  <TextInput
+                    style={styles.inputvalue}
+                    value={initProfile.firstname}
+                    editable={false}
+                    placeholderTextColor={colors.disable}
+                  />
+                </View>
+                <View style={[styles.input,{backgroundColor : colors.disable}]}>
+                  <Text style={styles.label}>
+                      นามสกุล
+                  </Text>
+                  <TextInput
+                    value={initProfile.lastname}
+                    style={styles.inputvalue}
+                    editable={false}
+                    placeholderTextColor={colors.disable}
+                  />
+                </View>
+                <View style={[styles.input,{backgroundColor : colors.disable}]}>
+                  <Text style={styles.label}>
+                    วัน/เดือน/ปี เกิด
+                  </Text>
+                  <TextInput
+                    value={initProfile.birthDate}
+                    style={styles.inputvalue}
+                    editable={false}
+                    placeholderTextColor={colors.disable}
+                  />
+                </View>
+                <View style={[styles.input,{backgroundColor : colors.disable}]}>
+                  <Text style={styles.label}>
+                    โทรศัพท์
+                  </Text>
+                  <TextInput
+                    value={initProfile.telephone}
+                    style={styles.inputvalue}
+                    editable={false}
+                    placeholderTextColor={colors.disable}
+                  />
+                </View>
                 <Text style={styles.title}>ที่อยู่</Text>
-                <TextInput
-                  value={initProfile.address1}
-                  style={[styles.input,{backgroundColor : colors.disable}]}
-                  editable={false}
-                  placeholder={'บ้านเลขที่'}
-                  placeholderTextColor={colors.disable}
-                />
-                <TextInput
-                  value={initProfile.address2}
-                  style={[styles.input,{backgroundColor : colors.disable}]}
-                  editable={false}
-                  placeholder={'รายละเอียดที่ีอยู่ (หมู่ ถนน)'}
-                  placeholderTextColor={colors.disable}
-                />
-                <TextInput
-                  value={initProfile.province}
-                  style={[styles.input,{backgroundColor : colors.disable}]}
-                  editable={false}
-                  placeholder={'จังหวัด'}
-                  placeholderTextColor={colors.disable}
-                />
-                <TextInput
-                  value={initProfile.district}
-                  style={[styles.input,{backgroundColor : colors.disable}]}
-                  editable={false}
-                  placeholder={'อำเภอ'}
-                  placeholderTextColor={colors.disable}
-                />
-                <TextInput
-                  value={initProfile.subdistrict}
-                  style={[styles.input,{backgroundColor : colors.disable}]}
-                  editable={false}
-                  placeholder={'ตำบล'}
-                  placeholderTextColor={colors.disable}
-                />
-                <TextInput
-                  value={initProfile.postal}
-                  style={[styles.input,{backgroundColor : colors.disable}]}
-                  editable={false}
-                  placeholder={'เลขไปรษณีย์'}
-                  placeholderTextColor={colors.disable}
-                />
+                <View style={[styles.input,{backgroundColor : colors.disable}]}>
+                  <Text style={styles.label}>
+                    บ้านเลขที่
+                  </Text>
+                  <TextInput
+                    value={initProfile.address1}
+                    style={styles.inputvalue}
+                    editable={false}
+                    placeholderTextColor={colors.disable}
+                  />
+                </View>
+                <View style={[styles.input,{backgroundColor : colors.disable}]}>
+                  <Text style={styles.label}>
+                  รายละเอียดที่ีอยู่ (หมู่ ถนน)
+                  </Text>
+                  <TextInput
+                    value={initProfile.address2}
+                    style={styles.inputvalue}
+                    editable={false}
+                    placeholderTextColor={colors.disable}
+                  />
+                </View>
+                <View style={[styles.input,{backgroundColor : colors.disable}]}>
+                  <Text style={styles.label}>
+                    จังหวัด
+                  </Text>
+                  <TextInput
+                    value={initProfile.province}
+                    style={styles.inputvalue}
+                    editable={false}
+                    placeholderTextColor={colors.disable}
+                  />
+                </View>
+                <View style={[styles.input,{backgroundColor : colors.disable}]}>
+                  <Text style={styles.label}>
+                    อำเภอ
+                  </Text>
+                  <TextInput
+                    value={initProfile.district}
+                    style={styles.inputvalue}
+                    editable={false}
+                    placeholderTextColor={colors.disable}
+                  />
+                </View>
+                <View style={[styles.input,{backgroundColor : colors.disable}]}>
+                  <Text style={styles.label}>
+                  ตำบล
+                  </Text>
+                  <TextInput
+                    value={initProfile.subdistrict}
+                    style={styles.inputvalue}
+                    editable={false}
+                    placeholderTextColor={colors.disable}
+                  />
+                </View>
+                <View style={[styles.input,{backgroundColor : colors.disable}]}>
+                  <Text style={styles.label}>
+                  รหัสไปรษณีย์
+                  </Text>
+                  <TextInput
+                    value={initProfile.postal}
+                    style={styles.inputvalue}
+                    editable={false}
+                    placeholderTextColor={colors.disable}
+                  />
+                </View>
             </ScrollView>
         </View>
     </SafeAreaView>
@@ -202,7 +276,8 @@ const styles = StyleSheet.create({
     },
     appBarHeader : {
       fontFamily: font.bold,
-      fontSize : normalize(19)
+      fontSize : normalize(19),
+      color: colors.fontBlack,
     },
     body:{
       flex : 9,
@@ -211,12 +286,14 @@ const styles = StyleSheet.create({
     },
     listTileIcon : {
       width : normalize(24),
-      height : normalize(24)
+      height : normalize(24),
+      color: colors.fontBlack,
     },
     title:{
         marginVertical : normalize(10),
         fontFamily : font.medium,
-        fontSize : normalize(16)
+        fontSize : normalize(16),
+        color: colors.fontBlack,
     },
     input: {
         height: normalize(56),
@@ -227,7 +304,16 @@ const styles = StyleSheet.create({
         borderRadius: normalize(10),
         fontFamily : font.light,
         color : colors.fontBlack,
-      },
+    },
+    label : {
+      fontFamily : font.light,
+      color : colors.fontBlack,
+      fontSize : normalize(10)
+    },
+    inputvalue : { 
+      fontFamily : font.light,
+      color : colors.fontBlack,fontSize : normalize(16)
+    }
 })
 
 export default ViewProfile

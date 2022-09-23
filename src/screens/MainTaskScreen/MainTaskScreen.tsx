@@ -16,7 +16,7 @@ const MainTaskScreen: React.FC = () => {
           paddingVertical: normalize(20),
           backgroundColor: colors.white,
         }}>
-        <Text style={{fontFamily: font.bold, fontSize: normalize(19)}}>
+        <Text style={{fontFamily: font.bold, fontSize: normalize(19),color : colors.fontBlack}}>
           งานของฉัน
         </Text>
       </View>
