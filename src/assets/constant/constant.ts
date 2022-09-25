@@ -4,7 +4,7 @@ export  const carouselItems = [
     {
       src: image.onboard1,
       title: 'ยินดีต้อนรับ!',
-      text: `IkonKaset Droner 
+      text: `IconKaset Droner 
       เชื่อมคุณสู่โลกการรับงานบินอย่างอิสระ 
       สร้างรายได้ด้วยโดรนของคุณ`,
     },

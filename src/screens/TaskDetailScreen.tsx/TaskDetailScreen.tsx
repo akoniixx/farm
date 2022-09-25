@@ -35,7 +35,7 @@ import CModal from 'react-native-modal';
 import * as ImagePicker from 'react-native-image-picker';
 import {CanceledFooter} from '../../components/Footer/CanceledFooter';
 import {callcenterNumber} from '../../definitions/callCenterNumber';
-import Spinner from 'react-native-loading-spinner-overlay'
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
@@ -61,8 +61,8 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const [comment, setComment] = useState<string>('');
   const starImgFilled = icons.starfill;
   const starImgCorner = icons.starCorner;
-  const [loading,setLoading] = useState<boolean>(false)
-  const [showModalStartTask,setShowModalStartTask] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showModalStartTask, setShowModalStartTask] = useState<boolean>(false);
 
   const ReviewBar = () => {
     return (
@@ -99,19 +99,29 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
 
   const onFinishTask = () => {
     setTogleModalReview(false);
-    setTimeout(() =>   setLoading(true), 500);
-    TaskDatasource.finishTask(finishImg, data.id, defaulRating, comment,`${data.droner.firstname} ${data.droner.lastname}`).then(
-      res => {
-        setLoading(false)
-        setTimeout(() => setTogleModalSuccess(true), 500);
-        setTimeout(() =>  receiveTask(), 600);
-      },
-    ).catch((err)=>{
-      setLoading(false)
-      console.log(err)
-    })
-    
+    setTimeout(() => setLoading(true), 500);
+    TaskDatasource.finishTask(
+      finishImg,
+      data.id,
+      defaulRating,
+      comment,
+      `${data.droner.firstname} ${data.droner.lastname}`,
+    )
+      .then(res => {
+        setLoading(false);
+        setTimeout(() => setTogleModalSuccess(true), 200);
+        setTimeout(() => getTaskDetail(), 300);
+      })
+      .catch(err => {
+        setLoading(false);
+        console.log(err);
+      });
   };
+
+  const onFinishTaskSuccess = () => {
+    setTogleModalSuccess(false)
+    getTaskDetail()
+  }
 
   const onChangImgFinish = () => {
     setTogleModalUpload(false);
@@ -120,21 +130,27 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
 
   const updateTask = (status: string) => {
     if (status === 'WAIT_START') {
-      setLoading(true)
-      setShowModalStartTask(false)
-      TaskDatasource.updateTaskStatus(data.id, data.droner.id, 'IN_PROGRESS',`${data.droner.firstname} ${data.droner.lastname}`)
+      setLoading(true);
+      setShowModalStartTask(false);
+      TaskDatasource.updateTaskStatus(
+        data.id,
+        data.droner.id,
+        'IN_PROGRESS',
+        `${data.droner.firstname} ${data.droner.lastname}`,
+      )
         .then(res => {
           Toast.show({
             type: 'success',
             text1: `งาน ${data.taskNo}`,
             text2: 'อัพเดทสถานะเรียบร้อยแล้ว',
           });
-          setLoading(false)
+          setLoading(false);
           getTaskDetail();
         })
         .catch(err => {
-          setLoading(false)
-          console.log(err)});
+          setLoading(false);
+          console.log(err);
+        });
     }
   };
 
@@ -199,16 +215,43 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
 
       {data ? (
         <>
-          <ScrollView showsVerticalScrollIndicator={false} persistentScrollbar={false}>
-          {data.status == 'WAIT_REVIEW'||data.status == 'DONE' ? <View style={{flex:1,backgroundColor:'#2EC66E'}}>
-            <View style={{ padding: normalize(18),flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
-              <View>
-              <Text style={{fontFamily:font.bold,fontSize:normalize(17),color:'white'}}>งานเสร็จสิ้น</Text>
-              <Text style={{fontFamily:font.light,fontSize:normalize(12),color:'white'}}>ยินดีด้วยคุณบินงานสำเร็จแล้ว</Text>
-              </View>
-                <Image source={icons.ssbaner} style={{width:normalize(54),height:normalize(54)}} />
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            persistentScrollbar={false}>
+            {data.status == 'WAIT_REVIEW' || data.status == 'DONE' ? (
+              <View style={{flex: 1, backgroundColor: '#2EC66E'}}>
+                <View
+                  style={{
+                    padding: normalize(18),
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
+                  <View>
+                    <Text
+                      style={{
+                        fontFamily: font.bold,
+                        fontSize: normalize(17),
+                        color: 'white',
+                      }}>
+                      งานเสร็จสิ้น
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: font.light,
+                        fontSize: normalize(12),
+                        color: 'white',
+                      }}>
+                      ยินดีด้วยคุณบินงานสำเร็จแล้ว
+                    </Text>
+                  </View>
+                  <Image
+                    source={icons.ssbaner}
+                    style={{width: normalize(54), height: normalize(54)}}
+                  />
                 </View>
-              </View>:null}
+              </View>
+            ) : null}
             <View style={styles.taskMenu}>
               <View style={styles.listTile}>
                 <Text
@@ -334,7 +377,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Image
                     source={profileImg ? {uri: profileImg} : icons.account}
-                    style={{width: normalize(24), height: normalize(24)}}
+                    style={{width: normalize(24), height: normalize(24),borderRadius:99}}
                   />
                   <Text
                     style={{
@@ -348,15 +391,16 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                       `${data.farmer.lastname}`}
                   </Text>
                 </View>
-                {data.status !== 'CANCELED'?  <TouchableOpacity
+                {data.status !== 'CANCELED' ? (
+                  <TouchableOpacity
                     onPress={() => dialCall(data.farmer.telephoneNo)}
                     style={styles.callFarmer}>
                     <Image
                       source={icons.calling}
                       style={{height: 20, width: 20}}
                     />
-                </TouchableOpacity>: null}
-
+                  </TouchableOpacity>
+                ) : null}
               </View>
               <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
                 <Image
@@ -439,7 +483,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   {marginVertical: normalize(5)},
                 ]}>
                 <Text style={styles.fontGray}>ค่าจ้าง</Text>
-                <Text style={styles.fontGray}>{data.price} ฿</Text>
+                <Text style={styles.fontGray}>{numberWithCommas(data.price)} ฿</Text>
               </View>
               <View
                 style={[
@@ -449,7 +493,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 <Text style={styles.fontGray}>
                   ค่าธรรมเนียม (5% ของราคารวม)
                 </Text>
-                <Text style={styles.fontGray}>{data.fee} ฿</Text>
+                <Text style={styles.fontGray}>{numberWithCommas(data.fee)} ฿</Text>
               </View>
 
               {data.discountFee ? (
@@ -462,7 +506,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                     ส่วนลดค่าธรรมเนียม
                   </Text>
                   <Text style={[styles.fontGray, {color: colors.green}]}>
-                    {data.discountFee} ฿
+                   {data.discountFee!=='0'?'- ' : null} {numberWithCommas(data.discountFee)} ฿
                   </Text>
                 </View>
               ) : null}
@@ -476,7 +520,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   รายได้ (หลังจ่ายค่าธรรมเนียม)
                 </Text>
                 <Text style={[styles.fontGray, {color: 'black'}]}>
-                  {data.totalPrice} ฿
+                  {numberWithCommas(data.totalPrice)} ฿
                 </Text>
               </View>
               {data.status == 'CANCELED' ? (
@@ -525,7 +569,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           {data.status == 'WAIT_START' ? (
             <WaitStartFooter
               disable={convertDate(data.dateAppointment) >= today}
-              mainFunc={()=>setShowModalStartTask(true)}
+              mainFunc={() => setShowModalStartTask(true)}
               togleModal={() =>
                 SheetManager.show('CallingSheet', {
                   payload: {tel: data.farmer.telephoneNo},
@@ -861,12 +905,15 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               }}>
               รีวิวสำเร็จ
             </Text>
-            <Image source={image.reviewSuccess} style={{width:normalize(170),height:normalize(168)}} />
+            <Image
+              source={image.reviewSuccess}
+              style={{width: normalize(170), height: normalize(168)}}
+            />
           </View>
           <MainButton
             label="ตกลง"
             color={colors.orange}
-            onPress={()=>setTogleModalSuccess(false)}
+            onPress={() => onFinishTaskSuccess }
           />
         </View>
       </CModal>
@@ -898,16 +945,26 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               กรุณากดยืนยันหากต้องการเริ่มงานนี้
             </Text>
           </View>
-          <MainButton label='เริ่มงาน' color={colors.orange} borderColor={colors.orange} fontColor='white' onPress={() => updateTask(data.status)}/>
-          <MainButton label='ยังไม่เริ่มงาน' color='white' borderColor={colors.gray} fontColor='black' onPress={()=>setShowModalStartTask(false)} />
-          
-         
+          <MainButton
+            label="เริ่มงาน"
+            color={colors.orange}
+            borderColor={colors.orange}
+            fontColor="white"
+            onPress={() => updateTask(data.status)}
+          />
+          <MainButton
+            label="ยังไม่เริ่มงาน"
+            color="white"
+            borderColor={colors.gray}
+            fontColor="black"
+            onPress={() => setShowModalStartTask(false)}
+          />
         </View>
       </CModal>
       <Spinner
         visible={loading}
         textContent={'Loading...'}
-        textStyle={{ color: '#FFF'}}
+        textStyle={{color: '#FFF'}}
       />
     </View>
   );

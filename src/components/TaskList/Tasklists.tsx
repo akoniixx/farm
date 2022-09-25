@@ -1,27 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {normalize} from '@rneui/themed';
 import fonts from '../../assets/fonts';
 import {colors, image, icons, font} from '../../assets';
-import {View, Text, Image, TouchableOpacity, StyleSheet, TextInput} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+} from 'react-native';
 import {numberWithCommas} from '../../function/utility';
 import * as RootNavigation from '../../navigations/RootNavigation';
-import { SheetManager } from 'react-native-actions-sheet';
+import {SheetManager} from 'react-native-actions-sheet';
 import Modal from 'react-native-modal';
-import { MainButton } from '../Button/MainButton';
+import {MainButton} from '../Button/MainButton';
 
 const Tasklists: React.FC<any> = (props: any) => {
   const date = new Date(props.date);
   const today = new Date();
-  const maxRatting:Array<number> = props.maxRatting
-  const defaulRating = props.defaulRating
-  const starImgFilled = props.starImgFilled
-  const starImgCorner = props.starImgCorner
-  const imgUploaded = props.imgUploaded
-  const finishImg = props.finishImg
-  const togleModalReview = props.togleModalReview
-  const togleModalSuccess = props.togleModalSuccess
-  const taskId = props.taskId
-  
+  const maxRatting: Array<number> = props.maxRatting;
+  const defaultRating = props.defaultRating;
+  const starImgFilled = props.starImgFilled;
+  const starImgCorner = props.starImgCorner;
+  const imgUploaded = props.imgUploaded;
+  const finishImg = props.finishImg;
+  const toggleModalReview = props.toggleModalReview;
+  const toggleModalSuccess = props.toggleModalSuccess;
+  const taskId = props.taskId;
+
   const ReviewBar = () => {
     return (
       <View style={styles.reviewBar}>
@@ -30,10 +37,10 @@ const Tasklists: React.FC<any> = (props: any) => {
             <TouchableOpacity
               activeOpacity={0.9}
               key={item}
-              onPress={() => props.setDefaulRating(item)}>
+              onPress={() => props.setDefaultRating(item)}>
               <Image
                 style={styles.star}
-                source={item <= defaulRating ? starImgFilled : starImgCorner}
+                source={item <= defaultRating ? starImgFilled : starImgCorner}
               />
             </TouchableOpacity>
           );
@@ -43,182 +50,197 @@ const Tasklists: React.FC<any> = (props: any) => {
   };
   return (
     <View style={styles.taskMenu}>
-        <View style={styles.listTile}>
-          <Text
-            style={{
-              fontFamily: fonts.medium,
-              fontSize: normalize(14),
-              color: '#9BA1A8',
-            }}>
-            #{props.id}
-          </Text>
-          <View
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor:
-                props.status === 'WAIT_START' ? '#D1F4FF' : '#FCE588',
-              paddingHorizontal: normalize(12),
-              paddingVertical: normalize(5),
-              borderRadius: normalize(12),
-            }}>
-            <Text
-              style={{
-                fontFamily: fonts.medium,
-                color: props.status === 'WAIT_START' ? '#0B69A3' : '#B16F05',
-                fontSize: normalize(12),
-              }}>
-              {props.status === 'WAIT_START' ? 'รอเริ่มงาน' : 'กำลังดำเนินการ'}
-            </Text>
-          </View>
-        </View>
-       
-           <TouchableOpacity onPress={()=>RootNavigation.navigate('Main', {
-        screen: 'TaskDetailScreen',
-        params: {taskId: props.taskId}
-      })}>
-          <View style={styles.listTile}>
-            <Text
-              style={{
-                color: colors.fontBlack,
-                fontFamily: fonts.medium,
-                fontSize: normalize(19),
-              }}>
-              {`${props.title} | ${props.farmArea} ไร่`}
-            </Text>
-            <Text
-              style={{
-                fontFamily: fonts.medium,
-                color: '#2EC66E',
-                fontSize: normalize(17),
-              }}>
-              ฿ {props.price ? numberWithCommas(props.price) : null}
-            </Text>
-          </View>
-          <View
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              flexDirection: 'row',
-              paddingVertical: normalize(5),
-            }}>
-            <Image
-              source={icons.jobCard}
-              style={{
-                width: normalize(20),
-                height: normalize(20),
-              }}
-            />
-            <Text
-              style={{
-                fontFamily: fonts.medium,
-                paddingLeft: normalize(8),
-                fontSize: normalize(14),
-                color: colors.fontBlack,
-              }}>{`${date.getDate()}/${date.getMonth() + 1}/${
-              date.getFullYear() + 543
-            },${date.getHours()}:${date.getMinutes()} น.`}</Text>
-          </View>
-
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              paddingVertical: normalize(5),
-            }}>
-            <Image
-              source={icons.jobDistance}
-              style={{
-                width: normalize(20),
-                height: normalize(20),
-              }}
-            />
-            <View
-              style={{
-                paddingLeft: normalize(8),
-              }}>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  color: colors.fontBlack,
-                  fontSize: normalize(14),
-                }}>
-                {props.address} 
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  color: '#9BA1A8',
-                  fontSize: normalize(13),
-                }}>
-                ระยะทาง {props.distance} กม.
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              flexDirection: 'row',
-              paddingVertical: normalize(5),
-            }}>
-            <Image
-              source={
-                typeof props.img !== 'string' ? icons.account : {uri: props.img}
-              }
-              style={{
-                width: normalize(20),
-                height: normalize(20),
-              }}
-            />
-            <Text
-              style={{
-                color: colors.fontBlack,
-                fontFamily: fonts.medium,
-                paddingLeft: normalize(8),
-                fontSize: normalize(14),
-              }}>
-              {props.user}
-            </Text>
-          </View>
-          </TouchableOpacity> 
-        
+      <View style={styles.listTile}>
+        <Text
+          style={{
+            fontFamily: fonts.medium,
+            fontSize: normalize(14),
+            color: '#9BA1A8',
+          }}>
+          #{props.id}
+        </Text>
         <View
           style={{
             display: 'flex',
-            justifyContent: 'space-between',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor:
+              props.status === 'WAIT_START' ? '#D1F4FF' : '#FCE588',
+            paddingHorizontal: normalize(12),
+            paddingVertical: normalize(5),
+            borderRadius: normalize(12),
+          }}>
+          <Text
+            style={{
+              fontFamily: fonts.medium,
+              color: props.status === 'WAIT_START' ? '#0B69A3' : '#B16F05',
+              fontSize: normalize(12),
+            }}>
+            {props.status === 'WAIT_START' ? 'รอเริ่มงาน' : 'กำลังดำเนินการ'}
+          </Text>
+        </View>
+      </View>
+
+      <TouchableOpacity
+        onPress={() =>
+          RootNavigation.navigate('Main', {
+            screen: 'TaskDetailScreen',
+            params: {taskId: props.taskId},
+          })
+        }>
+        <View style={styles.listTile}>
+          <Text
+            style={{
+              color: colors.fontBlack,
+              fontFamily: fonts.medium,
+              fontSize: normalize(19),
+            }}>
+            {`${props.title} | ${props.farmArea} ไร่`}
+          </Text>
+          <Text
+            style={{
+              fontFamily: fonts.medium,
+              color: '#2EC66E',
+              fontSize: normalize(17),
+            }}>
+            ฿ {props.price ? numberWithCommas(props.price) : null}
+          </Text>
+        </View>
+        <View
+          style={{
+            display: 'flex',
             alignItems: 'center',
             flexDirection: 'row',
-            paddingVertical: normalize(10),
+            paddingVertical: normalize(5),
           }}>
-          <TouchableOpacity
+          <Image
+            source={icons.jobCard}
             style={{
-              width: normalize(props.status === 'WAIT_START'? 155 : 49),
-              height: normalize(49),
-              borderRadius: normalize(8),
-              borderWidth: 0.5,
-              borderColor: 'grey',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection:'row'
+              width: normalize(20),
+              height: normalize(20),
             }}
-            onPress={() => {
-                SheetManager.show("CallingSheet", {
-                    payload: {tel: props.tel},
-                  });
+          />
+          <Text
+            style={{
+              fontFamily: fonts.medium,
+              paddingLeft: normalize(8),
+              fontSize: normalize(14),
+              color: colors.fontBlack,
+            }}>{`${date.getDate()}/${date.getMonth() + 1}/${
+            date.getFullYear() + 543
+          },${date.getHours()}:${date.getMinutes()} น.`}</Text>
+        </View>
+
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            paddingVertical: normalize(5),
+          }}>
+          <Image
+            source={icons.jobDistance}
+            style={{
+              width: normalize(20),
+              height: normalize(20),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(8),
             }}>
-            <Image
-              source={icons.calling}
+            <Text
               style={{
-                width: normalize(24),
-                height: normalize(24),
-              }}
-            />
-             {props.status === 'WAIT_START'? <Text style={{fontFamily:fonts.medium,fontSize:normalize(19),color:'black',marginLeft:5}}>โทร</Text> : null}
-          </TouchableOpacity>
-          {props.status === 'IN_PROGRESS'?<TouchableOpacity
+                fontFamily: fonts.medium,
+                color: colors.fontBlack,
+                fontSize: normalize(14),
+              }}>
+              {props.address}
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.medium,
+                color: '#9BA1A8',
+                fontSize: normalize(13),
+              }}>
+              ระยะทาง {props.distance} กม.
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'row',
+            paddingVertical: normalize(5),
+          }}>
+          <Image
+            source={
+              typeof props.img !== 'string' ? icons.account : {uri: props.img}
+            }
+            style={{
+              width: normalize(22),
+              height: normalize(22),
+              borderRadius: 99,
+            }}
+          />
+          <Text
+            style={{
+              color: colors.fontBlack,
+              fontFamily: fonts.medium,
+              paddingLeft: normalize(8),
+              fontSize: normalize(14),
+            }}>
+            {props.user}
+          </Text>
+        </View>
+      </TouchableOpacity>
+
+      <View
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexDirection: 'row',
+          paddingVertical: normalize(10),
+        }}>
+        <TouchableOpacity
+          style={{
+            width: normalize(props.status === 'WAIT_START' ? 155 : 49),
+            height: normalize(49),
+            borderRadius: normalize(8),
+            borderWidth: 0.5,
+            borderColor: 'grey',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+          }}
+          onPress={() => {
+            SheetManager.show('CallingSheet', {
+              payload: {tel: props.tel},
+            });
+          }}>
+          <Image
+            source={icons.calling}
+            style={{
+              width: normalize(24),
+              height: normalize(24),
+            }}
+          />
+          {props.status === 'WAIT_START' ? (
+            <Text
+              style={{
+                fontFamily: fonts.medium,
+                fontSize: normalize(19),
+                color: 'black',
+                marginLeft: 5,
+              }}>
+              โทร
+            </Text>
+          ) : null}
+        </TouchableOpacity>
+        {props.status === 'IN_PROGRESS' ? (
+          <TouchableOpacity
             disabled
             style={{
               width: normalize(127.5),
@@ -238,61 +260,70 @@ const Tasklists: React.FC<any> = (props: any) => {
               }}>
               ขยายเวลา
             </Text>
-          </TouchableOpacity>:null}
-          
-          <TouchableOpacity
-            disabled={props.status === 'WAIT_START'&&today<date}
-            onPress={()=>props.status === 'WAIT_START'?props.setShowModalStartTask():props.setTogleModalUpload(true)}
-            style={{
-              width: normalize(props.status === 'WAIT_START'? 155 : 127.5),
-              height: normalize(49),
-              borderRadius: normalize(8),
-              backgroundColor:
-                props.status === 'WAIT_START' ? today>=date?  '#2BB0ED': colors.disable : '#2EC66E',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text
-              style={{
-                fontFamily: fonts.medium,
-                fontWeight: '600',
-                fontSize: normalize(19),
-                color: colors.white,
-              }}>
-              {props.status === 'WAIT_START' ? 'เริ่มทำงาน' : 'งานเสร็จสิ้น'}
-            </Text>
           </TouchableOpacity>
-        </View>
+        ) : null}
+
+        <TouchableOpacity
+          disabled={props.status === 'WAIT_START' && today < date}
+          onPress={() =>
+            props.status === 'WAIT_START'
+              ? props.setShowModalStartTask()
+              : props.setToggleModalUpload()
+          }
+          style={{
+            width: normalize(props.status === 'WAIT_START' ? 155 : 127.5),
+            height: normalize(49),
+            borderRadius: normalize(8),
+            backgroundColor:
+              props.status === 'WAIT_START'
+                ? today >= date
+                  ? '#2BB0ED'
+                  : colors.disable
+                : '#2EC66E',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={{
+              fontFamily: fonts.medium,
+              fontWeight: '600',
+              fontSize: normalize(19),
+              color: colors.white,
+            }}>
+            {props.status === 'WAIT_START' ? 'เริ่มทำงาน' : 'งานเสร็จสิ้น'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'row',
+          paddingVertical: normalize(5),
+        }}>
+        <Image
+          source={icons.note}
+          style={{
+            width: normalize(20),
+            height: normalize(20),
+          }}
+        />
         <View
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            flexDirection: 'row',
-            paddingVertical: normalize(5),
+            paddingLeft: normalize(8),
           }}>
-          <Image
-            source={icons.note}
+          <Text
             style={{
-              width: normalize(20),
-              height: normalize(20),
-            }}
-          />
-          <View
-            style={{
-              paddingLeft: normalize(8),
+              color: colors.fontBlack,
+              fontFamily: fonts.medium,
+              fontSize: normalize(14),
             }}>
-            <Text
-              style={{
-                color: colors.fontBlack,
-                fontFamily: fonts.medium,
-                fontSize: normalize(14),
-              }}>
-              {props.preparation?props.preparation:'-'}
-            </Text>
-          </View>
+            {props.preparation ? props.preparation : '-'}
+          </Text>
         </View>
-        <Modal isVisible={props.showModalStartTask}>
+      </View>
+      <Modal isVisible={props.toggleModalStartTask}>
         <View
           style={{
             backgroundColor: 'white',
@@ -311,22 +342,32 @@ const Tasklists: React.FC<any> = (props: any) => {
               ยืนยันการเริ่มงาน?
             </Text>
             <Text
-            style={{
-              fontFamily: font.medium,
-              fontSize: normalize(14),
-              color: 'black',
-              marginBottom: 15,
-            }}>
-            กรุณากดยืนยันหากต้องการเริ่มงานนี้
-          </Text>
+              style={{
+                fontFamily: font.medium,
+                fontSize: normalize(14),
+                color: 'black',
+                marginBottom: 15,
+              }}>
+              กรุณากดยืนยันหากต้องการเริ่มงานนี้
+            </Text>
           </View>
-          <MainButton label='เริ่มงาน' color={colors.orange} borderColor={colors.orange} fontColor='white' onPress={props.updateTask}/>
-          <MainButton label='ยังไม่เริ่มงาน' color='white' borderColor={colors.gray} fontColor='black' onPress={props.setShowModalStartTask} />
-          
-         
+          <MainButton
+            label="เริ่มงาน"
+            color={colors.orange}
+            borderColor={colors.orange}
+            fontColor="white"
+            onPress={props.startTask}
+          />
+          <MainButton
+            label="ยังไม่เริ่มงาน"
+            color="white"
+            borderColor={colors.gray}
+            fontColor="black"
+            onPress={() => props.setToggleModalStartTask(false)}
+          />
         </View>
-        </Modal>
-        <Modal isVisible={props.togleModalUpload}>
+      </Modal>
+      <Modal isVisible={props.toggleModalUpload}>
         <View
           style={{
             backgroundColor: 'white',
@@ -459,7 +500,7 @@ const Tasklists: React.FC<any> = (props: any) => {
           </View>
         </View>
       </Modal>
-      <Modal isVisible={togleModalReview}>
+      <Modal isVisible={toggleModalReview}>
         <View
           style={{
             backgroundColor: 'white',
@@ -511,12 +552,12 @@ const Tasklists: React.FC<any> = (props: any) => {
           <MainButton
             label="ยืนยัน"
             color={colors.orange}
-            disable={defaulRating == 0}
-            onPress={()=>props.onFinishTask(taskId)}
+            disable={defaultRating == 0}
+            onPress={() => props.onFinishTask(taskId)}
           />
         </View>
       </Modal>
-      <Modal isVisible={togleModalSuccess}>
+      <Modal isVisible={toggleModalSuccess}>
         <View
           style={{
             backgroundColor: 'white',
@@ -534,8 +575,11 @@ const Tasklists: React.FC<any> = (props: any) => {
               }}>
               รีวิวสำเร็จ
             </Text>
-            <Image source={image.reviewSuccess} style={{width:normalize(170),height:normalize(168)}} />
-          </View> 
+            <Image
+              source={image.reviewSuccess}
+              style={{width: normalize(170), height: normalize(168)}}
+            />
+          </View>
           <MainButton
             label="ตกลง"
             color={colors.orange}
@@ -543,7 +587,6 @@ const Tasklists: React.FC<any> = (props: any) => {
           />
         </View>
       </Modal>
-      
     </View>
   );
 };

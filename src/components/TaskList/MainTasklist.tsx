@@ -174,8 +174,9 @@ const MainTasklists: React.FC<any> = (props: any) => {
               typeof props.img !== 'string' ? icons.account : {uri: props.img}
             }
             style={{
-              width: normalize(20),
-              height: normalize(20),
+              width: normalize(22),
+              height: normalize(22),
+              borderRadius: 99
             }}
           />
           <Text

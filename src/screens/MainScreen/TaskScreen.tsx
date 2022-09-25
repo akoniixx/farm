@@ -22,24 +22,33 @@ import {TaskDatasource} from '../../datasource/TaskDatasource';
 
 import {stylesCentral} from '../../styles/StylesCentral';
 import * as ImagePicker from 'react-native-image-picker';
+import {dataUpdateStatusEntity} from '../../entities/TaskScreenEntities';
 
 const TaskScreen: React.FC = () => {
   const [data, setData] = useState<any>([]);
 
   const [loading, setLoading] = useState(false);
   const [checkResIsComplete, setCheckResIsComplete] = useState(false);
-  const [showModalStartTask, setShowModalStartTask] = useState<boolean>(false);
+  const [toggleModalStartTask, setToggleModalStartTask] =
+    useState<boolean>(false);
 
-  const [togleModalUpload, setTogleModalUpload] = useState<boolean>(false);
-  const [togleModalReview, setTogleModalReview] = useState<boolean>(false);
-  const [togleModalSuccess, setTogleModalSuccess] = useState<boolean>(false);
+  const [toggleModalUpload, setToggleModalUpload] = useState<boolean>(false);
+  const [toggleModalReview, setToggleModalReview] = useState<boolean>(false);
+  const [toggleModalSuccess, setToggleModalSuccess] = useState<boolean>(false);
   const [imgUploaded, setImgUploaded] = useState<boolean>(false);
   const [finishImg, setFinishImg] = useState<any>(null);
-  const [defaulRating, setDefaulRating] = useState<number>(0);
+  const [defaultRating, setDefaultRating] = useState<number>(0);
   const [maxRatting, setMaxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
   const [comment, setComment] = useState<string>('');
-  const [idUpload,setIdUpload] = useState<string>('');
-  const [updateBy,setUpdateBy] = useState<string>('');
+  const [idUpload, setIdUpload] = useState<string>('');
+  const [updateBy, setUpdateBy] = useState<string>('');
+  const [dataUpdateStatus, setDataUpdateStatus] =
+    useState<dataUpdateStatusEntity>({
+      id: '',
+      dronerId: '',
+      taskNo: '',
+      updateBy: '',
+    });
   const starImgFilled = icons.starfill;
   const starImgCorner = icons.starCorner;
 
@@ -53,37 +62,48 @@ const TaskScreen: React.FC = () => {
     getData();
   }, []);
 
-  const updateTask = (
+  const startTask = () => {
+    setLoading(true);
+    setToggleModalStartTask(false);
+    TaskDatasource.updateTaskStatus(
+      dataUpdateStatus.id,
+      dataUpdateStatus.dronerId,
+      'IN_PROGRESS',
+      dataUpdateStatus.updateBy,
+    )
+      .then(res => {
+        Toast.show({
+          type: 'success',
+          text1: `งาน #${dataUpdateStatus.taskNo}`,
+          text2: 'อัพเดทสถานะเรียบร้อยแล้ว',
+        });
+        setLoading(false);
+        setTimeout(() => getData(), 300);
+      })
+      .catch(err => console.log(err.response.data));
+  };
+
+  const showModalStartTask = (
     id: string,
     dronerId: string,
-    status: string,
     taskNo: string,
     updateBy: string,
   ) => {
-    if (status === 'WAIT_START') {
-      setLoading(true);
-      setShowModalStartTask(false);
-      TaskDatasource.updateTaskStatus(id, dronerId, 'IN_PROGRESS',updateBy)
-        .then(res => {
-          Toast.show({
-            type: 'success',
-            text1: `งาน #${taskNo}`,
-            text2: 'อัพเดทสถานะเรียบร้อยแล้ว',
-          });
-          setLoading(false);
-          setTimeout(() => getData(), 500);
-        })
-        .catch(err => console.log(err.response.data));
-    } else {
-      console.log(status);
-    }
+    setDataUpdateStatus({
+      id: id,
+      dronerId: dronerId,
+      taskNo: taskNo,
+      updateBy: updateBy,
+    });
+
+    setToggleModalStartTask(true);
   };
 
-  const openModalUpload =(id:string,updateBy:string) =>{
-    setIdUpload(id)
-    setUpdateBy(updateBy)
-    setTogleModalUpload(true)
-  }
+  const openModalUpload = (id: string, updateBy: string) => {
+    setIdUpload(id);
+    setUpdateBy(updateBy);
+    setToggleModalUpload(true);
+  };
 
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
@@ -95,22 +115,28 @@ const TaskScreen: React.FC = () => {
     }
   }, [finishImg]);
   const onFinishTask = () => {
-    setTogleModalReview(false);
+    setToggleModalReview(false);
     setTimeout(() => setLoading(true), 500);
-    TaskDatasource.finishTask(finishImg, idUpload, defaulRating, comment,updateBy).then(
-      res => {
+    TaskDatasource.finishTask(
+      finishImg,
+      idUpload,
+      defaultRating,
+      comment,
+      updateBy,
+    )
+      .then(res => {
         setLoading(false);
-        setTimeout(() => setTogleModalSuccess(true), 500);
+        setTimeout(() => setToggleModalSuccess(true), 500);
         setFinishImg(null);
-        setDefaulRating(0)
-      },
-    ).catch((err)=>{
-      console.log(err)
-      Toast.show({
-        type: 'error',
-        text1: `เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง`,
+        setDefaultRating(0);
+      })
+      .catch(err => {
+        console.log(err);
+        Toast.show({
+          type: 'error',
+          text1: `เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง`,
+        });
       });
-    }) 
   };
 
   const getData = async () => {
@@ -126,21 +152,21 @@ const TaskScreen: React.FC = () => {
       })
       .catch(err => {
         setLoading(false);
-        console.log(err)
+        console.log(err);
       });
   };
 
   const closeFinishModal = () => {
-    setTogleModalUpload(false);
+    setToggleModalUpload(false);
     setFinishImg(null);
   };
 
   const onChangImgFinish = () => {
-    setTogleModalUpload(false);
-    setTimeout(() => setTogleModalReview(true), 500);
+    setToggleModalUpload(false);
+    setTimeout(() => setToggleModalReview(true), 500);
   };
   const onCloseSuccessModal = () => {
-    setTogleModalSuccess(false);
+    setToggleModalSuccess(false);
     setTimeout(() => getData(), 500);
   };
   return (
@@ -166,37 +192,40 @@ const TaskScreen: React.FC = () => {
                 tel={item.item.farmer.telephoneNo}
                 taskId={item.item.id}
                 farmArea={item.item.farmAreaAmount}
-                updateTask={() =>
-                  updateTask(
+                toggleModalStartTask={toggleModalStartTask}
+                setToggleModalStartTask={setToggleModalStartTask}
+                setShowModalStartTask={() =>
+                  showModalStartTask(
                     item.item.id,
                     item.item.dronerId,
-                    item.item.status,
                     item.item.taskNo,
-                    `${item.item.droner.firstname} ${item.item.droner.lastname}`
+                    `${item.item.droner.firstname} ${item.item.droner.lastname}`,
                   )
                 }
-                showModalStartTask={showModalStartTask}
-                setShowModalStartTask={() =>
-                  setShowModalStartTask(!showModalStartTask)
-                }
+                startTask={startTask}
                 maxRatting={maxRatting}
-                setDefaulRating={setDefaulRating}
-                defaulRating={defaulRating}
+                setDefaultRating={setDefaultRating}
+                defaultRating={defaultRating}
                 starImgFilled={starImgFilled}
                 starImgCorner={starImgCorner}
-                togleModalUpload={togleModalUpload}
+                toggleModalUpload={toggleModalUpload}
                 imgUploaded={imgUploaded}
                 finishImg={finishImg}
                 onAddImage={onAddImage}
                 closeFinishModal={closeFinishModal}
                 onChangImgFinish={onChangImgFinish}
-                togleModalReview={togleModalReview}
+                toggleModalReview={toggleModalReview}
                 setComment={setComment}
                 comment={comment}
-                togleModalSuccess={togleModalSuccess}
-                setTogleModalSuccess={setTogleModalSuccess}
+                toggleModalSuccess={toggleModalSuccess}
+                setToggleModalSuccess={setToggleModalSuccess}
                 onFinishTask={onFinishTask}
-                setTogleModalUpload={()=>openModalUpload(item.item.id, `${item.item.droner.firstname} ${item.item.droner.lastname}`)}
+                setToggleModalUpload={() =>
+                  openModalUpload(
+                    item.item.id,
+                    `${item.item.droner.firstname} ${item.item.droner.lastname}`,
+                  )
+                }
                 onCloseSuccessModal={onCloseSuccessModal}
               />
             )}
