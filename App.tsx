@@ -8,7 +8,6 @@ import {SheetProvider} from 'react-native-actions-sheet';
 import './src/sheet/Sheets';
 import {toastConfig} from './src/config/toast-config';
 import { BackHandler } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
   useEffect(() => {

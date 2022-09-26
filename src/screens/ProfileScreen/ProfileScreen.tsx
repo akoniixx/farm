@@ -136,7 +136,7 @@ const onLogout = () =>{
               dispatch({
                 type : "InitProfile",
                 name : `${res.firstname} ${res.lastname}`,
-                id : res.telephoneNo,
+                id : res.dronerCode,
                 image : "",
                 droneitem : res.dronerDrone,
                 status : res.status,
@@ -154,7 +154,7 @@ const onLogout = () =>{
                   dispatch({
                     type : "InitProfile",
                     name : `${res.firstname} ${res.lastname}`,
-                    id : res.telephoneNo,
+                    id : res.dronerCode,
                     image : resImg.url,
                     droneitem : res.dronerDrone,
                     status : res.status,
@@ -268,7 +268,7 @@ const onLogout = () =>{
               key={index}
               dronebrand={item.drone.series} 
               serialbrand={item.serialNo} 
-              status={"PENDING"} 
+              status={item.status} 
               image={item.drone.droneBrand.logoImagePath} />
           ))
         }
@@ -283,7 +283,9 @@ const onLogout = () =>{
           </View>
           <Text style={styles.revenue}>{`฿${profilestate.totalRevenue}`}</Text>
         </View>
-        <TouchableOpacity onPress={()=>{
+        {
+          (profilestate.status !== "ACTIVE")?
+          <TouchableOpacity onPress={()=>{
             navigation.navigate("ProfileDocument",{
               tele : profilestate.id
             })
@@ -304,7 +306,8 @@ const onLogout = () =>{
                 <Image source={icons.arrowRight} style={styles.listTileIcon}/>
               </TouchableOpacity>
             </View>
-        </TouchableOpacity>
+        </TouchableOpacity>:<></>
+        }
         <TouchableOpacity onPress={async()=>{
             await onLogout();
             RootNavigation.navigate('Auth', {
