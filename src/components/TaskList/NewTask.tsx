@@ -159,6 +159,7 @@ const NewTask: React.FC<any> = (props: any) => {
             style={{
               width: normalize(20),
               height: normalize(20),
+              borderRadius: normalize(99),
             }}
           />
           <Text
@@ -180,7 +181,7 @@ const NewTask: React.FC<any> = (props: any) => {
           }}>
           <TouchableOpacity
             style={{
-              width: normalize(155.5),
+              width: '48%',
               height: normalize(49),
               borderRadius: normalize(8),
               borderWidth: normalize(1),
@@ -205,7 +206,7 @@ const NewTask: React.FC<any> = (props: any) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={{
-              width: normalize(155.5),
+              width: '48%',
               height: normalize(49),
               borderRadius: normalize(8),
               backgroundColor: '#2EC66E',
