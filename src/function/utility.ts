@@ -37,7 +37,7 @@ export const openGps = (lat: number, lng: number, name: string) => {
   const latLng = `${lat},${lng}`;
   const label = name;
   const url = Platform.select({
-    ios: `comgooglemaps://?center=${lat},${lng}`,
+    ios: `comgooglemaps://?center=${lat},${lng}&q=${lat},${lng}&zoom=15&views=traffic`,
     android: `${scheme}${latLng}(${label})`,
   });
   Linking.canOpenURL(url ? url : '')
