@@ -76,6 +76,7 @@ const NewTask: React.FC<any> = (props: any) => {
             style={{
               fontFamily: fonts.medium,
               fontSize: normalize(19),
+              color: colors.fontBlack,
             }}>
             {`${props.title} | ${props.farmArea} ไร่`}
           </Text>
@@ -107,6 +108,7 @@ const NewTask: React.FC<any> = (props: any) => {
               fontFamily: fonts.medium,
               paddingLeft: normalize(8),
               fontSize: normalize(14),
+              color: colors.fontBlack,
             }}>{`${date.getDate()}/${date.getMonth() + 1}/${
             date.getFullYear() + 543
           },${date.getHours()}:${date.getMinutes()} น.`}</Text>
@@ -132,6 +134,7 @@ const NewTask: React.FC<any> = (props: any) => {
               style={{
                 fontFamily: fonts.medium,
                 fontSize: normalize(14),
+                color: colors.fontBlack,
               }}>
               {props.address}
             </Text>
@@ -167,6 +170,7 @@ const NewTask: React.FC<any> = (props: any) => {
               fontFamily: fonts.medium,
               paddingLeft: normalize(8),
               fontSize: normalize(14),
+              color: colors.fontBlack,
             }}>
             {props.user}
           </Text>
@@ -301,7 +305,7 @@ const NewTask: React.FC<any> = (props: any) => {
               style={{
                 fontFamily: fonts.medium,
                 fontSize: normalize(14),
-                color: '#242D35',
+                color: colors.fontBlack,
               }}>
               {props.comment}
             </Text>
