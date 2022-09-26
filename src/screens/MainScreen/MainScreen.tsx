@@ -18,6 +18,7 @@ import {SheetManager} from 'react-native-actions-sheet';
 import {BASE_URL} from '../../config/develop-config';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import { useFocusEffect } from '@react-navigation/native';
+import { decimalConvert, numberWithCommas } from '../../function/utility';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -213,7 +214,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     <Image source={icons.income} style={styles.iconsTask}/>
                     <Text style={styles.font}>รายได้วันนี้</Text>
                   </View>
-                  <Text style={styles.font}>{`฿${profile.totalRevenueToday}`}</Text>
+                  <Text style={styles.font}>{`฿${numberWithCommas(profile.totalRevenueToday)}`}</Text>
                 </View>
                 <View
                   style={{
@@ -233,7 +234,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                         <Image source={icons.income} style={styles.iconsTask}/>
                         <Text style={styles.font}>รายได้ทั้งหมด</Text>
                     </View>
-                  <Text style={styles.font}>{`฿${profile.totalRevenue}`}</Text>
+                  <Text style={styles.font}>{`฿${numberWithCommas(profile.totalRevenue)}`}</Text>
                 </View>
                 <View
                   style={{

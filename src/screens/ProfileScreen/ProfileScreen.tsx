@@ -18,6 +18,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ActionSheet, { ActionSheetRef } from 'react-native-actions-sheet';
 import Lottie from 'lottie-react-native';
+import { decimalConvert, numberWithCommas } from '../../function/utility';
 
 const ProfileScreen: React.FC<any> = ({navigation,route}) => {
   const [profilestate,dispatch] = useReducer(profileReducer,initProfileState)
@@ -280,7 +281,7 @@ const onLogout = () =>{
              <Image source={icons.pocket} style={styles.listTileIcon}/>
              <Text style={styles.listTileTitle}>รายได้</Text>
           </View>
-          <Text style={styles.revenue}>{`฿${profilestate.totalRevenue}`}</Text>
+          <Text style={styles.revenue}>{`฿${numberWithCommas(profilestate.totalRevenue)}`}</Text>
         </View>
         {
           (profilestate.status !== "ACTIVE")?
