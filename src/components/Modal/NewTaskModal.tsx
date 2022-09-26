@@ -146,6 +146,7 @@ export const NewTaskModal = (
               style={{
                 fontFamily: fonts.medium,
                 fontSize: normalize(19),
+                color: colors.fontBlack,
               }}>
               {`${data?.farmerPlot.plantName} | ${data?.farmAreaAmount} ไร่`}
             </Text>
@@ -177,6 +178,7 @@ export const NewTaskModal = (
                 fontFamily: fonts.medium,
                 paddingLeft: normalize(8),
                 fontSize: normalize(14),
+                color: colors.fontBlack,
               }}>{`${date.getDate()}/${date.getMonth() + 1}/${
               date.getFullYear() + 543
             },${date.getHours()}:${date.getMinutes()} น.`}</Text>
@@ -189,6 +191,7 @@ export const NewTaskModal = (
               style={{
                 fontFamily: fonts.medium,
                 fontSize: normalize(19),
+                color: colors.fontBlack,
               }}>
               เกษตรกร
             </Text>
@@ -215,6 +218,7 @@ export const NewTaskModal = (
                   fontFamily: fonts.medium,
                   paddingLeft: normalize(8),
                   fontSize: normalize(14),
+                  color: colors.fontBlack,
                 }}>
                 {`${data?.farmer.firstname} ${data?.farmer.lastname}`}
               </Text>
@@ -241,6 +245,7 @@ export const NewTaskModal = (
                 style={{
                   fontFamily: fonts.medium,
                   fontSize: normalize(14),
+                  color: colors.fontBlack,
                 }}>
                 {data?.farmerPlot.locationName}
               </Text>
@@ -374,15 +379,14 @@ export const NewTaskModal = (
               marginTop: normalize(10),
             }}
             onPress={() => {
-              rejectTask().then(() => {
-                // setOpenConfirmModal(false);
-              });
+              rejectTask();
             }}>
             <Text
               style={{
                 fontFamily: fonts.medium,
                 fontWeight: '600',
                 fontSize: normalize(19),
+                color: colors.fontBlack,
               }}>
               ไม่รับงาน
             </Text>
