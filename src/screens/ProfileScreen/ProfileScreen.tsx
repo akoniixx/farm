@@ -36,7 +36,6 @@ const ProfileScreen: React.FC<any> = ({navigation,route}) => {
   const [valuetype, setValuetype] = useState(null);
   const [droneno,setdroneno] = useState<any>(null)
   const [popupPage,setpopupPage] = useState(1)
-  const [dronedata,setDronedata] = useState<any>(null);
   const actionSheet = useRef<any>(null)
   const [reload,setReload] = useState(false)
   const [loading,setLoading] = useState(false)
@@ -226,7 +225,7 @@ const onLogout = () =>{
                       alignItems : 'center',
                       backgroundColor : StatusObject(profilestate.status).colorBg
                     }}>
-                      <Text style={{color: StatusObject(profilestate.status).fontColor,fontFamily : font.light,fontSize : normalize(14)}}>{StatusObject(profilestate.status).status}</Text>
+                      <Text style={{color: StatusObject(profilestate.status).fontColor,fontFamily : font.light,fontSize : normalize(14)}}>{(StatusObject(profilestate.status).status === "ตรวจสอบแล้ว")?"ยืนยันตัวตนแล้ว":"ตรวจสอบแล้ว"}</Text>
                     </View>
                 </View>
             </View>
