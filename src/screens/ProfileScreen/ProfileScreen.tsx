@@ -36,7 +36,6 @@ const ProfileScreen: React.FC<any> = ({navigation,route}) => {
   const [valuetype, setValuetype] = useState(null);
   const [droneno,setdroneno] = useState<any>(null)
   const [popupPage,setpopupPage] = useState(1)
-  const [dronedata,setDronedata] = useState<any>(null);
   const actionSheet = useRef<any>(null)
   const [reload,setReload] = useState(false)
   const [loading,setLoading] = useState(false)
@@ -136,7 +135,7 @@ const onLogout = () =>{
               dispatch({
                 type : "InitProfile",
                 name : `${res.firstname} ${res.lastname}`,
-                id : res.telephoneNo,
+                id : res.dronerCode,
                 image : "",
                 droneitem : res.dronerDrone,
                 status : res.status,
@@ -154,7 +153,7 @@ const onLogout = () =>{
                   dispatch({
                     type : "InitProfile",
                     name : `${res.firstname} ${res.lastname}`,
-                    id : res.telephoneNo,
+                    id : res.dronerCode,
                     image : resImg.url,
                     droneitem : res.dronerDrone,
                     status : res.status,
@@ -226,7 +225,7 @@ const onLogout = () =>{
                       alignItems : 'center',
                       backgroundColor : StatusObject(profilestate.status).colorBg
                     }}>
-                      <Text style={{color: StatusObject(profilestate.status).fontColor,fontFamily : font.light,fontSize : normalize(14)}}>{StatusObject(profilestate.status).status}</Text>
+                      <Text style={{color: StatusObject(profilestate.status).fontColor,fontFamily : font.light,fontSize : normalize(14)}}>{(StatusObject(profilestate.status).status === "ตรวจสอบแล้ว")?"ยืนยันตัวตนแล้ว":"ตรวจสอบแล้ว"}</Text>
                     </View>
                 </View>
             </View>
@@ -268,7 +267,7 @@ const onLogout = () =>{
               key={index}
               dronebrand={item.drone.series} 
               serialbrand={item.serialNo} 
-              status={"PENDING"} 
+              status={item.status} 
               image={item.drone.droneBrand.logoImagePath} />
           ))
         }
@@ -283,7 +282,9 @@ const onLogout = () =>{
           </View>
           <Text style={styles.revenue}>{`฿${profilestate.totalRevenue}`}</Text>
         </View>
-        <TouchableOpacity onPress={()=>{
+        {
+          (profilestate.status !== "ACTIVE")?
+          <TouchableOpacity onPress={()=>{
             navigation.navigate("ProfileDocument",{
               tele : profilestate.id
             })
@@ -304,7 +305,8 @@ const onLogout = () =>{
                 <Image source={icons.arrowRight} style={styles.listTileIcon}/>
               </TouchableOpacity>
             </View>
-        </TouchableOpacity>
+        </TouchableOpacity>:<></>
+        }
         <TouchableOpacity onPress={async()=>{
             await onLogout();
             RootNavigation.navigate('Auth', {
