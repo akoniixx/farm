@@ -297,10 +297,10 @@ const styles = StyleSheet.create({
     },
     input: {
         height: normalize(56),
-        marginVertical: 12,
-        padding: 10,
+        marginVertical: normalize(12),
+        padding: normalize(12),
         borderColor: colors.disable,
-        borderWidth: 1,
+        borderWidth: normalize(1),
         borderRadius: normalize(10),
         fontFamily : font.light,
         color : colors.fontBlack,
