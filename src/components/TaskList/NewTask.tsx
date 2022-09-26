@@ -159,6 +159,7 @@ const NewTask: React.FC<any> = (props: any) => {
             style={{
               width: normalize(20),
               height: normalize(20),
+              borderRadius: normalize(99),
             }}
           />
           <Text
@@ -178,41 +179,17 @@ const NewTask: React.FC<any> = (props: any) => {
             flexDirection: 'row',
             paddingVertical: normalize(10),
           }}>
-          {/* <TouchableOpacity
-            style={{
-              width: normalize(49),
-              height: normalize(49),
-              borderRadius: normalize(8),
-              borderWidth: 0.5,
-              borderColor: 'grey',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            onPress={() => {
-              call(props.tel);
-            }}>
-            <Image
-              source={icons.calling}
-              style={{
-                width: normalize(24),
-                height: normalize(24),
-              }}
-            />
-          </TouchableOpacity> */}
           <TouchableOpacity
             style={{
-              width: normalize(155.5),
+              width: '48%',
               height: normalize(49),
               borderRadius: normalize(8),
-              borderWidth: 0.2,
-              borderColor: 'grey',
-              // backgroundColor: '#FB8705',
+              borderWidth: normalize(1),
+              borderColor: '#DCDFE3',
+              backgroundColor: '#FFF',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              margin: normalize(10),
-              marginTop: normalize(0),
             }}
             onPress={() => {
               navigation.navigate('TaskDetailScreen', {taskId});
@@ -222,20 +199,18 @@ const NewTask: React.FC<any> = (props: any) => {
                 fontFamily: fonts.medium,
                 fontWeight: '600',
                 fontSize: normalize(19),
-                // color: '#fff',
+                color: '#242D35',
               }}>
               ดูรายละเอียด
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
-              width: normalize(155.5),
+              width: '48%',
               height: normalize(49),
               borderRadius: normalize(8),
               backgroundColor: '#2EC66E',
               display: 'flex',
-              margin: normalize(10),
-              marginTop: normalize(0),
               flexDirection: 'row',
             }}
             onPress={() => onPressReceiveTask()}>
@@ -326,8 +301,9 @@ const NewTask: React.FC<any> = (props: any) => {
               style={{
                 fontFamily: fonts.medium,
                 fontSize: normalize(14),
+                color: '#242D35',
               }}>
-              {props.preparation}
+              {props.comment}
             </Text>
           </View>
         </View>

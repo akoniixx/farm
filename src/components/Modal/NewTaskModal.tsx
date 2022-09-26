@@ -207,6 +207,7 @@ export const NewTaskModal = (
                 style={{
                   width: normalize(50),
                   height: normalize(50),
+                  borderRadius: normalize(99),
                 }}
               />
               <Text
@@ -298,14 +299,15 @@ export const NewTaskModal = (
               fontSize: normalize(14),
               color: '#A5A7AB',
             }}>
-            แจ้งให้ทราบ หากคุณปฏิเสธการรับงานบ่อยเกินไป อาจจะส่งผลให้กับ xxxx
+            แจ้งให้ทราบ หากคุณปฏิเสธการรับงานบ่อยเกินไป
+            อาจจะส่งผลให้คุณถูกลดจำนวนการมองเห็นงานใหม่ๆ
           </Text>
         </View>
         {/* Button */}
         <View>
           <TouchableOpacity
             style={{
-              width: normalize(343),
+              width: '100%',
               height: normalize(54),
               borderRadius: normalize(8),
               backgroundColor: '#2EC66E',
@@ -342,17 +344,16 @@ export const NewTaskModal = (
                   padding: 3,
                   backgroundColor: '#014D40',
                   width: '45%',
-                  left: '48%',
-                  borderRadius: 39,
+                  left: '50%',
+                  borderRadius: normalize(39),
                 }}>
                 <Text
                   style={{
-                    paddingRight: '10%',
                     fontFamily: fonts.medium,
                     fontWeight: '600',
                     fontSize: normalize(19),
                     color: '#ffffff',
-                    textAlign: 'right',
+                    textAlign: 'center',
                   }}>
                   {minutes + ':' + (seconds < 10 ? `0${seconds}` : seconds)}
                 </Text>
@@ -361,11 +362,11 @@ export const NewTaskModal = (
           </TouchableOpacity>
           <TouchableOpacity
             style={{
-              width: normalize(343),
+              width: '100%',
               height: normalize(54),
               borderRadius: normalize(8),
-              borderWidth: 0.2,
-              borderColor: 'grey',
+              borderWidth: normalize(1),
+              borderColor: '#DCDFE3',
               // backgroundColor: '#FB8705',
               display: 'flex',
               justifyContent: 'center',
@@ -420,9 +421,11 @@ const styles = StyleSheet.create({
     padding: normalize(14),
     backgroundColor: '#F7F8FA',
     borderRadius: 16,
+    marginTop: normalize(10),
+    marginBottom: normalize(10),
   },
   map: {
-    width: normalize(344),
+    width: '100%',
     height: normalize(129),
     // marginTop: normalize(10),
   },
