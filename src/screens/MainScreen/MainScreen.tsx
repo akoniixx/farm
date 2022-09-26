@@ -83,7 +83,8 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     totalRevenueToday : resRev.totalRevenueToday,
                     totalArea : resRev.totalArea,
                     totalTask : resRev.totalTask,
-                    ratingAvg : (!resRev.ratingAvg)?"0.00":((parseFloat(resRev.ratingAvg)).toFixed(2)).toString()
+                    ratingAvg : (!resRev.ratingAvg)?"0.00":((parseFloat(resRev.ratingAvg)).toFixed(2)).toString(),
+                    isOpenReceiveTask: res.isOpenReceiveTask,
                   });
                 }
               ).catch(err => console.log(err));
@@ -100,7 +101,8 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 totalRevenueToday : resRev.totalRevenueToday,
                 totalArea : resRev.totalArea,
                 totalTask : resRev.totalTask,
-                ratingAvg : (!resRev.ratingAvg)?"0.00":((parseFloat(resRev.ratingAvg)).toFixed(2)).toString()
+                ratingAvg : (!resRev.ratingAvg)?"0.00":((parseFloat(resRev.ratingAvg)).toFixed(2)).toString(),
+                isOpenReceiveTask: res.isOpenReceiveTask,
               });
             }
           ).catch(err => console.log(err));

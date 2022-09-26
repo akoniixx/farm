@@ -1,7 +1,15 @@
-import {BottomSheetModal, TouchableOpacity} from '@gorhom/bottom-sheet';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {normalize} from '@rneui/themed';
 import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {Dimensions, Image, Modal, StyleSheet, Text, View} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 import {FlatList, ScrollView} from 'react-native-gesture-handler';
 import {colors, font, image} from '../../assets';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
@@ -28,7 +36,6 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
- 
   const snapPoints = useMemo(() => ['25%', '25%'], []);
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const width = Dimensions.get('window').width;
@@ -141,6 +148,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                   preparation={item.item.preparationBy}
                   tel={item.item.farmer.telephoneNo}
                   updatedAt={item.item.updatedAt}
+                  comment={item.item.comment}
                   // callFunc={handlePresentModalPress}
                   // setTel={setTelNum}
                   farmArea={item.item.farmAreaAmount}

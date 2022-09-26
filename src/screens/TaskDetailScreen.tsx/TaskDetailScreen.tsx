@@ -391,7 +391,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                       `${data.farmer.lastname}`}
                   </Text>
                 </View>
-                {data.status !== 'CANCELED' ? (
+                {!['WAIT_RECEIVE', 'CANCELED'].includes(data.status) ? (
                   <TouchableOpacity
                     onPress={() => dialCall(data.farmer.telephoneNo)}
                     style={styles.callFarmer}>

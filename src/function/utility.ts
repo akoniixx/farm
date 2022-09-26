@@ -29,6 +29,8 @@ export const getStatusToText = (status: string) => {
           return {label: 'ถูกยกเลิก', bgcolor: '#FFD7D7', color: '#AB091E'};
     case 'DONE':
       return {label: 'งานเสร็จสิ้น', bgcolor: '#9BF9D3', color: '#014D40'};
+    case 'WAIT_RECEIVE':
+      return {label: 'งานใหม่', bgcolor: '#FF981E', color: '#FFFFFF'};
   }
 };
 

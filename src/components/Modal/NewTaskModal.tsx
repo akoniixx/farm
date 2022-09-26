@@ -298,7 +298,8 @@ export const NewTaskModal = (
               fontSize: normalize(14),
               color: '#A5A7AB',
             }}>
-            แจ้งให้ทราบ หากคุณปฏิเสธการรับงานบ่อยเกินไป อาจจะส่งผลให้กับ xxxx
+            แจ้งให้ทราบ หากคุณปฏิเสธการรับงานบ่อยเกินไป
+            อาจจะส่งผลให้คุณถูกลดจำนวนการมองเห็นงานใหม่ๆ
           </Text>
         </View>
         {/* Button */}
@@ -420,6 +421,8 @@ const styles = StyleSheet.create({
     padding: normalize(14),
     backgroundColor: '#F7F8FA',
     borderRadius: 16,
+    marginTop: normalize(10),
+    marginBottom: normalize(10),
   },
   map: {
     width: normalize(344),
