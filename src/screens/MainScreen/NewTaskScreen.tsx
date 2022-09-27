@@ -142,7 +142,11 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                   price={item.item.totalPrice}
                   date={item.item.dateAppointment}
                   address={item.item.farmerPlot.locationName}
-                  distance={item.item.distance}
+                  distance={
+                    item.item.taskDronerTemp.find(
+                      (x: any) => x.taskId == item.item.id,
+                    ).distance
+                  }
                   user={`${item.item.farmer.firstname} ${item.item.farmer.lastname}`}
                   img={item.image_profile_url}
                   preparation={item.item.preparationBy}

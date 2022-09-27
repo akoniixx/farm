@@ -14,7 +14,7 @@ import {normalize} from '@rneui/themed';
 import {MainButton} from '../Button/MainButton';
 import {colors, font, icons} from '../../assets';
 import fonts from '../../assets/fonts';
-import {numberWithCommas} from '../../function/utility';
+import {numberWithCommas, openGps} from '../../function/utility';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import ActionSheet, {
   SheetManager,
@@ -37,20 +37,6 @@ export const NewTaskModal = (
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
-
-  const openGps = (lat: number, lng: number, name: string) => {
-    /*  var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
-    var url = scheme + `${lat},${lng}`;
-    Linking.openURL(url); */
-    const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
-    const latLng = `${lat},${lng}`;
-    const label = 'Custom Label';
-    const url = Platform.select({
-      ios: `${scheme}${label}@${latLng}`,
-      android: `${scheme}${latLng}(${label})`,
-    });
-    Linking.openURL(url || '');
-  };
 
   const receiveTask = async () => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
