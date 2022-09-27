@@ -33,7 +33,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     ratingAvg : '0.00',
     isOpenReceiveTask: false,
   });
-  const [dronerId, setDronerId] = useState<string>('');
 
   const socket = io(BASE_URL, {
     path: '/tasks/task/socket',
@@ -53,10 +52,12 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
   const openSocket = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
-    socket.on(`new-task-${dronerId!}`, ({data}) => {
+    socket.on(`new-task-${dronerId!}`, ({data, image_profile_url}) => {
       SheetManager.show('NewTaskSheet', {
         payload: {
           data,
+          dronerId,
+          image_profile_url,
         },
       });
     });

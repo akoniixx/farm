@@ -27,9 +27,13 @@ import Toast from 'react-native-toast-message';
 export const NewTaskModal = (
   props: SheetProps<{
     data: any;
+    dronerId: string;
+    image_profile_url: string;
   }>,
 ) => {
   const data = props.payload?.data;
+  const dronerId = props.payload?.dronerId;
+  const imageProfileUrl = props.payload?.image_profile_url;
   const date = new Date(data?.dateAppointment);
   const [position, setPosition] = useState({
     latitude: parseFloat(data?.farmerPlot.lat),
@@ -37,7 +41,6 @@ export const NewTaskModal = (
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
-  const [dronerId, setDronerId] = useState<string>('');
 
   const receiveTask = async () => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
@@ -90,14 +93,6 @@ export const NewTaskModal = (
       clearInterval(interval);
     };
   });
-
-  const getDronerId = async () => {
-    setDronerId((await AsyncStorage.getItem('droner_id')) ?? '');
-  };
-
-  useEffect(() => {
-    getDronerId();
-  }, []);
 
   return (
     <ActionSheet
@@ -198,9 +193,9 @@ export const NewTaskModal = (
               }}>
               <Image
                 source={
-                  typeof data?.image_profile_url !== 'string'
+                  typeof imageProfileUrl !== 'string'
                     ? icons.account
-                    : {uri: data?.image_profile_url}
+                    : {uri: imageProfileUrl}
                 }
                 style={{
                   width: normalize(50),
@@ -252,8 +247,8 @@ export const NewTaskModal = (
                 }}>
                 ระยะทาง{' '}
                 {
-                  data.taskDronerTemp.find((x: any) => x.dronerId == dronerId)
-                    .distance
+                  data?.taskDronerTemp?.find((x: any) => x.dronerId == dronerId)
+                    ?.distance
                 }{' '}
                 กม.
               </Text>
