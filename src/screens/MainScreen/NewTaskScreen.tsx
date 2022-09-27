@@ -1,6 +1,6 @@
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {normalize} from '@rneui/themed';
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -40,6 +40,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const width = Dimensions.get('window').width;
   const [selectedTaskId, setSelectedTaskId] = useState<string>('');
+  const [dronerId, setDronerId] = useState<string>('');
 
   const getData = async () => {
     setLoading(true);
@@ -81,6 +82,14 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
       getData();
     }, []),
   );
+
+  const getDronerId = async () => {
+    setDronerId((await AsyncStorage.getItem('droner_id')) ?? '');
+  };
+
+  useEffect(() => {
+    getDronerId();
+  }, []);
 
   return (
     <>
@@ -144,7 +153,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                   address={item.item.farmerPlot.locationName}
                   distance={
                     item.item.taskDronerTemp.find(
-                      (x: any) => x.taskId == item.item.id,
+                      (x: any) => x.dronerId == dronerId,
                     ).distance
                   }
                   user={`${item.item.farmer.firstname} ${item.item.farmer.lastname}`}
