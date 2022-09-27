@@ -18,7 +18,7 @@ import {SheetManager} from 'react-native-actions-sheet';
 import {BASE_URL} from '../../config/develop-config';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import { useFocusEffect } from '@react-navigation/native';
-import { decimalConvert, numberWithCommas } from '../../function/utility';
+import { decimalConvert, numberWithCommas, socket } from '../../function/utility';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -34,20 +34,15 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     isOpenReceiveTask: false,
   });
 
-  const socket = io(BASE_URL, {
-    path: '/tasks/task/socket',
-  });
-  const [isConnected, setIsConnected] = useState(socket.connected);
-
   useFocusEffect(
     React.useCallback(() => {
       getProfile();
+      openSocket();
     }, []),
   );
 
   useEffect(() => {
     getProfile();
-    openSocket();
   }, []);
 
   const openSocket = async () => {
