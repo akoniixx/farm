@@ -14,7 +14,7 @@ import {normalize} from '@rneui/themed';
 import {MainButton} from '../Button/MainButton';
 import {colors, font, icons} from '../../assets';
 import fonts from '../../assets/fonts';
-import {numberWithCommas, openGps} from '../../function/utility';
+import {numberWithCommas, openGps, socket} from '../../function/utility';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import ActionSheet, {
   SheetManager,
@@ -23,6 +23,7 @@ import ActionSheet, {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import Toast from 'react-native-toast-message';
+import {useFocusEffect} from '@react-navigation/native';
 
 export const NewTaskModal = (
   props: SheetProps<{
@@ -48,7 +49,7 @@ export const NewTaskModal = (
       .then(res => {
         SheetManager.hide('NewTaskSheet');
         Toast.show({
-          type: 'task',
+          type: 'receiveTaskSuccess',
           text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
           text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
         });
@@ -60,11 +61,6 @@ export const NewTaskModal = (
     TaskDatasource.receiveTask(data?.id, dronerId, false)
       .then(res => {
         SheetManager.hide('NewTaskSheet');
-        // Toast.show({
-        //   type: 'task',
-        //   text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
-        //   text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
-        // });
       })
       .catch(err => console.log(err));
   };
@@ -93,6 +89,25 @@ export const NewTaskModal = (
       clearInterval(interval);
     };
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      onTaskReceive();
+      return () => disconnectSocket();
+    }, []),
+  );
+
+  const onTaskReceive = async () => {
+    const dronerId = await AsyncStorage.getItem('droner_id');
+    socket.on(`unsend-task-${dronerId!}`, (taskId) => {
+      if (data.id == taskId) SheetManager.hide('NewTaskSheet');
+    });
+  };
+
+  const disconnectSocket = async () => {
+    const dronerId = await AsyncStorage.getItem('droner_id');
+    socket.removeListener(`unsend-task-${dronerId!}`);
+  };
 
   return (
     <ActionSheet

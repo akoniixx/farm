@@ -28,7 +28,7 @@ const text2Style = {
 };
 
 export const toastConfig = {
-  task: ({text1, text2, props}: any) => (
+  receiveTaskSuccess: ({text1, text2, props}: any) => (
     <View
       style={{
         ...toastStyle,
@@ -61,4 +61,37 @@ export const toastConfig = {
       </View>
     </View>
   ),
+  // receiveTaskFail: ({text1, text2, props}: any) => (
+  //   <View
+  //     style={{
+  //       ...toastStyle,
+  //       paddingLeft: 20,
+  //       paddingRight: 20,
+  //       display: 'flex',
+  //       flexDirection: 'row',
+  //     }}>
+  //     <View
+  //       style={{
+  //         width: '10%',
+  //         justifyContent: 'center',
+  //       }}>
+  //       <Image
+  //         source={icons.checkSolid}
+  //         style={{
+  //           width: normalize(24),
+  //           height: normalize(24),
+  //         }}
+  //       />
+  //     </View>
+  //     <View
+  //       style={{
+  //         width: '90%',
+  //         paddingLeft: 6,
+  //         justifyContent: 'center',
+  //       }}>
+  //       <Text style={{...text1Style}}>{text1}</Text>
+  //       <Text style={{...text2Style}}>{text2}</Text>
+  //     </View>
+  //   </View>
+  // ),
 };

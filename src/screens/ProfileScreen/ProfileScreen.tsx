@@ -55,8 +55,7 @@ const ProfileScreen: React.FC<any> = ({navigation,route}) => {
   },[reload])
 
 const onLogout = async () =>{
-  const dronerId = await AsyncStorage.getItem('droner_id');
-  socket.removeAllListeners(`new-task-${dronerId!}`);
+  socket.close();
   Authentication.logout()
   setTimeout(() => {navigation.reset({
     index: 0,
