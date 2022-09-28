@@ -351,6 +351,8 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
     };
     drones.push(newDrone);
     dronesUI.push(newDroneUI);
+    setValue(null)
+    setValuetype(null)
     setDronedata(drones);
     setDronedataUI(dronesUI)
     setBrand(null)

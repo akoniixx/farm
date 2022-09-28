@@ -2,8 +2,6 @@ import {View, Text, StyleSheet, Image, ScrollView, Dimensions, TextInput, Modal,
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
-import BottomSheet from 'reanimated-bottom-sheet';
-import Animated from 'react-native-reanimated';
 import {MainButton} from '../../components/Button/MainButton';
 import {colors, font, icons, image} from '../../assets';
 import {normalize} from '../../function/Normalize';
@@ -227,7 +225,7 @@ const onLogout = async () =>{
                       alignItems : 'center',
                       backgroundColor : StatusObject(profilestate.status).colorBg
                     }}>
-                      <Text style={{color: StatusObject(profilestate.status).fontColor,fontFamily : font.light,fontSize : normalize(14)}}>{(StatusObject(profilestate.status).status === "ตรวจสอบแล้ว")?"ยืนยันตัวตนแล้ว":"ตรวจสอบแล้ว"}</Text>
+                      <Text style={{color: StatusObject(profilestate.status).fontColor,fontFamily : font.light,fontSize : normalize(14)}}>{(StatusObject(profilestate.status).status === "ตรวจสอบแล้ว")?"ยืนยันตัวตนแล้ว":"รอการตรวจสอบ"}</Text>
                     </View>
                 </View>
             </View>
@@ -251,7 +249,7 @@ const onLogout = async () =>{
                 fontSize : normalize(14),
                 paddingTop : normalize(8),
                 color : colors.fontBlack
-              }}>แก้ไข</Text>
+              }}>ดูข้อมูล</Text>
               </TouchableOpacity>
             }
         </View>

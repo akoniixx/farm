@@ -298,7 +298,8 @@ const styles = StyleSheet.create({
     input: {
         height: normalize(56),
         marginVertical: normalize(12),
-        padding: normalize(12),
+        justifyContent : 'center',
+        paddingHorizontal: normalize(12),
         borderColor: colors.disable,
         borderWidth: normalize(1),
         borderRadius: normalize(10),
@@ -312,7 +313,8 @@ const styles = StyleSheet.create({
     },
     inputvalue : { 
       fontFamily : font.light,
-      color : colors.fontBlack,fontSize : normalize(16)
+      color : colors.fontBlack,fontSize : normalize(16),
+      paddingVertical : normalize(0),
     }
 })
 

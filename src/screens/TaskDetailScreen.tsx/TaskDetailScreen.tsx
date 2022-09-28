@@ -121,7 +121,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
 
   const onFinishTaskSuccess = () => {
     setTogleModalSuccess(false)
+    setTimeout(() => getTaskDetail(), 200);
     getTaskDetail()
+   
   }
 
   const onChangImgFinish = () => {
@@ -926,7 +928,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           <MainButton
             label="ตกลง"
             color={colors.orange}
-            onPress={() => onFinishTaskSuccess }
+            onPress={onFinishTaskSuccess }
           />
         </View>
       </CModal>
