@@ -18,7 +18,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ActionSheet, { ActionSheetRef } from 'react-native-actions-sheet';
 import Lottie from 'lottie-react-native';
-import { decimalConvert, numberWithCommas } from '../../function/utility';
+import { decimalConvert, numberWithCommas, socket } from '../../function/utility';
 
 const ProfileScreen: React.FC<any> = ({navigation,route}) => {
   const [profilestate,dispatch] = useReducer(profileReducer,initProfileState)
@@ -56,13 +56,14 @@ const ProfileScreen: React.FC<any> = ({navigation,route}) => {
       .catch(err => console.log(err))
   },[reload])
 
-const onLogout = () =>{
-  navigation.reset({
+const onLogout = async () =>{
+  const dronerId = await AsyncStorage.getItem('droner_id');
+  socket.removeAllListeners(`new-task-${dronerId!}`);
+  Authentication.logout()
+  setTimeout(() => {navigation.reset({
     index: 0,
     routes: [{ name: 'Main' }],
-  });
-  setTimeout(() =>  Authentication.logout(), 500);
- 
+  });}, 300);
 }
 
   useEffect(() => {
