@@ -14,7 +14,7 @@ import {normalize} from '@rneui/themed';
 import {MainButton} from '../Button/MainButton';
 import {colors, font, icons} from '../../assets';
 import fonts from '../../assets/fonts';
-import {numberWithCommas} from '../../function/utility';
+import {numberWithCommas, openGps} from '../../function/utility';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import ActionSheet, {
   SheetManager,
@@ -27,9 +27,13 @@ import Toast from 'react-native-toast-message';
 export const NewTaskModal = (
   props: SheetProps<{
     data: any;
+    dronerId: string;
+    image_profile_url: string;
   }>,
 ) => {
   const data = props.payload?.data;
+  const dronerId = props.payload?.dronerId;
+  const imageProfileUrl = props.payload?.image_profile_url;
   const date = new Date(data?.dateAppointment);
   const [position, setPosition] = useState({
     latitude: parseFloat(data?.farmerPlot.lat),
@@ -37,20 +41,6 @@ export const NewTaskModal = (
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
-
-  const openGps = (lat: number, lng: number, name: string) => {
-    /*  var scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
-    var url = scheme + `${lat},${lng}`;
-    Linking.openURL(url); */
-    const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
-    const latLng = `${lat},${lng}`;
-    const label = 'Custom Label';
-    const url = Platform.select({
-      ios: `${scheme}${label}@${latLng}`,
-      android: `${scheme}${latLng}(${label})`,
-    });
-    Linking.openURL(url || '');
-  };
 
   const receiveTask = async () => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
@@ -203,9 +193,9 @@ export const NewTaskModal = (
               }}>
               <Image
                 source={
-                  typeof data?.image_profile_url !== 'string'
+                  typeof imageProfileUrl !== 'string'
                     ? icons.account
-                    : {uri: data?.image_profile_url}
+                    : {uri: imageProfileUrl}
                 }
                 style={{
                   width: normalize(50),
@@ -255,7 +245,12 @@ export const NewTaskModal = (
                   color: '#9BA1A8',
                   fontSize: normalize(13),
                 }}>
-                ระยะทาง {data?.distance} กม.
+                ระยะทาง{' '}
+                {
+                  data?.taskDronerTemp?.find((x: any) => x.dronerId == dronerId)
+                    ?.distance
+                }{' '}
+                กม.
               </Text>
             </View>
           </View>

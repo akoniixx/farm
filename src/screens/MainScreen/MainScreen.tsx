@@ -18,7 +18,7 @@ import {SheetManager} from 'react-native-actions-sheet';
 import {BASE_URL} from '../../config/develop-config';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import { useFocusEffect } from '@react-navigation/native';
-import { decimalConvert, numberWithCommas } from '../../function/utility';
+import { decimalConvert, numberWithCommas, socket } from '../../function/utility';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -33,30 +33,26 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     ratingAvg : '0.00',
     isOpenReceiveTask: false,
   });
-  const [dronerId, setDronerId] = useState<string>('');
-
-  const socket = io(BASE_URL, {
-    path: '/tasks/task/socket',
-  });
-  const [isConnected, setIsConnected] = useState(socket.connected);
 
   useFocusEffect(
     React.useCallback(() => {
       getProfile();
+      openSocket();
     }, []),
   );
 
   useEffect(() => {
     getProfile();
-    openSocket();
   }, []);
 
   const openSocket = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
-    socket.on(`new-task-${dronerId!}`, ({data}) => {
+    socket.on(`new-task-${dronerId!}`, ({data, image_profile_url}) => {
       SheetManager.show('NewTaskSheet', {
         payload: {
           data,
+          dronerId,
+          image_profile_url,
         },
       });
     });

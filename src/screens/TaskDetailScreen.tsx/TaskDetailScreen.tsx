@@ -63,6 +63,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const starImgCorner = icons.starCorner;
   const [loading, setLoading] = useState<boolean>(false);
   const [showModalStartTask, setShowModalStartTask] = useState<boolean>(false);
+  const [dronerId, setDronerId] = useState<string>('');
 
   const ReviewBar = () => {
     return (
@@ -206,6 +207,14 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     setTogleModalUpload(false);
     setFinishImg(null);
   };
+
+  const getDronerId = async () => {
+    setDronerId((await AsyncStorage.getItem('droner_id')) ?? '');
+  };
+
+  useEffect(() => {
+    getDronerId();
+  }, []);
 
   return (
     <View style={{flex: 1}}>
@@ -426,7 +435,11 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                       color: colors.gray,
                       fontSize: normalize(13),
                     }}>
-                    ระยะทาง {data.distance} กม.
+                    ระยะทาง{' '}
+                    {data.status == 'WAIT_RECEIVE'
+                      ? data.taskDronerTemp.find((x: any) => x.dronerId == dronerId).distance
+                      : data.distance}{' '}
+                    กม.
                   </Text>
                 </View>
               </View>
