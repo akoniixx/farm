@@ -139,7 +139,7 @@ const onLogout = () =>{
                 droneitem : res.dronerDrone,
                 status : res.status,
                 totalRevenue : resRev.totalRevenue,
-                rating : (!resRev.ratingAvg)?"0.00":((parseFloat(resRev.ratingAvg)).toFixed(2)).toString()
+                rating : (!resRev.ratingAvg)?"0.0":((parseFloat(resRev.ratingAvg)).toFixed(1)).toString()
               })
             }
           ).catch(err => console.log(err))
@@ -157,7 +157,7 @@ const onLogout = () =>{
                     droneitem : res.dronerDrone,
                     status : res.status,
                     totalRevenue : resRev.totalRevenue,
-                    rating : (!resRev.ratingAvg)?"0.00":((parseFloat(resRev.ratingAvg)).toFixed(2)).toString()
+                    rating : (!resRev.ratingAvg)?"0.0":((parseFloat(resRev.ratingAvg)).toFixed(1)).toString()
                   })
                 }
               ).catch(err => console.log(err))

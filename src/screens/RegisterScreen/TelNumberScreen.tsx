@@ -71,10 +71,6 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
                   {errMessage}
                 </Text>
               ) : null}
-
-              <Text style={styles.label}>
-                โปรดใช้หมายเลขโทรศัพท์ที่ลงทะเบียนไว้กับแอปพลิเคชั่น DnDs
-              </Text>
             </View>
 
             <View>
