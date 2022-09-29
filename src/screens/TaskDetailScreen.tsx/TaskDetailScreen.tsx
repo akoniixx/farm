@@ -182,7 +182,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
       .then(res => {
         getTaskDetail();
         Toast.show({
-          type: 'task',
+          type: 'receiveTaskSuccess',
           text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
           text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
         });

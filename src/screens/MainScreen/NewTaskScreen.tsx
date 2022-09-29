@@ -21,6 +21,7 @@ import Toast from 'react-native-toast-message';
 import icons from '../../assets/icons/icons';
 import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import {socket} from '../../function/utility';
 
 interface Prop {
   isOpenReceiveTask: boolean;
@@ -62,7 +63,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
         const task = res.responseData.data;
         setData(data.filter((x: any) => x.item.id != task.id));
         Toast.show({
-          type: 'task',
+          type: 'receiveTaskSuccess',
           text1: `งาน #${task.taskNo} ถูกรับแล้ว`,
           text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
         });
@@ -80,8 +81,14 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   useFocusEffect(
     React.useCallback(() => {
       getData();
+      return () => disconnectSocket();
     }, []),
   );
+
+  useEffect(() => {
+    onNewTask();
+    onTaskReceive();
+  }, [data]);
 
   const getDronerId = async () => {
     setDronerId((await AsyncStorage.getItem('droner_id')) ?? '');
@@ -90,6 +97,30 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   useEffect(() => {
     getDronerId();
   }, []);
+
+  const onNewTask = async () => {
+    const dronerId = await AsyncStorage.getItem('droner_id');
+    socket.on(`send-task-${dronerId!}`, task => {
+      setData(
+        [{image_profile_url: task.image_profile_url, item: task.data}].concat(
+          data,
+        ),
+      );
+    });
+  };
+
+  const onTaskReceive = async () => {
+    const dronerId = await AsyncStorage.getItem('droner_id');
+    socket.on(`unsend-task-${dronerId!}`, (taskId: string) => {
+      if (data.find((x: any) => x.item.id == taskId))
+        setData(data.filter((x: any) => x.item.id != taskId));
+    });
+  };
+
+  const disconnectSocket = async () => {
+    const dronerId = await AsyncStorage.getItem('droner_id');
+    socket.removeAllListeners(`unsend-task-${dronerId!}`);
+  };
 
   return (
     <>
