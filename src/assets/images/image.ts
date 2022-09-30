@@ -10,5 +10,7 @@ export default {
     marker: require('./marker.png'),
     map: require('./map.png'),
     loading : require('./loading.json'),
-    reviewSuccess: require('./reviewSuccess.png')
+    reviewSuccess: require('./reviewSuccess.png'),
+    successimage: require('./success.png'),
+    successdrone: require('./successdrone.png')
 }
