@@ -28,9 +28,9 @@ export class TaskDatasource {
       });
   }
 
-  static getTaskDetail(taskId: string): Promise<any> {
+  static getTaskDetail(taskId: string,dronerId:string): Promise<any> {
     return httpClient
-      .get(BASE_URL + `/tasks/task/${taskId}`)
+      .post(BASE_URL + `/tasks/task/task-droner-detail?taskId=${taskId}&dronerId=${dronerId}`)
       .then(response => {
         return response.data;
       })

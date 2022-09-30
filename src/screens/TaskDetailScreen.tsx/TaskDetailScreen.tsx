@@ -96,8 +96,10 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   }, [finishImg]);
 
   useEffect(() => {
+    getDronerId();
     getTaskDetail();
   }, []);
+
 
   const onFinishTask = () => {
     setTogleModalReview(false);
@@ -158,22 +160,29 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     }
   };
 
-  const getTaskDetail = () => {
-    TaskDatasource.getTaskDetail(taskId)
+  const getTaskDetail = async() => {
+    const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
+    TaskDatasource.getTaskDetail(taskId,dronerId)
       .then(res => {
-        setData(res.data);
-        let date = new Date(res.data.dateAppointment);
+       if(res.success){
+        setData(res.responseData.data);
+        let date = new Date(res.responseData.data.dateAppointment);
         setDateAppointment(date);
-        if (Object.keys(res.image_profile_url).length !== 0) {
-          setProfileImg(res.image_profile_url);
+        if (Object.keys(res.responseData.image_profile_url).length !== 0) {
+          setProfileImg(res.responseData.image_profile_url);
         }
 
         setPosition({
-          latitude: parseFloat(res.data.farmerPlot.lat),
-          longitude: parseFloat(res.data.farmerPlot.long),
+          latitude: parseFloat(res.responseData.data.farmerPlot.lat),
+          longitude: parseFloat(res.responseData.data.farmerPlot.long),
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         });
+       }else{
+        RootNavigation.navigate('Main', {
+          screen: 'MainScreen',
+        })
+       }
       })
       .catch(err => console.log(err));
   };
@@ -223,9 +232,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     setDronerId((await AsyncStorage.getItem('droner_id')) ?? '');
   };
 
-  useEffect(() => {
-    getDronerId();
-  }, []);
 
   return (
     <View style={{flex: 1}}>
