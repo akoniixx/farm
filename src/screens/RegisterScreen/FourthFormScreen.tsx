@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StyleSheet, Dimensions, Image } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, Dimensions, Image, ScrollView } from 'react-native'
 import {stylesCentral} from '../../styles/StylesCentral';
 import React from 'react'
 import CustomHeader from '../../components/CustomHeader';
@@ -20,6 +20,7 @@ const FourthFormScreen: React.FC<any>  = ({route,navigation})=>{
           showBackBtn
           onPressBack={() => navigation.goBack()}
         />
+        <ScrollView>
         <View style={styles.inner}>
               {
                 (Profile)?<></>:<>
@@ -45,7 +46,10 @@ const FourthFormScreen: React.FC<any>  = ({route,navigation})=>{
                   <Text style={styles.h3}>พร้อมถือบัตรประชาชนของคุณโดยให้เห็นใบหน้าชัดเจน</Text>
                   <Text style={styles.h3}>และบัตรประชาชนอย่างชัดเจน</Text>
               </View>
-            <View>
+           
+        </View>
+        </ScrollView>
+        <View style={{ paddingHorizontal : normalize(17),}}>
               <MainButton label='ถัดไป' color={colors.orange} onPress={()=>{
                 navigation.navigate("AddIDCardScreen",{tele : telNo,profile : Profile })
               }}/>
@@ -55,7 +59,7 @@ const FourthFormScreen: React.FC<any>  = ({route,navigation})=>{
                 }}/>
               }
             </View>
-        </View>
+          
     </SafeAreaView>
   )
 }
