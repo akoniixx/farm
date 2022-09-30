@@ -17,6 +17,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import ActionSheet, { ActionSheetRef } from 'react-native-actions-sheet';
 import Lottie from 'lottie-react-native';
 import { decimalConvert, numberWithCommas, socket } from '../../function/utility';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ProfileScreen: React.FC<any> = ({navigation,route}) => {
   const [profilestate,dispatch] = useReducer(profileReducer,initProfileState)
@@ -53,6 +54,20 @@ const ProfileScreen: React.FC<any> = ({navigation,route}) => {
       })
       .catch(err => console.log(err))
   },[reload])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getProfile();
+      ProfileDatasource.getDroneBrand(1,14).then(
+        (result)=> {
+          const data = result.data.map((item: any)=>{
+            return {label : item.name , value : item.id, image : item.logoImagePath, icon : ()=> (item.logoImagePath != null)?<Image source={{uri : item.logoImagePath}} style={{width : 30, height : 30, borderRadius : 15}}/>:<></>}
+          })
+          setItems(data)
+        })
+        .catch(err => console.log(err))
+    }, []),
+  );
 
 const onLogout = async () =>{
   await socket.close();

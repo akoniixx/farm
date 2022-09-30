@@ -36,6 +36,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import {CanceledFooter} from '../../components/Footer/CanceledFooter';
 import {callcenterNumber} from '../../definitions/callCenterNumber';
 import Spinner from 'react-native-loading-spinner-overlay';
+import * as RootNavigation from '../../navigations/RootNavigation';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
@@ -188,7 +189,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
             text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
           });
         }else{
-          getTaskDetail();
+          RootNavigation.navigate('Main', {
+            screen: 'MainScreen',
+          })
           Toast.show({
             type: 'error',
             text1: res.userMessage,

@@ -48,6 +48,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
   const openSocket = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
+    await socket.connect()
     socket.on(`send-task-${dronerId!}`, ({data, image_profile_url}) => {
       SheetManager.show('NewTaskSheet', {
         payload: {
