@@ -47,12 +47,20 @@ export const NewTaskModal = (
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(data?.id, dronerId, true)
       .then(res => {
-        SheetManager.hide('NewTaskSheet');
-        Toast.show({
-          type: 'receiveTaskSuccess',
-          text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
-          text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
-        });
+        if(res.success){
+          SheetManager.hide('NewTaskSheet');
+          Toast.show({
+            type: 'receiveTaskSuccess',
+            text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
+            text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
+          });
+        }else{
+          SheetManager.hide('NewTaskSheet');
+          Toast.show({
+            type: 'error',
+            text1: res.userMessage,
+          });
+        }
       })
       .catch(err => console.log(err));
   };
@@ -113,9 +121,9 @@ export const NewTaskModal = (
     <ActionSheet
       id={props.sheetId}
       useBottomSafeAreaPadding
-      gestureEnabled={true}>
+      gestureEnabled={true}
+      >
       <View style={styles.task}>
-        {/* Task detail */}
         <View style={styles.taskDetail}>
           <View style={styles.title}>
             <Text

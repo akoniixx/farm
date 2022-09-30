@@ -43,6 +43,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
   useEffect(() => {
     getProfile();
+    openSocket();
   }, []);
 
   const openSocket = async () => {

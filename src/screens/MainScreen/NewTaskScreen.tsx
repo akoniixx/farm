@@ -60,13 +60,22 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(selectedTaskId, dronerId, true)
       .then(res => {
-        const task = res.responseData.data;
-        setData(data.filter((x: any) => x.item.id != task.id));
-        Toast.show({
-          type: 'receiveTaskSuccess',
-          text1: `งาน #${task.taskNo} ถูกรับแล้ว`,
-          text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
-        });
+        if(res.success){
+          const task = res.responseData.data;
+          setData(data.filter((x: any) => x.item.id != task.id));
+          Toast.show({
+            type: 'receiveTaskSuccess',
+            text1: `งาน #${task.taskNo} ถูกรับแล้ว`,
+            text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
+          });
+        }else{
+          getData()
+          Toast.show({
+            type: 'error',
+            text1: res.userMessage,
+          });
+        }
+        
       })
       .catch(err => console.log(err));
   };

@@ -180,12 +180,20 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(data.id, dronerId, true)
       .then(res => {
-        getTaskDetail();
-        Toast.show({
-          type: 'receiveTaskSuccess',
-          text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
-          text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
-        });
+        if(res.success){
+          getTaskDetail();
+          Toast.show({
+            type: 'receiveTaskSuccess',
+            text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
+            text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
+          });
+        }else{
+          getTaskDetail();
+          Toast.show({
+            type: 'error',
+            text1: res.userMessage,
+          });
+        }
       })
       .catch(err => console.log(err));
   };
