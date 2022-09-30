@@ -32,6 +32,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     totalTask : '0',
     ratingAvg : '0.00',
     isOpenReceiveTask: false,
+    status: '',
   });
 
   useFocusEffect(
@@ -84,6 +85,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     totalTask : resRev.totalTask,
                     ratingAvg : (!resRev.ratingAvg)?"0.0":((parseFloat(resRev.ratingAvg)).toFixed(1)).toString(),
                     isOpenReceiveTask: res.isOpenReceiveTask,
+                    status: res.status
                   });
                 }
               ).catch(err => console.log(err));
@@ -102,6 +104,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 totalTask : resRev.totalTask,
                 ratingAvg : (!resRev.ratingAvg)?"0.0":((parseFloat(resRev.ratingAvg)).toFixed(1)).toString(),
                 isOpenReceiveTask: res.isOpenReceiveTask,
+                status: res.status
               });
             }
           ).catch(err => console.log(err));
@@ -279,7 +282,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           </View>
         </View>
         <View style={{flex: 4}}>
-          <TaskTapNavigator isOpenReceiveTask={profile.isOpenReceiveTask} />
+          <TaskTapNavigator isOpenReceiveTask={profile.isOpenReceiveTask} dronerStatus={profile.status} />
         </View>
       </View>
     </BottomSheetModalProvider>

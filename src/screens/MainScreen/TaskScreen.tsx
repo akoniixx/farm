@@ -25,9 +25,13 @@ import * as ImagePicker from 'react-native-image-picker';
 import {dataUpdateStatusEntity} from '../../entities/TaskScreenEntities';
 import * as RootNavigation from '../../navigations/RootNavigation';
 
-const TaskScreen: React.FC = () => {
-  const [data, setData] = useState<any>([]);
+interface Prop {
+  dronerStatus: string;
+}
 
+const TaskScreen: React.FC<Prop> = (props: Prop) => {
+  const dronerStatus = props.dronerStatus;
+  const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [checkResIsComplete, setCheckResIsComplete] = useState(false);
   const [toggleModalStartTask, setToggleModalStartTask] =
@@ -168,11 +172,14 @@ const TaskScreen: React.FC = () => {
   };
   const onCloseSuccessModal = () => {
     setToggleModalSuccess(false);
-    setTimeout(() =>  RootNavigation.navigate('Main', {
-      screen: 'TaskDetailScreen',
-      params: {taskId: idUpload},
-    }), 500);
-   
+    setTimeout(
+      () =>
+        RootNavigation.navigate('Main', {
+          screen: 'TaskDetailScreen',
+          params: {taskId: idUpload},
+        }),
+      500,
+    );
   };
   return (
     <>
@@ -238,17 +245,35 @@ const TaskScreen: React.FC = () => {
           <View></View>
         </View>
       ) : (
-        <View
-          style={[
-            stylesCentral.center,
-            {flex: 1, backgroundColor: colors.grayBg, padding: 8},
-          ]}>
-          <Image
-            source={image.blankTask}
-            style={{width: normalize(136), height: normalize(111)}}
-          />
-          <Text style={stylesCentral.blankFont}>ยังไม่มีงานที่ต้องทำ</Text>
-        </View>
+        <>
+          <View
+            style={[
+              stylesCentral.center,
+              {flex: 1, backgroundColor: colors.grayBg, padding: 8},
+            ]}>
+            <Image
+              source={image.blankTask}
+              style={{width: normalize(136), height: normalize(111)}}
+            />
+            <Text style={stylesCentral.blankFont}>ยังไม่มีงานที่ต้องทำ</Text>
+          </View>
+          {dronerStatus == 'PENDING' ? (
+<View style={{backgroundColor: colors.grayBg,}}>
+            <View style={{backgroundColor: 'white', padding: normalize(10),margin:normalize(10),borderWidth:2,borderColor:colors.greyWhite,borderRadius:16}}>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{display: 'flex', backgroundColor: '#FFF7F4',paddingHorizontal:normalize(10),paddingVertical:normalize(5),borderRadius:16}}>
+                  <Text style={{color: '#B16F05',fontFamily:fonts.bold,fontSize:normalize(16)}}>รอตรวจสอบเอกสาร</Text>
+                </View>
+              </View>
+              <View style={{paddingBottom:normalize(20),marginTop:normalize(5)}}>
+                <Text style={{fontFamily:fonts.medium,fontSize:normalize(18),color:'black'}}>
+                  ขณะนี้เจ้าหน้ากำลังตรวจสอบเอกสาร ยืนยันนักบินโดรนของคุณอยู่
+                </Text>
+              </View>
+            </View>
+            </View>
+          ) : null}
+        </>
       )}
       <Spinner
         visible={loading}

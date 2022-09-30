@@ -28,7 +28,8 @@ const renderTabBar = (props:any) => (
 // });
 
 interface Prop {
-  isOpenReceiveTask: boolean
+  isOpenReceiveTask: boolean,
+  dronerStatus: string
 }
 
 const TaskTapNavigator:React.FC<Prop> =(props: Prop)=> {
@@ -41,7 +42,7 @@ const TaskTapNavigator:React.FC<Prop> =(props: Prop)=> {
   const renderScene = ({ route }: any) => {
     switch (route.key) {
       case "task":
-        return <TaskScreen />;
+        return <TaskScreen dronerStatus={props.dronerStatus} />;
       case "newTask":
         return <NewTaskScreen isOpenReceiveTask={props.isOpenReceiveTask}/>;
       default: 
