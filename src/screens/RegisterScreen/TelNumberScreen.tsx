@@ -22,7 +22,7 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen: React.FC<any> = ({navigation}) => {
-  const [value, setValue] = useState<string>('');
+  const [value, setValue] = useState<string>('')
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState<string>('');
   const [errMessage, setErrMessage] = useState<string>('');
@@ -71,10 +71,6 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
                   {errMessage}
                 </Text>
               ) : null}
-
-              <Text style={styles.label}>
-                โปรดใช้หมายเลขโทรศัพท์ที่ลงทะเบียนไว้กับแอปพลิเคชั่น DnDs
-              </Text>
             </View>
 
             <View>
