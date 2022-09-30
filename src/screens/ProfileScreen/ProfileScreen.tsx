@@ -55,12 +55,12 @@ const ProfileScreen: React.FC<any> = ({navigation,route}) => {
   },[reload])
 
 const onLogout = async () =>{
-  socket.close();
-  Authentication.logout()
-  setTimeout(() => {navigation.reset({
+  await socket.close();
+  await Authentication.logout()
+  /* setTimeout(() => {navigation.reset({
     index: 0,
     routes: [{ name: 'Main' }],
-  });}, 300);
+  });}, 300); */
 }
 
   useEffect(() => {

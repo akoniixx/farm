@@ -23,6 +23,7 @@ import {TaskDatasource} from '../../datasource/TaskDatasource';
 import {stylesCentral} from '../../styles/StylesCentral';
 import * as ImagePicker from 'react-native-image-picker';
 import {dataUpdateStatusEntity} from '../../entities/TaskScreenEntities';
+import * as RootNavigation from '../../navigations/RootNavigation';
 
 const TaskScreen: React.FC = () => {
   const [data, setData] = useState<any>([]);
@@ -167,7 +168,11 @@ const TaskScreen: React.FC = () => {
   };
   const onCloseSuccessModal = () => {
     setToggleModalSuccess(false);
-    setTimeout(() => getData(), 500);
+    setTimeout(() =>  RootNavigation.navigate('Main', {
+      screen: 'TaskDetailScreen',
+      params: {taskId: idUpload},
+    }), 500);
+   
   };
   return (
     <>
