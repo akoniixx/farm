@@ -112,7 +112,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
     socket.on(`send-task-${dronerId!}`, task => {
       setData(
         [{image_profile_url: task.image_profile_url, item: task.data}].concat(
-          data,
+          data.filter((x: any) => x.item.id != task.data.id),
         ),
       );
     });
