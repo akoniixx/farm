@@ -141,7 +141,10 @@ const ViewProfile: React.FC<any> = ({navigation,route})=>{
                    alignItems : 'center',
                    marginBottom : normalize(20)
                 }}>
-                    <Image source={{uri : initProfile.image}} style={styles.imgProfile}/>
+                  {initProfile.image?<Image source={{uri : initProfile.image}} style={styles.imgProfile}/>:
+                  <Image source={icons.account} style={styles.imgProfile}/>
+                  }
+                   
                 </View>
                 <Text style={styles.title}>ข้อมูลทั่วไป (โปรดระบุ)</Text>
                 <View style={[styles.input,{backgroundColor : colors.disable}]}>
