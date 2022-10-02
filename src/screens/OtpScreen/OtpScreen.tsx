@@ -204,7 +204,7 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
                     }
                     setOtpCalling(true);
                   }}>
-                    <Text style={[styles.text, {color: colors.orange}]}>
+                    <Text style={[styles.text, {color: colors.orange,textDecorationLine:'underline',textDecorationColor:colors.orange}]}>
                       ส่งอีกครั้ง
                     </Text>
                   </TouchableOpacity>:<Text style={styles.text}>{time}</Text>
