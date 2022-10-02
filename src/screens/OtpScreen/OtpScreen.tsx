@@ -25,6 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Authentication } from '../../datasource/AuthDatasource';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as RootNavigation from '../../navigations/RootNavigation';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const CELL_COUNT = 6;
 
@@ -60,6 +61,7 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
 
   const [otpTimeOut,setOTPtimeout] = useState(120);
   const [time,setTime] = useState("02:00")
+  const [loading, setLoading] = useState(false);
   useEffect(()=>{
     if(otpCalling){
       setOTPtimeout(120)
@@ -101,16 +103,20 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
     if(route.params.isRegisterScreen){
       setValue(value);
       if (value.length >= CELL_COUNT) {
+        setLoading(true)
         try {
           Authentication.login(route.params.telNumber,value,tokenOtp,codeRef).then(async(result)=>{
+            setLoading(false)
             setErrOTP(false)
             await AsyncStorage.setItem('token_register',result.accessToken);
             navigation.navigate('FirstFormScreen',{tele : route.params.telNumber});
           }).catch((err)=>{
+            setLoading(false)
             setErrOTP(true)
             console.log(err)
           })
         } catch (e) {
+          setLoading(false)
           setErrOTP(true)
           console.log(e, 'AsyncStorage.setItem');
         }
@@ -118,8 +124,10 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
     }else{
       setValue(value);
       if (value.length >= CELL_COUNT) {
+        setLoading(true)
         try {
           Authentication.login(route.params.telNumber,value,tokenOtp,codeRef).then(async(result)=>{
+            setLoading(false)
             setErrOTP(false)
             await AsyncStorage.setItem('token', result.accessToken);
             await AsyncStorage.setItem('droner_id', result.data.id);
@@ -127,10 +135,12 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
               screen: 'MainScreen',
             })
           }).catch((err)=>{
+            setLoading(false)
             setErrOTP(true)
             console.log(err)
           })
         } catch (e) {
+          setLoading(false)
           setErrOTP(true)
           console.log(e, 'AsyncStorage.setItem');
         }
@@ -210,45 +220,15 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
                   </TouchableOpacity>:<Text style={styles.text}>{time}</Text>
                 }
               </View>
-              {/* {
-                (otpTimeOut === 0)?
-                <View style={styles.rowDirection}>
-                <Text style={styles.text}>ไม่ได้รับรหัส OTP? </Text>
-                <TouchableOpacity onPress={()=>{
-                  if(route.params.isRegisterScreen){
-                    Authentication.generateOtpRegister(route.params.telNumber).then(
-                      (res)=>{
-                        newTokenOtp(res.result.token)
-                        newCodeRef(res.result.refCode)
-                      }
-                    ).catch(err => console.log(err))
-                  }
-                  else{
-                    Authentication.generateOtp(route.params.telNumber).then(
-                      (res)=>{
-                        newTokenOtp(res.result.token)
-                        newCodeRef(res.result.refCode)
-                      }
-                    ).catch(err => console.log(err))
-                  }
-                  setOtpCalling(true);
-                }}>
-                  <Text style={[styles.text, {color: colors.orange}]}>
-                    ส่งอีกครั้ง
-                  </Text>
-                </TouchableOpacity>
-              </View>:<></>
-              } */}
             </View>
-            {/* <View style={styles.timeCount}>
-              <View style={styles.rowDirection}>
-                <Text style={styles.text}>รหัส OTP จะหมดอายุภายใน </Text>
-                <Text>{time}</Text>
-              </View>
-            </View> */}
           </View>
         </SafeAreaView>
       </TouchableWithoutFeedback>
+      <Spinner
+          visible={loading}
+          textContent={'Loading...'}
+          textStyle={{color: '#FFF'}}
+        />
     </KeyboardAvoidingView>
   );
 };

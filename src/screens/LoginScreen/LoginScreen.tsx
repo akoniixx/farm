@@ -21,18 +21,21 @@ import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import {Authentication} from '../../datasource/AuthDatasource';
 import * as RootNavigation from '../../navigations/RootNavigation';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const LoginScreen: React.FC<any> = ({navigation}) => {
   const [value, setValue] = useState<string>('');
   const [isError, setIsError] = React.useState(false);
   const [errMessage, setErrMessage] = useState<string>('');
-
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = React.useState<string>('');
   const login = () => {
+    setLoading(true)
     Authentication.generateOtp(value)
       .then(result => {
           const telNumber = value;
           setValue('')
+          setLoading(false)
           navigation.navigate('OtpScreen', {
             telNumber: telNumber,
             token: result.result.token,
@@ -41,6 +44,7 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
           });
       })
       .catch(err => {
+        setLoading(false)
         if (err.response.data.statusCode === 409) {
           setErrMessage('เบอร์นี้ถูกลงทะเบียนเรียบร้อยแล้ว');
         }
@@ -105,6 +109,11 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
           </View>
         </SafeAreaView>
       </TouchableWithoutFeedback>
+      <Spinner
+          visible={loading}
+          textContent={'Loading...'}
+          textStyle={{color: '#FFF'}}
+        />
     </KeyboardAvoidingView>
   );
 };
