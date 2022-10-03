@@ -74,7 +74,7 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
                   styles.label,
                   {color: colors.fontBlack, marginLeft: normalize(10)},
                 ]}>
-                ฉันยอมรับข้อมตกลงและเงื่อนไข
+                ฉันยอมรับข้อตกลงและเงื่อนไข
               </Text>
             </View>
           </TouchableOpacity>
