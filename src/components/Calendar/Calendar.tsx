@@ -4,7 +4,7 @@ import React, { createContext, useEffect, useMemo, useReducer, useState } from '
 import colors from '../../assets/colors/colors';
 import { normalize } from '@rneui/themed';
 import { font } from '../../assets';
-import { CalendarReducer, CalendarMode, _monthNumber, build12Year, _monthName } from '../../hooks/calendar';
+import { CalendarReducer, CalendarMode, _monthNumber, build12Year, _monthName, buildDate } from '../../hooks/calendar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -62,7 +62,7 @@ interface CalendarCustomType {
 const CalendarCustom: React.FC<CalendarCustomType> = ({onHandleChange,value}) =>{
     const dateSplit = value.split('-')
     const initCurrentCalendar = {
-        dateCurrent : (value != "")?value:(`${date.getFullYear()}-${_monthNumber[date.getMonth()]}-${(date.getDate())}`),
+        dateCurrent : (value != "")?value:(`${date.getFullYear()}-${_monthNumber[date.getMonth()]}-${buildDate(date.getDate())}`),
         mode : CalendarMode.Calendar,
         monthCurrent : (value != "")?(parseInt(dateSplit[1])-1):date.getMonth(),
         yearCurrent : (value != "")?parseInt(dateSplit[0]):date.getFullYear(),
