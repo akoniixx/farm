@@ -7,6 +7,10 @@ export enum CalendarMode{
     Year
 }
 
+export function buildDate(date : number){
+    return date < 10 ? '0' + date: date;
+}
+
 export function build12Year(year : number){
     let num = [];
     let result = year;
