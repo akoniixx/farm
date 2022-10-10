@@ -101,7 +101,7 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
                             </View>
                         }
                     </TouchableOpacity>
-                    <TextInput style={styles.input} placeholder="เลขบัตรประชาชน" onChangeText={(value)=>{
+                    <TextInput style={styles.input} placeholder="เลขบัตรประชาชน" maxLength={13} keyboardType={'number-pad'} onChangeText={(value)=>{
                         setIdCard(value)
                     }}/>
                     <Text style={[styles.h3, {color : colors.gray}]}>ใส่เลข 13 หลักโดยไม่ต้องเว้นวรรค</Text>

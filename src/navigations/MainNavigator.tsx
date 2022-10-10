@@ -13,6 +13,7 @@ import FourthFormScreen from '../screens/RegisterScreen/FourthFormScreen';
 import AddIDcardScreen from '../screens/RegisterScreen/AddIDcardScreen';
 import ViewProfile from '../screens/ProfileScreen/ViewProfile';
 import EditProfile from '../screens/ProfileScreen/EditProfile';
+import DeleteProfile from '../screens/ProfileScreen/DeleteProfile';
 const Stack = createStackNavigator()
 
 const MainNavigator: React.FC = () => {
@@ -29,6 +30,8 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="ProfileDocument" component={ProfileDocument} />
       <Stack.Screen name="FourthFormScreen" component={FourthFormScreen} />
       <Stack.Screen name="AddIDCardScreen" component={AddIDcardScreen} />
+      <Stack.Screen name="DeleteProfileScreen" component={DeleteProfile}/>
+      
     </Stack.Navigator>
   )
 }

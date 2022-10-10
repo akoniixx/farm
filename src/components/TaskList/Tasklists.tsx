@@ -264,7 +264,7 @@ const Tasklists: React.FC<any> = (props: any) => {
         ) : null}
 
         <TouchableOpacity
-          disabled={props.status === 'WAIT_START' && today < date}
+          disabled={props.status === 'WAIT_START' &&  new Date(date.setHours(date.getHours()-3)) <= today}
           onPress={() =>
             props.status === 'WAIT_START'
               ? props.setShowModalStartTask()

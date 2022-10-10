@@ -50,7 +50,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     longitudeDelta: 0,
   });
   const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
-  const today = new Date();
+  var todate = new Date()
   const width = Dimensions.get('window').width;
   const [togleModalUpload, setTogleModalUpload] = useState<boolean>(false);
   const [togleModalReview, setTogleModalReview] = useState<boolean>(false);
@@ -600,7 +600,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
 
           {data.status == 'WAIT_START' ? (
             <WaitStartFooter
-              disable={convertDate(data.dateAppointment) >= today}
+              disable={new Date(convertDate(data.dateAppointment).setHours(convertDate(data.dateAppointment).getHours()-3)) >= todate}
               mainFunc={() => setShowModalStartTask(true)}
               togleModal={() =>
                 SheetManager.show('CallingSheet', {

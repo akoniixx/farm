@@ -12,7 +12,7 @@ import {normalize} from '@rneui/themed';
 import { Image } from 'react-native';
 import MainTaskScreen from '../../screens/MainTaskScreen/MainTaskScreen';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
-
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const Tab = createBottomTabNavigator();
 
@@ -85,9 +85,9 @@ const MainTapNavigator: React.FC = () => {
             </Text>
           ),
           tabBarIcon:(i)=> i.focused?(
-            <Image source={icons.pocket_active} style={{width:20,height:20}} />
+            <Icon name={'user'} color={ colors.orange} size={20}  />
           ):
-          ( <Image source={icons.pocket} style={{width:20,height:20}} />)
+          ( <Icon name={'user-o'} color={'#9BA1A8'} size={20}  />)
         }}
       />
     </Tab.Navigator>

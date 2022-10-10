@@ -32,8 +32,8 @@ interface Prop {
 const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const dronerStatus = props.dronerStatus;
   const [data, setData] = useState<any>([]);
-  const [loading, setLoading] = useState(false);
-  const [checkResIsComplete, setCheckResIsComplete] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [checkResIsComplete, setCheckResIsComplete] = useState<boolean>(false);
   const [toggleModalStartTask, setToggleModalStartTask] =
     useState<boolean>(false);
 

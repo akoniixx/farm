@@ -31,4 +31,6 @@ export default {
   farm : require('./farm.png'),
   dronejob : require('./dronejob.png'),
   checkSolid: require('./check_solid.png'),
+  profile:require('./Profile.png'),
+  profileActive:require('./Profile-active.png'),
 };

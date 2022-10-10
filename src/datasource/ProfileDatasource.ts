@@ -17,6 +17,19 @@ export class ProfileDatasource {
       });
   }
 
+  static deleteAccount(
+    dronerID: string,
+  ): Promise<any> {
+    return httpClient
+      .delete(BASE_URL + `/droner/${dronerID}`)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
   static getImgePathProfile(
     dronerID : string,
     imagePath : string

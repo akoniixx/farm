@@ -142,6 +142,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   thumbColor={profile.isOpenReceiveTask ? "white" : "#f4f3f4"}
                   value={profile.isOpenReceiveTask}
                   onValueChange={value => openReceiveTask(value)}
+                  disabled={profile.status==='PENDING'}
                 />
                 <Text style={styles.activeFont}>เปิดรับงาน</Text>
               </View>

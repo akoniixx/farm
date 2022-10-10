@@ -44,7 +44,7 @@ const TaskTapNavigator:React.FC<Prop> =(props: Prop)=> {
       case "task":
         return <TaskScreen dronerStatus={props.dronerStatus} />;
       case "newTask":
-        return <NewTaskScreen isOpenReceiveTask={props.isOpenReceiveTask}/>;
+        return <NewTaskScreen isOpenReceiveTask={props.isOpenReceiveTask} dronerStatus={props.dronerStatus}/>;
       default: 
         return null;
     }

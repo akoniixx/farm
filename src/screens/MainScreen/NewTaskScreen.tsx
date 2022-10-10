@@ -25,9 +25,11 @@ import {socket} from '../../function/utility';
 
 interface Prop {
   isOpenReceiveTask: boolean;
+   dronerStatus: string;
 }
 
 const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
+  const dronerStatus = props.dronerStatus;
   const {isOpenReceiveTask} = props;
   const [data, setData] = useState<any>([]);
   const [page, setPage] = useState(1);
@@ -134,7 +136,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   return (
     <>
       <View style={[{flex: 1, backgroundColor: colors.grayBg, padding: 8}]}>
-        {data.length == 0 && !isOpenReceiveTask && (
+        {data.length == 0 && !isOpenReceiveTask && dronerStatus==="ACTIVE" &&(
           <View
             style={[
               stylesCentral.center,
@@ -147,16 +149,16 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
             <View
               style={{
                 marginTop: normalize(20),
-                paddingHorizontal: normalize(40),
+                paddingHorizontal: normalize(25),
               }}>
-              <Text style={stylesCentral.blankFont}>
+              <Text style={[stylesCentral.blankFont,{textAlign:'center'}]}>
                 ยังไม่มีงานใหม่ เนื่องจากคุณปิดรับงานอยู่
                 กรุณากดเปิดรับงานเพื่อที่จะไม่พลาดงานสำหรับคุณ!
               </Text>
             </View>
           </View>
         )}
-        {data.length == 0 && isOpenReceiveTask && (
+        {data.length == 0 && isOpenReceiveTask  && dronerStatus==="ACTIVE" && (
           <View
             style={[
               stylesCentral.center,
@@ -177,6 +179,39 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
             </View>
           </View>
         )}
+
+{dronerStatus == 'PENDING' ? (
+<View style={{backgroundColor: colors.grayBg,flex:1,justifyContent:'flex-end'}}>
+            <View style={{backgroundColor: 'white', padding: normalize(10),margin:normalize(10),borderWidth:2,borderColor:colors.greyWhite,borderRadius:16}}>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{display: 'flex', backgroundColor: '#FFF7F4',paddingHorizontal:normalize(10),paddingVertical:normalize(5),borderRadius:16}}>
+                  <Text style={{color: '#B16F05',fontFamily:fonts.bold,fontSize:normalize(16)}}>รอตรวจสอบเอกสาร</Text>
+                </View>
+              </View>
+              <View style={{paddingBottom:normalize(20),marginTop:normalize(5)}}>
+                <Text style={{fontFamily:fonts.medium,fontSize:normalize(18),color:'black'}}>
+                  ขณะนี้เจ้าหน้ากำลังตรวจสอบเอกสาร ยืนยันนักบินโดรนของคุณอยู่
+                </Text>
+              </View>
+            </View>
+            </View>
+          ) : null}
+           {dronerStatus == 'REJECTED' ? (
+<View style={{backgroundColor: colors.grayBg,flex:1,justifyContent:'flex-end'}}>
+            <View style={{backgroundColor: 'white', padding: normalize(10),margin:normalize(10),borderWidth:2,borderColor:colors.greyWhite,borderRadius:16}}>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{display: 'flex', backgroundColor: '#FFF7F4',paddingHorizontal:normalize(10),paddingVertical:normalize(5),borderRadius:16}}>
+                  <Text style={{color: '#B16F05',fontFamily:fonts.bold,fontSize:normalize(16)}}>ยืนยันตัวตนไม่สำเร็จ</Text>
+                </View>
+              </View>
+              <View style={{paddingBottom:normalize(20),marginTop:normalize(5)}}>
+                <Text style={{fontFamily:fonts.medium,fontSize:normalize(18),color:'black'}}>
+                โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. 021136159
+                </Text>
+              </View>
+            </View>
+            </View>
+          ) : null}
         {data.length > 0 && (
           <View>
             <FlatList
