@@ -6,6 +6,7 @@ import { normalize } from '@rneui/themed';
 import { font } from '../../assets';
 import { CalendarReducer, CalendarMode, _monthNumber, build12Year, _monthName, buildDate } from '../../hooks/calendar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { print } from '@gorhom/bottom-sheet/lib/typescript/utilities/logger';
 
 
 LocaleConfig.locales['th'] = {
@@ -79,9 +80,13 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({onHandleChange,value}) =>
               onPressArrowLeft={()=>dispatch({
                   type : "ArrowLeft"
               })}
-              onPressArrowRight={()=>dispatch({
-                  type : "ArrowRight"
-              })}
+              onPressArrowRight={()=>{
+                if(!(parseInt(calendarState.dateCurrent.split("-")[1]) === date.getMonth()+1 && parseInt(calendarState.dateCurrent.split("-")[0]) === date.getFullYear())){
+                    dispatch({
+                        type : "ArrowRight"
+                    })
+                }
+              }}
               initialDate={calendarState.dateCurrent}
               markingType={'custom'}
               markedDates={{[calendarState.dateCurrent]: {
@@ -129,11 +134,14 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({onHandleChange,value}) =>
                   selectedDayTextColor : colors.white
               }}
               onDayPress={day => {
-                  dispatch({
-                      type : "ChangeDate",
-                      date : day.dateString
-                  })
-                  onHandleChange(day)
+                console.log(day.dateString)
+                if(!(parseInt(day.dateString.split("-")[2]) > date.getDate() && parseInt(day.dateString.split("-")[1]) === date.getMonth()+1 && parseInt(day.dateString.split("-")[0]) === date.getFullYear())){
+                    dispatch({
+                        type : "ChangeDate",
+                        date : day.dateString
+                    })
+                    onHandleChange(day)
+                }
               }}
               />
       case CalendarMode.Month:
@@ -194,9 +202,11 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({onHandleChange,value}) =>
                       {`${calendarState.yearArray[0]+543} - ${calendarState.yearArray[11]+543}`}
                   </Text>
                   <TouchableOpacity onPress={()=>{
-                      dispatch({
-                          type : "ChangeRangeArrowRightYear"
-                      })
+                      if(calendarState.yearArray[11] < date.getFullYear()){
+                        dispatch({
+                            type : "ChangeRangeArrowRightYear"
+                        })
+                      }
                   }}>
                       <Text style={{
                           fontSize : normalize(24),
@@ -212,29 +222,31 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({onHandleChange,value}) =>
               }}>
                   {
                       calendarState.yearArray.map((item : any)=> (
+                          (item <= date.getFullYear())?
                           <TouchableOpacity key={item} onPress={()=>{
-                              dispatch({
-                                  type : "ChangeYear",
-                                  year : item
-                              })
-                          }} style={{
-                              paddingVertical : normalize(10)
-                          }}>
-                              <View style={{
-                                  width : width/4.2,
-                                  height : normalize(30),
-                                  display : 'flex',
-                                  justifyContent : 'center',
-                                  alignItems : 'center',
-                                  backgroundColor : (calendarState.yearCurrent === item)?colors.white:colors.orange,
-                                  borderRadius : normalize(4),
-                              }}>
-                                  <Text style={{
-                                      fontFamily : font.medium,
-                                      color : (calendarState.yearCurrent === item)?colors.fontBlack:colors.white
-                                  }}>{item+543}</Text>
-                              </View>
-                          </TouchableOpacity>
+                            dispatch({
+                                type : "ChangeYear",
+                                year : item
+                            })
+                        }} style={{
+                            paddingVertical : normalize(10)
+                        }}>
+                            <View style={{
+                                width : width/4.2,
+                                height : normalize(30),
+                                display : 'flex',
+                                justifyContent : 'center',
+                                alignItems : 'center',
+                                backgroundColor : (calendarState.yearCurrent === item)?colors.white:colors.orange,
+                                borderRadius : normalize(4),
+                            }}>
+                                <Text style={{
+                                    fontFamily : font.medium,
+                                    color : (calendarState.yearCurrent === item)?colors.fontBlack:colors.white
+                                }}>{item+543}</Text>
+                            </View>
+                        </TouchableOpacity>:
+                        <></>
                       ))
                   }
               </View>
