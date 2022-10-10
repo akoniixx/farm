@@ -79,19 +79,19 @@ ProfileDatasource.deleteAccount(droner_id!)
             </View>
             <View style={{marginTop:normalize(10)}}>
               <Text style={{fontFamily: fonts.medium, fontSize: normalize(16),color:'black'}}>
-                หากคุณมีงานมีงานที่กำลังดำเนินการ หรือรอเริ่มงาน
+                หากคุณมีงานที่กำลังดำเนินการ หรือรอเริ่มงาน
                 คุณจะไม่สามารถลบบัญชีของคุณได้
               </Text>
             </View>
 
             <View style={{marginTop:normalize(60)}}>
                 <Text style={{fontFamily:fonts.medium,fontSize:normalize(16),color: colors.orange}}>
-                    หากคุณมีปัญหสการใช้งาน คุณสามารถติดต่อ call center : {callcenterNumber}
+                    หากคุณมีปัญหาในการใช้งาน คุณสามารถติดต่อ call center : {callcenterNumber}
                 </Text>
             </View>
           </ScrollView>
           <View style={{alignItems:'center'}}>
-            <TouchableOpacity disabled={task.length===0} style={{backgroundColor:task.length===0?colors.disable:'red', paddingHorizontal:normalize(15),paddingVertical:normalize(10),borderRadius:30}} onPress={()=> setToggleModal(!toggleModal)}>
+            <TouchableOpacity disabled={task.length!==0} style={{backgroundColor:task.length!==0?colors.disable:'red', paddingHorizontal:normalize(15),paddingVertical:normalize(10),borderRadius:30}} onPress={()=> setToggleModal(!toggleModal)}>
             <Text style={{textDecorationLine:'underline',fontFamily:fonts.medium,fontSize:normalize(14),color:'white'}}>ลบบัญชี</Text>
             </TouchableOpacity>
           </View>

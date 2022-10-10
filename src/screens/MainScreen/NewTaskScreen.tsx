@@ -190,7 +190,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
               </View>
               <View style={{paddingBottom:normalize(20),marginTop:normalize(5)}}>
                 <Text style={{fontFamily:fonts.medium,fontSize:normalize(18),color:'black'}}>
-                  ขณะนี้เจ้าหน้ากำลังตรวจสอบเอกสาร ยืนยันนักบินโดรนของคุณอยู่
+                เจ้าหน้าที่กำลังตรวจสอบเอกสารการยืนยันตัวตน และ โดรนของคุณอยู่  กรุณาตรวจสอบหากคุณยังไม่เพิ่มโดรน
                 </Text>
               </View>
             </View>
