@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Image, TextInput, Modal } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Image, TextInput, Modal, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import {stylesCentral} from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
 import React, { useCallback, useState } from 'react'
@@ -32,6 +32,7 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
     }
   },[image]);
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <SafeAreaView style={stylesCentral.container}>
         <CustomHeader
           title={(Profile)?"ส่งเอกสารเพิ่มเติม":"ลงทะเบียนนักบินโดรน"}
@@ -50,6 +51,7 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
                         <Text style={styles.h1}>ยืนยันเอกสาร</Text>
                     </>
                 }
+                <ScrollView>
                 <View style={{paddingTop : 20}}>
                     <Text style={styles.h2}>รูปถ่ายผู้สมัคร คู่บัตรประชาชน</Text>
                     <TouchableOpacity style={{
@@ -106,6 +108,7 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
                     }}/>
                     <Text style={[styles.h3, {color : colors.gray}]}>ใส่เลข 13 หลักโดยไม่ต้องเว้นวรรค</Text>
                 </View>
+                </ScrollView>
             </View>
             <MainButton label='ยืนยันการสมัคร' color={(idcard.length === 13 && image != null)?colors.orange:colors.disable} disable={(idcard.length === 13 && image != null)?false:true} onPress={()=>{
                 if(idcard.length === 13 && image != null){
@@ -202,6 +205,7 @@ const AddIDcardScreen:React.FC<any> = ({route,navigation}) => {
             </Modal>
         </View>
     </SafeAreaView>
+    </TouchableWithoutFeedback>
   )
 }
 
