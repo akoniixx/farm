@@ -18,9 +18,9 @@ import {MainButton} from '../Button/MainButton';
 
 const Tasklists: React.FC<any> = (props: any) => {
   const date = new Date(props.date);
-  const d = new Date(props.date)
-  d.setHours(d.getHours()-3)
-  const checkdate = new Date(d)
+  const d = new Date(props.date);
+  d.setHours(d.getHours() - 3);
+  const checkdate = new Date(d);
   const today = new Date();
   const maxRatting: Array<number> = props.maxRatting;
   const defaultRating = props.defaultRating;
@@ -267,7 +267,7 @@ const Tasklists: React.FC<any> = (props: any) => {
         ) : null}
 
         <TouchableOpacity
-          disabled={props.status === 'WAIT_START' &&  checkdate >= today}
+          disabled={props.status === 'WAIT_START' && checkdate >= today}
           onPress={() =>
             props.status === 'WAIT_START'
               ? props.setShowModalStartTask()
@@ -277,7 +277,12 @@ const Tasklists: React.FC<any> = (props: any) => {
             width: normalize(props.status === 'WAIT_START' ? 155 : 127.5),
             height: normalize(49),
             borderRadius: normalize(8),
-            backgroundColor: props.status === 'WAIT_START'?  checkdate <= today ?  '#2BB0ED' :colors.disable: '#2EC66E',
+            backgroundColor:
+              props.status === 'WAIT_START'
+                ? checkdate <= today
+                  ? '#2BB0ED'
+                  : colors.disable
+                : '#2EC66E',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',

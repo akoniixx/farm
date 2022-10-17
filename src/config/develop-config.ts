@@ -6,7 +6,7 @@ export const BASE_URL = 'https://api-dev-dnds.iconkaset.com';
 
 axios.interceptors.request.use(async (config: any) => {
   const token = await AsyncStorage.getItem('token');
-  config.headers['Authorization'] = `Bearer ${token}`;
+  config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
@@ -15,7 +15,6 @@ axios.interceptors.response.use(
     return response;
   },
   async function (error) {
-    
     /*  if (500 === error.response.status) {
         RootNavigation.navigate('Auth', {
           screen: 'InternalServerError',
@@ -26,7 +25,7 @@ axios.interceptors.response.use(
           screen: 'HomeScreen',
         })
       } */
-    if (401 === error.response.status) {
+    if (error.response.status === 401) {
       RootNavigation.navigate('Auth', {
         screen: 'HomeScreen',
       });
@@ -46,40 +45,38 @@ const registerInstance = axios.create({});
 
 registerInstance.interceptors.request.use(async (config: any) => {
   const token = await AsyncStorage.getItem('token_register');
-  config.headers['Authorization'] = `Bearer ${token}`;
+  config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-const uploadFileregisterInstance = axios.create({})
+const uploadFileregisterInstance = axios.create({});
 
 uploadFileregisterInstance.interceptors.request.use(async (config: any) => {
   const token = await AsyncStorage.getItem('token_register');
   config.headers['Content-Type'] = 'multipart/form-data';
-  config.headers['Authorization'] = `Bearer ${token}`;
+  config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-const taskFormDataInstance = axios.create({})
+const taskFormDataInstance = axios.create({});
 
 taskFormDataInstance.interceptors.request.use(async (config: any) => {
   const token = await AsyncStorage.getItem('token');
   config.headers['Content-Type'] = 'multipart/form-data';
-  config.headers['Authorization'] = `Bearer ${token}`;
+  config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-const uploadFileProfileInstance = axios.create({})
+const uploadFileProfileInstance = axios.create({});
 
 uploadFileProfileInstance.interceptors.request.use(async (config: any) => {
   const token = await AsyncStorage.getItem('token');
   config.headers['Content-Type'] = 'multipart/form-data';
-  config.headers['Authorization'] = `Bearer ${token}`;
+  config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
 export const registerClient = registerInstance;
 export const uploadFileClient = uploadFileregisterInstance;
-export const  taskFormDataClient = taskFormDataInstance;
+export const taskFormDataClient = taskFormDataInstance;
 export const uploadFileProfile = uploadFileProfileInstance;
-
-

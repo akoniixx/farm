@@ -32,7 +32,7 @@ const HomeCarousel: React.FC<any> = () => {
         <View>
           <Text style={styles.headFont}>{carouselItems[index].title}</Text>
         </View>
-        <View style={{flexDirection:'row'}}>
+        <View style={{flexDirection: 'row'}}>
           <Text style={styles.detail}>{carouselItems[index].text}</Text>
         </View>
       </View>
@@ -64,14 +64,14 @@ const styles = StyleSheet.create({
   headFont: {
     fontFamily: font.bold,
     fontSize: normalize(24),
-    color:'black'
+    color: 'black',
   },
-  detail:{
+  detail: {
     fontFamily: font.medium,
     fontSize: normalize(14),
-    color:'black',
-    textAlign:'center',
-    marginTop:normalize(16),
-    flexShrink:1
-  }
+    color: 'black',
+    textAlign: 'center',
+    marginTop: normalize(16),
+    flexShrink: 1,
+  },
 });

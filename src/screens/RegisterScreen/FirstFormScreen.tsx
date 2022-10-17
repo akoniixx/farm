@@ -11,14 +11,14 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {ProgressBar} from '../../components/ProgressBar';
 import * as ImagePicker from 'react-native-image-picker';
 
-const FirstFormScreen: React.FC<any> = ({navigation,route}) => {
+const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const progress = [1, 2, 3, 4];
   const [response, setResponse] = React.useState<any>(null);
-  const tele = route.params.tele
- /*  const onButtonPress = React.useCallback(() => {
-   
+  const tele = route.params.tele;
+  /*  const onButtonPress = React.useCallback(() => {
+
       ImagePicker.launchImageLibrary(options, setResponse);
-    
+
   }, []); */
   return (
     <SafeAreaView style={stylesCentral.container}>
@@ -71,7 +71,9 @@ const FirstFormScreen: React.FC<any> = ({navigation,route}) => {
           <MainButton
             label="ถัดไป"
             color={colors.orange}
-            onPress={() =>  navigation.navigate('SecondFormScreen',{tele : tele})}
+            onPress={() =>
+              navigation.navigate('SecondFormScreen', {tele: tele})
+            }
           />
         </View>
       </View>

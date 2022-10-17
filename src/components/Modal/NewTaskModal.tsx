@@ -47,14 +47,14 @@ export const NewTaskModal = (
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(data?.id, dronerId, true)
       .then(res => {
-        if(res.success){
+        if (res.success) {
           SheetManager.hide('NewTaskSheet');
           Toast.show({
             type: 'receiveTaskSuccess',
             text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
             text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
           });
-        }else{
+        } else {
           SheetManager.hide('NewTaskSheet');
           Toast.show({
             type: 'error',
@@ -107,8 +107,10 @@ export const NewTaskModal = (
 
   const onTaskReceive = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
-    socket.on(`unsend-task-${dronerId!}`, (taskId) => {
-      if (data.id == taskId) SheetManager.hide('NewTaskSheet');
+    socket.on(`unsend-task-${dronerId!}`, taskId => {
+      if (data.id == taskId) {
+        SheetManager.hide('NewTaskSheet');
+      }
     });
   };
 
@@ -121,8 +123,7 @@ export const NewTaskModal = (
     <ActionSheet
       id={props.sheetId}
       useBottomSafeAreaPadding
-      gestureEnabled={true}
-      >
+      gestureEnabled={true}>
       <View style={styles.task}>
         <View style={styles.taskDetail}>
           <View style={styles.title}>

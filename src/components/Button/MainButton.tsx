@@ -7,7 +7,7 @@ import {normalize} from '../../function/Normalize';
 interface MainButtonProps {
   label: string;
   color: string;
-  fontSize? : number;
+  fontSize?: number;
   fontWeight?: string;
   fontColor?: string;
   borderColor?: string;
@@ -17,19 +17,24 @@ interface MainButtonProps {
 
 export const MainButton: React.FC<MainButtonProps> = props => {
   return (
-    
-      <Button
-     disabled={props.disable}
-        title={props.label}
-        titleStyle={{
-          color: props.fontColor ? props.fontColor : colors.white,
-          fontSize: props.fontSize??normalize(18),
-          fontFamily: font.medium
-        }}
-        buttonStyle={[styles.mainButton, {backgroundColor: props.color,borderColor:props.borderColor?props.borderColor:props.color,borderWidth:props.disable?0:0.5}]}
-        onPress ={props.onPress}
-      />
-   
+    <Button
+      disabled={props.disable}
+      title={props.label}
+      titleStyle={{
+        color: props.fontColor ? props.fontColor : colors.white,
+        fontSize: props.fontSize ?? normalize(18),
+        fontFamily: font.medium,
+      }}
+      buttonStyle={[
+        styles.mainButton,
+        {
+          backgroundColor: props.color,
+          borderColor: props.borderColor ? props.borderColor : props.color,
+          borderWidth: props.disable ? 0 : 0.5,
+        },
+      ]}
+      onPress={props.onPress}
+    />
   );
 };
 

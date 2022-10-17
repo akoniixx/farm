@@ -17,20 +17,20 @@ import io from 'socket.io-client';
 import {SheetManager} from 'react-native-actions-sheet';
 import {BASE_URL} from '../../config/develop-config';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
-import { useFocusEffect } from '@react-navigation/native';
-import { decimalConvert, numberWithCommas, socket } from '../../function/utility';
+import {useFocusEffect} from '@react-navigation/native';
+import {decimalConvert, numberWithCommas, socket} from '../../function/utility';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
   const [profile, setProfile] = useState({
     name: '',
     lastname: '',
-    image : '',
-    totalRevenue : '0',
-    totalRevenueToday : '0',
-    totalArea : '0',
-    totalTask : '0',
-    ratingAvg : '0.00',
+    image: '',
+    totalRevenue: '0',
+    totalRevenueToday: '0',
+    totalArea: '0',
+    totalTask: '0',
+    ratingAvg: '0.00',
     isOpenReceiveTask: false,
     status: '',
   });
@@ -49,7 +49,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
   const openSocket = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
-    await socket.connect()
+    await socket.connect();
     socket.on(`send-task-${dronerId!}`, ({data, image_profile_url}) => {
       SheetManager.show('NewTaskSheet', {
         payload: {
@@ -69,45 +69,48 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
           }
-        })
-        if(imgPath.length !=0){
-          ProfileDatasource.getTaskrevenuedroner().then(
-            resRev => {
-              ProfileDatasource.getImgePathProfile(droner_id!,imgPath[0].path).then(
-                resImg => {
+        });
+        if (imgPath.length != 0) {
+          ProfileDatasource.getTaskrevenuedroner()
+            .then(resRev => {
+              ProfileDatasource.getImgePathProfile(droner_id!, imgPath[0].path)
+                .then(resImg => {
                   setProfile({
                     ...profile,
                     name: res.firstname,
                     image: resImg.url,
-                    totalRevenue : resRev.totalRevenue,
-                    totalRevenueToday : resRev.totalRevenueToday,
-                    totalArea : resRev.totalArea,
-                    totalTask : resRev.totalTask,
-                    ratingAvg : (!resRev.ratingAvg)?"0.0":((parseFloat(resRev.ratingAvg)).toFixed(1)).toString(),
+                    totalRevenue: resRev.totalRevenue,
+                    totalRevenueToday: resRev.totalRevenueToday,
+                    totalArea: resRev.totalArea,
+                    totalTask: resRev.totalTask,
+                    ratingAvg: !resRev.ratingAvg
+                      ? '0.0'
+                      : parseFloat(resRev.ratingAvg).toFixed(1).toString(),
                     isOpenReceiveTask: res.isOpenReceiveTask,
-                    status: res.status
+                    status: res.status,
                   });
-                }
-              ).catch(err => console.log(err));
-            }
-          ).catch(err => console.log(err));
-        }
-        else{
-          ProfileDatasource.getTaskrevenuedroner().then(
-            resRev => {
+                })
+                .catch(err => console.log(err));
+            })
+            .catch(err => console.log(err));
+        } else {
+          ProfileDatasource.getTaskrevenuedroner()
+            .then(resRev => {
               setProfile({
                 ...profile,
                 name: res.firstname,
-                totalRevenue : resRev.totalRevenue,
-                totalRevenueToday : resRev.totalRevenueToday,
-                totalArea : resRev.totalArea,
-                totalTask : resRev.totalTask,
-                ratingAvg : (!resRev.ratingAvg)?"0.0":((parseFloat(resRev.ratingAvg)).toFixed(1)).toString(),
+                totalRevenue: resRev.totalRevenue,
+                totalRevenueToday: resRev.totalRevenueToday,
+                totalArea: resRev.totalArea,
+                totalTask: resRev.totalTask,
+                ratingAvg: !resRev.ratingAvg
+                  ? '0.0'
+                  : parseFloat(resRev.ratingAvg).toFixed(1).toString(),
                 isOpenReceiveTask: res.isOpenReceiveTask,
-                status: res.status
+                status: res.status,
               });
-            }
-          ).catch(err => console.log(err));
+            })
+            .catch(err => console.log(err));
         }
       })
       .catch(err => console.log(err));
@@ -138,11 +141,11 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
               </Text>
               <View style={styles.activeContainer}>
                 <Switch
-                  trackColor={{ false: "#767577", true: colors.green }}
-                  thumbColor={profile.isOpenReceiveTask ? "white" : "#f4f3f4"}
+                  trackColor={{false: '#767577', true: colors.green}}
+                  thumbColor={profile.isOpenReceiveTask ? 'white' : '#f4f3f4'}
                   value={profile.isOpenReceiveTask}
                   onValueChange={value => openReceiveTask(value)}
-                  disabled={profile.status==='PENDING'}
+                  disabled={profile.status === 'PENDING'}
                 />
                 <Text style={styles.activeFont}>เปิดรับงาน</Text>
               </View>
@@ -154,35 +157,47 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     navbar: false,
                   });
                 }}>
-                <View style={{
-                  width : normalize(50),
-                  height : normalize(65),
-                  position : 'relative',
-                }}>
-                  <Avatar size={normalize(50)} rounded source={(profile.image != '')?{uri : profile.image}:icons.account}/>
-                  <View style={{
-                    width : normalize(50),
-                    height : normalize(16),
-                    borderRadius : normalize(8),
-                    position : 'absolute',
-                    left : normalize(0),
-                    top : normalize(43),
-                    backgroundColor : colors.fontBlack,
-                    display : 'flex',
-                    flexDirection : 'row',
-                    alignItems : 'center',
-                    justifyContent : 'center'
+                <View
+                  style={{
+                    width: normalize(50),
+                    height: normalize(65),
+                    position: 'relative',
                   }}>
-                    <Text style={{
-                      fontFamily : font.medium,
-                      fontSize : normalize(12),
-                      color : colors.white,
-                      paddingRight : normalize(2)
-                    }}>{`${profile.ratingAvg}`}</Text>
-                    <Image source={icons.review} style={{
-                          width : normalize(12),
-                          height : normalize(12)
-                        }}/>
+                  <Avatar
+                    size={normalize(50)}
+                    rounded
+                    source={
+                      profile.image != '' ? {uri: profile.image} : icons.account
+                    }
+                  />
+                  <View
+                    style={{
+                      width: normalize(50),
+                      height: normalize(16),
+                      borderRadius: normalize(8),
+                      position: 'absolute',
+                      left: normalize(0),
+                      top: normalize(43),
+                      backgroundColor: colors.fontBlack,
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: font.medium,
+                        fontSize: normalize(12),
+                        color: colors.white,
+                        paddingRight: normalize(2),
+                      }}>{`${profile.ratingAvg}`}</Text>
+                    <Image
+                      source={icons.review}
+                      style={{
+                        width: normalize(12),
+                        height: normalize(12),
+                      }}
+                    />
                   </View>
                 </View>
               </TouchableOpacity>
@@ -203,59 +218,66 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     backgroundColor: colors.orange,
                     marginHorizontal: 5,
                     paddingHorizontal: 10,
-                    paddingVertical : normalize(10),
+                    paddingVertical: normalize(10),
                     justifyContent: 'space-between',
                     width: 160,
                     height: 75,
                     borderRadius: 16,
                   }}>
-                  <View style={{
-                    flexDirection : 'row',
-                    alignItems : 'center'
-                  }}>
-                    <Image source={icons.income} style={styles.iconsTask}/>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Image source={icons.income} style={styles.iconsTask} />
                     <Text style={styles.font}>รายได้วันนี้</Text>
                   </View>
-                  <Text style={styles.font}>{`฿${numberWithCommas(profile.totalRevenueToday)}`}</Text>
+                  <Text style={styles.font}>{`฿${numberWithCommas(
+                    profile.totalRevenueToday,
+                  )}`}</Text>
                 </View>
                 <View
                   style={{
                     backgroundColor: '#6B7580',
                     marginHorizontal: 5,
                     paddingHorizontal: 10,
-                    paddingVertical : normalize(10),
+                    paddingVertical: normalize(10),
                     justifyContent: 'space-between',
                     width: 160,
                     height: 75,
                     borderRadius: 16,
                   }}>
-                    <View style={{
-                    flexDirection : 'row',
-                    alignItems : 'center'
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
                     }}>
-                        <Image source={icons.income} style={styles.iconsTask}/>
-                        <Text style={styles.font}>รายได้ทั้งหมด</Text>
-                    </View>
-                  <Text style={styles.font}>{`฿${numberWithCommas(profile.totalRevenue)}`}</Text>
+                    <Image source={icons.income} style={styles.iconsTask} />
+                    <Text style={styles.font}>รายได้ทั้งหมด</Text>
+                  </View>
+                  <Text style={styles.font}>{`฿${numberWithCommas(
+                    profile.totalRevenue,
+                  )}`}</Text>
                 </View>
                 <View
                   style={{
                     backgroundColor: '#37ABFF',
                     marginHorizontal: 5,
                     paddingHorizontal: 10,
-                    paddingVertical : normalize(10),
+                    paddingVertical: normalize(10),
                     justifyContent: 'space-between',
                     width: 160,
                     height: 75,
                     borderRadius: 16,
                   }}>
-                    <View style={{
-                    flexDirection : 'row',
-                    alignItems : 'center'
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
                     }}>
-                      <Image source={icons.farm} style={styles.iconsTask}/>
-                      <Text style={styles.font}>ไร่สะสม</Text>
-                    </View>
+                    <Image source={icons.farm} style={styles.iconsTask} />
+                    <Text style={styles.font}>ไร่สะสม</Text>
+                  </View>
                   <Text style={styles.font}>{`${profile.totalArea} ไร่`}</Text>
                 </View>
                 <View
@@ -263,19 +285,20 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     backgroundColor: '#3EBD93',
                     marginHorizontal: 5,
                     paddingHorizontal: 10,
-                    paddingVertical : normalize(10),
+                    paddingVertical: normalize(10),
                     justifyContent: 'space-between',
                     width: 160,
                     height: 75,
                     borderRadius: 16,
                   }}>
-                    <View style={{
-                    flexDirection : 'row',
-                    alignItems : 'center'
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
                     }}>
-                      <Image source={icons.dronejob} style={styles.iconsTask}/>
-                      <Text style={styles.font}>งานที่บินเสร็จ</Text>
-                    </View>
+                    <Image source={icons.dronejob} style={styles.iconsTask} />
+                    <Text style={styles.font}>งานที่บินเสร็จ</Text>
+                  </View>
                   <Text style={styles.font}>{`${profile.totalTask} งาน`}</Text>
                 </View>
               </ScrollView>
@@ -283,7 +306,10 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           </View>
         </View>
         <View style={{flex: 4}}>
-          <TaskTapNavigator isOpenReceiveTask={profile.isOpenReceiveTask} dronerStatus={profile.status} />
+          <TaskTapNavigator
+            isOpenReceiveTask={profile.isOpenReceiveTask}
+            dronerStatus={profile.status}
+          />
         </View>
       </View>
     </BottomSheetModalProvider>
@@ -318,9 +344,9 @@ const styles = StyleSheet.create({
     fontSize: normalize(16),
     color: colors.white,
   },
-  iconsTask : {
-    width : normalize(20),
-    height : normalize(20),
-    marginRight : normalize(5)
-  }
+  iconsTask: {
+    width: normalize(20),
+    height: normalize(20),
+    marginRight: normalize(5),
+  },
 });

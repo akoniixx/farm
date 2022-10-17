@@ -29,11 +29,9 @@ const InprogressTask: React.FC = () => {
     const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.getTaskById(droner_id, ['IN_PROGRESS'], page, 99)
       .then(res => {
-        setTimeout(()=> setLoading(false),200)
-          setData(res);
-          setCheckResIsComplete(true);
-         
-        
+        setTimeout(() => setLoading(false), 200);
+        setData(res);
+        setCheckResIsComplete(true);
       })
       .catch(err => {
         setLoading(false);
@@ -67,7 +65,7 @@ const InprogressTask: React.FC = () => {
               />
             )}
           />
-          <View></View>
+          <View />
         </View>
       ) : (
         <View

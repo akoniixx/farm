@@ -50,7 +50,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     longitudeDelta: 0,
   });
   const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
-  var todate = new Date()
+  var todate = new Date();
   const width = Dimensions.get('window').width;
   const [togleModalUpload, setTogleModalUpload] = useState<boolean>(false);
   const [togleModalReview, setTogleModalReview] = useState<boolean>(false);
@@ -100,7 +100,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     getTaskDetail();
   }, []);
 
-
   const onFinishTask = () => {
     setTogleModalReview(false);
     setTimeout(() => setLoading(true), 500);
@@ -123,11 +122,10 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   const onFinishTaskSuccess = () => {
-    setTogleModalSuccess(false)
+    setTogleModalSuccess(false);
     setTimeout(() => getTaskDetail(), 200);
-    getTaskDetail()
-   
-  }
+    getTaskDetail();
+  };
 
   const onChangImgFinish = () => {
     setTogleModalUpload(false);
@@ -160,29 +158,29 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     }
   };
 
-  const getTaskDetail = async() => {
+  const getTaskDetail = async () => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
-    TaskDatasource.getTaskDetail(taskId,dronerId)
+    TaskDatasource.getTaskDetail(taskId, dronerId)
       .then(res => {
-       if(res.success){
-        setData(res.responseData.data);
-        let date = new Date(res.responseData.data.dateAppointment);
-        setDateAppointment(date);
-        if (Object.keys(res.responseData.image_profile_url).length !== 0) {
-          setProfileImg(res.responseData.image_profile_url);
-        }
+        if (res.success) {
+          setData(res.responseData.data);
+          let date = new Date(res.responseData.data.dateAppointment);
+          setDateAppointment(date);
+          if (Object.keys(res.responseData.image_profile_url).length !== 0) {
+            setProfileImg(res.responseData.image_profile_url);
+          }
 
-        setPosition({
-          latitude: parseFloat(res.responseData.data.farmerPlot.lat),
-          longitude: parseFloat(res.responseData.data.farmerPlot.long),
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        });
-       }else{
-        RootNavigation.navigate('Main', {
-          screen: 'MainScreen',
-        })
-       }
+          setPosition({
+            latitude: parseFloat(res.responseData.data.farmerPlot.lat),
+            longitude: parseFloat(res.responseData.data.farmerPlot.long),
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          });
+        } else {
+          RootNavigation.navigate('Main', {
+            screen: 'MainScreen',
+          });
+        }
       })
       .catch(err => console.log(err));
   };
@@ -190,17 +188,17 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(data.id, dronerId, true)
       .then(res => {
-        if(res.success){
+        if (res.success) {
           getTaskDetail();
           Toast.show({
             type: 'receiveTaskSuccess',
             text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
             text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
           });
-        }else{
+        } else {
           RootNavigation.navigate('Main', {
             screen: 'MainScreen',
-          })
+          });
           Toast.show({
             type: 'error',
             text1: res.userMessage,
@@ -231,7 +229,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const getDronerId = async () => {
     setDronerId((await AsyncStorage.getItem('droner_id')) ?? '');
   };
-
 
   return (
     <View style={{flex: 1}}>
@@ -405,7 +402,11 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Image
                     source={profileImg ? {uri: profileImg} : icons.account}
-                    style={{width: normalize(24), height: normalize(24),borderRadius:99}}
+                    style={{
+                      width: normalize(24),
+                      height: normalize(24),
+                      borderRadius: 99,
+                    }}
                   />
                   <Text
                     style={{
@@ -454,7 +455,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                     }}>
                     ระยะทาง{' '}
                     {data.status == 'WAIT_RECEIVE'
-                      ? data.taskDronerTemp.find((x: any) => x.dronerId == dronerId).distance
+                      ? data.taskDronerTemp.find(
+                          (x: any) => x.dronerId == dronerId,
+                        ).distance
                       : data.distance}{' '}
                     กม.
                   </Text>
@@ -515,7 +518,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   {marginVertical: normalize(5)},
                 ]}>
                 <Text style={styles.fontGray}>ค่าจ้าง</Text>
-                <Text style={styles.fontGray}>{numberWithCommas(data.price)} ฿</Text>
+                <Text style={styles.fontGray}>
+                  {numberWithCommas(data.price)} ฿
+                </Text>
               </View>
               <View
                 style={[
@@ -525,7 +530,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 <Text style={styles.fontGray}>
                   ค่าธรรมเนียม (5% ของราคารวม)
                 </Text>
-                <Text style={styles.fontGray}>{numberWithCommas(data.fee)} ฿</Text>
+                <Text style={styles.fontGray}>
+                  {numberWithCommas(data.fee)} ฿
+                </Text>
               </View>
 
               {data.discountFee ? (
@@ -538,7 +545,8 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                     ส่วนลดค่าธรรมเนียม
                   </Text>
                   <Text style={[styles.fontGray, {color: colors.green}]}>
-                   {data.discountFee!=='0'?'- ' : null} {numberWithCommas(data.discountFee)} ฿
+                    {data.discountFee !== '0' ? '- ' : null}{' '}
+                    {numberWithCommas(data.discountFee)} ฿
                   </Text>
                 </View>
               ) : null}
@@ -600,7 +608,13 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
 
           {data.status == 'WAIT_START' ? (
             <WaitStartFooter
-              disable={new Date(convertDate(data.dateAppointment).setHours(convertDate(data.dateAppointment).getHours()-3)) >= todate}
+              disable={
+                new Date(
+                  convertDate(data.dateAppointment).setHours(
+                    convertDate(data.dateAppointment).getHours() - 3,
+                  ),
+                ) >= todate
+              }
               mainFunc={() => setShowModalStartTask(true)}
               togleModal={() =>
                 SheetManager.show('CallingSheet', {
@@ -945,7 +959,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           <MainButton
             label="ตกลง"
             color={colors.orange}
-            onPress={onFinishTaskSuccess }
+            onPress={onFinishTaskSuccess}
           />
         </View>
       </CModal>

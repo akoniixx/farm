@@ -3,7 +3,7 @@ import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, font, icons} from '../../assets';
-import Icon from 'react-native-vector-icons/AntDesign'
+import Icon from 'react-native-vector-icons/AntDesign';
 const insets = useSafeAreaInsets();
 
 interface InprogressProp {
@@ -18,13 +18,13 @@ export const InprogressFooter: React.FC<InprogressProp> = ({
   return (
     <View style={[styles.footer, {paddingBottom: insets.bottom}]}>
       <TouchableOpacity style={styles.startButton} onPress={() => mainFunc()}>
-        <Icon name='checkcircleo' size={22} color='white' />
+        <Icon name="checkcircleo" size={22} color="white" />
         <Text
           style={{
             fontFamily: font.bold,
             fontSize: normalize(19),
             color: colors.white,
-            marginLeft: 10
+            marginLeft: 10,
           }}>
           งานเสร็จสิ้น
         </Text>
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: normalize(8),
-    flexDirection:'row'
+    flexDirection: 'row',
   },
   footer: {
     backgroundColor: colors.white,

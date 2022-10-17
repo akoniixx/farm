@@ -26,24 +26,16 @@ export class QueryLocation {
     districtName: string,
   ): Promise<any> {
     return registerClient
-      .get(
-        BASE_URL +
-          `/location/sub-district?districtId=${districtId}`,
-      )
+      .get(BASE_URL + `/location/sub-district?districtId=${districtId}`)
       .then(res => {
         return res.data;
       })
       .catch(err => console.log(err));
   }
 
-  static QueryProfileSubDistrict(
-    districtId: number
-  ): Promise<any> {
+  static QueryProfileSubDistrict(districtId: number): Promise<any> {
     return httpClient
-      .get(
-        BASE_URL +
-          `/location/sub-district?districtId=${districtId}`,
-      )
+      .get(BASE_URL + `/location/sub-district?districtId=${districtId}`)
       .then(res => {
         return res.data;
       })

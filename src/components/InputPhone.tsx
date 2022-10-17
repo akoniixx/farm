@@ -1,16 +1,23 @@
-import React from 'react'
-import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
-import { colors, icons } from '../assets'
+import React from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
+import {colors, icons} from '../assets';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { normalize } from '@rneui/themed';
+import {normalize} from '@rneui/themed';
 
 interface InputPhoneProps {
-  value: string
-  onChangeText?: (text: string) => void
-  maxLength: number
-  autoFocus?: boolean
-  onError?: boolean
-  errorMessage: string
+  value: string;
+  onChangeText?: (text: string) => void;
+  maxLength: number;
+  autoFocus?: boolean;
+  onError?: boolean;
+  errorMessage: string;
 }
 export const InputPhone: React.FC<InputPhoneProps> = ({
   value,
@@ -20,20 +27,20 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
   onError,
   errorMessage,
 }) => {
-  const [number, setNumber] = React.useState(value ? value : '')
+  const [number, setNumber] = React.useState(value ? value : '');
   const onTextChange = (text: string) => {
-    setNumber(text)
+    setNumber(text);
     if (onChangeText) {
-      onChangeText(text)
+      onChangeText(text);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
       <View style={!onError ? styles.boder : styles.boderError}>
-      <View style={!onError ? styles.flagBorder : styles.flagBorderError}>
-      <Image source={icons.th} />
-      </View>
+        <View style={!onError ? styles.flagBorder : styles.flagBorderError}>
+          <Image source={icons.th} />
+        </View>
         <TextInput
           style={styles.numberText}
           keyboardType="number-pad"
@@ -44,13 +51,13 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
           autoFocus={autoFocus}
         />
         <TouchableOpacity style={styles.clearBtn} onPress={() => setNumber('')}>
-          <Icon name='close'/>
+          <Icon name="close" />
         </TouchableOpacity>
       </View>
       {!onError ? null : <Text style={styles.textError}>{errorMessage}</Text>}
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -77,7 +84,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center',
   },
-  flagBorder:{
+  flagBorder: {
     alignItems: 'center',
     height: 44,
     flexDirection: 'row',
@@ -87,7 +94,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: normalize(12),
   },
-  flagBorderError:{
+  flagBorderError: {
     alignItems: 'center',
     height: 44,
     flexDirection: 'row',
@@ -95,8 +102,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 6,
     borderBottomLeftRadius: 6,
     borderWidth: 1,
-    paddingHorizontal: normalize(12)
-},
+    paddingHorizontal: normalize(12),
+  },
   countryCode: {
     fontSize: 16,
     lineHeight: 15,
@@ -114,8 +121,8 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     fontSize: 16,
     flex: 1,
-    width:'100%',
-    color : colors.fontBlack
+    width: '100%',
+    color: colors.fontBlack,
   },
   textError: {
     color: '#EB2C21',
@@ -123,5 +130,10 @@ const styles = StyleSheet.create({
     marginTop: 15,
     fontSize: 12,
   },
-  clearBtn: { flex: 0.1, height: 40, justifyContent: 'center', alignItems: 'center' },
-})
+  clearBtn: {
+    flex: 0.1,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

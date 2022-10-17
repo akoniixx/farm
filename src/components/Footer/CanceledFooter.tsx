@@ -3,16 +3,14 @@ import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, font, icons} from '../../assets';
-import Icon from 'react-native-vector-icons/AntDesign'
+import Icon from 'react-native-vector-icons/AntDesign';
 const insets = useSafeAreaInsets();
 
 interface CanceledProp {
   mainFunc: () => void;
 }
 
-export const CanceledFooter: React.FC<CanceledProp> = ({
-  mainFunc,
-}) => {
+export const CanceledFooter: React.FC<CanceledProp> = ({mainFunc}) => {
   return (
     <View style={[styles.footer, {paddingBottom: insets.bottom}]}>
       <TouchableOpacity style={styles.startButton} onPress={() => mainFunc()}>
@@ -25,23 +23,21 @@ export const CanceledFooter: React.FC<CanceledProp> = ({
           ติดต่อเจ้าหน้าที่
         </Text>
       </TouchableOpacity>
-
-     
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   startButton: {
-    flex:1,
+    flex: 1,
     height: normalize(52),
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: normalize(8),
-    flexDirection:'row',
+    flexDirection: 'row',
     borderColor: colors.greyWhite,
-    borderWidth:1,
+    borderWidth: 1,
   },
   footer: {
     backgroundColor: colors.white,

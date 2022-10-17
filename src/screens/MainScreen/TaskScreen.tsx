@@ -139,7 +139,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
         console.log(err);
         Toast.show({
           type: 'error',
-          text1: `เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง`,
+          text1: 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
         });
       });
   };
@@ -242,7 +242,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
               />
             )}
           />
-          <View></View>
+          <View />
         </View>
       ) : (
         <>
@@ -258,35 +258,98 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
             <Text style={stylesCentral.blankFont}>ยังไม่มีงานที่ต้องทำ</Text>
           </View>
           {dronerStatus == 'PENDING' ? (
-<View style={{backgroundColor: colors.grayBg,}}>
-            <View style={{backgroundColor: 'white', padding: normalize(10),margin:normalize(10),borderWidth:2,borderColor:colors.greyWhite,borderRadius:16}}>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{display: 'flex', backgroundColor: '#FFF7F4',paddingHorizontal:normalize(10),paddingVertical:normalize(5),borderRadius:16}}>
-                  <Text style={{color: '#B16F05',fontFamily:fonts.bold,fontSize:normalize(16)}}>รอตรวจสอบเอกสาร</Text>
+            <View style={{backgroundColor: colors.grayBg}}>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  padding: normalize(10),
+                  margin: normalize(10),
+                  borderWidth: 2,
+                  borderColor: colors.greyWhite,
+                  borderRadius: 16,
+                }}>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      display: 'flex',
+                      backgroundColor: '#FFF7F4',
+                      paddingHorizontal: normalize(10),
+                      paddingVertical: normalize(5),
+                      borderRadius: 16,
+                    }}>
+                    <Text
+                      style={{
+                        color: '#B16F05',
+                        fontFamily: fonts.bold,
+                        fontSize: normalize(16),
+                      }}>
+                      รอตรวจสอบเอกสาร
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    paddingBottom: normalize(20),
+                    marginTop: normalize(5),
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontSize: normalize(18),
+                      color: 'black',
+                    }}>
+                    เจ้าหน้าที่กำลังตรวจสอบเอกสารการยืนยันตัวตน และ
+                    โดรนของคุณอยู่ กรุณาตรวจสอบหากคุณยังไม่เพิ่มโดรน
+                  </Text>
                 </View>
               </View>
-              <View style={{paddingBottom:normalize(20),marginTop:normalize(5)}}>
-                <Text style={{fontFamily:fonts.medium,fontSize:normalize(18),color:'black'}}>
-                เจ้าหน้าที่กำลังตรวจสอบเอกสารการยืนยันตัวตน และ โดรนของคุณอยู่  กรุณาตรวจสอบหากคุณยังไม่เพิ่มโดรน
-                </Text>
-              </View>
-            </View>
             </View>
           ) : null}
-           {dronerStatus == 'REJECTED' ? (
-<View style={{backgroundColor: colors.grayBg,}}>
-            <View style={{backgroundColor: 'white', padding: normalize(10),margin:normalize(10),borderWidth:2,borderColor:colors.greyWhite,borderRadius:16}}>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{display: 'flex', backgroundColor: '#FFF7F4',paddingHorizontal:normalize(10),paddingVertical:normalize(5),borderRadius:16}}>
-                  <Text style={{color: '#B16F05',fontFamily:fonts.bold,fontSize:normalize(16)}}>ยืนยันตัวตนไม่สำเร็จ</Text>
+          {dronerStatus == 'REJECTED' ? (
+            <View style={{backgroundColor: colors.grayBg}}>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  padding: normalize(10),
+                  margin: normalize(10),
+                  borderWidth: 2,
+                  borderColor: colors.greyWhite,
+                  borderRadius: 16,
+                }}>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      display: 'flex',
+                      backgroundColor: '#FFF7F4',
+                      paddingHorizontal: normalize(10),
+                      paddingVertical: normalize(5),
+                      borderRadius: 16,
+                    }}>
+                    <Text
+                      style={{
+                        color: '#B16F05',
+                        fontFamily: fonts.bold,
+                        fontSize: normalize(16),
+                      }}>
+                      ยืนยันตัวตนไม่สำเร็จ
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    paddingBottom: normalize(20),
+                    marginTop: normalize(5),
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontSize: normalize(18),
+                      color: 'black',
+                    }}>
+                    โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. 021136159
+                  </Text>
                 </View>
               </View>
-              <View style={{paddingBottom:normalize(20),marginTop:normalize(5)}}>
-                <Text style={{fontFamily:fonts.medium,fontSize:normalize(18),color:'black'}}>
-                โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. 021136159
-                </Text>
-              </View>
-            </View>
             </View>
           ) : null}
         </>

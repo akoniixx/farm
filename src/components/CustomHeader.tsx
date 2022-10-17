@@ -1,25 +1,43 @@
-import React from 'react'
-import { View, Text, Image, TouchableOpacity, SafeAreaView, StyleSheet, StatusBar, ViewProps } from 'react-native'
-import { colors, font } from '../assets'
-import { normalize } from '../function/Normalize'
+import React from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+  StyleSheet,
+  StatusBar,
+  ViewProps,
+} from 'react-native';
+import {colors, font} from '../assets';
+import {normalize} from '../function/Normalize';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 interface Prop {
-  title?: string
-  showBackBtn?: boolean
-  onPressBack?: () => void
-  headerRight?: () => JSX.Element
-  headerLeft?: () => JSX.Element
-  style?: ViewProps
+  title?: string;
+  showBackBtn?: boolean;
+  onPressBack?: () => void;
+  headerRight?: () => JSX.Element;
+  headerLeft?: () => JSX.Element;
+  style?: ViewProps;
 }
 
-const CustomHeader: React.FC<Prop> = ({ style, title, showBackBtn, onPressBack, headerLeft, headerRight }) => {
+const CustomHeader: React.FC<Prop> = ({
+  style,
+  title,
+  showBackBtn,
+  onPressBack,
+  headerLeft,
+  headerRight,
+}) => {
   return (
     <SafeAreaView style={[styles.headerSafeArea, style]}>
       <View style={styles.headerWraper}>
         <View style={styles.headerLeftWrapper}>
           {showBackBtn && (
-            <TouchableOpacity style={{ paddingVertical: 14,paddingHorizontal:24 }} onPress={onPressBack}>
+            <TouchableOpacity
+              style={{paddingVertical: 14, paddingHorizontal: 24}}
+              onPress={onPressBack}>
               <Icon name="left" size={30} color="black" />
             </TouchableOpacity>
           )}
@@ -31,10 +49,10 @@ const CustomHeader: React.FC<Prop> = ({ style, title, showBackBtn, onPressBack, 
         <View style={styles.headerRightWrapper}>{headerRight?.()}</View>
       </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default CustomHeader
+export default CustomHeader;
 
 const styles = StyleSheet.create({
   headerSafeArea: {
@@ -62,7 +80,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: font.bold,
     fontSize: normalize(18),
-    color : colors.fontBlack,
+    color: colors.fontBlack,
     textAlign: 'center',
   },
-})
+});

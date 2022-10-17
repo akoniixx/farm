@@ -25,7 +25,7 @@ import {socket} from '../../function/utility';
 
 interface Prop {
   isOpenReceiveTask: boolean;
-   dronerStatus: string;
+  dronerStatus: string;
 }
 
 const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
@@ -62,7 +62,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(selectedTaskId, dronerId, true)
       .then(res => {
-        if(res.success){
+        if (res.success) {
           const task = res.responseData.data;
           setData(data.filter((x: any) => x.item.id != task.id));
           Toast.show({
@@ -70,14 +70,13 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
             text1: `งาน #${task.taskNo} ถูกรับแล้ว`,
             text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
           });
-        }else{
-          getData()
+        } else {
+          getData();
           Toast.show({
             type: 'error',
             text1: res.userMessage,
           });
         }
-        
       })
       .catch(err => console.log(err));
   };
@@ -123,8 +122,9 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   const onTaskReceive = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     socket.on(`unsend-task-${dronerId!}`, (taskId: string) => {
-      if (data.find((x: any) => x.item.id == taskId))
+      if (data.find((x: any) => x.item.id == taskId)) {
         setData(data.filter((x: any) => x.item.id != taskId));
+      }
     });
   };
 
@@ -136,7 +136,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   return (
     <>
       <View style={[{flex: 1, backgroundColor: colors.grayBg, padding: 8}]}>
-        {data.length == 0 && !isOpenReceiveTask && dronerStatus==="ACTIVE" &&(
+        {data.length == 0 && !isOpenReceiveTask && dronerStatus === 'ACTIVE' && (
           <View
             style={[
               stylesCentral.center,
@@ -151,14 +151,14 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                 marginTop: normalize(20),
                 paddingHorizontal: normalize(25),
               }}>
-              <Text style={[stylesCentral.blankFont,{textAlign:'center'}]}>
+              <Text style={[stylesCentral.blankFont, {textAlign: 'center'}]}>
                 ยังไม่มีงานใหม่ เนื่องจากคุณปิดรับงานอยู่
                 กรุณากดเปิดรับงานเพื่อที่จะไม่พลาดงานสำหรับคุณ!
               </Text>
             </View>
           </View>
         )}
-        {data.length == 0 && isOpenReceiveTask  && dronerStatus==="ACTIVE" && (
+        {data.length == 0 && isOpenReceiveTask && dronerStatus === 'ACTIVE' && (
           <View
             style={[
               stylesCentral.center,
@@ -180,38 +180,105 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
           </View>
         )}
 
-{dronerStatus == 'PENDING' ? (
-<View style={{backgroundColor: colors.grayBg,flex:1,justifyContent:'flex-end'}}>
-            <View style={{backgroundColor: 'white', padding: normalize(10),margin:normalize(10),borderWidth:2,borderColor:colors.greyWhite,borderRadius:16}}>
+        {dronerStatus == 'PENDING' ? (
+          <View
+            style={{
+              backgroundColor: colors.grayBg,
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}>
+            <View
+              style={{
+                backgroundColor: 'white',
+                padding: normalize(10),
+                margin: normalize(10),
+                borderWidth: 2,
+                borderColor: colors.greyWhite,
+                borderRadius: 16,
+              }}>
               <View style={{flexDirection: 'row'}}>
-                <View style={{display: 'flex', backgroundColor: '#FFF7F4',paddingHorizontal:normalize(10),paddingVertical:normalize(5),borderRadius:16}}>
-                  <Text style={{color: '#B16F05',fontFamily:fonts.bold,fontSize:normalize(16)}}>รอตรวจสอบเอกสาร</Text>
+                <View
+                  style={{
+                    display: 'flex',
+                    backgroundColor: '#FFF7F4',
+                    paddingHorizontal: normalize(10),
+                    paddingVertical: normalize(5),
+                    borderRadius: 16,
+                  }}>
+                  <Text
+                    style={{
+                      color: '#B16F05',
+                      fontFamily: fonts.bold,
+                      fontSize: normalize(16),
+                    }}>
+                    รอตรวจสอบเอกสาร
+                  </Text>
                 </View>
               </View>
-              <View style={{paddingBottom:normalize(20),marginTop:normalize(5)}}>
-                <Text style={{fontFamily:fonts.medium,fontSize:normalize(18),color:'black'}}>
-                เจ้าหน้าที่กำลังตรวจสอบเอกสารการยืนยันตัวตน และ โดรนของคุณอยู่  กรุณาตรวจสอบหากคุณยังไม่เพิ่มโดรน
+              <View
+                style={{paddingBottom: normalize(20), marginTop: normalize(5)}}>
+                <Text
+                  style={{
+                    fontFamily: fonts.medium,
+                    fontSize: normalize(18),
+                    color: 'black',
+                  }}>
+                  เจ้าหน้าที่กำลังตรวจสอบเอกสารการยืนยันตัวตน และ โดรนของคุณอยู่
+                  กรุณาตรวจสอบหากคุณยังไม่เพิ่มโดรน
                 </Text>
               </View>
             </View>
-            </View>
-          ) : null}
-           {dronerStatus == 'REJECTED' ? (
-<View style={{backgroundColor: colors.grayBg,flex:1,justifyContent:'flex-end'}}>
-            <View style={{backgroundColor: 'white', padding: normalize(10),margin:normalize(10),borderWidth:2,borderColor:colors.greyWhite,borderRadius:16}}>
+          </View>
+        ) : null}
+        {dronerStatus == 'REJECTED' ? (
+          <View
+            style={{
+              backgroundColor: colors.grayBg,
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}>
+            <View
+              style={{
+                backgroundColor: 'white',
+                padding: normalize(10),
+                margin: normalize(10),
+                borderWidth: 2,
+                borderColor: colors.greyWhite,
+                borderRadius: 16,
+              }}>
               <View style={{flexDirection: 'row'}}>
-                <View style={{display: 'flex', backgroundColor: '#FFF7F4',paddingHorizontal:normalize(10),paddingVertical:normalize(5),borderRadius:16}}>
-                  <Text style={{color: '#B16F05',fontFamily:fonts.bold,fontSize:normalize(16)}}>ยืนยันตัวตนไม่สำเร็จ</Text>
+                <View
+                  style={{
+                    display: 'flex',
+                    backgroundColor: '#FFF7F4',
+                    paddingHorizontal: normalize(10),
+                    paddingVertical: normalize(5),
+                    borderRadius: 16,
+                  }}>
+                  <Text
+                    style={{
+                      color: '#B16F05',
+                      fontFamily: fonts.bold,
+                      fontSize: normalize(16),
+                    }}>
+                    ยืนยันตัวตนไม่สำเร็จ
+                  </Text>
                 </View>
               </View>
-              <View style={{paddingBottom:normalize(20),marginTop:normalize(5)}}>
-                <Text style={{fontFamily:fonts.medium,fontSize:normalize(18),color:'black'}}>
-                โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. 021136159
+              <View
+                style={{paddingBottom: normalize(20), marginTop: normalize(5)}}>
+                <Text
+                  style={{
+                    fontFamily: fonts.medium,
+                    fontSize: normalize(18),
+                    color: 'black',
+                  }}>
+                  โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. 021136159
                 </Text>
               </View>
             </View>
-            </View>
-          ) : null}
+          </View>
+        ) : null}
         {data.length > 0 && (
           <View>
             <FlatList
