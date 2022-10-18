@@ -188,10 +188,19 @@ export default function ContentList({
             {flex: 1, backgroundColor: colors.grayBg, padding: 8},
           ]}>
           <Image
-            source={image.blankTask}
-            style={{width: normalize(136), height: normalize(111)}}
+            source={image.blankIncome}
+            style={{
+              width: normalize(136),
+              height: normalize(136),
+              marginBottom: 16,
+            }}
           />
-          <Text style={stylesCentral.blankFont}>ไม่มีรายการ</Text>
+          <Text style={stylesCentral.blankFont}>
+            คุณยังไม่มีรายได้จากการบินโดรน
+          </Text>
+          <Text style={stylesCentral.blankFont}>
+            เปิดรับงานและเริ่มทำงานได้เลย!
+          </Text>
         </View>
       )}
     </>

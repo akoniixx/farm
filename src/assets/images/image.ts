@@ -13,4 +13,7 @@ export default {
   reviewSuccess: require('./reviewSuccess.png'),
   successimage: require('./success.png'),
   successdrone: require('./successdrone.png'),
+  blankIncome: require('./blankIncome.png'),
+  profile: require('./profile.png'),
+  profileActive: require('./profileActive.png'),
 };

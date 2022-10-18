@@ -42,8 +42,8 @@ const MainTapNavigator: React.FC = () => {
       name: 'profile',
       title: 'โปรไฟล์',
       component: ProfileScreen,
-      activeIcon: '',
-      inactiveIcon: '',
+      activeIcon: icons.profileActive,
+      inactiveIcon: icons.profile,
     },
   ];
 
@@ -60,41 +60,40 @@ const MainTapNavigator: React.FC = () => {
                 fontFamily: font.medium,
               },
               tabBarStyle: {
-                minHeight: 60,
+                minHeight: 95,
+                alignItems: 'center',
+                justifyContent: 'center',
               },
               tabBarButton(props) {
                 const isFocused = props.accessibilityState?.selected;
                 return (
                   <TouchableOpacity
                     {...props}
-                    style={[props?.style, {padding: 8}]}>
+                    style={[
+                      props?.style,
+                      {
+                        padding: 8,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      },
+                    ]}>
                     <View
                       style={{justifyContent: 'center', alignItems: 'center'}}>
-                      {item.name === 'profile' ? (
-                        <>
-                          {isFocused ? (
-                            <Icon
-                              name={'user'}
-                              color={colors.orange}
-                              size={20}
-                            />
-                          ) : (
-                            <Icon name={'user-o'} color={'#9BA1A8'} size={18} />
-                          )}
-                        </>
-                      ) : (
-                        <Image
-                          source={
-                            isFocused ? item.activeIcon : item.inactiveIcon
-                          }
-                          style={{width: 20, height: 20}}
-                        />
-                      )}
+                      <Image
+                        source={isFocused ? item.activeIcon : item.inactiveIcon}
+                        style={
+                          item.name === 'profile'
+                            ? {width: 16, height: 20, marginTop: 3.5}
+                            : {width: 25, height: 25}
+                        }
+                      />
+
                       <Text
                         style={{
                           fontFamily: fonts.medium,
                           fontSize: normalize(14),
                           color: isFocused ? colors.orange : colors.gray,
+                          marginTop: item.name === 'profile' ? 2 : 0,
                         }}>
                         {item.title}
                       </Text>
