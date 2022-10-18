@@ -1,58 +1,19 @@
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  ViewStyle,
-  FlatList,
-  ActivityIndicator,
-} from 'react-native';
+import {View, Text, Image, StyleSheet, ViewStyle, FlatList} from 'react-native';
 import React from 'react';
 import colors from '../../assets/colors/colors';
 import {normalize} from '../../function/Normalize';
 import icons from '../../assets/icons/icons';
 import {numberWithCommas} from '../../function/utility';
 import {font} from '../../assets';
-import {ProfileDatasource} from '../../datasource/ProfileDatasource';
-import {useFocusEffect} from '@react-navigation/native';
+import {State} from '../../screens/IncomeScreen';
 
 interface Props {
-  totalRevenueToday?: number;
-  totalTask?: number;
-  totalArea?: number;
-  totalRevenue?: number;
+  data: State;
   styleContainer?: ViewStyle;
 }
-interface State {
-  totalRevenueToday: number;
-  totalTask: number;
-  totalArea: number;
-  totalRevenue: number;
-}
-const CardIncomeList = ({styleContainer}: Props): JSX.Element => {
-  const [loading, setLoading] = React.useState(true);
-  const [data, setData] = React.useState<State>({
-    totalRevenueToday: 0,
-    totalTask: 0,
-    totalArea: 0,
-    totalRevenue: 0,
-  });
+
+const CardIncomeList = ({styleContainer, data}: Props): JSX.Element => {
   const {totalRevenueToday, totalTask, totalArea, totalRevenue} = data;
-  const getProfileById = async () => {
-    try {
-      const result = await ProfileDatasource.getTaskrevenuedroner();
-      setData(result);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useFocusEffect(
-    React.useCallback(() => {
-      getProfileById();
-    }, []),
-  );
 
   const dataCard = [
     {
@@ -88,9 +49,7 @@ const CardIncomeList = ({styleContainer}: Props): JSX.Element => {
       backgroundColor: '#3EBD93',
     },
   ];
-  return loading ? (
-    <ActivityIndicator size={'large'} />
-  ) : (
+  return (
     <FlatList
       data={dataCard}
       numColumns={2}

@@ -1,15 +1,77 @@
-import React from 'react';
+import dayjs from 'dayjs';
+import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors} from '../../assets';
 import fonts from '../../assets/fonts';
 import CardIncomeList from '../../components/CardIncomeList';
+import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {normalize} from '../../function/Normalize';
 import {stylesCentral} from '../../styles/StylesCentral';
 import ContentList from './ContentList';
 
+export interface DataType {
+  taskNo: string;
+  farmAreaAmount: string;
+  dateAppointment: string;
+  targetSpray: string[];
+  totalPrice: string;
+  farmerPlot: {plantName: string};
+  purposeSpray: {
+    purposeSprayName: string;
+  };
+}
+export interface State {
+  totalRevenueToday: number;
+  totalTask: number;
+  totalArea: number;
+  totalRevenue: number;
+}
+
 const IncomeScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
+  const [type, setType] = React.useState<string>('week');
+  const [data, setData] = useState<DataType[]>([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [dataHeader, setDataHeader] = React.useState<State>({
+    totalRevenueToday: 0,
+    totalTask: 0,
+    totalArea: 0,
+    totalRevenue: 0,
+  });
+  useEffect(() => {
+    const fetchDataTask = async () => {
+      const currentStartOfWeek = dayjs().startOf('week').toISOString();
+      const currentEndOfWeek = dayjs().endOf('week').toISOString();
+      const currentStartOfMonth = dayjs().startOf('month').toISOString();
+      const currentEndOfMonth = dayjs().endOf('month').toISOString();
+      const currentStartOf3Month = dayjs()
+        .subtract(3, 'month')
+        .startOf('month')
+        .toISOString();
+      const currentEndOf3Month = dayjs().endOf('month').toISOString();
+      const result = await ProfileDatasource.getListTaskInProgress({
+        start:
+          type === 'week'
+            ? currentStartOfWeek
+            : type === 'month'
+            ? currentStartOfMonth
+            : currentStartOf3Month,
+        end:
+          type === 'week'
+            ? currentEndOfWeek
+            : type === 'month'
+            ? currentEndOfMonth
+            : currentEndOf3Month,
+      });
+
+      setDataHeader(result.summary);
+      setTotal(result.count);
+      setData(result.data);
+    };
+    fetchDataTask();
+  }, [type]);
   return (
     <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
       <View
@@ -28,9 +90,17 @@ const IncomeScreen: React.FC = () => {
         </Text>
       </View>
       <View>
-        <CardIncomeList />
+        <CardIncomeList data={dataHeader} />
       </View>
-      <ContentList />
+      <ContentList
+        type={type}
+        setType={setType}
+        page={page}
+        setPage={setPage}
+        data={data}
+        setData={setData}
+        total={total}
+      />
     </View>
   );
 };

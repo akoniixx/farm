@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Axios, AxiosStatic} from 'axios';
 import {
   BASE_URL,
   httpClient,
@@ -193,14 +192,12 @@ export class ProfileDatasource {
     page?: number;
     take?: number;
   }): Promise<{
-    summary: {
-      dronerId: string;
-    };
+    summary: any;
     count: number;
     data: [];
   }> {
-    // const drone_id = await AsyncStorage.getItem('droner_id');
-    const drone_id = '480cca3a-f5c8-4df5-aeae-765c6aadf13d';
+    const drone_id = await AsyncStorage.getItem('droner_id');
+    // const drone_id = '480cca3a-f5c8-4df5-aeae-765c6aadf13d';
     return httpClient
       .get(
         BASE_URL +

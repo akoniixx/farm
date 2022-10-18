@@ -6,6 +6,7 @@ import {
   FlatList,
   ScrollView,
   NativeScrollEvent,
+  Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import fonts from '../../assets/fonts';
@@ -15,26 +16,32 @@ import dayjs from 'dayjs';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {numberWithCommas} from '../../function/utility';
 import Divider from '../../components/Divider';
+import image from '../../assets/images/image';
+import {stylesCentral} from '../../styles/StylesCentral';
+import {DataType} from '.';
 
 interface Styles {
   isFocus?: boolean;
 }
-interface DataType {
-  taskNo: string;
-  farmAreaAmount: string;
-  dateAppointment: string;
-  targetSpray: string[];
-  totalPrice: string;
-  farmerPlot: {plantName: string};
-  purposeSpray: {
-    purposeSprayName: string;
-  };
+interface Props {
+  setType: React.Dispatch<React.SetStateAction<string>>;
+  type: string;
+  setData: React.Dispatch<React.SetStateAction<DataType[]>>;
+  data: DataType[];
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  total: number;
+  page: number;
 }
-export default function ContentList(): JSX.Element {
-  const [type, setType] = React.useState<string>('week');
-  const [data, setData] = useState<DataType[]>([]);
-  const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
+
+export default function ContentList({
+  setType,
+  type,
+  setData,
+  data,
+  setPage,
+  total,
+  page,
+}: Props): JSX.Element {
   const listHeader = [
     {
       title: 'สัปดาห์นี้',
@@ -49,36 +56,6 @@ export default function ContentList(): JSX.Element {
       type: '3month',
     },
   ];
-  useEffect(() => {
-    const fetchDataTask = async () => {
-      const currentStartOfWeek = dayjs().startOf('week').toISOString();
-      const currentEndOfWeek = dayjs().endOf('week').toISOString();
-      const currentStartOfMonth = dayjs().startOf('month').toISOString();
-      const currentEndOfMonth = dayjs().endOf('month').toISOString();
-      const currentStartOf3Month = dayjs()
-        .subtract(3, 'month')
-        .startOf('month')
-        .toISOString();
-      const currentEndOf3Month = dayjs().endOf('month').toISOString();
-      const result = await ProfileDatasource.getListTaskInProgress({
-        start:
-          type === 'week'
-            ? currentStartOfWeek
-            : type === 'month'
-            ? currentStartOfMonth
-            : currentStartOf3Month,
-        end:
-          type === 'week'
-            ? currentEndOfWeek
-            : type === 'month'
-            ? currentEndOfMonth
-            : currentEndOf3Month,
-      });
-      setTotal(result.count);
-      setData(result.data);
-    };
-    fetchDataTask();
-  }, [type]);
 
   const onLoadMore = async () => {
     try {
@@ -159,7 +136,7 @@ export default function ContentList(): JSX.Element {
               <View
                 key={index}
                 style={{
-                  marginBottom: 16,
+                  marginBottom: 8,
                   height: 120,
                   paddingHorizontal: 16,
                 }}>
@@ -174,8 +151,16 @@ export default function ContentList(): JSX.Element {
                       justifyContent: 'space-between',
                       alignItems: 'center',
                     }}>
-                    <Text style={styles({}).text} numberOfLines={1}>
-                      {`${item?.purposeSpray?.purposeSprayName} (${item?.farmerPlot?.plantName}) (${item?.farmAreaAmount} ไร่)`}
+                    <Text
+                      style={[styles({}).text, {width: '80%'}]}
+                      numberOfLines={1}>
+                      {`${
+                        item?.purposeSpray?.purposeSprayName
+                          ? item?.purposeSpray.purposeSprayName
+                          : ''
+                      } (${item?.farmerPlot?.plantName}) (${
+                        item?.farmAreaAmount
+                      } ไร่)`}
                     </Text>
                     <Text style={styles({}).textMoney}>
                       ฿{numberWithCommas(item.totalPrice, true)}
@@ -185,7 +170,7 @@ export default function ContentList(): JSX.Element {
                     style={[
                       styles({}).textSmall,
                       {
-                        marginTop: 4,
+                        marginTop: 8,
                       },
                     ]}>
                     {dayjs(item.dateAppointment).format('HH:mm')} น.
@@ -198,12 +183,15 @@ export default function ContentList(): JSX.Element {
         </ScrollView>
       ) : (
         <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 32,
-          }}>
-          <Text style={styles({}).textTitle}>ไม่มีรายการ</Text>
+          style={[
+            stylesCentral.center,
+            {flex: 1, backgroundColor: colors.grayBg, padding: 8},
+          ]}>
+          <Image
+            source={image.blankTask}
+            style={{width: normalize(136), height: normalize(111)}}
+          />
+          <Text style={stylesCentral.blankFont}>ไม่มีรายการ</Text>
         </View>
       )}
     </>
