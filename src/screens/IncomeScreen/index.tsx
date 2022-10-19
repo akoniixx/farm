@@ -4,7 +4,7 @@ import {Text, View} from 'react-native';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors} from '../../assets';
 import fonts from '../../assets/fonts';
-import CardIncomeList from '../../components/CardIncomeList';
+import CardIncomeList from '../../components/CardIncomeList/CardIncomeList';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {normalize} from '../../function/Normalize';
 import {stylesCentral} from '../../styles/StylesCentral';
