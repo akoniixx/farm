@@ -9,14 +9,13 @@ const CLEAR = 'clear';
 const PRESS_MODE_STRING = 'string';
 
 interface props {
-    value: string,
-    onChange: (v:string) => void
+  value: string;
+  onChange: (v: string) => void;
 }
 
-
-const VirtualKeyboard: React.FC<props> = ({value,onChange}) => {
+const VirtualKeyboard: React.FC<props> = ({value, onChange}) => {
   /* const [text, setText] = useState('');
- */
+   */
   const onPress = (val: any) => {
     let curText = value;
     if (isNaN(val)) {

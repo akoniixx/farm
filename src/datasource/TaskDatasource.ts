@@ -28,14 +28,17 @@ export class TaskDatasource {
       });
   }
 
-  static getTaskDetail(taskId: string,dronerId:string): Promise<any> {
+  static getTaskDetail(taskId: string, dronerId: string): Promise<any> {
     return httpClient
-      .post(BASE_URL + `/tasks/task/task-droner-detail?taskId=${taskId}&dronerId=${dronerId}`)
+      .post(
+        BASE_URL +
+          `/tasks/task/task-droner-detail?taskId=${taskId}&dronerId=${dronerId}`,
+      )
       .then(response => {
         return response.data;
       })
       .catch(error => {
-       throw(error);
+        throw error;
       });
   }
 
@@ -54,7 +57,7 @@ export class TaskDatasource {
       updateBy: updateBy,
     };
     return httpClient
-      .post(BASE_URL + `/tasks/task/update-task-status`, data)
+      .post(BASE_URL + '/tasks/task/update-task-status', data)
       .then(response => {
         return response.data;
       })
@@ -75,7 +78,7 @@ export class TaskDatasource {
     };
 
     return httpClient
-      .post(BASE_URL + `/tasks/task/receive-task`, data)
+      .post(BASE_URL + '/tasks/task/receive-task', data)
       .then(response => {
         return response.data;
       })
@@ -84,7 +87,13 @@ export class TaskDatasource {
       });
   }
 
-  static async finishTask(file: any,taskId:string,reviewFarmerScore:number,reviewFarmerComment:string,updateBy:string): Promise<any> {
+  static async finishTask(
+    file: any,
+    taskId: string,
+    reviewFarmerScore: number,
+    reviewFarmerComment: string,
+    updateBy: string,
+  ): Promise<any> {
     const data = new FormData();
     data.append('taskId', taskId);
     data.append('reviewFarmerScore', reviewFarmerScore);
@@ -96,7 +105,7 @@ export class TaskDatasource {
     });
     data.append('updateBy', updateBy);
     return taskFormDataClient
-      .post(BASE_URL + `/tasks/task/finish-task`, data)
+      .post(BASE_URL + '/tasks/task/finish-task', data)
       .then(response => {
         return response.data;
       })
@@ -109,7 +118,7 @@ export class TaskDatasource {
     const data = {id, isOpen};
 
     return httpClient
-      .post(BASE_URL + `/droner/open-receive-task`, data)
+      .post(BASE_URL + '/droner/open-receive-task', data)
       .then(response => {
         return response.data;
       })

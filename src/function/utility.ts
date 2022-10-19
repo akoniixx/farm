@@ -1,10 +1,10 @@
 import {Linking, Platform} from 'react-native';
-import { io } from 'socket.io-client';
-import { BASE_URL } from '../config/develop-config';
-import { callcenterNumber } from '../definitions/callCenterNumber';
+import {io} from 'socket.io-client';
+import {BASE_URL} from '../config/develop-config';
+import {callcenterNumber} from '../definitions/callCenterNumber';
 
-export const numberWithCommas = (number: string) => {
- let nub = parseFloat(number).toFixed(2)
+export const numberWithCommas = (number: string, withOutToFix = false) => {
+  let nub = parseFloat(number).toFixed(withOutToFix ? 0 : 2);
   return nub.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
@@ -26,9 +26,9 @@ export const getStatusToText = (status: string) => {
     case 'IN_PROGRESS':
       return {label: 'กำลังดำเนินการ', bgcolor: '#FCE588', color: '#B16F05'};
     case 'WAIT_REVIEW':
-        return {label: 'งานเสร็จสิ้น', bgcolor: '#9BF9D3', color: '#014D40'};
+      return {label: 'งานเสร็จสิ้น', bgcolor: '#9BF9D3', color: '#014D40'};
     case 'CANCELED':
-          return {label: 'ถูกยกเลิก', bgcolor: '#FFD7D7', color: '#AB091E'};
+      return {label: 'ถูกยกเลิก', bgcolor: '#FFD7D7', color: '#AB091E'};
     case 'DONE':
       return {label: 'งานเสร็จสิ้น', bgcolor: '#9BF9D3', color: '#014D40'};
     case 'WAIT_RECEIVE':
@@ -56,9 +56,8 @@ export const openGps = (lat: number, lng: number, name: string) => {
     .catch(err => console.log('error', err));
 };
 
-export const decimalConvert = (string:string) =>(
-  String(parseFloat(string).toFixed(2))
-)
+export const decimalConvert = (string: string) =>
+  String(parseFloat(string).toFixed(2));
 
 export const socket = io(BASE_URL, {
   path: '/tasks/task/socket',

@@ -11,7 +11,7 @@ const HomeScreen: React.FC<any> = ({navigation}) => {
   return (
     <SafeAreaView style={stylesCentral.container}>
       <View style={styles.inner}>
-        <View style={{flex: 1,alignItems:'center'}}>
+        <View style={{flex: 1, alignItems: 'center'}}>
           <HomeCarousel />
         </View>
         <View>

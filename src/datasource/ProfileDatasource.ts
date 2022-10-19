@@ -1,12 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-import {BASE_URL, httpClient, uploadFileProfile} from '../config/develop-config';
-
+import {
+  BASE_URL,
+  httpClient,
+  uploadFileProfile,
+} from '../config/develop-config';
 
 export class ProfileDatasource {
-  static getProfile(
-    dronerID: string,
-  ): Promise<any> {
+  static async getProfile(dronerID: string): Promise<any> {
     return httpClient
       .get(BASE_URL + `/droner/${dronerID}`)
       .then(response => {
@@ -17,9 +17,7 @@ export class ProfileDatasource {
       });
   }
 
-  static deleteAccount(
-    dronerID: string,
-  ): Promise<any> {
+  static deleteAccount(dronerID: string): Promise<any> {
     return httpClient
       .delete(BASE_URL + `/droner/${dronerID}`)
       .then(response => {
@@ -30,9 +28,9 @@ export class ProfileDatasource {
       });
   }
 
-  static getImgePathProfile(
-    dronerID : string,
-    imagePath : string
+  static async getImgePathProfile(
+    dronerID: string,
+    imagePath: string,
   ): Promise<any> {
     return httpClient
       .get(BASE_URL + `/file/geturl?path=${imagePath}`)
@@ -67,7 +65,8 @@ export class ProfileDatasource {
 
   static addDronerDrone(dronedata: any): Promise<any> {
     return httpClient
-      .post(BASE_URL+ '/droner-drone',dronedata).then(response => {
+      .post(BASE_URL + '/droner-drone', dronedata)
+      .then(response => {
         return response.data;
       })
       .catch(error => {
@@ -117,12 +116,14 @@ export class ProfileDatasource {
 
   static async getTaskrevenuedroner(): Promise<any> {
     const drone_id = await AsyncStorage.getItem('droner_id');
-    return httpClient.get(BASE_URL + `/tasks/task/revenue-droner/${drone_id}`).then(response => {
-      return response.data;
-    })
-    .catch(error => {
-      console.log(error);
-    });
+    return httpClient
+      .get(BASE_URL + `/tasks/task/revenue-droner/${drone_id}`)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   static async uploadDronerIDCard(file: any): Promise<any> {
@@ -146,39 +147,63 @@ export class ProfileDatasource {
       });
   }
 
-  static async uploadProfileImage(
-    image : any
-  ): Promise<any> {
-    const droner_id = await AsyncStorage.getItem('droner_id')
+  static async uploadProfileImage(image: any): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id');
     const data = new FormData();
-    data.append('file',{
-      uri : image.assets[0].uri,
-      name : image.assets[0].fileName,
-      type : image.assets[0].type
-    })
-    data.append('resourceId',droner_id)
-    data.append('resource',"DRONER")
-    data.append('category',"PROFILE_IMAGE");
-    return uploadFileProfile.post(BASE_URL + '/file/upload', data).then(response => {
-      return response.data;
-    })
-    .catch(error => {
-      console.log(error);
+    data.append('file', {
+      uri: image.assets[0].uri,
+      name: image.assets[0].fileName,
+      type: image.assets[0].type,
     });
-  }
-
-  static async addIdCard(
-    idcard : string
-  ): Promise<any> {
-    const droner_id = await AsyncStorage.getItem('droner_id')
-    return httpClient.patch(
-      BASE_URL + `/droner/${droner_id}`,{
-        idNo : idcard
-      }).then(response => {
+    data.append('resourceId', droner_id);
+    data.append('resource', 'DRONER');
+    data.append('category', 'PROFILE_IMAGE');
+    return uploadFileProfile
+      .post(BASE_URL + '/file/upload', data)
+      .then(response => {
         return response.data;
       })
       .catch(error => {
         console.log(error);
-    });
+      });
+  }
+
+  static async addIdCard(idcard: string): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    return httpClient
+      .patch(BASE_URL + `/droner/${droner_id}`, {
+        idNo: idcard,
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  static async getListTaskInProgress({
+    start,
+    end,
+    page = 1,
+    take = 6,
+  }: {
+    start: string;
+    end: string;
+    page?: number;
+    take?: number;
+  }): Promise<{
+    summary: any;
+    count: number;
+    data: [];
+  }> {
+    const drone_id = await AsyncStorage.getItem('droner_id');
+    // const drone_id = '480cca3a-f5c8-4df5-aeae-765c6aadf13d';
+    return httpClient
+      .get(
+        BASE_URL +
+          `/tasks/task-revenue/get-history-revenue?dronerId=${drone_id}&dateAppointmentStart=${start}&dateAppointmentEnd=${end}&page=${page}&take=${take}`,
+      )
+      .then(res => res.data)
+      .catch(err => console.log(err));
   }
 }

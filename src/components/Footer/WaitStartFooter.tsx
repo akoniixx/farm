@@ -14,11 +14,17 @@ interface WaitStartProp {
 export const WaitStartFooter: React.FC<WaitStartProp> = ({
   mainFunc,
   togleModal,
-  disable
+  disable,
 }) => {
   return (
     <View style={[styles.footer, {paddingBottom: insets.bottom}]}>
-      <TouchableOpacity style={[styles.startButton,{backgroundColor: disable?colors.disable : colors.primaryBlue}]} disabled={disable} onPress={() => mainFunc()}>
+      <TouchableOpacity
+        style={[
+          styles.startButton,
+          {backgroundColor: disable ? colors.disable : colors.primaryBlue},
+        ]}
+        disabled={disable}
+        onPress={() => mainFunc()}>
         <Text
           style={{
             fontFamily: font.bold,

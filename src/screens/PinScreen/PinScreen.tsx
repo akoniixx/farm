@@ -1,69 +1,72 @@
 import {
-    View,
-    Text,
-    StyleSheet,
-    TextInput,
-    TouchableWithoutFeedback,
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
-    Button,
-    Animated,
-    Image,
-    TouchableOpacity,
-  } from 'react-native';
-  import React, {useState} from 'react';
-  import {SafeAreaView} from 'react-native-safe-area-context';
-  import {stylesCentral} from '../../styles/StylesCentral';
-  import {colors, font} from '../../assets';
-  import {normalize} from '../../function/Normalize';
-  import CustomHeader from '../../components/CustomHeader';
-  import {InputPhone} from '../../components/InputPhone';
-  import {MainButton} from '../../components/Button/MainButton';
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Button,
+  Animated,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import React, {useState} from 'react';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {stylesCentral} from '../../styles/StylesCentral';
+import {colors, font} from '../../assets';
+import {normalize} from '../../function/Normalize';
+import CustomHeader from '../../components/CustomHeader';
+import {InputPhone} from '../../components/InputPhone';
+import {MainButton} from '../../components/Button/MainButton';
 import VirtualKeyboard from '../../components/VirtualKeyboard/Virtualkeyboard';
-import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
-  
-  const PinScreen: React.FC<any> = ({navigation}) => {
-    const [value, setValue] = useState<string>('');
-    const [isError, setIsError] = React.useState(false);
-  
-    const [message, setMessage] = React.useState<string>('');
-    return (
-      
-          <SafeAreaView style={stylesCentral.container}>
-           <Text>{value}</Text>
-           <AnimatedExample value={value} setValue={setValue} />
-           <VirtualKeyboard value={value} onChange={setValue} />
-          </SafeAreaView>
-       
-    );
-  };
-  export default PinScreen;
-  
-  const styles = StyleSheet.create({
-    inner: {
-      paddingHorizontal: normalize(17),
-      flex: 1,
-      justifyContent: 'space-around',
-    },
-    headText: {
-      fontFamily: font.bold,
-      fontSize: normalize(20),
-      marginBottom: normalize(24),
-    },
-    label: {
-      fontFamily: font.light,
-      fontSize: normalize(14),
-      color: colors.gray,
-      marginTop: normalize(24),
-    },
-    containerTopCard: {
-      flex: 1,
-      paddingTop: normalize(70),
-    },
-  });
-  
-  const {Value, Text: AnimatedText} = Animated;
+import {
+  CodeField,
+  Cursor,
+  useBlurOnFulfill,
+  useClearByFocusCell,
+} from 'react-native-confirmation-code-field';
+
+const PinScreen: React.FC<any> = ({navigation}) => {
+  const [value, setValue] = useState<string>('');
+  const [isError, setIsError] = React.useState(false);
+
+  const [message, setMessage] = React.useState<string>('');
+  return (
+    <SafeAreaView style={stylesCentral.container}>
+      <Text>{value}</Text>
+      <AnimatedExample value={value} setValue={setValue} />
+      <VirtualKeyboard value={value} onChange={setValue} />
+    </SafeAreaView>
+  );
+};
+export default PinScreen;
+
+const styles = StyleSheet.create({
+  inner: {
+    paddingHorizontal: normalize(17),
+    flex: 1,
+    justifyContent: 'space-around',
+  },
+  headText: {
+    fontFamily: font.bold,
+    fontSize: normalize(20),
+    marginBottom: normalize(24),
+  },
+  label: {
+    fontFamily: font.light,
+    fontSize: normalize(14),
+    color: colors.gray,
+    marginTop: normalize(24),
+  },
+  containerTopCard: {
+    flex: 1,
+    paddingTop: normalize(70),
+  },
+});
+
+const {Value, Text: AnimatedText} = Animated;
 
 const CELL_COUNT = 4;
 const source = {
@@ -72,7 +75,7 @@ const source = {
 
 const animationsColor = [...new Array(CELL_COUNT)].map(() => new Value(0));
 const animationsScale = [...new Array(CELL_COUNT)].map(() => new Value(1));
-const animateCell = ({hasValue, index, isFocused}:any) => {
+const animateCell = ({hasValue, index, isFocused}: any) => {
   Animated.parallel([
     Animated.timing(animationsColor[index], {
       useNativeDriver: false,
@@ -80,15 +83,14 @@ const animateCell = ({hasValue, index, isFocused}:any) => {
       duration: 250,
     }),
     Animated.spring(animationsScale[index], {
-     /*  duration: hasValue ? 300 : 250, */
+      /*  duration: hasValue ? 300 : 250, */
       useNativeDriver: false,
       toValue: hasValue ? 0 : 1,
-     
     }),
   ]).start();
 };
 
-const AnimatedExample = ({value,setValue}:any) => {
+const AnimatedExample = ({value, setValue}: any) => {
   /* const [value, setValue] = useState(''); */
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -96,7 +98,7 @@ const AnimatedExample = ({value,setValue}:any) => {
     setValue,
   });
 
-  const renderCell = ({index, symbol, isFocused}:any) => {
+  const renderCell = ({index, symbol, isFocused}: any) => {
     const hasValue = Boolean(symbol);
     const animatedCellStyle = {
       backgroundColor: hasValue
@@ -139,7 +141,7 @@ const AnimatedExample = ({value,setValue}:any) => {
   };
 
   return (
-   <View>
+    <View>
       <CodeField
         ref={ref}
         {...props}
@@ -152,13 +154,13 @@ const AnimatedExample = ({value,setValue}:any) => {
         renderCell={renderCell}
       />
       <View style={styless.nextButton}>
-        <TouchableOpacity onPress={()=>console.log(value)}><Text>ssdjhdj</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => console.log(value)}>
+          <Text>ssdjhdj</Text>
+        </TouchableOpacity>
       </View>
-      </View>
-  
+    </View>
   );
 };
-
 
 export const CELL_SIZE = 70;
 export const CELL_BORDER_RADIUS = 8;

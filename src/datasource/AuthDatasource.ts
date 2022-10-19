@@ -84,7 +84,7 @@ export class Register {
   static async registerStep2(
     firstname: string,
     lastname: string,
-    birthDate : Date,
+    birthDate: Date,
     telephoneNo: string,
     address1: string,
     address2: string,
@@ -96,7 +96,7 @@ export class Register {
     const droner_id = await AsyncStorage.getItem('droner_id');
     if (!droner_id) {
       return registerClient
-        .post(BASE_URL + `/auth/droner/register`, {
+        .post(BASE_URL + '/auth/droner/register', {
           firstname: firstname,
           lastname: lastname,
           birthDate: birthDate,
@@ -122,7 +122,7 @@ export class Register {
         });
     } else {
       return registerClient
-        .post(BASE_URL + `/auth/droner/register`, {
+        .post(BASE_URL + '/auth/droner/register', {
           id: droner_id,
           firstname: firstname,
           lastname: lastname,
@@ -149,31 +149,31 @@ export class Register {
     }
   }
 
-  static async uploadProfileImage(
-    image : any
-  ): Promise<any> {
-    const droner_id = await AsyncStorage.getItem('droner_id')
+  static async uploadProfileImage(image: any): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id');
     const data = new FormData();
-    data.append('file',{
-      uri : image.assets[0].uri,
-      name : image.assets[0].fileName,
-      type : image.assets[0].type
-    })
-    data.append('resourceId',droner_id)
-    data.append('resource',"DRONER")
-    data.append('category',"PROFILE_IMAGE");
-    return uploadFileClient.post(BASE_URL + '/file/upload', data).then(response => {
-      return response.data;
-    })
-    .catch(error => {
-      console.log(error);
+    data.append('file', {
+      uri: image.assets[0].uri,
+      name: image.assets[0].fileName,
+      type: image.assets[0].type,
     });
+    data.append('resourceId', droner_id);
+    data.append('resource', 'DRONER');
+    data.append('category', 'PROFILE_IMAGE');
+    return uploadFileClient
+      .post(BASE_URL + '/file/upload', data)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   static async uploadDronerdrone(dronerDrone: any): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient
-      .post(BASE_URL + `/auth/droner/register`, {
+      .post(BASE_URL + '/auth/droner/register', {
         id: droner_id,
         dronerDrone: dronerDrone,
         status: 'OPEN',
@@ -198,7 +198,7 @@ export class Register {
   ): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient
-      .post(BASE_URL + `/auth/droner/register`, {
+      .post(BASE_URL + '/auth/droner/register', {
         id: droner_id,
         status: 'OPEN',
         telephoneNo: telephoneNo,
@@ -222,7 +222,7 @@ export class Register {
   static async registerSkipStep4(): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient
-      .post(BASE_URL + `/auth/droner/register`, {
+      .post(BASE_URL + '/auth/droner/register', {
         id: droner_id,
         status: 'PENDING',
       })
@@ -237,7 +237,7 @@ export class Register {
   static async registerStep4(telephoneNo: string, idNo: string): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient
-      .post(BASE_URL + `/auth/droner/register`, {
+      .post(BASE_URL + '/auth/droner/register', {
         id: droner_id,
         telephoneNo: telephoneNo,
         idNo: idNo,
@@ -252,15 +252,16 @@ export class Register {
 
   static async changeToPending(): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
-    return httpClient.patch(
-      BASE_URL + `/droner/${droner_id}`,{
-        status : "PENDING"
-      }).then(response => {
+    return httpClient
+      .patch(BASE_URL + `/droner/${droner_id}`, {
+        status: 'PENDING',
+      })
+      .then(response => {
         return response.data;
       })
       .catch(error => {
         console.log(error);
-    });
+      });
   }
 
   static async uploadDronerLicense(drone_id: any, file: any): Promise<any> {

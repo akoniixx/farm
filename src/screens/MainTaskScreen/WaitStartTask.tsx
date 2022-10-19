@@ -28,13 +28,14 @@ const WaitStartTask: React.FC = () => {
     const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.getTaskById(droner_id, ['WAIT_START'], page, 99)
       .then(res => {
-        setTimeout(()=> setLoading(false),200)
-          setData(res);
-          setCheckResIsComplete(true);
+        setTimeout(() => setLoading(false), 200);
+        setData(res);
+        setCheckResIsComplete(true);
       })
       .catch(err => {
-        setLoading(false)
-        console.log(err)});
+        setLoading(false);
+        console.log(err);
+      });
   };
 
   return (
@@ -63,7 +64,7 @@ const WaitStartTask: React.FC = () => {
               />
             )}
           />
-          <View></View>
+          <View />
         </View>
       ) : (
         <View
@@ -79,7 +80,7 @@ const WaitStartTask: React.FC = () => {
         </View>
       )}
 
-<Spinner
+      <Spinner
         visible={loading}
         textContent={'Loading...'}
         textStyle={{color: '#FFF'}}

@@ -22,15 +22,15 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Authentication } from '../../datasource/AuthDatasource';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {Authentication} from '../../datasource/AuthDatasource';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const CELL_COUNT = 6;
 
-interface propsOTP{
-  toggle: boolean
+interface propsOTP {
+  toggle: boolean;
 }
 
 interface props {
@@ -43,45 +43,54 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
   const [value, setValue] = useState<string>('');
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
   const [isError, setIsError] = useState(false);
-  const [otpCalling,setOtpCalling] = useState(false)
-  const [tokenOtp,setTokenOtp] = useState(route.params.token)
-  const [codeRef,setCodeRef] = useState(route.params.refCode)
+  const [otpCalling, setOtpCalling] = useState(false);
+  const [tokenOtp, setTokenOtp] = useState(route.params.token);
+  const [codeRef, setCodeRef] = useState(route.params.refCode);
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
   const [errOTP, setErrOTP] = useState(false);
-  const newTokenOtp = useCallback((value : any)=>{
-    setTokenOtp(value)
-  },[tokenOtp])
+  const newTokenOtp = useCallback(
+    (value: any) => {
+      setTokenOtp(value);
+    },
+    [tokenOtp],
+  );
 
-  const newCodeRef = useCallback((value : any)=>{
-    setCodeRef(value)
-  },[codeRef])
+  const newCodeRef = useCallback(
+    (value: any) => {
+      setCodeRef(value);
+    },
+    [codeRef],
+  );
 
-  const [otpTimeOut,setOTPtimeout] = useState(120);
-  const [time,setTime] = useState("02:00")
+  const [otpTimeOut, setOTPtimeout] = useState(120);
+  const [time, setTime] = useState('02:00');
   const [loading, setLoading] = useState(false);
-  useEffect(()=>{
-    if(otpCalling){
-      setOTPtimeout(120)
-      setTime("02:00")
-      setOtpCalling(false)
+  useEffect(() => {
+    if (otpCalling) {
+      setOTPtimeout(120);
+      setTime('02:00');
+      setOtpCalling(false);
     }
-  },[otpCalling])
+  }, [otpCalling]);
 
-  useEffect(()=>{
-    let timer = setInterval(()=>{
-      if(otpTimeOut === 0){
+  useEffect(() => {
+    let timer = setInterval(() => {
+      if (otpTimeOut === 0) {
+      } else {
+        let second = otpTimeOut - 1;
+        setOTPtimeout(second);
+        setTime(
+          `0${parseInt((second / 60).toString())}:${
+            second % 60 < 10 ? '0' + (second % 60) : second % 60
+          }`,
+        );
       }
-      else{
-        let second = otpTimeOut-1;
-        setOTPtimeout(second)
-        setTime(`0${parseInt((second/60).toString())}:${(second%60 < 10)? '0'+second%60:second%60}`)
-      }
-    },1000)
-    return ()=> clearInterval(timer)
-  })
+    }, 1000);
+    return () => clearInterval(timer);
+  });
 
   const renderCell: React.FC<props> = ({index, symbol, isFocused}) => {
     return (
@@ -89,9 +98,10 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
         key={index}
         style={[
           !isError ? styles.cell : styles.cellError,
-          isFocused || symbol ? styles.focusCell : null,{
-            color : colors.fontBlack
-          }
+          isFocused || symbol ? styles.focusCell : null,
+          {
+            color: colors.fontBlack,
+          },
         ]}
         onLayout={getCellOnLayoutHandler(index)}>
         {symbol || (isFocused ? <Cursor /> : null)}
@@ -100,48 +110,54 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   const onFufill = async (value: string) => {
-    if(route.params.isRegisterScreen){
+    if (route.params.isRegisterScreen) {
       setValue(value);
       if (value.length >= CELL_COUNT) {
-        setLoading(true)
+        setLoading(true);
         try {
-          Authentication.login(route.params.telNumber,value,tokenOtp,codeRef).then(async(result)=>{
-            setLoading(false)
-            setErrOTP(false)
-            await AsyncStorage.setItem('token_register',result.accessToken);
-            navigation.navigate('FirstFormScreen',{tele : route.params.telNumber});
-          }).catch((err)=>{
-            setLoading(false)
-            setErrOTP(true)
-            console.log(err)
-          })
+          Authentication.login(route.params.telNumber, value, tokenOtp, codeRef)
+            .then(async result => {
+              setLoading(false);
+              setErrOTP(false);
+              await AsyncStorage.setItem('token_register', result.accessToken);
+              navigation.navigate('FirstFormScreen', {
+                tele: route.params.telNumber,
+              });
+            })
+            .catch(err => {
+              setLoading(false);
+              setErrOTP(true);
+              console.log(err);
+            });
         } catch (e) {
-          setLoading(false)
-          setErrOTP(true)
+          setLoading(false);
+          setErrOTP(true);
           console.log(e, 'AsyncStorage.setItem');
         }
       }
-    }else{
+    } else {
       setValue(value);
       if (value.length >= CELL_COUNT) {
-        setLoading(true)
+        setLoading(true);
         try {
-          Authentication.login(route.params.telNumber,value,tokenOtp,codeRef).then(async(result)=>{
-            setLoading(false)
-            setErrOTP(false)
-            await AsyncStorage.setItem('token', result.accessToken);
-            await AsyncStorage.setItem('droner_id', result.data.id);
-            await RootNavigation.navigate('Main', {
-              screen: 'MainScreen',
+          Authentication.login(route.params.telNumber, value, tokenOtp, codeRef)
+            .then(async result => {
+              setLoading(false);
+              setErrOTP(false);
+              await AsyncStorage.setItem('token', result.accessToken);
+              await AsyncStorage.setItem('droner_id', result.data.id);
+              await RootNavigation.navigate('Main', {
+                screen: 'MainScreen',
+              });
             })
-          }).catch((err)=>{
-            setLoading(false)
-            setErrOTP(true)
-            console.log(err)
-          })
+            .catch(err => {
+              setLoading(false);
+              setErrOTP(true);
+              console.log(err);
+            });
         } catch (e) {
-          setLoading(false)
-          setErrOTP(true)
+          setLoading(false);
+          setErrOTP(true);
           console.log(e, 'AsyncStorage.setItem');
         }
       }
@@ -181,54 +197,65 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
               textContentType="oneTimeCode"
               renderCell={renderCell}
             />
-            {
-              (errOTP)?<Text style={
-                styles.textError
-              }>
+            {errOTP ? (
+              <Text style={styles.textError}>
                 รหัส OTP ไม่ถูกต้องกรุณาลองอีกครั้ง
-              </Text>:<></>
-            }
+              </Text>
+            ) : (
+              <></>
+            )}
             <View style={styles.otpQuestion}>
               <View style={styles.rowDirection}>
                 <Text style={styles.text}>ไม่ได้รับรหัส OTP? </Text>
-                {
-                  (otpTimeOut === 0)?
-                  <TouchableOpacity onPress={()=>{
-                    if(route.params.isRegisterScreen){
-                      Authentication.generateOtpRegister(route.params.telNumber).then(
-                        (res)=>{
-                          setValue('')
-                          newTokenOtp(res.result.token)
-                          newCodeRef(res.result.refCode)
-                        }
-                      ).catch(err => console.log(err))
-                    }
-                    else{
-                      Authentication.generateOtp(route.params.telNumber).then(
-                        (res)=>{
-                          setValue('')
-                          newTokenOtp(res.result.token)
-                          newCodeRef(res.result.refCode)
-                        }
-                      ).catch(err => console.log(err))
-                    }
-                    setOtpCalling(true);
-                  }}>
-                    <Text style={[styles.text, {color: colors.orange,textDecorationLine:'underline',textDecorationColor:colors.orange}]}>
+                {otpTimeOut === 0 ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (route.params.isRegisterScreen) {
+                        Authentication.generateOtpRegister(
+                          route.params.telNumber,
+                        )
+                          .then(res => {
+                            setValue('');
+                            newTokenOtp(res.result.token);
+                            newCodeRef(res.result.refCode);
+                          })
+                          .catch(err => console.log(err));
+                      } else {
+                        Authentication.generateOtp(route.params.telNumber)
+                          .then(res => {
+                            setValue('');
+                            newTokenOtp(res.result.token);
+                            newCodeRef(res.result.refCode);
+                          })
+                          .catch(err => console.log(err));
+                      }
+                      setOtpCalling(true);
+                    }}>
+                    <Text
+                      style={[
+                        styles.text,
+                        {
+                          color: colors.orange,
+                          textDecorationLine: 'underline',
+                          textDecorationColor: colors.orange,
+                        },
+                      ]}>
                       ส่งอีกครั้ง
                     </Text>
-                  </TouchableOpacity>:<Text style={styles.text}>{time}</Text>
-                }
+                  </TouchableOpacity>
+                ) : (
+                  <Text style={styles.text}>{time}</Text>
+                )}
               </View>
             </View>
           </View>
         </SafeAreaView>
       </TouchableWithoutFeedback>
       <Spinner
-          visible={loading}
-          textContent={'Loading...'}
-          textStyle={{color: '#FFF'}}
-        />
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{color: '#FFF'}}
+      />
     </KeyboardAvoidingView>
   );
 };
@@ -273,11 +300,11 @@ const styles = StyleSheet.create({
     marginVertical: normalize(38),
     alignItems: 'center',
   },
-  otpQuestion:{
+  otpQuestion: {
     marginTop: normalize(38),
     alignItems: 'center',
   },
-  timeCount : {
+  timeCount: {
     marginTop: normalize(12),
     alignItems: 'center',
   },
@@ -294,26 +321,26 @@ const styles = StyleSheet.create({
 });
 
 const OtpTimerCount: React.FC<propsOTP> = ({toggle}) => {
-  const [otpTimeOut,setOTPtimeout] = useState(300);
-  const [time,setTime] = useState("05:00")
-  useEffect(()=>{
-    setOTPtimeout(300)
-    setTime("05:00")
-  },[toggle])
-  useEffect(()=>{
-    let timer = setInterval(()=>{
-      if(otpTimeOut === 0){
-
+  const [otpTimeOut, setOTPtimeout] = useState(300);
+  const [time, setTime] = useState('05:00');
+  useEffect(() => {
+    setOTPtimeout(300);
+    setTime('05:00');
+  }, [toggle]);
+  useEffect(() => {
+    let timer = setInterval(() => {
+      if (otpTimeOut === 0) {
+      } else {
+        let second = otpTimeOut - 1;
+        setOTPtimeout(second);
+        setTime(
+          `0${parseInt((second / 60).toString())}:${
+            second % 60 < 10 ? '0' + (second % 60) : second % 60
+          }`,
+        );
       }
-      else{
-        let second = otpTimeOut-1;
-        setOTPtimeout(second)
-        setTime(`0${parseInt((second/60).toString())}:${(second%60 < 10)? '0'+second%60:second%60}`)
-      }
-    },1000)
-    return ()=> clearInterval(timer)
-  })
-  return (
-      <Text>{time}</Text>
-  )
-}
+    }, 1000);
+    return () => clearInterval(timer);
+  });
+  return <Text>{time}</Text>;
+};

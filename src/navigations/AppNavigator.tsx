@@ -1,26 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { createStackNavigator } from '@react-navigation/stack'
-import HomeScreen from '../screens/HomeScreen/HomeScreen'
+import React, {useEffect, useState} from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
+import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import AppAuthNavigator from './AppAuthNavigator';
 import MainNavigator from './MainNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingNavigator from './LoadingNavigator';
 
-const Stack = createStackNavigator()
+const Stack = createStackNavigator();
 
 const AppNavigator: React.FC = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false, }}>
-
-        <Stack.Screen name="initPage" component={LoadingNavigator} options={{
-            gestureEnabled: false,
-            headerLeft: () => null,
-          }} />
-        <Stack.Screen name="Auth" component={AppAuthNavigator} />
-        <Stack.Screen name="Main" component={MainNavigator} />
-
+    <Stack.Navigator
+      screenOptions={{headerShown: false, gestureEnabled: false}}>
+      <Stack.Screen
+        name="initPage"
+        component={LoadingNavigator}
+        options={{
+          gestureEnabled: false,
+          headerLeft: () => null,
+        }}
+      />
+      <Stack.Screen name="Auth" component={AppAuthNavigator} />
+      <Stack.Screen name="Main" component={MainNavigator} />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
-export default AppNavigator
+export default AppNavigator;

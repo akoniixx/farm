@@ -18,9 +18,9 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({index}) => {
         alignItems: 'center',
         justifyContent: 'space-between',
       }}>
-      {progress.map((i) => (
+      {progress.map(i => (
         <View
-        key={i}
+          key={i}
           style={{
             width: normalize(80),
             height: 4,

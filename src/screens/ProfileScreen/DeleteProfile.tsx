@@ -73,7 +73,7 @@ const DeleteProfile: React.FC<any> = ({navigation, route}) => {
       .catch(err => {
         Toast.show({
           type: 'error',
-          text1: `ขออภัยระบบขัดข้อง กรุณาลองอีกครั้ง`,
+          text1: 'ขออภัยระบบขัดข้อง กรุณาลองอีกครั้ง',
         });
         setLoading(false);
         console.log(err);

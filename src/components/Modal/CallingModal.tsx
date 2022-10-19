@@ -19,7 +19,10 @@ import fonts from '../../assets/fonts';
 
 export const CallingModal = (props: SheetProps<{tel: string}>) => {
   return (
-    <ActionSheet id={props.sheetId} useBottomSafeAreaPadding gestureEnabled={true} >
+    <ActionSheet
+      id={props.sheetId}
+      useBottomSafeAreaPadding
+      gestureEnabled={true}>
       <View style={styles.container}>
         <View style={{alignItems: 'center'}}>
           <Text style={styles.h1}>โทรศัพท์หา</Text>
@@ -46,10 +49,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalize(16),
     paddingVertical: normalize(15),
   },
-  h1:{
-    fontFamily:fonts.medium,
+  h1: {
+    fontFamily: fonts.medium,
     colors: 'black',
-    fontSize: normalize(19)
-  }
+    fontSize: normalize(19),
+  },
 });
-

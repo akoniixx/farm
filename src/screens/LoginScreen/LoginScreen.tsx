@@ -30,30 +30,29 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = React.useState<string>('');
   const login = () => {
-    setLoading(true)
+    setLoading(true);
     Authentication.generateOtp(value)
       .then(result => {
-          const telNumber = value;
-          setValue('')
-          setLoading(false)
-          navigation.navigate('OtpScreen', {
-            telNumber: telNumber,
-            token: result.result.token,
-            refCode: result.result.refCode,
-            isRegisterScreen: false,
-          });
+        const telNumber = value;
+        setValue('');
+        setLoading(false);
+        navigation.navigate('OtpScreen', {
+          telNumber: telNumber,
+          token: result.result.token,
+          refCode: result.result.refCode,
+          isRegisterScreen: false,
+        });
       })
       .catch(err => {
-        setLoading(false)
+        setLoading(false);
         if (err.response.data.statusCode === 409) {
           setErrMessage('เบอร์นี้ถูกลงทะเบียนเรียบร้อยแล้ว');
-        }
-        else if(err.response.data.statusCode === 400){
-          setErrMessage('ไม่พบเบอร์โทรนี้ในระบบโปรดลงทะเบียนอีกครั้ง')
-        }else if(err){
+        } else if (err.response.data.statusCode === 400) {
+          setErrMessage('ไม่พบเบอร์โทรนี้ในระบบโปรดลงทะเบียนอีกครั้ง');
+        } else if (err) {
           Toast.show({
             type: 'error',
-            text1: `ระบบเครือขายมีปัญหา กรุณาลองใหม่อีกครั้งในภายหลัง`,
+            text1: 'ระบบเครือขายมีปัญหา กรุณาลองใหม่อีกครั้งในภายหลัง',
           });
         }
       });
@@ -101,19 +100,21 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
                 label="ลงทะเบียนนักบินโดรน"
                 color={colors.white}
                 fontColor={'black'}
-                onPress={() =>  RootNavigation.navigate('Auth', {
-                  screen: 'ConditionScreen',
-                })}
+                onPress={() =>
+                  RootNavigation.navigate('Auth', {
+                    screen: 'ConditionScreen',
+                  })
+                }
               />
             </View>
           </View>
         </SafeAreaView>
       </TouchableWithoutFeedback>
       <Spinner
-          visible={loading}
-          textContent={'Loading...'}
-          textStyle={{color: '#FFF'}}
-        />
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{color: '#FFF'}}
+      />
     </KeyboardAvoidingView>
   );
 };

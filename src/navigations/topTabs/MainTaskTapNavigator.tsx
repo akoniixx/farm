@@ -43,14 +43,12 @@ const MainTaskTapNavigator: React.FC = () => {
 
   return (
     <TabView
-   
       navigationState={{index, routes}}
       renderTabBar={renderTabBar}
       renderScene={renderScene}
       onIndexChange={setIndex}
       initialLayout={{width: layout.width}}
       lazy
-      
     />
   );
 };

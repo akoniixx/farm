@@ -30,7 +30,7 @@ import ActionSheet, {ActionSheetRef} from 'react-native-actions-sheet';
 import Lottie from 'lottie-react-native';
 import {decimalConvert, numberWithCommas, socket} from '../../function/utility';
 import {useFocusEffect} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/AntDesign'
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -238,7 +238,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
             <Image source={icons.arrowLeft} style={styles.listTileIcon} />
           </TouchableOpacity>
           <Text style={[styles.appBarHeader]}>โปรไฟล์ของฉัน</Text>
-          <View style={styles.listTileIcon}></View>
+          <View style={styles.listTileIcon} />
         </View>
       )}
       <View style={[styles.body]}>
@@ -432,7 +432,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <Icon name='closecircleo' size={24} color='#9BA1A8' />
+                <Icon name="closecircleo" size={24} color="#9BA1A8" />
                 <Text style={styles.listTileTitle}>ลบบัญชี</Text>
               </View>
 
@@ -509,7 +509,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                       />
                     </TouchableOpacity>
                     <Text style={styles.hSheet}>เพิ่มโดรน</Text>
-                    <View></View>
+                    <View />
                   </View>
                   <View
                     style={{
@@ -630,7 +630,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                         alignItems: 'center',
                       }}>
                       <Text style={styles.hSheet}>เพิ่มเอกสาร</Text>
-                      <View></View>
+                      <View />
                     </View>
                     <Text style={[styles.h2, {paddingTop: 12}]}>
                       อัพโหลดใบอนุญาตนักบิน

@@ -1,95 +1,110 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MainScreen from '../../screens/MainScreen/MainScreen';
-import IncomeScreen from '../../screens/IncomeScreen/IncomScreen';
+import IncomeScreen from '../../screens/IncomeScreen';
 import TaskScreen from '../../screens/MainTaskScreen/MainTaskScreen';
-import fontistoIcon from 'react-native-vector-icons/Foundation';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+
 import {colors, font, icons} from '../../assets';
 import {Text} from '@rneui/base';
 import fonts from '../../assets/fonts';
 import {normalize} from '@rneui/themed';
-import { Image } from 'react-native';
+import {Image, TouchableOpacity, View} from 'react-native';
 import MainTaskScreen from '../../screens/MainTaskScreen/MainTaskScreen';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
 
 const MainTapNavigator: React.FC = () => {
+  const ListPath = [
+    {
+      name: 'home',
+      title: 'หน้าหลัก',
+      component: MainScreen,
+      activeIcon: icons.home_active,
+      inactiveIcon: icons.home,
+    },
+    {
+      name: 'myTask',
+      title: 'งานของฉัน',
+      component: MainTaskScreen,
+      activeIcon: icons.task_active,
+      inactiveIcon: icons.task,
+    },
+    {
+      name: 'Income',
+      title: 'รายได้',
+      component: IncomeScreen,
+      activeIcon: icons.pocket_active,
+      inactiveIcon: icons.pocket,
+    },
+    {
+      name: 'profile',
+      title: 'โปรไฟล์',
+      component: ProfileScreen,
+      activeIcon: icons.profileActive,
+      inactiveIcon: icons.profile,
+    },
+  ];
+
   return (
     <Tab.Navigator screenOptions={{headerShown: false}}>
-      <Tab.Screen
-        name="หน้าหลัก"
-        component={MainScreen}
-        options={{
-          tabBarLabelStyle: {
-            fontFamily: font.medium,
-          },
-          lazy:true,
-          tabBarLabel: ({focused}) => (
-            <Text
-              style={{
-                fontFamily: fonts.medium,
-                fontSize: normalize(14),
-                color: focused ? colors.orange : colors.gray,
-              }}>
-              หน้าหลัก
-            </Text>
-          ),
-          tabBarIcon:(i)=> i.focused?(
-            <Image source={icons.home_active} style={{width:20,height:20}} />
-          ):
-          ( <Image source={icons.home} style={{width:20,height:20}} />)
-        }}
-      />
-      <Tab.Screen
-        name="งานของฉัน"
-        component={MainTaskScreen}
-        options={{
-          tabBarLabelStyle: {
-            fontFamily: font.medium,
-          },
-          lazy:true,
-          tabBarLabel: ({focused}) => (
-            <Text
-              style={{
-                fontFamily: fonts.medium,
-                fontSize: normalize(14),
-                color: focused ? colors.orange : colors.gray,
-              }}>
-              งานของฉัน
-            </Text>
-          ),
-          tabBarIcon:(i)=> i.focused?(
-            <Image source={icons.task_active} style={{width:20,height:20}} />
-          ):
-          ( <Image source={icons.task} style={{width:20,height:20}} />)
-        }}
-      />
-      <Tab.Screen
-        name="โปรไฟล์"
-        component={ProfileScreen}
-        options={{
-          tabBarLabelStyle: {
-            fontFamily: font.medium,
-          },
-          tabBarLabel: ({focused}) => (
-            <Text
-              style={{
-                fontFamily: fonts.medium,
-                fontSize: normalize(14),
-                color: focused ? colors.orange : colors.gray,
-              }}>
-              โปรไฟล์
-            </Text>
-          ),
-          tabBarIcon:(i)=> i.focused?(
-            <Icon name={'user'} color={ colors.orange} size={20}  />
-          ):
-          ( <Icon name={'user-o'} color={'#9BA1A8'} size={20}  />)
-        }}
-      />
+      {ListPath.map((item, index) => {
+        return (
+          <Tab.Screen
+            key={index}
+            name={item.name}
+            component={item.component}
+            options={{
+              tabBarLabelStyle: {
+                fontFamily: font.medium,
+              },
+              tabBarStyle: {
+                minHeight: 95,
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
+              tabBarButton(props) {
+                const isFocused = props.accessibilityState?.selected;
+                return (
+                  <TouchableOpacity
+                    {...props}
+                    style={[
+                      props?.style,
+                      {
+                        padding: 8,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      },
+                    ]}>
+                    <View
+                      style={{justifyContent: 'center', alignItems: 'center'}}>
+                      <Image
+                        source={isFocused ? item.activeIcon : item.inactiveIcon}
+                        style={
+                          item.name === 'profile'
+                            ? {width: 16, height: 20, marginTop: 3.5}
+                            : {width: 25, height: 25}
+                        }
+                      />
+
+                      <Text
+                        style={{
+                          fontFamily: fonts.medium,
+                          fontSize: normalize(14),
+                          color: isFocused ? colors.orange : colors.gray,
+                          marginTop: item.name === 'profile' ? 2 : 0,
+                        }}>
+                        {item.title}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              },
+            }}
+          />
+        );
+      })}
     </Tab.Navigator>
   );
 };

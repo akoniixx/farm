@@ -14,7 +14,7 @@ const MainTasklists: React.FC<any> = (props: any) => {
   const finishDate = new Date(
     props.finishTime?.length ? props.finishTime[0].createdAt : null,
   );
- 
+
   return (
     <View style={styles.taskMenu}>
       <View style={styles.listTile}>
@@ -176,7 +176,7 @@ const MainTasklists: React.FC<any> = (props: any) => {
             style={{
               width: normalize(22),
               height: normalize(22),
-              borderRadius: 99
+              borderRadius: 99,
             }}
           />
           <Text

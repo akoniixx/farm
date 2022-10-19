@@ -1,5 +1,5 @@
 export default {
-    light:'Anuphan-Light',
-    medium:'Anuphan-Medium',
-    bold: 'Anuphan-Bold'
-}
+  light: 'Anuphan-Light',
+  medium: 'Anuphan-Medium',
+  bold: 'Anuphan-Bold',
+};
