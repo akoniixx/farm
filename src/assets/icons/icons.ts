@@ -33,4 +33,5 @@ export default {
   checkSolid: require('./check_solid.png'),
   profile: require('./Profile.png'),
   profileActive: require('./Profile-active.png'),
+  trashBlack: require('./TrashBlack.png'),
 };

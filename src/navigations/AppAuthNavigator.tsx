@@ -13,6 +13,7 @@ import ThirdFormScreen from '../screens/RegisterScreen/ThirdFormScreen';
 import FourthFormScreen from '../screens/RegisterScreen/FourthFormScreen';
 import AddIDcardScreen from '../screens/RegisterScreen/AddIDcardScreen';
 import SuccessRegister from '../screens/RegisterScreen/SuccessRegister';
+import VerifyOTP from '../screens/ProfileScreen/DeleteProfile/VerifyOTP';
 
 const Stack = createStackNavigator();
 

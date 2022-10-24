@@ -8,10 +8,9 @@ import {colors, font, icons} from '../../assets';
 import {Text} from '@rneui/base';
 import fonts from '../../assets/fonts';
 import {normalize} from '@rneui/themed';
-import {Image, TouchableOpacity, View} from 'react-native';
+import {Image, Platform, TouchableOpacity, View} from 'react-native';
 import MainTaskScreen from '../../screens/MainTaskScreen/MainTaskScreen';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
 
@@ -60,7 +59,7 @@ const MainTapNavigator: React.FC = () => {
                 fontFamily: font.medium,
               },
               tabBarStyle: {
-                minHeight: 95,
+                minHeight: Platform.OS === 'ios' ? 95 : 80,
                 alignItems: 'center',
                 justifyContent: 'center',
               },
@@ -93,7 +92,7 @@ const MainTapNavigator: React.FC = () => {
                           fontFamily: fonts.medium,
                           fontSize: normalize(14),
                           color: isFocused ? colors.orange : colors.gray,
-                          marginTop: item.name === 'profile' ? 2 : 0,
+                          marginTop: item.name === 'profile' ? 4 : 2,
                         }}>
                         {item.title}
                       </Text>

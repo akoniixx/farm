@@ -14,7 +14,29 @@ import AddIDcardScreen from '../screens/RegisterScreen/AddIDcardScreen';
 import ViewProfile from '../screens/ProfileScreen/ViewProfile';
 import EditProfile from '../screens/ProfileScreen/EditProfile';
 import DeleteProfile from '../screens/ProfileScreen/DeleteProfile';
-const Stack = createStackNavigator();
+import VerifyOTP from '../screens/ProfileScreen/DeleteProfile/VerifyOTP';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RouteProp} from '@react-navigation/native';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
+
+export type StackParamList = {
+  DeleteProfileScreen: {
+    navigation: StackNavigationHelpers;
+    route: RouteProp<{params: {id: string}}, 'params'>;
+  };
+  VerifyOTP: any;
+  MainScreen: any;
+  ProfileScreen: any;
+  TaskDetailScreen: any;
+  EditProfile: any;
+  ViewProfile: any;
+  ProfileDocument: any;
+  FourthFormScreen: any;
+  AddIDCardScreen: any;
+};
+export type StackNativeScreenProps<T extends keyof StackParamList> =
+  NativeStackScreenProps<StackParamList, T>;
+const Stack = createStackNavigator<StackParamList>();
 
 const MainNavigator: React.FC = () => {
   return (
@@ -35,6 +57,7 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="FourthFormScreen" component={FourthFormScreen} />
       <Stack.Screen name="AddIDCardScreen" component={AddIDcardScreen} />
       <Stack.Screen name="DeleteProfileScreen" component={DeleteProfile} />
+      <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
     </Stack.Navigator>
   );
 };

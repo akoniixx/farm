@@ -4,34 +4,41 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {stylesCentral} from '../../styles/StylesCentral';
-import {colors, font, icons, image as img} from '../../assets';
-import {normalize} from '../../function/Normalize';
-import CustomHeader from '../../components/CustomHeader';
+import {stylesCentral} from '../../../styles/StylesCentral';
+import {colors, font, icons, image as img} from '../../../assets';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import {ScrollView} from 'react-native-gesture-handler';
-
-import fonts from '../../assets/fonts';
-import {callcenterNumber} from '../../definitions/callCenterNumber';
 import Modal from 'react-native-modal/dist/modal';
-import {TaskDatasource} from '../../datasource/TaskDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import {ProfileDatasource} from '../../datasource/ProfileDatasource';
-import {socket} from '../../function/utility';
-import {Authentication} from '../../datasource/AuthDatasource';
+import {callcenterNumber} from '../../../definitions/callCenterNumber';
+import fonts from '../../../assets/fonts';
+import {normalize} from '../../../function/Normalize';
+import CustomHeader from '../../../components/CustomHeader';
+import {TaskDatasource} from '../../../datasource/TaskDatasource';
+import {ProfileDatasource} from '../../../datasource/ProfileDatasource';
+import {socket} from '../../../function/utility';
+import {Authentication} from '../../../datasource/AuthDatasource';
+import {MainButton} from '../../../components/Button/MainButton';
+import * as RootNavigation from '../../../navigations/RootNavigation';
 import Toast from 'react-native-toast-message';
-import * as RootNavigation from '../../navigations/RootNavigation';
+import {RouteProp} from '@react-navigation/native';
+import {BottomTabNavigationHelpers} from '@react-navigation/bottom-tabs/lib/typescript/src/types';
+import {StackNativeScreenProps} from '../../../navigations/MainNavigator';
 
-const DeleteProfile: React.FC<any> = ({navigation, route}) => {
+type DeleteProfileScreenProps = StackNativeScreenProps<'DeleteProfileScreen'>;
+
+const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
+  navigation,
+  route,
+}) => {
   const windowWidth = Dimensions.get('window').width;
   const [toggleModal, setToggleModal] = useState<boolean>(false);
   const [task, setTask] = useState([]);
   const [loading, setLoading] = useState<boolean>(false);
-
   useEffect(() => {
     getData();
   }, []);
@@ -58,26 +65,26 @@ const DeleteProfile: React.FC<any> = ({navigation, route}) => {
     await Authentication.logout();
   };
 
-  const deleteProfile = async () => {
-    setLoading(true);
-    const droner_id = await AsyncStorage.getItem('droner_id');
-    ProfileDatasource.deleteAccount(droner_id!)
-      .then(res => {
-        setLoading(false);
-        setToggleModal(false);
-        onLogout();
-        RootNavigation.navigate('Auth', {
-          screen: 'HomeScreen',
-        });
-      })
-      .catch(err => {
-        Toast.show({
-          type: 'error',
-          text1: 'ขออภัยระบบขัดข้อง กรุณาลองอีกครั้ง',
-        });
-        setLoading(false);
-        console.log(err);
-      });
+  const verifyOtp = async () => {
+    navigation.navigate('VerifyOTP', {});
+    // const droner_id = await AsyncStorage.getItem('droner_id');
+    // ProfileDatasource.deleteAccount(droner_id!)
+    //   .then(res => {
+    //     setLoading(false);
+    //     setToggleModal(false);
+    //     onLogout();
+    //     RootNavigation.navigate('Auth', {
+    //       screen: 'HomeScreen',
+    //     });
+    //   })
+    //   .catch(err => {
+    //     Toast.show({
+    //       type: 'error',
+    //       text1: 'ขออภัยระบบขัดข้อง กรุณาลองอีกครั้ง',
+    //     });
+    //     setLoading(false);
+    //     console.log(err);
+    //   });
   };
 
   return (
@@ -94,8 +101,9 @@ const DeleteProfile: React.FC<any> = ({navigation, route}) => {
               <Text
                 style={{
                   fontFamily: fonts.bold,
-                  fontSize: normalize(18),
+                  fontSize: normalize(16),
                   color: 'black',
+                  textAlign: 'center',
                 }}>
                 เงื่อนไขการลบบัญชี
               </Text>
@@ -106,8 +114,17 @@ const DeleteProfile: React.FC<any> = ({navigation, route}) => {
                   fontFamily: fonts.medium,
                   fontSize: normalize(16),
                   color: 'black',
+                  textAlign: 'center',
                 }}>
                 หากคุณมีงานที่กำลังดำเนินการ หรือรอเริ่มงาน
+              </Text>
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  fontSize: normalize(16),
+                  color: 'black',
+                  textAlign: 'center',
+                }}>
                 คุณจะไม่สามารถลบบัญชีของคุณได้
               </Text>
             </View>
@@ -118,32 +135,33 @@ const DeleteProfile: React.FC<any> = ({navigation, route}) => {
                   fontFamily: fonts.medium,
                   fontSize: normalize(16),
                   color: colors.orange,
+                  textAlign: 'center',
                 }}>
-                หากคุณมีปัญหาในการใช้งาน คุณสามารถติดต่อ call center :{' '}
+                หากคุณมีปัญหาในการใช้งาน
+              </Text>
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  fontSize: normalize(16),
+                  color: colors.orange,
+                  textAlign: 'center',
+                }}>
+                คุณสามารถติดต่อเจ้าหน้าที่ โทร.
                 {callcenterNumber}
               </Text>
             </View>
           </ScrollView>
-          <View style={{alignItems: 'center'}}>
-            <TouchableOpacity
-              disabled={task.length !== 0}
-              style={{
-                backgroundColor: task.length !== 0 ? colors.disable : 'red',
-                paddingHorizontal: normalize(15),
-                paddingVertical: normalize(10),
-                borderRadius: 30,
-              }}
-              onPress={() => setToggleModal(!toggleModal)}>
-              <Text
-                style={{
-                  textDecorationLine: 'underline',
-                  fontFamily: fonts.medium,
-                  fontSize: normalize(14),
-                  color: 'white',
-                }}>
-                ลบบัญชี
-              </Text>
-            </TouchableOpacity>
+
+          <View
+            style={{
+              marginBottom: 16,
+            }}>
+            <MainButton
+              label="ลบบัญชี"
+              color={colors.darkOrange}
+              fontColor={'white'}
+              onPress={() => setToggleModal(!toggleModal)}
+            />
           </View>
         </View>
       </View>
@@ -156,33 +174,95 @@ const DeleteProfile: React.FC<any> = ({navigation, route}) => {
             borderRadius: 12,
           }}>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Image
+              source={icons.trashBlack}
+              style={{
+                width: 24,
+                height: 24,
+                marginBottom: 8,
+              }}
+            />
             <Text
               style={{
                 fontFamily: font.bold,
-                fontSize: normalize(19),
+                fontSize: normalize(18),
                 color: 'black',
                 marginBottom: normalize(10),
               }}>
-              ยืนยันการลบบัญชี?
+              ยืนยันการลบบัญชี
             </Text>
             <Text
               style={{
-                fontFamily: font.medium,
+                fontFamily: font.light,
                 fontSize: normalize(14),
-                color: 'black',
-                marginBottom: 15,
+                color: colors.inkLight,
+                textAlign: 'center',
               }}>
-              กรุณากดยืนยันหากต้องการลบบัญชีการใช้งานนี้
+              คำขอจะถูกส่งไปยังเจ้าหน้าที่
             </Text>
+            <Text
+              style={{
+                fontFamily: font.light,
+                fontSize: normalize(14),
+                color: colors.inkLight,
+                textAlign: 'center',
+              }}>
+              และบัญชีของคุณจะถูกลบอย่างถาวร
+            </Text>
+            <View style={{marginTop: 8}}>
+              <Text
+                style={{
+                  fontFamily: font.light,
+                  fontSize: normalize(14),
+                  color: colors.inkLight,
+                  textAlign: 'center',
+                }}>
+                มีคำถามเพิ่มเติมสามารถติดต่อเจ้าหน้าที่
+              </Text>
+              <Text
+                style={{
+                  fontFamily: font.light,
+                  fontSize: normalize(14),
+                  color: colors.inkLight,
+                  textAlign: 'center',
+                }}>
+                โทร. 02-113-6159
+              </Text>
+            </View>
           </View>
 
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View
+            style={{
+              marginTop: 16,
+            }}>
             <TouchableOpacity
               style={{
                 paddingHorizontal: normalize(20),
                 paddingVertical: normalize(10),
-                borderRadius: 16,
+                backgroundColor: colors.darkOrange,
+                borderRadius: 8,
+                alignItems: 'center',
+                marginBottom: 8,
+              }}
+              onPress={verifyOtp}>
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  fontSize: normalize(16),
+                  color: 'white',
+                }}>
+                ยืนยันการลบบัญชี
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: normalize(20),
+                paddingVertical: normalize(10),
+                borderRadius: 8,
+                alignItems: 'center',
+                marginBottom: 8,
                 borderWidth: 0.5,
+                borderColor: colors.inkLight,
               }}
               onPress={() => setToggleModal(!toggleModal)}>
               <Text
@@ -191,24 +271,7 @@ const DeleteProfile: React.FC<any> = ({navigation, route}) => {
                   fontSize: normalize(16),
                   color: 'black',
                 }}>
-                ปิดหน้านี้
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                paddingHorizontal: normalize(20),
-                paddingVertical: normalize(10),
-                backgroundColor: 'red',
-                borderRadius: 16,
-              }}
-              onPress={() => deleteProfile()}>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: normalize(16),
-                  color: 'white',
-                }}>
-                ยืนยันการลบบัญชี
+                ยกเลิก
               </Text>
             </TouchableOpacity>
           </View>
