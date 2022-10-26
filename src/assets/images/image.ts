@@ -16,4 +16,5 @@ export default {
   blankIncome: require('./blankIncome.png'),
   profile: require('./profile.png'),
   profileActive: require('./profileActive.png'),
+  deletePic: require('./deletePic.png'),
 };

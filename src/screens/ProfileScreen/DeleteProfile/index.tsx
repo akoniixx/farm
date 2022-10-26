@@ -66,6 +66,7 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
   };
 
   const verifyOtp = async () => {
+    setToggleModal(false);
     navigation.navigate('VerifyOTP', {});
     // const droner_id = await AsyncStorage.getItem('droner_id');
     // ProfileDatasource.deleteAccount(droner_id!)
