@@ -123,10 +123,12 @@ export const CalendarReducer = (state: any, action: any) => {
         yearArray: build12Year(state.yearArray[11] + 12),
       };
     case 'ChangeYear':
+      const currentMonth = new Date().getMonth();
       return {
         ...state,
         mode: CalendarMode.Calendar,
-        dateCurrent: `${action.year}-${_monthNumber[state.monthCurrent]}-01`,
+        monthCurrent: currentMonth,
+        dateCurrent: `${action.year}-${_monthNumber[currentMonth]}-01`,
         yearCurrent: action.year,
         highlight: false,
       };

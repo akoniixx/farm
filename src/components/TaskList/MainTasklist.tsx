@@ -112,7 +112,7 @@ const MainTasklists: React.FC<any> = (props: any) => {
                   fontSize: normalize(12),
                   color: '#3EBD93',
                 }}>
-                งานเสร็จเมื่อ{' '}
+                งานเสร็จเมื่อ
               </Text>
               <Text
                 style={{

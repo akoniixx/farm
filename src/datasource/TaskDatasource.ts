@@ -113,7 +113,27 @@ export class TaskDatasource {
         throw err;
       });
   }
-
+  static async onExtendTaskRequest({
+    statusDelay = 'WAIT_APPROVE',
+    ...payload
+  }: {
+    taskId: string;
+    dateDelay: string;
+    statusDelay?: string;
+    delayRemark: string;
+  }): Promise<any> {
+    return httpClient
+      .post(BASE_URL + '/tasks/task/request-extend', {
+        statusDelay,
+        ...payload,
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(err => {
+        throw err;
+      });
+  }
   static openReceiveTask(id: string, isOpen: boolean): Promise<any> {
     const data = {id, isOpen};
 

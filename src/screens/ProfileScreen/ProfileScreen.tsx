@@ -31,9 +31,13 @@ import Lottie from 'lottie-react-native';
 import {numberWithCommas, socket} from '../../function/utility';
 import {useFocusEffect} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign';
+import {useAuth} from '../../contexts/AuthContext';
 
 const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  const {
+    authContext: {getProfileAuth},
+  } = useAuth();
   const backbotton = !route.params ? true : route.params.navbar;
   const windowWidth = Dimensions.get('screen').width;
   const windowHeight = Dimensions.get('screen').height;
@@ -176,10 +180,10 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   const getProfile = async () => {
-    const droner_id = await AsyncStorage.getItem('droner_id');
-    ProfileDatasource.getProfile(droner_id!)
+    const droner_id = (await AsyncStorage.getItem('droner_id')) || '';
+    getProfileAuth()
       .then(res => {
-        const imgPath = res.file.filter((item: any) => {
+        const imgPath = res?.file?.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
           }

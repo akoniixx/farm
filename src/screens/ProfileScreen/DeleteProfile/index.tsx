@@ -19,15 +19,12 @@ import fonts from '../../../assets/fonts';
 import {normalize} from '../../../function/Normalize';
 import CustomHeader from '../../../components/CustomHeader';
 import {TaskDatasource} from '../../../datasource/TaskDatasource';
-import {ProfileDatasource} from '../../../datasource/ProfileDatasource';
-import {socket} from '../../../function/utility';
 import {Authentication} from '../../../datasource/AuthDatasource';
 import {MainButton} from '../../../components/Button/MainButton';
 import * as RootNavigation from '../../../navigations/RootNavigation';
 import Toast from 'react-native-toast-message';
-import {RouteProp} from '@react-navigation/native';
-import {BottomTabNavigationHelpers} from '@react-navigation/bottom-tabs/lib/typescript/src/types';
 import {StackNativeScreenProps} from '../../../navigations/MainNavigator';
+import {useAuth} from '../../../contexts/AuthContext';
 
 type DeleteProfileScreenProps = StackNativeScreenProps<'DeleteProfileScreen'>;
 
@@ -38,36 +35,47 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
   const windowWidth = Dimensions.get('window').width;
   const [toggleModal, setToggleModal] = useState<boolean>(false);
   const [task, setTask] = useState([]);
+  console.log(task);
   const [loading, setLoading] = useState<boolean>(false);
+  const {
+    state: {user},
+  } = useAuth();
   useEffect(() => {
+    const getData = async () => {
+      setLoading(true);
+      const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
+      TaskDatasource.getTaskById(
+        droner_id,
+        ['WAIT_START', 'IN_PROGRESS'],
+        1,
+        999,
+      )
+        .then(res => {
+          if (res !== undefined) {
+            setTask(res);
+            setLoading(false);
+          }
+        })
+        .catch(err => {
+          setLoading(false);
+          console.log(err);
+        });
+    };
     getData();
   }, []);
 
-  const getData = async () => {
-    setLoading(true);
-    const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
-    TaskDatasource.getTaskById(droner_id, ['WAIT_START', 'IN_PROGRESS'], 1, 999)
-      .then(res => {
-        if (res !== undefined) {
-          setTask(res);
-          setLoading(false);
-        }
-      })
-      .catch(err => {
-        setLoading(false);
-        console.log(err);
-      });
-  };
-  const onLogout = async () => {
-    const dronerId = await AsyncStorage.getItem('droner_id');
-    socket.removeAllListeners(`send-task-${dronerId!}`);
-    socket.close();
-    await Authentication.logout();
-  };
-
-  const verifyOtp = async () => {
+  const requestOtp = async () => {
     setToggleModal(false);
-    navigation.navigate('VerifyOTP', {});
+    try {
+      const data = await Authentication.genOtpDeleteAccount(user?.telephoneNo);
+      navigation.navigate('VerifyOTP', {
+        telNumber: user?.telephoneNo,
+        ...data.result,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+
     // const droner_id = await AsyncStorage.getItem('droner_id');
     // ProfileDatasource.deleteAccount(droner_id!)
     //   .then(res => {
@@ -159,6 +167,7 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
             }}>
             <MainButton
               label="ลบบัญชี"
+              disable={task?.length > 0}
               color={colors.darkOrange}
               fontColor={'white'}
               onPress={() => setToggleModal(!toggleModal)}
@@ -245,7 +254,7 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
                 alignItems: 'center',
                 marginBottom: 8,
               }}
-              onPress={verifyOtp}>
+              onPress={requestOtp}>
               <Text
                 style={{
                   fontFamily: fonts.medium,

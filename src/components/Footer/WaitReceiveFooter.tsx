@@ -4,7 +4,6 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, font, icons} from '../../assets';
 import fonts from '../../assets/fonts';
-const insets = useSafeAreaInsets();
 
 interface WaitReceiveProp {
   mainFunc: () => void;
@@ -17,6 +16,8 @@ export const WaitReceiveFooter: React.FC<WaitReceiveProp> = ({
   togleModal,
   updatedAt,
 }) => {
+  const insets = useSafeAreaInsets();
+
   const expire = new Date(new Date(updatedAt).getTime() + 30 * 60 * 1000);
   const now = new Date();
   const diff = new Date(expire.getTime() - now.getTime());

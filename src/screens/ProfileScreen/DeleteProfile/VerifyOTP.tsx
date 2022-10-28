@@ -22,6 +22,11 @@ import colors from '../../../assets/colors/colors';
 import {normalize} from '../../../function/Normalize';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {font} from '../../../assets';
+import {socket} from '../../../function/utility';
+import {Authentication} from '../../../datasource/AuthDatasource';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAuth} from '../../../contexts/AuthContext';
+import * as RootNavigation from '../../../navigations/RootNavigation';
 
 const CELL_COUNT = 6;
 interface props {
@@ -31,32 +36,52 @@ interface props {
 }
 
 const VerifyOTP: React.FC<any> = ({navigation, route}) => {
+  const params = route.params;
   const [value, setValue] = useState<string>('');
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
   const [isError, setIsError] = useState(false);
+  const [resentTime, setResentTime] = useState('02:00');
+  const [resentNumber, setResentNumber] = useState(120);
   const [otpCalling, setOtpCalling] = useState(false);
-  const [tokenOtp, setTokenOtp] = useState(route.params.token);
-  const [codeRef, setCodeRef] = useState(route.params.refCode);
+  const [refCode, setRefCode] = useState('');
+  const {
+    state: {user},
+  } = useAuth();
+  const onResendOtp = async () => {
+    try {
+      const data = await Authentication.genOtpDeleteAccount(user?.telephoneNo);
+      setRefCode(data?.result?.refCode);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
   const [errOTP, setErrOTP] = useState(false);
 
-  const newCodeRef = useCallback((v: any) => {
-    setCodeRef(v);
-  }, []);
-
   const [otpTimeOut, setOTPtimeout] = useState(300);
   const [time, setTime] = useState('05:00');
   const [loading, setLoading] = useState(false);
+
+  const onLogout = async () => {
+    const dronerId = await AsyncStorage.getItem('droner_id');
+    socket.removeAllListeners(`send-task-${dronerId!}`);
+    socket.close();
+    await Authentication.logout();
+  };
+
   useEffect(() => {
     if (otpCalling) {
       setOTPtimeout(300);
       setTime('05:00');
       setOtpCalling(false);
     }
-  }, [otpCalling]);
+    if (params.refCode) {
+      setRefCode(params.refCode);
+    }
+  }, [otpCalling, params.refCode]);
 
   useEffect(() => {
     let timer = setInterval(() => {
@@ -72,7 +97,22 @@ const VerifyOTP: React.FC<any> = ({navigation, route}) => {
       }
     }, 1000);
     return () => clearInterval(timer);
-  });
+  }, [otpTimeOut]);
+  useEffect(() => {
+    let timerR = setInterval(() => {
+      if (resentNumber === 0) {
+      } else {
+        let secondR = resentNumber - 1;
+        setResentNumber(prev => prev - 1);
+        setResentTime(
+          `0${parseInt((secondR / 60).toString())}:${
+            secondR % 60 < 10 ? '0' + (secondR % 60) : secondR % 60
+          }`,
+        );
+      }
+    }, 1000);
+    return () => clearInterval(timerR);
+  }, [resentNumber]);
 
   const renderCell: React.FC<props> = ({index, symbol, isFocused}) => {
     return (
@@ -92,12 +132,31 @@ const VerifyOTP: React.FC<any> = ({navigation, route}) => {
   };
 
   const onFufill = async (v: string) => {
-    console.log(v);
     setValue(v);
     if (v.length >= CELL_COUNT) {
-      setLoading(true);
+      const payload = {
+        telephoneNo: params.telNumber,
+        otpCode: v,
+        token: params.token,
+        refCode: params.refCode,
+      };
       try {
-        console.log(v);
+        setLoading(true);
+        const result = await Authentication.verifyOtp(payload);
+
+        Authentication.onDeleteAccount(result.data.id)
+          .then(res => {
+            if (res) {
+              setLoading(false);
+              onLogout();
+              RootNavigation.navigate('Auth', {
+                screen: 'DeleteSuccess',
+              });
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
       } catch (e) {
         setLoading(false);
         setErrOTP(true);
@@ -124,11 +183,11 @@ const VerifyOTP: React.FC<any> = ({navigation, route}) => {
               <View style={styles.rowDirection}>
                 <Text style={styles.text}>รหัส OTP ถูกส่งไปยัง </Text>
                 <Text style={[styles.text, {color: colors.orange}]}>
-                  {route.params.telNumber}
+                  {params.telNumber}
                 </Text>
               </View>
               <Text style={[styles.text, {color: colors.gray}]}>
-                รหัสอ้างอิง OTP: {codeRef}
+                รหัสอ้างอิง OTP: {refCode}
               </Text>
             </View>
             <CodeField
@@ -151,22 +210,40 @@ const VerifyOTP: React.FC<any> = ({navigation, route}) => {
             <View style={styles.otpQuestion}>
               <View style={styles.rowDirection}>
                 <Text style={styles.text}>ไม่ได้รับรหัส OTP? </Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    setOtpCalling(true);
-                  }}>
+                {resentNumber === 0 ? (
+                  <>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setOtpCalling(true);
+                        setResentNumber(120);
+                        setResentTime('02:00');
+                        onResendOtp();
+                      }}>
+                      <Text
+                        style={[
+                          styles.text,
+                          {
+                            color: colors.orange,
+                            textDecorationLine: 'underline',
+                            textDecorationColor: colors.orange,
+                          },
+                        ]}>
+                        ส่งอีกครั้ง
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                ) : (
                   <Text
                     style={[
                       styles.text,
                       {
                         color: colors.orange,
-                        textDecorationLine: 'underline',
                         textDecorationColor: colors.orange,
                       },
                     ]}>
-                    ส่งอีกครั้ง
+                    {resentTime}
                   </Text>
-                </TouchableOpacity>
+                )}
               </View>
               <View>
                 <Text

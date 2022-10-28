@@ -3,6 +3,7 @@ export default {
   darkOrange: '#E85737', // secondary
   fontBlack: '#1F2933',
   gray: '#6B7580',
+  grayPlaceholder: '#B0B8BF',
   disable: '#DCDFE3',
   transOrange: '#FFEAD1',
   transSubOrange: '#FFFBF6',
@@ -14,4 +15,5 @@ export default {
   primaryBlue: '#2BB0ED',
   darkBlue: '#036EAF',
   inkLight: '#4F5E71',
+  inputText: '#2B2B2B',
 };

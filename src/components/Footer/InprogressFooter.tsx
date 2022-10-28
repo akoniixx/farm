@@ -4,17 +4,22 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, font, icons} from '../../assets';
 import Icon from 'react-native-vector-icons/AntDesign';
-const insets = useSafeAreaInsets();
 
 interface InprogressProp {
   mainFunc: () => void;
   togleModal: () => void;
+  togleModalExtend?: () => void;
+  statusDelay: string;
 }
 
 export const InprogressFooter: React.FC<InprogressProp> = ({
   mainFunc,
   togleModal,
+  togleModalExtend,
+  statusDelay,
 }) => {
+  const insets = useSafeAreaInsets();
+  console.log({statusDelay});
   return (
     <View style={[styles.footer, {paddingBottom: insets.bottom}]}>
       <TouchableOpacity style={styles.startButton} onPress={() => mainFunc()}>
@@ -29,29 +34,43 @@ export const InprogressFooter: React.FC<InprogressProp> = ({
           งานเสร็จสิ้น
         </Text>
       </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => togleModal()}
+      <View
         style={{
-          width: 52,
-          height: 52,
-          backgroundColor: colors.darkBlue,
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: normalize(8),
+          marginVertical: 8,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
         }}>
-        <Image
-          source={icons.callSolid}
-          style={{width: normalize(20), height: normalize(20)}}
-        />
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={
+            // eslint-disable-next-line no-extra-boolean-cast
+            !!statusDelay ? styles.extendButtonDisable : styles.extendButton
+          }
+          disabled={!!statusDelay}
+          onPress={togleModalExtend}>
+          <Text
+            style={{
+              fontFamily: font.bold,
+              fontSize: normalize(19),
+              color: colors.white,
+              marginLeft: 10,
+            }}>
+            ขยายเวลา
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => togleModal()} style={styles.telButton}>
+          <Image
+            source={icons.callSolid}
+            style={{width: normalize(20), height: normalize(20)}}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   startButton: {
-    width: normalize(275),
+    width: '100%',
     height: normalize(52),
     backgroundColor: colors.green,
     alignItems: 'center',
@@ -59,11 +78,41 @@ const styles = StyleSheet.create({
     borderRadius: normalize(8),
     flexDirection: 'row',
   },
+  extendButton: {
+    height: normalize(52),
+    flex: 1,
+    backgroundColor: colors.orange,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: normalize(8),
+    flexDirection: 'row',
+    marginRight: 8,
+  },
+  extendButtonDisable: {
+    height: normalize(52),
+    flex: 1,
+    backgroundColor: colors.disable,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: normalize(8),
+    flexDirection: 'row',
+    marginRight: 8,
+  },
+  telButton: {
+    width: 52,
+    height: normalize(52),
+
+    backgroundColor: colors.darkBlue,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: normalize(8),
+  },
   footer: {
     backgroundColor: colors.white,
     paddingHorizontal: normalize(15),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: normalize(10),
+    justifyContent: 'center',
+    paddingVertical: normalize(10),
+    minHeight: 100,
+    alignItems: 'center',
   },
 });

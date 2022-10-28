@@ -1,6 +1,12 @@
 import {Button} from '@rneui/themed';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
 
@@ -13,6 +19,7 @@ interface MainButtonProps {
   borderColor?: string;
   disable?: boolean;
   onPress?: () => void;
+  style?: ViewStyle;
 }
 
 export const MainButton: React.FC<MainButtonProps> = props => {
@@ -32,6 +39,7 @@ export const MainButton: React.FC<MainButtonProps> = props => {
           borderColor: props.borderColor ? props.borderColor : props.color,
           borderWidth: props.disable ? 0 : 0.5,
         },
+        props.style,
       ]}
       onPress={props.onPress}
     />
