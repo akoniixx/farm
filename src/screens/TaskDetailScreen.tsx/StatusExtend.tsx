@@ -31,6 +31,9 @@ export default function StatusExtend({
     APPROVED: icons.approveIcon,
     REJECTED: icons.rejectIcon,
   };
+  if (status === null) {
+    return <View />;
+  }
   return (
     <View style={styles({status}).container}>
       <View

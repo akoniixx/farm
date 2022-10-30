@@ -354,12 +354,14 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   data.dateAppointment,
                 ).getMinutes()} น.`}</Text>
               </View>
-              <StatusExtend
-                status={data?.statusDelay || null}
-                dateDelay={data?.dateDelay || null}
-                delayRejectRemark={data?.delayRejectRemark || null}
-                delayRemark={data?.delayRemark || null}
-              />
+              {data?.statusDelay !== null && (
+                <StatusExtend
+                  status={data?.statusDelay || null}
+                  dateDelay={data?.dateDelay || null}
+                  delayRejectRemark={data?.delayRejectRemark || null}
+                  delayRemark={data?.delayRemark || null}
+                />
+              )}
             </View>
             <View style={styles.taskMenu}>
               <View style={styles.listTile}>
