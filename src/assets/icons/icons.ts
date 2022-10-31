@@ -39,4 +39,5 @@ export default {
   rejectIcon: require('./rejectIc.png'),
   approveIcon: require('./approveIc.png'),
   awaitIcon: require('./awaitIc.png'),
+  closeBlack: require('./CloseBlack.png'),
 };

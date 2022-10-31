@@ -8,13 +8,23 @@ import icons from '../../assets/icons/icons';
 
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import dayjs from 'dayjs';
+import DatePicker from 'react-native-modern-datepicker';
+import Modal from 'react-native-modal/dist/modal';
 
 interface Props {
   onChange?: (date: Date) => void;
   value?: Date;
+  label?: string;
+  placeholder?: string;
 }
-const InputTime = ({onChange, value}: Props): JSX.Element => {
+const InputTime = ({
+  onChange,
+  value,
+  label,
+  placeholder = 'เลือกเวลา',
+}: Props): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
+  console.log('value', value);
   return (
     <>
       <View
@@ -24,14 +34,16 @@ const InputTime = ({onChange, value}: Props): JSX.Element => {
           marginTop: 10,
           marginBottom: 8,
         }}>
-        <Text
-          style={{
-            fontFamily: font.medium,
-            fontSize: normalize(16),
-            color: colors.fontBlack,
-          }}>
-          เวลาเสร็จสิ้นการพ่น
-        </Text>
+        {label && (
+          <Text
+            style={{
+              fontFamily: font.medium,
+              fontSize: normalize(16),
+              color: colors.fontBlack,
+            }}>
+            {label}
+          </Text>
+        )}
       </View>
       <TouchableOpacity
         style={{
@@ -54,7 +66,7 @@ const InputTime = ({onChange, value}: Props): JSX.Element => {
               fontSize: normalize(16),
               color: colors.grayPlaceholder,
             }}>
-            เลือกเวลา
+            {placeholder}
           </Text>
         ) : (
           <Text
@@ -95,6 +107,52 @@ const InputTime = ({onChange, value}: Props): JSX.Element => {
           setIsOpen(false);
         }}
       />
+      {/* {isOpen && (
+        <Modal isVisible={isOpen}>
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              position: 'relative',
+              top: 32,
+              right: 24,
+              zIndex: 10,
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                setIsOpen(false);
+              }}
+              style={{
+                padding: 4,
+              }}>
+              <Image
+                source={icons.closeBlack}
+                style={{
+                  width: 16,
+                  height: 16,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+          <DatePicker
+            mode="time"
+            style={{
+              borderRadius: 12,
+            }}
+            onTimeChange={e => {
+              onChange?.(e);
+              setIsOpen(false);
+            }}
+            options={{
+              defaultFont: font.medium,
+              mainColor: colors.orange,
+              headerFont: font.medium,
+            }}
+            selected={value}
+          />
+        </Modal>
+      )} */}
     </>
   );
 };
