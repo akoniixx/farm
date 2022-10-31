@@ -1,4 +1,4 @@
-package com.droner;
+package com.iconkaset.droner;
 
 import android.app.Application;
 import android.content.Context;
