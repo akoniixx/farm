@@ -19,7 +19,7 @@ export const InprogressFooter: React.FC<InprogressProp> = ({
   statusDelay,
 }) => {
   const insets = useSafeAreaInsets();
-  console.log({statusDelay});
+
   return (
     <View style={[styles.footer, {paddingBottom: insets.bottom}]}>
       <TouchableOpacity style={styles.startButton} onPress={() => mainFunc()}>

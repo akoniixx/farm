@@ -35,7 +35,7 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
   const windowWidth = Dimensions.get('window').width;
   const [toggleModal, setToggleModal] = useState<boolean>(false);
   const [task, setTask] = useState([]);
-  console.log(task);
+
   const [loading, setLoading] = useState<boolean>(false);
   const {
     state: {user},

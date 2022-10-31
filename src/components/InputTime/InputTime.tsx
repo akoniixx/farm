@@ -24,7 +24,6 @@ const InputTime = ({
   placeholder = 'เลือกเวลา',
 }: Props): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
-  console.log('value', value);
   return (
     <>
       <View
