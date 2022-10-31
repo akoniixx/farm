@@ -21,6 +21,43 @@ export class Authentication {
         throw err;
       });
   }
+  static async verifyOtp(payload: {
+    telephoneNo: any;
+    otpCode: string;
+    token: any;
+    refCode: any;
+  }): Promise<any> {
+    return httpClient
+      .post(BASE_URL + '/auth/droner/verify-otp', payload)
+      .then(res => {
+        return res.data;
+      })
+      .catch(err => {
+        throw err;
+      });
+  }
+  static async genOtpDeleteAccount(telNumber: String): Promise<any> {
+    return httpClient
+      .post(BASE_URL + '/auth/droner/request-delete-otp', {
+        telephoneNo: telNumber,
+      })
+      .then(res => {
+        return res.data;
+      })
+      .catch(err => {
+        throw err;
+      });
+  }
+  static async onDeleteAccount(id: string): Promise<any> {
+    return httpClient
+      .delete(BASE_URL + '/droner/' + id)
+      .then(res => {
+        return res.data;
+      })
+      .catch(err => {
+        throw err;
+      });
+  }
   static async generateOtpRegister(telNumber: String): Promise<any> {
     return axios
       .post(BASE_URL + '/auth/droner/request-register-otp', {

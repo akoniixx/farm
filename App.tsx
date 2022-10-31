@@ -10,7 +10,7 @@ import {toastConfig} from './src/config/toast-config';
 import {BackHandler} from 'react-native';
 import buddhaEra from 'dayjs/plugin/buddhistEra';
 import dayjs from 'dayjs';
-
+import {AuthProvider} from './src/contexts/AuthContext';
 dayjs.extend(buddhaEra);
 const App = () => {
   useEffect(() => {
@@ -20,9 +20,11 @@ const App = () => {
   return (
     <>
       <NavigationContainer ref={navigationRef}>
-        <SheetProvider>
-          <AppNavigator />
-        </SheetProvider>
+        <AuthProvider>
+          <SheetProvider>
+            <AppNavigator />
+          </SheetProvider>
+        </AuthProvider>
         <Toast config={toastConfig} />
       </NavigationContainer>
     </>

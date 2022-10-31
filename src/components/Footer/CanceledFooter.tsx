@@ -4,13 +4,14 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, font, icons} from '../../assets';
 import Icon from 'react-native-vector-icons/AntDesign';
-const insets = useSafeAreaInsets();
 
 interface CanceledProp {
   mainFunc: () => void;
 }
 
 export const CanceledFooter: React.FC<CanceledProp> = ({mainFunc}) => {
+  const insets = useSafeAreaInsets();
+
   return (
     <View style={[styles.footer, {paddingBottom: insets.bottom}]}>
       <TouchableOpacity style={styles.startButton} onPress={() => mainFunc()}>

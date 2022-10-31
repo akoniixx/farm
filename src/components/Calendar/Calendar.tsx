@@ -18,8 +18,7 @@ import {
   _monthName,
   buildDate,
 } from '../../hooks/calendar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {print} from '@gorhom/bottom-sheet/lib/typescript/utilities/logger';
+import dayjs from 'dayjs';
 
 LocaleConfig.locales.th = {
   monthNames: [
@@ -78,13 +77,18 @@ interface CalendarType {
 interface CalendarCustomType {
   onHandleChange: (value: any) => void;
   value: string;
+  disableFuture?: boolean;
+  disablePast?: boolean;
 }
 
 const CalendarCustom: React.FC<CalendarCustomType> = ({
   onHandleChange,
   value,
+  disableFuture = false,
+  disablePast = false,
 }) => {
-  const dateSplit = value.split('-');
+  const dateSplit = (value && value?.split('-')) || [];
+
   const initCurrentCalendar = {
     dateCurrent:
       value != ''
@@ -108,24 +112,26 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
     CalendarReducer,
     initCurrentCalendar,
   );
+  const isSameYear = calendarState.yearCurrent === date.getFullYear();
+  const isSameMonth = calendarState.monthCurrent === date.getMonth();
+
   switch (calendarState.mode) {
     case CalendarMode.Calendar:
       return (
         <Calendar
-          onPressArrowLeft={() =>
-            dispatch({
-              type: 'ArrowLeft',
-            })
-          }
+          onPressArrowLeft={() => {
+            if (isSameMonth && isSameYear && disablePast) {
+              return;
+            } else {
+              dispatch({
+                type: 'ArrowLeft',
+              });
+            }
+          }}
           onPressArrowRight={() => {
-            if (
-              !(
-                parseInt(calendarState.dateCurrent.split('-')[1]) ===
-                  date.getMonth() + 1 &&
-                parseInt(calendarState.dateCurrent.split('-')[0]) ===
-                  date.getFullYear()
-              )
-            ) {
+            if (isSameMonth && isSameYear && disableFuture) {
+              return;
+            } else {
               dispatch({
                 type: 'ArrowRight',
               });
@@ -133,6 +139,8 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
           }}
           initialDate={calendarState.dateCurrent}
           markingType={'custom'}
+          maxDate={disableFuture ? dayjs().format('YYYY-MM-DD') : undefined}
+          minDate={disablePast ? dayjs().format('YYYY-MM-DD') : undefined}
           markedDates={{
             [calendarState.dateCurrent]: {
               customStyles: {
@@ -188,8 +196,12 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
               </TouchableOpacity>
             </View>
           )}
+          disableArrowRight={disableFuture && isSameYear && isSameMonth}
+          disableArrowLeft={disablePast && isSameYear && isSameMonth}
           theme={{
             arrowColor: colors.orange,
+            textDisabledColor: colors.grayPlaceholder,
+
             textDayFontFamily: font.bold,
             textMonthFontFamily: font.medium,
             textDayHeaderFontFamily: font.medium,
@@ -197,21 +209,20 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
             selectedDayTextColor: colors.white,
           }}
           onDayPress={day => {
-            console.log(day.dateString);
-            if (
-              !(
-                parseInt(day.dateString.split('-')[2]) > date.getDate() &&
-                parseInt(day.dateString.split('-')[1]) ===
-                  date.getMonth() + 1 &&
-                parseInt(day.dateString.split('-')[0]) === date.getFullYear()
-              )
-            ) {
-              dispatch({
-                type: 'ChangeDate',
-                date: day.dateString,
-              });
-              onHandleChange(day);
+            const isPast = disablePast && day.timestamp < dayjs().valueOf();
+            const isFuture = disableFuture && day.timestamp > dayjs().valueOf();
+            if (isPast) {
+              return null;
             }
+            if (isFuture) {
+              return null;
+            }
+            dispatch({
+              type: 'ChangeDate',
+              date: day.dateString,
+            });
+
+            onHandleChange(day);
           }}
         />
       );
@@ -284,7 +295,9 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
                 style={{
                   fontSize: normalize(24),
                   color: colors.orange,
-                }}>{`<`}</Text>
+                }}>
+                {'<'}
+              </Text>
             </TouchableOpacity>
             <Text>
               {`${calendarState.yearArray[0] + 543} - ${
@@ -303,7 +316,9 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
                 style={{
                   fontSize: normalize(24),
                   color: colors.orange,
-                }}>{`>`}</Text>
+                }}>
+                {'>'}
+              </Text>
             </TouchableOpacity>
           </View>
           <View
@@ -313,8 +328,8 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
               flexWrap: 'wrap',
               paddingVertical: normalize(10),
             }}>
-            {calendarState.yearArray.map((item: any) =>
-              item <= date.getFullYear() ? (
+            {calendarState.yearArray.map((item: any) => {
+              return item <= date.getFullYear() ? (
                 <TouchableOpacity
                   key={item}
                   onPress={() => {
@@ -353,8 +368,8 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
                 </TouchableOpacity>
               ) : (
                 <></>
-              ),
-            )}
+              );
+            })}
           </View>
         </View>
       );
@@ -430,6 +445,7 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
             arrowColor: colors.orange,
             textDayFontFamily: font.bold,
             textMonthFontFamily: font.medium,
+            disabledArrowColor: colors.gray,
             textDayHeaderFontFamily: font.medium,
             selectedDayBackgroundColor: colors.orange,
             selectedDayTextColor: colors.white,

@@ -549,6 +549,7 @@ const SecondFormScreen: React.FC<any> = ({navigation, route}) => {
                 padding: normalize(20),
               }}>
               <CalendarCustom
+                disableFuture
                 value={birthday}
                 onHandleChange={day => {
                   setBirthday(day.dateString);

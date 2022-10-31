@@ -33,4 +33,11 @@ export default {
   checkSolid: require('./check_solid.png'),
   profile: require('./Profile.png'),
   profileActive: require('./Profile-active.png'),
+  trashBlack: require('./TrashBlack.png'),
+  warningIcon: require('./warning.png'),
+  timeIcon: require('./Timepicker.png'),
+  rejectIcon: require('./rejectIc.png'),
+  approveIcon: require('./approveIc.png'),
+  awaitIcon: require('./awaitIc.png'),
+  closeBlack: require('./CloseBlack.png'),
 };

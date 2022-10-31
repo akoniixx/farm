@@ -15,6 +15,7 @@ import * as RootNavigation from '../../navigations/RootNavigation';
 import {SheetManager} from 'react-native-actions-sheet';
 import Modal from 'react-native-modal';
 import {MainButton} from '../Button/MainButton';
+import ExtendModal from '../Modal/ExtendModal';
 
 const Tasklists: React.FC<any> = (props: any) => {
   const date = new Date(props.date);
@@ -31,6 +32,8 @@ const Tasklists: React.FC<any> = (props: any) => {
   const toggleModalReview = props.toggleModalReview;
   const toggleModalSuccess = props.toggleModalSuccess;
   const taskId = props.taskId;
+  const statusDelay = props.statusDelay;
+  const [visible, setVisible] = useState(false);
 
   const ReviewBar = () => {
     return (
@@ -212,7 +215,7 @@ const Tasklists: React.FC<any> = (props: any) => {
             height: normalize(49),
             borderRadius: normalize(8),
             borderWidth: 0.5,
-            borderColor: 'grey',
+            borderColor: '#DCDFE3',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -244,12 +247,16 @@ const Tasklists: React.FC<any> = (props: any) => {
         </TouchableOpacity>
         {props.status === 'IN_PROGRESS' ? (
           <TouchableOpacity
-            disabled
+            disabled={!!statusDelay}
+            onPress={() => {
+              setVisible(true);
+            }}
             style={{
               width: normalize(127.5),
               height: normalize(49),
               borderRadius: normalize(8),
-              backgroundColor: colors.disable,
+              // eslint-disable-next-line no-extra-boolean-cast
+              backgroundColor: !!statusDelay ? colors.disable : colors.orange,
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
@@ -590,6 +597,12 @@ const Tasklists: React.FC<any> = (props: any) => {
           />
         </View>
       </Modal>
+      <ExtendModal
+        isVisible={visible}
+        onCloseModal={() => setVisible(false)}
+        taskId={taskId}
+        fetchTask={props.fetchTask}
+      />
     </View>
   );
 };

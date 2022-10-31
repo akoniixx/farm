@@ -28,12 +28,16 @@ import * as ImagePicker from 'react-native-image-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ActionSheet, {ActionSheetRef} from 'react-native-actions-sheet';
 import Lottie from 'lottie-react-native';
-import {decimalConvert, numberWithCommas, socket} from '../../function/utility';
+import {numberWithCommas, socket} from '../../function/utility';
 import {useFocusEffect} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign';
+import {useAuth} from '../../contexts/AuthContext';
 
 const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  const {
+    authContext: {getProfileAuth},
+  } = useAuth();
   const backbotton = !route.params ? true : route.params.navbar;
   const windowWidth = Dimensions.get('screen').width;
   const windowHeight = Dimensions.get('screen').height;
@@ -176,10 +180,10 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   const getProfile = async () => {
-    const droner_id = await AsyncStorage.getItem('droner_id');
-    ProfileDatasource.getProfile(droner_id!)
+    const droner_id = (await AsyncStorage.getItem('droner_id')) || '';
+    getProfileAuth()
       .then(res => {
-        const imgPath = res.file.filter((item: any) => {
+        const imgPath = res?.file?.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
           }
@@ -554,8 +558,8 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                         value={value}
                         items={items}
                         setOpen={setOpen}
-                        onSelectItem={value => {
-                          setBrand(value);
+                        onSelectItem={v => {
+                          setBrand(v);
                         }}
                         setValue={setValue}
                         dropDownDirection="BOTTOM"
@@ -583,8 +587,8 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                         value={valuetype}
                         items={itemstype}
                         setOpen={setOpentype}
-                        onSelectItem={value => {
-                          setBrandType(value);
+                        onSelectItem={v => {
+                          setBrandType(v);
                         }}
                         setValue={setValuetype}
                         dropDownDirection="BOTTOM"
@@ -594,8 +598,8 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                       />
                       <TextInput
                         placeholderTextColor={colors.gray}
-                        onChangeText={value => {
-                          setdroneno(value);
+                        onChangeText={v => {
+                          setdroneno(v);
                         }}
                         value={droneno}
                         style={styles.input}

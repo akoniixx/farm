@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors} from '../../assets';
 import fonts from '../../assets/fonts';
@@ -34,6 +35,7 @@ const IncomeScreen: React.FC = () => {
   const [data, setData] = useState<DataType[]>([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [dataHeader, setDataHeader] = React.useState<State>({
     totalRevenueToday: 0,
     totalTask: 0,
@@ -51,24 +53,30 @@ const IncomeScreen: React.FC = () => {
         .startOf('month')
         .toISOString();
       const currentEndOf3Month = dayjs().endOf('month').toISOString();
-      const result = await ProfileDatasource.getListTaskInProgress({
-        start:
-          type === 'week'
-            ? currentStartOfWeek
-            : type === 'month'
-            ? currentStartOfMonth
-            : currentStartOf3Month,
-        end:
-          type === 'week'
-            ? currentEndOfWeek
-            : type === 'month'
-            ? currentEndOfMonth
-            : currentEndOf3Month,
-      });
+      try {
+        const result = await ProfileDatasource.getListTaskInProgress({
+          start:
+            type === 'week'
+              ? currentStartOfWeek
+              : type === 'month'
+              ? currentStartOfMonth
+              : currentStartOf3Month,
+          end:
+            type === 'week'
+              ? currentEndOfWeek
+              : type === 'month'
+              ? currentEndOfMonth
+              : currentEndOf3Month,
+        });
 
-      setDataHeader(result.summary);
-      setTotal(result.count);
-      setData(result.data);
+        setDataHeader(result.summary);
+        setTotal(result.count);
+        setData(result.data);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchDataTask();
   }, [type]);
@@ -100,6 +108,11 @@ const IncomeScreen: React.FC = () => {
         data={data}
         setData={setData}
         total={total}
+      />
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{color: '#FFF'}}
       />
     </View>
   );

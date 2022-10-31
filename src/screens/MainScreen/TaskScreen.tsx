@@ -1,17 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import {normalize} from '@rneui/themed';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {
-  Button,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Image, Text, View} from 'react-native';
 
-import {FlatList, ScrollView} from 'react-native-gesture-handler';
+import {FlatList} from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Toast from 'react-native-toast-message';
 import {colors, image, icons} from '../../assets';
@@ -191,6 +184,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
             extraData={data}
             renderItem={({item}: any) => (
               <Tasklists
+                {...item.item}
                 id={item.item.taskNo}
                 status={item.item.status}
                 title={item.item.farmerPlot.plantName}
@@ -205,6 +199,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                 taskId={item.item.id}
                 farmArea={item.item.farmAreaAmount}
                 toggleModalStartTask={toggleModalStartTask}
+                fetchTask={getData}
                 setToggleModalStartTask={setToggleModalStartTask}
                 setShowModalStartTask={() =>
                   showModalStartTask(

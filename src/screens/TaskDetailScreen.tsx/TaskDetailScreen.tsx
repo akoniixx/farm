@@ -11,7 +11,7 @@ import {
 import React, {useCallback, useEffect, useState} from 'react';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font, icons, image} from '../../assets';
-import {normalize, width} from '../../function/Normalize';
+import {normalize} from '../../function/Normalize';
 import CustomHeader from '../../components/CustomHeader';
 import {MainButton} from '../../components/Button/MainButton';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -37,6 +37,8 @@ import {CanceledFooter} from '../../components/Footer/CanceledFooter';
 import {callcenterNumber} from '../../definitions/callCenterNumber';
 import Spinner from 'react-native-loading-spinner-overlay';
 import * as RootNavigation from '../../navigations/RootNavigation';
+import ExtendModal from '../../components/Modal/ExtendModal';
+import StatusExtend from './StatusExtend';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
@@ -58,6 +60,8 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const [imgUploaded, setImgUploaded] = useState<boolean>(false);
   const [finishImg, setFinishImg] = useState<any>(null);
   const [defaulRating, setDefaulRating] = useState<number>(0);
+  const [isVisibleExtendModal, setIsVisibleExtendModal] =
+    useState<boolean>(false);
   const [maxRatting, setMaxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
   const [comment, setComment] = useState<string>('');
   const starImgFilled = icons.starfill;
@@ -65,11 +69,10 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [showModalStartTask, setShowModalStartTask] = useState<boolean>(false);
   const [dronerId, setDronerId] = useState<string>('');
-
   const ReviewBar = () => {
     return (
       <View style={styles.reviewBar}>
-        {maxRatting.map((item, key) => {
+        {maxRatting.map(item => {
           return (
             <TouchableOpacity
               activeOpacity={0.9}
@@ -110,7 +113,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
       comment,
       `${data.droner.firstname} ${data.droner.lastname}`,
     )
-      .then(res => {
+      .then(() => {
         setLoading(false);
         setTimeout(() => setTogleModalSuccess(true), 200);
         setTimeout(() => getTaskDetail(), 300);
@@ -142,7 +145,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
         'IN_PROGRESS',
         `${data.droner.firstname} ${data.droner.lastname}`,
       )
-        .then(res => {
+        .then(() => {
           Toast.show({
             type: 'success',
             text1: `งาน ${data.taskNo}`,
@@ -159,8 +162,8 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   const getTaskDetail = async () => {
-    const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
-    TaskDatasource.getTaskDetail(taskId, dronerId)
+    const droner_Id = (await AsyncStorage.getItem('droner_id')) ?? '';
+    TaskDatasource.getTaskDetail(taskId, droner_Id)
       .then(res => {
         if (res.success) {
           setData(res.responseData.data);
@@ -185,8 +188,8 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
       .catch(err => console.log(err));
   };
   const receiveTask = async () => {
-    const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
-    TaskDatasource.receiveTask(data.id, dronerId, true)
+    const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
+    TaskDatasource.receiveTask(data.id, droner_id, true)
       .then(res => {
         if (res.success) {
           getTaskDetail();
@@ -208,9 +211,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
       .catch(err => console.log(err));
   };
   const rejectTask = async () => {
-    const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
-    TaskDatasource.receiveTask(data.id, dronerId, false)
-      .then(res => {
+    const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
+    TaskDatasource.receiveTask(data.id, droner_id, false)
+      .then(() => {
         navigation.goBack();
       })
       .catch(err => console.log(err));
@@ -351,6 +354,14 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   data.dateAppointment,
                 ).getMinutes()} น.`}</Text>
               </View>
+              {data?.statusDelay !== null && (
+                <StatusExtend
+                  status={data?.statusDelay || null}
+                  dateDelay={data?.dateDelay || null}
+                  delayRejectRemark={data?.delayRejectRemark || null}
+                  delayRemark={data?.delayRemark || null}
+                />
+              )}
             </View>
             <View style={styles.taskMenu}>
               <View style={styles.listTile}>
@@ -626,6 +637,10 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
 
           {data.status == 'IN_PROGRESS' ? (
             <InprogressFooter
+              togleModalExtend={() => {
+                setIsVisibleExtendModal(true);
+              }}
+              statusDelay={data.statusDelay || null}
               mainFunc={() => setTogleModalUpload(true)}
               togleModal={() =>
                 SheetManager.show('CallingSheet', {
@@ -933,6 +948,12 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           />
         </View>
       </CModal>
+      <ExtendModal
+        isVisible={isVisibleExtendModal}
+        taskId={taskId}
+        fetchTask={getTaskDetail}
+        onCloseModal={() => setIsVisibleExtendModal(false)}
+      />
       <CModal isVisible={togleModalSuccess}>
         <View
           style={{

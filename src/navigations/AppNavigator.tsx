@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import AppAuthNavigator from './AppAuthNavigator';
 import MainNavigator from './MainNavigator';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingNavigator from './LoadingNavigator';
 
 const Stack = createStackNavigator();
