@@ -1,6 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 import firebase from '@react-native-firebase/app';
 import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const credentials = {
     databaseURL: '',
@@ -29,7 +30,7 @@ export async function requestUserPermission() {
   
   export const getFCMToken = async() =>{
       const token = await messaging().getToken();
-      console.log(token)
+      await AsyncStorage.setItem('fcmtoken',token);
   }
   
   export const fcmOnListen = ()=>{

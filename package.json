@@ -92,6 +92,5 @@
       "json",
       "node"
     ]
-  },
-  "postinstall": "npx patch-package"
+  }
 }

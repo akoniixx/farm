@@ -9,7 +9,7 @@ import {
   Modal,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useReducer, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useReducer, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {MainButton} from '../../components/Button/MainButton';
@@ -58,11 +58,18 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const actionSheet = useRef<any>(null);
   const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fcmToken,setFcmToken] = useState("")
 
   const showActionSheet = () => {
     actionSheet.current.show();
   };
+  const getToken = async() => {
+    const token = await AsyncStorage.getItem('fcmtoken');
+    setFcmToken(token!)
+  }
+
   useEffect(() => {
+    getToken()
     getProfile();
     ProfileDatasource.getDroneBrand(1, 14)
       .then(result => {
@@ -464,6 +471,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
 
               <Image source={icons.arrowRight} style={styles.listTileIcon} />
             </View>
+            <Text>{fcmToken}</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
