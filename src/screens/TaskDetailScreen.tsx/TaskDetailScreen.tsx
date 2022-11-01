@@ -315,6 +315,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   style={{
                     fontFamily: fonts.medium,
                     fontSize: normalize(19),
+                    color: colors.fontBlack
                   }}>
                   {data.farmerPlot.plantName}
                 </Text>
@@ -346,6 +347,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                     fontFamily: fonts.medium,
                     paddingLeft: normalize(8),
                     fontSize: normalize(14),
+                    color : colors.fontBlack
                   }}>{`${convertDate(data.dateAppointment).getDate()}/${
                   convertDate(data.dateAppointment).getMonth() + 1
                 }/${
@@ -1053,6 +1055,7 @@ const styles = StyleSheet.create({
   font16: {
     fontFamily: fonts.medium,
     fontSize: normalize(16),
+    color : colors.fontBlack
   },
   fontGray: {
     fontFamily: font.medium,

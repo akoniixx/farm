@@ -65,6 +65,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   };
   const getToken = async() => {
     const token = await AsyncStorage.getItem('fcmtoken');
+    console.log(token)
     setFcmToken(token!)
   }
 
@@ -471,7 +472,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
 
               <Image source={icons.arrowRight} style={styles.listTileIcon} />
             </View>
-            <Text>{fcmToken}</Text>
+            <Text style={styles.h2}>{fcmToken}</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
