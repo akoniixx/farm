@@ -44,9 +44,9 @@ PODS:
     - GoogleUtilities/Logger (~> 7.8)
   - FirebaseCoreExtension (10.0.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.0.0):
+  - FirebaseCoreInternal (10.1.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseInstallations (10.0.0):
+  - FirebaseInstallations (10.1.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
@@ -547,7 +547,7 @@ PODS:
     - RNFBApp
   - RNGestureHandler (2.6.0):
     - React-Core
-  - RNReanimated (2.10.0):
+  - RNReanimated (2.12.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -814,8 +814,8 @@ SPEC CHECKSUMS:
   FirebaseAnalytics: 9921a52739f4ab66099da31b6e0243db78a3ac0a
   FirebaseCore: 97f48a3a567a72b8d4daa0f03c3aadb78df4e995
   FirebaseCoreExtension: 449595a035812f16314ca88cebf959e3bb77dd67
-  FirebaseCoreInternal: 5eb3960335da5ea30115d57d39db6988c4ad06f3
-  FirebaseInstallations: 7f1c9ae6bd9df6abe9c74124b38fa8740aba5df4
+  FirebaseCoreInternal: 96d75228e10fd369564da51bd898414eb0f54df5
+  FirebaseInstallations: 99d24bac0243cf8b0e96cf5426340d211f0bcc80
   FirebaseMessaging: 8916bf5edb1dbfac74665a181e4d1ab3a78a08a2
   Flipper: 26fc4b7382499f1281eb8cb921e5c3ad6de91fe0
   Flipper-Boost-iOSX: fd1e2b8cbef7e662a122412d7ac5f5bea715403c
@@ -881,7 +881,7 @@ SPEC CHECKSUMS:
   RNFBApp: 3976c7928aa054c4fdcd0d029dececa0b3397ee5
   RNFBMessaging: 70bc93859b3952d0985b0d90eb2ed85ec29f5bc0
   RNGestureHandler: 920eb17f5b1e15dae6e5ed1904045f8f90e0b11e
-  RNReanimated: 60e291d42c77752a0f6d6f358387bdf225a87c6e
+  RNReanimated: 2a91e85fcd343f8af3c58d3425b99fdd285590a5
   RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9
   RNSVG: 42a0c731b11179ebbd27a3eeeafa7201ebb476ff
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
