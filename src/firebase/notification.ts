@@ -5,8 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const credentials = {
     databaseURL: '',
-    clientId: '624587099660-0d8efka3acml4qc7g8fr9itflvl1nads.apps.googleusercontent.com',
-    appId: (Platform.OS === 'ios')?'1:624587099660:ios:e85a40b99f4fa18640e829':'1:624587099660:android:7195a4bc311d807940e829',
+    clientId: '624587099660-g11b50kio2iiuepcn5lv9ciu1uroa9bi.apps.googleusercontent.com',
+    appId: (Platform.OS === 'ios')?'1:624587099660:ios:5947d5a2e249610d40e829':'1:624587099660:android:7195a4bc311d807940e829',
     apiKey: 'AIzaSyDVnYdTOLWIoN4HpwDTnhZddEePlDDQ96M',
     storageBucket: 'droner-app.appspot.com',
     messagingSenderId: '624587099660',
