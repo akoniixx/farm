@@ -24,6 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import Toast from 'react-native-toast-message';
 import {useFocusEffect} from '@react-navigation/native';
+import { responsiveHeigth, responsiveWidth } from '../../function/responsive';
 
 export const NewTaskModal = (
   props: SheetProps<{
@@ -121,6 +122,9 @@ export const NewTaskModal = (
 
   return (
     <ActionSheet
+      containerStyle={{
+        height : responsiveHeigth(600)
+      }}
       id={props.sheetId}
       useBottomSafeAreaPadding
       gestureEnabled={true}>
@@ -280,7 +284,10 @@ export const NewTaskModal = (
           </View>
         </View>
         {/* Map */}
-        <View>
+        <View style={{
+          position : 'relative',
+          alignItems : 'center'
+        }}>
           <MapView.Animated
             style={styles.map}
             zoomEnabled={false}
@@ -292,28 +299,33 @@ export const NewTaskModal = (
             initialRegion={position}>
             <Marker coordinate={position} />
           </MapView.Animated>
-          <TouchableOpacity
-            style={styles.viewMap}
-            onPress={() =>
-              openGps(
-                position.latitude,
-                position.longitude,
-                data?.farmerPlot.plotName,
-              )
-            }>
-            <Image
-              source={icons.direction}
-              style={{width: normalize(24), height: normalize(24)}}
-            />
-            <Text
-              style={{
-                marginLeft: 5,
-                fontFamily: font.medium,
-                color: 'black',
-              }}>
-              ดูแผนที่
-            </Text>
-          </TouchableOpacity>
+          <View style={{
+            position : 'absolute',
+            bottom : normalize(10)
+          }}>
+            <TouchableOpacity
+              style={styles.viewMap}
+              onPress={() =>
+                openGps(
+                  position.latitude,
+                  position.longitude,
+                  data?.farmerPlot.plotName,
+                )
+              }>
+              <Image
+                source={icons.direction}
+                style={{width: normalize(24), height: normalize(24)}}
+              />
+              <Text
+                style={{
+                  marginLeft: 5,
+                  fontFamily: font.medium,
+                  color: 'black',
+                }}>
+                ดูแผนที่
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
         {/* Warning */}
         <View style={styles.warning}>
@@ -453,14 +465,13 @@ const styles = StyleSheet.create({
     // marginTop: normalize(10),
   },
   viewMap: {
+    width : responsiveWidth(100),
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     marginTop: 10,
     backgroundColor: 'white',
-    borderColor: colors.primaryBlue,
-    borderWidth: 1,
-    paddingVertical: normalize(10),
+    paddingVertical: normalize(5),
     paddingHorizontal: normalize(10),
     borderRadius: normalize(50),
   },

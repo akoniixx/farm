@@ -28,10 +28,12 @@ import * as ImagePicker from 'react-native-image-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ActionSheet, {ActionSheetRef} from 'react-native-actions-sheet';
 import Lottie from 'lottie-react-native';
-import {numberWithCommas, socket} from '../../function/utility';
-import {useFocusEffect} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useAuth} from '../../contexts/AuthContext';
+import { decimalConvert, numberWithCommas, socket } from '../../function/utility';
+import { useFocusEffect } from '@react-navigation/native';
+import messaging from '@react-native-firebase/messaging';
+import RegisterNotification from '../../components/Modal/RegisterNotification';
 
 const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);

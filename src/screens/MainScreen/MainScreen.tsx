@@ -17,8 +17,13 @@ import io from 'socket.io-client';
 import {SheetManager} from 'react-native-actions-sheet';
 import {BASE_URL} from '../../config/develop-config';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
-import {useFocusEffect} from '@react-navigation/native';
 import {decimalConvert, numberWithCommas, socket} from '../../function/utility';
+import { useFocusEffect } from '@react-navigation/native';
+import RegisterNotification from '../../components/Modal/RegisterNotification';
+import messaging from '@react-native-firebase/messaging';
+import Toast from 'react-native-toast-message';
+import { responsiveHeigth, responsiveWidth } from '../../function/responsive';
+import fonts from '../../assets/fonts';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -34,6 +39,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     isOpenReceiveTask: false,
     status: '',
   });
+  const [openNoti,setOpenNoti] = useState(false)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -51,6 +57,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     await socket.connect();
     socket.on(`send-task-${dronerId!}`, ({data, image_profile_url}) => {
+      //Modal Task Screen
       SheetManager.show('NewTaskSheet', {
         payload: {
           data,
@@ -127,6 +134,12 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
   return (
     <BottomSheetModalProvider>
+      <RegisterNotification value={openNoti} onClick={()=>{
+        setOpenNoti(false)
+        navigation.navigate('ProfileScreen', {
+          navbar: false,
+        });
+      }}/>
       <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
         <View style={{flex: 2}}>
           <View style={styles.headCard}>
