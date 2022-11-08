@@ -469,11 +469,10 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                 <Image source={icons.logout} style={styles.listTileIcon} />
                 <Text style={styles.listTileTitle}>ออกจากระบบ</Text>
               </View>
-
               <Image source={icons.arrowRight} style={styles.listTileIcon} />
             </View>
-            <Text style={styles.h2}>{fcmToken}</Text>
           </TouchableOpacity>
+          <Text style={styles.h2}>{fcmToken}</Text>
         </ScrollView>
       </View>
       <ActionSheet ref={actionSheet}>

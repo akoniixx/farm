@@ -61,6 +61,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   useEffect(()=>{
     messaging().getInitialNotification().then(
       message =>{
+        console.log(message)
         if(message){
           if(message.notification?.body === "register complete"){
             setInitialRouteName("โปรไฟล์")
@@ -84,6 +85,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
       }
     )
     messaging().onNotificationOpenedApp(async message =>{
+      console.log(message)
       if(message.notification?.body === "register complete"){
         setRegisterNoti(true)
       }
@@ -105,6 +107,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     })
 
     messaging().onMessage(async message =>{
+      console.log(message)
       if(message.notification?.body === "register complete"){
         setRegisterNoti(true)
       }

@@ -24,8 +24,8 @@ const App = () => {
   const getDroner = async() => {
     const droner_id = await AsyncStorage.getItem('droner_id')
     const token = await AsyncStorage.getItem('token')
-    console.log(droner_id)
-    console.log(token)
+    console.log(`droner_id = ${droner_id}`)
+    console.log(`token = ${token}`)
   }
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
@@ -37,6 +37,7 @@ const App = () => {
     requestUserPermission()
     getFCMToken()
   }, []);
+
   return (
     <>
       <NavigationContainer ref={navigationRef}>
