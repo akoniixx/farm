@@ -42,6 +42,7 @@ import StatusExtend from './StatusExtend';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
+  console.log(`taskid = ${route.params.taskId}`)
   const [data, setData] = useState<any>();
   const [dateAppointment, setDateAppointment] = useState<any>();
   const [profileImg, setProfileImg] = useState<string>();
@@ -165,6 +166,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     const droner_Id = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.getTaskDetail(taskId, droner_Id)
       .then(res => {
+        console.log(res)
         if (res.success) {
           setData(res.responseData.data);
           let date = new Date(res.responseData.data.dateAppointment);
@@ -195,8 +197,11 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           getTaskDetail();
           Toast.show({
             type: 'receiveTaskSuccess',
-            text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
-            text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
+            text1: `งาน #${data.taskNo}`,
+            text2: `วันที่ ${data.dateAppointment.split("T")[0].split("-")[2]}/${data.dateAppointment.split("T")[0].split("-")[1]}/${parseInt(data.dateAppointment.split("T")[0].split("-")[0])+543} เวลา ${((parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7) > 9)? `${(parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7)}`:`0${(parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7)}`}:${data.dateAppointment.split("T")[1].split(":")[1]}`,
+            onPress : ()=>{
+              Toast.hide()
+            }
           });
         } else {
           RootNavigation.navigate('Main', {

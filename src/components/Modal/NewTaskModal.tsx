@@ -52,15 +52,17 @@ export const NewTaskModal = (
           SheetManager.hide('NewTaskSheet');
           Toast.show({
             type: 'receiveTaskSuccess',
-            text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
-            text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
+            text1: `งาน #${data.taskNo}`,
+            text2: `วันที่ ${data.dateAppointment.split("T")[0].split("-")[2]}/${data.dateAppointment.split("T")[0].split("-")[1]}/${parseInt(data.dateAppointment.split("T")[0].split("-")[0])+543} เวลา ${(parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7 > 9)? `${parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7}`:`0${parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7}`}:${data.dateAppointment.split("T")[1].split(":")[1]}`,
+            onPress : ()=>{
+              Toast.hide()
+            }
           });
         } else {
-          SheetManager.hide('NewTaskSheet');
-          Toast.show({
-            type: 'error',
-            text1: res.userMessage,
-          });
+          console.log(data)
+          setTimeout(()=>{
+            SheetManager.hide('NewTaskSheet');
+          },5000)
         }
       })
       .catch(err => console.log(err));
@@ -110,7 +112,7 @@ export const NewTaskModal = (
     const dronerId = await AsyncStorage.getItem('droner_id');
     socket.on(`unsend-task-${dronerId!}`, taskId => {
       if (data.id == taskId) {
-        SheetManager.hide('NewTaskSheet');
+        // SheetManager.hide('NewTaskSheet');
       }
     });
   };
@@ -123,7 +125,7 @@ export const NewTaskModal = (
   return (
     <ActionSheet
       containerStyle={{
-        height : responsiveHeigth(600)
+        height : '80%'
       }}
       id={props.sheetId}
       useBottomSafeAreaPadding

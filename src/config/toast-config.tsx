@@ -32,38 +32,69 @@ const text2Style = {
 };
 
 export const toastConfig = {
-  receiveTaskSuccess: ({text1, text2, props}: any) => (
-    <View
-      style={{
-        ...toastStyle,
-        paddingLeft: 20,
-        paddingRight: 20,
-        display: 'flex',
-        flexDirection: 'row',
+  receiveTaskSuccess: ({onPress,text1, text2, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+    <View style={styles.modalBgSuccess}>
+      <View style={{
+          flexDirection : 'row'
       }}>
-      <View
-        style={{
-          width: '10%',
-          justifyContent: 'center',
-        }}>
-        <Image
-          source={icons.checkSolid}
-          style={{
-            width: normalize(24),
-            height: normalize(24),
-          }}
-        />
+          <Image source={icons.closecircle} style={{
+              width : normalize(30),
+              height : normalize(30)
+          }}/>
+          <View style={{
+              paddingLeft : normalize(12)
+          }}>
+              <Text style={styles.info}>{text1}</Text>
+              <Text style={styles.info}>{text2}</Text>
+              <Text style={styles.info}>ถูกรับแล้ว</Text>
+              <Text style={styles.infolight}>อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน</Text>
+          </View>
       </View>
-      <View
-        style={{
-          width: '90%',
-          paddingLeft: 6,
-          justifyContent: 'center',
-        }}>
-        <Text style={{...text1Style}}>{text1}</Text>
-        <Text style={{...text2Style}}>{text2}</Text>
+      <View style={styles.closePosition}>
+          <TouchableOpacity onPress={()=>{
+            Toast.hide()
+          }}>
+              <Image source={icons.closewhite} style={{
+                  width : normalize(12),
+                  height : normalize(12)
+              }}/>
+          </TouchableOpacity>
+          <View></View>
       </View>
-    </View>
+  </View>
+  </TouchableOpacity>
+    // <View
+    //   style={{
+    //     ...toastStyle,
+    //     paddingLeft: 20,
+    //     paddingRight: 20,
+    //     display: 'flex',
+    //     flexDirection: 'row',
+    //   }}>
+    //   <View
+    //     style={{
+    //       width: '10%',
+    //       justifyContent: 'center',
+    //     }}>
+    //     <Image
+    //       source={icons.checkSolid}
+    //       style={{
+    //         width: normalize(24),
+    //         height: normalize(24),
+    //       }}
+    //     />
+    //   </View>
+    //   <View
+    //     style={{
+    //       width: '90%',
+    //       paddingLeft: 6,
+    //       justifyContent: 'center',
+    //     }}>
+    //     <Text style={{...text1Style}}>{text1}</Text>
+    //     <Text style={{...text2Style}}>{text2}</Text>
+    //   </View>
+    // </View>
   ),
   registerFailed : ({onPress,props} : any) => (
       <TouchableOpacity onPress={onPress}>
@@ -289,7 +320,7 @@ export const toastConfig = {
       </View>
       </TouchableOpacity>
     ),
-    taskWarningContactFarmerTowmorow : ({onPress,props} : any) => (
+    taskWarningContactFarmerTowmorow : ({onPress,text1,props} : any) => (
       <TouchableOpacity onPress={onPress}>
         <View style={styles.modalBgWarning}>
           <View style={{
@@ -304,7 +335,7 @@ export const toastConfig = {
               }}>
                   <Text style={styles.info}>แจ้งเตือน</Text>
                   <Text style={styles.info}>รายการงานของท่านในวันพรุ่งนี้</Text>
-                  <Text style={styles.info}>วันที่ 25/01/2565 เวลา 09.00 น.</Text>
+                  <Text style={styles.info}>{text1}</Text>
 
               </View>
           </View>
@@ -451,6 +482,38 @@ export const toastConfig = {
       </View>
       </TouchableOpacity>
     ),
+    taskWarningBeforeClose :({onPress,props} : any) => (
+        <TouchableOpacity onPress={onPress}>
+            <View style={styles.modalBgWarning}>
+          <View style={{
+              flexDirection : 'row'
+          }}>
+              <Image source={icons.success} style={{
+                  width : normalize(30),
+                  height : normalize(30)
+              }}/>
+              <View style={{
+                  paddingLeft : normalize(12)
+              }}>
+                  <Text style={styles.info}>ขออภัยค่ะ</Text>
+                  <Text style={styles.info}>ท่านกำลังมีงานที่กำลังจะเกิดขึ้น</Text>
+                  <Text style={[styles.infolight,{paddingBottom : normalize(5)}]}>หากมีปัญหากรุณาติดต่อเจ้าหน้าที่ค่ะ</Text>
+                  <Text style={styles.infolight}>โทร.02-1136159</Text>
+              </View>
+          </View>
+          <View style={styles.closePosition}>
+              <TouchableOpacity onPress={()=>{
+                Toast.hide()
+              }}>
+                  <Image source={icons.closewhite} style={{
+                      width : normalize(12),
+                      height : normalize(12)
+                  }}/>
+              </TouchableOpacity>
+          </View>
+      </View>
+        </TouchableOpacity>
+    )
 };
 
 const styles = StyleSheet.create({

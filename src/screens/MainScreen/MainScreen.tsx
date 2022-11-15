@@ -128,6 +128,14 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     TaskDatasource.openReceiveTask(dronerId!, isOpen)
       .then(res => {
         setProfile({...profile, isOpenReceiveTask: res.isOpenReceiveTask});
+        if(!isOpen){
+          TaskDatasource.getTaskById(dronerId!, ['WAIT_START', 'IN_PROGRESS'], 1, 999).then(
+            res => {
+              if(res.length !=0 ){
+                
+              }
+            }).catch(err => console.log(err))
+        }
       })
       .catch(err => console.log(err));
   };

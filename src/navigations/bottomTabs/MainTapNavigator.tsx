@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MainScreen from '../../screens/MainScreen/MainScreen';
 import messaging from '@react-native-firebase/messaging';
@@ -16,16 +16,18 @@ import RegisterFailedModal from '../../components/Modal/RegisterFailedModalNotif
 import Toast from 'react-native-toast-message';
 import { responsiveHeigth, responsiveWidth } from '../../function/responsive';
 import IncomeScreen from '../../screens/IncomeScreen';
+import * as RootNavigation from '../../navigations/RootNavigation';
+import { SheetManager } from 'react-native-actions-sheet';
+import { ActionContext } from '../../../App';
 
 const Tab = createBottomTabNavigator();
 
 const MainTapNavigator: React.FC<any> = ({navigation}) => {
   const [loading,setLoading] = useState(true)
   const [registerNoti,setRegisterNoti] = useState(false)
-  const [registerfailedNoti,setRegisterFailedNoti] = useState(false)
   const [registerfailedModalNoti,setRegisterFailedModalNoti] = useState(false)
-  const [initialRouteName,setInitialRouteName] = useState('หน้าหลัก')
-
+  const [initialRouteName,setInitialRouteName] = useState('home')
+  const {actiontaskId,setActiontaskId} = useContext(ActionContext)
   const ListPath = [
     {
       name: 'home',
@@ -61,130 +63,192 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   useEffect(()=>{
     messaging().getInitialNotification().then(
       message =>{
-        console.log(message)
+        // console.log(message)
         if(message){
-          if(message.notification?.body === "register complete"){
-            setInitialRouteName("โปรไฟล์")
+          if(message.data?.type === "APPROVE_DRONER_SUCCESS"){
+            setInitialRouteName("profile")
             setRegisterNoti(true)
           }
-          else if(message.notification?.body === "register incomplete"){
-            setInitialRouteName("โปรไฟล์")
+          else if(message.data?.type === "APPROVE_DRONER_FAIL"){
+            setInitialRouteName("profile")
             setRegisterFailedModalNoti(true)
           }
-          else if(message.notification?.body === "drone firsttime failed"){
-            setInitialRouteName("โปรไฟล์")
+          else if(message.data?.type === "APPROVE_DRONER_DRONE_FAIL"){
+            setInitialRouteName("profile")
           }
-          else if(message.notification?.body === "drone success"){
-            setInitialRouteName("โปรไฟล์")
+          else if(message.data?.type === "APPROVE_ADDITION_DRONER_DRONE_SUCCESS"){
+            setInitialRouteName("profile")
           }
-          else if(message.notification?.body === "drone failed"){
-            setInitialRouteName("โปรไฟล์")
+          else if(message.data?.type === "APPROVE_ADDITION_DRONER_DRONE_FAIL"){
+            setInitialRouteName("profile")
+          }
+          else if(message.data?.type === "NEW_TASK"){
+            RootNavigation.navigate('Main', {
+              screen: 'TaskDetailScreen',
+              params: {taskId: message.data?.taskId},
+            })
+          }
+          else if(message.data?.type === "FIRST_REMIND"){
+            RootNavigation.navigate('Main', {
+              screen: 'TaskDetailScreen',
+              params: {taskId: message.data?.taskId},
+            })
+          }
+          else if(message.data?.type === "SECOND_REMIND"){
+            RootNavigation.navigate('Main', {
+              screen: 'TaskDetailScreen',
+              params: {taskId: message.data?.taskId},
+            })
+          }
+          else if(message.data?.type === "THIRD_REMIND"){
+            RootNavigation.navigate('Main', {
+              screen: 'TaskDetailScreen',
+              params: {taskId: message.data?.taskId},
+            })
+          }
+          else if(message.data?.type === "FORTH_REMIND"){
+            RootNavigation.navigate('Main', {
+              screen: 'TaskDetailScreen',
+              params: {taskId: message.data?.taskId},
+            })
+          }
+          else if(message.data?.type === "DONE_TASK_REMIND"){
+            RootNavigation.navigate('Main', {
+              screen: 'TaskDetailScreen',
+              params: {taskId: message.data?.taskId},
+            })
           }
         }
         setLoading(false)
       }
     )
     messaging().onNotificationOpenedApp(async message =>{
-      console.log(message)
-      if(message.notification?.body === "register complete"){
+      // console.log(message)
+      if(message.data?.type === "APPROVE_DRONER_SUCCESS"){
         setRegisterNoti(true)
       }
-      else if(message.notification?.body === "register incomplete"){
+      else if(message.data?.type === "APPROVE_DRONER_FAIL"){
         setRegisterFailedModalNoti(true)
       }
-      else if(message.notification?.body === "drone firsttime failed"){
-        const jumpAction = TabActions.jumpTo('โปรไฟล์');
+      else if(message.data?.type === "APPROVE_DRONER_DRONE_FAIL"){
+        const jumpAction = TabActions.jumpTo('profile');
         navigation.dispatch(jumpAction)
       }
-      else if(message.notification?.body === "drone success"){
-        const jumpAction = TabActions.jumpTo('โปรไฟล์');
+      else if(message.data?.type === "APPROVE_ADDITION_DRONER_DRONE_SUCCESS"){
+        const jumpAction = TabActions.jumpTo('profile');
         navigation.dispatch(jumpAction)
       }
-      else if(message.notification?.body === "drone failed"){
-        const jumpAction = TabActions.jumpTo('โปรไฟล์');
+      else if(message.data?.type === "APPROVE_ADDITION_DRONER_DRONE_FAIL"){
+        const jumpAction = TabActions.jumpTo('profile');
         navigation.dispatch(jumpAction)
+      }
+      else if(message.data?.type === "NEW_TASK"){
+        SheetManager.hide('NewTaskSheet');
+        RootNavigation.navigate('Main', {
+          screen: 'TaskDetailScreen',
+          params: {taskId: message.data?.taskId},
+        })
+      }
+      else if(message.data?.type === "FIRST_REMIND"){
+        RootNavigation.navigate('Main', {
+          screen: 'TaskDetailScreen',
+          params: {taskId: message.data?.taskId},
+        })
+      }
+      else if(message.data?.type === "SECOND_REMIND"){
+        RootNavigation.navigate('Main', {
+          screen: 'TaskDetailScreen',
+          params: {taskId: message.data?.taskId},
+        })
+      }
+      else if(message.data?.type === "THIRD_REMIND"){
+        RootNavigation.navigate('Main', {
+          screen: 'TaskDetailScreen',
+          params: {taskId: message.data?.taskId},
+        })
+      }
+      else if(message.data?.type === "FORTH_REMIND"){
+        RootNavigation.navigate('Main', {
+          screen: 'TaskDetailScreen',
+          params: {taskId: message.data?.taskId},
+        })
+      }
+      else if(message.data?.type === "DONE_TASK_REMIND"){
+        RootNavigation.navigate('Main', {
+          screen: 'TaskDetailScreen',
+          params: {taskId: message.data?.taskId},
+        })
       }
     })
 
     messaging().onMessage(async message =>{
       console.log(message)
-      if(message.notification?.body === "register complete"){
+      if(message.data?.type === "APPROVE_DRONER_SUCCESS"){
         setRegisterNoti(true)
       }
-      else if(message.notification?.body === "register incomplete"){
+      else if(message.data?.type === "APPROVE_DRONER_FAIL"){
         Toast.show({
           type : 'registerFailed',
           topOffset : 10,
           position : 'top',
           onPress() {
-            const jumpAction = TabActions.jumpTo('โปรไฟล์');
+            const jumpAction = TabActions.jumpTo('profile');
             navigation.dispatch(jumpAction)
             Toast.hide()
           },
         });
       }
-      else if(message.notification?.body === "drone firsttime failed"){
+      else if(message.notification?.body === "APPROVE_DRONER_DRONE_FAIL"){
         Toast.show({
           type : 'droneFirstTimeFailed',
           topOffset : 10,
           position : 'top',
           onPress() {
-            const jumpAction = TabActions.jumpTo('โปรไฟล์');
+            const jumpAction = TabActions.jumpTo('profile');
             navigation.dispatch(jumpAction)
             Toast.hide()
           },
         });
       }
-      else if(message.notification?.body === "drone success"){
+      else if(message.data?.type === "APPROVE_ADDITION_DRONER_DRONE_SUCCESS"){
         Toast.show({
           type : 'droneSuccess',
           topOffset : 10,
-          text1 : '123456789',
+          text1 : message.data?.message.split(" ")[2],
           position : 'top',
           onPress() {
-            const jumpAction = TabActions.jumpTo('โปรไฟล์');
+            const jumpAction = TabActions.jumpTo('profile');
             navigation.dispatch(jumpAction)
             Toast.hide()
           },
         });
       }
-      else if(message.notification?.body === "drone failed"){
+      else if(message.data?.type === "APPROVE_ADDITION_DRONER_DRONE_FAIL"){
         Toast.show({
           type : 'droneFailed',
-          text1 : '123456789',
+          text1 : message.data?.message.split(" ")[2],
           topOffset : 10,
           position : 'top',
           onPress() {
-            const jumpAction = TabActions.jumpTo('โปรไฟล์');
+            const jumpAction = TabActions.jumpTo('profile');
             navigation.dispatch(jumpAction)
             Toast.hide()
           },
         });
       }
-      else if(message.notification?.body === "task receive success"){
-        Toast.show({
-          type : 'taskSuccess',
-          topOffset : 10,
-          text1 : '#TK20220518TH-0000001',
-          text2 : 'วันที่ 25/10/2565 เวลา 00.00 น.',
-          position : 'top',
-          onPress() {
-            Toast.hide()
-          },
-        });
-      }
-      else if(message.notification?.body === "task receive failed"){
+      else if(message.data?.type === "RECEIVE_TASK_FAIL"){
+        setActiontaskId(message.data?.taskId)
         Toast.show({
           type : 'taskFailed',
           topOffset : 10,
-          text1 : '#TK20220518TH-0000001',
+          text1 : `${message.data?.taskNo}`,
           position : 'top',
           onPress() {
             Toast.hide()
           },
         });
       }
-      else if(message.notification?.body === "task warning contact farmer"){
+      else if(message.data?.type === "FIRST_REMIND"){
         Toast.show({
           type : 'taskWarningContactFarmer',
           topOffset : 10,
@@ -194,17 +258,19 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           },
         });
       }
-      else if(message.notification?.body === "task warning contact farmer towmorow"){
+      else if(message.data?.type === "SECOND_REMIND"){
+        const date = message.data?.dateAppointment.split("T")
         Toast.show({
           type : 'taskWarningContactFarmerTowmorow',
           topOffset : 10,
           position : 'top',
+          text1 : `วันที่ ${date[0].split("-")[2]}/${date[0].split("-")[1]}/${parseInt(date[0].split("-")[0])+543} เวลา ${(parseInt(date[1].split(":")[0])+7)>9?`0${parseInt(date[1].split(":")[0])+7}`:parseInt(date[1].split(":")[0])+7}.${parseInt(date[1].split(":")[1])}น.`,
           onPress() {
             Toast.hide()
           },
         });
       }
-      else if(message.notification?.body === "task warning before 1 hours"){
+      else if(message.data?.type === "THIRD_REMIND"){
         Toast.show({
           type : 'taskWarningBeforeOneHours',
           topOffset : 10,
@@ -214,7 +280,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           },
         });
       }
-      else if(message.notification?.body === "task warning start job"){
+      else if(message.data?.type === "FORTH_REMIND"){
         Toast.show({
           type : 'taskWarningStartJob',
           topOffset : 10,
@@ -224,7 +290,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           },
         });
       }
-      else if(message.notification?.body === "task warning job success"){
+      else if(message.data?.type === "DONE_TASK_REMIND"){
         Toast.show({
           type : 'taskWarningJobSuccess',
           topOffset : 10,
@@ -234,12 +300,13 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           },
         });
       }
-      else if(message.notification?.body === "task success"){
+      else if(message.data?.type === "FORCE_SELECT_DRONER"){
+        const date = message.data?.dateAppointment.split("T")
         Toast.show({
           type : 'taskJobSuccess',
           topOffset : 10,
-          text1 : '#TK20220518TH-0000001',
-          text2 : 'วันที่ 25/10/2565 เวลา 00.00 น.',
+          text1 : `#${message.data?.taskNo}`,
+          text2 : `วันที่ ${date[0].split("-")[2]}/${date[0].split("-")[1]}/${parseInt(date[0].split("-")[0])+543} เวลา ${(parseInt(date[1].split(":")[0])+7)>9?`0${parseInt(date[1].split(":")[0])+7}`:parseInt(date[1].split(":")[0])+7}.${parseInt(date[1].split(":")[1])}น.`,
           position : 'top',
           onPress() {
             Toast.hide()
@@ -256,8 +323,8 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     <>
     <RegisterNotification value={registerNoti} onClick={()=>{
       setRegisterNoti(false);
-      setInitialRouteName("หน้าหลัก")
-      const jumpAction = TabActions.jumpTo('โปรไฟล์');
+      setInitialRouteName("home")
+      const jumpAction = TabActions.jumpTo('profile');
       navigation.dispatch(jumpAction)
     }}
     onClose={()=>{
@@ -267,15 +334,15 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     <RegisterFailedModal value={registerfailedModalNoti} 
     onClick={()=>{
       setRegisterFailedModalNoti(false)
-      setInitialRouteName("หน้าหลัก")
-      const jumpAction = TabActions.jumpTo('โปรไฟล์');
+      setInitialRouteName("home")
+      const jumpAction = TabActions.jumpTo('profile');
       navigation.dispatch(jumpAction)
     }} 
     onClose={()=>{
       setRegisterFailedModalNoti(false)
     }}/>
 
-<Tab.Navigator screenOptions={{headerShown: false}}>
+    <Tab.Navigator screenOptions={{headerShown: false}} initialRouteName={initialRouteName}>
       {ListPath.map((item, index) => {
         return (
           <Tab.Screen
@@ -291,6 +358,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                 alignItems: 'center',
                 justifyContent: 'center',
               },
+              lazy:true,
               tabBarButton(props) {
                 const isFocused = props.accessibilityState?.selected;
                 return (

@@ -44,4 +44,12 @@ export default {
   approveIcon: require('./approveIc.png'),
   awaitIcon: require('./awaitIc.png'),
   closeBlack: require('./CloseBlack.png'),
+  notification : require('./notification.png'),
+  notificationpromotion : require('./notificationpromotion.png'),
+  notificationrevenue : require('./notificationrevenue.png'),
+  notificationsetup : require('./notificationsetup.png'),
+  notificationtask : require('./notificationtask.png'),
+  unread : require('./unread.png'),
+  deletewhite : require('./deletewhite.png'),
+  deleteblack : require('./deleteblack.png')
 };

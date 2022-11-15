@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {createContext, useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AppNavigator from './src/navigations/AppNavigator';
 import {navigationRef} from './src/navigations/RootNavigation';
@@ -20,7 +20,20 @@ import {
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+type ActionContextType = {
+  actiontaskId: string | null,
+  setActiontaskId: React.Dispatch<React.SetStateAction<string | null>>
+}
+
+const ActionContextState = {
+  actiontaskId: "",
+  setActiontaskId: () => {}
+}
+
+const ActionContext = createContext<ActionContextType>(ActionContextState);
+
 const App = () => {
+  const [actiontaskId,setActiontaskId] = useState<string | null>("")
   const getDroner = async() => {
     const droner_id = await AsyncStorage.getItem('droner_id')
     const token = await AsyncStorage.getItem('token')
@@ -40,16 +53,18 @@ const App = () => {
 
   return (
     <>
-      <NavigationContainer ref={navigationRef}>
-        <AuthProvider>
-          <SheetProvider>
-            <AppNavigator />
-          </SheetProvider>
-        </AuthProvider>
-        <Toast config={toastConfig} />
-      </NavigationContainer>
+      <ActionContext.Provider value={{actiontaskId,setActiontaskId}}>
+        <NavigationContainer ref={navigationRef}>
+          <AuthProvider>
+            <SheetProvider>
+              <AppNavigator />
+            </SheetProvider>
+          </AuthProvider>
+          <Toast config={toastConfig} />
+        </NavigationContainer>
+      </ActionContext.Provider>
     </>
   );
 };
-
+export { ActionContext };
 export default App;
