@@ -1,19 +1,20 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {stylesCentral} from '../../styles/StylesCentral';
-import {MainButton} from '../../components/Button/MainButton';
-import {colors, font} from '../../assets';
-import {normalize} from '../../function/Normalize';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Linking } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { stylesCentral } from '../../styles/StylesCentral';
+import { MainButton } from '../../components/Button/MainButton';
+import { colors, font } from '../../assets';
+import { normalize } from '../../function/Normalize';
 import CustomHeader from '../../components/CustomHeader';
-import {ScrollView} from 'react-native-gesture-handler';
-import {condition} from '../../assets/constant/constant';
-import {CheckBox} from '@rneui/themed';
+import { ScrollView } from 'react-native-gesture-handler';
+import { condition } from '../../assets/constant/constant';
+import { CheckBox } from '@rneui/themed';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import icons from '../../assets/icons/icons';
 
-const ConditionScreen: React.FC<any> = ({navigation}) => {
-  const [checked, setChecked] = useState<boolean>(false);
+const ConditionScreen: React.FC<any> = ({ navigation }) => {
+  const [checked1, setChecked1] = useState<boolean>(false);
+  const [checked2, setChecked2] = useState<boolean>(false);
   const [disabledCheckbox, setDisabledCheckbox] = useState<boolean>(true);
 
   const isCloseToBottom = ({
@@ -35,19 +36,19 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
         onPressBack={() => navigation.goBack()}
       />
       <View style={styles.inner}>
-        <View style={{flex: 5}}>
+        <View style={{ flex: 5 }}>
           <ScrollView
-            onScroll={({nativeEvent}) => {
+            onScroll={({ nativeEvent }) => {
               if (isCloseToBottom(nativeEvent)) {
                 setDisabledCheckbox(false);
               }
             }}>
             <Text style={styles.h2}>ข้อตกลงและเงื่อนไข</Text>
-            <Text style={[styles.h3, {marginVertical: normalize(20)}]}>
+            <Text style={[styles.h3, { marginVertical: normalize(20) }]}>
               โปรดอ่านข้อตกลงและเงื่อนไขโดยละเอียดก่อน ดำเนินการถัดไป
             </Text>
             <Text style={[styles.h1]}>นโยบายการคุ้มครองข้อมูลส่วน บุคคล</Text>
-            <Text style={[styles.h3, {marginVertical: normalize(20)}]}>
+            <Text style={[styles.h3, { marginVertical: normalize(20) }]}>
               หัวข้อนโยบาย
             </Text>
 
@@ -61,27 +62,67 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
             justifyContent: 'space-between',
           }}>
           <TouchableOpacity
-            onPress={() => setChecked(!checked)}
+            onPress={() => setChecked1(!checked1)}
             disabled={disabledCheckbox}>
-            <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
-              <Image
-                source={checked ? icons.checked : icons.check}
-                style={{width: normalize(20), height: normalize(20)}}
-              />
-
+            <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
+              {disabledCheckbox ?
+                <Image
+                  source={icons.checkbox_disable}
+                  style={{ width: normalize(20), height: normalize(20) }}
+                /> :
+                <Image
+                  source={checked1 ? icons.checked : icons.check}
+                  style={{ width: normalize(20), height: normalize(20) }}
+                />
+              }
               <Text
                 style={[
                   styles.label,
-                  {color: colors.fontBlack, marginLeft: normalize(10)},
+                  { color: colors.fontBlack, marginLeft: normalize(10) },
                 ]}>
-                ฉันยอมรับข้อตกลงและเงื่อนไข
+                ฉันยอมรับข้อกำหนดและเงื่อนไขการใช้บริการ
               </Text>
             </View>
+
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setChecked2(!checked2)}
+            disabled={disabledCheckbox}>
+            <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
+              {disabledCheckbox ?
+                <Image
+                  source={icons.checkbox_disable}
+                  style={{ width: normalize(20), height: normalize(20) }}
+                /> :
+                <Image
+                  source={checked2 ? icons.checked : icons.check}
+                  style={{ width: normalize(20), height: normalize(20) }}
+                />
+              }
+              <Text
+                style={[
+                  styles.label,
+                  { color: colors.fontBlack, marginLeft: normalize(10) },
+                ]}>
+                ฉันยอมรับ
+              </Text>
+
+              <Text
+             onPress={() => Linking.openURL('https://www.iconkaset.com/policy/')}
+                style={[
+                  styles.label,
+                  { color: colors.fontBlack,textDecorationLine:'underline' },
+                ]}>
+                นโยบายความเป็นส่วนตัว
+              </Text>
+             
+            </View>
+
           </TouchableOpacity>
           <MainButton
             label="ถัดไป"
             color={colors.orange}
-            disable={!checked}
+            disable={checked1==false||checked2==false }
             onPress={() => navigation.navigate('TelNumberScreen')}
           />
         </View>

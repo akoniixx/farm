@@ -39,6 +39,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import ExtendModal from '../../components/Modal/ExtendModal';
 import StatusExtend from './StatusExtend';
+import { mixpanel } from '../../../mixpanel';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
@@ -125,6 +126,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   const onFinishTaskSuccess = () => {
+    mixpanel.track('Task success');
     setTogleModalSuccess(false);
     setTimeout(() => getTaskDetail(), 200);
     getTaskDetail();

@@ -36,6 +36,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import Lottie from 'lottie-react-native';
 import DroneBrandingItem from '../../components/Drone/DroneBranding';
+import { mixpanel } from '../../../mixpanel';
 
 const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const fall = new Animated.Value(1);
@@ -336,6 +337,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   };
 
   const addDrone = () => {
+    mixpanel.track('Add drone');
     const drones = [...dronedata];
     const dronesUI = [...dronedataUI];
     const newDrone = {

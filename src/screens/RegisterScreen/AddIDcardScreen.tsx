@@ -24,6 +24,7 @@ import {Register} from '../../datasource/AuthDatasource';
 import {ProgressBar} from '../../components/ProgressBar';
 import Lottie from 'lottie-react-native';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import { mixpanel } from '../../../mixpanel';
 
 const width = Dimensions.get('window').width;
 
@@ -203,6 +204,7 @@ const AddIDcardScreen: React.FC<any> = ({route, navigation}) => {
                   label="ถัดไป"
                   color={colors.orange}
                   onPress={() => {
+                    mixpanel.track('Add ID card');
                     setOpenModal(false);
                     setLoading(true);
                     Register.registerStep4(telNo, idcard)

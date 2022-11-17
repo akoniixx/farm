@@ -6,6 +6,7 @@ import HomeCarousel from '../../components/Carousel/HomeCarousel';
 import {MainButton} from '../../components/Button/MainButton';
 import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
+import { mixpanel } from '../../../mixpanel';
 
 const HomeScreen: React.FC<any> = ({navigation}) => {
   return (
@@ -25,7 +26,9 @@ const HomeScreen: React.FC<any> = ({navigation}) => {
             label="ลงทะเบียนนักบินโดรน"
             color={colors.white}
             fontColor={'black'}
-            onPress={() => navigation.navigate('ConditionScreen')}
+            onPress={() => {
+              mixpanel.track('Create account');
+              navigation.navigate('ConditionScreen')}}
           />
         </View>
       </View>

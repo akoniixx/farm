@@ -16,6 +16,7 @@ import {SheetManager} from 'react-native-actions-sheet';
 import Modal from 'react-native-modal';
 import {MainButton} from '../Button/MainButton';
 import ExtendModal from '../Modal/ExtendModal';
+import { mixpanel } from '../../../mixpanel';
 
 const Tasklists: React.FC<any> = (props: any) => {
   const date = new Date(props.date);
@@ -563,7 +564,9 @@ const Tasklists: React.FC<any> = (props: any) => {
             label="ยืนยัน"
             color={colors.orange}
             disable={defaultRating == 0}
-            onPress={() => props.onFinishTask(taskId)}
+            onPress={() => {
+              mixpanel.track('Task success');
+              props.onFinishTask(taskId)}}
           />
         </View>
       </Modal>

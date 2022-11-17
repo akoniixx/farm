@@ -51,5 +51,6 @@ export default {
   notificationtask : require('./notificationtask.png'),
   unread : require('./unread.png'),
   deletewhite : require('./deletewhite.png'),
-  deleteblack : require('./deleteblack.png')
+  deleteblack : require('./deleteblack.png'),
+  checkbox_disable: require ('./checkbox_disable.png')
 };
