@@ -174,7 +174,6 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
     )
       .then(response => response.json())
       .then(responseJson => {
-        console.log(responseJson);
         setlat(responseJson.results[0].geometry.location.lat);
         setlong(responseJson.results[0].geometry.location.lng);
         setAddress(
@@ -483,26 +482,6 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   <></>
                 )}
               </View>
-              {dronedataUI.length === 0 && dronedata.length === 0 ? (
-                <></>
-              ) : (
-                <View
-                  style={{
-                    marginTop: normalize(20),
-                    display: 'flex',
-                    justifyContent: 'center',
-                  }}>
-                  {dronedataUI.map((item: any, index: number) => (
-                    <DroneBrandingItem
-                      key={index}
-                      dronebrand={item.droneBrand}
-                      serialbrand={item.serialBrand}
-                      status={'PENDING'}
-                      image={item.img}
-                    />
-                  ))}
-                </View>
-              )}
               <View>
                 <View
                   style={{
@@ -518,6 +497,26 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     (เพิ่มได้ภายหลัง)
                   </Text>
                 </View>
+                {dronedataUI.length === 0 && dronedata.length === 0 ? (
+                  <></>
+                ) : (
+                  <View
+                    style={{
+                      marginTop: normalize(20),
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}>
+                    {dronedataUI.map((item: any, index: number) => (
+                      <DroneBrandingItem
+                        key={index}
+                        dronebrand={item.droneBrand}
+                        serialbrand={item.serialBrand}
+                        status={'PENDING'}
+                        image={item.img}
+                      />
+                    ))}
+                  </View>
+                )}
                 <View style={{backgroundColor: colors.white}}>
                   <MainButton
                     label="+ เพิ่มโดรน"

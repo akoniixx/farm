@@ -42,7 +42,6 @@ import StatusExtend from './StatusExtend';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
-  console.log(`taskid = ${route.params.taskId}`)
   const [data, setData] = useState<any>();
   const [dateAppointment, setDateAppointment] = useState<any>();
   const [profileImg, setProfileImg] = useState<string>();
@@ -166,7 +165,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     const droner_Id = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.getTaskDetail(taskId, droner_Id)
       .then(res => {
-        console.log(res)
         if (res.success) {
           setData(res.responseData.data);
           let date = new Date(res.responseData.data.dateAppointment);

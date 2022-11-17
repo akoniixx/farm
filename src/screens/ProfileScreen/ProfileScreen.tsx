@@ -387,6 +387,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
               style={{
                 fontFamily: font.medium,
                 fontSize: normalize(16),
+                color : colors.fontBlack
               }}>
               โดรนฉีดพ่นของคุณ
             </Text>

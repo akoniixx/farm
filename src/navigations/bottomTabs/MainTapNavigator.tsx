@@ -63,255 +63,262 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   useEffect(()=>{
     messaging().getInitialNotification().then(
       message =>{
-        // console.log(message)
         if(message){
-          if(message.data?.type === "APPROVE_DRONER_SUCCESS"){
-            setInitialRouteName("profile")
-            setRegisterNoti(true)
-          }
-          else if(message.data?.type === "APPROVE_DRONER_FAIL"){
-            setInitialRouteName("profile")
-            setRegisterFailedModalNoti(true)
-          }
-          else if(message.data?.type === "APPROVE_DRONER_DRONE_FAIL"){
-            setInitialRouteName("profile")
-          }
-          else if(message.data?.type === "APPROVE_ADDITION_DRONER_DRONE_SUCCESS"){
-            setInitialRouteName("profile")
-          }
-          else if(message.data?.type === "APPROVE_ADDITION_DRONER_DRONE_FAIL"){
-            setInitialRouteName("profile")
-          }
-          else if(message.data?.type === "NEW_TASK"){
-            RootNavigation.navigate('Main', {
-              screen: 'TaskDetailScreen',
-              params: {taskId: message.data?.taskId},
-            })
-          }
-          else if(message.data?.type === "FIRST_REMIND"){
-            RootNavigation.navigate('Main', {
-              screen: 'TaskDetailScreen',
-              params: {taskId: message.data?.taskId},
-            })
-          }
-          else if(message.data?.type === "SECOND_REMIND"){
-            RootNavigation.navigate('Main', {
-              screen: 'TaskDetailScreen',
-              params: {taskId: message.data?.taskId},
-            })
-          }
-          else if(message.data?.type === "THIRD_REMIND"){
-            RootNavigation.navigate('Main', {
-              screen: 'TaskDetailScreen',
-              params: {taskId: message.data?.taskId},
-            })
-          }
-          else if(message.data?.type === "FORTH_REMIND"){
-            RootNavigation.navigate('Main', {
-              screen: 'TaskDetailScreen',
-              params: {taskId: message.data?.taskId},
-            })
-          }
-          else if(message.data?.type === "DONE_TASK_REMIND"){
-            RootNavigation.navigate('Main', {
-              screen: 'TaskDetailScreen',
-              params: {taskId: message.data?.taskId},
-            })
+          const type = message.data?.type;
+          switch (type) {
+            case "APPROVE_DRONER_SUCCESS":
+              setInitialRouteName("profile")
+              setRegisterNoti(true)
+              break;
+            case "APPROVE_DRONER_FAIL":
+              setInitialRouteName("profile")
+              setRegisterFailedModalNoti(true)
+              break;
+            case "APPROVE_DRONER_DRONE_FAIL":
+              setInitialRouteName("profile")
+              break;
+            case "APPROVE_ADDITION_DRONER_DRONE_SUCCESS":
+              setInitialRouteName("profile")
+              break;
+            case "APPROVE_ADDITION_DRONER_DRONE_FAIL":
+              setInitialRouteName("profile")
+              break;
+            case "NEW_TASK":
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              break;
+            case "FIRST_REMIND":
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              break;
+            case "SECOND_REMIND":
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              break;
+            case "THIRD_REMIND":
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              break;
+            case "FORTH_REMIND":
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              break;
+            case "DONE_TASK_REMIND":
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              break;
+            default:
+              break;
           }
         }
         setLoading(false)
       }
     )
     messaging().onNotificationOpenedApp(async message =>{
-      // console.log(message)
-      if(message.data?.type === "APPROVE_DRONER_SUCCESS"){
-        setRegisterNoti(true)
-      }
-      else if(message.data?.type === "APPROVE_DRONER_FAIL"){
-        setRegisterFailedModalNoti(true)
-      }
-      else if(message.data?.type === "APPROVE_DRONER_DRONE_FAIL"){
-        const jumpAction = TabActions.jumpTo('profile');
-        navigation.dispatch(jumpAction)
-      }
-      else if(message.data?.type === "APPROVE_ADDITION_DRONER_DRONE_SUCCESS"){
-        const jumpAction = TabActions.jumpTo('profile');
-        navigation.dispatch(jumpAction)
-      }
-      else if(message.data?.type === "APPROVE_ADDITION_DRONER_DRONE_FAIL"){
-        const jumpAction = TabActions.jumpTo('profile');
-        navigation.dispatch(jumpAction)
-      }
-      else if(message.data?.type === "NEW_TASK"){
-        SheetManager.hide('NewTaskSheet');
-        RootNavigation.navigate('Main', {
-          screen: 'TaskDetailScreen',
-          params: {taskId: message.data?.taskId},
-        })
-      }
-      else if(message.data?.type === "FIRST_REMIND"){
-        RootNavigation.navigate('Main', {
-          screen: 'TaskDetailScreen',
-          params: {taskId: message.data?.taskId},
-        })
-      }
-      else if(message.data?.type === "SECOND_REMIND"){
-        RootNavigation.navigate('Main', {
-          screen: 'TaskDetailScreen',
-          params: {taskId: message.data?.taskId},
-        })
-      }
-      else if(message.data?.type === "THIRD_REMIND"){
-        RootNavigation.navigate('Main', {
-          screen: 'TaskDetailScreen',
-          params: {taskId: message.data?.taskId},
-        })
-      }
-      else if(message.data?.type === "FORTH_REMIND"){
-        RootNavigation.navigate('Main', {
-          screen: 'TaskDetailScreen',
-          params: {taskId: message.data?.taskId},
-        })
-      }
-      else if(message.data?.type === "DONE_TASK_REMIND"){
-        RootNavigation.navigate('Main', {
-          screen: 'TaskDetailScreen',
-          params: {taskId: message.data?.taskId},
-        })
+      const type = message.data?.type;
+      const jumpAction = TabActions.jumpTo('profile');
+      switch (type) {
+        case "APPROVE_DRONER_SUCCESS":
+          setRegisterNoti(true)
+          break;
+        case "APPROVE_DRONER_FAIL":
+          setRegisterFailedModalNoti(true)
+          break;
+        case "APPROVE_DRONER_DRONE_FAIL":
+          navigation.dispatch(jumpAction)
+          break;
+        case "APPROVE_ADDITION_DRONER_DRONE_SUCCESS":
+          navigation.dispatch(jumpAction)
+          break;
+        case "APPROVE_ADDITION_DRONER_DRONE_FAIL":
+          navigation.dispatch(jumpAction)
+          break;
+        case "NEW_TASK":
+          RootNavigation.navigate('Main', {
+            screen: 'TaskDetailScreen',
+            params: {taskId: message.data?.taskId},
+          })
+          break;
+        case "FIRST_REMIND":
+          RootNavigation.navigate('Main', {
+            screen: 'TaskDetailScreen',
+            params: {taskId: message.data?.taskId},
+          })
+          break;
+        case "SECOND_REMIND":
+          RootNavigation.navigate('Main', {
+            screen: 'TaskDetailScreen',
+            params: {taskId: message.data?.taskId},
+          })
+          break;
+        case "THIRD_REMIND":
+          RootNavigation.navigate('Main', {
+            screen: 'TaskDetailScreen',
+            params: {taskId: message.data?.taskId},
+          })
+          break;
+        case "FORTH_REMIND":
+          RootNavigation.navigate('Main', {
+            screen: 'TaskDetailScreen',
+            params: {taskId: message.data?.taskId},
+          })
+          break;
+        case "DONE_TASK_REMIND":
+          RootNavigation.navigate('Main', {
+            screen: 'TaskDetailScreen',
+            params: {taskId: message.data?.taskId},
+          })
+          break;
+        default:
+          break;
       }
     })
 
     messaging().onMessage(async message =>{
-      console.log(message)
-      if(message.data?.type === "APPROVE_DRONER_SUCCESS"){
-        setRegisterNoti(true)
-      }
-      else if(message.data?.type === "APPROVE_DRONER_FAIL"){
-        Toast.show({
-          type : 'registerFailed',
-          topOffset : 10,
-          position : 'top',
-          onPress() {
-            const jumpAction = TabActions.jumpTo('profile');
-            navigation.dispatch(jumpAction)
-            Toast.hide()
-          },
-        });
-      }
-      else if(message.notification?.body === "APPROVE_DRONER_DRONE_FAIL"){
-        Toast.show({
-          type : 'droneFirstTimeFailed',
-          topOffset : 10,
-          position : 'top',
-          onPress() {
-            const jumpAction = TabActions.jumpTo('profile');
-            navigation.dispatch(jumpAction)
-            Toast.hide()
-          },
-        });
-      }
-      else if(message.data?.type === "APPROVE_ADDITION_DRONER_DRONE_SUCCESS"){
-        Toast.show({
-          type : 'droneSuccess',
-          topOffset : 10,
-          text1 : message.data?.message.split(" ")[2],
-          position : 'top',
-          onPress() {
-            const jumpAction = TabActions.jumpTo('profile');
-            navigation.dispatch(jumpAction)
-            Toast.hide()
-          },
-        });
-      }
-      else if(message.data?.type === "APPROVE_ADDITION_DRONER_DRONE_FAIL"){
-        Toast.show({
-          type : 'droneFailed',
-          text1 : message.data?.message.split(" ")[2],
-          topOffset : 10,
-          position : 'top',
-          onPress() {
-            const jumpAction = TabActions.jumpTo('profile');
-            navigation.dispatch(jumpAction)
-            Toast.hide()
-          },
-        });
-      }
-      else if(message.data?.type === "RECEIVE_TASK_FAIL"){
-        setActiontaskId(message.data?.taskId)
-        Toast.show({
-          type : 'taskFailed',
-          topOffset : 10,
-          text1 : `${message.data?.taskNo}`,
-          position : 'top',
-          onPress() {
-            Toast.hide()
-          },
-        });
-      }
-      else if(message.data?.type === "FIRST_REMIND"){
-        Toast.show({
-          type : 'taskWarningContactFarmer',
-          topOffset : 10,
-          position : 'top',
-          onPress() {
-            Toast.hide()
-          },
-        });
-      }
-      else if(message.data?.type === "SECOND_REMIND"){
-        const date = message.data?.dateAppointment.split("T")
-        Toast.show({
-          type : 'taskWarningContactFarmerTowmorow',
-          topOffset : 10,
-          position : 'top',
-          text1 : `วันที่ ${date[0].split("-")[2]}/${date[0].split("-")[1]}/${parseInt(date[0].split("-")[0])+543} เวลา ${(parseInt(date[1].split(":")[0])+7)>9?`0${parseInt(date[1].split(":")[0])+7}`:parseInt(date[1].split(":")[0])+7}.${parseInt(date[1].split(":")[1])}น.`,
-          onPress() {
-            Toast.hide()
-          },
-        });
-      }
-      else if(message.data?.type === "THIRD_REMIND"){
-        Toast.show({
-          type : 'taskWarningBeforeOneHours',
-          topOffset : 10,
-          position : 'top',
-          onPress() {
-            Toast.hide()
-          },
-        });
-      }
-      else if(message.data?.type === "FORTH_REMIND"){
-        Toast.show({
-          type : 'taskWarningStartJob',
-          topOffset : 10,
-          position : 'top',
-          onPress() {
-            Toast.hide()
-          },
-        });
-      }
-      else if(message.data?.type === "DONE_TASK_REMIND"){
-        Toast.show({
-          type : 'taskWarningJobSuccess',
-          topOffset : 10,
-          position : 'top',
-          onPress() {
-            Toast.hide()
-          },
-        });
-      }
-      else if(message.data?.type === "FORCE_SELECT_DRONER"){
-        const date = message.data?.dateAppointment.split("T")
-        Toast.show({
-          type : 'taskJobSuccess',
-          topOffset : 10,
-          text1 : `#${message.data?.taskNo}`,
-          text2 : `วันที่ ${date[0].split("-")[2]}/${date[0].split("-")[1]}/${parseInt(date[0].split("-")[0])+543} เวลา ${(parseInt(date[1].split(":")[0])+7)>9?`0${parseInt(date[1].split(":")[0])+7}`:parseInt(date[1].split(":")[0])+7}.${parseInt(date[1].split(":")[1])}น.`,
-          position : 'top',
-          onPress() {
-            Toast.hide()
-          },
-        });
+      const type = message.data?.type;
+      const date = message.data?.dateAppointment.split("T")
+      switch (type) {
+        case "APPROVE_DRONER_SUCCESS":
+          setRegisterNoti(true)
+          break;
+        case "APPROVE_DRONER_FAIL":
+          Toast.show({
+            type : 'registerFailed',
+            topOffset : 10,
+            position : 'top',
+            onPress() {
+              const jumpAction = TabActions.jumpTo('profile');
+              navigation.dispatch(jumpAction)
+              Toast.hide()
+            },
+          });
+          break;
+        case "APPROVE_DRONER_DRONE_FAIL":
+          Toast.show({
+            type : 'droneFirstTimeFailed',
+            topOffset : 10,
+            position : 'top',
+            onPress() {
+              const jumpAction = TabActions.jumpTo('profile');
+              navigation.dispatch(jumpAction)
+              Toast.hide()
+            },
+          });
+          break;
+        case "APPROVE_ADDITION_DRONER_DRONE_SUCCESS":
+          Toast.show({
+            type : 'droneSuccess',
+            topOffset : 10,
+            text1 : message.data?.message.split(" ")[2],
+            position : 'top',
+            onPress() {
+              const jumpAction = TabActions.jumpTo('profile');
+              navigation.dispatch(jumpAction)
+              Toast.hide()
+            },
+          });
+          break;
+        case "APPROVE_ADDITION_DRONER_DRONE_FAIL":
+          Toast.show({
+            type : 'droneFailed',
+            text1 : message.data?.message.split(" ")[2],
+            topOffset : 10,
+            position : 'top',
+            onPress() {
+              const jumpAction = TabActions.jumpTo('profile');
+              navigation.dispatch(jumpAction)
+              Toast.hide()
+            },
+          });
+          break;
+        case "RECEIVE_TASK_FAIL":
+          setActiontaskId(message.data?.taskId!)
+          Toast.show({
+            type : 'taskFailed',
+            topOffset : 10,
+            text1 : `${message.data?.taskNo}`,
+            position : 'top',
+            onPress() {
+              Toast.hide()
+            },
+          });
+          break;
+        case "FIRST_REMIND":
+          Toast.show({
+            type : 'taskWarningContactFarmer',
+            topOffset : 10,
+            position : 'top',
+            onPress() {
+              Toast.hide()
+            },
+          });
+          break;
+        case "SECOND_REMIND":
+          Toast.show({
+            type : 'taskWarningContactFarmerTowmorow',
+            topOffset : 10,
+            position : 'top',
+            text1 : `วันที่ ${date![0].split("-")[2]}/${date![0].split("-")[1]}/${parseInt(date![0].split("-")[0])+543} เวลา ${(parseInt(date![1].split(":")[0])+7)>9?`0${parseInt(date![1].split(":")[0])+7}`:parseInt(date![1].split(":")[0])+7}.${parseInt(date![1].split(":")[1])}น.`,
+            onPress() {
+              Toast.hide()
+            },
+          });
+          break;
+        case "THIRD_REMIND":
+          Toast.show({
+            type : 'taskWarningBeforeOneHours',
+            topOffset : 10,
+            position : 'top',
+            onPress() {
+              Toast.hide()
+            },
+          });
+          break;
+        case "FORTH_REMIND":
+          Toast.show({
+            type : 'taskWarningStartJob',
+            topOffset : 10,
+            position : 'top',
+            onPress() {
+              Toast.hide()
+            },
+          });
+          break;
+        case "DONE_TASK_REMIND":
+          Toast.show({
+            type : 'taskWarningJobSuccess',
+            topOffset : 10,
+            position : 'top',
+            onPress() {
+              Toast.hide()
+            },
+          });
+          break;
+        case "FORCE_SELECT_DRONER":
+          Toast.show({
+            type : 'taskJobSuccess',
+            topOffset : 10,
+            text1 : `#${message.data?.taskNo}`,
+            text2 : `วันที่ ${date![0].split("-")[2]}/${date![0].split("-")[1]}/${parseInt(date![0].split("-")[0])+543} เวลา ${(parseInt(date![1].split(":")[0])+7)>9?`0${parseInt(date![1].split(":")[0])+7}`:parseInt(date![1].split(":")[0])+7}.${parseInt(date![1].split(":")[1])}น.`,
+            position : 'top',
+            onPress() {
+              Toast.hide()
+            },
+          });
+        default:
+          break;
       }
     })
   },[])
