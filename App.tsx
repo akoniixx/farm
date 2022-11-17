@@ -34,16 +34,9 @@ const ActionContext = createContext<ActionContextType>(ActionContextState);
 
 const App = () => {
   const [actiontaskId,setActiontaskId] = useState<string | null>("")
-  const getDroner = async() => {
-    const droner_id = await AsyncStorage.getItem('droner_id')
-    const token = await AsyncStorage.getItem('token')
-    console.log(`droner_id = ${droner_id}`)
-    console.log(`token = ${token}`)
-  }
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
-    getDroner();
     if(Platform.OS === "ios"){
       firebaseInitialize()
     }

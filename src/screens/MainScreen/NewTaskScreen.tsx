@@ -108,12 +108,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   };
 
   useEffect(()=>{
-    console.log(`actiontaskId = ${actiontaskId}`)
-    // // if(actiontaskId){
-    //   console.log(selectedTaskId)
       setData(data.filter((x: any) => x.item.id != actiontaskId));
-      // setActiontaskId(false);
-    // }
   },[actiontaskId])
   useEffect(() => {
     getDronerId();

@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, View, TouchableOpacity, FlatList, Modal } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { stylesCentral } from '../../styles/StylesCentral'
 import { colors, font, icons } from '../../assets'
@@ -10,13 +10,15 @@ import * as RootNavigation from '../../navigations/RootNavigation';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource'
 import fonts from '../../assets/fonts'
 import { MainButton } from '../../components/Button/MainButton'
+import { useFocusEffect } from '@react-navigation/native'
 
 interface NotificationListTileParams{
-  type : String;
-  date : String;
-  description : String;
+  type : string;
+  date : string;
+  description : string;
   isRead : boolean;
   id : string;
+  data : any;
 }
 
 const monthArray = [
@@ -63,12 +65,12 @@ const readIt = (id : string)=>{
   ).catch(err => console.log(err))
 }
 
-const readItTask = (id : string)=>{
+const readItTask = (id : string,data : string)=>{
   FCMtokenDatasource.readNotification(id).then(
     res=>{
       RootNavigation.navigate('Main', {
         screen: 'TaskDetailScreen',
-        params: {taskId: id},
+        params: {taskId: data},
       })
     }
   ).catch(err => console.log(err))
@@ -79,7 +81,8 @@ const NotificationListTile:React.FC<NotificationListTileParams> = ({
   date,
   description,
   isRead,
-  id
+  id,
+  data
 }) => {
     const currentdate = date.split("T")[0];
     const currentTime = date.split("T")[1];
@@ -140,7 +143,8 @@ const NotificationListTile:React.FC<NotificationListTileParams> = ({
       || type === 'DONE_TASK_REMIND' || type === 'FORCE_SELECT_DRONER' || type === 'RECEIVE_TASK_SUCCESS'){
       return (
         <TouchableOpacity onPress={()=>{
-          readItTask(id)
+          console.log(data)
+          readItTask(id,data.taskDronerTemp[0].taskId)
         }}>
         <View style={{
           height : responsiveHeigth(78),
@@ -219,6 +223,11 @@ const NotificationList: React.FC<any> = ({navigation,route})=>{
   useEffect(()=>{
     getNotiList()
   },[])
+  useFocusEffect( 
+    React.useCallback(()=>{
+      getNotiList()
+    },[])
+  )
   return (
     <SafeAreaView style={[stylesCentral.container]}>
         <Modal         
@@ -278,6 +287,7 @@ const NotificationList: React.FC<any> = ({navigation,route})=>{
             description={item.detail}
             isRead={item.isRead}
             id={item.id}
+            data={item.data}
           />} 
           renderHiddenItem={({item}:any)=>
             <View style={{
