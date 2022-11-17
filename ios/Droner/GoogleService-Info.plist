@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>624587099660-g11b50kio2iiuepcn5lv9ciu1uroa9bi.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.624587099660-g11b50kio2iiuepcn5lv9ciu1uroa9bi</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDVnYdTOLWIoN4HpwDTnhZddEePlDDQ96M</string>
+	<key>GCM_SENDER_ID</key>
+	<string>624587099660</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.iconkaset.dev.droner</string>
+	<key>PROJECT_ID</key>
+	<string>droner-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>droner-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:624587099660:ios:5947d5a2e249610d40e829</string>
+</dict>
+</plist>

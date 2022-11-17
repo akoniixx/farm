@@ -195,8 +195,11 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           getTaskDetail();
           Toast.show({
             type: 'receiveTaskSuccess',
-            text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
-            text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
+            text1: `งาน #${data.taskNo}`,
+            text2: `วันที่ ${data.dateAppointment.split("T")[0].split("-")[2]}/${data.dateAppointment.split("T")[0].split("-")[1]}/${parseInt(data.dateAppointment.split("T")[0].split("-")[0])+543} เวลา ${((parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7) > 9)? `${(parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7)}`:`0${(parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7)}`}:${data.dateAppointment.split("T")[1].split(":")[1]}`,
+            onPress : ()=>{
+              Toast.hide()
+            }
           });
         } else {
           RootNavigation.navigate('Main', {
@@ -315,6 +318,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   style={{
                     fontFamily: fonts.medium,
                     fontSize: normalize(19),
+                    color: colors.fontBlack
                   }}>
                   {data.farmerPlot.plantName}
                 </Text>
@@ -346,6 +350,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                     fontFamily: fonts.medium,
                     paddingLeft: normalize(8),
                     fontSize: normalize(14),
+                    color : colors.fontBlack
                   }}>{`${convertDate(data.dateAppointment).getDate()}/${
                   convertDate(data.dateAppointment).getMonth() + 1
                 }/${
@@ -1053,6 +1058,7 @@ const styles = StyleSheet.create({
   font16: {
     fontFamily: fonts.medium,
     fontSize: normalize(16),
+    color : colors.fontBlack
   },
   fontGray: {
     fontFamily: font.medium,

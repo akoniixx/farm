@@ -1,20 +1,33 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MainScreen from '../../screens/MainScreen/MainScreen';
-import IncomeScreen from '../../screens/IncomeScreen';
-import TaskScreen from '../../screens/MainTaskScreen/MainTaskScreen';
-
+import messaging from '@react-native-firebase/messaging';
 import {colors, font, icons} from '../../assets';
 import {Text} from '@rneui/base';
 import fonts from '../../assets/fonts';
 import {normalize} from '@rneui/themed';
-import {Image, Platform, TouchableOpacity, View} from 'react-native';
+import { Image, View, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import MainTaskScreen from '../../screens/MainTaskScreen/MainTaskScreen';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
+import RegisterNotification from '../../components/Modal/RegisterNotification';
+import { TabActions } from '@react-navigation/native';
+import RegisterFailedNotification from '../../components/Modal/RegisterFailedNotification';
+import RegisterFailedModal from '../../components/Modal/RegisterFailedModalNotification';
+import Toast from 'react-native-toast-message';
+import { responsiveHeigth, responsiveWidth } from '../../function/responsive';
+import IncomeScreen from '../../screens/IncomeScreen';
+import * as RootNavigation from '../../navigations/RootNavigation';
+import { SheetManager } from 'react-native-actions-sheet';
+import { ActionContext } from '../../../App';
 
 const Tab = createBottomTabNavigator();
 
-const MainTapNavigator: React.FC = () => {
+const MainTapNavigator: React.FC<any> = ({navigation}) => {
+  const [loading,setLoading] = useState(true)
+  const [registerNoti,setRegisterNoti] = useState(false)
+  const [registerfailedModalNoti,setRegisterFailedModalNoti] = useState(false)
+  const [initialRouteName,setInitialRouteName] = useState('home')
+  const {actiontaskId,setActiontaskId} = useContext(ActionContext)
   const ListPath = [
     {
       name: 'home',
@@ -46,8 +59,297 @@ const MainTapNavigator: React.FC = () => {
     },
   ];
 
+
+  useEffect(()=>{
+    messaging().getInitialNotification().then(
+      message =>{
+        if(message){
+          const type = message.data?.type;
+          switch (type) {
+            case "APPROVE_DRONER_SUCCESS":
+              setInitialRouteName("profile")
+              setRegisterNoti(true)
+              break;
+            case "APPROVE_DRONER_FAIL":
+              setInitialRouteName("profile")
+              setRegisterFailedModalNoti(true)
+              break;
+            case "APPROVE_DRONER_DRONE_FAIL":
+              setInitialRouteName("profile")
+              break;
+            case "APPROVE_ADDITION_DRONER_DRONE_SUCCESS":
+              setInitialRouteName("profile")
+              break;
+            case "APPROVE_ADDITION_DRONER_DRONE_FAIL":
+              setInitialRouteName("profile")
+              break;
+            case "NEW_TASK":
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              break;
+            case "FIRST_REMIND":
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              break;
+            case "SECOND_REMIND":
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              break;
+            case "THIRD_REMIND":
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              break;
+            case "FORTH_REMIND":
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              break;
+            case "DONE_TASK_REMIND":
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              break;
+            default:
+              break;
+          }
+        }
+        setLoading(false)
+      }
+    )
+    messaging().onNotificationOpenedApp(async message =>{
+      const type = message.data?.type;
+      const jumpAction = TabActions.jumpTo('profile');
+      switch (type) {
+        case "APPROVE_DRONER_SUCCESS":
+          setRegisterNoti(true)
+          break;
+        case "APPROVE_DRONER_FAIL":
+          setRegisterFailedModalNoti(true)
+          break;
+        case "APPROVE_DRONER_DRONE_FAIL":
+          navigation.dispatch(jumpAction)
+          break;
+        case "APPROVE_ADDITION_DRONER_DRONE_SUCCESS":
+          navigation.dispatch(jumpAction)
+          break;
+        case "APPROVE_ADDITION_DRONER_DRONE_FAIL":
+          navigation.dispatch(jumpAction)
+          break;
+        case "NEW_TASK":
+          RootNavigation.navigate('Main', {
+            screen: 'TaskDetailScreen',
+            params: {taskId: message.data?.taskId},
+          })
+          break;
+        case "FIRST_REMIND":
+          RootNavigation.navigate('Main', {
+            screen: 'TaskDetailScreen',
+            params: {taskId: message.data?.taskId},
+          })
+          break;
+        case "SECOND_REMIND":
+          RootNavigation.navigate('Main', {
+            screen: 'TaskDetailScreen',
+            params: {taskId: message.data?.taskId},
+          })
+          break;
+        case "THIRD_REMIND":
+          RootNavigation.navigate('Main', {
+            screen: 'TaskDetailScreen',
+            params: {taskId: message.data?.taskId},
+          })
+          break;
+        case "FORTH_REMIND":
+          RootNavigation.navigate('Main', {
+            screen: 'TaskDetailScreen',
+            params: {taskId: message.data?.taskId},
+          })
+          break;
+        case "DONE_TASK_REMIND":
+          RootNavigation.navigate('Main', {
+            screen: 'TaskDetailScreen',
+            params: {taskId: message.data?.taskId},
+          })
+          break;
+        default:
+          break;
+      }
+    })
+
+    messaging().onMessage(async message =>{
+      const type = message.data?.type;
+      const date = message.data?.dateAppointment.split("T")
+      switch (type) {
+        case "APPROVE_DRONER_SUCCESS":
+          setRegisterNoti(true)
+          break;
+        case "APPROVE_DRONER_FAIL":
+          Toast.show({
+            type : 'registerFailed',
+            topOffset : 10,
+            position : 'top',
+            onPress() {
+              const jumpAction = TabActions.jumpTo('profile');
+              navigation.dispatch(jumpAction)
+              Toast.hide()
+            },
+          });
+          break;
+        case "APPROVE_DRONER_DRONE_FAIL":
+          Toast.show({
+            type : 'droneFirstTimeFailed',
+            topOffset : 10,
+            position : 'top',
+            onPress() {
+              const jumpAction = TabActions.jumpTo('profile');
+              navigation.dispatch(jumpAction)
+              Toast.hide()
+            },
+          });
+          break;
+        case "APPROVE_ADDITION_DRONER_DRONE_SUCCESS":
+          Toast.show({
+            type : 'droneSuccess',
+            topOffset : 10,
+            text1 : message.data?.message.split(" ")[2],
+            position : 'top',
+            onPress() {
+              const jumpAction = TabActions.jumpTo('profile');
+              navigation.dispatch(jumpAction)
+              Toast.hide()
+            },
+          });
+          break;
+        case "APPROVE_ADDITION_DRONER_DRONE_FAIL":
+          Toast.show({
+            type : 'droneFailed',
+            text1 : message.data?.message.split(" ")[2],
+            topOffset : 10,
+            position : 'top',
+            onPress() {
+              const jumpAction = TabActions.jumpTo('profile');
+              navigation.dispatch(jumpAction)
+              Toast.hide()
+            },
+          });
+          break;
+        case "RECEIVE_TASK_FAIL":
+          setActiontaskId(message.data?.taskId!)
+          Toast.show({
+            type : 'taskFailed',
+            topOffset : 10,
+            text1 : `${message.data?.taskNo}`,
+            position : 'top',
+            onPress() {
+              Toast.hide()
+            },
+          });
+          break;
+        case "FIRST_REMIND":
+          Toast.show({
+            type : 'taskWarningContactFarmer',
+            topOffset : 10,
+            position : 'top',
+            onPress() {
+              Toast.hide()
+            },
+          });
+          break;
+        case "SECOND_REMIND":
+          Toast.show({
+            type : 'taskWarningContactFarmerTowmorow',
+            topOffset : 10,
+            position : 'top',
+            text1 : `วันที่ ${date![0].split("-")[2]}/${date![0].split("-")[1]}/${parseInt(date![0].split("-")[0])+543} เวลา ${(parseInt(date![1].split(":")[0])+7)>9?`0${parseInt(date![1].split(":")[0])+7}`:parseInt(date![1].split(":")[0])+7}.${parseInt(date![1].split(":")[1])}น.`,
+            onPress() {
+              Toast.hide()
+            },
+          });
+          break;
+        case "THIRD_REMIND":
+          Toast.show({
+            type : 'taskWarningBeforeOneHours',
+            topOffset : 10,
+            position : 'top',
+            onPress() {
+              Toast.hide()
+            },
+          });
+          break;
+        case "FORTH_REMIND":
+          Toast.show({
+            type : 'taskWarningStartJob',
+            topOffset : 10,
+            position : 'top',
+            onPress() {
+              Toast.hide()
+            },
+          });
+          break;
+        case "DONE_TASK_REMIND":
+          Toast.show({
+            type : 'taskWarningJobSuccess',
+            topOffset : 10,
+            position : 'top',
+            onPress() {
+              Toast.hide()
+            },
+          });
+          break;
+        case "FORCE_SELECT_DRONER":
+          Toast.show({
+            type : 'taskJobSuccess',
+            topOffset : 10,
+            text1 : `#${message.data?.taskNo}`,
+            text2 : `วันที่ ${date![0].split("-")[2]}/${date![0].split("-")[1]}/${parseInt(date![0].split("-")[0])+543} เวลา ${(parseInt(date![1].split(":")[0])+7)>9?`0${parseInt(date![1].split(":")[0])+7}`:parseInt(date![1].split(":")[0])+7}.${parseInt(date![1].split(":")[1])}น.`,
+            position : 'top',
+            onPress() {
+              Toast.hide()
+            },
+          });
+        default:
+          break;
+      }
+    })
+  },[])
+
+  if(loading){
+    return <></>
+  }
   return (
-    <Tab.Navigator screenOptions={{headerShown: false}}>
+    <>
+    <RegisterNotification value={registerNoti} onClick={()=>{
+      setRegisterNoti(false);
+      setInitialRouteName("home")
+      const jumpAction = TabActions.jumpTo('profile');
+      navigation.dispatch(jumpAction)
+    }}
+    onClose={()=>{
+      setRegisterNoti(false);
+    }}
+    />
+    <RegisterFailedModal value={registerfailedModalNoti} 
+    onClick={()=>{
+      setRegisterFailedModalNoti(false)
+      setInitialRouteName("home")
+      const jumpAction = TabActions.jumpTo('profile');
+      navigation.dispatch(jumpAction)
+    }} 
+    onClose={()=>{
+      setRegisterFailedModalNoti(false)
+    }}/>
+
+    <Tab.Navigator screenOptions={{headerShown: false}} initialRouteName={initialRouteName}>
       {ListPath.map((item, index) => {
         return (
           <Tab.Screen
@@ -63,6 +365,7 @@ const MainTapNavigator: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
               },
+              lazy:true,
               tabBarButton(props) {
                 const isFocused = props.accessibilityState?.selected;
                 return (
@@ -105,7 +408,18 @@ const MainTapNavigator: React.FC = () => {
         );
       })}
     </Tab.Navigator>
+    
+    </>
   );
 };
+
+const styles = StyleSheet.create({
+  modal : {
+      width : '100%',
+      height : Platform.OS === 'ios'? responsiveHeigth(170):responsiveWidth(100),
+      justifyContent : 'center',
+      alignItems : 'center'
+  },
+})
 
 export default MainTapNavigator;

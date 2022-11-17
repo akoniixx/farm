@@ -20,6 +20,9 @@ import fonts from '../../assets/fonts';
 export const CallingModal = (props: SheetProps<{tel: string}>) => {
   return (
     <ActionSheet
+      containerStyle={{
+        height : normalize(300)
+      }}
       id={props.sheetId}
       useBottomSafeAreaPadding
       gestureEnabled={true}>

@@ -17,4 +17,9 @@ export default {
   profile: require('./profile.png'),
   profileActive: require('./profileActive.png'),
   deletePic: require('./deletePic.png'),
-};
+  newjobnoti: require('./newjobnoti.png'),
+  registerconfirmnoti: require('./registerconfirmnoti.png'),
+  registerfailednoti: require('./registerfailednoti.png'),
+  troublejobnoti: require('./troublejobnoti.png'),
+  troublemissnoti: require('./troublemissnoti.png')
+}

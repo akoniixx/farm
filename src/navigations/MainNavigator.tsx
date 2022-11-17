@@ -18,6 +18,7 @@ import VerifyOTP from '../screens/ProfileScreen/DeleteProfile/VerifyOTP';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
+import NotificationList from '../screens/ProfileScreen/NotificationList';
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
 export type StackParamList = {
@@ -34,6 +35,7 @@ export type StackParamList = {
   ProfileDocument: any;
   FourthFormScreen: any;
   AddIDCardScreen: any;
+  NotificationList : any;
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
   // };
@@ -62,6 +64,7 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="AddIDCardScreen" component={AddIDcardScreen} />
       <Stack.Screen name="DeleteProfileScreen" component={DeleteProfile} />
       <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
+      <Stack.Screen name="NotificationList" component={NotificationList} />
       {/* <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} /> */}
     </Stack.Navigator>
   );

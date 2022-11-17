@@ -18,6 +18,12 @@ export function StatusObject(status: string) {
         colorBg: '#FDF0E3',
         fontColor: '#AE5700',
       };
+    case 'REJECTED':
+      return {
+        status: 'ไม่ผ่านการตรวจสอบ',
+        colorBg: 'rgba(255, 148, 148, 0.15)',
+        fontColor: '#EB5757',
+      };
     case 'ACTIVE':
       return {
         status: 'ตรวจสอบแล้ว',
@@ -72,7 +78,6 @@ const DroneBrandingItem: React.FC<DroneBranding> = ({
         </View>
         <View
           style={{
-            width: normalize(109),
             height: normalize(24),
             borderRadius: normalize(12),
             display: 'flex',

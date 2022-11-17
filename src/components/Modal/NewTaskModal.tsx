@@ -24,6 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import Toast from 'react-native-toast-message';
 import {useFocusEffect} from '@react-navigation/native';
+import { responsiveHeigth, responsiveWidth } from '../../function/responsive';
 
 export const NewTaskModal = (
   props: SheetProps<{
@@ -51,15 +52,17 @@ export const NewTaskModal = (
           SheetManager.hide('NewTaskSheet');
           Toast.show({
             type: 'receiveTaskSuccess',
-            text1: `งาน #${data.taskNo} ถูกรับแล้ว`,
-            text2: 'อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน',
+            text1: `งาน #${data.taskNo}`,
+            text2: `วันที่ ${data.dateAppointment.split("T")[0].split("-")[2]}/${data.dateAppointment.split("T")[0].split("-")[1]}/${parseInt(data.dateAppointment.split("T")[0].split("-")[0])+543} เวลา ${(parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7 > 9)? `${parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7}`:`0${parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7}`}:${data.dateAppointment.split("T")[1].split(":")[1]}`,
+            onPress : ()=>{
+              Toast.hide()
+            }
           });
         } else {
-          SheetManager.hide('NewTaskSheet');
-          Toast.show({
-            type: 'error',
-            text1: res.userMessage,
-          });
+          console.log(data)
+          setTimeout(()=>{
+            SheetManager.hide('NewTaskSheet');
+          },5000)
         }
       })
       .catch(err => console.log(err));
@@ -109,7 +112,7 @@ export const NewTaskModal = (
     const dronerId = await AsyncStorage.getItem('droner_id');
     socket.on(`unsend-task-${dronerId!}`, taskId => {
       if (data.id == taskId) {
-        SheetManager.hide('NewTaskSheet');
+        // SheetManager.hide('NewTaskSheet');
       }
     });
   };
@@ -121,6 +124,9 @@ export const NewTaskModal = (
 
   return (
     <ActionSheet
+      containerStyle={{
+        height : '80%'
+      }}
       id={props.sheetId}
       useBottomSafeAreaPadding
       gestureEnabled={true}>
@@ -280,7 +286,10 @@ export const NewTaskModal = (
           </View>
         </View>
         {/* Map */}
-        <View>
+        <View style={{
+          position : 'relative',
+          alignItems : 'center'
+        }}>
           <MapView.Animated
             style={styles.map}
             zoomEnabled={false}
@@ -292,28 +301,33 @@ export const NewTaskModal = (
             initialRegion={position}>
             <Marker coordinate={position} />
           </MapView.Animated>
-          <TouchableOpacity
-            style={styles.viewMap}
-            onPress={() =>
-              openGps(
-                position.latitude,
-                position.longitude,
-                data?.farmerPlot.plotName,
-              )
-            }>
-            <Image
-              source={icons.direction}
-              style={{width: normalize(24), height: normalize(24)}}
-            />
-            <Text
-              style={{
-                marginLeft: 5,
-                fontFamily: font.medium,
-                color: 'black',
-              }}>
-              ดูแผนที่
-            </Text>
-          </TouchableOpacity>
+          <View style={{
+            position : 'absolute',
+            bottom : normalize(10)
+          }}>
+            <TouchableOpacity
+              style={styles.viewMap}
+              onPress={() =>
+                openGps(
+                  position.latitude,
+                  position.longitude,
+                  data?.farmerPlot.plotName,
+                )
+              }>
+              <Image
+                source={icons.direction}
+                style={{width: normalize(24), height: normalize(24)}}
+              />
+              <Text
+                style={{
+                  marginLeft: 5,
+                  fontFamily: font.medium,
+                  color: 'black',
+                }}>
+                ดูแผนที่
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
         {/* Warning */}
         <View style={styles.warning}>
@@ -453,14 +467,13 @@ const styles = StyleSheet.create({
     // marginTop: normalize(10),
   },
   viewMap: {
+    width : responsiveWidth(100),
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     marginTop: 10,
     backgroundColor: 'white',
-    borderColor: colors.primaryBlue,
-    borderWidth: 1,
-    paddingVertical: normalize(10),
+    paddingVertical: normalize(5),
     paddingHorizontal: normalize(10),
     borderRadius: normalize(50),
   },

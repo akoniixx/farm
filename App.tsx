@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {createContext, useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AppNavigator from './src/navigations/AppNavigator';
 import {navigationRef} from './src/navigations/RootNavigation';
@@ -12,23 +12,52 @@ import buddhaEra from 'dayjs/plugin/buddhistEra';
 import dayjs from 'dayjs';
 import {AuthProvider} from './src/contexts/AuthContext';
 dayjs.extend(buddhaEra);
+import {
+  firebaseInitialize,
+  getFCMToken,
+  requestUserPermission,
+} from './src/firebase/notification';
+import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+type ActionContextType = {
+  actiontaskId: string | null,
+  setActiontaskId: React.Dispatch<React.SetStateAction<string | null>>
+}
+
+const ActionContextState = {
+  actiontaskId: "",
+  setActiontaskId: () => {}
+}
+
+const ActionContext = createContext<ActionContextType>(ActionContextState);
+
 const App = () => {
+  const [actiontaskId,setActiontaskId] = useState<string | null>("")
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
+    if(Platform.OS === "ios"){
+      firebaseInitialize()
+    }
+    requestUserPermission()
+    getFCMToken()
   }, []);
+
   return (
     <>
-      <NavigationContainer ref={navigationRef}>
-        <AuthProvider>
-          <SheetProvider>
-            <AppNavigator />
-          </SheetProvider>
-        </AuthProvider>
-        <Toast config={toastConfig} />
-      </NavigationContainer>
+      <ActionContext.Provider value={{actiontaskId,setActiontaskId}}>
+        <NavigationContainer ref={navigationRef}>
+          <AuthProvider>
+            <SheetProvider>
+              <AppNavigator />
+            </SheetProvider>
+          </AuthProvider>
+          <Toast config={toastConfig} />
+        </NavigationContainer>
+      </ActionContext.Provider>
     </>
   );
 };
-
+export { ActionContext };
 export default App;
