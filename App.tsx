@@ -19,6 +19,7 @@ import {
 } from './src/firebase/notification';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { mixpanel } from './mixpanel';
 
 type ActionContextType = {
   actiontaskId: string | null,
@@ -35,6 +36,7 @@ const ActionContext = createContext<ActionContextType>(ActionContextState);
 const App = () => {
   const [actiontaskId,setActiontaskId] = useState<string | null>("")
   useEffect(() => {
+    mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
     if(Platform.OS === "ios"){
