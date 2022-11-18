@@ -188,7 +188,6 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
 
     messaging().onMessage(async message =>{
       const type = message.data?.type;
-      const date = message.data?.dateAppointment.split("T")
       switch (type) {
         case "APPROVE_DRONER_SUCCESS":
           setRegisterNoti(true)
@@ -266,11 +265,12 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           });
           break;
         case "SECOND_REMIND":
+          let date_secondremind = message.data?.dateAppointment.split("T")
           Toast.show({
             type : 'taskWarningContactFarmerTowmorow',
             topOffset : 10,
             position : 'top',
-            text1 : `วันที่ ${date![0].split("-")[2]}/${date![0].split("-")[1]}/${parseInt(date![0].split("-")[0])+543} เวลา ${(parseInt(date![1].split(":")[0])+7)>9?`0${parseInt(date![1].split(":")[0])+7}`:parseInt(date![1].split(":")[0])+7}.${parseInt(date![1].split(":")[1])}น.`,
+            text1 : `วันที่ ${date_secondremind![0].split("-")[2]}/${date_secondremind![0].split("-")[1]}/${parseInt(date_secondremind![0].split("-")[0])+543} เวลา ${(parseInt(date_secondremind![1].split(":")[0])+7)>9?`0${parseInt(date_secondremind![1].split(":")[0])+7}`:parseInt(date_secondremind![1].split(":")[0])+7}.${parseInt(date_secondremind![1].split(":")[1])}น.`,
             onPress() {
               Toast.hide()
             },
@@ -307,11 +307,12 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           });
           break;
         case "FORCE_SELECT_DRONER":
+          let date_force_select = message.data?.dateAppointment.split("T")
           Toast.show({
             type : 'taskJobSuccess',
             topOffset : 10,
             text1 : `#${message.data?.taskNo}`,
-            text2 : `วันที่ ${date![0].split("-")[2]}/${date![0].split("-")[1]}/${parseInt(date![0].split("-")[0])+543} เวลา ${(parseInt(date![1].split(":")[0])+7)>9?`0${parseInt(date![1].split(":")[0])+7}`:parseInt(date![1].split(":")[0])+7}.${parseInt(date![1].split(":")[1])}น.`,
+            text2 : `วันที่ ${date_force_select![0].split("-")[2]}/${date_force_select![0].split("-")[1]}/${parseInt(date_force_select![0].split("-")[0])+543} เวลา ${(parseInt(date_force_select![1].split(":")[0])+7)>9?`0${parseInt(date_force_select![1].split(":")[0])+7}`:parseInt(date_force_select![1].split(":")[0])+7}.${parseInt(date_force_select![1].split(":")[1])}น.`,
             position : 'top',
             onPress() {
               Toast.hide()

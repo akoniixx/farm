@@ -132,7 +132,9 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           TaskDatasource.getTaskById(dronerId!, ['WAIT_START', 'IN_PROGRESS'], 1, 999).then(
             res => {
               if(res.length !=0 ){
-                
+                Toast.show({type : 'taskWarningBeforeClose',onPress : ()=>{
+                  Toast.hide()
+                }})
               }
             }).catch(err => console.log(err))
         }
