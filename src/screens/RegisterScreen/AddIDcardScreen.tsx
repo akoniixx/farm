@@ -24,7 +24,7 @@ import {Register} from '../../datasource/AuthDatasource';
 import {ProgressBar} from '../../components/ProgressBar';
 import Lottie from 'lottie-react-native';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
-import { mixpanel } from '../../../mixpanel';
+import {mixpanel} from '../../../mixpanel';
 
 const width = Dimensions.get('window').width;
 

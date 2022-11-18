@@ -16,7 +16,7 @@ import {SheetManager} from 'react-native-actions-sheet';
 import Modal from 'react-native-modal';
 import {MainButton} from '../Button/MainButton';
 import ExtendModal from '../Modal/ExtendModal';
-import { mixpanel } from '../../../mixpanel';
+import {mixpanel} from '../../../mixpanel';
 
 const Tasklists: React.FC<any> = (props: any) => {
   const date = new Date(props.date);
@@ -34,6 +34,8 @@ const Tasklists: React.FC<any> = (props: any) => {
   const toggleModalSuccess = props.toggleModalSuccess;
   const taskId = props.taskId;
   const statusDelay = props.statusDelay;
+  const isProblem = props.isProblem;
+
   const [visible, setVisible] = useState(false);
 
   const ReviewBar = () => {
@@ -248,7 +250,7 @@ const Tasklists: React.FC<any> = (props: any) => {
         </TouchableOpacity>
         {props.status === 'IN_PROGRESS' ? (
           <TouchableOpacity
-            disabled={!!statusDelay}
+            disabled={!!statusDelay || isProblem}
             onPress={() => {
               setVisible(true);
             }}
@@ -257,7 +259,8 @@ const Tasklists: React.FC<any> = (props: any) => {
               height: normalize(49),
               borderRadius: normalize(8),
               // eslint-disable-next-line no-extra-boolean-cast
-              backgroundColor: !!statusDelay ? colors.disable : colors.orange,
+              backgroundColor:
+                !!statusDelay || isProblem ? colors.disable : colors.orange,
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
@@ -275,7 +278,10 @@ const Tasklists: React.FC<any> = (props: any) => {
         ) : null}
 
         <TouchableOpacity
-          disabled={props.status === 'WAIT_START' && checkdate >= today}
+          disabled={
+            (props.status === 'WAIT_START' && checkdate >= today) ||
+            statusDelay === 'WAIT_APPROVE'
+          }
           onPress={() =>
             props.status === 'WAIT_START'
               ? props.setShowModalStartTask()
@@ -566,7 +572,8 @@ const Tasklists: React.FC<any> = (props: any) => {
             disable={defaultRating == 0}
             onPress={() => {
               mixpanel.track('Task success');
-              props.onFinishTask(taskId)}}
+              props.onFinishTask(taskId);
+            }}
           />
         </View>
       </Modal>

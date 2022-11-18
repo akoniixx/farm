@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     fontFamily: font.bold,
     fontSize: normalize(20),
     marginBottom: normalize(24),
-    color : colors.fontBlack
+    color: colors.fontBlack,
   },
   label: {
     fontFamily: font.light,

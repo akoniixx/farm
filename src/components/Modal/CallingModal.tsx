@@ -21,7 +21,7 @@ export const CallingModal = (props: SheetProps<{tel: string}>) => {
   return (
     <ActionSheet
       containerStyle={{
-        height : normalize(300)
+        height: normalize(300),
       }}
       id={props.sheetId}
       useBottomSafeAreaPadding
