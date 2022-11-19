@@ -134,7 +134,18 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
             ['WAIT_START', 'IN_PROGRESS'],
             1,
             999,
-          ).catch(err => console.log(err));
+          )
+            .then(res => {
+              if (res.length != 0) {
+                Toast.show({
+                  type: 'taskWarningBeforeClose',
+                  onPress: () => {
+                    Toast.hide();
+                  },
+                });
+              }
+            })
+            .catch(err => console.log(err));
         }
       })
       .catch(err => console.log(err));
