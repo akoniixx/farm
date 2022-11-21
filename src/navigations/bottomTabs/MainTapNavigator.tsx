@@ -214,7 +214,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           Toast.show({
             type : 'droneSuccess',
             topOffset : 10,
-            text1 : message.data?.message.split(" ")[2],
+            text1 : message.data?.serialNo,
             position : 'top',
             onPress() {
               const jumpAction = TabActions.jumpTo('profile');
@@ -225,33 +225,8 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
             break;
         case "APPROVE_DRONER_DRONE_FAIL":
           Toast.show({
-            type: 'droneFirstTimeFailed',
-            topOffset: 10,
-            position: 'top',
-            onPress() {
-              const jumpAction = TabActions.jumpTo('profile');
-              navigation.dispatch(jumpAction);
-              Toast.hide();
-            },
-          });
-          break;
-        case 'APPROVE_ADDITION_DRONER_DRONE_SUCCESS':
-          Toast.show({
-            type: 'droneSuccess',
-            topOffset: 10,
-            text1: message.data?.message.split(' ')[2],
-            position: 'top',
-            onPress() {
-              const jumpAction = TabActions.jumpTo('profile');
-              navigation.dispatch(jumpAction);
-              Toast.hide();
-            },
-          });
-          break;
-        case 'APPROVE_ADDITION_DRONER_DRONE_FAIL':
-          Toast.show({
             type: 'droneFailed',
-            text1: message.data?.message.split(' ')[2],
+            text1: message.data?.serialNo,
             topOffset: 10,
             position: 'top',
             onPress() {
