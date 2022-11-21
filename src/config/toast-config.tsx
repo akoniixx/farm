@@ -6,8 +6,8 @@ import {font} from '../assets';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import icons from '../assets/icons/icons';
 import Toast from 'react-native-toast-message';
-import { TabActions } from '@react-navigation/native';
-import { responsiveHeigth, responsiveWidth } from '../function/responsive';
+import {TabActions} from '@react-navigation/native';
+import {responsiveHeigth, responsiveWidth} from '../function/responsive';
 import fonts from '../assets/fonts';
 
 const toastStyle = {
@@ -32,38 +32,49 @@ const text2Style = {
 };
 
 export const toastConfig = {
-  receiveTaskSuccess: ({onPress,text1, text2, props}: any) => (
+  receiveTaskSuccess: ({onPress, text1, text2, props}: any) => (
     <TouchableOpacity onPress={onPress}>
-    <View style={styles.modalBgSuccess}>
-      <View style={{
-          flexDirection : 'row'
-      }}>
-          <Image source={icons.closecircle} style={{
-              width : normalize(30),
-              height : normalize(30)
-          }}/>
-          <View style={{
-              paddingLeft : normalize(12)
+      <View style={styles.modalBgSuccess}>
+        <View
+          style={{
+            flexDirection: 'row',
           }}>
-              <Text style={styles.info}>{text1}</Text>
-              <Text style={styles.info}>{text2}</Text>
-              <Text style={styles.info}>ถูกรับแล้ว</Text>
-              <Text style={styles.infolight}>อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน</Text>
+          <Image
+            source={icons.closecircle}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text style={styles.info}>{text1}</Text>
+            <Text style={styles.info}>{text2}</Text>
+            <Text style={styles.info}>ถูกรับแล้ว</Text>
+            <Text style={styles.infolight}>
+              อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน
+            </Text>
           </View>
-      </View>
-      <View style={styles.closePosition}>
-          <TouchableOpacity onPress={()=>{
-            Toast.hide()
-          }}>
-              <Image source={icons.closewhite} style={{
-                  width : normalize(12),
-                  height : normalize(12)
-              }}/>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
           </TouchableOpacity>
-          <View></View>
+          <View />
+        </View>
       </View>
-  </View>
-  </TouchableOpacity>
+    </TouchableOpacity>
     // <View
     //   style={{
     //     ...toastStyle,
@@ -96,484 +107,739 @@ export const toastConfig = {
     //   </View>
     // </View>
   ),
-  registerFailed : ({onPress,props} : any) => (
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.modalBgFailed}>
-          <View style={{
-              flexDirection : 'row'
-          }}>
-              <Image source={icons.closecircle} style={{
-                  width : normalize(30),
-                  height : normalize(30)
-              }}/>
-              <View style={{
-                  paddingLeft : normalize(12)
-              }}>
-                  <Text style={styles.info}>ท่านยืนยันตัวตนไม่สำเร็จ</Text>
-                  <Text style={styles.info}>โปรดติดต่อเจ้าหน้าที่</Text>
-                  <Text style={styles.info}>โทร 02-1136159</Text>
-              </View>
-          </View>
-          <View style={styles.closePosition}>
-              <TouchableOpacity onPress={()=>{
-                Toast.hide()
-              }}>
-                  <Image source={icons.closewhite} style={{
-                      width : normalize(12),
-                      height : normalize(12)
-                  }}/>
-              </TouchableOpacity>
-              <View></View>
-          </View>
-      </View>
-      </TouchableOpacity>
-  ),
-  droneFirstTimeFailed: ({onPress,props} : any) => (
+  registerFailed: ({onPress, props}: any) => (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.modalBgFailed}>
-        <View style={{
-            flexDirection : 'row'
-        }}>
-            <Image source={icons.closecircle} style={{
-                width : normalize(30),
-                height : normalize(30)
-            }}/>
-            <View style={{
-                paddingLeft : normalize(12)
+        <View
+          style={{
+            flexDirection: 'row',
+          }}>
+          <Image
+            source={icons.closecircle}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
             }}>
-                <Text style={styles.info}>โดรนของท่านไม่ผ่านการยืนยัน</Text>
-                <Text style={styles.info}>โปรดติดต่อเจ้าหน้าที่</Text>
-                <Text style={styles.info}>โทร 02-1136159</Text>
-            </View>
+            <Text style={styles.info}>ท่านยืนยันตัวตนไม่สำเร็จ</Text>
+            <Text style={styles.info}>โปรดติดต่อเจ้าหน้าที่</Text>
+            <Text style={styles.info}>โทร 02-1136159</Text>
+          </View>
         </View>
         <View style={styles.closePosition}>
-            <TouchableOpacity onPress={()=>{
-              Toast.hide()
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
             }}>
-                <Image source={icons.closewhite} style={{
-                    width : normalize(12),
-                    height : normalize(12)
-                }}/>
-            </TouchableOpacity>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+          <View />
         </View>
-    </View>
+      </View>
     </TouchableOpacity>
-    ),
-    droneSuccess : ({onPress,text1,props} : any) => (
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.modalBgSuccess}>
-          <View style={{
-              flexDirection : 'row'
+  ),
+  droneFirstTimeFailed: ({onPress, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgFailed}>
+        <View
+          style={{
+            flexDirection: 'row',
           }}>
-              <Image source={icons.success} style={{
-                  width : normalize(30),
-                  height : normalize(30)
-              }}/>
-              <View style={{
-                  paddingLeft : normalize(12)
-              }}>
-                  <Text style={styles.info}>โดรนของท่าน หมายเลขตัวถัง</Text>
-                  <Text style={styles.info}>{text1}</Text>
-                  <Text style={styles.info}>ได้รับการตรวจสอบแล้ว</Text>
-              </View>
+          <Image
+            source={icons.closecircle}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text style={styles.info}>โดรนของท่านไม่ผ่านการยืนยัน</Text>
+            <Text style={styles.info}>โปรดติดต่อเจ้าหน้าที่</Text>
+            <Text style={styles.info}>โทร 02-1136159</Text>
           </View>
-          <View style={styles.closePosition}>
-              <TouchableOpacity onPress={()=>{
-                Toast.hide()
-              }}>
-                  <Image source={icons.closewhite} style={{
-                      width : normalize(12),
-                      height : normalize(12)
-                  }}/>
-              </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      </TouchableOpacity>
-    ),
-    droneFailed : ({onPress,text1,props} : any) => (
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.modalBgdroneFailed}>
-          <View style={{
-              flexDirection : 'row'
+    </TouchableOpacity>
+  ),
+  droneSuccess: ({onPress, text1, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgSuccess}>
+        <View
+          style={{
+            flexDirection: 'row',
           }}>
-              <Image source={icons.closecircle} style={{
-                  width : normalize(30),
-                  height : normalize(30)
-              }}/>
-              <View style={{
-                  paddingLeft : normalize(12)
-              }}>
-                  <Text style={styles.info}>โดรนของท่าน หมายเลขตัวถัง</Text>
-                  <Text style={styles.info}>{text1}</Text>
-                  <Text style={styles.info}>ได้รับการตรวจสอบแล้ว</Text>
-                  <Text style={styles.infolight}>โปรดติดต่อเจ้าหน้าที่เพื่อดำเนินการ</Text>
-                  <Text style={styles.infolight}>โทร 02-1136159</Text>
-              </View>
+          <Image
+            source={icons.success}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text style={styles.info}>โดรนของท่าน หมายเลขตัวถัง</Text>
+            <Text style={styles.info}>{text1}</Text>
+            <Text style={styles.info}>ได้รับการตรวจสอบแล้ว</Text>
           </View>
-          <View style={styles.closePosition}>
-              <TouchableOpacity onPress={()=>{
-                Toast.hide()
-              }}>
-                  <Image source={icons.closewhite} style={{
-                      width : normalize(12),
-                      height : normalize(12)
-                  }}/>
-              </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      </TouchableOpacity>
-    ),
-    taskSuccess : ({onPress,text1,text2,props} : any) => (
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.modalBgSuccess}>
-          <View style={{
-              flexDirection : 'row'
+    </TouchableOpacity>
+  ),
+  droneFailed: ({onPress, text1, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgdroneFailed}>
+        <View
+          style={{
+            flexDirection: 'row',
           }}>
-              <Image source={icons.success} style={{
-                  width : normalize(30),
-                  height : normalize(30)
-              }}/>
-              <View style={{
-                  paddingLeft : normalize(12)
-              }}>
-                  <Text style={styles.info}>งาน {text1}</Text>
-                  <Text style={styles.info}>{text2}</Text>
-                  <Text style={styles.info}>ถูกรับแล้ว</Text>
-                  <Text style={styles.infolight}>อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน</Text>
-
-              </View>
+          <Image
+            source={icons.closecircle}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text style={styles.info}>โดรนของท่าน หมายเลขตัวถัง</Text>
+            <Text style={styles.info}>{text1}</Text>
+            <Text style={styles.info}>ได้รับการตรวจสอบแล้ว</Text>
+            <Text style={styles.infolight}>
+              โปรดติดต่อเจ้าหน้าที่เพื่อดำเนินการ
+            </Text>
+            <Text style={styles.infolight}>โทร 02-1136159</Text>
           </View>
-          <View style={styles.closePosition}>
-              <TouchableOpacity onPress={()=>{
-                Toast.hide()
-              }}>
-                  <Image source={icons.closewhite} style={{
-                      width : normalize(12),
-                      height : normalize(12)
-                  }}/>
-              </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      </TouchableOpacity>
-    ),
-    taskFailed : ({onPress,text1,props} : any) => (
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.modalBgFailed}>
-          <View style={{
-              flexDirection : 'row'
+    </TouchableOpacity>
+  ),
+  taskSuccess: ({onPress, text1, text2, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgSuccess}>
+        <View
+          style={{
+            flexDirection: 'row',
           }}>
-              <Image source={icons.closecircle} style={{
-                  width : normalize(30),
-                  height : normalize(30)
-              }}/>
-              <View style={{
-                  paddingLeft : normalize(12)
-              }}>
-                  <Text style={styles.info}>ขออภัย งานหมายเลข</Text>
-                  <Text style={styles.info}>{text1}</Text>
-                  <Text style={styles.info}>ถูกนักบินท่านอื่นรับไปแล้ว</Text>
-                  <Text style={styles.infolight}>รอแจ้งเตือนงานใหม่ครั้งถัดไปอีกครั้ง</Text>
-
-              </View>
+          <Image
+            source={icons.success}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text style={styles.info}>งาน {text1}</Text>
+            <Text style={styles.info}>{text2}</Text>
+            <Text style={styles.info}>ถูกรับแล้ว</Text>
+            <Text style={styles.infolight}>
+              อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน
+            </Text>
           </View>
-          <View style={styles.closePosition}>
-              <TouchableOpacity onPress={()=>{
-                Toast.hide()
-              }}>
-                  <Image source={icons.closewhite} style={{
-                      width : normalize(12),
-                      height : normalize(12)
-                  }}/>
-              </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      </TouchableOpacity>
-    ),
-    taskWarningContactFarmer : ({onPress,props} : any) => (
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.modalBgWarning}>
-          <View style={{
-              flexDirection : 'row'
+    </TouchableOpacity>
+  ),
+  taskFailed: ({onPress, text1, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgFailed}>
+        <View
+          style={{
+            flexDirection: 'row',
           }}>
-              <Image source={icons.warning} style={{
-                  width : normalize(30),
-                  height : normalize(30)
-              }}/>
-              <View style={{
-                  paddingLeft : normalize(12)
-              }}>
-                  <Text style={styles.info}>กรุณาติดต่อเกษตรกร</Text>
-                  <Text style={styles.info}>เพื่อรับรายละเอียดของงาน</Text>
-
-              </View>
+          <Image
+            source={icons.closecircle}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text style={styles.info}>ขออภัย งานหมายเลข</Text>
+            <Text style={styles.info}>{text1}</Text>
+            <Text style={styles.info}>ถูกนักบินท่านอื่นรับไปแล้ว</Text>
+            <Text style={styles.infolight}>
+              รอแจ้งเตือนงานใหม่ครั้งถัดไปอีกครั้ง
+            </Text>
           </View>
-          <View style={styles.closePosition}>
-              <TouchableOpacity onPress={()=>{
-                Toast.hide()
-              }}>
-                  <Image source={icons.closewhite} style={{
-                      width : normalize(12),
-                      height : normalize(12)
-                  }}/>
-              </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      </TouchableOpacity>
-    ),
-    taskWarningContactFarmerTowmorow : ({onPress,text1,props} : any) => (
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.modalBgWarning}>
-          <View style={{
-              flexDirection : 'row'
+    </TouchableOpacity>
+  ),
+  taskWarningContactFarmer: ({onPress, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgWarning}>
+        <View
+          style={{
+            flexDirection: 'row',
           }}>
-              <Image source={icons.warning} style={{
-                  width : normalize(30),
-                  height : normalize(30)
-              }}/>
-              <View style={{
-                  paddingLeft : normalize(12)
-              }}>
-                  <Text style={styles.info}>แจ้งเตือน</Text>
-                  <Text style={styles.info}>รายการงานของท่านในวันพรุ่งนี้</Text>
-                  <Text style={styles.info}>{text1}</Text>
-
-              </View>
+          <Image
+            source={icons.warning}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text style={styles.info}>กรุณาติดต่อเกษตรกร</Text>
+            <Text style={styles.info}>เพื่อรับรายละเอียดของงาน</Text>
           </View>
-          <View style={styles.closePosition}>
-              <TouchableOpacity onPress={()=>{
-                Toast.hide()
-              }}>
-                  <Image source={icons.closewhite} style={{
-                      width : normalize(12),
-                      height : normalize(12)
-                  }}/>
-              </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      </TouchableOpacity>
-    ),
-    taskWarningBeforeOneHours : ({onPress,props} : any) => (
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.modalBgWarning}>
-          <View style={{
-              flexDirection : 'row'
+    </TouchableOpacity>
+  ),
+  taskWarningContactFarmerTowmorow: ({onPress, text1, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgWarning}>
+        <View
+          style={{
+            flexDirection: 'row',
           }}>
-              <Image source={icons.warning} style={{
-                  width : normalize(30),
-                  height : normalize(30)
-              }}/>
-              <View style={{
-                  paddingLeft : normalize(12)
-              }}>
-                  <Text style={styles.info}>งานของท่านกำลังจะเริ่มขึ้นในอีก</Text>
-                  <Text style={styles.info}>1 ชั่วโมง กรุณาติดต่อเกษตรกร</Text>
-                  <Text style={[styles.info,{paddingBottom : normalize(5)}]}>เพื่อยืนยันสถานะ</Text>
-                  <Text style={styles.infolight}>มีคำถามเพิ่มสามารถติดต่อเจ้าหน้าที่</Text>
-                  <Text style={styles.infolight}>โทร 02-1136159</Text>
-
-              </View>
+          <Image
+            source={icons.warning}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text style={styles.info}>แจ้งเตือน</Text>
+            <Text style={styles.info}>รายการงานของท่านในวันพรุ่งนี้</Text>
+            <Text style={styles.info}>{text1}</Text>
           </View>
-          <View style={styles.closePosition}>
-              <TouchableOpacity onPress={()=>{
-                Toast.hide()
-              }}>
-                  <Image source={icons.closewhite} style={{
-                      width : normalize(12),
-                      height : normalize(12)
-                  }}/>
-              </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      </TouchableOpacity>
-    ),
-    taskWarningStartJob : ({onPress,props} : any) => (
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.modalBgWarning}>
-          <View style={{
-              flexDirection : 'row'
+    </TouchableOpacity>
+  ),
+  taskWarningBeforeOneHours: ({onPress, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgWarning}>
+        <View
+          style={{
+            flexDirection: 'row',
           }}>
-              <Image source={icons.warning} style={{
-                  width : normalize(30),
-                  height : normalize(30)
-              }}/>
-              <View style={{
-                  paddingLeft : normalize(12)
-              }}>
-                  <Text style={styles.info}>หากเริ่มงานแล้ว</Text>
-                  <Text style={styles.info}>อย่าลืมกดปุ่มเริ่มงานด้วยนะคะ</Text>
-
-              </View>
+          <Image
+            source={icons.warning}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text style={styles.info}>งานของท่านกำลังจะเริ่มขึ้นในอีก</Text>
+            <Text style={styles.info}>1 ชั่วโมง กรุณาติดต่อเกษตรกร</Text>
+            <Text style={[styles.info, {paddingBottom: normalize(5)}]}>
+              เพื่อยืนยันสถานะ
+            </Text>
+            <Text style={styles.infolight}>
+              มีคำถามเพิ่มสามารถติดต่อเจ้าหน้าที่
+            </Text>
+            <Text style={styles.infolight}>โทร 02-1136159</Text>
           </View>
-          <View style={styles.closePosition}>
-              <TouchableOpacity onPress={()=>{
-                Toast.hide()
-              }}>
-                  <Image source={icons.closewhite} style={{
-                      width : normalize(12),
-                      height : normalize(12)
-                  }}/>
-              </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      </TouchableOpacity>
-    ),
-    taskWarningJobSuccess : ({onPress,props} : any) => (
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.modalBgWarning}>
-          <View style={{
-              flexDirection : 'row'
+    </TouchableOpacity>
+  ),
+  taskWarningStartJob: ({onPress, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgWarning}>
+        <View
+          style={{
+            flexDirection: 'row',
           }}>
-              <Image source={icons.warning} style={{
-                  width : normalize(30),
-                  height : normalize(30)
-              }}/>
-              <View style={{
-                  paddingLeft : normalize(12)
-              }}>
-                  <Text style={styles.info}>ท่านยังไม่ได้กดปุ่มงานเสร็จสิ้น</Text>
-                  <Text style={styles.info}>หากมีปัญหา กรุณาติดต่อเจ้าหน้าที่</Text>
-                  <Text style={[styles.info,{paddingBottom : normalize(5)}]}>ในเวลา 9.00-18.00 น.</Text>
-                  <Text style={styles.infolight}>มีคำถามเพิ่มสามารถติดต่อเจ้าหน้าที่</Text>
-                  <Text style={styles.infolight}>โทร 02-1136159</Text>
-              </View>
+          <Image
+            source={icons.warning}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text style={styles.info}>หากเริ่มงานแล้ว</Text>
+            <Text style={styles.info}>อย่าลืมกดปุ่มเริ่มงานด้วยนะคะ</Text>
           </View>
-          <View style={styles.closePosition}>
-              <TouchableOpacity onPress={()=>{
-                Toast.hide()
-              }}>
-                  <Image source={icons.closewhite} style={{
-                      width : normalize(12),
-                      height : normalize(12)
-                  }}/>
-              </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      </TouchableOpacity>
-    ),
-    taskJobSuccess : ({onPress,text1,text2,props} : any) => (
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.modalBgSuccess}>
-          <View style={{
-              flexDirection : 'row'
+    </TouchableOpacity>
+  ),
+  taskWarningJobSuccess: ({onPress, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgWarning}>
+        <View
+          style={{
+            flexDirection: 'row',
           }}>
-              <Image source={icons.success} style={{
-                  width : normalize(30),
-                  height : normalize(30)
-              }}/>
-              <View style={{
-                  paddingLeft : normalize(12)
-              }}>
-                  <Text style={styles.info}>งาน {text1}</Text>
-                  <Text style={styles.info}>{text2}</Text>
-                  <Text style={[styles.info,{paddingBottom : normalize(5)}]}>ถูกรับแล้ว</Text>
-                  <Text style={styles.infolight}>อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน</Text>
-              </View>
+          <Image
+            source={icons.warning}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text style={styles.info}>ท่านยังไม่ได้กดปุ่มงานเสร็จสิ้น</Text>
+            <Text style={styles.info}>หากมีปัญหา กรุณาติดต่อเจ้าหน้าที่</Text>
+            <Text style={[styles.info, {paddingBottom: normalize(5)}]}>
+              ในเวลา 9.00-18.00 น.
+            </Text>
+            <Text style={styles.infolight}>
+              มีคำถามเพิ่มสามารถติดต่อเจ้าหน้าที่
+            </Text>
+            <Text style={styles.infolight}>โทร 02-1136159</Text>
           </View>
-          <View style={styles.closePosition}>
-              <TouchableOpacity onPress={()=>{
-                Toast.hide()
-              }}>
-                  <Image source={icons.closewhite} style={{
-                      width : normalize(12),
-                      height : normalize(12)
-                  }}/>
-              </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-      </TouchableOpacity>
-    ),
-    taskWarningBeforeClose :({onPress,props} : any) => (
-        <TouchableOpacity onPress={onPress}>
-            <View style={styles.modalBgWarning}>
-          <View style={{
-              flexDirection : 'row'
+    </TouchableOpacity>
+  ),
+  taskJobSuccess: ({onPress, text1, text2, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgSuccess}>
+        <View
+          style={{
+            flexDirection: 'row',
           }}>
-              <Image source={icons.success} style={{
-                  width : normalize(30),
-                  height : normalize(30)
-              }}/>
-              <View style={{
-                  paddingLeft : normalize(12)
-              }}>
-                  <Text style={styles.info}>ขออภัยค่ะ</Text>
-                  <Text style={styles.info}>ท่านกำลังมีงานที่กำลังจะเกิดขึ้น</Text>
-                  <Text style={[styles.infolight,{paddingBottom : normalize(5)}]}>หากมีปัญหากรุณาติดต่อเจ้าหน้าที่ค่ะ</Text>
-                  <Text style={styles.infolight}>โทร.02-1136159</Text>
-              </View>
+          <Image
+            source={icons.success}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text style={styles.info}>งาน {text1}</Text>
+            <Text style={styles.info}>{text2}</Text>
+            <Text style={[styles.info, {paddingBottom: normalize(5)}]}>
+              ถูกรับแล้ว
+            </Text>
+            <Text style={styles.infolight}>
+              อย่าลืมติดต่อหาเกษตรกรก่อนเริ่มงาน
+            </Text>
           </View>
-          <View style={styles.closePosition}>
-              <TouchableOpacity onPress={()=>{
-                Toast.hide()
-              }}>
-                  <Image source={icons.closewhite} style={{
-                      width : normalize(12),
-                      height : normalize(12)
-                  }}/>
-              </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-        </TouchableOpacity>
-    )
+    </TouchableOpacity>
+  ),
+  taskWarningBeforeClose: ({onPress, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgWarning}>
+        <View
+          style={{
+            flexDirection: 'row',
+          }}>
+          <Image
+            source={icons.success}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text style={styles.info}>ขออภัยค่ะ</Text>
+            <Text style={styles.info}>ท่านกำลังมีงานที่กำลังจะเกิดขึ้น</Text>
+            <Text style={[styles.infolight, {paddingBottom: normalize(5)}]}>
+              หากมีปัญหากรุณาติดต่อเจ้าหน้าที่ค่ะ
+            </Text>
+            <Text style={styles.infolight}>โทร.02-1136159</Text>
+          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </TouchableOpacity>
+  ),
+  taskExtendReqSuccess: ({onPress, text1, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgSuccess}>
+        <View
+          style={{
+            flexDirection: 'row',
+          }}>
+          <Image
+            source={icons.success}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text
+              style={{
+                fontSize: normalize(16),
+                fontFamily: fonts.bold,
+                color: colors.white,
+                width: 220,
+              }}>
+              {text1}
+            </Text>
+            <Text
+              style={{
+                fontSize: normalize(16),
+                fontFamily: fonts.bold,
+                color: colors.white,
+              }}>
+              ขอขยายเวลาแล้ว
+            </Text>
+            <Text
+              style={{
+                fontSize: normalize(14),
+                fontFamily: fonts.light,
+                color: colors.white,
+              }}>
+              กรุณารอการอนุมัติจากเจ้าหน้าที่
+            </Text>
+          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </TouchableOpacity>
+  ),
+  taskExtendSuccess: ({onPress, text1, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgSuccess}>
+        <View
+          style={{
+            flexDirection: 'row',
+          }}>
+          <Image
+            source={icons.success}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text
+              style={{
+                fontSize: normalize(16),
+                fontFamily: fonts.bold,
+                color: colors.white,
+                width: 220,
+              }}>
+              {text1}
+            </Text>
+            <Text
+              style={{
+                fontSize: normalize(16),
+                fontFamily: fonts.bold,
+                color: colors.white,
+              }}>
+              ขอขยายเวลาแล้ว
+            </Text>
+            <Text
+              style={{
+                fontSize: normalize(14),
+                fontFamily: fonts.light,
+                color: colors.white,
+              }}>
+              ได้รับอนุมัติจากเจ้าหน้าที่แล้ว
+            </Text>
+          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </TouchableOpacity>
+  ),
 };
 
 const styles = StyleSheet.create({
-  modalBgSuccess : {
-    width : responsiveWidth(345),
-    borderRadius : responsiveWidth(16),
-    backgroundColor : '#3EBD93',
-    paddingVertical : responsiveHeigth(15),
-    paddingHorizontal : normalize(20),
-    flexDirection : 'row',
-    justifyContent : 'space-between',
-    alignItems : 'center',
-    position : 'relative'
+  modalBgSuccess: {
+    width: responsiveWidth(345),
+    borderRadius: responsiveWidth(16),
+    backgroundColor: '#3EBD93',
+    paddingVertical: responsiveHeigth(15),
+    paddingHorizontal: normalize(20),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'relative',
   },
-  modalBgWarning : {
-    width : responsiveWidth(345),
-    borderRadius : responsiveWidth(16),
-    backgroundColor : '#FF981E',
-    paddingVertical : responsiveHeigth(15),
-    paddingHorizontal : normalize(20),
-    flexDirection : 'row',
-    justifyContent : 'space-between',
-    alignItems : 'center',
-    position : 'relative'
+  modalBgWarning: {
+    width: responsiveWidth(345),
+    borderRadius: responsiveWidth(16),
+    backgroundColor: '#FF981E',
+    paddingVertical: responsiveHeigth(15),
+    paddingHorizontal: normalize(20),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'relative',
   },
-  modalBgFailed : {
-      width : responsiveWidth(345),
-      borderRadius : responsiveWidth(16),
-      backgroundColor : '#EB5757',
-      paddingVertical : responsiveHeigth(15),
-      paddingHorizontal : normalize(20),
-      flexDirection : 'row',
-      justifyContent : 'space-between',
-      alignItems : 'center',
-      position : 'relative'
+  modalBgFailed: {
+    width: responsiveWidth(345),
+    borderRadius: responsiveWidth(16),
+    backgroundColor: '#EB5757',
+    paddingVertical: responsiveHeigth(15),
+    paddingHorizontal: normalize(20),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'relative',
   },
-  modalBgdroneFailed : {
-    width : responsiveWidth(345),
-    borderRadius : responsiveWidth(16),
-    backgroundColor : '#EB5757',
-    paddingVertical : responsiveHeigth(15),
-    paddingHorizontal : normalize(20),
-    flexDirection : 'row',
-    justifyContent : 'space-between',
-    alignItems : 'center',
-    position : 'relative'
+  modalBgdroneFailed: {
+    width: responsiveWidth(345),
+    borderRadius: responsiveWidth(16),
+    backgroundColor: '#EB5757',
+    paddingVertical: responsiveHeigth(15),
+    paddingHorizontal: normalize(20),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'relative',
   },
-  closePosition:{
-    position :'absolute',
-    top : 15,
-    right : 15
+  closePosition: {
+    position: 'absolute',
+    top: 15,
+    right: 15,
   },
-  info : {
-      fontSize : normalize(16),
-      fontFamily : fonts.medium,
-      color : colors.white
+  info: {
+    fontSize: normalize(16),
+    fontFamily: fonts.medium,
+    color: colors.white,
   },
-  infolight : {
-    fontSize : normalize(14),
-    fontFamily : fonts.medium,
-    color : colors.white
-  }
-})
+  infolight: {
+    fontSize: normalize(14),
+    fontFamily: fonts.medium,
+    color: colors.white,
+  },
+});

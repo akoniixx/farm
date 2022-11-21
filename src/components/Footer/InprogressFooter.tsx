@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 interface InprogressProp {
   mainFunc: () => void;
   togleModal: () => void;
+  isProblem: boolean;
   togleModalExtend?: () => void;
   statusDelay: string;
 }
@@ -17,12 +18,16 @@ export const InprogressFooter: React.FC<InprogressProp> = ({
   togleModal,
   togleModalExtend,
   statusDelay,
+  isProblem,
 }) => {
   const insets = useSafeAreaInsets();
 
   return (
     <View style={[styles.footer, {paddingBottom: insets.bottom}]}>
-      <TouchableOpacity style={styles.startButton} onPress={() => mainFunc()}>
+      <TouchableOpacity
+        style={styles.startButton}
+        disabled={statusDelay === 'WAIT_APPROVE'}
+        onPress={() => mainFunc()}>
         <Icon name="checkcircleo" size={22} color="white" />
         <Text
           style={{
@@ -43,9 +48,11 @@ export const InprogressFooter: React.FC<InprogressProp> = ({
         <TouchableOpacity
           style={
             // eslint-disable-next-line no-extra-boolean-cast
-            !!statusDelay ? styles.extendButtonDisable : styles.extendButton
+            !!statusDelay || isProblem
+              ? styles.extendButtonDisable
+              : styles.extendButton
           }
-          disabled={!!statusDelay}
+          disabled={!!statusDelay || isProblem}
           onPress={togleModalExtend}>
           <Text
             style={{

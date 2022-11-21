@@ -6,7 +6,7 @@ import {MainButton} from '../../components/Button/MainButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {Register} from '../../datasource/AuthDatasource';
-import { mixpanel } from '../../../mixpanel';
+import {mixpanel} from '../../../mixpanel';
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;

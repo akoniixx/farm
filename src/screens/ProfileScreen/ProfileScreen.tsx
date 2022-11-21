@@ -30,12 +30,11 @@ import ActionSheet, {ActionSheetRef} from 'react-native-actions-sheet';
 import Lottie from 'lottie-react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useAuth} from '../../contexts/AuthContext';
-import { decimalConvert, numberWithCommas, socket } from '../../function/utility';
-import { useFocusEffect } from '@react-navigation/native';
-import messaging from '@react-native-firebase/messaging';
+import {decimalConvert, numberWithCommas, socket} from '../../function/utility';
+import {useFocusEffect} from '@react-navigation/native';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
-import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
-import { responsiveHeigth, responsiveWidth } from '../../function/responsive';
+import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
+import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 
 const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -60,35 +59,35 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const actionSheet = useRef<any>(null);
   const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [fcmToken,setFcmToken] = useState("")
-  const [notidata,setnotidata] = useState(0)
+  const [fcmToken, setFcmToken] = useState('');
+  const [notidata, setnotidata] = useState(0);
 
   const showActionSheet = () => {
     actionSheet.current.show();
   };
-  const getToken = async() => {
+  const getToken = async () => {
     const token = await AsyncStorage.getItem('fcmtoken');
-    setFcmToken(token!)
-  }
+    setFcmToken(token!);
+  };
 
-  const getNotiList = async() => {
-    FCMtokenDatasource.getNotificationList().then(
-      res => {
-        const count = res.data.filter((item : any)=> !item.isRead)
-        setnotidata(count.length)
-      }
-    ).catch(err => console.log(err))
-  }
+  const getNotiList = async () => {
+    FCMtokenDatasource.getNotificationList()
+      .then(res => {
+        const count = res.data.filter((item: any) => !item.isRead);
+        setnotidata(count.length);
+      })
+      .catch(err => console.log(err));
+  };
 
   useFocusEffect(
     React.useCallback(() => {
-      getNotiList()
+      getNotiList();
     }, []),
   );
 
   useEffect(() => {
-    getNotiList()
-    getToken()
+    getNotiList();
+    getToken();
     getProfile();
     ProfileDatasource.getDroneBrand(1, 14)
       .then(result => {
@@ -144,10 +143,10 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     socket.removeAllListeners(`send-task-${dronerId!}`);
     socket.close();
-    const fcmtoken = await AsyncStorage.getItem('fcmtoken')
-    FCMtokenDatasource.deleteFCMtoken(fcmToken).then(
-      async res => await Authentication.logout()
-    ).catch(err => console.log(err))
+    const fcmtoken = await AsyncStorage.getItem('fcmtoken');
+    FCMtokenDatasource.deleteFCMtoken(fcmToken)
+      .then(async res => await Authentication.logout())
+      .catch(err => console.log(err));
   };
 
   useEffect(() => {
@@ -387,7 +386,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
               style={{
                 fontFamily: font.medium,
                 fontSize: normalize(16),
-                color : colors.fontBlack
+                color: colors.fontBlack,
               }}>
               โดรนฉีดพ่นของคุณ
             </Text>
@@ -473,10 +472,10 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={async () => {
-                // await onLogout();
-                RootNavigation.navigate('Main', {
-                  screen: 'NotificationList',
-                });
+              // await onLogout();
+              RootNavigation.navigate('Main', {
+                screen: 'NotificationList',
+              });
             }}>
             <View style={styles.listTile}>
               <View
@@ -484,35 +483,40 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <Image source={icons.notification} style={styles.listTileIcon} />
+                <Image
+                  source={icons.notification}
+                  style={styles.listTileIcon}
+                />
                 <Text style={styles.listTileTitle}>การแจ้งเตือน</Text>
               </View>
-              <View style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-                {
-                  (notidata != 0)?
-                  <View style={{
-                    width : responsiveWidth(39),
-                    height : responsiveHeigth(24),
-                    borderRadius : responsiveHeigth(12),
-                    backgroundColor : '#EB5757',
-                    justifyContent : 'center',
-                    alignItems : 'center',
-                    marginRight : normalize(10)
-                  }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                {notidata != 0 ? (
+                  <View
+                    style={{
+                      width: responsiveWidth(39),
+                      height: responsiveHeigth(24),
+                      borderRadius: responsiveHeigth(12),
+                      backgroundColor: '#EB5757',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginRight: normalize(10),
+                    }}>
                     <Text
                       style={{
-                        fontFamily : font.medium,
-                        fontSize : normalize(12),
-                        color : colors.white
-                      }}
-                    >{
-                      (notidata > 99)?"99+":notidata}</Text>
-                  </View>:
+                        fontFamily: font.medium,
+                        fontSize: normalize(12),
+                        color: colors.white,
+                      }}>
+                      {notidata > 99 ? '99+' : notidata}
+                    </Text>
+                  </View>
+                ) : (
                   <></>
-                }
+                )}
                 <Image source={icons.arrowRight} style={styles.listTileIcon} />
               </View>
             </View>

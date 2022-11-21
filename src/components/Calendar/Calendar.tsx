@@ -79,6 +79,7 @@ interface CalendarCustomType {
   value: string;
   disableFuture?: boolean;
   disablePast?: boolean;
+  enableOneWeek?: boolean;
 }
 
 const CalendarCustom: React.FC<CalendarCustomType> = ({
@@ -86,6 +87,7 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
   value,
   disableFuture = false,
   disablePast = false,
+  enableOneWeek = false,
 }) => {
   const dateSplit = (value && value?.split('-')) || [];
 
@@ -129,7 +131,7 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
             }
           }}
           onPressArrowRight={() => {
-            if (isSameMonth && isSameYear && disableFuture) {
+            if ((isSameMonth && isSameYear && disableFuture) || enableOneWeek) {
               return;
             } else {
               dispatch({
@@ -139,7 +141,13 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
           }}
           initialDate={calendarState.dateCurrent}
           markingType={'custom'}
-          maxDate={disableFuture ? dayjs().format('YYYY-MM-DD') : undefined}
+          maxDate={
+            disableFuture
+              ? dayjs().format('YYYY-MM-DD')
+              : enableOneWeek
+              ? dayjs().add(7, 'day').format('YYYY-MM-DD')
+              : undefined
+          }
           minDate={disablePast ? dayjs().format('YYYY-MM-DD') : undefined}
           markedDates={{
             [calendarState.dateCurrent]: {
@@ -164,12 +172,15 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
                 flexDirection: 'row',
               }}>
               <TouchableOpacity
-                onPress={() =>
+                onPress={() => {
+                  if (enableOneWeek) {
+                    return null;
+                  }
                   dispatch({
                     type: 'ChangeMode',
                     mode: CalendarMode.Month,
-                  })
-                }>
+                  });
+                }}>
                 <Text
                   style={{
                     fontFamily: font.medium,
@@ -180,12 +191,15 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() =>
+                onPress={() => {
+                  if (enableOneWeek) {
+                    return null;
+                  }
                   dispatch({
                     type: 'ChangeMode',
                     mode: CalendarMode.Year,
-                  })
-                }>
+                  });
+                }}>
                 <Text
                   style={{
                     fontFamily: font.medium,
@@ -196,7 +210,9 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
               </TouchableOpacity>
             </View>
           )}
-          disableArrowRight={disableFuture && isSameYear && isSameMonth}
+          disableArrowRight={
+            (disableFuture && isSameYear && isSameMonth) || enableOneWeek
+          }
           disableArrowLeft={disablePast && isSameYear && isSameMonth}
           theme={{
             arrowColor: colors.orange,
@@ -411,12 +427,15 @@ const CalendarCustom: React.FC<CalendarCustomType> = ({
                 flexDirection: 'row',
               }}>
               <TouchableOpacity
-                onPress={() =>
+                onPress={() => {
+                  if (enableOneWeek) {
+                    return null;
+                  }
                   dispatch({
                     type: 'ChangeMode',
                     mode: CalendarMode.Month,
-                  })
-                }>
+                  });
+                }}>
                 <Text
                   style={{
                     fontFamily: font.medium,

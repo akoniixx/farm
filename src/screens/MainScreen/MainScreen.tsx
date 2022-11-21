@@ -18,11 +18,11 @@ import {SheetManager} from 'react-native-actions-sheet';
 import {BASE_URL} from '../../config/develop-config';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import {decimalConvert, numberWithCommas, socket} from '../../function/utility';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
 import messaging from '@react-native-firebase/messaging';
 import Toast from 'react-native-toast-message';
-import { responsiveHeigth, responsiveWidth } from '../../function/responsive';
+import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import fonts from '../../assets/fonts';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
@@ -39,7 +39,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     isOpenReceiveTask: false,
     status: '',
   });
-  const [openNoti,setOpenNoti] = useState(false)
+  const [openNoti, setOpenNoti] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -128,15 +128,24 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     TaskDatasource.openReceiveTask(dronerId!, isOpen)
       .then(res => {
         setProfile({...profile, isOpenReceiveTask: res.isOpenReceiveTask});
-        if(!isOpen){
-          TaskDatasource.getTaskById(dronerId!, ['WAIT_START', 'IN_PROGRESS'], 1, 999).then(
-            res => {
-              if(res.length !=0 ){
-                Toast.show({type : 'taskWarningBeforeClose',onPress : ()=>{
-                  Toast.hide()
-                }})
+        if (!isOpen) {
+          TaskDatasource.getTaskById(
+            dronerId!,
+            ['WAIT_START', 'IN_PROGRESS'],
+            1,
+            999,
+          )
+            .then(res => {
+              if (res.length != 0) {
+                Toast.show({
+                  type: 'taskWarningBeforeClose',
+                  onPress: () => {
+                    Toast.hide();
+                  },
+                });
               }
-            }).catch(err => console.log(err))
+            })
+            .catch(err => console.log(err));
         }
       })
       .catch(err => console.log(err));
@@ -144,12 +153,15 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
   return (
     <BottomSheetModalProvider>
-      <RegisterNotification value={openNoti} onClick={()=>{
-        setOpenNoti(false)
-        navigation.navigate('ProfileScreen', {
-          navbar: false,
-        });
-      }}/>
+      <RegisterNotification
+        value={openNoti}
+        onClick={() => {
+          setOpenNoti(false);
+          navigation.navigate('ProfileScreen', {
+            navbar: false,
+          });
+        }}
+      />
       <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
         <View style={{flex: 2}}>
           <View style={styles.headCard}>

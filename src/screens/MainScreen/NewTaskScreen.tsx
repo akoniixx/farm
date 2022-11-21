@@ -1,6 +1,13 @@
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {normalize} from '@rneui/themed';
-import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Dimensions,
   Image,
@@ -22,7 +29,7 @@ import icons from '../../assets/icons/icons';
 import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {socket} from '../../function/utility';
-import { ActionContext } from '../../../App';
+import {ActionContext} from '../../../App';
 
 interface Prop {
   isOpenReceiveTask: boolean;
@@ -30,7 +37,7 @@ interface Prop {
 }
 
 const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
-  const [unsendTask,setUnsendtask] = useState([]);
+  const [unsendTask, setUnsendtask] = useState([]);
   const dronerStatus = props.dronerStatus;
   const {isOpenReceiveTask} = props;
   const [data, setData] = useState<any>([]);
@@ -46,7 +53,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   const width = Dimensions.get('window').width;
   const [selectedTaskId, setSelectedTaskId] = useState<string>('');
   const [dronerId, setDronerId] = useState<string>('');
-  const {actiontaskId,setActiontaskId} = useContext(ActionContext)
+  const {actiontaskId, setActiontaskId} = useContext(ActionContext);
 
   const getData = async () => {
     setLoading(true);
@@ -71,10 +78,24 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
           Toast.show({
             type: 'receiveTaskSuccess',
             text1: `งาน #${task.taskNo}`,
-            text2: `วันที่ ${data.dateAppointment.split("T")[0].split("-")[2]}/${data.dateAppointment.split("T")[0].split("-")[1]}/${parseInt(data.dateAppointment.split("T")[0].split("-")[0])+543} เวลา ${((parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7) > 9)? `${(parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7)}`:`0${(parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7)}`}:${data.dateAppointment.split("T")[1].split(":")[1]}`,
-            onPress : ()=>{
-              Toast.hide()
-            }
+            text2: `วันที่ ${
+              data.dateAppointment.split('T')[0].split('-')[2]
+            }/${data.dateAppointment.split('T')[0].split('-')[1]}/${
+              parseInt(data.dateAppointment.split('T')[0].split('-')[0]) + 543
+            } เวลา ${
+              parseInt(data.dateAppointment.split('T')[1].split(':')[0]) + 7 > 9
+                ? `${
+                    parseInt(data.dateAppointment.split('T')[1].split(':')[0]) +
+                    7
+                  }`
+                : `0${
+                    parseInt(data.dateAppointment.split('T')[1].split(':')[0]) +
+                    7
+                  }`
+            }:${data.dateAppointment.split('T')[1].split(':')[1]}`,
+            onPress: () => {
+              Toast.hide();
+            },
           });
         } else {
           getData();
@@ -107,9 +128,9 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
     setDronerId((await AsyncStorage.getItem('droner_id')) ?? '');
   };
 
-  useEffect(()=>{
-      setData(data.filter((x: any) => x.item.id != actiontaskId));
-  },[actiontaskId])
+  useEffect(() => {
+    setData(data.filter((x: any) => x.item.id != actiontaskId));
+  }, [actiontaskId]);
   useEffect(() => {
     getDronerId();
   }, []);
@@ -126,14 +147,12 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   };
 
   const onTaskReceive = async () => {
-
     // const dronerId = await AsyncStorage.getItem('droner_id');
-
     // socket.on(`unsend-task-${dronerId!}`, (taskId: string) => {
-      // if (data.find((x: any) => x.item.id == taskId)) {
-        // setUnsendtask(data.concat(data))
-        // setData(data.filter((x: any) => x.item.id != taskId));
-      // }
+    // if (data.find((x: any) => x.item.id == taskId)) {
+    // setUnsendtask(data.concat(data))
+    // setData(data.filter((x: any) => x.item.id != taskId));
+    // }
     // });
   };
 
