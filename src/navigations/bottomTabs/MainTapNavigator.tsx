@@ -126,6 +126,12 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                 params: {taskId: message.data?.taskId},
               });
               break;
+            case 'FORCE_SELECT_DRONER':
+                RootNavigation.navigate('Main', {
+                  screen: 'TaskDetailScreen',
+                  params: {taskId: message.data?.taskId},
+                });
+                break;
             default:
               break;
           }
@@ -187,6 +193,12 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
             params: {taskId: message.data?.taskId},
           });
           break;
+        case 'FORCE_SELECT_DRONER':
+            RootNavigation.navigate('Main', {
+              screen: 'TaskDetailScreen',
+              params: {taskId: message.data?.taskId},
+            });
+            break;
         default:
           break;
       }
