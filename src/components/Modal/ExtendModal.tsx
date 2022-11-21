@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   Modal as ModalRN,
   Dimensions,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 import React from 'react';
 import Modal from 'react-native-modal/dist/modal';
+import Toast from 'react-native-toast-message';
 
 import {normalize} from '../../function/Normalize';
 import {font} from '../../assets';
@@ -60,6 +60,10 @@ const ExtendModal = ({
       if (res) {
         await fetchTask();
       }
+      Toast.show({
+        type: 'taskExtendReqSuccess',
+        text1: `งาน #${taskId}`,
+      });
     } catch (e) {
       console.log(e);
     }
@@ -242,6 +246,7 @@ const ExtendModal = ({
                   }}>
                   <CalendarCustom
                     disablePast
+                    enableOneWeek
                     value={date.dateString}
                     onHandleChange={v => {
                       setDate(v);

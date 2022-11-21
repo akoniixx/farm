@@ -27,7 +27,7 @@ import {Authentication} from '../../../datasource/AuthDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuth} from '../../../contexts/AuthContext';
 import * as RootNavigation from '../../../navigations/RootNavigation';
-import { FCMtokenDatasource } from '../../../datasource/FCMDatasource';
+import {FCMtokenDatasource} from '../../../datasource/FCMDatasource';
 
 const CELL_COUNT = 6;
 interface props {
@@ -150,14 +150,14 @@ const VerifyOTP: React.FC<any> = ({navigation, route}) => {
             if (res) {
               setLoading(false);
               const fcmtoken = await AsyncStorage.getItem('fcmtoken');
-              FCMtokenDatasource.deleteFCMtoken(fcmtoken!).then(
-                res => {
+              FCMtokenDatasource.deleteFCMtoken(fcmtoken!)
+                .then(res => {
                   onLogout();
                   RootNavigation.navigate('Auth', {
                     screen: 'DeleteSuccess',
                   });
-                }
-              ).catch(err => console.log(err))
+                })
+                .catch(err => console.log(err));
             }
           })
           .catch(err => {

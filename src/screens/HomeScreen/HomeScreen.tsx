@@ -6,7 +6,7 @@ import HomeCarousel from '../../components/Carousel/HomeCarousel';
 import {MainButton} from '../../components/Button/MainButton';
 import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
-import { mixpanel } from '../../../mixpanel';
+import {mixpanel} from '../../../mixpanel';
 
 const HomeScreen: React.FC<any> = ({navigation}) => {
   return (
@@ -28,7 +28,8 @@ const HomeScreen: React.FC<any> = ({navigation}) => {
             fontColor={'black'}
             onPress={() => {
               mixpanel.track('Create account');
-              navigation.navigate('ConditionScreen')}}
+              navigation.navigate('ConditionScreen');
+            }}
           />
         </View>
       </View>

@@ -39,7 +39,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import ExtendModal from '../../components/Modal/ExtendModal';
 import StatusExtend from './StatusExtend';
-import { mixpanel } from '../../../mixpanel';
+import {mixpanel} from '../../../mixpanel';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
@@ -198,10 +198,24 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           Toast.show({
             type: 'receiveTaskSuccess',
             text1: `งาน #${data.taskNo}`,
-            text2: `วันที่ ${data.dateAppointment.split("T")[0].split("-")[2]}/${data.dateAppointment.split("T")[0].split("-")[1]}/${parseInt(data.dateAppointment.split("T")[0].split("-")[0])+543} เวลา ${((parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7) > 9)? `${(parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7)}`:`0${(parseInt(data.dateAppointment.split("T")[1].split(":")[0])+7)}`}:${data.dateAppointment.split("T")[1].split(":")[1]}`,
-            onPress : ()=>{
-              Toast.hide()
-            }
+            text2: `วันที่ ${
+              data.dateAppointment.split('T')[0].split('-')[2]
+            }/${data.dateAppointment.split('T')[0].split('-')[1]}/${
+              parseInt(data.dateAppointment.split('T')[0].split('-')[0]) + 543
+            } เวลา ${
+              parseInt(data.dateAppointment.split('T')[1].split(':')[0]) + 7 > 9
+                ? `${
+                    parseInt(data.dateAppointment.split('T')[1].split(':')[0]) +
+                    7
+                  }`
+                : `0${
+                    parseInt(data.dateAppointment.split('T')[1].split(':')[0]) +
+                    7
+                  }`
+            }:${data.dateAppointment.split('T')[1].split(':')[1]}`,
+            onPress: () => {
+              Toast.hide();
+            },
           });
         } else {
           RootNavigation.navigate('Main', {
@@ -320,7 +334,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   style={{
                     fontFamily: fonts.medium,
                     fontSize: normalize(19),
-                    color: colors.fontBlack
+                    color: colors.fontBlack,
                   }}>
                   {data.farmerPlot.plantName}
                 </Text>
@@ -352,7 +366,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                     fontFamily: fonts.medium,
                     paddingLeft: normalize(8),
                     fontSize: normalize(14),
-                    color : colors.fontBlack
+                    color: colors.fontBlack,
                   }}>{`${convertDate(data.dateAppointment).getDate()}/${
                   convertDate(data.dateAppointment).getMonth() + 1
                 }/${
@@ -607,6 +621,44 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 </View>
               ) : null}
             </View>
+            {data?.statusDelay && data.statusDelay === 'APPROVED' ? (
+              <View
+                style={{
+                  marginVertical: normalize(10),
+                  flexDirection: 'row',
+                  paddingHorizontal: normalize(20),
+                  alignItems: 'center',
+                  minHeight: normalize(44),
+                }}>
+                <View
+                  style={{
+                    paddingHorizontal: 16,
+                    paddingVertical: 8,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    backgroundColor: '#F7F8FA',
+                    borderWidth: 1,
+                    borderColor: '#F3F4F6',
+                    borderRadius: 8,
+                    width: '100%',
+                  }}>
+                  <Image
+                    source={icons.warningGrey}
+                    style={{marginRight: 20, width: 32, height: 32}}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: font.medium,
+                      fontSize: normalize(12),
+                      color: '#A5A7AB',
+                      width: '85%',
+                    }}>
+                    คุณขอขยายเวลางานครบกำหนดที่ทางระบบกำหนดแล้ว
+                    หากต้องการขยายงานเพิ่มเติม กรุณาติดต่อเจ้าหน้าที่
+                  </Text>
+                </View>
+              </View>
+            ) : null}
           </ScrollView>
 
           {data.status == 'WAIT_RECEIVE' ? (
@@ -647,6 +699,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               togleModalExtend={() => {
                 setIsVisibleExtendModal(true);
               }}
+              isProblem={data.isProblem || false}
               statusDelay={data.statusDelay || null}
               mainFunc={() => setTogleModalUpload(true)}
               togleModal={() =>
@@ -1061,7 +1114,7 @@ const styles = StyleSheet.create({
   font16: {
     fontFamily: fonts.medium,
     fontSize: normalize(16),
-    color : colors.fontBlack
+    color: colors.fontBlack,
   },
   fontGray: {
     fontFamily: font.medium,
