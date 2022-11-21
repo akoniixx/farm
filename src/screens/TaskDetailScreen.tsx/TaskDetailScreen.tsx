@@ -758,6 +758,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   fontFamily: fonts.medium,
                   fontWeight: '600',
                   fontSize: normalize(19),
+                  color : colors.fontBlack
                 }}>
                 ไม่รับงาน
               </Text>

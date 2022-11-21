@@ -112,10 +112,15 @@ const NotificationListTile:React.FC<NotificationListTileParams> = ({
                 width : '65%'
               }}>
                 <Text numberOfLines={2} ellipsizeMode='tail'style={{
-                  fontFamily : font.medium
+                  fontFamily : font.medium,
+                  color : colors.fontBlack
                 }}>{description}</Text>
               </View>
-              <View>
+              <View style={{
+            justifyContent : 'space-between',
+            alignItems : 'flex-end',
+            paddingRight : normalize(10)
+          }}>
               {
                 isRead ?
                 <View style={{

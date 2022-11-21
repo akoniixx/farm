@@ -19,6 +19,7 @@ import IncomeScreen from '../../screens/IncomeScreen';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { SheetManager } from 'react-native-actions-sheet';
 import { ActionContext } from '../../../App';
+import { dialCall } from '../../function/utility';
 
 const Tab = createBottomTabNavigator();
 
@@ -187,6 +188,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     })
 
     messaging().onMessage(async message =>{
+      console.log(message)
       const type = message.data?.type;
       switch (type) {
         case "APPROVE_DRONER_SUCCESS":
@@ -204,6 +206,19 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
             },
           });
           break;
+        case "APPROVE_DRONER_DRONE_SUCCESS":
+          Toast.show({
+            type : 'droneSuccess',
+            topOffset : 10,
+            text1 : message.data?.message.split(" ")[2],
+            position : 'top',
+            onPress() {
+              const jumpAction = TabActions.jumpTo('profile');
+              navigation.dispatch(jumpAction)
+              Toast.hide()
+            },
+          });
+            break;
         case "APPROVE_DRONER_DRONE_FAIL":
           Toast.show({
             type : 'droneFirstTimeFailed',
@@ -240,6 +255,20 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
               navigation.dispatch(jumpAction)
               Toast.hide()
             },
+          });
+          break;
+        case "RECEIVE_TASK_SUCCESS":
+          Toast.show({
+            type: 'receiveTaskSuccess',
+            text1: `งาน #${message.data?.taskNo}`,
+            text2: `วันที่ ${message.data?.dateAppointment.split("T")[0].split("-")[2]}/${message.data?.dateAppointment.split("T")[0].split("-")[1]}/${parseInt(message.data?.dateAppointment.split("T")[0].split("-")[0]!)+543} เวลา ${(parseInt(message.data?.dateAppointment.split("T")[1].split(":")[0]!)+7 > 9)? `${parseInt(message.data?.dateAppointment.split("T")[1].split(":")[0]!)+7}`:`0${parseInt(message.data?.dateAppointment.split("T")[1].split(":")[0]!)+7}`}:${message.data?.dateAppointment.split("T")[1].split(":")[1]}`,
+            onPress : ()=>{
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              Toast.hide();
+            }
           });
           break;
         case "RECEIVE_TASK_FAIL":
@@ -315,6 +344,10 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
             text2 : `วันที่ ${date_force_select![0].split("-")[2]}/${date_force_select![0].split("-")[1]}/${parseInt(date_force_select![0].split("-")[0])+543} เวลา ${(parseInt(date_force_select![1].split(":")[0])+7)>9?`0${parseInt(date_force_select![1].split(":")[0])+7}`:parseInt(date_force_select![1].split(":")[0])+7}.${parseInt(date_force_select![1].split(":")[1])}น.`,
             position : 'top',
             onPress() {
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
               Toast.hide()
             },
           });
@@ -342,9 +375,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     <RegisterFailedModal value={registerfailedModalNoti} 
     onClick={()=>{
       setRegisterFailedModalNoti(false)
-      setInitialRouteName("home")
-      const jumpAction = TabActions.jumpTo('profile');
-      navigation.dispatch(jumpAction)
+      dialCall()
     }} 
     onClose={()=>{
       setRegisterFailedModalNoti(false)
