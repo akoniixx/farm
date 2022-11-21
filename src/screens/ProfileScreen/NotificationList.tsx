@@ -132,12 +132,6 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
             style={{
               width: '65%',
             }}>
-            <Text
-              numberOfLines={2}
-              ellipsizeMode="tail"
-              style={{
-                fontFamily: font.medium,
-              }}>
                 <Text numberOfLines={2} ellipsizeMode='tail'style={{
                   fontFamily : font.medium,
                   color : colors.fontBlack
@@ -197,7 +191,6 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
                 width : '65%'
               }}>
               {generateNotiTime(currentdate, currentTime)}
-            </Text>
           </View>
         </View>
       </TouchableOpacity>

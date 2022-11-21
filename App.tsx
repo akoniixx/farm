@@ -33,11 +33,6 @@ const ActionContextState = {
 
 const ActionContext = createContext<ActionContextType>(ActionContextState);
 
-const getToken = async()=>{
-  const token = await AsyncStorage.getItem("token")
-  console.log(token)
-}
-
 const App = () => {
   const [actiontaskId, setActiontaskId] = useState<string | null>('');
   useEffect(() => {
@@ -47,8 +42,8 @@ const App = () => {
     if (Platform.OS === 'ios') {
       firebaseInitialize();
     }
-    requestUserPermission();
-    getFCMToken();
+    requestUserPermission()
+    getFCMToken()
   }, []);
 
   return (

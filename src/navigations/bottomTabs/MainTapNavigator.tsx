@@ -192,7 +192,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
       }
     });
 
-    messaging().onMessage(async message => {
+    messaging().onMessage(async message =>{
       const type = message.data?.type;
       switch (type) {
         case 'APPROVE_DRONER_SUCCESS':
@@ -346,6 +346,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           });
           break;
         case 'FORCE_SELECT_DRONER':
+          let date_force_select = message.data?.dateAppointment.split('T');
           Toast.show({
             type: 'taskJobSuccess',
             topOffset: 10,
@@ -395,48 +396,6 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     onClose={()=>{
       setRegisterFailedModalNoti(false)
     }}/>
-
-    <Tab.Navigator screenOptions={{headerShown: false}} initialRouteName={initialRouteName}>
-      {ListPath.map((item, index) => {
-        return (
-          <Tab.Screen
-            key={index}
-            name={item.name}
-            component={item.component}
-            options={{
-              tabBarLabelStyle: {
-                fontFamily: font.medium,
-              },
-              tabBarStyle: {
-                minHeight: Platform.OS === 'ios' ? 95 : 80,
-                alignItems: 'center',
-                justifyContent: 'center',
-              },
-              lazy:true,
-              tabBarButton(props) {
-                const isFocused = props.accessibilityState?.selected;
-                return (
-                  <TouchableOpacity
-                    {...props}
-                    style={[
-                      props?.style,
-                      {
-                        padding: 8,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      },
-                    ]}>
-                    <View
-                      style={{justifyContent: 'center', alignItems: 'center'}}>
-                      <Image
-                        source={isFocused ? item.activeIcon : item.inactiveIcon}
-                        style={
-                          item.name === 'profile'
-                            ? {width: 16, height: 20, marginTop: 3.5}
-                            : {width: 25, height: 25}
-                        }
-                      />
-
       <Tab.Navigator
         screenOptions={{headerShown: false}}
         initialRouteName={initialRouteName}>
