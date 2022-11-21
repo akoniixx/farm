@@ -163,39 +163,7 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
             </View>
           </TouchableOpacity>
         );
-      }
-      else if(type === 'FIRST_REMIND' || type === 'SECOND_REMIND'
-      || type === 'THIRD_REMIND' || type === 'FORTH_REMIND' 
-      || type === 'DONE_TASK_REMIND' || type === 'FORCE_SELECT_DRONER' || type === 'RECEIVE_TASK_SUCCESS'){
-      return (
-        <TouchableOpacity onPress={()=>{
-          console.log(data)
-          readItTask(id,data.taskDronerTemp[0].taskId)
-        }}>
-        <View style={{
-          height : responsiveHeigth(78),
-          justifyContent : 'space-between',
-          alignItems : 'center',
-          flexDirection : 'row',
-          borderBottomWidth : normalize(1),
-          borderBottomColor : colors.disable,
-          backgroundColor : colors.white
-        }}>
-          <Image source={
-                icons.notificationtask
-              } style={{
-                width : normalize(50),
-                height : normalize(50)
-              }}/>
-              <View style={{
-                width : '65%'
-              }}>
-              {generateNotiTime(currentdate, currentTime)}
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  } else if (
+      } else if (
     type === 'FIRST_REMIND' ||
     type === 'SECOND_REMIND' ||
     type === 'THIRD_REMIND' ||
@@ -287,6 +255,7 @@ const NotificationList: React.FC<any> = ({navigation, route}) => {
   const getNotiList = () => {
     FCMtokenDatasource.getNotificationList()
       .then(res => {
+        console.log(res.data)
         setData(res.data);
       })
       .catch(err => console.log(err));

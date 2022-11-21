@@ -17,30 +17,30 @@ import {
   getFCMToken,
   requestUserPermission,
 } from './src/firebase/notification';
-import {Platform} from 'react-native';
+import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {mixpanel} from './mixpanel';
+import { mixpanel } from './mixpanel';
 
 type ActionContextType = {
-  actiontaskId: string | null;
-  setActiontaskId: React.Dispatch<React.SetStateAction<string | null>>;
-};
+  actiontaskId: string | null,
+  setActiontaskId: React.Dispatch<React.SetStateAction<string | null>>
+}
 
 const ActionContextState = {
-  actiontaskId: '',
-  setActiontaskId: () => {},
-};
+  actiontaskId: "",
+  setActiontaskId: () => {}
+}
 
 const ActionContext = createContext<ActionContextType>(ActionContextState);
 
 const App = () => {
-  const [actiontaskId, setActiontaskId] = useState<string | null>('');
+  const [actiontaskId,setActiontaskId] = useState<string | null>("")
   useEffect(() => {
     mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
-    if (Platform.OS === 'ios') {
-      firebaseInitialize();
+    if(Platform.OS === "ios"){
+      firebaseInitialize()
     }
     requestUserPermission()
     getFCMToken()
@@ -48,7 +48,7 @@ const App = () => {
 
   return (
     <>
-      <ActionContext.Provider value={{actiontaskId, setActiontaskId}}>
+      <ActionContext.Provider value={{actiontaskId,setActiontaskId}}>
         <NavigationContainer ref={navigationRef}>
           <AuthProvider>
             <SheetProvider>
@@ -61,5 +61,5 @@ const App = () => {
     </>
   );
 };
-export {ActionContext};
+export { ActionContext };
 export default App;
