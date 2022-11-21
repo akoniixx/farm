@@ -328,7 +328,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   style={{
                     fontFamily: fonts.medium,
                     color: '#2EC66E',
-                    fontSize: normalize(17),
+                    fontSize: normalize(17)
                   }}>
                   ฿ {data.totalPrice ? numberWithCommas(data.totalPrice) : null}
                 </Text>
