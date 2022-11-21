@@ -26,7 +26,7 @@ import {Authentication} from '../../datasource/AuthDatasource';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
+import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
 
 const CELL_COUNT = 6;
 
@@ -148,11 +148,13 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
               await AsyncStorage.setItem('token', result.accessToken);
               await AsyncStorage.setItem('droner_id', result.data.id);
               const fcmtoken = await AsyncStorage.getItem('fcmtoken');
-              FCMtokenDatasource.saveFCMtoken(fcmtoken!).then(
-                res => RootNavigation.navigate('Main', {
-                  screen: 'MainScreen',
-                })
-              ).catch(err => console.log(err))
+              FCMtokenDatasource.saveFCMtoken(fcmtoken!)
+                .then(res =>
+                  RootNavigation.navigate('Main', {
+                    screen: 'MainScreen',
+                  }),
+                )
+                .catch(err => console.log(err));
             })
             .catch(err => {
               setLoading(false);

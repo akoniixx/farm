@@ -21,5 +21,5 @@ export default {
   registerconfirmnoti: require('./registerconfirmnoti.png'),
   registerfailednoti: require('./registerfailednoti.png'),
   troublejobnoti: require('./troublejobnoti.png'),
-  troublemissnoti: require('./troublemissnoti.png')
-}
+  troublemissnoti: require('./troublemissnoti.png'),
+};

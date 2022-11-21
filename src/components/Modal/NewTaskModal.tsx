@@ -24,7 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import Toast from 'react-native-toast-message';
 import {useFocusEffect} from '@react-navigation/native';
-import { responsiveHeigth, responsiveWidth } from '../../function/responsive';
+import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 
 export const NewTaskModal = (
   props: SheetProps<{
@@ -51,10 +51,10 @@ export const NewTaskModal = (
         if (res.success) {
           SheetManager.hide('NewTaskSheet');
         } else {
-          console.log(data)
-          setTimeout(()=>{
+          console.log(data);
+          setTimeout(() => {
             SheetManager.hide('NewTaskSheet');
-          },5000)
+          }, 5000);
         }
       })
       .catch(err => console.log(err));
@@ -117,7 +117,7 @@ export const NewTaskModal = (
   return (
     <ActionSheet
       containerStyle={{
-        height : '80%'
+        height: '80%',
       }}
       id={props.sheetId}
       useBottomSafeAreaPadding
@@ -278,10 +278,11 @@ export const NewTaskModal = (
           </View>
         </View>
         {/* Map */}
-        <View style={{
-          position : 'relative',
-          alignItems : 'center'
-        }}>
+        <View
+          style={{
+            position: 'relative',
+            alignItems: 'center',
+          }}>
           <MapView.Animated
             style={styles.map}
             zoomEnabled={false}
@@ -293,10 +294,11 @@ export const NewTaskModal = (
             initialRegion={position}>
             <Marker coordinate={position} />
           </MapView.Animated>
-          <View style={{
-            position : 'absolute',
-            bottom : normalize(10)
-          }}>
+          <View
+            style={{
+              position: 'absolute',
+              bottom: normalize(10),
+            }}>
             <TouchableOpacity
               style={styles.viewMap}
               onPress={() =>
@@ -459,7 +461,7 @@ const styles = StyleSheet.create({
     // marginTop: normalize(10),
   },
   viewMap: {
-    width : responsiveWidth(100),
+    width: responsiveWidth(100),
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',

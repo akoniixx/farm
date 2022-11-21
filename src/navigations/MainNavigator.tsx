@@ -35,7 +35,7 @@ export type StackParamList = {
   ProfileDocument: any;
   FourthFormScreen: any;
   AddIDCardScreen: any;
-  NotificationList : any;
+  NotificationList: any;
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
   // };
