@@ -188,7 +188,6 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     })
 
     messaging().onMessage(async message =>{
-      console.log(message)
       const type = message.data?.type;
       switch (type) {
         case "APPROVE_DRONER_SUCCESS":
