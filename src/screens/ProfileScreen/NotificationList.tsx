@@ -138,32 +138,63 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
               style={{
                 fontFamily: font.medium,
               }}>
-              {description}
-            </Text>
-          </View>
-          <View>
-            {isRead ? (
-              <View
-                style={{
-                  width: normalize(8),
-                  height: normalize(8),
-                  marginBottom: normalize(10),
-                }}
-              />
-            ) : (
-              <Image
-                source={icons.unread}
-                style={{
-                  width: normalize(8),
-                  height: normalize(8),
-                  marginBottom: normalize(10),
-                }}
-              />
-            )}
-            <Text
-              style={{
-                fontFamily: font.light,
-                color: colors.gray,
+                <Text numberOfLines={2} ellipsizeMode='tail'style={{
+                  fontFamily : font.medium,
+                  color : colors.fontBlack
+                }}>{description}</Text>
+              </View>
+              <View style={{
+            justifyContent : 'space-between',
+            alignItems : 'flex-end',
+            paddingRight : normalize(10)
+          }}>
+              {
+                isRead ?
+                <View style={{
+                  width : normalize(8),
+                  height : normalize(8),
+                  marginBottom : normalize(10)
+                }} ></View>:
+                <Image source={icons.unread} style={{
+                  width : normalize(8),
+                  height : normalize(8),
+                  marginBottom : normalize(10)
+                }} />
+              }
+              <Text style={{
+                fontFamily : font.light,
+                color : colors.gray
+              }}>{generateNotiTime(currentdate,currentTime)}</Text>
+            </View>
+            </View>
+          </TouchableOpacity>
+        );
+      }
+      else if(type === 'FIRST_REMIND' || type === 'SECOND_REMIND'
+      || type === 'THIRD_REMIND' || type === 'FORTH_REMIND' 
+      || type === 'DONE_TASK_REMIND' || type === 'FORCE_SELECT_DRONER' || type === 'RECEIVE_TASK_SUCCESS'){
+      return (
+        <TouchableOpacity onPress={()=>{
+          console.log(data)
+          readItTask(id,data.taskDronerTemp[0].taskId)
+        }}>
+        <View style={{
+          height : responsiveHeigth(78),
+          justifyContent : 'space-between',
+          alignItems : 'center',
+          flexDirection : 'row',
+          borderBottomWidth : normalize(1),
+          borderBottomColor : colors.disable,
+          backgroundColor : colors.white
+        }}>
+          <Image source={
+                icons.notificationtask
+              } style={{
+                width : normalize(50),
+                height : normalize(50)
+              }}/>
+              <View style={{
+                width : '65%'
               }}>
               {generateNotiTime(currentdate, currentTime)}
             </Text>

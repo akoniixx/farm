@@ -50,28 +50,6 @@ export const NewTaskModal = (
       .then(res => {
         if (res.success) {
           SheetManager.hide('NewTaskSheet');
-          Toast.show({
-            type: 'receiveTaskSuccess',
-            text1: `งาน #${data.taskNo}`,
-            text2: `วันที่ ${
-              data.dateAppointment.split('T')[0].split('-')[2]
-            }/${data.dateAppointment.split('T')[0].split('-')[1]}/${
-              parseInt(data.dateAppointment.split('T')[0].split('-')[0]) + 543
-            } เวลา ${
-              parseInt(data.dateAppointment.split('T')[1].split(':')[0]) + 7 > 9
-                ? `${
-                    parseInt(data.dateAppointment.split('T')[1].split(':')[0]) +
-                    7
-                  }`
-                : `0${
-                    parseInt(data.dateAppointment.split('T')[1].split(':')[0]) +
-                    7
-                  }`
-            }:${data.dateAppointment.split('T')[1].split(':')[1]}`,
-            onPress: () => {
-              Toast.hide();
-            },
-          });
         } else {
           console.log(data);
           setTimeout(() => {

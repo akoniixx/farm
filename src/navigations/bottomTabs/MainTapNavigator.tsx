@@ -23,8 +23,9 @@ import Toast from 'react-native-toast-message';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import IncomeScreen from '../../screens/IncomeScreen';
 import * as RootNavigation from '../../navigations/RootNavigation';
-import {SheetManager} from 'react-native-actions-sheet';
-import {ActionContext} from '../../../App';
+import { SheetManager } from 'react-native-actions-sheet';
+import { ActionContext } from '../../../App';
+import { dialCall } from '../../function/utility';
 
 const Tab = createBottomTabNavigator();
 
@@ -209,7 +210,20 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
             },
           });
           break;
-        case 'APPROVE_DRONER_DRONE_FAIL':
+        case "APPROVE_DRONER_DRONE_SUCCESS":
+          Toast.show({
+            type : 'droneSuccess',
+            topOffset : 10,
+            text1 : message.data?.message.split(" ")[2],
+            position : 'top',
+            onPress() {
+              const jumpAction = TabActions.jumpTo('profile');
+              navigation.dispatch(jumpAction)
+              Toast.hide()
+            },
+          });
+            break;
+        case "APPROVE_DRONER_DRONE_FAIL":
           Toast.show({
             type: 'droneFirstTimeFailed',
             topOffset: 10,
@@ -247,8 +261,22 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
             },
           });
           break;
-        case 'RECEIVE_TASK_FAIL':
-          setActiontaskId(message.data?.taskId!);
+        case "RECEIVE_TASK_SUCCESS":
+          Toast.show({
+            type: 'receiveTaskSuccess',
+            text1: `งาน #${message.data?.taskNo}`,
+            text2: `วันที่ ${message.data?.dateAppointment.split("T")[0].split("-")[2]}/${message.data?.dateAppointment.split("T")[0].split("-")[1]}/${parseInt(message.data?.dateAppointment.split("T")[0].split("-")[0]!)+543} เวลา ${(parseInt(message.data?.dateAppointment.split("T")[1].split(":")[0]!)+7 > 9)? `${parseInt(message.data?.dateAppointment.split("T")[1].split(":")[0]!)+7}`:`0${parseInt(message.data?.dateAppointment.split("T")[1].split(":")[0]!)+7}`}:${message.data?.dateAppointment.split("T")[1].split(":")[1]}`,
+            onPress : ()=>{
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              Toast.hide();
+            }
+          });
+          break;
+        case "RECEIVE_TASK_FAIL":
+          setActiontaskId(message.data?.taskId!)
           Toast.show({
             type: 'taskFailed',
             topOffset: 10,
@@ -331,7 +359,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
             }.${parseInt(date_force_select![1].split(':')[1])}น.`,
             position: 'top',
             onPress() {
-              Toast.hide();
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              })
+              Toast.hide()
             },
           });
         default:
@@ -345,30 +377,65 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   }
   return (
     <>
-      <RegisterNotification
-        value={registerNoti}
-        onClick={() => {
-          setRegisterNoti(false);
-          setInitialRouteName('home');
-          const jumpAction = TabActions.jumpTo('profile');
-          navigation.dispatch(jumpAction);
-        }}
-        onClose={() => {
-          setRegisterNoti(false);
-        }}
-      />
-      <RegisterFailedModal
-        value={registerfailedModalNoti}
-        onClick={() => {
-          setRegisterFailedModalNoti(false);
-          setInitialRouteName('home');
-          const jumpAction = TabActions.jumpTo('profile');
-          navigation.dispatch(jumpAction);
-        }}
-        onClose={() => {
-          setRegisterFailedModalNoti(false);
-        }}
-      />
+    <RegisterNotification value={registerNoti} onClick={()=>{
+      setRegisterNoti(false);
+      setInitialRouteName("home")
+      const jumpAction = TabActions.jumpTo('profile');
+      navigation.dispatch(jumpAction)
+    }}
+    onClose={()=>{
+      setRegisterNoti(false);
+    }}
+    />
+    <RegisterFailedModal value={registerfailedModalNoti} 
+    onClick={()=>{
+      setRegisterFailedModalNoti(false)
+      dialCall()
+    }} 
+    onClose={()=>{
+      setRegisterFailedModalNoti(false)
+    }}/>
+
+    <Tab.Navigator screenOptions={{headerShown: false}} initialRouteName={initialRouteName}>
+      {ListPath.map((item, index) => {
+        return (
+          <Tab.Screen
+            key={index}
+            name={item.name}
+            component={item.component}
+            options={{
+              tabBarLabelStyle: {
+                fontFamily: font.medium,
+              },
+              tabBarStyle: {
+                minHeight: Platform.OS === 'ios' ? 95 : 80,
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
+              lazy:true,
+              tabBarButton(props) {
+                const isFocused = props.accessibilityState?.selected;
+                return (
+                  <TouchableOpacity
+                    {...props}
+                    style={[
+                      props?.style,
+                      {
+                        padding: 8,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      },
+                    ]}>
+                    <View
+                      style={{justifyContent: 'center', alignItems: 'center'}}>
+                      <Image
+                        source={isFocused ? item.activeIcon : item.inactiveIcon}
+                        style={
+                          item.name === 'profile'
+                            ? {width: 16, height: 20, marginTop: 3.5}
+                            : {width: 25, height: 25}
+                        }
+                      />
 
       <Tab.Navigator
         screenOptions={{headerShown: false}}

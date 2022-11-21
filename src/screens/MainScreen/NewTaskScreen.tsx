@@ -440,6 +440,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                     fontFamily: fonts.medium,
                     fontWeight: '600',
                     fontSize: normalize(19),
+                    color : colors.fontBlack
                   }}>
                   ไม่รับงาน
                 </Text>
