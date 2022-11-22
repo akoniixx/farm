@@ -412,7 +412,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              <Image source={icons.pocket} style={styles.listTileIcon} />
+              <Image source={icons.wallet} style={styles.listTileIcon} />
               <Text style={styles.listTileTitle}>รายได้</Text>
             </View>
             <Text style={styles.revenue}>{`฿${numberWithCommas(
@@ -451,25 +451,6 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
           ) : (
             <></>
           )}
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('DeleteProfileScreen', {
-                tele: profilestate.id,
-              });
-            }}>
-            <View style={styles.listTile}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Icon name="closecircleo" size={24} color="#9BA1A8" />
-                <Text style={styles.listTileTitle}>ลบบัญชี</Text>
-              </View>
-
-              <Image source={icons.arrowRight} style={styles.listTileIcon} />
-            </View>
-          </TouchableOpacity>
           <TouchableOpacity
             onPress={async () => {
               // await onLogout();
@@ -519,6 +500,28 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                 )}
                 <Image source={icons.arrowRight} style={styles.listTileIcon} />
               </View>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('DeleteProfileScreen', {
+                tele: profilestate.id,
+              });
+            }}>
+            <View style={styles.listTile}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={icons.deleteUser}
+                  style={styles.listTileIcon}
+                />
+                <Text style={styles.listTileTitle}>ลบบัญชี</Text>
+              </View>
+
+              <Image source={icons.arrowRight} style={styles.listTileIcon} />
             </View>
           </TouchableOpacity>
           <TouchableOpacity

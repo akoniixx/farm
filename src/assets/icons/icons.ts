@@ -54,4 +54,6 @@ export default {
   deleteblack: require('./deleteblack.png'),
   checkbox_disable: require('./checkbox_disable.png'),
   warningGrey: require('./warningGrey.png'),
+  deleteUser : require('./delete_user.png'),
+  wallet : require('./wallet.png')
 };
