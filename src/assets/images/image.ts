@@ -22,4 +22,5 @@ export default {
   registerfailednoti: require('./registerfailednoti.png'),
   troublejobnoti: require('./troublejobnoti.png'),
   troublemissnoti: require('./troublemissnoti.png'),
+  emptyhistory : require('./emptyhistory.png')
 };
