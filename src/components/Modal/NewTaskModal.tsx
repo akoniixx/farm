@@ -25,6 +25,7 @@ import {TaskDatasource} from '../../datasource/TaskDatasource';
 import Toast from 'react-native-toast-message';
 import {useFocusEffect} from '@react-navigation/native';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
+import { mixpanel } from '../../../mixpanel';
 
 export const NewTaskModal = (
   props: SheetProps<{
@@ -347,6 +348,7 @@ export const NewTaskModal = (
               flexDirection: 'row',
             }}
             onPress={() => {
+              mixpanel.track('Accept new task');
               receiveTask();
             }}>
             <View
