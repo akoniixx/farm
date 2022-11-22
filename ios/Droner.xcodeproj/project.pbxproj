@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* DronerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* DronerTests.m */; };
-		0851244CC86D12363EDF63F2 /* libPods-Droner-DronerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1F678402B28B1F0F6FE41A /* libPods-Droner-DronerTests.a */; };
 		0FF9C0EC2910DB3E007F4EEE /* main.jsbundle.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0FF9C0EB2910DB3E007F4EEE /* main.jsbundle.xib */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		23E6F5869BDC2395E9E4FEFB /* libPods-Droner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0551ED351CEFC1E4FEA22B3F /* libPods-Droner.a */; };
+		2C844838A6C2B9544A3F7AD0 /* libPods-Droner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A90357E0C0F32867BB01D27 /* libPods-Droner.a */; };
+		5759926C3F87992F8D262912 /* libPods-Droner-DronerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAEFC834ADA44DCE44AD8B86 /* libPods-Droner-DronerTests.a */; };
 		602C8F7128A261A5007D6E25 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 602C8F7028A261A5007D6E25 /* FontAwesome.ttf */; };
 		60AC83AD28858DCD00CED949 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 60AC83AC28858DCD00CED949 /* AntDesign.ttf */; };
 		60DC076C28AB7E5E000756CF /* geolocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DC076B28AB7E5E000756CF /* geolocation.swift */; };
@@ -38,7 +38,6 @@
 		00E356EE1AD99517003FC87E /* DronerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DronerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* DronerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DronerTests.m; sourceTree = "<group>"; };
-		0551ED351CEFC1E4FEA22B3F /* libPods-Droner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Droner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F6A943D290137D3003FB0CE /* Droner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Droner.entitlements; path = Droner/Droner.entitlements; sourceTree = "<group>"; };
 		0FF9C0EB2910DB3E007F4EEE /* main.jsbundle.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = main.jsbundle.xib; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Droner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Droner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -48,7 +47,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Droner/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Droner/main.m; sourceTree = "<group>"; };
 		1C1F98A971913C087CD914B8 /* Pods-Droner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner.release.xcconfig"; path = "Target Support Files/Pods-Droner/Pods-Droner.release.xcconfig"; sourceTree = "<group>"; };
-		2B1F678402B28B1F0F6FE41A /* libPods-Droner-DronerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Droner-DronerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A90357E0C0F32867BB01D27 /* libPods-Droner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Droner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		602C8F7028A261A5007D6E25 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
 		60AC83AC28858DCD00CED949 /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = ../src/assets/fonts/AntDesign.ttf; sourceTree = "<group>"; };
 		60DC076A28AB7E5E000756CF /* Droner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Droner-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -64,6 +63,7 @@
 		BD49078068B87B57FC3B6468 /* Pods-Droner-DronerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner-DronerTests.debug.xcconfig"; path = "Target Support Files/Pods-Droner-DronerTests/Pods-Droner-DronerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C19F56C161539819DF0B9F45 /* Pods-Droner-DronerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner-DronerTests.release.xcconfig"; path = "Target Support Files/Pods-Droner-DronerTests/Pods-Droner-DronerTests.release.xcconfig"; sourceTree = "<group>"; };
 		DA7B806B47F8D0778A58BE58 /* Pods-Droner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner.debug.xcconfig"; path = "Target Support Files/Pods-Droner/Pods-Droner.debug.xcconfig"; sourceTree = "<group>"; };
+		DAEFC834ADA44DCE44AD8B86 /* libPods-Droner-DronerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Droner-DronerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -72,7 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0851244CC86D12363EDF63F2 /* libPods-Droner-DronerTests.a in Frameworks */,
+				5759926C3F87992F8D262912 /* libPods-Droner-DronerTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,7 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				23E6F5869BDC2395E9E4FEFB /* libPods-Droner.a in Frameworks */,
+				2C844838A6C2B9544A3F7AD0 /* libPods-Droner.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,8 +123,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				0551ED351CEFC1E4FEA22B3F /* libPods-Droner.a */,
-				2B1F678402B28B1F0F6FE41A /* libPods-Droner-DronerTests.a */,
+				3A90357E0C0F32867BB01D27 /* libPods-Droner.a */,
+				DAEFC834ADA44DCE44AD8B86 /* libPods-Droner-DronerTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

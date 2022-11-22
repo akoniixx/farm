@@ -10,7 +10,7 @@ import {
 import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
-import {colors, font, icons} from '../../assets';
+import {colors, font, icons, image} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import {SwipeListView} from 'react-native-swipe-list-view';
@@ -19,6 +19,7 @@ import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
 import fonts from '../../assets/fonts';
 import {MainButton} from '../../components/Button/MainButton';
 import {useFocusEffect} from '@react-navigation/native';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 interface NotificationListTileParams {
   type: string;
@@ -251,11 +252,12 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
 
 const NotificationList: React.FC<any> = ({navigation, route}) => {
   const [data, setData] = useState([]);
+  const [loading,setLoading] = useState(true);
   const [deleteall, setDeleteall] = useState(false);
   const getNotiList = () => {
     FCMtokenDatasource.getNotificationList()
       .then(res => {
-        console.log(res.data)
+        setLoading(false);
         setData(res.data);
       })
       .catch(err => console.log(err));
@@ -344,46 +346,73 @@ const NotificationList: React.FC<any> = ({navigation, route}) => {
         </View>
       </View>
       <View style={styles.body}>
-        <SwipeListView
-          data={data}
-          renderItem={({item}: any) => (
-            <NotificationListTile
-              type={item.type}
-              date={item.createdAt}
-              description={item.detail}
-              isRead={item.isRead}
-              id={item.id}
-              data={item.data}
-            />
-          )}
-          renderHiddenItem={({item}: any) => (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'flex-end',
-              }}>
-              <TouchableOpacity
-                onPress={() => {
-                  deleteItem(item.id);
+        {
+          (loading)?
+          <Spinner
+            visible={true}
+            textContent={'Loading...'}
+            textStyle={{color: '#FFF'}}
+          />:
+          (data.length != 0)?
+          <SwipeListView
+            data={data}
+            renderItem={({item}: any) => (
+              <NotificationListTile
+                type={item.type}
+                date={item.createdAt}
+                description={item.detail}
+                isRead={item.isRead}
+                id={item.id}
+                data={item.data}
+              />
+            )}
+            renderHiddenItem={({item}: any) => (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'flex-end',
                 }}>
-                <View
-                  style={{
-                    width: responsiveHeigth(78),
-                    height: responsiveHeigth(78),
-                    backgroundColor: '#E85737',
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                <TouchableOpacity
+                  onPress={() => {
+                    deleteItem(item.id);
                   }}>
-                  <Image source={icons.deletewhite} />
-                </View>
-              </TouchableOpacity>
-            </View>
-          )}
-          previewRowKey={'0'}
-          previewOpenValue={-40}
-          rightOpenValue={-responsiveHeigth(78)}
-        />
+                  <View
+                    style={{
+                      width: responsiveHeigth(78),
+                      height: responsiveHeigth(78),
+                      backgroundColor: '#E85737',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Image source={icons.deletewhite} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
+            previewRowKey={'0'}
+            previewOpenValue={-40}
+            rightOpenValue={-responsiveHeigth(78)}
+          />:
+          <View style={{
+            paddingTop : '50%',
+            justifyContent : 'center',
+            alignItems : 'center'
+          }}>
+            <Image source={image.emptyhistory}/>
+            <Text style={{
+              fontFamily : font.medium,
+              color : colors.grayPlaceholder,
+              fontSize : normalize(15),
+              paddingTop : normalize(10)
+            }}>ยังไม่มีข้อความในขณะนี้</Text>
+            <Text style={{
+              fontFamily : font.medium,
+              color : colors.grayPlaceholder,
+              fontSize : normalize(15)
+            }}>เมื่อคุณได้รับข้อความใหม่ กลับมาดูได้ที่นี้</Text>
+          </View>
+        }
       </View>
     </SafeAreaView>
   );
