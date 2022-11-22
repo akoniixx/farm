@@ -62,14 +62,20 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
             onPress={() => setChecked(!checked)}
             disabled={disabledCheckbox}>
             <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
-              <Image
-                source={checked ? icons.checked : icons.check}
-                style={{width: normalize(20), height: normalize(20)}}
-              />
-
+            {disabledCheckbox ? (
+                <Image
+                  source={icons.checkdisable}
+                  style={{width: normalize(20), height: normalize(20)}}
+                />
+              ) : (
+                <Image
+                  source={checked ? icons.checked : icons.check}
+                  style={{width: normalize(20), height: normalize(20)}}
+                />
+              )}
               <Text
                 style={[
-                  styles.h3,
+                  styles.condition,
                   {color: colors.fontBlack, marginLeft: normalize(10)},
                 ]}>
                 ฉันยอมรับข้อกำหนดและเงื่อนไขการใช้บริการ
@@ -80,14 +86,20 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
             onPress={() => setChecked1(!checked1)}
             disabled={disabledCheckbox}>
             <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
-              <Image
+            {disabledCheckbox ? (
+                <Image
+                  source={icons.checkdisable}
+                  style={{width: normalize(20), height: normalize(20)}}
+                />
+              ) : (
+                <Image
                 source={checked1 ? icons.checked : icons.check}
                 style={{width: normalize(20), height: normalize(20)}}
               />
-
+              )}
               <Text
                 style={[
-                  styles.h3,
+                  styles.condition,
                   {color: colors.fontBlack, marginLeft: normalize(10)},
                 ]}>
                 ฉันยอมรับนโยบายความเป็นส่วนตัว
@@ -128,15 +140,20 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
   },
   h3: {
-    fontFamily: font.Sarabun,
-    fontSize: normalize(16),
-    color: colors.fontBlack,
+    fontFamily: font.SarabunLight,
+    fontSize: normalize(18),
+    color: colors.fontGrey,
   },
   label: {
-    fontFamily: font.Sarabun,
-    fontSize: normalize(14),
+    fontFamily: font.SarabunLight,
+    fontSize: normalize(16),
     color: colors.gray,
     backgroundColor: '#2EC46D0D',
     padding: normalize(18),
+  },
+  condition: {
+    fontFamily: font.SarabunMedium,
+    fontSize: normalize(16),
+    color: colors.gray,
   }
 });

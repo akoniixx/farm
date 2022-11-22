@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
   },
   label: {
-    fontFamily: font.Sarabun,
+    fontFamily: font.SarabunLight,
     fontSize: normalize(16),
     color: colors.fontBlack,
   },

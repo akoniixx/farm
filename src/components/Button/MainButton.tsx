@@ -14,7 +14,9 @@ interface MainButtonProps {
   fontWeight?: string;
   fontColor?: string;
   borderColor?: string;
+  fontFamily?: string;
   disable?: boolean;
+  width?: number;
   onPress?: () => void;
   style?: ViewStyle;
 }
@@ -27,7 +29,7 @@ export const MainButton: React.FC<MainButtonProps> = props => {
       titleStyle={{
         color: props.fontColor ? props.fontColor : colors.white,
         fontSize: props.fontSize ?? normalize(18),
-        fontFamily: font.AnuphanMedium,
+        fontFamily: props.fontFamily ?? font.AnuphanMedium 
       }}
       buttonStyle={[
         styles.mainButton,
@@ -35,6 +37,7 @@ export const MainButton: React.FC<MainButtonProps> = props => {
           backgroundColor: props.color,
           borderColor: props.borderColor ? props.borderColor : props.color,
           borderWidth: props.disable ? 0 : 0.5,
+          width: props.width 
         },
         props.style,
       ]}

@@ -26,7 +26,6 @@ import image from '../../assets/images/image';
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 const MainScreen: React.FC<any> = ({navigation, route}) => {
-
   return (
     <BottomSheetModalProvider>
       <View style={[stylesCentral.container]}>
@@ -37,67 +36,71 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
               style={{
                 width: (windowWidth * 380) / 375,
                 height: (windowHeight * 300) / 812,
-              }}
-            >
-                   <View style={styles.headCard}>
-            <View>
-              <Text
-                style={{
-                  fontFamily: font.AnuphanMedium,
-                  fontSize: normalize(18),
-                  color: colors.fontBlack,
-                }}>
-                ยินดีต้อนรับ
-              </Text>
-              <Text
-                style={{
-                  fontFamily: font.AnuphanBold,
-                  fontSize: normalize(26),
-                  color: colors.orange,
-                }}>
-                Icon
-                <Text
-                  style={{
-                    fontFamily: font.AnuphanBold,
-                    fontSize: normalize(26),
-                    color: colors.greenLight,
-                  }}>
-                  Kaset
-                </Text>
-              </Text>
-            </View>
-          </View>
-          <View style={{flexDirection: 'row', top: '35%'}}>
-            <View
-              style={{
-                backgroundColor: '#3B996E',
-                marginHorizontal: 15,
-                paddingHorizontal: 10,
-                paddingVertical: normalize(10),
-                width: 180,
-                height: 150,
-                borderRadius: 24,
-                alignItems: 'center',
               }}>
-              <Image source={icons.drone}/>
-
-              <Text style={styles.font}>จ้างโดรนเกษตร</Text>
-            </View>
-            <View
-              style={{
-                backgroundColor: '#ECFBF2',
-                marginHorizontal: 10,
-                paddingHorizontal: 10,
-                paddingVertical: normalize(10),
-                width: 180,
-                height: 150,
-                borderRadius: 24,
-                alignItems: 'center',
-              }}>
-              <Image source={icons.plots} />
-              <Text style={styles.font1}>แปลงของคุณ</Text>
-            </View>
-          </View>
+              <View style={styles.headCard}>
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanMedium,
+                      fontSize: normalize(18),
+                      color: colors.fontBlack,
+                    }}>
+                    ยินดีต้อนรับ
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanBold,
+                      fontSize: normalize(26),
+                      color: colors.orange,
+                    }}>
+                    Icon
+                    <Text
+                      style={{
+                        fontFamily: font.AnuphanBold,
+                        fontSize: normalize(26),
+                        color: colors.greenLight,
+                      }}>
+                      Kaset
+                    </Text>
+                  </Text>
+                </View>
+              </View>
+              <View style={{flexDirection: 'row', top: '35%'}}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('ConditionScreen')}>
+                  <View
+                    style={{
+                      backgroundColor: '#3B996E',
+                      marginHorizontal: 15,
+                      paddingHorizontal: 10,
+                      paddingVertical: normalize(10),
+                      width: 180,
+                      height: 150,
+                      borderRadius: 24,
+                      alignItems: 'center',
+                    }}>
+                    <Image source={icons.drone} />
+                    <Text style={styles.font} >จ้างโดรนเกษตร</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('ConditionScreen')}>
+                  <View
+                    style={{
+                      backgroundColor: '#ECFBF2',
+                      marginHorizontal: 10,
+                      paddingHorizontal: 10,
+                      paddingVertical: normalize(10),
+                      width: 180,
+                      height: 150,
+                      borderRadius: 24,
+                      alignItems: 'center',
+                    }}>
+                    <Image source={icons.plots} />
+                    <Text style={styles.font1}>แปลงของคุณ</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
             </ImageBackground>
           </View>
         </View>

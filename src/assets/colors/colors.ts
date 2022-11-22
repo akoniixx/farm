@@ -6,7 +6,8 @@ export default {
     greenDark: '#014D40',
     greenLight: '#2EC66E',
     greenLemon: '#A0D644',
-    yellowLight: '#FFE26F',
+    yellow: '#FFE26F',
+    yellowLight: '#FFF2E3',
     darkOrange: '#E85737',
     redDark: '#AB091E',
     disable: '#DCDFE3',
@@ -17,7 +18,7 @@ export default {
     greyWhite: '#F2F2F2',
     inkLight: '#4F5E71',
     inputText: '#2B2B2B',
-    fontBlack: '#000000',
+    fontBlack: '#202326',
     gray: '#6B7580',
+    fontGrey: '#353A3F'
   };
-  

@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   detail: {
-    fontFamily: font.Sarabun,
+    fontFamily: font.SarabunLight,
     fontSize: normalize(14),
     color: 'black',
     textAlign: 'center',

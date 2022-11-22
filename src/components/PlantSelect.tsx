@@ -20,11 +20,12 @@ export const PlantSelect: React.FC<PrantSelectProps> = ({
   return (
     <View
       style={{
-        margin: '2%',
-        width: normalize(165),
-        height: normalize(47),
+        marginRight : (width-normalize(40)-3*normalize(103))/3,
+        marginBottom : (width-normalize(40)-3*normalize(103))/3,
+        width: normalize(160),
+        height: normalize(50),
         borderRadius : normalize(6),
-        backgroundColor: active ? '#2BB0ED' : colors.greyWhite,
+        backgroundColor: active ? colors.greenLight : colors.greyWhite,
         justifyContent: 'center',
         alignItems: 'center',
       }}>
@@ -32,7 +33,7 @@ export const PlantSelect: React.FC<PrantSelectProps> = ({
         <Text
           style={{
             color: active ? colors.white : colors.fontBlack,
-            fontFamily: font.Sarabun,
+            fontFamily: font.SarabunLight,
             fontSize: normalize(16),
           }}>
           {label}

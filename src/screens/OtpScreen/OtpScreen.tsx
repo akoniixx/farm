@@ -124,10 +124,10 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
                 <Text style={[styles.text]}>
                 เบอร์ {" "}
                 <Text style={[styles.text, {color: colors.greenLight}]}>
-                 0989284761
+                 0987654321
                 </Text>
               </Text>
-              <Text style={[styles.text, {color: colors.gray}]}>
+              <Text style={[styles.textpass, {color: colors.gray}]}>
                 รหัสอ้างอิง OTP: NIAA
               </Text>
               </View>
@@ -154,11 +154,6 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
           </View>
         </SafeAreaView>
       </TouchableWithoutFeedback>
-      <Spinner
-        visible={loading}
-        textContent={'Loading...'}
-        textStyle={{color: '#FFF'}}
-      />
     </KeyboardAvoidingView>
   );
 };
@@ -212,11 +207,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontFamily: font.Sarabun,
+    fontFamily: font.SarabunLight,
     fontSize: normalize(16),
     color: colors.fontBlack,
     textAlign: 'center',
 
+  },
+  textpass: {
+    fontFamily: font.SarabunLight,
+    fontSize: normalize(14),
+    color: colors.fontBlack,
+    textAlign: 'center',
   },
   rowDirection: {
     flexDirection: 'row',

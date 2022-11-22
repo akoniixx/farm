@@ -7,7 +7,8 @@ export default {
     examidcard: require('./examid.png'),
     success: require('./success.png'),
     bgHead: require('./bgHead.png'),
-    map: require('./map.png')
+    map: require('./map.png'),
+    mark: require('./marker.png')
     
   };
   

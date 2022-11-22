@@ -6,11 +6,13 @@ import ConditionScreen from '../screens/RegisterScreen/ConditionScreen';
 import TelNumScreen from '../screens/RegisterScreen/TelNumberScreen';
 import OtpScreen from '../screens/OtpScreen/OtpScreen';
 import MainScreen from '../screens/MainScreen/MainScreen';
-import FirstFormScreen from '../screens/RegisterScreen/FirstFormScreen';
 import SecondFormScreen from '../screens/RegisterScreen/SecondFormScreen';
 import ThirdFormScreen from '../screens/RegisterScreen/ThirdFormScreen';
 import SuccessRegister from '../screens/RegisterScreen/SuccessScreen';
 import AddPlotScreen from '../screens/RegisterScreen/AddPlotScreen';
+import FourthFormScreen from '../screens/RegisterScreen/FourthFormScreen';
+import AddIDcardScreen from '../screens/RegisterScreen/AddIDcardScreen';
+import FirstFormScreen from '../screens/RegisterScreen/FirstFromScreen';
 
 
 
@@ -30,6 +32,10 @@ const AppAuthNavigator: React.FC = () => {
       <Stack.Screen name="ThirdFormScreen" component={ThirdFormScreen} />
       <Stack.Screen name="SuccessRegister" component={SuccessRegister} />
       <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
+      <Stack.Screen name="FourthFormScreen" component={FourthFormScreen} />
+      <Stack.Screen name="AddIDcardScreen" component={AddIDcardScreen} />
+
+
 
 
 

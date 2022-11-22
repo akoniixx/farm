@@ -47,7 +47,6 @@ const TelNumScreen: React.FC<any> = ({navigation}) => {
                 autoFocus={true}
                 onError={isError}
                 errorMessage={message}
-                
               />
               {errMessage.length > 0 ? (
                 <Text

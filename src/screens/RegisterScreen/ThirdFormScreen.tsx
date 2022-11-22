@@ -1,9 +1,21 @@
-import React from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import { Button } from '@rneui/themed';
+import React, {useRef, useState} from 'react';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {colors, font} from '../../assets';
+import {font} from '../../assets';
+import colors from '../../assets/colors/colors';
+import fonts from '../../assets/fonts';
 import image from '../../assets/images/image';
-import {MainButton} from '../../components/Button/MainButton';
+import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
 import {ProgressBar} from '../../components/ProgressBar';
 import {normalize} from '../../functions/Normalize';
@@ -22,29 +34,23 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
           <View style={{marginBottom: normalize(10)}}>
             <ProgressBar index={3} />
           </View>
-          <Text style={styles.h3}>ขั้นตอนที่ 3 จาก 3</Text>
-          <Text style={styles.h1}>ยืนยันเอกสาร</Text>
-          <Text style={styles.h2}>{`ยืนยันตัวตน ด้วยรูปถ่ายคู่ผู้สมัคร 
-พร้อมบัตรประชาชน`}</Text>
-          <View style={{marginTop: normalize(16), alignItems: 'center', top: '8%'}}>
-            <Image
-              source={image.examidcard}
-              style={{width: normalize(342), height: normalize(200)}}
-            />
+          <Text style={styles.h3}>ขั้นตอนที่ 3 จาก 4</Text>
+          <Text style={styles.h1}>สร้างแปลงเกษตร</Text>
+
+          <View style={styles.rectangleFixed}>
+            <Image style={styles.rectangle} source={image.rectangle} />
+            <Text style={styles.h2}>กดเพื่อเพิ่มแปลงเกษตรของคุณ</Text>
           </View>
+          <View
+              style={styles.buttonAdd}>
+              <Text style={styles.textaddplot} onPress={() => navigation.navigate('AddPlotScreen')}>+ เพิ่มแปลงเกษตร</Text>
+            </View>
         </View>
-       
         <View style={{backgroundColor: colors.white, zIndex: 0}}>
-          <MainButton
-            label="ถัดไป"
-            color={colors.greenLight}
-            onPress={() => navigation.navigate('FourthFormScreen')}
-          />
-            <MainButton
-            label="ข้ามขั้นตอน"
-            color={colors.white}
-            fontColor={'black'}
-            onPress={() => navigation.navigate('SuccessRegister')}
+          <MainButton 
+          label="ถัดไป" 
+          color={colors.greenLight}
+          onPress={() => navigation.navigate('FourthFormScreen')}
           />
         </View>
       </View>
@@ -52,31 +58,33 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   );
 };
 export default ThirdFormScreen;
+
 const styles = StyleSheet.create({
   first: {
     flex: 1,
     justifyContent: 'space-around',
   },
   inner: {
-    paddingHorizontal: normalize(17),
+    paddingHorizontal: normalize(15),
     flex: 1,
     justifyContent: 'space-around',
   },
   h1: {
     fontFamily: font.AnuphanBold,
-    fontSize: normalize(19),
+    fontSize: normalize(20),
     color: colors.greenLight,
   },
   h2: {
-    fontFamily: font.Sarabun,
+    fontFamily: font.SarabunLight,
     fontSize: normalize(16),
     color: colors.fontBlack,
-    top: '3%',
-    textAlign: 'center',
+    top: '8%',
+    textAlign: 'center'
+    
   },
   h3: {
     fontFamily: font.AnuphanMedium,
-    fontSize: normalize(16),
+    fontSize: normalize(14),
     color: colors.gray,
   },
   varidate: {
@@ -99,17 +107,29 @@ const styles = StyleSheet.create({
   },
 
   rectangleFixed: {
-    left: '0%',
     position: 'absolute',
     top: '25%',
   },
-  buttonAdd: {
-    top: '20%',
+  buttonAdd : {
+    top: '55%',
+    borderColor: '#1F8449' ,
+    borderWidth: 1,
+    borderRadius: 15 ,
+    height: normalize(90),
+    width: normalize(350),
+    borderStyle: 'dashed'
+  },
+  textaddplot: {
+    fontFamily: fonts.AnuphanBold,
+    fontSize: normalize(20),
+    color: colors.greenLight,
+    textAlign: 'center',
+    top: '30%'
   },
   rectangle: {
     height: normalize(160),
     width: normalize(350),
-    bottom: '15%',
+    bottom: '15%'
   },
   input: {
     display: 'flex',

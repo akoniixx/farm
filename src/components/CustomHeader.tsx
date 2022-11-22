@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontFamily: font.AnuphanBold,
-    fontSize: normalize(22),
+    fontSize: normalize(20),
     color: colors.fontBlack,
     textAlign: 'center',
   },
