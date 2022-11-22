@@ -7,8 +7,14 @@ const LoadingNavigator: React.FC<any> = ({navigation}) => {
     const getData = async () => {
       try {
         const value = await AsyncStorage.getItem('token');
+        const fcmtoken = await AsyncStorage.getItem('fcmtoken')
         if (value !== null) {
-          navigation.push('Main');
+          if(fcmtoken !== null){
+            navigation.push('Main');
+          }
+          else{
+            navigation.push('Auth');
+          }
         } else {
           navigation.push('Auth');
         }
