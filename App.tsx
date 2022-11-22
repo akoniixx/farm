@@ -44,12 +44,10 @@ const App = () => {
       firebaseInitialize()
     }
     checkPermission()
-    getFCMToken()
   }, []);
 
   const checkPermission = () => {
     checkNotifications().then(({ status, settings }) => {
-      console.log(status,'de')
       if (status === 'denied' || status === 'blocked') {
         requestUserPermission()
       }
