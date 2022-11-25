@@ -40,14 +40,12 @@ const App = () => {
     mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
-    if (Platform.OS === "ios") {
-      firebaseInitialize()
-    }
+    requestUserPermission()
     checkPermission()
   }, []);
 
   const checkPermission = () => {
-    checkNotifications().then(({ status, settings }) => {
+    checkNotifications().then(async({ status, settings }) => {
       if (status === 'denied' || status === 'blocked') {
         requestUserPermission()
       }

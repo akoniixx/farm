@@ -25,7 +25,9 @@ export async function requestUserPermission() {
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
   if (enabled) {
-    getFCMToken()
+    setTimeout(()=>{
+      getFCMToken()
+    },1000)
   }
 }
 
