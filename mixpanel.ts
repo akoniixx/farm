@@ -1,8 +1,9 @@
 import {Mixpanel} from 'mixpanel-react-native';
+import { MIXPANEL_DEV } from './src/config/develop-config';
 
 const trackAutomaticEvents = true;
 export const mixpanel = new Mixpanel(
-  'dbdab0029a094a9cd5a329d2fb86f3a9',
+  MIXPANEL_DEV,
   trackAutomaticEvents,
 );
 mixpanel.init();
