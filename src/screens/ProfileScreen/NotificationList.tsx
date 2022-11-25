@@ -13,13 +13,14 @@ import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font, icons, image} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
-import {SwipeListView} from 'react-native-swipe-list-view';
+import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
 import fonts from '../../assets/fonts';
 import {MainButton} from '../../components/Button/MainButton';
 import {useFocusEffect} from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import { PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
 
 interface NotificationListTileParams {
   type: string;
@@ -99,6 +100,26 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
 }) => {
   const currentdate = date.split('T')[0];
   const currentTime = date.split('T')[1];
+
+  const translateX = useSharedValue(0);
+
+  const rStyle = useAnimatedStyle(()=>({
+    transform : [
+      {
+        translateX : translateX.value
+      }
+    ]
+  }))
+
+  const panGesture = useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
+    onActive : (event) =>{
+      translateX.value = event.translationX
+    },
+    onEnd : () => {
+      
+    }
+  })
+
   if (
     type === 'APPROVE_DRONER_SUCCESS' ||
     type === 'APPROVE_DRONER_FAIL' ||
@@ -108,61 +129,90 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
     type === 'APPROVE_ADDITION_DRONER_DRONE_FAIL'
   ) {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          readIt(id);
-        }}>
+      <View style={{
+        width : '100%',
+      }}>
         <View
           style={{
-            height: responsiveHeigth(78),
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexDirection: 'row',
-            borderBottomWidth: normalize(1),
-            borderBottomColor: colors.disable,
-            backgroundColor: colors.white,
+            justifyContent: 'center',
+            position : 'absolute',
+            right : '10%'
           }}>
-          <Image
-            source={icons.notificationsetup}
-            style={{
-              width: normalize(50),
-              height: normalize(50),
-            }}
-          />
-          <View
-            style={{
-              width: '65%',
+          <TouchableOpacity
+            onPress={() => {
+              deleteItem(id);
             }}>
-                <Text numberOfLines={2} ellipsizeMode='tail'style={{
-                  fontFamily : font.medium,
-                  color : colors.fontBlack
-                }}>{description}</Text>
-              </View>
-              <View style={{
-            justifyContent : 'space-between',
-            alignItems : 'flex-end',
-            paddingRight : normalize(10)
-          }}>
-              {
-                isRead ?
-                <View style={{
-                  width : normalize(8),
-                  height : normalize(8),
-                  marginBottom : normalize(10)
-                }} ></View>:
-                <Image source={icons.unread} style={{
-                  width : normalize(8),
-                  height : normalize(8),
-                  marginBottom : normalize(10)
-                }} />
-              }
-              <Text style={{
-                fontFamily : font.light,
-                color : colors.gray
-              }}>{generateNotiTime(currentdate,currentTime)}</Text>
-            </View>
+            <View
+              style={{
+                width: responsiveHeigth(78),
+                height: responsiveHeigth(78),
+                backgroundColor: '#E85737',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image source={icons.deletewhite} />
             </View>
           </TouchableOpacity>
+        </View>
+        <PanGestureHandler onGestureEvent={panGesture}>
+          <Animated.View
+            style={
+              rStyle
+            }>
+            <TouchableOpacity onPress={()=>{
+              readIt(id)
+            }} style={{
+                height: responsiveHeigth(78),
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexDirection: 'row',
+                borderBottomWidth: normalize(1),
+                borderBottomColor: colors.disable,
+                backgroundColor: colors.white,
+              }}>
+            <Image
+              source={icons.notificationsetup}
+              style={{
+                width: normalize(50),
+                height: normalize(50),
+              }}
+            />
+            <View
+              style={{
+                width: '65%',
+              }}>
+                  <Text numberOfLines={2} ellipsizeMode='tail'style={{
+                    fontFamily : font.medium,
+                    color : colors.fontBlack
+                  }}>{description}</Text>
+                </View>
+                <View style={{
+              justifyContent : 'space-between',
+              alignItems : 'flex-end',
+              paddingRight : normalize(10)
+            }}>
+                {
+                  isRead ?
+                  <View style={{
+                    width : normalize(8),
+                    height : normalize(8),
+                    marginBottom : normalize(10)
+                  }} ></View>:
+                  <Image source={icons.unread} style={{
+                    width : normalize(8),
+                    height : normalize(8),
+                    marginBottom : normalize(10)
+                  }} />
+                }
+                <Text style={{
+                  fontFamily : font.light,
+                  color : colors.gray
+                }}>{generateNotiTime(currentdate,currentTime)}</Text>
+              </View>
+            </TouchableOpacity>
+          </Animated.View>
+        </PanGestureHandler>
+      </View>
         );
       } else if (
     type === 'FIRST_REMIND' ||
@@ -174,76 +224,106 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
     type === 'RECEIVE_TASK_SUCCESS'
   ) {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          console.log(data);
-          readItTask(id, data.taskDronerTemp[0].taskId);
-        }}>
+      <View style={{
+        width : '100%',
+        display : 'flex',
+      }}>
         <View
           style={{
-            height: responsiveHeigth(78),
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexDirection: 'row',
-            borderBottomWidth: normalize(1),
-            borderBottomColor: colors.disable,
-            backgroundColor: colors.white,
+            justifyContent: 'center',
+            position : 'absolute',
+            right : 0,
           }}>
-          <Image
-            source={icons.notificationtask}
-            style={{
-              width: normalize(50),
-              height: normalize(50),
-            }}
-          />
-          <View
-            style={{
-              width: '65%',
+          <TouchableOpacity
+            onPress={() => {
+              deleteItem(id);
             }}>
-            <Text
-              numberOfLines={2}
-              ellipsizeMode="tail"
+            <View
               style={{
-                fontFamily: font.medium,
-                color: colors.fontBlack,
+                width: responsiveHeigth(78),
+                height: responsiveHeigth(78),
+                backgroundColor: '#E85737',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
-              {description}
-            </Text>
-          </View>
-          <View
-            style={{
+              <Image source={icons.deletewhite} />
+            </View>
+          </TouchableOpacity>
+        </View>
+      <PanGestureHandler onGestureEvent={panGesture}>
+        <Animated.View
+          style={
+            rStyle
+          }>
+            <TouchableOpacity onPress={()=>{
+              readIt(id)
+            }} style={{
+              height: responsiveHeigth(78),
               justifyContent: 'space-between',
-              alignItems: 'flex-end',
-              paddingRight: normalize(10),
+              alignItems: 'center',
+              flexDirection: 'row',
+              borderBottomWidth: normalize(1),
+              borderBottomColor: colors.disable,
+              backgroundColor: colors.white,
+              zIndex : 1000
             }}>
-            {isRead ? (
+              <Image
+                source={icons.notificationtask}
+                style={{
+                  width: normalize(50),
+                  height: normalize(50),
+                }}
+              />
               <View
                 style={{
-                  width: normalize(8),
-                  height: normalize(8),
-                  marginBottom: normalize(10),
-                }}
-              />
-            ) : (
-              <Image
-                source={icons.unread}
+                  width: '65%',
+                }}>
+                <Text
+                  numberOfLines={2}
+                  ellipsizeMode="tail"
+                  style={{
+                    fontFamily: font.medium,
+                    color: colors.fontBlack,
+                  }}>
+                  {description}
+                </Text>
+              </View>
+              <View
                 style={{
-                  width: normalize(8),
-                  height: normalize(8),
-                  marginBottom: normalize(10),
-                }}
-              />
-            )}
-            <Text
-              style={{
-                fontFamily: font.light,
-                color: colors.gray,
-              }}>
-              {generateNotiTime(currentdate, currentTime)}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-end',
+                  paddingRight: normalize(10),
+                }}>
+                {isRead ? (
+                  <View
+                    style={{
+                      width: normalize(8),
+                      height: normalize(8),
+                      marginBottom: normalize(10),
+                    }}
+                  />
+                ) : (
+                  <Image
+                    source={icons.unread}
+                    style={{
+                      width: normalize(8),
+                      height: normalize(8),
+                      marginBottom: normalize(10),
+                    }}
+                  />
+                )}
+                <Text
+                  style={{
+                    fontFamily: font.light,
+                    color: colors.gray,
+                  }}>
+                  {generateNotiTime(currentdate, currentTime)}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </Animated.View>
+        </PanGestureHandler>
+      </View>
     );
   } else {
     return <></>;
@@ -354,7 +434,47 @@ const NotificationList: React.FC<any> = ({navigation, route}) => {
             textStyle={{color: '#FFF'}}
           />:
           (data.length != 0)?
-          <SwipeListView
+          // <SwipeListView
+          //   data={data}
+          //   renderItem={({item}: any) => (
+          //     <NotificationListTile
+          //       type={item.type}
+          //       date={item.createdAt}
+          //       description={item.detail}
+          //       isRead={item.isRead}
+          //       id={item.id}
+          //       data={item.data}
+          //     />
+          //   )}
+          //   renderHiddenItem={({item}: any) => (
+          //     <View
+          //       style={{
+          //         flex: 1,
+          //         justifyContent: 'center',
+          //         alignItems: 'flex-end',
+          //       }}>
+          //       <TouchableOpacity
+          //         onPress={() => {
+          //           deleteItem(item.id);
+          //         }}>
+          //         <View
+          //           style={{
+          //             width: responsiveHeigth(78),
+          //             height: responsiveHeigth(78),
+          //             backgroundColor: '#E85737',
+          //             justifyContent: 'center',
+          //             alignItems: 'center',
+          //           }}>
+          //           <Image source={icons.deletewhite} />
+          //         </View>
+          //       </TouchableOpacity>
+          //     </View>
+          //   )}
+          //   previewRowKey={'0'}
+          //   previewOpenValue={-40}
+          //   rightOpenValue={-responsiveHeigth(78)}
+          // />:
+          <FlatList
             data={data}
             renderItem={({item}: any) => (
               <NotificationListTile
@@ -366,34 +486,7 @@ const NotificationList: React.FC<any> = ({navigation, route}) => {
                 data={item.data}
               />
             )}
-            renderHiddenItem={({item}: any) => (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'flex-end',
-                }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    deleteItem(item.id);
-                  }}>
-                  <View
-                    style={{
-                      width: responsiveHeigth(78),
-                      height: responsiveHeigth(78),
-                      backgroundColor: '#E85737',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Image source={icons.deletewhite} />
-                  </View>
-                </TouchableOpacity>
-              </View>
-            )}
-            previewRowKey={'0'}
-            previewOpenValue={-40}
-            rightOpenValue={-responsiveHeigth(78)}
-          />:
+          /> :
           <View style={{
             paddingTop : '50%',
             justifyContent : 'center',
