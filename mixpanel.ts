@@ -3,7 +3,7 @@ import { MIXPANEL_DEV, MIXPANEL_PROD } from './src/config/develop-config';
 
 const trackAutomaticEvents = true;
 export const mixpanel = new Mixpanel(
-  MIXPANEL_PROD,
+  MIXPANEL_DEV,
   trackAutomaticEvents,
 );
 mixpanel.init();
