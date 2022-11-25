@@ -100,7 +100,6 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
 }) => {
   const currentdate = date.split('T')[0];
   const currentTime = date.split('T')[1];
-
   const translateX = useSharedValue(0);
 
   const rStyle = useAnimatedStyle(()=>({
@@ -256,7 +255,7 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
             rStyle
           }>
             <TouchableOpacity onPress={()=>{
-              readIt(id)
+              readItTask(id,data.taskDronerTemp[0].taskId)
             }} style={{
               height: responsiveHeigth(78),
               justifyContent: 'space-between',
@@ -434,46 +433,6 @@ const NotificationList: React.FC<any> = ({navigation, route}) => {
             textStyle={{color: '#FFF'}}
           />:
           (data.length != 0)?
-          // <SwipeListView
-          //   data={data}
-          //   renderItem={({item}: any) => (
-          //     <NotificationListTile
-          //       type={item.type}
-          //       date={item.createdAt}
-          //       description={item.detail}
-          //       isRead={item.isRead}
-          //       id={item.id}
-          //       data={item.data}
-          //     />
-          //   )}
-          //   renderHiddenItem={({item}: any) => (
-          //     <View
-          //       style={{
-          //         flex: 1,
-          //         justifyContent: 'center',
-          //         alignItems: 'flex-end',
-          //       }}>
-          //       <TouchableOpacity
-          //         onPress={() => {
-          //           deleteItem(item.id);
-          //         }}>
-          //         <View
-          //           style={{
-          //             width: responsiveHeigth(78),
-          //             height: responsiveHeigth(78),
-          //             backgroundColor: '#E85737',
-          //             justifyContent: 'center',
-          //             alignItems: 'center',
-          //           }}>
-          //           <Image source={icons.deletewhite} />
-          //         </View>
-          //       </TouchableOpacity>
-          //     </View>
-          //   )}
-          //   previewRowKey={'0'}
-          //   previewOpenValue={-40}
-          //   rightOpenValue={-responsiveHeigth(78)}
-          // />:
           <FlatList
             data={data}
             renderItem={({item}: any) => (
