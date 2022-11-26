@@ -255,7 +255,7 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
             rStyle
           }>
             <TouchableOpacity onPress={()=>{
-              readItTask(id,data.taskDronerTemp[0].taskId)
+              readItTask(id,data.id)
             }} style={{
               height: responsiveHeigth(78),
               justifyContent: 'space-between',
