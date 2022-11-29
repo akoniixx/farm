@@ -48,15 +48,6 @@ const monthArray = [
   'ธ.ค.',
 ];
 
-const deleteItem = (id: string) => {
-  FCMtokenDatasource.deleteNotiItem(id)
-    .then(res => {
-      RootNavigation.navigate('Main', {
-        screen: 'MainScreen',
-      });
-    })
-    .catch(err => console.log(err));
-};
 
 const generateNotiTime = (date: string, time: string) => {
   const datenow = new Date();
@@ -266,8 +257,17 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
 
 const NotificationList: React.FC<any> = ({navigation, route}) => {
   const [data, setData] = useState([]);
+  const [reload,setReload] = useState(true);
   const [loading,setLoading] = useState(true);
   const [deleteall, setDeleteall] = useState(false);
+
+  const deleteItem = (id: string) => {
+    FCMtokenDatasource.deleteNotiItem(id)
+      .then(res => {
+        setReload(!reload)
+      })
+      .catch(err => console.log(err));
+  };
   const getNotiList = () => {
     FCMtokenDatasource.getNotificationList()
       .then(res => {
@@ -288,7 +288,7 @@ const NotificationList: React.FC<any> = ({navigation, route}) => {
   };
   useEffect(() => {
     getNotiList();
-  }, []);
+  }, [reload]);
   useFocusEffect(
     React.useCallback(() => {
       getNotiList();
