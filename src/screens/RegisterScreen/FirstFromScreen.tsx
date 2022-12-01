@@ -51,10 +51,6 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const [response, setResponse] = React.useState<any>(null);
   const [openModal, setOpenModal] = useState(false);
   const [date, setDate] = useState();
-  // const day = date.getDate();
-  // const month = date.getMonth();
-  // const year = date.getFullYear() + 543;
-  // const buddhist = new Date(year, month, day);
 
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
@@ -183,7 +179,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   },
                 ]}>
                 <TextInput
-                  value={birthday}
+                  value={date}
                   editable={false}
                   placeholder={'ระบุวัน เดือน ปี'}
                   placeholderTextColor={colors.disable}
@@ -295,24 +291,18 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
               </Text>
               <View>
                 <DatePickerCustom
-                value={date}
-                onChange={(date)=> {
-                  setBirthday(birthday)
-                  // setOpenCalendar(false)
-                  dispatch({
-                    type : "Handle Input",
-                    field : "birthDate",
-                    payload : new Date()
-                  })
-                }}
+                  value={day}
+                  onChange={day => {
+                    // setBirthday(day)
+                    console.log(new Date(day));
+                    setOpenCalendar(false);
+                    dispatch({
+                      type: 'Handle Input',
+                      field: 'birthDate',
+                      payload: new Date(day),
+                    });
+                  }}
                 />
-                {/* <DatePicker
-                  textColor={colors.fontBlack}
-                  date={date}
-                  maximumDate={date}
-                  mode="date"
-                  locale="th"
-                /> */}
               </View>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-around'}}>
@@ -331,8 +321,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   width={150}
                   onPress={() => {
                     setOpenCalendar(false);
-                    birthDays();
-                    // setBirthday(buddhist);
+                    // setBirthday();
                   }}
                 />
               </View>

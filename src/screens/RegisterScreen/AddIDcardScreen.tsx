@@ -129,6 +129,7 @@ const AddIDcardScreen: React.FC<any> = ({route, navigation}) => {
               maxLength={13}
               style={styles.input}
               placeholder="ระบุเลขบัตรประชาชน"
+              placeholderTextColor={colors.disable}
               onChangeText={value => {
                 setIdCard(value);
               }}
