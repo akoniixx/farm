@@ -1,11 +1,8 @@
 import {Button} from '@rneui/themed';
 import React from 'react';
-import {
-  StyleSheet,
-  ViewStyle,
-} from 'react-native';
-import {colors,font} from '../../assets';
-import { normalize } from '../../functions/Normalize';
+import { StyleSheet, ViewStyle } from 'react-native';
+import {colors, font} from '../../assets';
+import {normalize} from '../../functions/Normalize';
 
 interface MainButtonProps {
   label: string;
@@ -29,7 +26,7 @@ export const MainButton: React.FC<MainButtonProps> = props => {
       titleStyle={{
         color: props.fontColor ? props.fontColor : colors.white,
         fontSize: props.fontSize ?? normalize(18),
-        fontFamily: props.fontFamily ?? font.AnuphanMedium 
+        fontFamily: props.fontFamily ?? font.AnuphanMedium,
       }}
       buttonStyle={[
         styles.mainButton,
@@ -37,7 +34,7 @@ export const MainButton: React.FC<MainButtonProps> = props => {
           backgroundColor: props.color,
           borderColor: props.borderColor ? props.borderColor : props.color,
           borderWidth: props.disable ? 0 : 0.5,
-          width: props.width 
+          width: props.width,
         },
         props.style,
       ]}

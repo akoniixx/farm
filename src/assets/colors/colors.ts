@@ -10,6 +10,7 @@ export default {
     yellowLight: '#FFF2E3',
     darkOrange: '#E85737',
     redDark: '#AB091E',
+    error: '#EF4E4E',
     disable: '#DCDFE3',
     transOrange: '#FFEAD1',
     transSubOrange: '#FFFBF6',

@@ -11,6 +11,13 @@ export default {
   plots: require('./plots.png'),
   drone: require('./drone.png'),
   dangercircle: require('./dangercircle.png'),
-  checkdisable: require('./checkdisable.png')
-
+  checkdisable: require('./checkdisable.png'),
+  close: require('./x.png'),
+  register: require('./register.png'),
+  plot: require('./plot.png'),
+  plant: require('./plant.png'),
+  location: require('./location.png'),
+  down:require('./down.png'),
+  locate: require('./locate.png'),
+  delete: require('./delete.png')
 };

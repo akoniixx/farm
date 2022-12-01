@@ -48,6 +48,21 @@
    Friday: 5,
    Saturday: 6,
  });
+
+ export const _monthName = [
+  'มกราคม',
+  'กุมภาพันธ์',
+  'มีนาคม',
+  'เมษายน',
+  'พฤษภาคม',
+  'มิถุนายน',
+  'กรกฎาคม',
+  'สิงหาคม',
+  'กันยายน',
+  'ตุลาคม',
+  'พฤศจิกายน',
+  'ธันวาคม'
+]
  
  export const DATE_SET_ACTION = 'dateSetAction';
  export const TIME_SET_ACTION = 'timeSetAction';

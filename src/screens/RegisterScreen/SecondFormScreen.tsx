@@ -1,5 +1,5 @@
 import { Button } from '@rneui/themed';
-import React, {useReducer, useRef, useState} from 'react';
+import React, {useEffect, useReducer, useRef, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -19,6 +19,7 @@ import image from '../../assets/images/image';
 import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
 import {ProgressBar} from '../../components/ProgressBar';
+import { QueryLocation } from '../../datasource/LocationDatasource';
 import {normalize} from '../../functions/Normalize';
 import { registerReducer } from '../../hook/registerfield';
 import {stylesCentral} from '../../styles/StylesCentral';
@@ -54,7 +55,6 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
     initialFormRegisterState,
   );
 
-  
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -256,17 +256,6 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
         <View style={{backgroundColor: colors.white, zIndex: 0}}>
           <MainButton
             label="ถัดไป"
-            disable={
-              !formState.no ||
-              !formState.address 
-              // !formState.province.value ||
-              // !formState.district.value ||
-              // !formState.subdistrict.value ||
-              // !formState.postal
-                ? true
-                : false
-            }
-
             color={colors.greenLight}
             onPress={() => navigation.navigate('ThirdFormScreen')}
           />

@@ -2,18 +2,17 @@ import React from 'react';
 import {View, StyleSheet, TouchableOpacity, Dimensions, useWindowDimensions} from 'react-native';
 
 import {normalize} from '@rneui/themed';
-import colors from '../assets/colors/colors';
 import {Text} from '@rneui/base';
-import {font} from '../assets';
+import { colors, font } from '../../assets';
 
 interface PrantSelectProps {
   label: string;
-  active: boolean;
+  id: any;
   onPress?: () => void;
 }
 export const PlantSelect: React.FC<PrantSelectProps> = ({
   label,
-  active,
+  id,
   onPress,
 }) => {
   const width = Dimensions.get('window').width;
@@ -22,23 +21,23 @@ export const PlantSelect: React.FC<PrantSelectProps> = ({
       style={{
         marginRight : (width-normalize(40)-3*normalize(103))/3,
         marginBottom : (width-normalize(40)-3*normalize(103))/3,
-        width: normalize(160),
-        height: normalize(50),
-        borderRadius : normalize(6),
-        backgroundColor: active ? colors.greenLight : colors.greyWhite,
-        justifyContent: 'center',
-        alignItems: 'center',
+        width: '100%',
+        height: normalize(60),
+        borderBottomWidth: 0.2,
+        borderColor: colors.disable
       }}>
       <TouchableOpacity onPress={onPress}>
         <Text
           style={{
-            color: active ? colors.white : colors.fontBlack,
             fontFamily: font.SarabunLight,
             fontSize: normalize(16),
-          }}>
+            marginTop: normalize(15),
+          }}
+        >
           {label}
         </Text>
       </TouchableOpacity>
     </View>
   );
 };
+
