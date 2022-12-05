@@ -18,7 +18,7 @@ const HomeScreen: React.FC<any> = ({navigation}) => {
           <MainButton
             label="เริ่มใช้งาน"
             color={colors.greenLight}
-            onPress={() => navigation.navigate('MainScreen')}
+            onPress={() => navigation.navigate('LoginScreen')}
           />
         </View>
       </View>
@@ -29,7 +29,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   btnContainer: {
-    width: normalize(343),
+    width: normalize(33),
     marginVertical: normalize(10),
   },
   inner: {
