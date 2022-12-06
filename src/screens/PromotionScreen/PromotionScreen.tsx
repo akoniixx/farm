@@ -1,9 +1,9 @@
 import React from "react";
 
-const DiscountScreen = () => {
+const PromotionScreen = () => {
     return(
         <>
         </>
     )
 }
-export default DiscountScreen
+export default PromotionScreen

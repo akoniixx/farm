@@ -23,6 +23,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {normalize, width} from '../../functions/Normalize';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import image from '../../assets/images/image';
+import MainTapNavigator from '../../navigations/Bottom/MainTapNavigator';
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 const MainScreen: React.FC<any> = ({navigation, route}) => {

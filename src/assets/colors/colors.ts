@@ -21,5 +21,6 @@ export default {
     inputText: '#2B2B2B',
     fontBlack: '#202326',
     gray: '#6B7580',
-    fontGrey: '#353A3F'
+    fontGrey: '#353A3F',
+    bg: '#E5E5E5'
   };

@@ -10,10 +10,11 @@ import {
 import {colors, font} from '../../assets';
 import {_monthName} from '../../definitions/constants';
 import {normalize} from '../../functions/Normalize';
+import { MainButton } from '../Button/MainButton';
 
 const DatePickerCustom: React.FC<DatePickerProps> = ({
   value,
-  onChange,
+  onHandleChange,
   height,
   width,
   fontSize,
@@ -56,12 +57,11 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
       case 'day':
         date.setDate(digit);
       case 'month':
-        date.setMonth(digit);
+        date.setMonth(digit - 1);
       case 'year':
         date.setFullYear(digit);
     }
-
-    onChange(date);
+    onHandleChange(date);
   };
 
   const getOrder = () => {
@@ -70,7 +70,7 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
         case 'dd':
           return {name: 'day', digits: days, value: date.getDate()};
         case 'mm':
-          return {name: 'month', digits: months, value: date.getDate()};
+          return {name: 'month', digits: months, value: date.getDate() +1};
         case 'yyyy':
           return {name: 'year', digits: years, value: date.getFullYear()};
         default:
@@ -94,7 +94,7 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
           <DateBlock
             digits={el.digits}
             value={el.value}
-            onChange={changeHandle}
+            onHandleChange={changeHandle}
             height={pickerHeight}
             fontSize={fontSize}
             textColor={textColor}
@@ -115,7 +115,7 @@ const DateBlock: React.FC<DateBlockProps> = ({
   value,
   digits,
   type,
-  onChange,
+  onHandleChange,
   height,
   fontSize,
   textColor,
@@ -146,8 +146,8 @@ const DateBlock: React.FC<DateBlockProps> = ({
 
   const handleMomentumScrollEnd = ({nativeEvent}: any) => {
     const digit = Math.round(nativeEvent.contentOffset.y / dHeight + digits[0]);
-    // onChange(type, digit);
-    console.log(digit);
+    onHandleChange(type, digit);
+    // console.log(digit);
   };
 
   return (
@@ -168,15 +168,17 @@ const DateBlock: React.FC<DateBlockProps> = ({
         snapToOffsets={offsets}
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={0}
-        onMomentumScrollEnd={handleMomentumScrollEnd}>
-        {digits.map((value: number, index: number) => {
+        onMomentumScrollEnd={handleMomentumScrollEnd}
+        >
+        {digits.map((value: any, index: any) => {
           return (
             <TouchableOpacity
               key={index}
               onPress={() => {
-                onChange(type, digits[index]);
+                onHandleChange(type, digits[index]);
                 snapScrollToIndex(index);
-              }}>
+              }}
+              >
               <Text
                 style={[
                   styles.digit,
@@ -255,7 +257,7 @@ const styles = StyleSheet.create({
 });
 
 export interface DatePickerProps {
-  value: Date | null | undefined;
+  value: any;
   height?: number;
   width?: number | string;
   fontSize?: number;
@@ -267,7 +269,7 @@ export interface DatePickerProps {
   markWidth?: number | string;
   fadeColor?: string;
   format?: string;
-  onChange(value: Date): void;
+  onHandleChange : (value : any)=> void;
 }
 
 export interface DateBlockProps {
@@ -281,8 +283,7 @@ export interface DateBlockProps {
   markHeight?: number;
   markWidth?: number | string;
   fadeColor?: string;
-
-  onChange(type: string, digit: number): void;
+  onHandleChange(type: any, digit: any): void;
 }
 
 export default DatePickerCustom;

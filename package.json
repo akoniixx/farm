@@ -10,7 +10,6 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@expo/react-native-action-sheet": "^4.0.1",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-native-fontawesome": "^0.3.0",
@@ -24,6 +23,7 @@
     "@rneui/base": "^4.0.0-rc.5",
     "@rneui/themed": "^4.0.0-rc.5",
     "axios": "^1.2.0",
+    "lodash": "^4.17.21",
     "lottie-react-native": "^5.1.4",
     "react": "18.1.0",
     "react-moment": "^1.1.2",
@@ -37,6 +37,7 @@
     "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-google-maps": "^1.0.0",
+    "react-native-google-places-autocomplete": "^2.5.1",
     "react-native-image-picker": "^4.10.1",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-loading-spinner-overlay": "^3.0.1",

@@ -19,5 +19,11 @@ export default {
   location: require('./location.png'),
   down:require('./down.png'),
   locate: require('./locate.png'),
-  delete: require('./delete.png')
+  delete: require('./delete.png'),
+  correct: require('./correct.png'),
+  edit: require('./edit.png'),
+  deleteUser: require('./deleteUser.png'),
+  lock: require('./lock.png'),
+  logout: require('./logout.png'),
+  arrowRigth: require('./arrowRight.png')
 };

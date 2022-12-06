@@ -16,7 +16,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -41,6 +40,7 @@ import {QueryLocation} from '../../datasource/LocationDatasource';
 import {ButtonGroup} from '@rneui/base';
 import {image} from '../../assets/index';
 import {PlantSelect} from '../../components/PlantSelect/PlantSelect';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
 const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const windowWidth = Dimensions.get('window').width;
@@ -489,7 +489,14 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   placeholderTextColor={colors.disable}
                 />
               </View>
-
+              {/* <GooglePlacesAutocomplete
+                 placeholder="Type a place"
+                 onPress={(data, details = null) => console.log(data, details)}
+                 query={{key: ''}}
+                 fetchDetails={true}
+                 onFail={error => console.log(error)}
+                 onNotFound={() => console.log('no results')}
+              /> */}
               <View style={{flex: 1}}>
                 <MapView.Animated
                   style={styles.map}

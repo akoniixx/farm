@@ -25,15 +25,16 @@ import {normalize, width} from '../../functions/Normalize';
 import {ProgressBar} from '../../components/ProgressBar';
 import {registerReducer} from '../../hook/registerfield';
 import fonts from '../../assets/fonts';
-import DatePicker from 'react-native-date-picker';
 import {Avatar} from '@rneui/themed';
 import {LocaleConfig} from 'react-native-calendars';
-import day from 'react-native-calendars/src/calendar/day';
 import MyDatePicker from '../../components/Calendar/Calendar';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Schedule from '../../components/Calendar/Calendar';
 import {_monthName} from '../../definitions/constants';
 import DatePickerCustom from '../../components/Calendar/Calendar';
+import CustomCalendar from '../../components/Calendar/Calendar';
+import TimePicker from '../../components/Calendar/Calendar';
+import DatePicker from 'react-native-date-picker';
 const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const initialFormRegisterState = {
     name: '',
@@ -50,8 +51,10 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const [openImg, setOpenImg] = useState(false);
   const [response, setResponse] = React.useState<any>(null);
   const [openModal, setOpenModal] = useState(false);
-  const [date, setDate] = useState();
+  const [time, setTime] = useState('');
+  const [date, setDate] = useState<Date | null>();
 
+  console.log(time);
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
       mediaType: 'photo',
@@ -76,10 +79,6 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
     registerReducer,
     initialFormRegisterState,
   );
-
-  const birthDays = () => {
-    console.log(birthday);
-  };
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -179,7 +178,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   },
                 ]}>
                 <TextInput
-                  value={date}
+                  value={time}
                   editable={false}
                   placeholder={'ระบุวัน เดือน ปี'}
                   placeholderTextColor={colors.disable}
@@ -188,7 +187,8 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                     color: colors.fontBlack,
                     fontSize: normalize(16),
                     fontFamily: font.SarabunLight,
-                  }}></TextInput>
+                  }}
+                />
                 <Image
                   source={icons.calendar}
                   style={{
@@ -291,17 +291,14 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
               </Text>
               <View>
                 <DatePickerCustom
-                  value={day}
-                  onChange={day => {
-                    // setBirthday(day)
-                    console.log(new Date(day));
-                    setOpenCalendar(false);
-                    dispatch({
-                      type: 'Handle Input',
-                      field: 'birthDate',
-                      payload: new Date(day),
-                    });
-                  }}
+                  value={time}
+                  onHandleChange={(value: Date) =>
+                    setTime(value.toLocaleDateString())
+                  }
+                  // onHandleChange={day => {
+                  //   setTime(day)
+                  //   setBirthday(day);
+                  // }}
                 />
               </View>
               <View
@@ -320,8 +317,9 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   color={colors.greenLight}
                   width={150}
                   onPress={() => {
+                    // setBirthday()
+                    // console.log(birthday);
                     setOpenCalendar(false);
-                    // setBirthday();
                   }}
                 />
               </View>
@@ -335,6 +333,23 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
 export default FirstFormScreen;
 
 const styles = StyleSheet.create({
+  date: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '60%',
+  },
+  datePart: {
+    width: 100,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '200',
+    marginBottom: 5,
+  },
+  digit: {
+    fontSize: 20,
+  },
   inner: {
     paddingHorizontal: normalize(17),
     flex: 1,

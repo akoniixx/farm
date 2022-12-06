@@ -8,7 +8,8 @@ export default {
     success: require('./success.png'),
     bgHead: require('./bgHead.png'),
     map: require('./map.png'),
-    mark: require('./marker.png')
+    mark: require('./marker.png'),
+    iconAppDrone: require('./dronerIcon.png')
     
   };
   
