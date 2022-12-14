@@ -17,5 +17,4 @@ const MainNavigator: React.FC = () => {
     </Stack.Navigator>
   )
 }
-
-export default MainNavigator
+export default MainNavigator;

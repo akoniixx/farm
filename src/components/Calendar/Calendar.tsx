@@ -64,15 +64,16 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
     onHandleChange(date);
   };
 
+
   const getOrder = () => {
     return (format || 'dd-mm-yyyy').split('-').map((type, index: any) => {
       switch (type) {
         case 'dd':
-          return {name: 'day', digits: days, value: date.getDate()};
+          return {name: 'day', digits: days, value: ''};
         case 'mm':
-          return {name: 'month', digits: months, value: date.getDate() +1};
+          return {name: 'month', digits: months, value: ''};
         case 'yyyy':
-          return {name: 'year', digits: years, value: date.getFullYear()};
+          return {name: 'year', digits: years, value: ''};
         default:
           console.warn(
             `Invalid date picker format prop: found "${type}" in ${format}. Please read documentation!`,
@@ -80,7 +81,7 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
           return {
             name: ['day', 'month', 'year'][index],
             digits: [days, months, years][index],
-            value: [date.getDate(), date.getMonth() + 1, date.getFullYear()][
+            value: ['', '' , ''][
               index
             ],
           };
@@ -128,14 +129,8 @@ const DateBlock: React.FC<DateBlockProps> = ({
 
   const mHeight: number = markHeight || Math.min(dHeight, 65);
   const mWidth: number | string = markWidth || '70%';
-
   const offsets = digits.map((_: number, index: number) => index * dHeight);
-
-  const fadeFilled: string = hex2rgba(fadeColor || '#ffffff', 1);
-  const fadeTransparent: string = hex2rgba(fadeColor || '#ffffff', 0);
-
   const scrollRef = useRef<any>(null);
-
   const snapScrollToIndex = (index: number) => {
     scrollRef?.current?.scrollTo({y: dHeight * index, animated: true});
   };
@@ -147,7 +142,7 @@ const DateBlock: React.FC<DateBlockProps> = ({
   const handleMomentumScrollEnd = ({nativeEvent}: any) => {
     const digit = Math.round(nativeEvent.contentOffset.y / dHeight + digits[0]);
     onHandleChange(type, digit);
-    // console.log(digit);
+    console.log(digit);
   };
 
   return (
@@ -168,7 +163,7 @@ const DateBlock: React.FC<DateBlockProps> = ({
         snapToOffsets={offsets}
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={0}
-        onMomentumScrollEnd={handleMomentumScrollEnd}
+        // onMomentumScrollEnd={handleMomentumScrollEnd}
         >
         {digits.map((value: any, index: any) => {
           return (
@@ -203,25 +198,6 @@ const DateBlock: React.FC<DateBlockProps> = ({
       </ScrollView>
     </View>
   );
-};
-
-const hex2rgba = (hex: string, alpha: number): string => {
-  hex = hex.replace('#', '');
-
-  const r: number = parseInt(
-    hex.length === 3 ? hex.slice(0, 1).repeat(2) : hex.slice(0, 2),
-    16,
-  );
-  const g: number = parseInt(
-    hex.length === 3 ? hex.slice(1, 2).repeat(2) : hex.slice(2, 4),
-    16,
-  );
-  const b: number = parseInt(
-    hex.length === 3 ? hex.slice(2, 3).repeat(2) : hex.slice(4, 6),
-    16,
-  );
-
-  return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
 };
 
 const styles = StyleSheet.create({

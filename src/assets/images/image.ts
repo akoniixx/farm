@@ -9,7 +9,9 @@ export default {
     bgHead: require('./bgHead.png'),
     map: require('./map.png'),
     mark: require('./marker.png'),
-    iconAppDrone: require('./dronerIcon.png')
+    iconAppDrone: require('./dronerIcon.png'),
+    empty_droner: require('./empty_droner.png'),
+    academy: require('./academy.png')
     
   };
   

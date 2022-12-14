@@ -29,7 +29,7 @@ import {normalize} from '../../functions/Normalize';
 import {stylesCentral} from '../../styles/StylesCentral';
 import Animated from 'react-native-reanimated';
 import {plantList} from '../../definitions/plants';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import ActionSheet from 'react-native-actions-sheet';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {registerReducer} from '../../hook/registerfield';
@@ -37,28 +37,42 @@ import Geolocation from 'react-native-geolocation-service';
 import DroneBrandingItem from '../../components/Plots/Plots';
 import PlotsItem from '../../components/Plots/Plots';
 import {QueryLocation} from '../../datasource/LocationDatasource';
-import {ButtonGroup} from '@rneui/base';
+import {ButtonGroup, ScreenWidth} from '@rneui/base';
 import {image} from '../../assets/index';
 import {PlantSelect} from '../../components/PlantSelect/PlantSelect';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-
+import axios from 'axios';
+import {Register} from '../../datasource/AuthDatasource';
+import SearchBarWithAutocomplete from '../../components/SearchBarWithAutocomplete';
+export type PredictionType = {
+  description: string;
+  place_id: string;
+  reference: string;
+  matched_substrings: any[];
+  tructured_formatting: Object;
+  terms: Object[];
+  types: string[];
+};
 const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
+  const fall = new Animated.Value(1);
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const [position, setPosition] = useState({
-    latitude: route.latitude,
-    longitude: route.longitude,
+    latitude: route.params.latitude,
+    longitude: route.params.longitude,
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
+  const [search, setSearch] = useState({term: ''});
+  const telNo = route.params;
   const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState(null);
-  const [plants, setPlants] = useState<string[]>([]);
+  const [plantName, setPlantName] = useState<string[]>([]);
   const [brand, setBrand] = useState<any>(null);
-  const [plotCount, setPlotCount] = useState<any>('');
+  const [raiAmount, setraiAmount] = useState<any>('');
   const [plantListSelect, setPlantListSelect] = useState(plantList);
-  const [nearPlot, setNearPlot] = useState<any>('');
-  const [landMark, setLandMark] = useState<any>('');
+  const [locationName, setLocationName] = useState<any>('');
+  const [landmark, setlandmark] = useState<any>('');
   const [address, setAddress] = useState('');
   const [plotDataUI, setplotDataUI] = useState<any>([]);
   const [plotData, setplotData] = useState<any>([]);
@@ -74,103 +88,11 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const [selectItem, setSelectItem] = useState<any>([]);
 
   useEffect(() => {
-    getNameFormLat();
-  }, [position]);
-
-  useEffect(() => {
     getLocation();
   }, []);
-  const hasPermissionIOS = async () => {
-    const openSetting = () => {
-      Linking.openSettings().catch(() => {
-        Alert.alert('Unable to open settings');
-      });
-    };
-    const status = await Geolocation.requestAuthorization('whenInUse');
 
-    if (status === 'granted') {
-      return true;
-    }
-
-    if (status === 'denied') {
-      Alert.alert('Location permission denied');
-    }
-
-    if (status === 'disabled') {
-      Alert.alert(
-        `Turn on Location Services to allow  to determine your location.`,
-        '',
-        [
-          {text: 'Go to Settings', onPress: openSetting},
-          {text: "Don't Use Location", onPress: () => {}},
-        ],
-      );
-    }
-
-    return false;
-  };
-  const hasLocationPermission = async () => {
-    if (Platform.OS === 'ios') {
-      const hasPermission = await hasPermissionIOS();
-      return hasPermission;
-    }
-
-    if (Platform.OS === 'android' && Platform.Version < 23) {
-      return true;
-    }
-
-    const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-
-    if (hasPermission) {
-      return true;
-    }
-
-    const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-
-    if (status === PermissionsAndroid.RESULTS.GRANTED) {
-      return true;
-    }
-
-    if (status === PermissionsAndroid.RESULTS.DENIED) {
-      ToastAndroid.show(
-        'Location permission denied by user.',
-        ToastAndroid.LONG,
-      );
-    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-      ToastAndroid.show(
-        'Location permission revoked by user.',
-        ToastAndroid.LONG,
-      );
-    }
-
-    return false;
-  };
-  const getLocation = async () => {
-    const hasPermission = await hasLocationPermission();
-    if (hasPermission) {
-      Geolocation.getCurrentPosition(
-        pos => {
-          setPosition({
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          });
-        },
-        error => {
-          // See error code charts below.
-          console.log(error.code, error.message);
-        },
-        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-      );
-    }
-  };
   const getNameFormLat = () => {
-    let myApiKey = 'AIzaSyDg4BI3Opn-Bo2Pnr40Z7PKlC6MOv8T598';
+    let myApiKey = 'AIzaSyA93oxMv6XFgTf87cQDl7iIdPZ9u1k_L4g';
     let myLat = position.latitude;
     let myLon = position.longitude;
     fetch(
@@ -183,9 +105,10 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
     )
       .then(response => response.json())
       .then(responseJson => {
-        console.log(responseJson);
         setlat(responseJson.results[0].geometry.location.lat);
         setlong(responseJson.results[0].geometry.location.lng);
+        console.log(lat);
+        console.log(long);
         setAddress(
           responseJson.results[0].address_components[0].long_name +
             ' ' +
@@ -252,34 +175,123 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
           .catch(err => console.log(err));
       });
   };
+  const hasPermissionIOS = async () => {
+    const openSetting = () => {
+      Linking.openSettings().catch(() => {
+        Alert.alert('Unable to open settings');
+      });
+    };
+    const status = await Geolocation.requestAuthorization('whenInUse');
+
+    if (status === 'granted') {
+      return true;
+    }
+
+    if (status === 'denied') {
+      Alert.alert('Location permission denied');
+    }
+
+    if (status === 'disabled') {
+      Alert.alert(
+        'Turn on Location Services to allow  to determine your location.',
+        '',
+        [
+          {text: 'Go to Settings', onPress: openSetting},
+          {text: "Don't Use Location", onPress: () => {}},
+        ],
+      );
+    }
+
+    return false;
+  };
+  const hasLocationPermission = async () => {
+    if (Platform.OS === 'ios') {
+      const hasPermission = await hasPermissionIOS();
+      return hasPermission;
+    }
+
+    if (Platform.OS === 'android' && Platform.Version < 23) {
+      return true;
+    }
+
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
+    if (status === PermissionsAndroid.RESULTS.GRANTED) {
+      return true;
+    }
+
+    if (status === PermissionsAndroid.RESULTS.DENIED) {
+      ToastAndroid.show(
+        'Location permission denied by user.',
+        ToastAndroid.LONG,
+      );
+    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+      ToastAndroid.show(
+        'Location permission revoked by user.',
+        ToastAndroid.LONG,
+      );
+    }
+
+    return false;
+  };
+  const getLocation = async () => {
+    const hasPermission = await hasLocationPermission();
+    if (hasPermission) {
+      Geolocation.getCurrentPosition(
+        pos => {
+          setPosition({
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          });
+        },
+        error => {
+          console.log(error.code, error.message);
+        },
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      );
+    }
+  };
   const addPlots = () => {
     const plots = [...plotData];
     const plotsUI = [...plotDataUI];
     const newPlot = {
-      plotCount: plotCount,
+      raiAmount: raiAmount,
       plotName: plotName,
       locations: address,
-      nearPlot: nearPlot,
-      plants: plants,
+      locationName: locationName,
+      plantName: plantName,
       status: 'PENDING',
     };
     const newPlotUI = {
       plotName: plotName,
-      plotCount: plotCount,
-      plant: plants,
-      nearPlot: nearPlot,
+      raiAmount: raiAmount,
+      plantName: plantName,
+      locationName: locationName,
       location: address,
     };
+    console.log(newPlotUI)
     plots.push(newPlot);
     plotsUI.push(newPlotUI);
     setValue(null);
     setplotData(plots);
     setplotDataUI(plotsUI);
-    setPlants([]);
+    setPlantName([]);
     setAddress(address);
-    setPlotCount(null);
+    setraiAmount(null);
     setplotName(null);
-    setNearPlot(null);
+    setLocationName(null);
     actionSheet.current.hide();
   };
   const deletePlots = () => {
@@ -287,14 +299,33 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   };
   const selectPlants = (value: any, index: number, label: string) => {
     const data = [...value];
-    const resultarray = plants.findIndex(e => e === label);
+    const resultarray = plantName.findIndex(e => e === label);
     if (resultarray === -1) {
-      plants.push(label);
+      plantName.push(label);
     }
-    setPlants(plants);
+    setPlantName(plantName);
     setPlantListSelect(data);
     console.log(resultarray);
     plantSheet.current.hide();
+  };
+  const [regionCoords, setRegion] = useState({lat: 37.78825, lng: -122.4324});
+  const [marker, setMarker] = useState({lat: 37.78825, lng: -122.4324});
+
+  const onPress = (
+    data: any,
+    details: {
+      geometry: {
+        location:
+          | {lat: number; lng: number}
+          | ((prevState: {lat: number; lng: number}) => {
+              lat: number;
+              lng: number;
+            });
+      };
+    },
+  ) => {
+    setRegion(details.geometry.location);
+    setMarker(details.geometry.location);
   };
 
   return (
@@ -343,13 +374,17 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                       key={index}
                       plotName={
                         !item.plotName
-                          ? 'แปลงที่' + ' ' + `${index + 1}` + ' ' + item.plant
+                          ? 'แปลงที่' +
+                            ' ' +
+                            `${index + 1}` +
+                            ' ' +
+                            item.plantName
                           : item.plotName
                       }
-                      plotCount={item.plotCount}
+                      plotCount={item.raiAmount}
                       location={item.location}
-                      plants={item.plant}
-                      landMark={item.landMark}
+                      plants={item.plantName}
+                      landMark={item.landmark}
                       nearPlot={item.nearPlot}
                       status={item.status}
                     />
@@ -372,7 +407,23 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
           <MainButton
             label="ถัดไป"
             color={colors.greenLight}
-            onPress={() => navigation.navigate('FourthFormScreen')}
+            onPress={() => {
+              Register.register3(
+                telNo.tele,
+                plotName,
+                raiAmount,
+                landmark,
+                plantName,
+                lat,
+                long,
+                locationName,
+              )
+                .then((res)=>{
+                    navigation.navigate('FourthFormScreen',{tele : telNo.tele});
+                }).catch(err => {
+                  console.log(err)
+                })
+            }}
           />
         </View>
         <ActionSheet ref={actionSheet}>
@@ -404,15 +455,20 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 value={plotName}
                 style={[styles.input, {borderColor: colors.disable}]}
                 editable={true}
-                placeholder={'ระบุชื่อแปลงเกษตร'}
-                placeholderTextColor={colors.disable}
+                placeholder={
+                  !plotName ? `แปลงที่ ${plotDataUI.length + 1}` : plotName
+                }
+                placeholderTextColor={colors.fontGrey}
               />
-              <Text style={styles.head}>จำนวนไร่</Text>
+              <Text style={styles.head}>
+                จำนวนไร่{' '}
+                <Text style={{fontSize: normalize(16)}}>(โดยประมาณ)</Text>
+              </Text>
               <TextInput
                 onChangeText={value => {
-                  setPlotCount(value);
+                  setraiAmount(value);
                 }}
-                value={plotCount}
+                value={raiAmount}
                 style={[styles.input, {borderColor: colors.disable}]}
                 editable={true}
                 placeholder={'ระบุจำนวนไร่'}
@@ -442,7 +498,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                       fontSize: normalize(16),
                       color: colors.gray,
                     }}>
-                    {!plants ? (
+                    {!plantName ? (
                       <Text
                         style={{
                           fontFamily: font.SarabunLight,
@@ -456,7 +512,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                           fontFamily: font.SarabunLight,
                           color: colors.fontGrey,
                         }}>
-                        {plants}
+                        {plantName}
                       </Text>
                     )}
                   </Text>
@@ -474,11 +530,11 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
               <Text style={styles.head}>สถานที่ใกล้แปลง</Text>
               <View style={styles.input}>
                 <Image source={image.map} style={styles.imageStyle} />
-                <TextInput
+                {/* <TextInput
                   onChangeText={value => {
-                    setNearPlot(value);
+                    setLocationName(value);
                   }}
-                  value={nearPlot}
+                  value={locationName}
                   style={{
                     borderColor: colors.disable,
                     fontFamily: font.SarabunLight,
@@ -486,72 +542,26 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   }}
                   editable={true}
                   placeholder={'เช่น วัด, โรงเรียน, ร้านค้า'}
-                  placeholderTextColor={colors.disable}
-                />
+                  placeholderTextColor={colors.disable}/> */}
               </View>
-              {/* <GooglePlacesAutocomplete
-                 placeholder="Type a place"
-                 onPress={(data, details = null) => console.log(data, details)}
-                 query={{key: ''}}
-                 fetchDetails={true}
-                 onFail={error => console.log(error)}
-                 onNotFound={() => console.log('no results')}
-              /> */}
               <View style={{flex: 1}}>
-                <MapView.Animated
-                  style={styles.map}
+                {/* <MapView.Animated
                   mapType="satellite"
+                  style={styles.map}
                   provider={PROVIDER_GOOGLE}
                   initialRegion={position}
                   showsUserLocation={true}
                   onRegionChangeComplete={region => setPosition(region)}
                   showsMyLocationButton={true}
                 />
-                {/* <View
-                  style={[
-                    styles.ButtonLocation,
-                    {
-                      backgroundColor: colors.white,
-                      width: normalize(165),
-                      height: normalize(50),
-                      borderRadius: normalize(50),
-                      display: 'flex',
-                      flexDirection: 'row',
-                      top: normalize(100),
-                      left: normalize(170),
-                      position: 'absolute',
-                      padding: 10,
-                      marginVertical: 20,
-                      alignItems: 'center',
-                    },
-                  ]}>
-                  <Image
-                    source={icons.locate}
-                    style={{
-                      width: normalize(17),
-                      height: normalize(17),
-                      marginRight: 5,
-                    }}
-                  />
-                  <TouchableOpacity onPress={goToUsersLocation}>
-                    <Text
-                      style={{
-                        fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(15),
-                        color: colors.fontBlack,
-                      }}>
-                      ระบุตำแหน่งของฉัน
-                    </Text>
-                  </TouchableOpacity>
-                </View> */}
                 <View style={styles.markerFixed}>
                   <Image style={styles.marker} source={image.mark} />
-                </View>
+                </View> */}
               </View>
               <Text style={styles.head}>จุดสังเกต</Text>
               <TextInput
                 onChangeText={value => {
-                  setLandMark(value);
+                  setlandmark(value);
                 }}
                 value={brand}
                 style={[styles.input, {borderColor: colors.disable}]}
@@ -661,9 +671,9 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 <Text style={styles.head}>จำนวนไร่</Text>
                 <TextInput
                   onChangeText={value => {
-                    setPlotCount(value);
+                    setraiAmount(value);
                   }}
-                  value={item.plotCount}
+                  value={item.raiAmount}
                   style={[styles.input, {borderColor: colors.disable}]}
                   editable={true}
                   placeholder={'ระบุจำนวนไร่'}
@@ -721,7 +731,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   <Image source={image.map} style={styles.imageStyle} />
                   <TextInput
                     onChangeText={value => {
-                      setNearPlot(value);
+                      setLocationName(value);
                     }}
                     value={item.nearPlot}
                     editable={true}
@@ -1001,5 +1011,8 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
     fontFamily: font.SarabunLight,
     fontSize: normalize(16),
+  },
+  body: {
+    paddingHorizontal: 20,
   },
 });

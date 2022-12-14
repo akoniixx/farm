@@ -6,8 +6,11 @@ export default {
   avatar: require('./avatar.png'),
   calendar: require('./calendar.png'),
   home: require('./home.png'),
+  home_active: require('./home_active.png'),
   discount: require('./discount.png'),
+  discount_active: require('./discount_active.png'),
   profile: require('./profile.png'),
+  profile_active: require('./profile_active.png'),
   plots: require('./plots.png'),
   drone: require('./drone.png'),
   dangercircle: require('./dangercircle.png'),
@@ -25,5 +28,9 @@ export default {
   deleteUser: require('./deleteUser.png'),
   lock: require('./lock.png'),
   logout: require('./logout.png'),
-  arrowRigth: require('./arrowRight.png')
+  arrowRigth: require('./arrowRight.png'),
+  mytask: require('./mytask.png'),
+  mytask_active: require('./mytask_active.png'),
+  profile_blank: require('./profile_blank.png')
+
 };

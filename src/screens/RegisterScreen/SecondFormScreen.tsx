@@ -1,8 +1,10 @@
-import { Button } from '@rneui/themed';
+import {Button} from '@rneui/themed';
 import React, {useEffect, useReducer, useRef, useState} from 'react';
 import {
   Dimensions,
   Image,
+  PermissionsAndroid,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -12,17 +14,21 @@ import {
 import DropDownPicker from 'react-native-dropdown-picker';
 import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {font} from '../../assets';
+import {font, icons} from '../../assets';
 import colors from '../../assets/colors/colors';
 import fonts from '../../assets/fonts';
 import image from '../../assets/images/image';
-import { MainButton } from '../../components/Button/MainButton';
+import {MainButton} from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
 import {ProgressBar} from '../../components/ProgressBar';
-import { QueryLocation } from '../../datasource/LocationDatasource';
+import {QueryLocation} from '../../datasource/LocationDatasource';
 import {normalize} from '../../functions/Normalize';
-import { registerReducer } from '../../hook/registerfield';
+import {registerReducer} from '../../hook/registerfield';
 import {stylesCentral} from '../../styles/StylesCentral';
+import ActionSheet from 'react-native-actions-sheet';
+import {Register} from '../../datasource/AuthDatasource';
+import Geolocation from 'react-native-geolocation-service';
+import { LocationSelect } from '../../components/Location/Location';
 
 const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
   const initialFormRegisterState = {
@@ -33,10 +39,14 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
     subdistrict: '',
     postal: '',
   };
-  
   const windowWidth = Dimensions.get('window').width;
+  const windowHeight = Dimensions.get('window').height;
+  const telNo = route.params;
+  const [openCalendar, setOpenCalendar] = useState(false);
+  const [birthday, setBirthday] = useState('');
+  const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<any>([]);
   const [openDistrict, setOpenDistrict] = useState(false);
   const [valueDistrict, setValueDistrict] = useState(null);
   const [itemsDistrict, setItemDistrict] = useState([]);
@@ -47,13 +57,72 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
   const [district, setDistrict] = useState<any>(null);
   const [subdistrict, setSubdistrict] = useState<any>(null);
   const [image, setImage] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
   const [bottompadding, setBottomPadding] = useState(0);
-  const [open, setOpen] = useState(false);
+  const provinceSheet = useRef<any>();
+  const DistriSheet = useRef<any>();
+  const SubDistriSheet = useRef<any>();
+
+  useEffect(() => {
+    QueryLocation.QueryProvince().then(res => {
+      const Province = res.map((item: any) => {
+        return {label: item.provinceName, value: item.provinceId};
+      });
+      setItems(Province);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (province != null) {
+      QueryLocation.QueryDistrict(province.value).then(res => {
+        const District = res.map((item: any) => {
+          return {label: item.districtName, value: item.districtId};
+        });
+        setItemDistrict(District);
+      });
+    }
+  }, [province]);
+
+  useEffect(() => {
+    if (province != null && district != null) {
+      QueryLocation.QuerySubDistrict(district.value, district.label).then(
+        res => {
+          const SubDistrict = res.map((item: any) => {
+            return {
+              label: item.subdistrictName,
+              value: item.subdistrictId,
+              postcode: item.postcode,
+            };
+          });
+          setItemSubDistrict(SubDistrict);
+        },
+      );
+    }
+  }, [province, district]);
 
   const [formState, dispatch] = useReducer(
     registerReducer,
     initialFormRegisterState,
   );
+  const selectProvince = (value: any, label:any) => {
+    const data = [...value];
+    const result = data.filter((item, index) => {
+      if(item.label == "สระบุรี"){
+         return true
+       }
+       
+       else{
+        return false
+       }
+  
+})
+
+console.log(result)
+
+
+    provinceSheet.current.hide()
+  };
+  
 
   return (
     <SafeAreaView style={stylesCentral.container}>
@@ -68,44 +137,45 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
             <ProgressBar index={2} />
           </View>
           <Text style={styles.h3}>ขั้นตอนที่ 2 จาก 4</Text>
-          <Text style={styles.h1}>ระบุที่อยู่
-          <Text style={{fontSize: normalize(18), color: colors.gray}}> (ไม่จำเป็นต้องระบุ)</Text>
+          <Text style={styles.h1}>
+            ระบุที่อยู่
+            <Text style={{fontSize: normalize(18), color: colors.gray}}>
+              {' '}
+              (ไม่จำเป็นต้องระบุ)
+            </Text>
           </Text>
           <ScrollView>
             <Text style={styles.head}>บ้านเลขที่</Text>
             <TextInput
-             onChangeText={value => {
-              dispatch({
-                type: 'Handle Input',
-                field: 'no',
-                payload: value,
-              });
-            }}
-            value={formState.no}
+              onChangeText={value => {
+                dispatch({
+                  type: 'Handle Input',
+                  field: 'no',
+                  payload: value,
+                });
+              }}
+              value={formState.no}
               style={styles.input}
               editable={true}
               placeholder={'บ้านเลขที่'}
               placeholderTextColor={colors.disable}
             />
             <Text style={styles.head}>รายละเอียดที่อยู่</Text>
-
             <TextInput
-             onChangeText={value => {
-              dispatch({
-                type: 'Handle Input',
-                field: 'address',
-                payload: value,
-              });
-            }}
-            value={formState.address}
-
+              onChangeText={value => {
+                dispatch({
+                  type: 'Handle Input',
+                  field: 'address',
+                  payload: value,
+                });
+              }}
+              value={formState.address}
               style={styles.input}
               editable={true}
               placeholder={'รายละเอียดที่อยู่ (หมู่, ถนน)'}
               placeholderTextColor={colors.disable}
             />
             <Text style={styles.head}>จังหวัด</Text>
-
             <DropDownPicker
               listMode="SCROLLVIEW"
               scrollViewProps={{
@@ -117,6 +187,12 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
                 marginVertical: 10,
                 backgroundColor: colors.white,
                 borderColor: colors.disable,
+              }}
+              placeholder="จังหวัด"
+              placeholderStyle={{
+                color: colors.disable,
+                fontSize: normalize(16),
+
               }}
               open={open}
               value={value}
@@ -131,19 +207,127 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
                 });
               }}
               setValue={setValue}
-              placeholder="จังหวัด"
-              placeholderStyle={{
-                color: colors.disable,
-                fontFamily: font.SarabunLight,
-                fontSize: normalize(16)
-              }}
               dropDownDirection="BOTTOM"
               dropDownContainerStyle={{
                 borderColor: colors.disable,
               }}
             />
-            <Text style={styles.head}>อำเภอ</Text>
 
+            {/* <TouchableOpacity
+              onPress={() => {
+                provinceSheet.current.show();
+              }}>
+              <View
+                style={{
+                  borderColor: colors.disable,
+                  borderWidth: 1,
+                  padding: 10,
+                  borderRadius: 10,
+                  marginVertical: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  height: normalize(55),
+                  justifyContent: 'space-between',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fonts.AnuphanMedium,
+                    fontSize: normalize(16),
+                    color: colors.gray,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.SarabunLight,
+                      color: colors.disable,
+                    }}>
+                     {!province ? (
+                      <Text
+                        style={{
+                          fontFamily: font.SarabunLight,
+                          color: colors.disable,
+                        }}>
+                        จังหวัด
+                      </Text>
+                    ) : (
+                      <Text
+                        style={{
+                          fontFamily: font.SarabunLight,
+                          color: colors.fontGrey,
+                        }}>
+                        {province}
+                      </Text>
+                    )}
+                  </Text>
+                </Text>
+                <Image
+                  source={icons.down}
+                  style={{
+                    width: normalize(24),
+                    height: normalize(22),
+                    marginRight: 10,
+                    tintColor: colors.disable,
+                  }}
+                />
+              </View>
+            </TouchableOpacity> */}
+            <Text style={styles.head}>อำเภอ</Text>
+            {/* <TouchableOpacity
+              onPress={() => {
+                DistriSheet.current.show();
+              }}>
+              <View
+                style={{
+                  borderColor: colors.disable,
+                  borderWidth: 1,
+                  padding: 10,
+                  borderRadius: 10,
+                  marginVertical: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  height: normalize(55),
+                  justifyContent: 'space-between',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fonts.AnuphanMedium,
+                    fontSize: normalize(16),
+                    color: colors.gray,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.SarabunLight,
+                      color: colors.disable,
+                    }}>
+                     {!district ? (
+                      <Text
+                        style={{
+                          fontFamily: font.SarabunLight,
+                          color: colors.disable,
+                        }}>
+                        อำเภอ
+                      </Text>
+                    ) : (
+                      <Text
+                        style={{
+                          fontFamily: font.SarabunLight,
+                          color: colors.fontGrey,
+                        }}>
+                        {district}
+                      </Text>
+                    )}
+                  </Text>
+                </Text>
+                <Image
+                  source={icons.down}
+                  style={{
+                    width: normalize(24),
+                    height: normalize(22),
+                    marginRight: 10,
+                    tintColor: colors.disable,
+                  }}
+                />
+              </View>
+            </TouchableOpacity> */}
             <DropDownPicker
               listMode="SCROLLVIEW"
               scrollViewProps={{
@@ -160,7 +344,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
               placeholderStyle={{
                 color: !province ? colors.gray : colors.disable,
                 fontFamily: font.SarabunLight,
-                fontSize: normalize(16)
+                fontSize: normalize(16),
               }}
               onOpen={() => {
                 setBottomPadding(60);
@@ -187,7 +371,63 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
               }}
             />
             <Text style={styles.head}>ตำบล</Text>
-
+            {/* <TouchableOpacity
+              onPress={() => {
+                DistriSheet.current.show();
+              }}>
+              <View
+                style={{
+                  borderColor: colors.disable,
+                  borderWidth: 1,
+                  padding: 10,
+                  borderRadius: 10,
+                  marginVertical: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  height: normalize(55),
+                  justifyContent: 'space-between',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fonts.AnuphanMedium,
+                    fontSize: normalize(16),
+                    color: colors.gray,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.SarabunLight,
+                      color: colors.disable,
+                    }}>
+                     {!subdistrict ? (
+                      <Text
+                        style={{
+                          fontFamily: font.SarabunLight,
+                          color: colors.disable,
+                        }}>
+                        ตำบล
+                      </Text>
+                    ) : (
+                      <Text
+                        style={{
+                          fontFamily: font.SarabunLight,
+                          color: colors.fontGrey,
+                        }}>
+                        {subdistrict}
+                      </Text>
+                    )}
+                  </Text>
+                </Text>
+                <Image
+                  source={icons.down}
+                  style={{
+                    width: normalize(24),
+                    height: normalize(22),
+                    marginRight: 10,
+                    tintColor: colors.disable,
+                  }}
+                />
+              </View>
+            </TouchableOpacity> */}
             <DropDownPicker
               listMode="SCROLLVIEW"
               scrollViewProps={{
@@ -205,7 +445,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
               placeholderStyle={{
                 color: !district ? colors.gray : colors.disable,
                 fontFamily: font.SarabunLight,
-                fontSize: normalize(16)
+                fontSize: normalize(16),
               }}
               onOpen={() => {
                 setBottomPadding(120);
@@ -231,7 +471,6 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
                 });
               }}
               setValue={setSubValueDistrict}
-
               dropDownDirection="BOTTOM"
               dropDownContainerStyle={{
                 borderColor: colors.disable,
@@ -239,7 +478,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
             />
             <Text style={styles.head}>รหัสไปรษณีย์</Text>
             <TextInput
-             value={formState.postal}
+              value={formState.postal}
               style={[
                 styles.input,
                 {
@@ -257,9 +496,187 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
           <MainButton
             label="ถัดไป"
             color={colors.greenLight}
-            onPress={() => navigation.navigate('ThirdFormScreen')}
+            onPress={() => {
+              setLoading(true);
+              Register.register2(
+                telNo.tele,
+                formState.no,
+                formState.address,
+                formState.province.value,
+                formState.district.value,
+                formState.subdistrict.value,
+                formState.postal,
+              )
+                .then(async res => {
+                  console.log(res);
+                  if (Platform.OS === 'ios') {
+                    await Geolocation.requestAuthorization('always');
+                  } else if (Platform.OS === 'android') {
+                    await PermissionsAndroid.request(
+                      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                    );
+                  }
+                  Geolocation.getCurrentPosition(
+                    position => {
+                      setLoading(false);
+                      navigation.navigate('ThirdFormScreen', {
+                        tele: formState.tel,
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                      });
+                    },
+                    error => {
+                      console.log(error.code, error.message);
+                    },
+                    {
+                      enableHighAccuracy: true,
+                      timeout: 15000,
+                      maximumAge: 10000,
+                    },
+                  );
+                })
+                .catch(err => console.log(err));
+            }}
           />
         </View>
+        <ActionSheet ref={provinceSheet}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              paddingVertical: normalize(30),
+              paddingHorizontal: normalize(20),
+              width: windowWidth,
+              height: windowHeight * 0.7,
+              borderRadius: normalize(20),
+            }}>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={[styles.head, {marginBottom: normalize(10)}]}>
+                จังหวัด
+              </Text>
+              <Text
+                style={{
+                  color: colors.greenLight,
+                  fontFamily: font.SarabunMedium,
+                  fontSize: normalize(16),
+                }}
+                onPress={() => {
+                  provinceSheet.current.hide();
+                }}>
+                ยกเลิก
+              </Text>
+            </View>
+            <View style={styles.container}>
+              <ScrollView>
+                {items.map((v: { label: any; value: any; }, i: any | null | undefined) => (
+                  <TouchableOpacity> 
+                      <LocationSelect
+                        key={i}
+                        label={v.label}
+                        value={v.value}
+                        onPress={() =>
+                          selectProvince(items, value)
+                        }
+                      />
+                  
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        </ActionSheet>
+        <ActionSheet ref={DistriSheet} >
+          <View
+            style={{
+              backgroundColor: 'white',
+              paddingVertical: normalize(30),
+              paddingHorizontal: normalize(20),
+              width: windowWidth,
+              height: windowHeight * 0.7,
+              borderRadius: normalize(20),
+            }}>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={[styles.head, {marginBottom: normalize(10)}]}>
+                อำเภอ
+              </Text>
+              <Text
+                style={{
+                  color: colors.greenLight,
+                  fontFamily: font.SarabunMedium,
+                  fontSize: normalize(16),
+                }}
+                onPress={() => {
+                  DistriSheet.current.hide();
+                }}>
+                ยกเลิก
+              </Text>
+            </View>
+            <View style={styles.container}>
+              <ScrollView>
+                {items.map((v: { label: any; value: any; }, i: any | null | undefined) => (
+                  <TouchableOpacity> 
+                      <LocationSelect
+                        key={i}
+                        label={v.label}
+                        value={v.value}
+                        // onPress={() =>
+                        //   selectProvince()
+                        // }
+                      />
+                  
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        </ActionSheet>
+        <ActionSheet ref={SubDistriSheet}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              paddingVertical: normalize(30),
+              paddingHorizontal: normalize(20),
+              width: windowWidth,
+              height: windowHeight * 0.7,
+              borderRadius: normalize(20),
+            }}>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={[styles.head, {marginBottom: normalize(10)}]}>
+                ตำบล
+              </Text>
+              <Text
+                style={{
+                  color: colors.greenLight,
+                  fontFamily: font.SarabunMedium,
+                  fontSize: normalize(16),
+                }}
+                onPress={() => {
+                  SubDistriSheet.current.hide();
+                }}>
+                ยกเลิก
+              </Text>
+            </View>
+            <View style={styles.container}>
+              <ScrollView>
+                {items.map((v: { label: any; value: any; }, i: any | null | undefined) => (
+                  <TouchableOpacity> 
+                      <LocationSelect
+                        key={i}
+                        label={v.label}
+                        value={v.value}
+                        // onPress={() =>
+                        //   selectProvince()
+                        // }
+                      />
+                  
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        </ActionSheet>
       </View>
     </SafeAreaView>
   );
@@ -274,7 +691,7 @@ const styles = StyleSheet.create({
   },
   head: {
     fontFamily: font.AnuphanBold,
-    fontSize: normalize(16),
+    fontSize: normalize(18),
     color: colors.fontBlack,
   },
   h1: {

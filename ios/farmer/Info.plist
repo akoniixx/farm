@@ -54,15 +54,15 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>IconKaset Droner would like to use access camera to take your photo for your profile.</string>
+	<string>IconKaset Farmer would like to use access camera to take your photo for your profile.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
+	<string>IconKaset Farmer ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
+	<string>IconKaset Farmer ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
+	<string>IconKaset Farmer ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>IconKaset Droner would like access to your photo gallery, so you can use it as your profile.</string>
+	<string>IconKaset Farmer would like access to your photo gallery, so you can use it as your profile.</string>
 	
 	<key>UIAppFonts</key>
 	<array>

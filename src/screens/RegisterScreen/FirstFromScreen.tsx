@@ -35,16 +35,20 @@ import DatePickerCustom from '../../components/Calendar/Calendar';
 import CustomCalendar from '../../components/Calendar/Calendar';
 import TimePicker from '../../components/Calendar/Calendar';
 import DatePicker from 'react-native-date-picker';
+import {Register} from '../../datasource/AuthDatasource';
+import Geolocation from 'react-native-geolocation-service';
+
 const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const initialFormRegisterState = {
     name: '',
     surname: '',
     birthDate: '',
-    tel: '',
+    tel: route.params.tele,
   };
-
+  const tele = route.params.tele;
   const windowWidth = Dimensions.get('window').width;
   const [image, setImage] = useState<any>(null);
+
   const [value, setValue] = useState(null);
   const [birthday, setBirthday] = useState('');
   const [openCalendar, setOpenCalendar] = useState(false);
@@ -53,8 +57,8 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const [openModal, setOpenModal] = useState(false);
   const [time, setTime] = useState('');
   const [date, setDate] = useState<Date | null>();
+  const [loading, setLoading] = useState(false);
 
-  console.log(time);
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
       mediaType: 'photo',
@@ -79,6 +83,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
     registerReducer,
     initialFormRegisterState,
   );
+  console.log(formState)
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -202,7 +207,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
             <TextInput
               style={[styles.input, {backgroundColor: colors.disable}]}
               editable={false}
-              placeholder={'0888888888'}
+              value={tele}
               placeholderTextColor={colors.gray}
             />
           </ScrollView>
@@ -210,14 +215,34 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
         <View style={{backgroundColor: colors.white, zIndex: 0}}>
           <MainButton
             label="ถัดไป"
-            disable={
-              !formState.name || !formState.surname
-                ? // !formState.birthDate
-                  true
-                : false
-            }
+            disable={!formState.name || !formState.surname ? true : false}
             color={colors.greenLight}
-            onPress={() => navigation.navigate('SecondFormScreen')}
+            onPress={() => {
+              Register.register1(
+                formState.name,
+                formState.surname,
+                formState.birthDate,
+                formState.tel
+              )
+                .then(async res => {
+                  console.log(res)
+                  if (!image) {
+                    setLoading(false);
+                    navigation.navigate('SecondFormScreen', {
+                      formState
+                    });
+                  } else {
+                    Register.uploadProfileImage(image).then(
+                      async(res) => {
+                        setLoading(false);
+                        navigation.navigate('SecondFormScreen', {
+                         formState
+                        });
+                      }
+                    ).catch(err => console.log(err))
+                  }
+                }).catch(err => console.log(err))
+            }}
           />
         </View>
         <Modal transparent={true} visible={openModal}>

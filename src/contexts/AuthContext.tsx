@@ -2,6 +2,7 @@
 import * as React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AppState} from 'react-native';
+import { ProfileDatasource } from '../datasource/ProfileDatasource';
 
 interface Props {
   children: JSX.Element;
@@ -59,11 +60,11 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
     () => ({
       getProfileAuth: async () => {
         try {
-          const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
+          const farmerId = (await AsyncStorage.getItem('farmer_id')) ?? '';
 
-        //   const data = await ProfileDatasource.getProfile(dronerId);
-        //   dispatch({type: 'GET_ME', user: data});
-        //   return data;
+          const data = await ProfileDatasource.getProfile(farmerId);
+          dispatch({type: 'GET_ME', user: data});
+          return data;
         } catch (e: any) {
           console.log(e);
         }
