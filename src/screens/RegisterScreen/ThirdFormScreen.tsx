@@ -28,7 +28,7 @@ import {ProgressBar} from '../../components/ProgressBar';
 import {normalize} from '../../functions/Normalize';
 import {stylesCentral} from '../../styles/StylesCentral';
 import Animated from 'react-native-reanimated';
-import {plantList} from '../../definitions/plants';
+import {plant, plantList} from '../../definitions/plants';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import ActionSheet from 'react-native-actions-sheet';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -44,6 +44,7 @@ import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 import axios from 'axios';
 import {Register} from '../../datasource/AuthDatasource';
 import SearchBarWithAutocomplete from '../../components/SearchBarWithAutocomplete';
+
 export type PredictionType = {
   description: string;
   place_id: string;
@@ -67,11 +68,11 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const telNo = route.params;
   const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState(null);
-  const [plantName, setPlantName] = useState<string[]>([]);
+  const [plantName, setPlantName] = useState<any>();
   const [brand, setBrand] = useState<any>(null);
-  const [raiAmount, setraiAmount] = useState<any>('');
-  const [plantListSelect, setPlantListSelect] = useState(plantList);
-  const [locationName, setLocationName] = useState<any>('');
+  const [raiAmount, setraiAmount] = useState<any>();
+  const [plantListSelect, setPlantListSelect] = useState(plant);
+  const [location, setlocation] = useState<any>('');
   const [landmark, setlandmark] = useState<any>('');
   const [address, setAddress] = useState('');
   const [plotDataUI, setplotDataUI] = useState<any>([]);
@@ -270,62 +271,33 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
       raiAmount: raiAmount,
       plotName: plotName,
       locations: address,
-      locationName: locationName,
       plantName: plantName,
       status: 'PENDING',
     };
+    console.log(newPlot);
     const newPlotUI = {
       plotName: plotName,
       raiAmount: raiAmount,
       plantName: plantName,
-      locationName: locationName,
       location: address,
     };
-    console.log(newPlotUI)
     plots.push(newPlot);
     plotsUI.push(newPlotUI);
     setValue(null);
     setplotData(plots);
     setplotDataUI(plotsUI);
-    setPlantName([]);
+    setPlantName(null);
     setAddress(address);
     setraiAmount(null);
     setplotName(null);
-    setLocationName(null);
     actionSheet.current.hide();
   };
   const deletePlots = () => {
     deTailPlot.current.hide();
   };
-  const selectPlants = (value: any, index: number, label: string) => {
-    const data = [...value];
-    const resultarray = plantName.findIndex(e => e === label);
-    if (resultarray === -1) {
-      plantName.push(label);
-    }
-    setPlantName(plantName);
-    setPlantListSelect(data);
-    console.log(resultarray);
+  const selectPlants = (value: any) => {
+    setPlantName(value);
     plantSheet.current.hide();
-  };
-  const [regionCoords, setRegion] = useState({lat: 37.78825, lng: -122.4324});
-  const [marker, setMarker] = useState({lat: 37.78825, lng: -122.4324});
-
-  const onPress = (
-    data: any,
-    details: {
-      geometry: {
-        location:
-          | {lat: number; lng: number}
-          | ((prevState: {lat: number; lng: number}) => {
-              lat: number;
-              lng: number;
-            });
-      };
-    },
-  ) => {
-    setRegion(details.geometry.location);
-    setMarker(details.geometry.location);
   };
 
   return (
@@ -381,11 +353,10 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                             item.plantName
                           : item.plotName
                       }
-                      plotCount={item.raiAmount}
-                      location={item.location}
-                      plants={item.plantName}
+                      raiAmount={item.raiAmount}
+                      locationName={item.location}
+                      plantName={item.plantName}
                       landMark={item.landmark}
-                      nearPlot={item.nearPlot}
                       status={item.status}
                     />
                   </TouchableOpacity>
@@ -407,22 +378,16 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
           <MainButton
             label="ถัดไป"
             color={colors.greenLight}
-            onPress={() => {
-              Register.register3(
-                telNo.tele,
-                plotName,
-                raiAmount,
-                landmark,
-                plantName,
-                lat,
-                long,
-                locationName,
-              )
-                .then((res)=>{
-                    navigation.navigate('FourthFormScreen',{tele : telNo.tele});
-                }).catch(err => {
-                  console.log(err)
-                })
+            onPress={()=>{
+                Register.uploadFarmerPlot(plotData).then((res)=>{
+                  console.log(plotData)
+                  console.log(res)
+                  navigation.navigate('FourthFormScreen',{tele : telNo.tele});
+                }).catch(err => console.log(err))
+          
+            // onPress={() => {
+              
+            //   navigation.navigate('FourthFormScreen', {tele: telNo.tele});
             }}
           />
         </View>
@@ -586,7 +551,25 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 style={styles.button}
                 label="บันทึก"
                 color={colors.greenLight}
-                onPress={addPlots}
+                onPress={() => {
+                  Register.register3(
+                    telNo.tele,
+                    plotName,
+                    raiAmount,
+                    landmark,
+                    plantName,
+                    lat,
+                    long,
+                    location,
+                  )
+                    .then(res => {
+                    addPlots()
+                    })
+                    .catch(err => {
+                      console.log(err);
+                    });
+                }}
+                // onPress={addPlots}
               />
             </View>
           </View>
@@ -623,11 +606,9 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     <TouchableOpacity>
                       <PlantSelect
                         key={i}
-                        label={v.value}
-                        id={v.id}
-                        onPress={() =>
-                          selectPlants(plantListSelect, i, v.value)
-                        }
+                        label={v}
+                        id={v}
+                        onPress={() => selectPlants(v)}
                       />
                     </TouchableOpacity>
                   ))}
@@ -731,9 +712,9 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   <Image source={image.map} style={styles.imageStyle} />
                   <TextInput
                     onChangeText={value => {
-                      setLocationName(value);
+                      setlocation(value);
                     }}
-                    value={item.nearPlot}
+                    value={item.location}
                     editable={true}
                     style={{
                       fontFamily: font.SarabunLight,

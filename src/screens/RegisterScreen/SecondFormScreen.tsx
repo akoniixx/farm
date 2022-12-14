@@ -28,37 +28,42 @@ import {stylesCentral} from '../../styles/StylesCentral';
 import ActionSheet from 'react-native-actions-sheet';
 import {Register} from '../../datasource/AuthDatasource';
 import Geolocation from 'react-native-geolocation-service';
-import { LocationSelect } from '../../components/Location/Location';
+import {
+  LocationInPostcodeSelect,
+  LocationSelect,
+} from '../../components/Location/Location';
 
 const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
   const initialFormRegisterState = {
-    no: '',
-    address: '',
-    province: '',
-    district: '',
-    subdistrict: '',
-    postal: '',
+    no : "",
+    address : "",
+    province : "",
+    district : "",
+    subdistrict : "",
+    postal : ""
   };
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const telNo = route.params;
+  const [items, setItems] = useState<any>([]);
+  const [itemsDistrict, setItemDistrict] = useState([]);
+  const [itemsSubDistrict, setItemSubDistrict] = useState([]);
+  const [proVince, setProVince] = useState<any>([]);
+  const [disTrict, setDisTrict] = useState<any>([]);
+  const [subDistrict, setSubDistrict] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
+  const [bottompadding, setBottomPadding] = useState(0);
   const [openCalendar, setOpenCalendar] = useState(false);
   const [birthday, setBirthday] = useState('');
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState<any>([]);
   const [openDistrict, setOpenDistrict] = useState(false);
   const [valueDistrict, setValueDistrict] = useState(null);
-  const [itemsDistrict, setItemDistrict] = useState([]);
   const [openSubDistrict, setOpenSubDistrict] = useState(false);
   const [valueSubDistrict, setSubValueDistrict] = useState(null);
-  const [itemsSubDistrict, setItemSubDistrict] = useState([]);
   const [province, setProvince] = useState<any>(null);
   const [district, setDistrict] = useState<any>(null);
   const [subdistrict, setSubdistrict] = useState<any>(null);
-  const [image, setImage] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [bottompadding, setBottomPadding] = useState(0);
   const provinceSheet = useRef<any>();
   const DistriSheet = useRef<any>();
   const SubDistriSheet = useRef<any>();
@@ -104,25 +109,19 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
     registerReducer,
     initialFormRegisterState,
   );
-  const selectProvince = (value: any, label:any) => {
-    const data = [...value];
-    const result = data.filter((item, index) => {
-      if(item.label == "สระบุรี"){
-         return true
-       }
-       
-       else{
-        return false
-       }
-  
-})
-
-console.log(result)
-
-
-    provinceSheet.current.hide()
+  console.log(formState);
+  const selectProvince = (value: any, label: any) => {
+    setProVince(value);
+    provinceSheet.current.hide();
   };
-  
+  const selectDistrict = (value: any, label: any) => {
+    setDisTrict(value);
+    DistriSheet.current.hide();
+  };
+  const selectSubDistrict = (value: any, label: any) => {
+    setSubDistrict(value);
+    SubDistriSheet.current.hide();
+  };
 
   return (
     <SafeAreaView style={stylesCentral.container}>
@@ -177,22 +176,35 @@ console.log(result)
             />
             <Text style={styles.head}>จังหวัด</Text>
             <DropDownPicker
-              listMode="SCROLLVIEW"
+              listItemLabelStyle={{
+                fontFamily: font.SarabunLight,
+                fontSize: 18,
+                padding: '2%',
+                top: '3%',
+              }}
+              labelStyle={{
+                fontSize: normalize(16),
+                fontFamily: font.SarabunLight,
+              }}
+              modalTitle="จังหวัด"
+              modalTitleStyle={{
+                fontFamily: font.AnuphanBold,
+                fontSize: 22,
+              }}
+              listMode="MODAL"
+              modalProps={{animationType: 'slide'}}
               scrollViewProps={{
-                nestedScrollEnabled: true,
+                nestedScrollEnabled: false,
+                decelerationRate: 'fast',
               }}
               zIndex={3000}
               zIndexInverse={1000}
-              style={{
-                marginVertical: 10,
-                backgroundColor: colors.white,
-                borderColor: colors.disable,
-              }}
+              style={styles.input}
               placeholder="จังหวัด"
               placeholderStyle={{
                 color: colors.disable,
+                fontFamily: fonts.SarabunLight,
                 fontSize: normalize(16),
-
               }}
               open={open}
               value={value}
@@ -212,145 +224,41 @@ console.log(result)
                 borderColor: colors.disable,
               }}
             />
-
-            {/* <TouchableOpacity
-              onPress={() => {
-                provinceSheet.current.show();
-              }}>
-              <View
-                style={{
-                  borderColor: colors.disable,
-                  borderWidth: 1,
-                  padding: 10,
-                  borderRadius: 10,
-                  marginVertical: 20,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  height: normalize(55),
-                  justifyContent: 'space-between',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: fonts.AnuphanMedium,
-                    fontSize: normalize(16),
-                    color: colors.gray,
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: font.SarabunLight,
-                      color: colors.disable,
-                    }}>
-                     {!province ? (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.disable,
-                        }}>
-                        จังหวัด
-                      </Text>
-                    ) : (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.fontGrey,
-                        }}>
-                        {province}
-                      </Text>
-                    )}
-                  </Text>
-                </Text>
-                <Image
-                  source={icons.down}
-                  style={{
-                    width: normalize(24),
-                    height: normalize(22),
-                    marginRight: 10,
-                    tintColor: colors.disable,
-                  }}
-                />
-              </View>
-            </TouchableOpacity> */}
             <Text style={styles.head}>อำเภอ</Text>
-            {/* <TouchableOpacity
-              onPress={() => {
-                DistriSheet.current.show();
-              }}>
-              <View
-                style={{
-                  borderColor: colors.disable,
-                  borderWidth: 1,
-                  padding: 10,
-                  borderRadius: 10,
-                  marginVertical: 20,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  height: normalize(55),
-                  justifyContent: 'space-between',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: fonts.AnuphanMedium,
-                    fontSize: normalize(16),
-                    color: colors.gray,
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: font.SarabunLight,
-                      color: colors.disable,
-                    }}>
-                     {!district ? (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.disable,
-                        }}>
-                        อำเภอ
-                      </Text>
-                    ) : (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.fontGrey,
-                        }}>
-                        {district}
-                      </Text>
-                    )}
-                  </Text>
-                </Text>
-                <Image
-                  source={icons.down}
-                  style={{
-                    width: normalize(24),
-                    height: normalize(22),
-                    marginRight: 10,
-                    tintColor: colors.disable,
-                  }}
-                />
-              </View>
-            </TouchableOpacity> */}
             <DropDownPicker
-              listMode="SCROLLVIEW"
+              listItemLabelStyle={{
+                fontFamily: font.SarabunLight,
+                fontSize: 18,
+                padding: '2%',
+                top: '3%',
+              }}
+              labelStyle={{
+                fontSize: normalize(16),
+                fontFamily: font.SarabunLight,
+              }}
+              modalTitle="อำเภอ"
+              modalTitleStyle={{
+                fontFamily: font.AnuphanMedium,
+                fontSize: 22,
+              }}
+              listMode="MODAL"
+              modalProps={{animationType: 'slide'}}
               scrollViewProps={{
-                nestedScrollEnabled: true,
+                nestedScrollEnabled: false,
+                decelerationRate: 'fast',
               }}
               zIndex={2000}
               zIndexInverse={2000}
-              style={{
-                borderColor: colors.disable,
-                marginVertical: 10,
-                backgroundColor: !province ? colors.disable : colors.white,
-              }}
+              disabled={!province ? true : false}
+              style={[
+                styles.input,
+                {backgroundColor: !province ? colors.disable : colors.white},
+              ]}
               placeholder="อำเภอ"
               placeholderStyle={{
                 color: !province ? colors.gray : colors.disable,
-                fontFamily: font.SarabunLight,
+                fontFamily: fonts.SarabunLight,
                 fontSize: normalize(16),
-              }}
-              onOpen={() => {
-                setBottomPadding(60);
-              }}
-              onClose={() => {
-                setBottomPadding(0);
               }}
               open={openDistrict}
               value={valueDistrict}
@@ -371,87 +279,40 @@ console.log(result)
               }}
             />
             <Text style={styles.head}>ตำบล</Text>
-            {/* <TouchableOpacity
-              onPress={() => {
-                DistriSheet.current.show();
-              }}>
-              <View
-                style={{
-                  borderColor: colors.disable,
-                  borderWidth: 1,
-                  padding: 10,
-                  borderRadius: 10,
-                  marginVertical: 20,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  height: normalize(55),
-                  justifyContent: 'space-between',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: fonts.AnuphanMedium,
-                    fontSize: normalize(16),
-                    color: colors.gray,
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: font.SarabunLight,
-                      color: colors.disable,
-                    }}>
-                     {!subdistrict ? (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.disable,
-                        }}>
-                        ตำบล
-                      </Text>
-                    ) : (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.fontGrey,
-                        }}>
-                        {subdistrict}
-                      </Text>
-                    )}
-                  </Text>
-                </Text>
-                <Image
-                  source={icons.down}
-                  style={{
-                    width: normalize(24),
-                    height: normalize(22),
-                    marginRight: 10,
-                    tintColor: colors.disable,
-                  }}
-                />
-              </View>
-            </TouchableOpacity> */}
             <DropDownPicker
-              listMode="SCROLLVIEW"
+              listItemLabelStyle={{
+                fontFamily: font.SarabunLight,
+                fontSize: 18,
+                padding: '2%',
+                top: '3%',
+              }}
+              labelStyle={{
+                fontSize: normalize(16),
+                fontFamily: font.SarabunLight,
+              }}
+              modalTitle="ตำบล"
+              modalTitleStyle={{
+                fontFamily: font.AnuphanMedium,
+                fontSize: 22,
+              }}
+              listMode="MODAL"
+              modalProps={{animationType: 'slide'}}
               scrollViewProps={{
-                nestedScrollEnabled: true,
+                nestedScrollEnabled: false,
+                decelerationRate: 'fast',
               }}
               zIndex={1000}
               zIndexInverse={3000}
               disabled={!district ? true : false}
-              style={{
-                borderColor: colors.disable,
-                marginVertical: 10,
-                backgroundColor: !district ? colors.disable : colors.white,
-              }}
+              style={[
+                styles.input,
+                {backgroundColor: !district ? colors.disable : colors.white},
+              ]}
               placeholder="ตำบล"
               placeholderStyle={{
                 color: !district ? colors.gray : colors.disable,
-                fontFamily: font.SarabunLight,
+                fontFamily: fonts.SarabunLight,
                 fontSize: normalize(16),
-              }}
-              onOpen={() => {
-                setBottomPadding(120);
-              }}
-              onClose={() => {
-                setBottomPadding(0);
               }}
               open={openSubDistrict}
               value={valueSubDistrict}
@@ -476,6 +337,7 @@ console.log(result)
                 borderColor: colors.disable,
               }}
             />
+
             <Text style={styles.head}>รหัสไปรษณีย์</Text>
             <TextInput
               value={formState.postal}
@@ -488,7 +350,6 @@ console.log(result)
               ]}
               editable={false}
               placeholder={'รหัสไปรษณีย์'}
-              placeholderTextColor={colors.gray}
             />
           </ScrollView>
         </View>
@@ -568,24 +429,26 @@ console.log(result)
             </View>
             <View style={styles.container}>
               <ScrollView>
-                {items.map((v: { label: any; value: any; }, i: any | null | undefined) => (
-                  <TouchableOpacity> 
+                {items.map(
+                  (
+                    v: {label: any; value: any},
+                    i: React.Key | null | undefined,
+                  ) => (
+                    <TouchableOpacity>
                       <LocationSelect
                         key={i}
                         label={v.label}
                         value={v.value}
-                        onPress={() =>
-                          selectProvince(items, value)
-                        }
+                        onPress={() => selectProvince(v, i)}
                       />
-                  
-                  </TouchableOpacity>
-                ))}
+                    </TouchableOpacity>
+                  ),
+                )}
               </ScrollView>
             </View>
           </View>
         </ActionSheet>
-        <ActionSheet ref={DistriSheet} >
+        <ActionSheet ref={DistriSheet}>
           <View
             style={{
               backgroundColor: 'white',
@@ -614,19 +477,18 @@ console.log(result)
             </View>
             <View style={styles.container}>
               <ScrollView>
-                {items.map((v: { label: any; value: any; }, i: any | null | undefined) => (
-                  <TouchableOpacity> 
+                {itemsDistrict.map(
+                  (v: {label: any; value: any}, i: any | null | undefined) => (
+                    <TouchableOpacity>
                       <LocationSelect
                         key={i}
                         label={v.label}
                         value={v.value}
-                        // onPress={() =>
-                        //   selectProvince()
-                        // }
+                        onPress={() => selectDistrict(v, i)}
                       />
-                  
-                  </TouchableOpacity>
-                ))}
+                    </TouchableOpacity>
+                  ),
+                )}
               </ScrollView>
             </View>
           </View>
@@ -660,19 +522,22 @@ console.log(result)
             </View>
             <View style={styles.container}>
               <ScrollView>
-                {items.map((v: { label: any; value: any; }, i: any | null | undefined) => (
-                  <TouchableOpacity> 
-                      <LocationSelect
+                {itemsSubDistrict.map(
+                  (
+                    v: {label: any; value: any; postcode: any},
+                    i: any | null | undefined,
+                  ) => (
+                    <TouchableOpacity>
+                      <LocationInPostcodeSelect
                         key={i}
                         label={v.label}
                         value={v.value}
-                        // onPress={() =>
-                        //   selectProvince()
-                        // }
+                        postcode={v.postcode}
+                        onPress={() => selectSubDistrict(v, i)}
                       />
-                  
-                  </TouchableOpacity>
-                ))}
+                    </TouchableOpacity>
+                  ),
+                )}
               </ScrollView>
             </View>
           </View>

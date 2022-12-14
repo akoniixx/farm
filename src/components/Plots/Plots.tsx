@@ -6,12 +6,11 @@ import fonts from '../../assets/fonts';
 
 interface AddPlot {
   plotName: string;
-  plotCount: string;
-  plants: string;
-  location: string;
+  raiAmount: number;
+  plantName: string;
   status: string;
   landMark: string;
-  nearPlot: string;
+  locationName: string;
 }
 
 export function StatusObject(status: string) {
@@ -41,12 +40,11 @@ export function StatusObject(status: string) {
 
 const PlotsItem: React.FC<AddPlot> = ({
   plotName,
-  plotCount,
-  plants,
+  raiAmount,
+  plantName,
   status,
-  location,
   landMark,
-  nearPlot
+  locationName
 }) => {
   return (
     <View
@@ -88,7 +86,7 @@ const PlotsItem: React.FC<AddPlot> = ({
                 color: colors.fontGrey,
                 marginRight: '40%',
               }}>
-              {plotCount + ' ' + 'ไร่'}
+              {raiAmount + ' ' + 'ไร่'}
             </Text>
             <Image
               source={icons.plant}
@@ -105,7 +103,7 @@ const PlotsItem: React.FC<AddPlot> = ({
                 color: colors.fontGrey,
                 marginRight: '10%',
               }}>
-              {plants}
+              {plantName}
             </Text>
           </View>
           <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
@@ -125,9 +123,9 @@ const PlotsItem: React.FC<AddPlot> = ({
                 color: colors.fontGrey,
                 marginRight: '10%',
               }}>
-                 {location.length < 15
-                ? `${location}`
-                : `${location.substring(0, 15)}...`}
+                 {locationName.length < 15
+                ? `${locationName}`
+                : `${locationName.substring(0, 15)}...`}
              
             </Text>
             <View

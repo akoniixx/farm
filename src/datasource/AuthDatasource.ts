@@ -176,35 +176,46 @@ export class Register {
     telephoneNo: string,
     plotName: string,
     raiAmount: number,
-    landmark: string,
-    plantName: string[],
+    plantName: string,
     lat: string,
     long: string,
     locationName: string,
-
+    landmark: string,
   ): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-    console.log(farmer_id)
     return registerClient
-      .post(BASE_URL + '/auth/farmer/register', {
+      .post(BASE_URL + `/auth/farmer/register`, {
         id: farmer_id,
-        status: 'OPEN',
+        status: 'PENDING',
         telephoneNo: telephoneNo,
-        farmerPlot:
-          {
-            plotName: plotName,
-            raiAmount: raiAmount,
-            landmark: landmark,
-            plantName: plantName,
-            lat: lat,
-            long: long,
-            locationName: locationName,
-          }
+        farmerPlot:[
+           {
+             plotName: plotName,
+             raiAmount: raiAmount,
+             plantName: plantName,
+             lat: lat,
+             long: long,
+             locationName: locationName,
+             landmark: landmark,
+           }
+          ]
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  static async uploadFarmerPlot(farmerPlot: any): Promise<any> {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    return registerClient
+      .post(BASE_URL + `/auth/farmer/register`, {
+        id: farmer_id,
+        farmerPlot: farmerPlot,
+        status: 'OPEN',
       })
       .then(async response => {
-        console.log(response)
-        const farmer_id = response.data.id;
-        await AsyncStorage.setItem('farmer_id', farmer_id);
         return response.data;
       })
       .catch(error => {
@@ -284,8 +295,6 @@ export class Register {
         console.log(error);
       });
   }
-
-
   static async uploadFarmerIDCard(file: any): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const data = new FormData();
