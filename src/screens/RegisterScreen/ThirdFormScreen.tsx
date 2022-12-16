@@ -1,6 +1,7 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react';
 import {
   Alert,
+  Button,
   Dimensions,
   FlatList,
   Image,
@@ -8,6 +9,7 @@ import {
   Modal,
   PermissionsAndroid,
   Platform,
+  StatusBar,
   StyleSheet,
   Text,
   TextInput,
@@ -27,7 +29,7 @@ import CustomHeader from '../../components/CustomHeader';
 import {ProgressBar} from '../../components/ProgressBar';
 import {normalize} from '../../functions/Normalize';
 import {stylesCentral} from '../../styles/StylesCentral';
-import Animated from 'react-native-reanimated';
+import Animated, {color} from 'react-native-reanimated';
 import {plant, plantList} from '../../definitions/plants';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import ActionSheet from 'react-native-actions-sheet';
@@ -44,6 +46,8 @@ import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 import axios from 'axios';
 import {Register} from '../../datasource/AuthDatasource';
 import SearchBarWithAutocomplete from '../../components/SearchBarWithAutocomplete';
+import {useDebounce} from '../../functions/useDebounce';
+import Geocoder from 'react-native-geocoding';
 
 export type PredictionType = {
   description: string;
@@ -64,7 +68,6 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
-  const [search, setSearch] = useState({term: ''});
   const telNo = route.params;
   const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState(null);
@@ -72,9 +75,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const [brand, setBrand] = useState<any>(null);
   const [raiAmount, setraiAmount] = useState<any>();
   const [plantListSelect, setPlantListSelect] = useState(plant);
-  const [location, setlocation] = useState<any>('');
   const [landmark, setlandmark] = useState<any>('');
-  const [address, setAddress] = useState('');
   const [plotDataUI, setplotDataUI] = useState<any>([]);
   const [plotData, setplotData] = useState<any>([]);
   const [provinceId, setProvinceId] = useState<any>(null);
@@ -83,17 +84,27 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const [lat, setlat] = useState<any>(null);
   const [long, setlong] = useState<any>(null);
   const [plotName, setplotName] = useState<any>(null);
+  const [location, setLocation] = useState<any>(null);
   const actionSheet = useRef<any>();
   const plantSheet = useRef<any>();
   const deTailPlot = useRef<any>();
   const [selectItem, setSelectItem] = useState<any>([]);
+  Geocoder.init('AIzaSyDg4BI3Opn-Bo2Pnr40Z7PKlC6MOv8T598');
+  const GOOGLE_PACES_API_BASE_URL =
+    'https://maps.googleapis.com/maps/api/place';
+  const myApiKey = 'AIzaSyDg4BI3Opn-Bo2Pnr40Z7PKlC6MOv8T598';
+  const [search, setSearch] = useState<any>('');
+  const [coordinates, setCoordinates] = useState<any>(null);
 
   useEffect(() => {
     getLocation();
   }, []);
+  useEffect(() => {
+    getNameFormLat();
+  }, [position]);
 
   const getNameFormLat = () => {
-    let myApiKey = 'AIzaSyA93oxMv6XFgTf87cQDl7iIdPZ9u1k_L4g';
+    let myApiKey = 'AIzaSyDg4BI3Opn-Bo2Pnr40Z7PKlC6MOv8T598';
     let myLat = position.latitude;
     let myLon = position.longitude;
     fetch(
@@ -108,9 +119,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
       .then(responseJson => {
         setlat(responseJson.results[0].geometry.location.lat);
         setlong(responseJson.results[0].geometry.location.lng);
-        console.log(lat);
-        console.log(long);
-        setAddress(
+        setLocation(
           responseJson.results[0].address_components[0].long_name +
             ' ' +
             responseJson.results[0].address_components[2].long_name +
@@ -266,11 +275,12 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   };
   const addPlots = () => {
     const plots = [...plotData];
+    console.log(plots);
     const plotsUI = [...plotDataUI];
     const newPlot = {
       raiAmount: raiAmount,
       plotName: plotName,
-      locations: address,
+      location: location,
       plantName: plantName,
       status: 'PENDING',
     };
@@ -279,7 +289,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
       plotName: plotName,
       raiAmount: raiAmount,
       plantName: plantName,
-      location: address,
+      location: location,
     };
     plots.push(newPlot);
     plotsUI.push(newPlotUI);
@@ -287,7 +297,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
     setplotData(plots);
     setplotDataUI(plotsUI);
     setPlantName(null);
-    setAddress(address);
+    setLocation(location);
     setraiAmount(null);
     setplotName(null);
     actionSheet.current.hide();
@@ -298,6 +308,87 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const selectPlants = (value: any) => {
     setPlantName(value);
     plantSheet.current.hide();
+  };
+
+  const handleSearch = () => {
+    Geocoder.from(search)
+      .then(
+        (json: {
+          results: {
+            [x: string]: any;
+            geometry: {location: any};
+          }[];
+        }) => {
+          const location = json.results[0].geometry.location;
+          setLocation(
+            json.results[0].address_components[0].long_name +
+              ' ' +
+              json.results[0].address_components[2].long_name +
+              ' ' +
+              json.results[0].address_components[3].long_name +
+              ' ' +
+              json.results[0].address_components[4].long_name,
+          );
+          QueryLocation.QueryProvince()
+          .then(item => {
+            item.map((Province: any) => {
+              if (
+                Province.provinceName ==
+                `จังหวัด${json.results[0].address_components[3].long_name}`
+              ) {
+                setProvinceId(Province.provinceId);
+                QueryLocation.QueryDistrict(Province.provinceId)
+                  .then((itemDistrict: any) => {
+                    itemDistrict.map((District: any) => {
+                      if (
+                        District.districtName ===
+                        `${
+                          json.results[0].address_components[2].long_name.split(
+                            ' ',
+                          )[0]
+                        }${
+                          json.results[0].address_components[2].long_name.split(
+                            ' ',
+                          )[1]
+                        }`
+                      ) {
+                        setDistrictId(District.districtId);
+                        QueryLocation.QuerySubDistrict(
+                          District.districtId,
+                          District.districtName,
+                        )
+                          .then(itemSubDistrict => {
+                            itemSubDistrict.map((SubDistrict: any) => {
+                              if (
+                                SubDistrict.districtName ===
+                                `${
+                                  json.results[0].address_components[2].long_name.split(
+                                    ' ',
+                                  )[0]
+                                }${
+                                  json.results[0].address_components[2].long_name.split(
+                                    ' ',
+                                  )[1]
+                                }`
+                              ) {
+                                setSubdistrictId(SubDistrict.subdistrictId);
+                              }
+                            });
+                          })
+                          .catch(err => console.log(err));
+                      }
+                    });
+                  })
+                  .catch(err => console.log(err));
+              }
+            });
+          })
+          .catch(err => console.log(err));
+          console.log(location);
+          setCoordinates(location);
+        },
+      )
+      .catch((error: any) => console.warn(error));
   };
 
   return (
@@ -378,16 +469,12 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
           <MainButton
             label="ถัดไป"
             color={colors.greenLight}
-            onPress={()=>{
-                Register.uploadFarmerPlot(plotData).then((res)=>{
-                  console.log(plotData)
-                  console.log(res)
-                  navigation.navigate('FourthFormScreen',{tele : telNo.tele});
-                }).catch(err => console.log(err))
-          
-            // onPress={() => {
-              
-            //   navigation.navigate('FourthFormScreen', {tele: telNo.tele});
+            onPress={() => {
+              Register.uploadFarmerPlot(plotData)
+                .then(res => {
+                  navigation.navigate('FourthFormScreen', {tele: telNo.tele});
+                })
+                .catch(err => console.log(err));
             }}
           />
         </View>
@@ -408,7 +495,6 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 onPressBack={() => actionSheet.current.hide()}
               />
             </View>
-
             <ScrollView>
               <Text style={[styles.head, {marginTop: normalize(15)}]}>
                 ชื่อแปลงเกษตร
@@ -493,13 +579,11 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 </View>
               </TouchableOpacity>
               <Text style={styles.head}>สถานที่ใกล้แปลง</Text>
-              <View style={styles.input}>
+              <View style={[styles.input]}>
                 <Image source={image.map} style={styles.imageStyle} />
-                {/* <TextInput
-                  onChangeText={value => {
-                    setLocationName(value);
-                  }}
-                  value={locationName}
+                <TextInput
+                  value={search}
+                  onChangeText={setSearch}
                   style={{
                     borderColor: colors.disable,
                     fontFamily: font.SarabunLight,
@@ -507,19 +591,52 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   }}
                   editable={true}
                   placeholder={'เช่น วัด, โรงเรียน, ร้านค้า'}
-                  placeholderTextColor={colors.disable}/> */}
+                  placeholderTextColor={colors.disable}
+                />
+                <TouchableHighlight onPress={handleSearch}>
+                  <Image source={icons.search} style={[styles.search]} />
+                </TouchableHighlight>
               </View>
               <View style={{flex: 1}}>
+                {coordinates && (
+                  <MapView
+                    mapType="satellite"
+                    style={styles.map}
+                    provider={PROVIDER_GOOGLE}
+                    showsMyLocationButton={true}
+                    showsUserLocation={true}
+                    initialRegion={{
+                      latitude: coordinates.lat,
+                      longitude: coordinates.lng,
+                      latitudeDelta: 0.0922,
+                      longitudeDelta: 0.0421,
+                    }}
+                    onRegionChangeComplete={region => setSearch(region)}>
+                    <Marker
+                      coordinate={{
+                        latitude: coordinates.lat,
+                        longitude: coordinates.lng,
+                      }}
+                      title={search}
+                    />
+                  </MapView>
+                )}
                 {/* <MapView.Animated
                   mapType="satellite"
                   style={styles.map}
                   provider={PROVIDER_GOOGLE}
-                  initialRegion={position}
+                  initialRegion={{
+                    latitude: coordinates.lat,
+                    longitude: coordinates.lng,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                  }}
+                  // initialRegion={position}
                   showsUserLocation={true}
-                  onRegionChangeComplete={region => setPosition(region)}
+                  // onRegionChangeComplete={region => setPosition(region)}
                   showsMyLocationButton={true}
-                />
-                <View style={styles.markerFixed}>
+                /> */}
+                {/* <View style={styles.markerFixed}>
                   <Image style={styles.marker} source={image.mark} />
                 </View> */}
               </View>
@@ -528,7 +645,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 onChangeText={value => {
                   setlandmark(value);
                 }}
-                value={brand}
+                value={landmark}
                 style={[styles.input, {borderColor: colors.disable}]}
                 editable={true}
                 placeholder={'ระบุจุดสังเกต'}
@@ -556,20 +673,20 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     telNo.tele,
                     plotName,
                     raiAmount,
-                    landmark,
                     plantName,
-                    lat,
-                    long,
+                    coordinates.lat,
+                    coordinates.lng,
                     location,
+                    landmark,
                   )
                     .then(res => {
-                    addPlots()
+                      console.log(res);
+                      addPlots();
                     })
                     .catch(err => {
                       console.log(err);
                     });
                 }}
-                // onPress={addPlots}
               />
             </View>
           </View>
@@ -712,7 +829,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   <Image source={image.map} style={styles.imageStyle} />
                   <TextInput
                     onChangeText={value => {
-                      setlocation(value);
+                      setLocation(value);
                     }}
                     value={item.location}
                     editable={true}
@@ -843,6 +960,17 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
 export default ThirdFormScreen;
 
 const styles = StyleSheet.create({
+  search: {
+    padding: 10,
+    margin: 5,
+    height: 25,
+    width: 25,
+    alignItems: 'flex-end',
+    tintColor: colors.fontGrey,
+  },
+  body: {
+    paddingHorizontal: 20,
+  },
   sectionStyle: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -992,8 +1120,5 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
     fontFamily: font.SarabunLight,
     fontSize: normalize(16),
-  },
-  body: {
-    paddingHorizontal: 20,
   },
 });

@@ -1,5 +1,12 @@
 import {Switch} from '@rneui/themed';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import {
   Button,
   Image,
@@ -28,21 +35,48 @@ import {socket} from '../../functions/utility';
 import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
 import {Authentication} from '../../datasource/AuthDatasource';
 import LinearGradient from 'react-native-linear-gradient';
+import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import {initProfileState, profileReducer} from '../../hook/profilefield';
+
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 const imageWidth = screenWidth / 2;
+
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const [fcmToken, setFcmToken] = useState('');
+  const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
 
   const getData = async () => {
-    const value = await AsyncStorage.getItem('token')
+    const value = await AsyncStorage.getItem('token');
     setFcmToken(value!);
   };
-
   useEffect(() => {
     getData();
-  });
+  }, []);
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getProfile();
+    }, []),
+  );
+
+  const getProfile = async () => {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    ProfileDatasource.getProfile(farmer_id!)
+      .then(res => {
+        dispatch({
+          type: 'InitProfile',
+          name: `${res.firstname}`,
+        });
+      })
+      .catch(err => console.log(err));
+  };
+
   return (
     <BottomSheetModalProvider>
       {fcmToken !== null ? (
@@ -69,23 +103,16 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                       style={{
                         fontFamily: font.AnuphanBold,
                         fontSize: normalize(26),
-                        color: colors.orange,
+                        color: colors.fontBlack,
                       }}>
-                      Icon
-                      <Text
-                        style={{
-                          fontFamily: font.AnuphanBold,
-                          fontSize: normalize(26),
-                          color: colors.greenLight,
-                        }}>
-                        Kaset
-                      </Text>
+                      {profilestate.name}
                     </Text>
                   </View>
                 </View>
                 <View style={{flexDirection: 'row', top: '30%'}}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('ConditionScreen')}>
+                  // onPress={() => navigation.navigate('ConditionScreen')}
+                  >
                     <View
                       style={{
                         backgroundColor: '#3B996E',
@@ -102,7 +129,8 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('ConditionScreen')}>
+                  // onPress={() => navigation.navigate('ConditionScreen')}
+                  >
                     <View
                       style={{
                         backgroundColor: '#ECFBF2',
@@ -310,7 +338,7 @@ const styles = StyleSheet.create({
     top: '8%',
   },
   headCard: {
-    top: '10%',
+    top: '15%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: normalize(23),

@@ -20,6 +20,7 @@ import {InputPhone} from '../../components/InputPhone';
 import OtpScreen from '../OtpScreen/OtpScreen';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { Authentication } from '../../datasource/AuthDatasource';
+import  Toast  from 'react-native-toast-message';
 
 const TelNumScreen: React.FC<any> = ({navigation}) => {
   const [value, setValue] = useState<string>('');
@@ -27,6 +28,32 @@ const TelNumScreen: React.FC<any> = ({navigation}) => {
   const [message, setMessage] = useState<string>('');
   const [errMessage, setErrMessage] = useState<string>('');
 
+  // const login = () => {
+  //   Authentication.generateOtp(value)
+  //     .then(result => {
+  //         const telNumber = value;
+  //         setValue('')
+  //         navigation.navigate('OtpScreen', {
+  //           telNumber: telNumber,
+  //           token: result.result.token,
+  //           refCode: result.result.refCode,
+  //           isRegisterScreen: false,
+  //         });
+  //     })
+  //     .catch(err => {
+  //       if (err.response.data.statusCode === 409) {
+  //         setErrMessage('เบอร์นี้ถูกลงทะเบียนเรียบร้อยแล้ว');
+  //       }
+  //       else if(err.response.data.statusCode === 400){
+  //         setErrMessage('ไม่พบเบอร์โทรนี้ในระบบโปรดลงทะเบียนอีกครั้ง')
+  //       }else if(err){
+  //         Toast.show({
+  //           type: 'error',
+  //           text1: `ระบบเครือขายมีปัญหา กรุณาลองใหม่อีกครั้งในภายหลัง`,
+  //         });
+  //       }
+  //     });
+  // };
   const login = () => {
     Authentication.generateOtpRegister(value)
       .then(result => {

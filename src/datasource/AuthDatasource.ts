@@ -183,7 +183,34 @@ export class Register {
     landmark: string,
   ): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-    return registerClient
+    const index = 0;
+    if (!plotName) {
+      return registerClient
+      .post(BASE_URL + `/auth/farmer/register`, {
+        id: farmer_id,
+        status: 'PENDING',
+        telephoneNo: telephoneNo,
+        farmerPlot:[
+           {
+             plotName: `แปลงที่ ${index + 1} ${plantName}`,
+             raiAmount: raiAmount,
+             plantName: plantName,
+             lat: lat,
+             long: long,
+             locationName: locationName,
+             landmark: landmark,
+           }
+          ]
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    }else{
+      return registerClient
       .post(BASE_URL + `/auth/farmer/register`, {
         id: farmer_id,
         status: 'PENDING',
@@ -206,6 +233,9 @@ export class Register {
       .catch(error => {
         console.log(error);
       });
+
+    }
+   
   }
   static async uploadFarmerPlot(farmerPlot: any): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');

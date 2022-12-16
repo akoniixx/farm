@@ -110,65 +110,53 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
   });
 
   const onFufill = async (value: string) => {
-    if (route.params.isRegisterScreen) {
+    if(route.params.isRegisterScreen){
       setValue(value);
       if (value.length >= CELL_COUNT) {
-        setLoading(true);
+        setLoading(true)
         try {
-          Authentication.login(route.params.telNumber, value, tokenOtp, codeRef)
-            .then(async result => {
-              setLoading(false);
-              setErrOTP(false);
-              await AsyncStorage.setItem('token_register', result.accessToken);
-              navigation.navigate('FirstFormScreen', {
-                tele: route.params.telNumber,
-              });
-            })
-            .catch(err => {
-              setLoading(false);
-              setErrOTP(true);
-              console.log(err);
-            });
+          Authentication.login(route.params.telNumber,value,tokenOtp,codeRef).then(async(result)=>{
+            setLoading(false)
+            setErrOTP(false)
+            await AsyncStorage.setItem('token_register',result.accessToken);
+            navigation.navigate('FirstFormScreen',{tele : route.params.telNumber});
+          }).catch((err)=>{
+            setLoading(false)
+            setErrOTP(true)
+            console.log(err)
+          })
         } catch (e) {
-          setLoading(false);
-          setErrOTP(true);
+          setLoading(false)
+          setErrOTP(true)
           console.log(e, 'AsyncStorage.setItem');
         }
       }
-    } else {
+    }else{
       setValue(value);
       if (value.length >= CELL_COUNT) {
-        setLoading(true);
+        setLoading(true)
         try {
-          Authentication.login(route.params.telNumber, value, tokenOtp, codeRef)
-            .then(async result => {
-              setLoading(false);
-              setErrOTP(false);
-              await AsyncStorage.setItem('token', result.accessToken);
-              await AsyncStorage.setItem('farmer_id', result.data.id);
-              const fcmtoken = await AsyncStorage.getItem('fcmtoken');
-              FCMtokenDatasource.saveFCMtoken(fcmtoken!)
-                .then(res =>
-                  RootNavigation.navigate('Main', {
-                    screen: 'MainScreen',
-                  }),
-                )
-                .catch(err => console.log(err));
+          Authentication.login(route.params.telNumber,value,tokenOtp,codeRef).then(async(result)=>{
+            setLoading(false)
+            setErrOTP(false)
+            await AsyncStorage.setItem('token', result.accessToken);
+            await AsyncStorage.setItem('farmer_id', result.data.id);
+            await RootNavigation.navigate('Main', {
+              screen: 'MainScreen',
             })
-            .catch(err => {
-              setLoading(false);
-              setErrOTP(true);
-              console.log(err);
-            });
+          }).catch((err)=>{
+            setLoading(false)
+            setErrOTP(true)
+            console.log(err)
+          })
         } catch (e) {
-          setLoading(false);
-          setErrOTP(true);
+          setLoading(false)
+          setErrOTP(true)
           console.log(e, 'AsyncStorage.setItem');
         }
       }
     }
   };
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

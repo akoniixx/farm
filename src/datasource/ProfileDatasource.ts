@@ -7,9 +7,9 @@ import {
 } from '../config/develop-config';
 
 export class ProfileDatasource {
-  static async getProfile(farmerId: string): Promise<any> {
+  static async getProfile(farmer_id: string): Promise<any> {
     return httpClient
-      .get(BASE_URL + `/farmer/${farmerId}`)
+      .get(BASE_URL + `/farmer/${farmer_id}`)
       .then(response => {
         return response.data;
       })

@@ -172,7 +172,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
               placeholderTextColor={colors.disable}
             />
 
-            <Text style={styles.head}>วันเกิด*</Text>
+            <Text style={styles.head}>วันเกิด</Text>
             <TouchableOpacity onPress={() => setOpenCalendar(true)}>
               <View
                 style={[

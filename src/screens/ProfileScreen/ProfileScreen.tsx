@@ -50,16 +50,12 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
     const value = await AsyncStorage.getItem('token')
     setFcmToken(value!);
   };
-
-  const onLogout = async () => {
+  const onLogout = async () =>{
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     socket.removeAllListeners(`send-task-${farmer_id!}`);
     socket.close();
-    const fcmtoken = await AsyncStorage.getItem('fcmtoken');
-    FCMtokenDatasource.deleteFCMtoken(fcmToken)
-      .then(async res => await Authentication.logout())
-      .catch(err => console.log(err));
-  };
+    await Authentication.logout()
+  }
   useEffect(() => {
     getData();
   }, [reload]);

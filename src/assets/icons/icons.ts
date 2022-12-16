@@ -31,6 +31,7 @@ export default {
   arrowRigth: require('./arrowRight.png'),
   mytask: require('./mytask.png'),
   mytask_active: require('./mytask_active.png'),
-  profile_blank: require('./profile_blank.png')
+  profile_blank: require('./profile_blank.png'),
+  search:require('./search.png')
 
 };
