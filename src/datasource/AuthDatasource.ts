@@ -78,11 +78,10 @@ export class Register {
   static async register1(
     firstname: string,
     lastname: string,
-    birthDate : Date,
+    birthDate :   Date,
     telephoneNo: string
     ): Promise<any> {
       const farmer_id = await AsyncStorage.getItem('farmer_id');
-      console.log(farmer_id)
       if (!farmer_id) {
         if(!birthDate) {
           return registerClient
@@ -110,6 +109,7 @@ export class Register {
             status: 'OPEN'
           })
           .then(async response => {
+            console.log(response)
             const farmer_id = response.data.id;
             await AsyncStorage.setItem('farmer_id', farmer_id);
             return response.data;
@@ -118,7 +118,6 @@ export class Register {
             console.log(error);
           });
         }
-      
       } else {
         return registerClient
           .post(BASE_URL + `/auth/farmer/register`, {

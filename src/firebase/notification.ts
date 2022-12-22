@@ -8,7 +8,7 @@ const credentials = {
   clientId:
     '281602709828-2mm0cut3h2lu70ed7vnslj0haf9bemau.apps.googleusercontent.com',
   appId: '1:281602709828:ios:b4e1d3550d4c57c1341f11',
-  apiKey: 'AIzaSyDznStatGAHm47Z9ewbKgATGV-P_mVzPyk',
+  apiKey: 'AIzaSyDxr86nrQS_1AlXYIo_iax0JHOEf-yORa0',
   storageBucket: 'farmer-app1.appspot.com',
   messagingSenderId: '281602709828',
   projectId: 'farmer-app1',

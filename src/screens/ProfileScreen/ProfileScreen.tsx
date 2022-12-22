@@ -9,7 +9,7 @@ import CustomHeader from '../../components/CustomHeader';
 import {Avatar} from '@rneui/themed';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {ScrollView} from 'react-native';
-import PlotsItem from '../../components/Plots/Plots';
+import PlotsItem, {StatusObject} from '../../components/Plots/Plots';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Authentication} from '../../datasource/AuthDatasource';
 import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
@@ -20,12 +20,11 @@ import {useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {MainButton} from '../../components/Button/MainButton';
 import ConditionScreen from '../RegisterScreen/ConditionScreen';
+import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 
 const ProfileScreen: React.FC<any> = ({navigation}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
-  const {
-    authContext: {getProfileAuth},
-  } = useAuth();
+  const [data, setData] = useState<any>();
   const windowWidth = Dimensions.get('screen').width;
   const windowHeight = Dimensions.get('screen').height;
   const [items, setItems] = useState<any>([]);
@@ -45,33 +44,121 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [fcmToken, setFcmToken] = useState('');
   const [notidata, setnotidata] = useState(0);
+  const [plotDataUI, setplotDataUI] = useState<any>([]);
+  const [plotData, setplotData] = useState<any>([]);
+  const [raiAmount, setraiAmount] = useState<any>();
+  const [plotName, setplotName] = useState<any>(null);
+  const [location, setLocation] = useState<any>({
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+  console.log(location)
+  const [plantName, setPlantName] = useState<any>();
 
   const getData = async () => {
-    const value = await AsyncStorage.getItem('token')
+    const value = await AsyncStorage.getItem('token');
     setFcmToken(value!);
   };
-  const onLogout = async () =>{
+  const onLogout = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     socket.removeAllListeners(`send-task-${farmer_id!}`);
     socket.close();
-    await Authentication.logout()
-  }
+    await Authentication.logout();
+  };
   useEffect(() => {
     getData();
+    getProfile();
   }, [reload]);
 
-  
+  const getProfile = async () => {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    ProfileDatasource.getProfile(farmer_id!)
+      .then(res => {
+        console.log(res.farmerPlot);
+        const imgPath = res.file.filter((item: any) => {
+          if (item.category === 'PROFILE_IMAGE') {
+            return item;
+          }
+        });
+        if (imgPath.length === 0) {
+          dispatch({
+            type: 'InitProfile',
+            name: `${res.firstname} ${res.lastname}`,
+            id: res.farmerCode,
+            image: '',
+            plotitem: res.farmerPlot,
+            status: res.status,
+          });
+        } else {
+          ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
+            .then(resImg => {
+              dispatch({
+                type: 'InitProfile',
+                name: `${res.firstname} ${res.lastname}`,
+                id: res.farmerCode,
+                image: '',
+                plotItem: res.farmerPlot,
+                status: res.status,
+              });
+            })
+            .catch(err => console.log(err));
+        }
+      })
+      .catch(err => console.log(err));
+  };
+  const addPlots = () => {
+    const plots = [...plotData];
+    console.log(plots);
+    const plotsUI = [...plotDataUI];
+    const newPlot = {
+      raiAmount: raiAmount,
+      plotName: plotName,
+      location: location,
+      plantName: plantName,
+      status: 'PENDING',
+    };
+    console.log(newPlot);
+    const newPlotUI = {
+      plotName: plotName,
+      raiAmount: raiAmount,
+      plantName: plantName,
+      location: location,
+    };
+    plots.push(newPlot);
+    plotsUI.push(newPlotUI);
+    setValue(null);
+    setplotData(plots);
+    setplotDataUI(plotsUI);
+    setPlantName(null);
+    setLocation(location);
+    setraiAmount(null);
+    setplotName(null);
+    actionSheet.current.hide();
+  };
   return (
     <SafeAreaView
       style={[stylesCentral.container, {backgroundColor: '#EBEEF0'}]}>
       {fcmToken !== null ? (
         <>
-          <CustomHeader title="บัญชีของฉัน" />
+          <CustomHeader title="บัญชีของฉัน"/>
           <ScrollView>
             <View style={styles.section1}>
-              <Avatar
+              {/* <Avatar
                 size={normalize(80)}
                 source={icons.avatar}
+                avatarStyle={{
+                  borderRadius: normalize(40),
+                  borderColor: colors.greenLight,
+                  borderWidth: 1,
+                }}
+              /> */}
+              <Avatar
+                size={normalize(80)}
+                source={
+                  profilestate.image === ''
+                    ? icons.avatar
+                    : {uri: profilestate.image}
+                }
                 avatarStyle={{
                   borderRadius: normalize(40),
                   borderColor: colors.greenLight,
@@ -85,8 +172,9 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   top: normalize(5),
                 }}>
                 <View style={{flexDirection: 'row'}}>
-                  <Text style={[styles.text]}>อาพรรัตน์ ดวงเกษตร</Text>
-                  <TouchableOpacity>
+                  <Text style={[styles.text]}>{profilestate.name} </Text>
+                  <TouchableOpacity
+                >
                     <Image
                       source={icons.edit}
                       style={{
@@ -98,23 +186,28 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                     />
                   </TouchableOpacity>
                 </View>
-
                 <View
-                  style={[
-                    styles.appProve,
-                    {flexDirection: 'row', top: normalize(10)},
-                  ]}>
-                  <Image
-                    source={icons.correct}
-                    style={{margin: normalize(3)}}
-                  />
+                  style={{
+                    marginTop: normalize(10),
+                    width: normalize(109),
+                    height: normalize(24),
+                    borderRadius: normalize(12),
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderWidth: 1,
+                    borderColor: StatusObject(profilestate.status).fontColor,
+                    backgroundColor: StatusObject(profilestate.status).colorBg,
+                  }}>
                   <Text
                     style={{
-                      fontSize: normalize(16),
-                      fontFamily: font.AnuphanBold,
-                      color: colors.greenLight,
+                      color: StatusObject(profilestate.status).fontColor,
+                      fontFamily: font.AnuphanMedium,
+                      fontSize: normalize(14),
                     }}>
-                    ยืนยันตัวสำเร็จ
+                    {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
+                      ? 'ยืนยันตัวตนแล้ว'
+                      : 'รอการตรวจสอบ'}
                   </Text>
                 </View>
               </View>
@@ -123,181 +216,122 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
             <View style={styles.section2}>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={[styles.head]}>แปลงของคุณ (1)</Text>
+                <Text style={[styles.head, {bottom: '5%'}]}>
+                  แปลงของคุณ 
+                  {/* ({profilestate.plotItem.length}) */}
+                </Text>
                 <TouchableOpacity>
                   <Text style={[styles.h1]}>ดูแปลงทั้งหมด</Text>
                 </TouchableOpacity>
               </View>
-              <View
-                style={{
-                  height: normalize(110),
-                  borderWidth: 0.5,
-                  borderColor: colors.greenLight,
-                  backgroundColor: '#ECFBF2',
-                  borderRadius: normalize(10),
-                  paddingVertical: normalize(10),
-                  paddingHorizontal: normalize(20),
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: normalize(10),
-                  marginTop: normalize(10),
-                }}>
-                <View
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                  }}>
-                  <View>
-                    <Text style={{fontFamily: font.SarabunLight, fontSize: 18}}>
-                      แปลง 1 ข้าวโพด
-                    </Text>
-                    <View
-                      style={{flexDirection: 'row', marginTop: normalize(10)}}>
-                      <Image
-                        source={icons.plot}
-                        style={{
-                          width: normalize(18),
-                          height: normalize(20),
-                          marginRight: normalize(10),
-                        }}
-                      />
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          fontSize: normalize(16),
-                          color: colors.fontGrey,
-                          marginRight: '40%',
-                        }}>
-                        {20 + ' ' + 'ไร่'}
-                      </Text>
-                      <Image
-                        source={icons.plant}
-                        style={{
-                          width: normalize(18),
-                          height: normalize(20),
-                          marginRight: normalize(10),
-                        }}
-                      />
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          fontSize: normalize(16),
-                          color: colors.fontGrey,
-                          marginRight: '10%',
-                        }}>
-                        {'ข้าวโพด'}
-                      </Text>
-                    </View>
-                    <View
-                      style={{flexDirection: 'row', marginTop: normalize(10)}}>
-                      <Image
-                        source={icons.location}
-                        style={{
-                          width: normalize(18),
-                          height: normalize(20),
-                          marginRight: normalize(10),
-                        }}
-                      />
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          fontSize: normalize(16),
-                          color: colors.fontGrey,
-                          marginRight: '10%',
-                        }}>
-                        88/32 สราญสิริ ...
-                        {/* {location.length < 15
-                  ? `${location}`
-                  : `${location.substring(0, 15)}...`}
-                */}
-                      </Text>
-                      <View
-                        style={{
-                          width: normalize(109),
-                          height: normalize(24),
-                          borderRadius: normalize(12),
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          backgroundColor: colors.white,
-                          borderColor: colors.greenLight,
-                          borderWidth: 1,
-                        }}>
-                        <Text
-                          style={[
-                            styles.head,
-                            {color: colors.greenLight, fontSize: 14},
-                          ]}>
-                          ตรวจสอบแล้ว
-                          {/* {StatusObject(status).status} */}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              </View>
+              {/* {profilestate.plotItem.map((item: any, index: number) => (
+                <PlotsItem
+                  key={index}
+                  plotName={
+                    !item.plotName
+                      ? 'แปลงที่' + ' ' + `${index + 1}` + ' ' + item.plantName
+                      : item.plotName
+                  }
+                  raiAmount={item.raiAmount}
+                  location={item.location}
+                  plantName={item.plantName}
+                  landMark={item.landmark}
+                  status={item.status}
+                />
+              ))} */}
             </View>
             <View style={{margin: 3}}></View>
             <View style={[styles.section3]}>
-              <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  paddingBottom: normalize(20),
-                  justifyContent: 'space-between',
-                }}>
-                <Image
-                  source={image.iconAppDrone}
-                  style={[styles.icon, {marginRight: -100}]}
-                />
-                <Text style={[styles.h2]}>มาเป็นนักบินโดรนร่วมกับเรา</Text>
-                <Image
-                  source={icons.arrowRigth}
-                  style={{width: 24, height: 24}}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.menu}>
-                <Image
-                  source={icons.lock}
-                  style={[styles.icon, {marginRight: -125}]}
-                />
-                <Text style={styles.h2}>นโยบายความเป็นส่วนตัว</Text>
-                <Image
-                  source={icons.arrowRigth}
-                  style={{width: 24, height: 24}}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.menu}>
-                <Image
-                  source={icons.deleteUser}
-                  style={[styles.icon, {marginRight: -245}]}
-                />
-                <Text style={styles.h2}>ลบบัญชี</Text>
-                <Image
-                  source={icons.arrowRigth}
-                  style={{width: 24, height: 24}}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.menu}
-                onPress={async () => {
-                  await onLogout();
-                  RootNavigation.navigate('Auth', {
-                    screen: 'HomeScreen',
-                  });
-                }}>
-                <Image
-                  source={icons.logout}
-                  style={[styles.icon, {marginRight: -200}]}
-                />
-                <Text style={styles.h2}>ออกจากระบบ</Text>
-                <Image
-                  source={icons.arrowRigth}
-                  style={{width: 24, height: 24}}
-                />
-              </TouchableOpacity>
+            <View
+            style={{
+              backgroundColor: colors.white,
+              width: '100%',
+              justifyContent: 'space-around',
+            }}>
+            <TouchableOpacity
+              style={{
+                padding: normalize(20),
+                flexDirection: 'row',
+                height: normalize(62),
+                justifyContent: 'space-between',
+                borderBottomWidth: 1,
+                borderColor: colors.disable,
+              }}>
+              <Image
+                source={image.iconAppDrone}
+                style={[styles.icon, {marginRight: '-15%'}]}
+              />
+              <Text style={[styles.h2]}>มาเป็นนักบินโดรนร่วมกับเรา</Text>
+              <Image
+                source={icons.arrowRigth}
+                style={{width: 24, height: 24}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                padding: normalize(20),
+                flexDirection: 'row',
+                height: normalize(62),
+                justifyContent: 'space-between',
+                borderBottomWidth: 1,
+                borderColor: colors.disable,
+              }}>
+              <Image
+                source={icons.lock}
+                style={[styles.icon, {marginRight: '-23%'}]}
+              />
+              <Text style={styles.h2}>นโยบายความเป็นส่วนตัว</Text>
+              <Image
+                source={icons.arrowRigth}
+                style={{width: 24, height: 24}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                padding: normalize(20),
+                flexDirection: 'row',
+                height: normalize(62),
+                justifyContent: 'space-between',
+                borderBottomWidth: 1,
+                borderColor: colors.disable,
+              }}>
+              <Image
+                source={icons.deleteUser}
+                style={[styles.icon, {marginRight: '-55%'}]}
+              />
+              <Text style={styles.h2}>ลบบัญชี</Text>
+              <Image
+                source={icons.arrowRigth}
+                style={{width: 24, height: 24}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+             onPress={async () => {
+              await onLogout();
+              RootNavigation.navigate('Auth', {
+                screen: 'HomeScreen',
+              });
+            }}
+
+              style={{
+                padding: normalize(20),
+                flexDirection: 'row',
+                height: normalize(62),
+                justifyContent: 'space-between',
+                borderBottomWidth: 1,
+                borderColor: colors.disable,
+              }}>
+              <Image
+                source={icons.logout}
+                style={[styles.icon, {marginRight: '-45%'}]}
+              />
+              <Text style={styles.h2}>ออกจากระบบ</Text>
+              <Image
+                source={icons.arrowRigth}
+                style={{width: 25, height: 25}}
+              />
+            </TouchableOpacity>
+          </View>
             </View>
           </ScrollView>
         </>
@@ -454,17 +488,14 @@ const styles = StyleSheet.create({
     display: 'flex',
   },
   text: {
-    fontFamily: font.SarabunLight,
+    fontFamily: font.AnuphanMedium,
     fontSize: normalize(18),
   },
   section1: {
     flexDirection: 'row',
-    backgroundColor: colors.white,
-    // backgroundColor: '#F7FFF0',
+    backgroundColor: '#F7FFF0',
     display: 'flex',
     alignItems: 'flex-start',
-    width: normalize(380),
-    height: normalize(120),
     padding: 20,
   },
   appProve: {
@@ -480,14 +511,11 @@ const styles = StyleSheet.create({
   section2: {
     padding: normalize(20),
     backgroundColor: colors.white,
-    width: normalize(380),
-    height: normalize(250),
+   
   },
   section3: {
-    padding: normalize(20),
+    padding: '1.5%',
     backgroundColor: colors.white,
-    width: '100%',
-    height: normalize(250),
     justifyContent: 'space-around',
   },
   menu: {

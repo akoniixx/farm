@@ -36,7 +36,7 @@ const HomeScreen: React.FC<any> = ({navigation, route}) => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {height: normalize(75), borderBottomColor: colors.white},
+        tabBarStyle: {height: '9%', borderBottomColor: colors.white},
       }}>
       <Tab.Screen
         name="หน้าแรก"
@@ -52,7 +52,7 @@ const HomeScreen: React.FC<any> = ({navigation, route}) => {
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: normalize(16),
                 color: focused ? colors.greenLight : '#8D96A0',
-                top: normalize(3),
+              
               }}>
               หน้าแรก
             </Text>
@@ -85,7 +85,7 @@ const HomeScreen: React.FC<any> = ({navigation, route}) => {
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: normalize(16),
                 color: focused ? colors.greenLight : '#8D96A0',
-                top: normalize(3),
+               
               }}>
               โปรโมชั่น
             </Text>
@@ -117,7 +117,7 @@ const HomeScreen: React.FC<any> = ({navigation, route}) => {
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: normalize(16),
                 color: focused ? colors.greenLight : '#8D96A0',
-                top: normalize(3),
+               
               }}>
               บัญชีของฉัน
             </Text>

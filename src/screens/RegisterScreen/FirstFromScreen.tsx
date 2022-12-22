@@ -30,13 +30,14 @@ import {LocaleConfig} from 'react-native-calendars';
 import MyDatePicker from '../../components/Calendar/Calendar';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Schedule from '../../components/Calendar/Calendar';
-import {_monthName} from '../../definitions/constants';
 import DatePickerCustom from '../../components/Calendar/Calendar';
 import CustomCalendar from '../../components/Calendar/Calendar';
 import TimePicker from '../../components/Calendar/Calendar';
 import DatePicker from 'react-native-date-picker';
 import {Register} from '../../datasource/AuthDatasource';
 import Geolocation from 'react-native-geolocation-service';
+import moment from 'moment';
+import { _monthName, build12Year } from '../../definitions/constants';
 
 const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const initialFormRegisterState = {
@@ -48,16 +49,14 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const tele = route.params.tele;
   const windowWidth = Dimensions.get('window').width;
   const [image, setImage] = useState<any>(null);
-
   const [value, setValue] = useState(null);
-  const [birthday, setBirthday] = useState('');
+  const [birthday, setBirthday] = useState<any>();
   const [openCalendar, setOpenCalendar] = useState(false);
   const [openImg, setOpenImg] = useState(false);
-  const [response, setResponse] = React.useState<any>(null);
   const [openModal, setOpenModal] = useState(false);
-  const [time, setTime] = useState('');
-  const [date, setDate] = useState<Date | null>();
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState(new Date());
 
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
@@ -83,7 +82,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
     registerReducer,
     initialFormRegisterState,
   );
-  console.log(formState)
+
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -183,7 +182,11 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   },
                 ]}>
                 <TextInput
-                  value={time}
+                  value={date.toLocaleDateString('th-TH', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  })}
                   editable={false}
                   placeholder={'ระบุวัน เดือน ปี'}
                   placeholderTextColor={colors.disable}
@@ -221,27 +224,28 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
               Register.register1(
                 formState.name,
                 formState.surname,
-                formState.birthDate,
-                formState.tel
+                birthday,
+                formState.tel,
               )
                 .then(async res => {
                   console.log(res)
                   if (!image) {
                     setLoading(false);
                     navigation.navigate('SecondFormScreen', {
-                      formState
+                      formState,
                     });
                   } else {
-                    Register.uploadProfileImage(image).then(
-                      async(res) => {
+                    Register.uploadProfileImage(image)
+                      .then(async res => {
                         setLoading(false);
                         navigation.navigate('SecondFormScreen', {
-                         formState
+                          formState,
                         });
-                      }
-                    ).catch(err => console.log(err))
+                      })
+                      .catch(err => console.log(err));
                   }
-                }).catch(err => console.log(err))
+                })
+                .catch(err => console.log(err));
             }}
           />
         </View>
@@ -315,16 +319,36 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                 เลื่อนขึ้นลงเพื่อเลือกวันเกิดของคุณ
               </Text>
               <View>
-                <DatePickerCustom
-                  value={time}
-                  onHandleChange={(value: Date) =>
-                    setTime(value.toLocaleDateString())
-                  }
-                  // onHandleChange={day => {
-                  //   setTime(day)
-                  //   setBirthday(day);
-                  // }}
+                <DatePicker
+                  modal
+                  mode="date"
+                  locale='th'
+                  open={openCalendar}
+                  date={date}
+                  onConfirm={date => {
+                    setOpenCalendar(false);
+                    setDate(date);
+                  }}
+                  onCancel={() => {
+                    setOpenCalendar(false);
+                  }}
                 />
+                {/* <DatePickerCustom
+                  value={birthday}
+                  onHandleChange={(day: Date) => {
+                    const result = day.toLocaleDateString('th-TH', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                    });
+                    console.log(result);
+                    setBirthday(result);
+                    //  const d =  day.toDateString().split(" ")
+                    //   const newFarmer = `${d[0]} ${d[2]} ${d[1]} ${d[3]}`
+                    //   console.log('res',newFarmer)
+                    //   setBirthday(newFarmer)
+                  }}
+                /> */}
               </View>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-around'}}>
@@ -342,8 +366,6 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   color={colors.greenLight}
                   width={150}
                   onPress={() => {
-                    // setBirthday()
-                    // console.log(birthday);
                     setOpenCalendar(false);
                   }}
                 />
@@ -358,6 +380,12 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
 export default FirstFormScreen;
 
 const styles = StyleSheet.create({
+  carlendar: {
+    height: '50%',
+    borderWidth: 1,
+    borderColor: colors.disable,
+    borderRadius: 10,
+  },
   date: {
     flexDirection: 'row',
     justifyContent: 'space-around',

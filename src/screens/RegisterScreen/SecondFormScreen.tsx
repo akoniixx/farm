@@ -41,7 +41,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
   };
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  const telNo = route.params;
+  const telNo = route.params.tele;
   const [items, setItems] = useState<any>([]);
   const [itemsDistrict, setItemDistrict] = useState([]);
   const [itemsSubDistrict, setItemSubDistrict] = useState([]);
@@ -94,7 +94,6 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
     registerReducer,
     initialFormRegisterState,
   );
-  console.log(formState)
   const selectProvince = (value: any, label: any) => {
     dispatch({
       type: 'Handle Input',
@@ -143,12 +142,12 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
           <Text style={styles.h3}>ขั้นตอนที่ 2 จาก 4</Text>
           <Text style={styles.h1}>
             ระบุที่อยู่
-            <Text style={{fontSize: normalize(18), color: colors.gray}}>
+            <Text style={{fontSize: normalize(18), color: '#A7AEB5'}}>
               {' '}
               (ไม่จำเป็นต้องระบุ)
             </Text>
           </Text>
-          <ScrollView>
+          <ScrollView style={{top: '5%' }}>
             <Text style={styles.head}>บ้านเลขที่</Text>
             <TextInput
               onChangeText={value => {
@@ -159,7 +158,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
                 });
               }}
               value={formState.no}
-              style={styles.input}
+              style={[styles.input]}
               editable={true}
               placeholder={'บ้านเลขที่'}
               placeholderTextColor={colors.disable}
@@ -190,7 +189,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
                   borderWidth: 1,
                   padding: 10,
                   borderRadius: 10,
-                  marginVertical: 20,
+                  marginVertical: 10,
                   flexDirection: 'row',
                   alignItems: 'center',
                   height: normalize(55),
@@ -251,7 +250,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
                   borderWidth: 1,
                   padding: 10,
                   borderRadius: 10,
-                  marginVertical: 20,
+                  marginVertical: 10,
                   flexDirection: 'row',
                   alignItems: 'center',
                   height: normalize(55),
@@ -310,7 +309,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
                   borderWidth: 1,
                   padding: 10,
                   borderRadius: 10,
-                  marginVertical: 20,
+                  marginVertical: 10,
                   flexDirection: 'row',
                   alignItems: 'center',
                   height: normalize(55),
@@ -372,6 +371,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
               placeholderTextColor={colors.gray}
             />
           </ScrollView>
+          <View style={{height: 40}}></View>
         </View>
         <View style={{backgroundColor: colors.white, zIndex: 0}}>
           <MainButton
@@ -380,13 +380,13 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
             onPress={() => {
               setLoading(true);
               Register.register2(
-                telNo.tele,
+                telNo,
                 formState.no,
                 formState.address,
                 formState.province.value,
                 formState.district.value,
                 formState.subdistrict.value,
-                formState.postal.value.postcode,
+                formState.postal
               )
                 .then(async res => {
                   console.log(res);

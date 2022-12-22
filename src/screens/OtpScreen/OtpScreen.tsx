@@ -82,13 +82,13 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
     },
     [codeRef],
   );
-  const [otpTimeOut, setOTPtimeout] = useState(300);
-  const [time, setTime] = useState('05:00');
+  const [otpTimeOut, setOTPtimeout] = useState(120);
+  const [time, setTime] = useState('02:00');
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (otpCalling) {
-      setOTPtimeout(300);
-      setTime('05:00');
+      setOTPtimeout(120);
+      setTime('02:00');
       setOtpCalling(false);
     }
   }, [otpCalling]);
@@ -321,27 +321,3 @@ const styles = StyleSheet.create({
     marginVertical: normalize(10),
   },
 });
-const OtpTimerCount: React.FC<propsOTP> = ({toggle}) => {
-  const [otpTimeOut, setOTPtimeout] = useState(300);
-  const [time, setTime] = useState('05:00');
-  useEffect(() => {
-    setOTPtimeout(300);
-    setTime('05:00');
-  }, [toggle]);
-  useEffect(() => {
-    let timer = setInterval(() => {
-      if (otpTimeOut === 0) {
-      } else {
-        let second = otpTimeOut - 1;
-        setOTPtimeout(second);
-        setTime(
-          `0${parseInt((second / 60).toString())}:${
-            second % 60 < 10 ? '0' + (second % 60) : second % 60
-          }`,
-        );
-      }
-    }, 1000);
-    return () => clearInterval(timer);
-  });
-  return <Text>{time}</Text>;
-};

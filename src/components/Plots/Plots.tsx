@@ -5,12 +5,13 @@ import {colors, font, icons} from '../../assets';
 import fonts from '../../assets/fonts';
 
 interface AddPlot {
+  index: number;
   plotName: string;
   raiAmount: number;
   plantName: string;
   status: string;
   landMark: string;
-  locationName: string;
+  location: string;
 }
 
 export function StatusObject(status: string) {
@@ -39,21 +40,23 @@ export function StatusObject(status: string) {
 }
 
 const PlotsItem: React.FC<AddPlot> = ({
+  index,
   plotName,
   raiAmount,
   plantName,
   status,
   landMark,
-  locationName
+  location
 }) => {
   return (
     <View
+      key={index}
       style={{
         height: normalize(131),
         borderWidth: 0.5,
         borderColor: colors.greenLight,
         backgroundColor: '#ECFBF2',
-        borderRadius: normalize(10),
+        borderRadius: normalize(12),
         paddingVertical: normalize(10),
         paddingHorizontal: normalize(20),
         display: 'flex',
@@ -123,10 +126,10 @@ const PlotsItem: React.FC<AddPlot> = ({
                 color: colors.fontGrey,
                 marginRight: '10%',
               }}>
-                 {locationName.length < 15
-                ? `${locationName}`
-                : `${locationName.substring(0, 15)}...`}
-             
+                 {location.length < 15
+                ? `${location}`
+                : `${location.substring(0, 15)}...`}
+
             </Text>
             <View
               style={{
