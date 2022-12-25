@@ -9,7 +9,6 @@ import {Image, Platform, StyleSheet, View} from 'react-native';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import PromotionScreen from '../../screens/PromotionScreen/PromotionScreen';
 import {responsiveHeigth, responsiveWidth} from '../../functions/responsive';
-import TaskScreen from '../../screens/MyTaskScreen/TaskScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -54,7 +53,7 @@ const MainTapNavigator: React.FC = () => {
       />
       <Tab.Screen
         name="งานของฉัน"
-        component={TaskScreen}
+        component={PromotionScreen}
         options={{
           tabBarLabelStyle: {
             fontFamily: font.AnuphanMedium,

@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, AppState } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {MainButton} from '../../components/Button/MainButton';
@@ -9,13 +9,11 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {condition} from '../../assets/constant/constant';
 import {normalize} from '../../functions/Normalize';
 import icons from '../../assets/icons/icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ConditionScreen: React.FC<any> = ({navigation}) => {
   const [checked, setChecked] = useState<boolean>(false);
   const [checked1, setChecked1] = useState<boolean>(false);
   const [disabledCheckbox, setDisabledCheckbox] = useState<boolean>(true);
-  const [appState, setAppState] = useState(AppState.currentState);
 
   const isCloseToBottom = ({
     layoutMeasurement,
@@ -29,7 +27,6 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
     );
   };
   return (
-    
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
         title="ลงทะเบียนเกษตรกร"
@@ -37,7 +34,7 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
         onPressBack={() => navigation.goBack()}
       />
       <View style={styles.inner}>
-        <View style={{flex: 1}}>
+        <View style={{flex: 5}}>
           <ScrollView
             onScroll={({nativeEvent}) => {
               if (isCloseToBottom(nativeEvent)) {

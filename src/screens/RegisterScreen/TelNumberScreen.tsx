@@ -31,6 +31,7 @@ const TelNumScreen: React.FC<any> = ({navigation}) => {
   const login = () => {
     Authentication.generateOtpRegister(value)
       .then(result => {
+        console.log(result)
         navigation.navigate('OtpScreen', {
           telNumber: value,
           token: result.result.token,

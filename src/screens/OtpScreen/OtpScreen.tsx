@@ -251,11 +251,6 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
           </View>
         </SafeAreaView>
       </TouchableWithoutFeedback>
-      <Spinner
-          visible={loading}
-          textContent={'Loading...'}
-          textStyle={{color: '#FFF'}}
-        />
     </KeyboardAvoidingView>
   );
 };

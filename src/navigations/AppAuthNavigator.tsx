@@ -11,7 +11,10 @@ import SuccessRegister from '../screens/RegisterScreen/SuccessScreen';
 import FourthFormScreen from '../screens/RegisterScreen/FourthFormScreen';
 import AddIDcardScreen from '../screens/RegisterScreen/AddIDcardScreen';
 import FirstFormScreen from '../screens/RegisterScreen/FirstFromScreen';
+import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import Onboarding from '../screens/Onboarding/Onboarding';
+import DronerBooking from '../screens/DronerBooking/DronerBooking';
+import MyPlotScreen from '../screens/MyPlotScreen/MyPlotScreen';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +33,10 @@ const AppAuthNavigator: React.FC = () => {
       <Stack.Screen name="FourthFormScreen" component={FourthFormScreen} />
       <Stack.Screen name="AddIDCardScreen" component={AddIDcardScreen} />
       <Stack.Screen name="SuccessRegister" component={SuccessRegister} />
+      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Stack.Screen name="DronerBooking" component={DronerBooking} />
+      <Stack.Screen name="MyPlotScreen" component={MyPlotScreen} />
+
     </Stack.Navigator>
   );
 };
