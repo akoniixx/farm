@@ -10,7 +10,6 @@ interface AddPlot {
   raiAmount: number;
   plantName: string;
   status: string;
-  landMark: string;
   location: string;
 }
 
@@ -19,20 +18,20 @@ export function StatusObject(status: string) {
     case 'PENDING':
       return {
         status: 'รอการตรวจสอบ',
-        colorBg: '#FDF0E3',
+        colorBg: colors.white,
         fontColor: '#E27904',
         borderColor: colors.darkOrange
       };
     case 'ACTIVE':
       return {
         status: 'ตรวจสอบแล้ว',
-        colorBg: 'rgba(46, 198, 110, 0.15)',
-        fontColor: '#014D40',
+        colorBg: colors.white,
+        fontColor: colors.greenLight,
       };
     default:
       return {
         status: 'รอการตรวจสอบ',
-        colorBg: '#FDF0E3',
+        colorBg: colors.white,
         fontColor: '#E27904',
         borderColor: colors.darkOrange
       };
@@ -45,7 +44,6 @@ const PlotsItem: React.FC<AddPlot> = ({
   raiAmount,
   plantName,
   status,
-  landMark,
   location
 }) => {
   return (
@@ -125,11 +123,9 @@ const PlotsItem: React.FC<AddPlot> = ({
                 fontSize: normalize(16),
                 color: colors.fontGrey,
                 marginRight: '10%',
+                width: 150
               }}>
-                 {location.length < 15
-                ? `${location}`
-                : `${location.substring(0, 15)}...`}
-
+                {location}
             </Text>
             <View
               style={{
@@ -140,7 +136,8 @@ const PlotsItem: React.FC<AddPlot> = ({
                 justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor: StatusObject(status).colorBg,
-                borderColor: StatusObject(status).borderColor
+                borderColor: StatusObject(status).borderColor,
+                borderWidth: 0.5
                 }}>
               <Text
                 style={[styles.label, {color: StatusObject(status).fontColor}]}>

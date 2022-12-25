@@ -109,7 +109,6 @@ export class Register {
             status: 'OPEN'
           })
           .then(async response => {
-            console.log(response)
             const farmer_id = response.data.id;
             await AsyncStorage.setItem('farmer_id', farmer_id);
             return response.data;
@@ -118,6 +117,7 @@ export class Register {
             console.log(error);
           });
         }
+      
       } else {
         return registerClient
           .post(BASE_URL + `/auth/farmer/register`, {
@@ -202,6 +202,7 @@ export class Register {
           ]
       })
       .then(response => {
+        console.log(response)
         return response.data;
       })
       .catch(error => {
@@ -245,6 +246,7 @@ export class Register {
         status: 'OPEN',
       })
       .then(async response => {
+        console.log(response)
         return response.data;
       })
       .catch(error => {
@@ -346,3 +348,21 @@ export class Register {
       });
   }
 }
+
+export class GetFarmer {
+  static async getAll(
+    tel: string
+    ): Promise<any> {
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      return registerClient
+          .get(BASE_URL + `/farmer?search${tel}`)
+          .then(async response => {
+            console.log(response)
+
+            return response;
+          })
+          .catch(error => {
+            console.log(error);
+          });
+    }
+  }

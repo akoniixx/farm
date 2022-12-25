@@ -70,13 +70,10 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const [position, setPosition] = useState({
     latitude: route.params.latitude,
     longitude: route.params.longitude,
-    // latitude: 0,
-    // longitude: 0,
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
   const telNo = route.params;
-  // const telNo = '';
 
   const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState(null);
@@ -349,7 +346,6 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                       raiAmount={item.raiAmount}
                       location={item.location}
                       plantName={item.plantName}
-                      landMark={item.landmark}
                       status={item.status}
                     />
                   </TouchableOpacity>
@@ -369,6 +365,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
         </View>
         <View style={{backgroundColor: colors.white}}>
           <MainButton
+            disable={plotDataUI.length === 0 && plotData.length === 0}
             label="ถัดไป"
             color={colors.greenLight}
             onPress={() => {
@@ -523,7 +520,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
               </TouchableOpacity>
               <View style={{flex: 1}}>
                 <MapView.Animated
-                   mapType="satellite"
+                  mapType="satellite"
                   minZoomLevel={14}
                   maxZoomLevel={18}
                   style={styles.map}
@@ -568,6 +565,9 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 }}
               />
               <MainButton
+                disable={
+                  !raiAmount || !plantName || !search.term ? true : false
+                }
                 style={styles.button}
                 label="บันทึก"
                 color={colors.greenLight}
@@ -580,7 +580,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     plantName,
                     lat,
                     long,
-                    location,
+                    search.term,
                     landmark,
                   )
                     .then(res => {
