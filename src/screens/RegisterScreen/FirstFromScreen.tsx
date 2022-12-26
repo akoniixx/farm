@@ -26,19 +26,13 @@ import {ProgressBar} from '../../components/ProgressBar';
 import {registerReducer} from '../../hook/registerfield';
 import fonts from '../../assets/fonts';
 import {Avatar} from '@rneui/themed';
-import {LocaleConfig} from 'react-native-calendars';
-import MyDatePicker from '../../components/Calendar/Calendar';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import Schedule from '../../components/Calendar/Calendar';
-import DatePickerCustom from '../../components/Calendar/Calendar';
-import CustomCalendar from '../../components/Calendar/Calendar';
-import TimePicker from '../../components/Calendar/Calendar';
 import {Register} from '../../datasource/AuthDatasource';
 import Geolocation from 'react-native-geolocation-service';
 import moment from 'moment';
-import { _monthName, build12Year } from '../../definitions/constants';
+import {_monthName, build12Year} from '../../definitions/constants';
 import DatePicker from 'react-native-date-picker';
-
+import RNDateTimePicker from '@react-native-community/datetimepicker';
+import DatePickerCustom from '../../components/Calendar/Calendar';
 
 const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const initialFormRegisterState = {
@@ -51,13 +45,20 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const windowWidth = Dimensions.get('window').width;
   const [image, setImage] = useState<any>(null);
   const [value, setValue] = useState(null);
-  const [birthday, setBirthday] = useState<any>();
+  const [birthday, setBirthday] = useState('');
   const [openCalendar, setOpenCalendar] = useState(false);
   const [openImg, setOpenImg] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [date , setDate] = useState(new Date())
+  const days = new Date();
+  const [date , setDate] = useState(new Date());
+
+  const onChange = (event: any, selectDate: any) => {
+    setDate(selectDate);
+    console.log(selectDate)
+    
+  }
 
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
@@ -183,12 +184,11 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   },
                 ]}>
                 <TextInput
-                // value={birthday}
-                  value={date.toLocaleDateString('th-TH', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                  })}
+                 value={date.toLocaleDateString('th-TH', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })}
                   editable={false}
                   placeholder={'ระบุวัน เดือน ปี'}
                   placeholderTextColor={colors.disable}
@@ -230,7 +230,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                 formState.tel,
               )
                 .then(async res => {
-                  console.log(res)
+                  console.log(res);
                   if (!image) {
                     setLoading(false);
                     navigation.navigate('SecondFormScreen', {
@@ -321,24 +321,51 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                 เลื่อนขึ้นลงเพื่อเลือกวันเกิดของคุณ
               </Text>
               <View>
-                <DatePicker
+                <RNDateTimePicker
+                  locale="th"
+                  themeVariant="dark"
+                  textColor={colors.fontBlack}
+                  dateFormat="dayofweek day month"
+                  mode="date"
+                  display="spinner"
+                  value={date}
+                  maximumDate={new Date()}
+                  onChange={onChange}
+                  // onChange={_value => {
+                  //   const a = _value.nativeEvent.timestamp;
+                  //   console.log(
+                  //     new Date(a).toLocaleDateString('th-TH', {
+                  //       day: 'numeric',
+                  //       month: 'long',
+                  //       year: 'numeric',
+                  //     }),
+                  //   );
+                  // }}
+                />
+
+                {/* <DatePicker
+                title={'เลือกวันเกิด'}
                   modal
                   mode="date"
                   locale='th'
                   open={openCalendar}
-                  date={date}
+                  date={days}
                   confirmText={'ยืนยัน'}
-                cancelText={'ยกเลิก'}
-                  onConfirm={(date: Date) => {
+                 cancelText={'ยกเลิก'}
+                  onConfirm={(day: Date) => {
                     setOpenCalendar(false);
-                    setDate(date);
+                    setBirthday(day.toLocaleDateString('th-TH', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                    }));
                   }}
                   onCancel={() => {
                     setOpenCalendar(false);
                   }}
-                />
+                /> */}
                 {/* <DatePickerCustom
-                  value={null}
+                  value={days}
                   onHandleChange={(date) => {
                     console.log(date)
                     const result = date.toLocaleDateString('th-TH', {

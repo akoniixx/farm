@@ -7,7 +7,6 @@ import Toast from 'react-native-toast-message';
 import {SheetProvider} from 'react-native-actions-sheet';
 import {toastConfig} from './src/config/toast-config';
 import { BackHandler } from 'react-native';
-import FirstFormScreen from './src/screens/RegisterScreen/FirstFromScreen';
 
 const App = () => {
   useEffect(() => {
@@ -18,7 +17,6 @@ const App = () => {
     <>
       <NavigationContainer ref={navigationRef}>
         <SheetProvider>
-        {/* <FirstFormScreen/> */}
           <AppNavigator />
         </SheetProvider>
         <Toast config={toastConfig} />

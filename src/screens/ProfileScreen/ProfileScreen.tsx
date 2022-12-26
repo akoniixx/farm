@@ -155,7 +155,6 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
               บัญชีของฉัน
             </Text>
           </View>
-
           <ScrollView>
             <View style={styles.section1}>
               <Avatar
@@ -239,7 +238,8 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                <Text style={[styles.head]}>
-                  แปลงของคุณ ({profilestate.plotItem.length})
+                  แปลงของคุณ 
+                  ({profilestate.plotItem.length})
                 </Text>
                 <TouchableOpacity 
               onPress={() => {
@@ -595,7 +595,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   section3: {
-    padding: '1.5%',
     backgroundColor: colors.white,
     justifyContent: 'space-around',
   },

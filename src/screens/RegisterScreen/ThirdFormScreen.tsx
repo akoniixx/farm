@@ -70,13 +70,10 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const [position, setPosition] = useState({
     latitude: route.params.latitude,
     longitude: route.params.longitude,
-    // latitude: 0,
-    // longitude: 0,
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
   const telNo = route.params;
-  // const telNo = '';
 
   const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState(null);
@@ -372,7 +369,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
             color={colors.greenLight}
             onPress={() => {
               navigation.navigate('FourthFormScreen', {
-                tele: telNo.tele,
+                tele: telNo.tele
               });
             }}
           />
@@ -552,8 +549,9 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 placeholder={'ระบุจุดสังเกต'}
                 placeholderTextColor={colors.disable}
               />
+               <View style={{height: 40}}></View>
             </ScrollView>
-            <View style={{height: 40}}></View>
+           
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <MainButton
@@ -916,7 +914,9 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     label="ลบ"
                     color={colors.error}
                     fontColor={colors.white}
-                    onPress={deletePlots}
+                    onPress={() => {
+                      deletePlots()
+                    }}
                   />
                   <MainButton
                     style={{width: normalize(150), height: normalize(52)}}

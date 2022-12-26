@@ -39,6 +39,7 @@ export const IOS_MODE = Object.freeze({
   countdown: 'countdown',
 });
 
+
 export const DAY_OF_WEEK = Object.freeze({
   Sunday: 0,
   Monday: 1,
@@ -70,7 +71,7 @@ export function buildDate(date : number){
 export function build12Year(year : number){
   let num = [];
   let result = year;
-  for(let i=0;i<12;i++){
+  for(let i=0;i<100;i++){
       num.push(result)
       result -= 1;
   }

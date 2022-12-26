@@ -110,10 +110,8 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     </Text>
                   </View>
                 </View>
-                <View style={{flexDirection: 'row', top: '30%'}}>
-                  <TouchableOpacity
-                  // onPress={() => navigation.navigate('ConditionScreen')}
-                  >
+                <View style={{flexDirection: 'row', top: '30%', justifyContent: 'center'}}>
+                  <TouchableOpacity>
                     <LinearGradient
                       colors={['#61E097', '#3B996E']}
                       style={{
@@ -128,9 +126,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                       <Text style={styles.font}>จ้างโดรนเกษตร</Text>
                     </LinearGradient>
                   </TouchableOpacity>
-                  <TouchableOpacity
-                  // onPress={() => navigation.navigate('ConditionScreen')}
-                  >
+                  <TouchableOpacity>
                     <LinearGradient
                       colors={['#FFFFFF', '#ECFBF2']}
                       style={{
@@ -176,7 +172,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   width: '100%',
                   height: normalize(60),
                   alignItems: 'center',
-                  top: '10%',
+                  top: '%',
                 }}>
                 <Image
                   source={image.academy}
@@ -203,7 +199,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
         </View>
       ) : (
         <>
-          <ScrollView style={{backgroundColor: colors.white}}>
+          <ScrollView style={{backgroundColor: colors.white, height: screenHeight}}>
             <View style={[stylesCentral.container]}>
               <View style={{flex: 1}}>
                 <View>
@@ -241,7 +237,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                         </Text>
                       </View>
                     </View>
-                    <View style={{alignItems: 'center'}}>
+                    <View style={{alignItems: 'center', justifyContent: 'center'}}>
                       <View style={{flexDirection: 'row', top: '20%'}}>
                         <TouchableOpacity
                           onPress={() => navigation.navigate('DronerBooking')}>
@@ -358,7 +354,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   </TouchableOpacity>
                 </View>
               </View>
-              <View style={{height: 100}}></View>
             </View>
           </ScrollView>
         </>

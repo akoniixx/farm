@@ -48,14 +48,14 @@ const PromotionScreen: React.FC<any> = ({navigation, route}) => {
           />
           <View>
             <Image source={image.empty_farmer} style={[styles.empty]} />
-            <View style={{top: '35%'}}>
+            <View style={{top: '25%'}}>
               <Text style={[styles.text]}>คุณเป็นสมาชิกหรือยัง?</Text>
               <Text style={[styles.label]}>
                 {`เข้าร่วมเป็นสมาชิกกับเรา
   เพื่อรับสิทธิประโยชน์มากมาย`}
               </Text>
             </View>
-            <View style={{top: '40%'}}>
+            <View style={{top: '30%'}}>
               <MainButton
                 label="ลงทะเบียน/เข้าสู่ระบบ"
                 color={colors.greenLight}
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     display: 'flex',
-    top: '25%',
+    top: '20%',
   },
   textEmpty: {
     fontFamily: font.SarabunLight,

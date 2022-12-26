@@ -78,7 +78,7 @@ export class Register {
   static async register1(
     firstname: string,
     lastname: string,
-    birthDate :   Date,
+    birthDate :  Date,
     telephoneNo: string
     ): Promise<any> {
       const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -249,6 +249,16 @@ export class Register {
       })
       .catch(error => {
         console.log(error);
+      });
+  }
+  static deleteFarmerPlot(id?: string): Promise<any> {
+    return httpClient
+      .delete(BASE_URL + "/farmer-plot/" + id)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((err) => {
+        console.log(err, "err deleteFarmerPlot");
       });
   }
   static async registerSkip4(): Promise<any> {
