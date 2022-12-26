@@ -33,11 +33,12 @@ import Schedule from '../../components/Calendar/Calendar';
 import DatePickerCustom from '../../components/Calendar/Calendar';
 import CustomCalendar from '../../components/Calendar/Calendar';
 import TimePicker from '../../components/Calendar/Calendar';
-import DatePicker from 'react-native-date-picker';
 import {Register} from '../../datasource/AuthDatasource';
 import Geolocation from 'react-native-geolocation-service';
 import moment from 'moment';
 import { _monthName, build12Year } from '../../definitions/constants';
+import DatePicker from 'react-native-date-picker';
+
 
 const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const initialFormRegisterState = {
@@ -56,7 +57,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const [openModal, setOpenModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const [date , setDate] = useState(new Date())
 
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
@@ -182,6 +183,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   },
                 ]}>
                 <TextInput
+                // value={birthday}
                   value={date.toLocaleDateString('th-TH', {
                     day: 'numeric',
                     month: 'long',
@@ -224,7 +226,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
               Register.register1(
                 formState.name,
                 formState.surname,
-                birthday,
+                date,
                 formState.tel,
               )
                 .then(async res => {
@@ -325,7 +327,9 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   locale='th'
                   open={openCalendar}
                   date={date}
-                  onConfirm={date => {
+                  confirmText={'ยืนยัน'}
+                cancelText={'ยกเลิก'}
+                  onConfirm={(date: Date) => {
                     setOpenCalendar(false);
                     setDate(date);
                   }}
@@ -334,9 +338,10 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   }}
                 />
                 {/* <DatePickerCustom
-                  value={birthday}
-                  onHandleChange={(day: Date) => {
-                    const result = day.toLocaleDateString('th-TH', {
+                  value={null}
+                  onHandleChange={(date) => {
+                    console.log(date)
+                    const result = date.toLocaleDateString('th-TH', {
                       day: 'numeric',
                       month: 'long',
                       year: 'numeric',

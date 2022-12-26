@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {colors, font} from '../../assets';
-import {_monthName} from '../../definitions/constants';
+import { _monthName, build12Year } from '../../definitions/constants';
 import { normalize } from '../../functions/Normalize';
 import { MainButton } from '../Button/MainButton';
 
@@ -36,7 +36,7 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
     const start = !startYear || startYear > end ? end - 100 : startYear;
 
     const _days = [...Array(31)].map((_, index) => index + 1);
-    const _months = [...Array(12)].map((_,i) => i+1);
+    const _months = [...Array(12)].map((_,i) => i + 1);
     const _years = [...Array(end - start + 1)].map((_, index) => start + index);
 
     setDays(_days);
@@ -50,8 +50,10 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
   );
   const pickerWidth: number | string = width || '100%';
 
-  const unexpectedDate: Date = new Date(years[0], 0, 1);
+  const unexpectedDate: Date = new Date(years[0], 0, 0);
   const date = new Date(value || unexpectedDate);
+
+  // const date = new Date()
 
   const changeHandle = (type: any, digit: any): void => {
     switch (type) {
@@ -63,17 +65,24 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
         date.setFullYear(digit - 543);
     }
     onHandleChange(date);
+    // console.log('เดือน', date.setMonth(digit -1))
+
+    // console.log(date.toLocaleDateString('th-TH', {
+    //     day: 'numeric',
+    //     month: 'long',
+    //     year: 'numeric',
+    //   }))
   };
 
   const getOrder = () => {
     return (format || 'dd-mm-yyyy').split('-').map((type, index: any) => {
       switch (type) {
         case 'dd':
-          return {name: 'day', digits: days, valueD: date.getDay()};
+          return {name: 'day', digits: days, value: date.getDay()};
         case 'mm':
-          return {name: 'month', digits: months, valueM: date.getMonth() +1};
+          return {name: 'month', digits: months, value: date.getMonth() +1};
         case 'yyyy':
-          return {name: 'year', digits: years, valueY: date.getFullYear()};
+          return {name: 'year', digits: years, value: date.getFullYear()};
         default:
           console.warn(
             `Invalid date picker format prop: found "${type}" in ${format}. Please read documentation!`,
@@ -153,12 +162,12 @@ const DateBlock: React.FC<DateBlockProps> = ({
   const offsets = digits.map((_: number, index: number) => index * dHeight);
   const scrollRef = useRef<any>(null);
   const snapScrollToIndex = (index: number) => {
-    scrollRef?.current?.scrollTo({y: dHeight * index, animated: true});
+    scrollRef?.current?.scrollTo({y: dHeight * index, animated: false});
   };
 
 
   useEffect(() => {
-    snapScrollToIndex(value - digits[5]);
+    snapScrollToIndex(value - digits[6]);
   }, [scrollRef.current]);
 
   const handleMomentumScrollEnd = ({nativeEvent}: any) => {
@@ -211,7 +220,7 @@ const DateBlock: React.FC<DateBlockProps> = ({
                     fontFamily: font.AnuphanMedium,
                   },
                 ]}>
-                {(index !==1)?
+                {(index !== 1)?
                   value : _monthName[valIndex].value
                 }
               </Text>

@@ -34,6 +34,9 @@ export default {
   profile_blank: require('./profile_blank.png'),
   search:require('./search.png'),
   myLocation: require('./myLocation.png'),
-  warning: require('./warning.png')
+  warning: require('./warning.png'),
+  heart: require('./heart.png'),
+  star: require('./star.png'),
+  distance: require('./distance.png')
 
 };

@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import MainTapNavigator from './Bottom/MainTapNavigator';
 import MainScreen from '../screens/MainScreen/MainScreen';
+import AllPlotScreen from '../screens/ProfileScreen/AllPlotScreen';
 const Stack = createStackNavigator()
 
 const MainNavigator: React.FC = () => {
@@ -13,6 +14,7 @@ const MainNavigator: React.FC = () => {
             headerLeft: () => null,
           }} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Stack.Screen name="AllPlotScreen" component={AllPlotScreen} />
       <Stack.Screen name="MainScreen" component={MainScreen}/>
     </Stack.Navigator>
   )

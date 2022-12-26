@@ -57,6 +57,7 @@ export class ProfileDatasource {
     return uploadFileProfile
       .post(BASE_URL + '/file/upload', data)
       .then(response => {
+        console.log(response)
         return response.data;
       })
       .catch(error => {

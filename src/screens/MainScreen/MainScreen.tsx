@@ -37,6 +37,7 @@ import {Authentication} from '../../datasource/AuthDatasource';
 import LinearGradient from 'react-native-linear-gradient';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {initProfileState, profileReducer} from '../../hook/profilefield';
+import DronerCarousel from '../../components/Carousel/DronerCarousel';
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -78,10 +79,10 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   return (
-    <BottomSheetModalProvider>
+    <ScrollView>
       {fcmToken !== null ? (
         <View style={[stylesCentral.container]}>
-          <View style={{flex: 2}}>
+          <View style={{flex: 1}}>
             <View>
               <ImageBackground
                 source={image.bgHead}
@@ -113,42 +114,91 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   <TouchableOpacity
                   // onPress={() => navigation.navigate('ConditionScreen')}
                   >
-                    <View
+                    <LinearGradient
+                      colors={['#61E097', '#3B996E']}
                       style={{
-                        backgroundColor: '#3B996E',
                         marginHorizontal: 15,
-                        paddingHorizontal: 10,
                         paddingVertical: normalize(10),
-                        width: 180,
-                        height: 150,
+                        width: 170,
+                        height: 130,
                         borderRadius: 24,
                         alignItems: 'center',
                       }}>
                       <Image source={icons.drone} />
                       <Text style={styles.font}>จ้างโดรนเกษตร</Text>
-                    </View>
+                    </LinearGradient>
                   </TouchableOpacity>
                   <TouchableOpacity
                   // onPress={() => navigation.navigate('ConditionScreen')}
                   >
-                    <View
+                    <LinearGradient
+                      colors={['#FFFFFF', '#ECFBF2']}
                       style={{
-                        backgroundColor: '#ECFBF2',
-                        marginHorizontal: 10,
-                        paddingHorizontal: 10,
+                        marginHorizontal: 15,
                         paddingVertical: normalize(10),
-                        width: 180,
-                        height: 150,
+                        width: 170,
+                        height: 130,
                         borderRadius: 24,
                         alignItems: 'center',
                       }}>
                       <Image source={icons.plots} />
                       <Text style={styles.font1}>แปลงของคุณ</Text>
-                    </View>
+                    </LinearGradient>
                   </TouchableOpacity>
                 </View>
               </ImageBackground>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  padding: '5%',
+                  justifyContent: 'space-between',
+                  top: '10%',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: font.AnuphanBold,
+                    fontSize: normalize(20),
+                    color: colors.fontGrey,
+                  }}>
+                  กูรูเกษตร
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: font.SarabunLight,
+                    fontSize: normalize(14),
+                    color: colors.gray,
+                  }}>
+                  ดูทั้งหมด
+                </Text>
+              </View>
+              <View
+                style={{
+                  width: '100%',
+                  height: normalize(60),
+                  alignItems: 'center',
+                  top: '10%',
+                }}>
+                <Image
+                  source={image.academy}
+                  style={{
+                    width: 360,
+                    height: 120,
+                    top: -15,
+                    borderRadius: 10,
+                  }}
+                />
+              </View>
+              <View style={[styles.empty]}>
+                <Text
+                  style={[styles.text, {alignSelf: 'flex-start', top: '20%'}]}>
+                  นักบินโดรนที่แนะนำ
+                </Text>
+                <View style={{ top: '10%'}}>
+                  <DronerCarousel />
+                </View>
+              </View>
             </View>
+            <View style={{height: 150}}></View>
           </View>
         </View>
       ) : (
@@ -308,11 +358,12 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   </TouchableOpacity>
                 </View>
               </View>
+              <View style={{height: 100}}></View>
             </View>
           </ScrollView>
         </>
       )}
-    </BottomSheetModalProvider>
+    </ScrollView>
   );
 };
 export default MainScreen;

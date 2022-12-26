@@ -349,7 +349,6 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                       raiAmount={item.raiAmount}
                       location={item.location}
                       plantName={item.plantName}
-                      landMark={item.landmark}
                       status={item.status}
                     />
                   </TouchableOpacity>
@@ -523,7 +522,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
               </TouchableOpacity>
               <View style={{flex: 1}}>
                 <MapView.Animated
-                   mapType="satellite"
+                  mapType="satellite"
                   minZoomLevel={14}
                   maxZoomLevel={18}
                   style={styles.map}
@@ -580,7 +579,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     plantName,
                     lat,
                     long,
-                    location,
+                    search.term,
                     landmark,
                   )
                     .then(res => {

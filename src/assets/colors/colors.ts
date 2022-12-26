@@ -3,6 +3,7 @@ export default {
     orangeLight: '#FF981E', // secondary
     blueDark: '#036EAF',
     blueLight: '#2BB0ED',
+    primary: '#1F8449',
     greenDark: '#014D40',
     greenLight: '#2EC66E',
     greenLemon: '#A0D644',

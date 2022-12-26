@@ -87,7 +87,7 @@
                   <View
                     style={{
                       width: width * 0.9,
-                      height: normalize(162),
+                      height: normalize(220),
                       borderRadius: 20,
                       position: 'relative',
                     }}>
@@ -110,7 +110,7 @@
                         top: 0,
                         left: 0,
                         width: width * 0.9,
-                        height: normalize(162),
+                        height: normalize(220),
                         borderRadius: 20,
                         zIndex: 0,
                       }}>
@@ -118,7 +118,7 @@
                         source={{uri: image.assets[0].uri}}
                         style={{
                           width: width * 0.9,
-                          height: normalize(162),
+                          height: normalize(220),
                           borderRadius: 20,
                         }}
                       />
