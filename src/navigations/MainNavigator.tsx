@@ -1,6 +1,9 @@
 import React, { createContext, useMemo } from 'react';
 import { createStackNavigator } from '@react-navigation/stack'
-import MainTapNavigator from './Tabs/MainTapNavigator';
+import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
+import MainTapNavigator from './Bottom/MainTapNavigator';
+import MainScreen from '../screens/MainScreen/MainScreen';
+import AllPlotScreen from '../screens/ProfileScreen/AllPlotScreen';
 const Stack = createStackNavigator()
 
 const MainNavigator: React.FC = () => {
@@ -10,8 +13,10 @@ const MainNavigator: React.FC = () => {
             gestureEnabled: false,
             headerLeft: () => null,
           }} />
+      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Stack.Screen name="AllPlotScreen" component={AllPlotScreen} />
+      <Stack.Screen name="MainScreen" component={MainScreen}/>
     </Stack.Navigator>
   )
 }
-
-export default MainNavigator
+export default MainNavigator;

@@ -3,6 +3,7 @@ export default {
     orangeLight: '#FF981E', // secondary
     blueDark: '#036EAF',
     blueLight: '#2BB0ED',
+    primary: '#1F8449',
     greenDark: '#014D40',
     greenLight: '#2EC66E',
     greenLemon: '#A0D644',
@@ -10,6 +11,7 @@ export default {
     yellowLight: '#FFF2E3',
     darkOrange: '#E85737',
     redDark: '#AB091E',
+    error: '#EF4E4E',
     disable: '#DCDFE3',
     transOrange: '#FFEAD1',
     transSubOrange: '#FFFBF6',
@@ -20,5 +22,6 @@ export default {
     inputText: '#2B2B2B',
     fontBlack: '#202326',
     gray: '#6B7580',
-    fontGrey: '#353A3F'
+    fontGrey: '#353A3F',
+    bg: '#E5E5E5'
   };

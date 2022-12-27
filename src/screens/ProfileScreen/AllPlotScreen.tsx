@@ -1,9 +1,10 @@
 import React from "react";
 
-const DiscountScreen = () => {
+const AllPlotScreen = () => {
     return(
         <>
         </>
     )
+
 }
-export default DiscountScreen
+export default AllPlotScreen;

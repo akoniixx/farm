@@ -19,12 +19,44 @@ import {normalize} from '../../functions/Normalize';
 import {InputPhone} from '../../components/InputPhone';
 import OtpScreen from '../OtpScreen/OtpScreen';
 import * as RootNavigation from '../../navigations/RootNavigation';
+import { Authentication } from '../../datasource/AuthDatasource';
+import  Toast  from 'react-native-toast-message';
 
 const TelNumScreen: React.FC<any> = ({navigation}) => {
   const [value, setValue] = useState<string>('');
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState<string>('');
   const [errMessage, setErrMessage] = useState<string>('');
+
+  const login = () => {
+    Authentication.generateOtpRegister(value)
+      .then(result => {
+        console.log(result)
+        navigation.navigate('OtpScreen', {
+          telNumber: value,
+          token: result.result.token,
+          refCode: result.result.refCode,
+          isRegisterScreen: true,
+        });
+      })
+      .catch(err => {
+              if (err.response.data.statusCode === 409) {
+                Authentication.generateOtp(value)
+                    .then(result => {
+                        const telNumber = value;
+                        setValue('')
+                        navigation.navigate('OtpScreen', {
+                          telNumber: telNumber,
+                          token: result.result.token,
+                          refCode: result.result.refCode,
+                          isRegisterScreen: false,
+                        });
+                    })
+              }
+            }
+      )
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -61,7 +93,7 @@ const TelNumScreen: React.FC<any> = ({navigation}) => {
                 label="ถัดไป"
                 color={colors.greenLight}
                 disable={value.length != 10}
-                onPress={() => navigation.navigate('OtpScreen')}
+                onPress={() => login()}
               />
             </View>
           </View>

@@ -22,6 +22,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({index}) => {
             width: normalize(80),
             height: 4,
             backgroundColor: i <= index ? colors.greenLight : colors.disable,
+            borderRadius: normalize(20)
           }}
         />
       ))}

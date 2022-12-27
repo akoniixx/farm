@@ -7,10 +7,14 @@ import image from '../../assets/images/image';
 import {MainButton} from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
 import {ProgressBar} from '../../components/ProgressBar';
+import { Register } from '../../datasource/AuthDatasource';
 import {normalize} from '../../functions/Normalize';
 import {stylesCentral} from '../../styles/StylesCentral';
 const width = Dimensions.get('window').width;
 const FourthFormScreen: React.FC<any> = ({route, navigation}) => {
+  const telNo = route.params.tele;
+  const Profile = route.params.profile ?? false;
+
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -27,23 +31,23 @@ const FourthFormScreen: React.FC<any> = ({route, navigation}) => {
           <Text style={styles.h1}>ยืนยันเอกสาร</Text>
           <Text style={styles.h2}>{`ยืนยันตัวตน ด้วยรูปถ่ายคู่ผู้สมัคร 
 พร้อมบัตรประชาชน`}</Text>
-          <View
-            style={{alignItems: 'center', top: '8%'}}>
+          <View style={{alignItems: 'center', top: '8%'}}>
             <Image
               source={image.examidcard}
               style={{width: normalize(350), height: normalize(200)}}
             />
             <View style={styles.border}>
               <View style={styles.allText}>
-              <Text style={styles.h4}>
-              <Image source={icons.dangercircle} />
-              <Text>{" "}</Text>
-                 ลักษณะภาพถ่าย</Text>
-              <Text style={styles.text}>กรุณาถ่ายหน้าตรง พร้อมถือ</Text>
-              <Text style={styles.text}>
-                บัตรประชาชนของคุณโดยให้เห็นใบหน้า
-              </Text>
-              <Text style={styles.text}>และบัตรประชาชนอย่างชัดเจน</Text>
+                <Text style={styles.h4}>
+                  <Image source={icons.dangercircle} />
+                  <Text> </Text>
+                  ลักษณะภาพถ่าย
+                </Text>
+                <Text style={styles.text}>กรุณาถ่ายหน้าตรง พร้อมถือ</Text>
+                <Text style={styles.text}>
+                  บัตรประชาชนของคุณโดยให้เห็นใบหน้า
+                </Text>
+                <Text style={styles.text}>และบัตรประชาชนอย่างชัดเจน</Text>
               </View>
             </View>
           </View>
@@ -53,13 +57,22 @@ const FourthFormScreen: React.FC<any> = ({route, navigation}) => {
           <MainButton
             label="ถัดไป"
             color={colors.greenLight}
-            onPress={() => navigation.navigate('AddIDcardScreen')}
+            onPress={() => {
+              navigation.navigate('AddIDCardScreen', {
+                tele: telNo,
+                profile: Profile,
+              });
+            }}  
           />
           <MainButton
             label="ข้ามขั้นตอน"
             color={colors.white}
             fontColor={'black'}
-            onPress={() => navigation.navigate('SuccessRegister')}
+            onPress={() => {
+              Register.registerSkip4()
+                .then(res => navigation.navigate('SuccessRegister'))
+                .catch(err => console.log(err));
+            }}
           />
         </View>
       </View>
@@ -103,7 +116,7 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunLight,
     fontSize: normalize(14),
     color: colors.fontGrey,
-    marginLeft: normalize(20)
+    marginLeft: normalize(20),
   },
   varidate: {
     fontFamily: font.AnuphanMedium,
@@ -122,8 +135,7 @@ const styles = StyleSheet.create({
   },
   allText: {
     top: '10%',
-    marginLeft: normalize(20)
-
+    marginLeft: normalize(20),
   },
   container: {
     flex: 1,

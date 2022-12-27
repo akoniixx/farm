@@ -1,9 +1,13 @@
 import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import React from 'react';
+import * as RootNavigation from '../../navigations/RootNavigation';
 import {normalize} from '@rneui/themed';
 import {colors, font, image} from '../../assets';
 import {MainButton} from '../../components/Button/MainButton';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Register } from '../../datasource/AuthDatasource';
+import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
+import { getFCMToken } from '../../firebase/notification';
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
@@ -32,9 +36,8 @@ const SuccessRegister: React.FC<any> = ({navigation}) => {
             source={image.success}
             style={{
               top: '10%',
-              width : (windowWidth*290/375),
-              height : (windowHeight*330/812)
-
+              width: (windowWidth * 290) / 375,
+              height: (windowHeight * 330) / 812,
             }}
           />
         </View>
@@ -59,7 +62,20 @@ const SuccessRegister: React.FC<any> = ({navigation}) => {
 แปลงเกษตรของคุณได้เลย!`}</Text>
         </View>
       </View>
-      <MainButton label="เริ่มใช้งาน" color={colors.greenLight}   onPress={() => navigation.navigate('MainScreen')}/>
+      <MainButton
+        label="เริ่มใช้งาน"
+        color={colors.greenLight}
+        onPress={async()=>{
+          const token_register = await AsyncStorage.getItem('token_register')
+          await AsyncStorage.setItem('token',token_register!)
+          Register.changeToPending().then(
+            res => {
+              RootNavigation.navigate('Main', {
+                screen: 'MainScreen',
+              })
+            }
+          ).catch(err => console.log(err))
+      }}/>
     </View>
   );
 };

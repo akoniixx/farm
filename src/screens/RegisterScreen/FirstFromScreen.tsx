@@ -25,29 +25,39 @@ import {normalize, width} from '../../functions/Normalize';
 import {ProgressBar} from '../../components/ProgressBar';
 import {registerReducer} from '../../hook/registerfield';
 import fonts from '../../assets/fonts';
-import DatePicker from 'react-native-date-picker';
 import {Avatar} from '@rneui/themed';
-import {LocaleConfig} from 'react-native-calendars';
-import day from 'react-native-calendars/src/calendar/day';
-import MyDatePicker from '../../components/Calendar/Calendar';
+import {Register} from '../../datasource/AuthDatasource';
+import Geolocation from 'react-native-geolocation-service';
+import moment from 'moment';
+import {_monthName, build12Year} from '../../definitions/constants';
+import DatePicker from 'react-native-date-picker';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
+import DatePickerCustom from '../../components/Calendar/Calendar';
 
 const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const initialFormRegisterState = {
     name: '',
     surname: '',
     birthDate: '',
-    tel: '',
+    tel: route.params.tele,
   };
-
+  const tele = route.params.tele;
   const windowWidth = Dimensions.get('window').width;
   const [image, setImage] = useState<any>(null);
-  const [date, setDate] = useState(new Date());
   const [value, setValue] = useState(null);
   const [birthday, setBirthday] = useState('');
   const [openCalendar, setOpenCalendar] = useState(false);
   const [openImg, setOpenImg] = useState(false);
-  const [response, setResponse] = React.useState<any>(null);
   const [openModal, setOpenModal] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const days = new Date();
+  const [date , setDate] = useState(new Date());
+
+  const onChange = (event: any, selectDate: any) => {
+    setDate(selectDate);
+    
+  }
 
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
@@ -73,6 +83,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
     registerReducer,
     initialFormRegisterState,
   );
+
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -161,7 +172,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
               placeholderTextColor={colors.disable}
             />
 
-            <Text style={styles.head}>วันเกิด*</Text>
+            <Text style={styles.head}>วันเกิด</Text>
             <TouchableOpacity onPress={() => setOpenCalendar(true)}>
               <View
                 style={[
@@ -172,13 +183,11 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   },
                 ]}>
                 <TextInput
-                  value={
-                    birthday != ''
-                      ? `${birthday.split('-')[2]}/${birthday.split('-')[1]}/${
-                          parseInt(birthday.split('-')[0]) + 543
-                        }`
-                      : birthday
-                  }
+                 value={date.toLocaleDateString('th-TH', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })}
                   editable={false}
                   placeholder={'ระบุวัน เดือน ปี'}
                   placeholderTextColor={colors.disable}
@@ -187,9 +196,10 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                     color: colors.fontBlack,
                     fontSize: normalize(16),
                     fontFamily: font.SarabunLight,
-                  }}
+                    justifyContent: 'center',
+                  alignItems: 'center'
+                                  }}
                 />
-
                 <Image
                   source={icons.calendar}
                   style={{
@@ -203,7 +213,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
             <TextInput
               style={[styles.input, {backgroundColor: colors.disable}]}
               editable={false}
-              placeholder={'0989284761'}
+              value={tele}
               placeholderTextColor={colors.gray}
             />
           </ScrollView>
@@ -211,14 +221,35 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
         <View style={{backgroundColor: colors.white, zIndex: 0}}>
           <MainButton
             label="ถัดไป"
-            disable={
-              !formState.name || !formState.surname
-                ? // !formState.birthDate
-                  true
-                : false
-            }
+            disable={!formState.name || !formState.surname ? true : false}
             color={colors.greenLight}
-            onPress={() => navigation.navigate('SecondFormScreen')}
+            onPress={() => {
+              Register.register1(
+                formState.name,
+                formState.surname,
+                date,
+                formState.tel,
+              )
+                .then(async res => {
+                  console.log(res);
+                  if (!image) {
+                    setLoading(false);
+                    navigation.navigate('SecondFormScreen', {
+                      formState,
+                    });
+                  } else {
+                    Register.uploadProfileImage(image)
+                      .then(async res => {
+                        setLoading(false);
+                        navigation.navigate('SecondFormScreen', {
+                          formState,
+                        });
+                      })
+                      .catch(err => console.log(err));
+                  }
+                })
+                .catch(err => console.log(err));
+            }}
           />
         </View>
         <Modal transparent={true} visible={openModal}>
@@ -291,7 +322,47 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                 เลื่อนขึ้นลงเพื่อเลือกวันเกิดของคุณ
               </Text>
               <View>
-               <MyDatePicker />
+                <RNDateTimePicker
+                  locale="th"
+                  themeVariant="dark"
+                  textColor={colors.fontBlack}
+                  dateFormat="dayofweek day month"
+                  mode="date"
+                  display="spinner"
+                  value={date}
+                  maximumDate={new Date()}
+                  onChange={onChange}
+                  
+                />
+
+                {/* <DatePicker
+                title={'เลือกวันเกิด'}
+                  modal
+                  mode="date"
+                  locale='th'
+                  open={openCalendar}
+                  date={days}
+                 confirmText={'ยืนยัน'}
+                 cancelText={'ยกเลิก'}
+                  onConfirm={(day: Date) => {
+                    setOpenCalendar(false);
+                    setBirthday(day.toLocaleDateString('th-TH', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                    }));
+                  }}
+                  onCancel={() => {
+                    setOpenCalendar(false);
+                  }}
+                /> */}
+                {/* <DatePickerCustom
+                  value={date}
+                  onHandleChange={(d : Date) => {
+                    console.log(d.toLocaleDateString('th-Th'))
+                    setDate(d)
+                  }}
+                /> */}
               </View>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-around'}}>
@@ -307,33 +378,15 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   label="บันทึก"
                   fontColor={colors.white}
                   color={colors.greenLight}
-                  onPress={() =>    
-                    setBirthday(day.dateString)
-                   
-                   }
                   width={150}
+                  onPress={() => {
+                    setOpenCalendar(false);
+                  }}
                 />
               </View>
             </View>
           </View>
         </Modal>
-        {/* <DatePicker
-          modal
-          confirmText={'บันทึก'}
-          cancelText={'ยกเลิก'}
-          title={'เลือกวันเกิด'}
-          mode="date"
-          open={openCalendar}
-          date={date}
-          maximumDate={new Date()}
-          onConfirm={date => {
-            setOpenCalendar(false);
-            setDate(date);
-          }}
-          onCancel={() => {
-            setOpenCalendar(false);
-          }}
-        /> */}
       </View>
     </SafeAreaView>
   );
@@ -341,6 +394,29 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
 export default FirstFormScreen;
 
 const styles = StyleSheet.create({
+  carlendar: {
+    height: '50%',
+    borderWidth: 1,
+    borderColor: colors.disable,
+    borderRadius: 10,
+  },
+  date: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '60%',
+  },
+  datePart: {
+    width: 100,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '200',
+    marginBottom: 5,
+  },
+  digit: {
+    fontSize: 20,
+  },
   inner: {
     paddingHorizontal: normalize(17),
     flex: 1,
@@ -379,7 +455,7 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunLight,
     height: normalize(56),
     marginVertical: 12,
-    padding: 10,
+    padding: 5,
     borderColor: colors.disable,
     borderWidth: 1,
     borderRadius: normalize(10),
