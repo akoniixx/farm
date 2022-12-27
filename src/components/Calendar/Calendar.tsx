@@ -65,13 +65,6 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
         date.setFullYear(digit - 543);
     }
     onHandleChange(date);
-    // console.log('เดือน', date.setMonth(digit -1))
-
-    // console.log(date.toLocaleDateString('th-TH', {
-    //     day: 'numeric',
-    //     month: 'long',
-    //     year: 'numeric',
-    //   }))
   };
 
   const getOrder = () => {

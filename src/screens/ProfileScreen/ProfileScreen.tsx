@@ -24,27 +24,11 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 
 const ProfileScreen: React.FC<any> = ({navigation}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
-  console.log(profilestate);
-  const [data, setData] = useState<any>();
-  const windowWidth = Dimensions.get('screen').width;
-  const windowHeight = Dimensions.get('screen').height;
-  const [items, setItems] = useState<any>([]);
-  const [brand, setBrand] = useState<any>(null);
-  const [brandtype, setBrandType] = useState<any>(null);
-  const [itemstype, setItemstype] = useState<any>([]);
-  const [image1, setImage1] = useState<any>(null);
-  const [image2, setImage2] = useState<any>(null);
-  const [open, setOpen] = useState(false);
-  const [opentype, setOpentype] = useState(false);
   const [value, setValue] = useState(null);
-  const [valuetype, setValuetype] = useState(null);
-  const [droneno, setdroneno] = useState<any>(null);
-  const [popupPage, setpopupPage] = useState(1);
   const actionSheet = useRef<any>(null);
   const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fcmToken, setFcmToken] = useState('');
-  const [notidata, setnotidata] = useState(0);
   const [plotDataUI, setplotDataUI] = useState<any>([]);
   const [plotData, setplotData] = useState<any>([]);
   const [raiAmount, setraiAmount] = useState<any>();
@@ -256,20 +240,20 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                       width: normalize(138),
                       height: normalize(120),
                       alignSelf: 'center',
-                      top: '8%',
+                      top: '5%',
                     }}
                   />
-                  <View style={{top: 25}}>
                     <Text
                       style={{
                         fontFamily: font.SarabunLight,
                         fontSize: normalize(16),
                         color: colors.gray,
                         textAlign: 'center',
+                        paddingVertical: normalize(22)
                       }}>{`คุณไม่มีแปลงเกษตร
  กดเพิ่มแปลงเกษตรได้เลย!`}</Text>
-                  </View>
-                  <View style={[styles.buttonAdd, {top: '15%'}]}>
+                 
+                  <View style={[styles.buttonAdd]}>
                     <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
                   </View>
                 </View>
@@ -413,6 +397,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   style={{
                     fontSize: normalize(22),
                     fontFamily: font.AnuphanMedium,
+                    color: colors.fontBlack
                   }}>
                   ยินดีต้อนรับสู่ IconKaset
                 </Text>
@@ -421,6 +406,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                     fontSize: normalize(16),
                     fontFamily: font.SarabunLight,
                     top: 15,
+                    color: colors.fontBlack
                   }}>
                   เข้าร่วมเป็นสมาชิกเพื่อรับสิทธิประโยชน์มากมาย
                 </Text>
@@ -442,6 +428,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
             }}>
             <TouchableOpacity
               style={{
+                alignItems: 'center',
                 padding: normalize(20),
                 flexDirection: 'row',
                 height: normalize(62),
@@ -461,6 +448,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={{
+                alignItems: 'center',
                 padding: normalize(20),
                 flexDirection: 'row',
                 height: normalize(62),
@@ -503,7 +491,6 @@ const styles = StyleSheet.create({
     top: '30%',
   },
   buttonAdd: {
-    top: normalize(100),
     borderColor: '#1F8449',
     borderWidth: 1,
     borderRadius: 10,
@@ -545,10 +532,12 @@ const styles = StyleSheet.create({
   h1: {
     fontFamily: font.SarabunLight,
     fontSize: normalize(16),
+    color: colors.fontBlack
   },
   h2: {
     fontFamily: font.SarabunMedium,
     fontSize: 18,
+    color: colors.fontBlack
   },
   headerTitleWraper: {
     backgroundColor: '#F7FFF0',
@@ -573,6 +562,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: font.AnuphanMedium,
     fontSize: normalize(18),
+    color: colors.fontBlack
   },
   section1: {
     flexDirection: 'row',

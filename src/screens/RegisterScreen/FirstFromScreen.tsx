@@ -56,7 +56,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
 
   const onChange = (event: any, selectDate: any) => {
     setDate(selectDate);
-    console.log(selectDate)
+    setOpenCalendar(false)
     
   }
 
@@ -197,7 +197,9 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                     color: colors.fontBlack,
                     fontSize: normalize(16),
                     fontFamily: font.SarabunLight,
-                  }}
+                    justifyContent: 'center',
+                  alignItems: 'center'
+                                  }}
                 />
                 <Image
                   source={icons.calendar}
@@ -331,16 +333,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   value={date}
                   maximumDate={new Date()}
                   onChange={onChange}
-                  // onChange={_value => {
-                  //   const a = _value.nativeEvent.timestamp;
-                  //   console.log(
-                  //     new Date(a).toLocaleDateString('th-TH', {
-                  //       day: 'numeric',
-                  //       month: 'long',
-                  //       year: 'numeric',
-                  //     }),
-                  //   );
-                  // }}
+                  
                 />
 
                 {/* <DatePicker
@@ -350,7 +343,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   locale='th'
                   open={openCalendar}
                   date={days}
-                  confirmText={'ยืนยัน'}
+                 confirmText={'ยืนยัน'}
                  cancelText={'ยกเลิก'}
                   onConfirm={(day: Date) => {
                     setOpenCalendar(false);
@@ -365,20 +358,10 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   }}
                 /> */}
                 {/* <DatePickerCustom
-                  value={days}
-                  onHandleChange={(date) => {
-                    console.log(date)
-                    const result = date.toLocaleDateString('th-TH', {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric',
-                    });
-                    console.log(result);
-                    setBirthday(result);
-                    //  const d =  day.toDateString().split(" ")
-                    //   const newFarmer = `${d[0]} ${d[2]} ${d[1]} ${d[3]}`
-                    //   console.log('res',newFarmer)
-                    //   setBirthday(newFarmer)
+                  value={date}
+                  onHandleChange={(d : Date) => {
+                    console.log(d.toLocaleDateString('th-Th'))
+                    setDate(d)
                   }}
                 /> */}
               </View>
@@ -473,7 +456,7 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunLight,
     height: normalize(56),
     marginVertical: 12,
-    padding: 10,
+    padding: 5,
     borderColor: colors.disable,
     borderWidth: 1,
     borderRadius: normalize(10),

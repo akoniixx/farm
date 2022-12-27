@@ -199,13 +199,14 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 </View>
               </View>
             </View>
-            <View style={{height: 150}}></View>
+            <View style={{height: normalize(150)}}>
+              
+            </View>
           </View>
         </View>
       ) : (
         <>
-          <ScrollView
-            style={{backgroundColor: colors.white, height: screenHeight}}>
+          <View style={{backgroundColor: colors.white, height: screenHeight}}>
             <View style={[stylesCentral.container]}>
               <View style={{flex: 1}}>
                 <View>
@@ -287,7 +288,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     flexDirection: 'row',
                     padding: '5%',
                     justifyContent: 'space-between',
-                    top: '5%',
+                    top: '10%',
                   }}>
                   <Text
                     style={{
@@ -311,7 +312,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     width: '100%',
                     height: normalize(60),
                     alignItems: 'center',
-                    top: '6%',
+                    top: '5%',
                   }}>
                   <Image
                     source={image.academy}
@@ -323,11 +324,15 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     }}
                   />
                 </View>
-                <View style={[styles.empty]}>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
                   <Text
                     style={[
                       styles.text,
-                      {alignSelf: 'flex-start', top: '15%'},
+                      {
+                        alignSelf: 'flex-start',
+                        top: '15%',
+                        paddingVertical: '5%',
+                      },
                     ]}>
                     นักบินโดรนที่แนะนำ
                   </Text>
@@ -336,11 +341,11 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     style={{
                       width: normalize(126),
                       height: normalize(120),
-                      top: '18%',
+                      top: '16%',
+                      marginBottom: normalize(32),
                     }}
                   />
                   <View style={{height: '10%'}}></View>
-
                   <Text style={[styles.textEmpty]}>
                     เพื่อให้สามารถจ้างงานนักบินโดรนได้
                   </Text>
@@ -348,8 +353,15 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     กรุณาลงทะเบียน/เข้าสู่ระบบ
                   </Text>
                   <TouchableOpacity
-                    style={{margin: '10%'}}
-                    onPress={() => navigation.navigate('ConditionScreen')}>
+                    style={{margin: '3%'}}
+                    onPress={async () => {
+                      const value = await AsyncStorage.getItem('PDPA');
+                      if (value === 'read') {
+                        navigation.navigate('TelNumScreen');
+                      } else {
+                        navigation.navigate('ConditionScreen');
+                      }
+                    }}>
                     <Text
                       style={[
                         styles.textEmpty,
@@ -364,7 +376,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 </View>
               </View>
             </View>
-          </ScrollView>
+          </View>
         </>
       )}
     </ScrollView>
@@ -376,7 +388,6 @@ const styles = StyleSheet.create({
   textEmpty: {
     fontFamily: font.SarabunLight,
     fontSize: normalize(18),
-    top: '16%',
     color: colors.gray,
   },
   text: {

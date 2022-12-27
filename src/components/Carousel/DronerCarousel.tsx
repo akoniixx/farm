@@ -10,7 +10,7 @@ const DronerCarousel: React.FC<any> = () => {
   const RenderItem: React.FC<any> = ({index}) => {
     return (
       <View style={{flex: 1, top: '10%', padding: 10}}>
-        <View style={styles.cards}>
+        <View style={[styles.cards]}>
           <View
             style={[
               {
@@ -50,21 +50,21 @@ const DronerCarousel: React.FC<any> = () => {
             </View>
             <View style={{paddingLeft: 10}}>
               <Text style={styles.h1}>นายเอิร์ท</Text>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
                   source={icons.star}
                   style={{width: 20, height: 20, marginRight: 10}}
                 />
                 <Text style={styles.label}>5.0 คะแนน</Text>
               </View>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
                   source={icons.location}
                   style={{width: 20, height: 20, marginRight: 10}}
                 />
                 <Text style={styles.label}>จ.เลย</Text>
               </View>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
                   source={icons.distance}
                   style={{width: 20, height: 20, marginRight: 10}}
@@ -97,15 +97,18 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: font.SarabunLight,
     fontSize: normalize(16),
+    color: colors.fontBlack,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   h1: {
     color: colors.primary,
     fontFamily: font.SarabunBold,
-    fontSize: normalize(20),
+    fontSize: normalize(18),
   },
   cards: {
     backgroundColor: colors.white,
-    height: normalize(205),
+    height:  normalize(250),
     width: normalize(160),
     borderRadius: 10,
     borderWidth: 0.3,

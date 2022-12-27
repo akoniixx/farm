@@ -9,6 +9,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {condition} from '../../assets/constant/constant';
 import {normalize} from '../../functions/Normalize';
 import icons from '../../assets/icons/icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ConditionScreen: React.FC<any> = ({navigation}) => {
   const [checked, setChecked] = useState<boolean>(false);
@@ -110,7 +111,10 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
             label="ถัดไป"
             color={colors.greenLight}
             disable={!checked || !checked1}
-            onPress={() => navigation.navigate('TelNumScreen')}
+            onPress={ async() => {
+              await AsyncStorage.setItem('PDPA', 'read')
+              navigation.navigate('TelNumScreen')}
+            }
           />
         </View>
       </View>

@@ -1071,7 +1071,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     height: normalize(80),
-    width: normalize(350),
+    width: normalize(330),
     borderStyle: 'dashed',
     position: 'relative',
     alignSelf: 'center',
