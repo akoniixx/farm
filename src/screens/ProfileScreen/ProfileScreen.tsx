@@ -504,15 +504,7 @@ const styles = StyleSheet.create({
     height: normalize(54),
     width: normalize(343),
     alignSelf: 'center',
-    marginTop: normalize(30),
-    shadowColor: '#0CDF65',
-    shadowOffset: {
-      width: 1,
-      height: 3,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 12.35,
-    elevation: 19,
+    marginTop: normalize(30)
   },
   textBlank: {
     alignItems: 'center',

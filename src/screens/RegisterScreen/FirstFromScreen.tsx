@@ -56,7 +56,6 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
 
   const onChange = (event: any, selectDate: any) => {
     setDate(selectDate);
-    setOpenCalendar(false)
     
   }
 
