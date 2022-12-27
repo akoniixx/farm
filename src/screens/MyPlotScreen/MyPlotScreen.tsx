@@ -5,8 +5,8 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
 import {normalize} from '../../functions/Normalize';
-import {MainButton} from '../../components/Button/MainButton';
 import {colors, font, image} from '../../assets';
+import {MainButton} from '../../components/Button/MainButton';
 
 const MyPlotScreen: React.FC<any> = ({navigation}) => {
   const [fcmToken, setFcmToken] = useState('');
@@ -54,27 +54,6 @@ const MyPlotScreen: React.FC<any> = ({navigation}) => {
 };
 export default MyPlotScreen;
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  inner: {
-    paddingHorizontal: normalize(17),
-    flex: 1,
-    justifyContent: 'space-around',
-  },
-  buttomBlank: {
-    height: normalize(54),
-    width: normalize(343),
-    alignSelf: 'center',
-    shadowColor: '#0CDF65',
-    shadowOffset: {
-      width: 1,
-      height: 3,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 12.35,
-    elevation: 19,
-  },
   text: {
     fontFamily: font.AnuphanBold,
     fontSize: normalize(22),
@@ -95,5 +74,23 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     display: 'flex',
     top: '25%',
+  },
+  buttomBlank: {
+    height: normalize(54),
+    width: normalize(343),
+    alignSelf: 'center',
+    shadowColor: '#0CDF65',
+    shadowOffset: {
+      width: 1,
+      height: 3,
+    },
+    container: {
+      flex: 1,
+    },
+    inner: {
+      paddingHorizontal: normalize(17),
+      flex: 1,
+      justifyContent: 'space-around',
+    },
   },
 });

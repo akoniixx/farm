@@ -24,6 +24,7 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 
 const ProfileScreen: React.FC<any> = ({navigation}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  console.log(profilestate);
   const [data, setData] = useState<any>();
   const windowWidth = Dimensions.get('screen').width;
   const windowHeight = Dimensions.get('screen').height;
@@ -79,17 +80,19 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
           }
         });
         if (imgPath.length === 0) {
+          console.log(res.farmerPlot);
           dispatch({
             type: 'InitProfile',
             name: `${res.firstname} ${res.lastname}`,
             id: res.farmerCode,
             image: '',
-            plotitem: res.farmerPlot,
+            plotItem: res.farmerPlot,
             status: res.status,
           });
         } else {
           ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
             .then(resImg => {
+              console.log(res.farmerPlot);
               dispatch({
                 type: 'InitProfile',
                 name: `${res.firstname} ${res.lastname}`,
@@ -134,8 +137,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
     actionSheet.current.hide();
   };
   return (
-    <SafeAreaView
-      style={[stylesCentral.container]}>
+    <SafeAreaView style={[stylesCentral.container]}>
       {fcmToken !== null ? (
         <>
           <View
@@ -179,15 +181,14 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                 <View style={{flexDirection: 'row'}}>
                   <Text style={[styles.text]}>{profilestate.name} </Text>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('EditProfileScreen')}
-                >
+                    onPress={() => navigation.navigate('EditProfileScreen')}>
                     <Image
                       source={icons.edit}
                       style={{
                         width: normalize(20),
                         height: normalize(20),
                         tintColor: colors.fontBlack,
-                        marginLeft: '55%',                      
+                        marginLeft: '55%',
                       }}
                     />
                   </TouchableOpacity>
@@ -205,9 +206,8 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                     borderColor: StatusObject(profilestate.status).fontColor,
                     backgroundColor: StatusObject(profilestate.status).colorBg,
                     flexDirection: 'row',
-
                   }}>
-                     {StatusObject(profilestate.status).status ===
+                  {StatusObject(profilestate.status).status ===
                   'ตรวจสอบแล้ว' ? (
                     <Image
                       source={icons.correct}
@@ -223,29 +223,28 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   <Text
                     style={{
                       color: StatusObject(profilestate.status).fontColor,
-                      fontFamily: font.AnuphanBold,                      fontSize: normalize(14),
-
+                      fontFamily: font.AnuphanBold,
+                      fontSize: normalize(14),
                     }}>
                     {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
-                     ? 'ยืนยันตัวตนสำเร็จ'
+                      ? 'ยืนยันตัวตนสำเร็จ'
                       : 'รอการตรวจสอบ'}
                   </Text>
                 </View>
               </View>
             </View>
-            <View style={{margin: 2, backgroundColor: '#EBEEF0', height: 3}}></View>
+            <View
+              style={{margin: 2, backgroundColor: '#EBEEF0', height: 3}}></View>
             <View style={[styles.section2]}>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-               <Text style={[styles.head]}>
-                  แปลงของคุณ 
-                  ({profilestate.plotItem.length})
+                <Text style={[styles.head]}>
+                  แปลงของคุณ ({profilestate.plotItem.length})
                 </Text>
-                <TouchableOpacity 
-              onPress={() => {
-                navigation.navigate('AllPlotScreen');
-              }}
-              >
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('AllPlotScreen');
+                  }}>
                   <Text style={[styles.h1]}>ดูแปลงทั้งหมด</Text>
                 </TouchableOpacity>
               </View>
@@ -279,27 +278,29 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   {profilestate.plotItem.map((item: any, index: number) => (
                     <PlotsItem
                       key={index}
-                      plotName={!item.plotName
-                        ? 'แปลงที่' +
-                        ' ' +
-                        `${index + 1}` +
-                        ' ' +
-                        item.plantName
-                        : item.plotName}
+                      plotName={
+                        !item.plotName
+                          ? 'แปลงที่' +
+                            ' ' +
+                            `${index + 1}` +
+                            ' ' +
+                            item.plantName
+                          : item.plotName
+                      }
                       raiAmount={item.raiAmount}
                       location={item.locationName}
                       plantName={item.plantName}
                       status={item.status}
-                      index={0} 
-                      />
+                      index={0}
+                    />
                   ))}
                 </View>
               )}
-
             </View>
-            <View style={{margin: 2, backgroundColor: '#EBEEF0', height: 3}}></View>
-            <View style={[styles.section3]}>
             <View
+              style={{margin: 2, backgroundColor: '#EBEEF0', height: 3}}></View>
+            <View style={[styles.section3]}>
+              <View
                 style={{
                   backgroundColor: colors.white,
                   width: '100%',

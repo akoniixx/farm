@@ -88,7 +88,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 source={image.bgHead}
                 style={{
                   width: (windowWidth * 380) / 375,
-                  height: (windowHeight * 300) / 812,
+                  height: (windowHeight * 250) / 812,
                 }}>
                 <View style={styles.headCard}>
                   <View>
@@ -110,7 +110,12 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     </Text>
                   </View>
                 </View>
-                <View style={{flexDirection: 'row', top: '30%', justifyContent: 'center'}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    top: '25%',
+                    justifyContent: 'center',
+                  }}>
                   <TouchableOpacity>
                     <LinearGradient
                       colors={['#61E097', '#3B996E']}
@@ -148,7 +153,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   flexDirection: 'row',
                   padding: '5%',
                   justifyContent: 'space-between',
-                  top: '10%',
+                  top: '5%',
                 }}>
                 <Text
                   style={{
@@ -172,7 +177,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   width: '100%',
                   height: normalize(60),
                   alignItems: 'center',
-                  top: '%',
+                  top: '6%',
                 }}>
                 <Image
                   source={image.academy}
@@ -189,7 +194,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   style={[styles.text, {alignSelf: 'flex-start', top: '20%'}]}>
                   นักบินโดรนที่แนะนำ
                 </Text>
-                <View style={{ top: '10%'}}>
+                <View style={{top: '10%'}}>
                   <DronerCarousel />
                 </View>
               </View>
@@ -199,7 +204,8 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
         </View>
       ) : (
         <>
-          <ScrollView style={{backgroundColor: colors.white, height: screenHeight}}>
+          <ScrollView
+            style={{backgroundColor: colors.white, height: screenHeight}}>
             <View style={[stylesCentral.container]}>
               <View style={{flex: 1}}>
                 <View>
@@ -237,8 +243,9 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                         </Text>
                       </View>
                     </View>
-                    <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                      <View style={{flexDirection: 'row', top: '20%'}}>
+                    <View
+                      style={{alignItems: 'center', justifyContent: 'center'}}>
+                      <View style={{flexDirection: 'row', top: '25%'}}>
                         <TouchableOpacity
                           onPress={() => navigation.navigate('DronerBooking')}>
                           <LinearGradient
@@ -280,7 +287,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     flexDirection: 'row',
                     padding: '5%',
                     justifyContent: 'space-between',
-                    top: '10%',
+                    top: '5%',
                   }}>
                   <Text
                     style={{
@@ -320,7 +327,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   <Text
                     style={[
                       styles.text,
-                      {alignSelf: 'flex-start', top: '10%'},
+                      {alignSelf: 'flex-start', top: '15%'},
                     ]}>
                     นักบินโดรนที่แนะนำ
                   </Text>
@@ -329,9 +336,11 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     style={{
                       width: normalize(126),
                       height: normalize(120),
-                      top: '15%',
+                      top: '18%',
                     }}
                   />
+                  <View style={{height: '10%'}}></View>
+
                   <Text style={[styles.textEmpty]}>
                     เพื่อให้สามารถจ้างงานนักบินโดรนได้
                   </Text>
