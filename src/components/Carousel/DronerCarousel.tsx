@@ -8,6 +8,8 @@ import {Avatar} from '@rneui/themed';
 const DronerCarousel: React.FC<any> = () => {
   const screen = Dimensions.get('window');
   const RenderItem: React.FC<any> = ({index}) => {
+
+    
     return (
       <View style={{flex: 1, top: '10%', padding: 10}}>
         <View style={[styles.cards]}>

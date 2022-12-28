@@ -38,6 +38,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {initProfileState, profileReducer} from '../../hook/profilefield';
 import DronerCarousel from '../../components/Carousel/DronerCarousel';
+import { TaskSuggestion } from '../../datasource/TaskSuggestion';
+import PlotsItem from '../../components/Plots/Plots';
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -47,6 +49,7 @@ const imageWidth = screenWidth / 2;
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const [fcmToken, setFcmToken] = useState('');
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  const [taskSug, setTaskSug] = useState()
 
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -68,6 +71,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
   const getProfile = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
+    console.log(farmer_id)
     ProfileDatasource.getProfile(farmer_id!)
       .then(res => {
         dispatch({
@@ -76,7 +80,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
         });
       })
       .catch(err => console.log(err));
-  };
+  }; 
 
   return (
     <ScrollView>
