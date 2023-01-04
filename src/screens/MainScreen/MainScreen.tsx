@@ -203,9 +203,42 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 </View>
               </View>
             </View>
-            <View style={{height: normalize(150)}}>
-              
-            </View>
+            <View style={{flexDirection: 'row', top: '35%'}}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('SelectDateScreen')}>
+                  <View
+                    style={{
+                      backgroundColor: '#3B996E',
+                      marginHorizontal: 15,
+                      paddingHorizontal: 10,
+                      paddingVertical: normalize(10),
+                      width: 180,
+                      height: 150,
+                      borderRadius: 24,
+                      alignItems: 'center',
+                    }}>
+                    <Image source={icons.drone} />
+                    <Text style={styles.font} >จ้างโดรนเกษตร</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('ConditionScreen')}>
+                  <View
+                    style={{
+                      backgroundColor: '#ECFBF2',
+                      marginHorizontal: 10,
+                      paddingHorizontal: 10,
+                      paddingVertical: normalize(10),
+                      width: 180,
+                      height: 150,
+                      borderRadius: 24,
+                      alignItems: 'center',
+                    }}>
+                    <Image source={icons.plots} />
+                    <Text style={styles.font1}>แปลงของคุณ</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
           </View>
         </View>
       ) : (

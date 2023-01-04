@@ -140,3 +140,15 @@ const HomeScreen: React.FC<any> = ({navigation, route}) => {
   );
 };
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+  btnContainer: {
+    width: normalize(33),
+    marginVertical: normalize(10),
+  },
+  inner: {
+    paddingHorizontal: normalize(17),
+    flex: 1,
+    justifyContent: 'space-around',
+  },
+});
