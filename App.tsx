@@ -7,11 +7,13 @@ import Toast from 'react-native-toast-message';
 import {SheetProvider} from 'react-native-actions-sheet';
 import {toastConfig} from './src/config/toast-config';
 import { BackHandler } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
+     AsyncStorage.setItem('token', '123');
   }, []);
   return (
     <>

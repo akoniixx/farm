@@ -4,6 +4,7 @@ import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import MainTapNavigator from './Bottom/MainTapNavigator';
 import MainScreen from '../screens/MainScreen/MainScreen';
 import AllPlotScreen from '../screens/ProfileScreen/AllPlotScreen';
+import SelectDateScreen from '../screens/AutoBooking/SelectDateScreen';
 const Stack = createStackNavigator()
 
 const MainNavigator: React.FC = () => {
@@ -16,6 +17,7 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="AllPlotScreen" component={AllPlotScreen} />
       <Stack.Screen name="MainScreen" component={MainScreen}/>
+         <Stack.Screen name="SelectDateScreen" component={SelectDateScreen} /> 
     </Stack.Navigator>
   )
 }
