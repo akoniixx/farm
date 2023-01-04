@@ -12,6 +12,7 @@ import SuccessRegister from '../screens/RegisterScreen/SuccessScreen';
 import FourthFormScreen from '../screens/RegisterScreen/FourthFormScreen';
 import AddIDcardScreen from '../screens/RegisterScreen/AddIDcardScreen';
 import FirstFormScreen from '../screens/RegisterScreen/FirstFromScreen';
+import SelectDateScreen from '../screens/AutoBooking/SelectDateScreen';
 
 
 
@@ -32,7 +33,7 @@ const AppAuthNavigator: React.FC = () => {
       <Stack.Screen name="SuccessRegister" component={SuccessRegister} />
       <Stack.Screen name="FourthFormScreen" component={FourthFormScreen} />
       <Stack.Screen name="AddIDcardScreen" component={AddIDcardScreen} />
-
+      
 
 
 

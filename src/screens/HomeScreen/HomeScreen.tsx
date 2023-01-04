@@ -18,7 +18,7 @@ const HomeScreen: React.FC<any> = ({navigation}) => {
           <MainButton
             label="เริ่มใช้งาน"
             color={colors.greenLight}
-            onPress={() => navigation.navigate('LoginScreen')}
+            onPress={() => navigation.navigate('MainScreen')}
           />
         </View>
       </View>

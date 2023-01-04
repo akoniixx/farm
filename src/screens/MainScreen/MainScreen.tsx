@@ -67,7 +67,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
               </View>
               <View style={{flexDirection: 'row', top: '35%'}}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('ConditionScreen')}>
+                  onPress={() => navigation.navigate('SelectDateScreen')}>
                   <View
                     style={{
                       backgroundColor: '#3B996E',

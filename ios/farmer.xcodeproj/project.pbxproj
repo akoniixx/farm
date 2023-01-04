@@ -9,11 +9,11 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* farmerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* farmerTests.m */; };
 		0BBE516B5CAB43D68B98C339 /* Anuphan-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 65D81DE2054F4B3899F3DAED /* Anuphan-Medium.otf */; };
-		0C80B921A6F3F58F76C31292 /* libPods-farmer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-farmer.a */; };
 		10279EFD61A64239982BF31F /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B8F08C6ABB4465FB8F65BD3 /* FontAwesome5_Solid.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		2443898E11FEE65805F756D8 /* libPods-farmer-farmerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D1D889D6A5B24E97F49A487 /* libPods-farmer-farmerTests.a */; };
 		24841A7F6BB64F00AB0F0900 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A3E1A9ACBE21454F807F8B26 /* Zocial.ttf */; };
 		25CF6150BC874D98B80FDC7E /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF83F8BDB28F4FCAA12DCD39 /* Entypo.ttf */; };
 		2BC7B07EC9034DAAAB6366B2 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9603BDE0B1F8417FBE9CE02A /* Ionicons.ttf */; };
@@ -24,11 +24,11 @@
 		64A332CA74844D35B3393CAF /* Sarabun-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2FE69C8B24DA43A3A19E6C72 /* Sarabun-Bold.ttf */; };
 		6E53E75379834B1BA3A7D41E /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D825E13E2910472ABD4CC80B /* MaterialCommunityIcons.ttf */; };
 		7249DA0B3AD847568EF7FF2F /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F74FFD5E50E64D30A149CE0C /* Foundation.ttf */; };
-		7699B88040F8A987B510C191 /* libPods-farmer-farmerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-farmer-farmerTests.a */; };
 		7EEF520FEAC748719C0D4AE2 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C65D6DA68D104371B1AF607F /* MaterialIcons.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8202680272B84FBF9BCBB4EE /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6625B2D94D2454AB6DCDE21 /* FontAwesome.ttf */; };
 		990F5E42EB1A4D3485349652 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6104EDE766E24424A0000B38 /* Fontisto.ttf */; };
+		9942D5D73F1EFDC3304BB52E /* libPods-farmer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 045713E20BE4A53143B39DC7 /* libPods-farmer.a */; };
 		99B205E0EB5E4BA18CFB9B69 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93519276B58C41D7BC3208EA /* FontAwesome5_Brands.ttf */; };
 		9D4520479D6C44EE844AF082 /* Anuphan-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = F42BE3F7CD644E84B362FE49 /* Anuphan-Bold.otf */; };
 		AC582E29205C4EEBADF6BE27 /* Sarabun-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D1F2C604491F47C6A563A689 /* Sarabun-Light.ttf */; };
@@ -53,38 +53,38 @@
 		00E356EE1AD99517003FC87E /* farmerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = farmerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* farmerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = farmerTests.m; sourceTree = "<group>"; };
+		045713E20BE4A53143B39DC7 /* libPods-farmer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-farmer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* farmer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = farmer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = farmer/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = farmer/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = farmer/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = farmer/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = farmer/main.m; sourceTree = "<group>"; };
-		19F6CBCC0A4E27FBF8BF4A61 /* libPods-farmer-farmerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-farmer-farmerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		20B9AF20600E5E98BC667138 /* Pods-farmer-farmerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer-farmerTests.release.xcconfig"; path = "Target Support Files/Pods-farmer-farmerTests/Pods-farmer-farmerTests.release.xcconfig"; sourceTree = "<group>"; };
 		26E973754BE244C08A903311 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = ../src/assets/fonts/Feather.ttf; sourceTree = "<group>"; };
 		2FE69C8B24DA43A3A19E6C72 /* Sarabun-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Bold.ttf"; path = "../src/assets/fonts/Sarabun-Bold.ttf"; sourceTree = "<group>"; };
-		3B4392A12AC88292D35C810B /* Pods-farmer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer.debug.xcconfig"; path = "Target Support Files/Pods-farmer/Pods-farmer.debug.xcconfig"; sourceTree = "<group>"; };
 		3CB3D555E4984153AE4BA2D5 /* Sarabun-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Medium.ttf"; path = "../src/assets/fonts/Sarabun-Medium.ttf"; sourceTree = "<group>"; };
 		4230E2C5E05F42A28CAB7E2C /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = ../src/assets/fonts/AntDesign.ttf; sourceTree = "<group>"; };
 		4B8F08C6ABB4465FB8F65BD3 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = ../src/assets/fonts/FontAwesome5_Solid.ttf; sourceTree = "<group>"; };
 		4F4087F42B2843228EE8D8D8 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = ../src/assets/fonts/Octicons.ttf; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-farmer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer.release.xcconfig"; path = "Target Support Files/Pods-farmer/Pods-farmer.release.xcconfig"; sourceTree = "<group>"; };
-		5B7EB9410499542E8C5724F5 /* Pods-farmer-farmerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer-farmerTests.debug.xcconfig"; path = "Target Support Files/Pods-farmer-farmerTests/Pods-farmer-farmerTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5DCACB8F33CDC322A6C60F78 /* libPods-farmer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-farmer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		60F1F01729266B63007549EB /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		6104EDE766E24424A0000B38 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = ../src/assets/fonts/Fontisto.ttf; sourceTree = "<group>"; };
 		65D81DE2054F4B3899F3DAED /* Anuphan-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Anuphan-Medium.otf"; path = "../src/assets/fonts/Anuphan-Medium.otf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = farmer/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		828C0E280D604EFE8C155856 /* Anuphan-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Anuphan-Light.otf"; path = "../src/assets/fonts/Anuphan-Light.otf"; sourceTree = "<group>"; };
-		89C6BE57DB24E9ADA2F236DE /* Pods-farmer-farmerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer-farmerTests.release.xcconfig"; path = "Target Support Files/Pods-farmer-farmerTests/Pods-farmer-farmerTests.release.xcconfig"; sourceTree = "<group>"; };
+		8D1D889D6A5B24E97F49A487 /* libPods-farmer-farmerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-farmer-farmerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9224C52AA92ACE10BC40C257 /* Pods-farmer-farmerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer-farmerTests.debug.xcconfig"; path = "Target Support Files/Pods-farmer-farmerTests/Pods-farmer-farmerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		93519276B58C41D7BC3208EA /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = ../src/assets/fonts/FontAwesome5_Brands.ttf; sourceTree = "<group>"; };
 		9603BDE0B1F8417FBE9CE02A /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = ../src/assets/fonts/Ionicons.ttf; sourceTree = "<group>"; };
 		A3E1A9ACBE21454F807F8B26 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = ../src/assets/fonts/Zocial.ttf; sourceTree = "<group>"; };
 		AF83F8BDB28F4FCAA12DCD39 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = ../src/assets/fonts/Entypo.ttf; sourceTree = "<group>"; };
 		B61B979E6E7A4D8FBB33C734 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = ../src/assets/fonts/FontAwesome5_Regular.ttf; sourceTree = "<group>"; };
+		C2ACCBD8A31CAE75727C0836 /* Pods-farmer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer.debug.xcconfig"; path = "Target Support Files/Pods-farmer/Pods-farmer.debug.xcconfig"; sourceTree = "<group>"; };
 		C65D6DA68D104371B1AF607F /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = ../src/assets/fonts/MaterialIcons.ttf; sourceTree = "<group>"; };
 		C6625B2D94D2454AB6DCDE21 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = ../src/assets/fonts/FontAwesome.ttf; sourceTree = "<group>"; };
 		D1F2C604491F47C6A563A689 /* Sarabun-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Light.ttf"; path = "../src/assets/fonts/Sarabun-Light.ttf"; sourceTree = "<group>"; };
 		D825E13E2910472ABD4CC80B /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = ../src/assets/fonts/MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
+		DCFFE7152644D58ED8E54EC1 /* Pods-farmer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer.release.xcconfig"; path = "Target Support Files/Pods-farmer/Pods-farmer.release.xcconfig"; sourceTree = "<group>"; };
 		E354E12A922F4E29915ECEC5 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = ../src/assets/fonts/EvilIcons.ttf; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F1C865AEF1074351B752CE88 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = ../src/assets/fonts/SimpleLineIcons.ttf; sourceTree = "<group>"; };
@@ -97,7 +97,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7699B88040F8A987B510C191 /* libPods-farmer-farmerTests.a in Frameworks */,
+				2443898E11FEE65805F756D8 /* libPods-farmer-farmerTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,7 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C80B921A6F3F58F76C31292 /* libPods-farmer.a in Frameworks */,
+				9942D5D73F1EFDC3304BB52E /* libPods-farmer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,8 +175,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5DCACB8F33CDC322A6C60F78 /* libPods-farmer.a */,
-				19F6CBCC0A4E27FBF8BF4A61 /* libPods-farmer-farmerTests.a */,
+				045713E20BE4A53143B39DC7 /* libPods-farmer.a */,
+				8D1D889D6A5B24E97F49A487 /* libPods-farmer-farmerTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -217,10 +217,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3B4392A12AC88292D35C810B /* Pods-farmer.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-farmer.release.xcconfig */,
-				5B7EB9410499542E8C5724F5 /* Pods-farmer-farmerTests.debug.xcconfig */,
-				89C6BE57DB24E9ADA2F236DE /* Pods-farmer-farmerTests.release.xcconfig */,
+				C2ACCBD8A31CAE75727C0836 /* Pods-farmer.debug.xcconfig */,
+				DCFFE7152644D58ED8E54EC1 /* Pods-farmer.release.xcconfig */,
+				9224C52AA92ACE10BC40C257 /* Pods-farmer-farmerTests.debug.xcconfig */,
+				20B9AF20600E5E98BC667138 /* Pods-farmer-farmerTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -232,12 +232,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "farmerTests" */;
 			buildPhases = (
-				A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */,
+				3F7572A07010EB6638E8637A /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */,
-				F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */,
+				8DCD4236B38FF67D41A984D6 /* [CP] Embed Pods Frameworks */,
+				C15A075037EBBA19C9B40956 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -253,14 +253,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "farmer" */;
 			buildPhases = (
-				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
+				79E166EADCF9987F8BC86939 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
-				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
+				D24B038DF2531DECFB29CAA4 /* [CP] Embed Pods Frameworks */,
+				DE9E1A045630F6ABE4976CF0 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -366,24 +366,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-farmer/Pods-farmer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-farmer/Pods-farmer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-farmer/Pods-farmer-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
+		3F7572A07010EB6638E8637A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -405,7 +388,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
+		79E166EADCF9987F8BC86939 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -427,7 +410,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */ = {
+		8DCD4236B38FF67D41A984D6 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -444,24 +427,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-farmer-farmerTests/Pods-farmer-farmerTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-farmer/Pods-farmer-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-farmer/Pods-farmer-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-farmer/Pods-farmer-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */ = {
+		C15A075037EBBA19C9B40956 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -476,6 +442,40 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-farmer-farmerTests/Pods-farmer-farmerTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D24B038DF2531DECFB29CAA4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-farmer/Pods-farmer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-farmer/Pods-farmer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-farmer/Pods-farmer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DE9E1A045630F6ABE4976CF0 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-farmer/Pods-farmer-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-farmer/Pods-farmer-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-farmer/Pods-farmer-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -530,7 +530,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-farmer-farmerTests.debug.xcconfig */;
+			baseConfigurationReference = 9224C52AA92ACE10BC40C257 /* Pods-farmer-farmerTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -557,7 +557,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-farmer-farmerTests.release.xcconfig */;
+			baseConfigurationReference = 20B9AF20600E5E98BC667138 /* Pods-farmer-farmerTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
@@ -583,7 +583,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-farmer.debug.xcconfig */;
+			baseConfigurationReference = C2ACCBD8A31CAE75727C0836 /* Pods-farmer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -613,7 +613,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-farmer.release.xcconfig */;
+			baseConfigurationReference = DCFFE7152644D58ED8E54EC1 /* Pods-farmer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

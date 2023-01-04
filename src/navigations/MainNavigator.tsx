@@ -1,6 +1,7 @@
 import React, { createContext, useMemo } from 'react';
 import { createStackNavigator } from '@react-navigation/stack'
 import MainTapNavigator from './Tabs/MainTapNavigator';
+import SelectDateScreen from '../screens/AutoBooking/SelectDateScreen';
 const Stack = createStackNavigator()
 
 const MainNavigator: React.FC = () => {
@@ -10,6 +11,7 @@ const MainNavigator: React.FC = () => {
             gestureEnabled: false,
             headerLeft: () => null,
           }} />
+         <Stack.Screen name="SelectDateScreen" component={SelectDateScreen} /> 
     </Stack.Navigator>
   )
 }
