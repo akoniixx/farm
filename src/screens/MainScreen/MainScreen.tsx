@@ -52,13 +52,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const [fcmToken, setFcmToken] = useState('');
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [taskSug, setTaskSug] = useState<any[]>([]);
-  const [plotData, setPlotData] = useState<any>([]);
-  const [name, setName] = useState<any>();
-  const [rate, setRate] = useState<any>();
-  const [province, setProvince] = useState<any>();
-  const [distance, setDistance] = useState<any>();
-  const [profileIMG, setProfileIMG] = useState<any>();
-  const [background, setBackground] = useState<any>();
 
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
