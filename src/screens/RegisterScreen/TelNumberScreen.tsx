@@ -64,7 +64,7 @@ const TelNumScreen: React.FC<any> = ({navigation}) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={stylesCentral.container}>
           <CustomHeader
-            title="ลงทะเบียนเกษตรกร"
+            title="ลงทะเบียน/เข้าสู่ระบบ"
             showBackBtn
             onPressBack={() => navigation.goBack()}
           />

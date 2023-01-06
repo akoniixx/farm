@@ -38,8 +38,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {initProfileState, profileReducer} from '../../hook/profilefield';
 import DronerCarousel from '../../components/Carousel/DronerCarousel';
-import { TaskSuggestion } from '../../datasource/TaskSuggestion';
+import {TaskSuggestion} from '../../datasource/TaskSuggestion';
 import PlotsItem from '../../components/Plots/Plots';
+import PlotsItemS from '../../components/Carousel/DronerCarousel';
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -47,9 +48,17 @@ const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 const imageWidth = screenWidth / 2;
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
+  const date = new Date().toLocaleDateString();
   const [fcmToken, setFcmToken] = useState('');
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
-  const [taskSug, setTaskSug] = useState()
+  const [taskSug, setTaskSug] = useState<any[]>([]);
+  const [plotData, setPlotData] = useState<any>([]);
+  const [name, setName] = useState<any>();
+  const [rate, setRate] = useState<any>();
+  const [province, setProvince] = useState<any>();
+  const [distance, setDistance] = useState<any>();
+  const [profileIMG, setProfileIMG] = useState<any>();
+  const [background, setBackground] = useState<any>();
 
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -61,6 +70,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
   useEffect(() => {
     getProfile();
+    dronerSug();
   }, []);
 
   useFocusEffect(
@@ -71,21 +81,28 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
   const getProfile = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-    console.log(farmer_id)
-    ProfileDatasource.getProfile(farmer_id!)
-      .then(res => {
-        dispatch({
-          type: 'InitProfile',
-          name: `${res.firstname}`,
-        });
-      })
-      .catch(err => console.log(err));
-  }; 
-
+    ProfileDatasource.getProfile(farmer_id!).then(res => {
+      dispatch({
+        type: 'InitProfile',
+        name: `${res.firstname} ${res.lastname}`,
+        plotItem: res.farmerPlot,
+      });
+    });
+  };
+  const dronerSug = async () => {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    TaskSuggestion.searchDroner(
+      farmer_id !== null ? farmer_id : '',
+      profilestate.plotItem[0].id,
+      date,
+    ).then(res => {
+      setTaskSug(res);
+    });
+  };
   return (
     <ScrollView>
       {fcmToken !== null ? (
-        <View style={[stylesCentral.container]}>
+        <View style={[stylesCentral.container, {height: windowHeight}]}>
           <View style={{flex: 1}}>
             <View>
               <ImageBackground
@@ -181,7 +198,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   width: '100%',
                   height: normalize(60),
                   alignItems: 'center',
-                  top: '6%',
+                  top: '4%',
                 }}>
                 <Image
                   source={image.academy}
@@ -195,50 +212,44 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
               </View>
               <View style={[styles.empty]}>
                 <Text
-                  style={[styles.text, {alignSelf: 'flex-start', top: '20%'}]}>
+                  style={[styles.text, {alignSelf: 'flex-start', top: '10%'}]}>
                   นักบินโดรนที่แนะนำ
                 </Text>
-                <View style={{top: '10%'}}>
-                  <DronerCarousel />
+                <View style={{top: '15%', height: '110%'}}>
+                  <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}>
+                    {taskSug.map(
+                      (item:any,index: any) => (
+                        <TouchableOpacity
+                          onPress={() => {
+                            // deTailPlot.current.show();
+                          }}>
+                          <PlotsItemS
+                          key={index}
+                            index={index}
+                            profile={
+                              item.image_droner !== null
+                                ? item.image_droner
+                                : image.empty_droner
+                            }
+                            background={''}
+                            name={item.firstname + ' ' + item.lastname}
+                            rate={item.rating_avg !== null ? parseFloat(item.rating_avg).toFixed(1) : '0'}
+                            province={item.province_name}
+                            distance={
+                              item.street_distance !== null
+                                ? item.street_distance.toFixed(0)
+                                : 0
+                            }
+                          />
+                        </TouchableOpacity>
+                      ),
+                    )}
+                  </ScrollView>
                 </View>
               </View>
             </View>
-            <View style={{flexDirection: 'row', top: '35%'}}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('SelectDateScreen')}>
-                  <View
-                    style={{
-                      backgroundColor: '#3B996E',
-                      marginHorizontal: 15,
-                      paddingHorizontal: 10,
-                      paddingVertical: normalize(10),
-                      width: 180,
-                      height: 150,
-                      borderRadius: 24,
-                      alignItems: 'center',
-                    }}>
-                    <Image source={icons.drone} />
-                    <Text style={styles.font} >จ้างโดรนเกษตร</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('ConditionScreen')}>
-                  <View
-                    style={{
-                      backgroundColor: '#ECFBF2',
-                      marginHorizontal: 10,
-                      paddingHorizontal: 10,
-                      paddingVertical: normalize(10),
-                      width: 180,
-                      height: 150,
-                      borderRadius: 24,
-                      alignItems: 'center',
-                    }}>
-                    <Image source={icons.plots} />
-                    <Text style={styles.font1}>แปลงของคุณ</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
           </View>
         </View>
       ) : (

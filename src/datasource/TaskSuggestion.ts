@@ -11,18 +11,14 @@ export class TaskSuggestion {
     dateAppointment: string,
     ): Promise<any> {
     return axios
-      .post(BASE_URL + '/tasks/task-suggestion/search-droner-suggestion', {
+      .post(BASE_URL + `/tasks/task-suggestion/search-droner-suggestion`, {
         farmerId: farmerId,
         farmerPlotId: farmerPlotId,
-        dateAppointment: dateAppointment
+        dateAppointment: dateAppointment        
       })
       .then(res => {
-        console.log(res)
         return res.data;
       })
-      .catch(err => {
-        throw err;
-      });
   }
 }
 

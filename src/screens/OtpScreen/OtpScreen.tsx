@@ -171,10 +171,13 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
           <View style={styles.inner}>
             <View style={styles.headContainer}>
               <View>
-                <Text style={[styles.text, {bottom: 15}]}>
-                  รหัสยืนยัน (OTP) ถูกส่งไปที่กล่องข้อความ{' '}
+                <Text style={[styles.text, {bottom: '5%'}]}>
+                เลขยืนยัน 6 หลัก (OTP)
                 </Text>
-                <Text style={[styles.text,{bottom: 10}]}>
+                <Text style={[styles.text, {bottom: '5%'}]}>
+                ถูกส่งไปที่กล่องข้อความของคุณ
+                </Text>
+                <Text style={[styles.text,{bottom: '2%'}]}>
                   เบอร์{' '}
                   <Text style={[styles.text, {color: colors.greenLight}]}>
                     {route.params.telNumber}
@@ -205,7 +208,7 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
 
             <View style={styles.otpQuestion}>
               <View>
-                <Text style={[styles.text, {bottom:15}]}>
+                <Text style={[styles.text, {bottom:'5%'}]}>
                   ถ้ายังไม่ได้รับรหัสยืนยัน (OTP) ?
                 
                 </Text>

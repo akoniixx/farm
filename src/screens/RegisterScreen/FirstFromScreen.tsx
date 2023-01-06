@@ -53,6 +53,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const days = new Date();
   const [date , setDate] = useState(new Date());
+  const dateFormat = "DD/MM/YYYY";
 
   const onChange = (event: any, selectDate: any) => {
     setDate(selectDate);
@@ -187,7 +188,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   day: 'numeric',
                   month: 'long',
                   year: 'numeric',
-                })}
+                 })}
                   editable={false}
                   placeholder={'ระบุวัน เดือน ปี'}
                   placeholderTextColor={colors.disable}
@@ -322,7 +323,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                 เลื่อนขึ้นลงเพื่อเลือกวันเกิดของคุณ
               </Text>
               <View>
-                <RNDateTimePicker
+                {/* <RNDateTimePicker
                   locale="th"
                   themeVariant="dark"
                   textColor={colors.fontBlack}
@@ -333,7 +334,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   maximumDate={new Date()}
                   onChange={onChange}
                   
-                />
+                /> */}
 
                 {/* <DatePicker
                 title={'เลือกวันเกิด'}
@@ -356,13 +357,12 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                     setOpenCalendar(false);
                   }}
                 /> */}
-                {/* <DatePickerCustom
+                <DatePickerCustom
                   value={date}
                   onHandleChange={(d : Date) => {
-                    console.log(d.toLocaleDateString('th-Th'))
                     setDate(d)
                   }}
-                /> */}
+                />
               </View>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-around'}}>

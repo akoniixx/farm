@@ -64,7 +64,6 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
           }
         });
         if (imgPath.length === 0) {
-          console.log(res.farmerPlot);
           dispatch({
             type: 'InitProfile',
             name: `${res.firstname} ${res.lastname}`,
@@ -76,7 +75,6 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
         } else {
           ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
             .then(resImg => {
-              console.log(res.farmerPlot);
               dispatch({
                 type: 'InitProfile',
                 name: `${res.firstname} ${res.lastname}`,
@@ -91,6 +89,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
       })
       .catch(err => console.log(err));
   };
+
   const addPlots = () => {
     const plots = [...plotData];
     console.log(plots);
@@ -431,7 +430,6 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                 alignItems: 'center',
                 padding: normalize(20),
                 flexDirection: 'row',
-                height: normalize(62),
                 justifyContent: 'space-between',
                 borderBottomWidth: 1,
                 borderColor: colors.disable,
@@ -451,7 +449,6 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                 alignItems: 'center',
                 padding: normalize(20),
                 flexDirection: 'row',
-                height: normalize(62),
                 justifyContent: 'space-between',
                 borderBottomWidth: 1,
                 borderColor: colors.disable,
@@ -529,8 +526,9 @@ const styles = StyleSheet.create({
   h2: {
     fontFamily: font.SarabunMedium,
     fontSize: 18,
-    color: colors.fontBlack
-  },
+    color: colors.fontBlack,
+    alignItems: 'center'
+    },
   headerTitleWraper: {
     backgroundColor: '#F7FFF0',
     display: 'flex',

@@ -352,7 +352,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 ))}
               </View>
             )}
-            <View style={[styles.buttonAdd, {top: '2%'}]}>
+            <View style={[styles.buttonAdd, {top: '0%'}]}>
               <Text
                 style={styles.textaddplot}
                 onPress={() => {

@@ -226,7 +226,9 @@ export class Register {
            }
           ]
       })
-      .then(response => {
+      .then(async response => {
+        const farmerPlot_id = response.data.id;
+        await AsyncStorage.setItem('farmerPlot_id', farmerPlot_id);
         return response.data;
       })
       .catch(error => {
