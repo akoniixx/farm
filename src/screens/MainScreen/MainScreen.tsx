@@ -204,6 +204,51 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 />
               </View>
               <View style={[styles.empty]}>
+                <View style={{flexDirection: 'row'}}>
+                <Text
+                  style={[styles.text, {alignSelf: 'flex-start', top: '10%'}]}>
+                  จ้างนักบินที่เคยจ้าง
+                </Text>
+                <Text
+                  style={[styles.text, {alignSelf: 'flex-start', top: '10%'}]}>
+                  ดูทั้งหมด
+                </Text>
+                </View>
+                <View style={{top: '15%', height: '110%'}}>
+                  <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}>
+                    {taskSug.map(
+                      (item:any,index: any) => (
+                        <TouchableOpacity
+                          onPress={() => {
+                            // deTailPlot.current.show();
+                          }}>
+                          <PlotsItemS
+                          key={index}
+                            index={index}
+                            profile={
+                              item.image_droner !== null
+                                ? item.image_droner
+                                : image.empty_droner
+                            }
+                            background={''}
+                            name={item.firstname + ' ' + item.lastname}
+                            rate={item.rating_avg !== null ? parseFloat(item.rating_avg).toFixed(1) : '0'}
+                            province={item.province_name}
+                            distance={
+                              item.street_distance !== null
+                                ? item.street_distance.toFixed(0)
+                                : 0
+                            }
+                          />
+                        </TouchableOpacity>
+                      ),
+                    )}
+                  </ScrollView>
+                </View>
+              </View>
+              <View style={[styles.empty]}>
                 <Text
                   style={[styles.text, {alignSelf: 'flex-start', top: '10%'}]}>
                   นักบินโดรนที่แนะนำ

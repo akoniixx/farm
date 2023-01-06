@@ -1,5 +1,5 @@
 import React, {useReducer, useRef, useState} from 'react';
-import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, Image, Linking, Platform, StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, font, icons, image} from '../../assets';
 import {height, normalize} from '../../functions/Normalize';
@@ -119,6 +119,14 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
     setplotName(null);
     actionSheet.current.hide();
   };
+  const openGooglePlay = () => {
+    if (Platform.OS === 'ios') {
+      Linking.openURL(`https://apps.apple.com/th/app/iconkaset-droner/id6443516628?l=th`);
+    } else {
+      Linking.openURL(
+        `https://play.google.com/store/apps/details?id=com.iconkaset.droner`
+      );
+  }};
   return (
     <SafeAreaView style={[stylesCentral.container]}>
       {fcmToken !== null ? (
@@ -426,6 +434,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
               justifyContent: 'space-around',
             }}>
             <TouchableOpacity
+            onPress={openGooglePlay}
               style={{
                 alignItems: 'center',
                 padding: normalize(20),
