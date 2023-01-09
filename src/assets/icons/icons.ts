@@ -37,6 +37,8 @@ export default {
   warning: require('./warning.png'),
   heart: require('./heart.png'),
   star: require('./star.png'),
-  distance: require('./distance.png')
+  distance: require('./distance.png'),
+  heart_active: require('./heart_active.png'),
+
 
 };

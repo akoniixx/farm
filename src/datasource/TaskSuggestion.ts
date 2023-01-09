@@ -20,5 +20,24 @@ export class TaskSuggestion {
         return res.data;
       })
   }
+  static async DronerUsed(
+    farmerId: string,
+    farmerPlotId: string,
+    dateAppointment: string,
+    limit: number,
+    offset: number
+    ): Promise<any> {
+    return axios
+      .post(BASE_URL + `/tasks/task-suggestion/droner-ever-used`, {
+        farmerId: farmerId,
+        farmerPlotId: farmerPlotId,
+        dateAppointment: dateAppointment,
+        limit: limit,
+        offset: offset     
+      })
+      .then(res => {
+        return res.data;
+      })
+  }
 }
 

@@ -1,5 +1,14 @@
 import React, {useReducer, useRef, useState} from 'react';
-import {Dimensions, Image, Linking, Platform, StyleSheet, Text, View} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  Linking,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, font, icons, image} from '../../assets';
 import {height, normalize} from '../../functions/Normalize';
@@ -21,6 +30,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {MainButton} from '../../components/Button/MainButton';
 import ConditionScreen from '../RegisterScreen/ConditionScreen';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import PlotInProfile from '../../components/Plots/PlotsInProfile';
 
 const ProfileScreen: React.FC<any> = ({navigation}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -121,12 +131,16 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
   };
   const openGooglePlay = () => {
     if (Platform.OS === 'ios') {
-      Linking.openURL(`https://apps.apple.com/th/app/iconkaset-droner/id6443516628?l=th`);
+      Linking.openURL(
+        `https://apps.apple.com/th/app/iconkaset-droner/id6443516628?l=th`,
+      );
     } else {
       Linking.openURL(
-        `https://play.google.com/store/apps/details?id=com.iconkaset.droner`
+        `https://play.google.com/store/apps/details?id=com.iconkaset.droner`,
       );
-  }};
+    }
+  };
+
   return (
     <SafeAreaView style={[stylesCentral.container]}>
       {fcmToken !== null ? (
@@ -250,24 +264,70 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                       top: '5%',
                     }}
                   />
-                    <Text
-                      style={{
-                        fontFamily: font.SarabunLight,
-                        fontSize: normalize(16),
-                        color: colors.gray,
-                        textAlign: 'center',
-                        paddingVertical: normalize(22)
-                      }}>{`คุณไม่มีแปลงเกษตร
+                  <Text
+                    style={{
+                      fontFamily: font.SarabunLight,
+                      fontSize: normalize(16),
+                      color: colors.gray,
+                      textAlign: 'center',
+                      paddingVertical: normalize(22),
+                    }}>{`คุณไม่มีแปลงเกษตร
  กดเพิ่มแปลงเกษตรได้เลย!`}</Text>
-                 
+
                   <View style={[styles.buttonAdd]}>
                     <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
                   </View>
                 </View>
               ) : (
-                <View style={{top: 20}}>
+                <View style={{top: 5}}>
+                  <ScrollView
+                    style={{paddingVertical: 20}}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}>
+                    <FlatList
+                      scrollEnabled={false}
+                      contentContainerStyle={{
+                        alignSelf: 'flex-start',
+                      }}
+                      ItemSeparatorComponent={({highlighted}) => (
+                        <View style={[highlighted && {marginLeft: 0}]} />
+                      )}
+                      numColumns={Math.ceil(profilestate.plotItem.length / 2)}
+                      showsVerticalScrollIndicator={false}
+                      showsHorizontalScrollIndicator={true}
+                      data={profilestate.plotItem}
+                      renderItem={({item, index}) => (
+                        // <Image source={item.uri} />
+                        <View
+                          style={{display: 'flex', flexDirection: 'column'}}>
+                          <View>
+                            <PlotInProfile
+                              key={index}
+                              plotName={
+                                !item.plotName
+                                  ? 'แปลงที่' +
+                                    ' ' +
+                                    `${index + 1}` +
+                                    ' ' +
+                                    item.plantName
+                                  : item.plotName
+                              }
+                              raiAmount={item.raiAmount}
+                              location={item.locationName}
+                              plantName={item.plantName}
+                              status={item.status}
+                              index={0}
+                            />
+                          </View>
+                        </View>
+                      )}
+                    />
+                  </ScrollView>
+                  {/* <ScrollView
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}>
                   {profilestate.plotItem.map((item: any, index: number) => (
-                    <PlotsItem
+                    <PlotInProfile
                       key={index}
                       plotName={
                         !item.plotName
@@ -285,6 +345,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                       index={0}
                     />
                   ))}
+                  </ScrollView> */}
                 </View>
               )}
             </View>
@@ -298,6 +359,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   justifyContent: 'space-around',
                 }}>
                 <TouchableOpacity
+                  onPress={openGooglePlay}
                   style={{
                     padding: normalize(20),
                     flexDirection: 'row',
@@ -404,7 +466,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   style={{
                     fontSize: normalize(22),
                     fontFamily: font.AnuphanMedium,
-                    color: colors.fontBlack
+                    color: colors.fontBlack,
                   }}>
                   ยินดีต้อนรับสู่ IconKaset
                 </Text>
@@ -413,7 +475,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                     fontSize: normalize(16),
                     fontFamily: font.SarabunLight,
                     top: 15,
-                    color: colors.fontBlack
+                    color: colors.fontBlack,
                   }}>
                   เข้าร่วมเป็นสมาชิกเพื่อรับสิทธิประโยชน์มากมาย
                 </Text>
@@ -434,7 +496,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
               justifyContent: 'space-around',
             }}>
             <TouchableOpacity
-            onPress={openGooglePlay}
+              onPress={openGooglePlay}
               style={{
                 alignItems: 'center',
                 padding: normalize(20),
@@ -510,7 +572,7 @@ const styles = StyleSheet.create({
     height: normalize(54),
     width: normalize(343),
     alignSelf: 'center',
-    marginTop: normalize(30)
+    marginTop: normalize(30),
   },
   textBlank: {
     alignItems: 'center',
@@ -530,14 +592,14 @@ const styles = StyleSheet.create({
   h1: {
     fontFamily: font.SarabunLight,
     fontSize: normalize(16),
-    color: colors.fontBlack
+    color: colors.fontBlack,
   },
   h2: {
     fontFamily: font.SarabunMedium,
     fontSize: 18,
     color: colors.fontBlack,
-    alignItems: 'center'
-    },
+    alignItems: 'center',
+  },
   headerTitleWraper: {
     backgroundColor: '#F7FFF0',
     display: 'flex',
@@ -561,7 +623,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: font.AnuphanMedium,
     fontSize: normalize(18),
-    color: colors.fontBlack
+    color: colors.fontBlack,
   },
   section1: {
     flexDirection: 'row',

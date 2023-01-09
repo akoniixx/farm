@@ -83,13 +83,9 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const [landmark, setlandmark] = useState<any>('');
   const [plotDataUI, setplotDataUI] = useState<any>([]);
   const [plotData, setplotData] = useState<any>([]);
-  const [provinceId, setProvinceId] = useState<any>(null);
-  const [districtId, setDistrictId] = useState<any>(null);
-  const [subdistrictId, setSubdistrictId] = useState<any>(null);
   const [lat, setlat] = useState<any>(null);
   const [long, setlong] = useState<any>(null);
   const [plotName, setplotName] = useState<any>(null);
-  const [location, setLocation] = useState<any>(null);
   const actionSheet = useRef<any>();
   const plantSheet = useRef<any>();
   const deTailPlot = useRef<any>();
@@ -222,6 +218,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
     setplotName(null);
     actionSheet.current.hide();
   };
+  console.log(plotName);
   const deletePlots = () => {
     deTailPlot.current.hide();
   };
@@ -369,7 +366,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
             color={colors.greenLight}
             onPress={() => {
               navigation.navigate('FourthFormScreen', {
-                tele: telNo.tele
+                tele: telNo.tele,
               });
             }}
           />
@@ -403,7 +400,11 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 style={[styles.input, {borderColor: colors.disable}]}
                 editable={true}
                 placeholder={
-                  !plotName ? `แปลงที่ ${plotDataUI.length + 1}` : plotName
+                  !plotName
+                    ? `แปลงที่ ${plotDataUI.length + 1} ${
+                        plantName !== undefined ? plantName : ''
+                      }`
+                    : plotName
                 }
                 placeholderTextColor={colors.fontGrey}
               />
@@ -549,9 +550,9 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 placeholder={'ระบุจุดสังเกต'}
                 placeholderTextColor={colors.disable}
               />
-               <View style={{height: 40}}></View>
+              <View style={{height: 40}}></View>
             </ScrollView>
-           
+
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <MainButton
@@ -581,7 +582,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     landmark,
                   )
                     .then(res => {
-                      console.log(res);
+                      console.log('res',res);
                     })
                     .catch(err => {
                       console.log(err);
@@ -915,7 +916,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     color={colors.error}
                     fontColor={colors.white}
                     onPress={() => {
-                      deletePlots()
+                      deletePlots();
                     }}
                   />
                   <MainButton
