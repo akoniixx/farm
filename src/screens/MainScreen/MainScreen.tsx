@@ -27,7 +27,7 @@ import {Avatar} from '@rneui/base';
 import icons from '../../assets/icons/icons';
 import {SheetManager} from 'react-native-actions-sheet';
 import {useFocusEffect} from '@react-navigation/native';
-import {normalize, width} from '../../functions/Normalize';
+import { normalize, width } from '../../functions/Normalize';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import image from '../../assets/images/image';
 import MainTapNavigator from '../../navigations/Bottom/MainTapNavigator';
@@ -41,10 +41,9 @@ import DronerCarousel from '../../components/Carousel/DronerCarousel';
 import {TaskSuggestion} from '../../datasource/TaskSuggestion';
 import DronerSugg from '../../components/Carousel/DronerCarousel';
 import DronerUsed from '../../components/Carousel/DronerUsed';
+import * as RootNavigation from '../../navigations/RootNavigation';
 
-const MainScreen: React.FC<any> = ({navigation, route}) => {
-  const windowWidth = Dimensions.get('screen').width;
-  const windowHeight = Dimensions.get('screen').height;
+const MainScreen: React.FC<any> = ({navigation}) => {
   const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
   const imageWidth = screenWidth / 2;
   const date = new Date().toLocaleDateString();
@@ -52,7 +51,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [taskSug, setTaskSug] = useState<any[]>([]);
   const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
-
+  const {height, width} = Dimensions.get('window');
 
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -60,9 +59,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   };
   useEffect(() => {
     getData();
-  }, []);
-
-  useEffect(() => {
     getProfile();
     dronerSug();
     dronerSugUsed();
@@ -76,14 +72,18 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
   const getProfile = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-    ProfileDatasource.getProfile(farmer_id!).then(res => {
-      dispatch({
-        type: 'InitProfile',
-        name: `${res.firstname} ${res.lastname}`,
-        plotItem: res.farmerPlot,
-      });
-    });
+    ProfileDatasource.getProfile(farmer_id!)
+      .then(async res => {
+        await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`)
+        dispatch({
+          type: 'InitProfile',
+          name: `${res.firstname}`,
+          plotItem: res.farmerPlot,
+        });
+      })
+      .catch(err => console.log(err));
   };
+
   const dronerSug = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     TaskSuggestion.searchDroner(
@@ -109,16 +109,17 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     });
   };
   return (
-    <ScrollView style={[stylesCentral.container]}>
+    <View style={[stylesCentral.container]}>
       {fcmToken !== null ? (
-        <View style={{backgroundColor: colors.white
+        <ScrollView>
+  <View style={{backgroundColor: colors.white
 }}>
-          <View style={{ height: screenHeight}}>
+          <View style={{ height: normalize(990)}}>
             <ImageBackground
               source={image.bgHead}
               style={{
-                width: (windowWidth * 380) / 375,
-                height: (windowHeight * 250) / 812,
+                width: (width * 380) / 375,
+                height: (height * 250) / 812,
               }}>
               <View style={styles.headCard}>
                 <View>
@@ -234,14 +235,20 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   }}>
                   จ้างนักบินที่เคยจ้าง
                 </Text>
-                <Text
+                <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("SeeAllDronerUsed")}}
+                >                
+                  <Text
                   style={{
                     fontFamily: font.SarabunLight,
                     fontSize: normalize(16),
                     color: colors.fontGrey,
+                    height: 25
                   }}>
                   ดูทั้งหมด
                 </Text>
+                </TouchableOpacity>
               </View>
               <View style={{height: '110%'}}>
                 <ScrollView
@@ -249,9 +256,16 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   showsHorizontalScrollIndicator={false}>
                   {taskSugUsed.map((item: any, index: any) => (
                     <TouchableOpacity
-                      onPress={() => {
-                        // deTailPlot.current.show();
-                      }}>
+                    key={index}
+                    onPress={ async() => {
+                      await AsyncStorage.setItem('droner_id', `${item.droner_id}`)
+                      navigation.push('DronerDetail')
+                    }
+                    }
+                    // onPress={() =>
+                    //   navigation.push('DronerDetail',`${item.droner_id}`)
+                    // }
+                    >
                       <DronerUsed
                         key={index}
                         index={index}
@@ -267,9 +281,10 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                             ? parseFloat(item.rating_avg).toFixed(1)
                             : '0'
                         }
+                        total_task={item.total_task !== null ? item.total_task : '0'}
                         province={item.province_name !== null ? item.province_name : '-'}
                         distance={
-                          item.street_distance !== null
+                          item.street_distance !== ''
                             ? item.street_distance.toFixed(0)
                             : 0
                         }
@@ -290,12 +305,13 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   showsHorizontalScrollIndicator={false}>
                   {taskSug.map((item: any, index: any) => (
                     <TouchableOpacity
+                    key={index}
                       onPress={() => {
                         // deTailPlot.current.show();
                       }}>
                       <DronerSugg
-                        key={index}
-                        index={index}
+                         index={index}
+                      key={index}
                         profile={
                           item.image_droner !== null
                             ? item.image_droner
@@ -308,9 +324,10 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                             ? parseFloat(item.rating_avg).toFixed(1)
                             : '0'
                         }
-                        province={item.province_name}
+                        total_task={item.total_task !== null ? item.total_task : '0'}
+                        province={item.province_name !== null ? item.province_name : '-'}
                         distance={
-                          item.street_distance !== null
+                          item.street_distance !== ''
                             ? item.street_distance.toFixed(0)
                             : 0
                         }
@@ -322,6 +339,8 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
             </View>
           </View>
         </View>
+        </ScrollView>
+      
         
       ) : (
         <>
@@ -332,8 +351,8 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   <ImageBackground
                     source={image.bgHead}
                     style={{
-                      width: (windowWidth * 380) / 375,
-                      height: (windowHeight * 250) / 812,
+                      width: (width * 380) / 375,
+                      height: (height * 250) / 812,
                     }}>
                     <View style={styles.headCard}>
                       <View>
@@ -402,7 +421,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     </View>
                   </ImageBackground>
                 </View>
-                <View
+                {/* <View
                   style={{
                     flexDirection: 'row',
                     padding: '5%',
@@ -425,8 +444,8 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                     }}>
                     ดูทั้งหมด
                   </Text>
-                </View>
-                <View
+                </View> */}
+                {/* <View
                   style={{
                     width: '100%',
                     height: normalize(60),
@@ -442,9 +461,9 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                       borderRadius: 10,
                     }}
                   />
-                </View>
+                </View> */}
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                  <Text
+                  {/* <Text
                     style={[
                       styles.text,
                       {
@@ -454,7 +473,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                       },
                     ]}>
                     นักบินโดรนที่แนะนำ
-                  </Text>
+                  </Text> */}
                   <Image
                     source={image.empty_droner}
                     style={{
@@ -464,7 +483,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                       marginBottom: normalize(32),
                     }}
                   />
-                  <View style={{height: '10%'}}></View>
+                  <View style={{height: '20%'}}></View>
                   <Text style={[styles.textEmpty]}>
                     เพื่อให้สามารถจ้างงานนักบินโดรนได้
                   </Text>
@@ -498,7 +517,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           </View>
         </>
       )}
-    </ScrollView>
+    </View>
   );
 };
 export default MainScreen;

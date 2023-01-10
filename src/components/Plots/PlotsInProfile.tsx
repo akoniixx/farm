@@ -55,8 +55,8 @@ const PlotInProfile: React.FC<plotData> = ({
   const windowWidth = Dimensions.get('screen').width;
 
   return (
-    <View style={{flex: 1, margin: 5}}>
-      <View style={[styles.cards]}>
+    <View style={{flex: 1, padding: 5, alignSelf: 'center'}}>
+      <View key={index} style={[styles.cards]}>
         <View>
           <Text style={styles.title}>{plantName}</Text>
           <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
@@ -74,6 +74,7 @@ const PlotInProfile: React.FC<plotData> = ({
                 fontSize: normalize(16),
                 color: colors.fontGrey,
                 marginRight: '40%',
+                bottom: 2,
               }}>
               {raiAmount + ' ' + 'ไร่'}
             </Text>
@@ -91,6 +92,7 @@ const PlotInProfile: React.FC<plotData> = ({
                 fontSize: normalize(16),
                 color: colors.fontGrey,
                 marginRight: '10%',
+                bottom: 2,
               }}>
               {plantName}
             </Text>
@@ -112,6 +114,7 @@ const PlotInProfile: React.FC<plotData> = ({
                 color: colors.fontGrey,
                 marginRight: '10%',
                 width: normalize(140),
+                bottom: 2,
               }}>
               {location}
             </Text>

@@ -17,7 +17,6 @@ export class ProfileDatasource {
         console.log(error);
       });
   }
-
   static deleteAccount(farmerId: string): Promise<any> {
     return httpClient
       .delete(BASE_URL + `/farmer/${farmerId}`)
@@ -28,7 +27,6 @@ export class ProfileDatasource {
         console.log(error);
       });
   }
-
   static async getImgePathProfile(
     farmerId: string,
     imagePath: string,
@@ -42,7 +40,6 @@ export class ProfileDatasource {
         console.log(error);
       });
   }
-
   static async uploadProfileImage(image: any): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer)id');
     const data = new FormData();
@@ -64,7 +61,6 @@ export class ProfileDatasource {
         console.log(error);
       });
   }
-
   static async addIdCard(idcard: string): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     return httpClient
@@ -94,6 +90,21 @@ export class ProfileDatasource {
       .post(BASE_URL + '/file/upload', data)
       .then(response => {
         return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  //Droner
+  static async getDroner(droner_id: string): Promise<any> {
+    return httpClient
+      .get(BASE_URL + `/droner/${droner_id}`)
+      .then(async response => {
+        // const droner_id = response.data.id;
+        console.log('droner',response)
+        // await AsyncStorage.setItem('droner_id', droner_id);
+        // return response.data;
       })
       .catch(error => {
         console.log(error);

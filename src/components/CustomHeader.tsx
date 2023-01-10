@@ -18,6 +18,7 @@ interface Prop {
   headerRight?: () => JSX.Element;
   headerLeft?: () => JSX.Element;
   style?: ViewProps;
+  image?: () => JSX.Element;
 }
 
 const CustomHeader: React.FC<Prop> = ({
@@ -27,6 +28,7 @@ const CustomHeader: React.FC<Prop> = ({
   onPressBack,
   headerLeft,
   headerRight,
+  image
 }) => {
   return (
     <SafeAreaView style={[styles.headerSafeArea, style]}>
@@ -45,6 +47,8 @@ const CustomHeader: React.FC<Prop> = ({
           <Text style={styles.headerTitle}>{title}</Text>
         </View>
         <View style={styles.headerRightWrapper}>{headerRight?.()}</View>
+        <View style={styles.fav}>{image?.()}</View>
+
       </View>
     </SafeAreaView>
   );
@@ -53,6 +57,11 @@ const CustomHeader: React.FC<Prop> = ({
 export default CustomHeader;
 
 const styles = StyleSheet.create({
+  fav: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    right: '5%'
+  },
   headerSafeArea: {
     backgroundColor: colors.white,
   },

@@ -281,7 +281,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
               ) : (
                 <View style={{top: 5}}>
                   <ScrollView
-                    style={{paddingVertical: 20}}
+                    style={{paddingVertical: 10}}
                     horizontal
                     showsHorizontalScrollIndicator={false}>
                     <FlatList
@@ -297,7 +297,6 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                       showsHorizontalScrollIndicator={true}
                       data={profilestate.plotItem}
                       renderItem={({item, index}) => (
-                        // <Image source={item.uri} />
                         <View
                           style={{display: 'flex', flexDirection: 'column'}}>
                           <View>
@@ -323,29 +322,6 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                       )}
                     />
                   </ScrollView>
-                  {/* <ScrollView
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}>
-                  {profilestate.plotItem.map((item: any, index: number) => (
-                    <PlotInProfile
-                      key={index}
-                      plotName={
-                        !item.plotName
-                          ? 'แปลงที่' +
-                            ' ' +
-                            `${index + 1}` +
-                            ' ' +
-                            item.plantName
-                          : item.plotName
-                      }
-                      raiAmount={item.raiAmount}
-                      location={item.locationName}
-                      plantName={item.plantName}
-                      status={item.status}
-                      index={0}
-                    />
-                  ))}
-                  </ScrollView> */}
                 </View>
               )}
             </View>
@@ -630,7 +606,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7FFF0',
     display: 'flex',
     alignItems: 'flex-start',
-    padding: 20,
+    padding: 15,
   },
   appProve: {
     borderWidth: 1,
@@ -643,7 +619,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   section2: {
-    padding: normalize(20),
+    padding: 15,
     backgroundColor: colors.white,
   },
   section3: {

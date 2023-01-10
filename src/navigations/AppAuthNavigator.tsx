@@ -15,7 +15,6 @@ import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import Onboarding from '../screens/Onboarding/Onboarding';
 import DronerBooking from '../screens/DronerBooking/DronerBooking';
 import MyPlotScreen from '../screens/MyPlotScreen/MyPlotScreen';
-import SelectDateScreen from '../screens/AutoBooking/SelectDateScreen';
 
 
 

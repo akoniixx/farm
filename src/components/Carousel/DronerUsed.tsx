@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, View, TextInput} from 'react-native';
+import {Image, StyleSheet, Text, View, TextInput, ImageBackground} from 'react-native';
 import React, {useState} from 'react';
 import {normalize} from '../../functions/Normalize';
 import {colors, font, icons, image} from '../../assets';
@@ -12,6 +12,7 @@ interface dronerUsedData {
   background: string;
   name: string;
   rate: string;
+  total_task: string;
   province: string;
   distance: number;
 }
@@ -22,6 +23,7 @@ const DronerUsed: React.FC<dronerUsedData> = ({
   background,
   name,
   rate,
+  total_task,
   province,
   distance,
 }) => {
@@ -30,21 +32,19 @@ const DronerUsed: React.FC<dronerUsedData> = ({
   return (
     <View style={{flex: 1, top: '10%', paddingHorizontal: 8, left: '10%'}}>
       <View style={[styles.cards]}>
-        <View
+      <ImageBackground
+        borderTopLeftRadius={10}
+        borderTopRightRadius={10}
+        style={{height: normalize(70)}}
+          source={background === '' ? image.bg_droner : {uri: profile}}
+        >
+           <View
           key={index}
-          style={[
-            {
-              backgroundColor: colors.greenDark,
-              height: '33%',
-              width: normalize(160),
-              borderWidth: 0.3,
-              borderTopRightRadius: 10,
-              borderTopLeftRadius: 10,
-            },
-          ]}>
+        >
           <Image source={profile === '' ? image.empty_plot : {uri: profile}} />
           <View
-            style={{
+             style={{
+              backgroundColor: colors.white,
               borderColor: colors.bg,
               borderWidth: 1,
               width: 30,
@@ -81,6 +81,8 @@ const DronerUsed: React.FC<dronerUsedData> = ({
                 style={{width: 20, height: 20, marginRight: 10}}
               />
               <Text style={styles.label}>{rate + ' ' + 'คะแนน'} </Text>
+              <Text style={[styles.label,{color: colors.gray}]}>{ '(' + total_task + ')'} </Text>
+
             </View>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Image
@@ -126,6 +128,8 @@ const DronerUsed: React.FC<dronerUsedData> = ({
             </View>
           </View>
         </View>
+        </ImageBackground>
+       
       </View>
     </View>
   );

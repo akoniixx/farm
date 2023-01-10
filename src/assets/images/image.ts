@@ -12,7 +12,8 @@ export default {
     empty_droner: require('./empty_droner.png'),
     academy: require('./academy.png'),
     empty_farmer: require('./empty_farmer.png'),
-    empty_plot: require('./empty_plot.png')
+    empty_plot: require('./empty_plot.png'),
+    bg_droner: require('./bg_droner.png')
 
     
   };

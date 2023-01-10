@@ -39,6 +39,8 @@ export default {
   star: require('./star.png'),
   distance: require('./distance.png'),
   heart_active: require('./heart_active.png'),
+  chat: require('./chat.png'),
+  done_academy: require('./doneAcademy.png')
 
 
 };
