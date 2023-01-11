@@ -11,32 +11,24 @@ import {stylesCentral} from '../../styles/StylesCentral';
 import {TaskSuggestion} from '../../datasource/TaskSuggestion';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
-import {initProfileState, profileReducer} from '../../hook/profilefield';
+import {
+  detailDronerReducer,
+  initDetailDronerState,
+} from '../../hook/profilefield';
 import CardDetailDroner from '../../components/Carousel/CardTaskDetailDroner';
 
 const DronerDetail: React.FC<any> = ({navigation, route}) => {
-  const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  const [detailState, dispatch] = useReducer(
+    detailDronerReducer,
+    initDetailDronerState,
+  );
   const date = new Date().toLocaleDateString();
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<any>([]);
   const [taskSugUsed, setTaskSugUsed] = useState<any>();
 
-
   useEffect(() => {
-    getProfile();
-    // dronerSugUsed();
     dronerDetails();
   }, []);
-
-  const getProfile = async () => {
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    ProfileDatasource.getProfile(farmer_id!).then(res => {
-      dispatch({
-        type: 'InitProfile',
-        name: `${res.firstname} ${res.lastname}`,
-        plotItem: res.farmerPlot,
-      });
-    });
-  };
 
   const dronerDetails = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -52,10 +44,25 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
       limit,
       offset,
     ).then(res => {
-      // console.log(res)
+      dispatch({
+        type: 'InitDroner',
+        name: `${res[0].firstname} ${res[0].lastname}`,
+        distance: `${res[0].street_distance}`,
+        imagePro: `${res[0].street_distance}`,
+        imageTask: `${res[0].image_task[0]}`,
+        rate: `${res[0].rating_avg}`,
+        total_task: `${res[0].street_distance}`,
+        district: `${res[0].subdistrict_name}`,
+        province: `${res[0].province_name}`,
+        droneBand: `${res[0].drone_brand}`,
+        price: `${res[0].price_per_rai}`,
+      });
+
       // setData(res);
     });
   };
+  console.log(detailState.rate)
+
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -69,10 +76,19 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
       <ScrollView>
         <View style={[styles.section]}>
           <Text style={[styles.text]}>
-            ภาพผลงานนักบิน <Text style={{color: colors.gray}}>(15)</Text>
+            ภาพผลงานนักบิน{' '}
+            <Text style={{color: colors.gray}}>
+              {detailState.imageTask.length !== 0
+                ? `(${detailState.imageTask.length})`
+                : (0)}
+            </Text>
           </Text>
           <Image
-            source={image.empty_farmer}
+            source={
+              detailState.imageTask !== null
+                ? {uri: detailState.imageTask}
+                : image.empty_farmer
+            }
             style={{
               alignSelf: 'center',
               width: normalize(375),
@@ -81,7 +97,7 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
             }}
           />
         </View>
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             padding: normalize(15),
@@ -110,11 +126,11 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
               ดูทั้งหมด
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View style={{height: 10, backgroundColor: '#F8F9FA'}}></View>
         <View style={[styles.section]}>
           <Text style={[styles.text, {marginBottom: '3%'}]}>
-            ราคา 50 บาท/ไร่
+            {`ราคา ${detailState.price} บาท/ไร`}่
           </Text>
           <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
             <View
@@ -127,14 +143,25 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
                 source={icons.star}
                 style={{width: 24, height: 24, right: 3}}
               />
-              <Text style={[styles.label]}>5.0 คะแนน (10)</Text>
+              <Text style={[styles.label]}>
+                {detailState.rate !== null
+                  ? `${parseFloat(detailState.rate).toFixed(1)}`
+                  : 0 }
+                 คะแนน (10)
+              </Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Image
                 source={icons.distance}
                 style={{width: 24, height: 24, right: 3}}
               />
-              <Text style={[styles.label]}>ห่างคุณ 10 กม.</Text>
+              <Text style={[styles.label]}>
+                ห่างคุณ{' '}
+                {detailState.distance !== null
+                  ? `${parseFloat(detailState.distance).toFixed(0)}`
+                  : 0}{' '}
+                กม.
+              </Text>
             </View>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -142,7 +169,7 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
               source={icons.location}
               style={{width: 24, height: 24, right: 3}}
             />
-            <Text style={[styles.label]}>อู่ทอง, จ. สุพรรณบุรี</Text>
+            <Text style={[styles.label]}>{`${detailState.district} , จ. ${detailState.province}`}</Text>
           </View>
         </View>
         <View style={{height: 10, backgroundColor: '#F8F9FA'}}></View>
@@ -168,7 +195,7 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
               }}
             />
             <View style={{left: 20}}>
-              <Text style={[styles.droner]}></Text>
+              <Text style={[styles.droner]}>{detailState.name}</Text>
               <View style={{flexDirection: 'row', marginTop: 10}}>
                 <Image
                   source={icons.done_academy}
@@ -186,14 +213,14 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
             </View>
           </View>
           <Text style={[styles.droner]}>
-            ยี่ห้อโดรน :{' '}
+            ยี่ห้อโดรน :
             <Text
               style={{
                 fontFamily: font.SarabunLight,
                 fontSize: normalize(18),
                 color: colors.fontBlack,
               }}>
-              DJI T20
+              {`  ${detailState.droneBand}`}
             </Text>
           </Text>
           <Text
@@ -221,7 +248,7 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
 export default DronerDetail;
 const styles = StyleSheet.create({
   button: {
-    height: normalize(54),
+    height: 52,
     width: normalize(343),
     alignSelf: 'center',
     shadowColor: '#0CDF65',

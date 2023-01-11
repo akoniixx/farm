@@ -105,7 +105,6 @@ const MainScreen: React.FC<any> = ({navigation}) => {
      setTaskSugUsed(res);
     });
   };
-console.log('1',taskSugUsed[0])
   return (
     <View style={[stylesCentral.container]}>
       {fcmToken !== null ? (

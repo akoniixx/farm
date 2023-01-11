@@ -6,6 +6,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import DronerDetail from '../screens/DronerProfile/DronerDetail';
 import SeeAllDronerUsed from '../screens/DronerProfile/SeeAllDronerUsed';
 import DeleteAcc from '../screens/ProfileScreen/DeleteProfile/DeleteAcc';
+import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
+import PrivacyScreen from '../screens/ProfileScreen/PrivacyScreen';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +28,10 @@ const AppNavigator: React.FC = () => {
       <Stack.Screen name="DronerDetail" component={DronerDetail} />
       <Stack.Screen name="SeeAllDronerUsed" component={SeeAllDronerUsed} />
       <Stack.Screen name="DeleteAcc" component={DeleteAcc} />
+      <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
+      <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
+
+
 
 
 

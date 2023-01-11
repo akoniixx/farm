@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import MainTapNavigator from './Bottom/MainTapNavigator';
 import DeleteAcc from '../screens/ProfileScreen/DeleteProfile/DeleteAcc';
+import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 const Stack = createStackNavigator()
 
 const MainNavigator: React.FC = () => {
@@ -14,6 +15,8 @@ const MainNavigator: React.FC = () => {
           }} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="DeleteAcc" component={DeleteAcc} />
+      <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
+
 
     </Stack.Navigator>
   )

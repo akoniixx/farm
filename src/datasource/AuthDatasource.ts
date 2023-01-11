@@ -73,6 +73,30 @@ export class Authentication {
     await AsyncStorage.removeItem('token');
     await AsyncStorage.removeItem('farmer_id');
   }
+  static async onDeleteAccount(id: string): Promise<any> {
+    return httpClient
+      .delete(BASE_URL + '/farmer/' + id)
+      .then(res => {
+        return res.data;
+      })
+      .catch(err => {
+        throw err;
+      });
+  }
+
+  // static async genOtpDeleteAccount(telNumber: String): Promise<any> {
+  //   return httpClient
+  //     .post(BASE_URL + '/auth/farmer/request-delete-otp', {
+  //       telephoneNo: telNumber,
+  //     })
+  //     .then(res => {
+  //       return res.data;
+  //     })
+  //     .catch(err => {
+  //       throw err;
+  //     });
+  // }
+
 }
 export class Register {
   static async register1(

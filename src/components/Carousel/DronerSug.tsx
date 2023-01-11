@@ -34,7 +34,7 @@ const DronerSugg: React.FC<dronerData> = ({
   distance,
 }) => {
   return (
-    <View style={{flex: 1, top: '10%', paddingHorizontal: 8, left: '10%'}}>
+    // <View style={{flex: 1, top: '10%', paddingHorizontal: 8, left: '10%'}}>
       <View style={[styles.cards]}>
         <ImageBackground
           borderTopLeftRadius={10}
@@ -88,7 +88,7 @@ const DronerSugg: React.FC<dronerData> = ({
                     : `0 คะแนน`}{' '}
                 </Text>
                 <Text style={[styles.label, {color: colors.gray}]}>
-                  {total_task !== null ? `( ${total_task} )` : `  (0)`}{' '}
+                  {total_task !== null ? `(${total_task})` : `  (0)`}{' '}
                 </Text>
               </View>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -115,7 +115,7 @@ const DronerSugg: React.FC<dronerData> = ({
           </View>
         </ImageBackground>
       </View>
-    </View>
+    // </View>
   );
 };
 
