@@ -38,7 +38,7 @@ const DronerUsed: React.FC<dronerUsedData> = ({
   const [checked, setChecked] = useState<boolean>(false);
 
   return (
-    // <View style={{flex: 1, top: '10%', paddingHorizontal: 2, left: '10%'}}>
+    <View style={{paddingHorizontal: 2, left: '10%'}}>
       <View style={[styles.cards]}>
         <ImageBackground
           borderTopLeftRadius={10}
@@ -144,7 +144,7 @@ const DronerUsed: React.FC<dronerUsedData> = ({
           </View>
         </ImageBackground>
       </View>
-    // </View>
+     </View>
   );
 };
 

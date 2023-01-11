@@ -93,6 +93,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const [search, setSearch] = useState({term: '', fetchPredictions: false});
   const [showPredictions, setShowPredictions] = useState(false);
   const [predictions, setPredictions] = useState<PredictionType[]>([]);
+  
 
   const GOOGLE_PACES_API_BASE_URL =
     'https://maps.googleapis.com/maps/api/place';
@@ -526,12 +527,12 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   style={styles.map}
                   initialRegion={position}
                   provider={PROVIDER_GOOGLE}
-                  region={{
+                  /* region={{
                     latitude: lat,
                     longitude: long,
                     latitudeDelta: 0,
                     longitudeDelta: 0,
-                  }}
+                  }} */
                   showsUserLocation={true}
                   showsMyLocationButton={true}
                 />
@@ -821,12 +822,12 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     style={styles.map}
                     initialRegion={position}
                     provider={PROVIDER_GOOGLE}
-                    region={{
+                    /* region={{
                       latitude: lat,
                       longitude: long,
                       latitudeDelta: 0,
                       longitudeDelta: 0,
-                    }}
+                    }} */
                     showsUserLocation={true}
                     showsMyLocationButton={true}
                   />

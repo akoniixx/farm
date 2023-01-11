@@ -34,7 +34,7 @@ const DronerSugg: React.FC<dronerData> = ({
   distance,
 }) => {
   return (
-    // <View style={{flex: 1, top: '10%', paddingHorizontal: 8, left: '10%'}}>
+    <View style={{left: 10}}>
       <View style={[styles.cards]}>
         <ImageBackground
           borderTopLeftRadius={10}
@@ -115,7 +115,7 @@ const DronerSugg: React.FC<dronerData> = ({
           </View>
         </ImageBackground>
       </View>
-    // </View>
+      </View>
   );
 };
 

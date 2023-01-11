@@ -4,7 +4,6 @@ import React, {
   useEffect,
   useMemo,
   useReducer,
-  useRef,
   useState,
 } from 'react';
 import {
@@ -65,45 +64,52 @@ const MainScreen: React.FC<any> = ({navigation}) => {
   }, []);
 
   const getProfile = async () => {
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    ProfileDatasource.getProfile(farmer_id!)
-      .then(async res => {
-        await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`)
-        dispatch({
-          type: 'InitProfile',
-          name: `${res.firstname}`,
-          plotItem: res.farmerPlot[0].id,
-        });
-      })
-      .catch(err => console.log(err));
+    const value = await AsyncStorage.getItem('token');
+    if(value){
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      ProfileDatasource.getProfile(farmer_id!)
+        .then(async res => {
+          await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`)
+          dispatch({
+            type: 'InitProfile',
+            name: `${res.firstname}`,
+            plotItem: res.farmerPlot,
+          });
+        })
+        .catch(err => console.log(err));
+    }
   };
   const dronerSug = async () => {
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    const plot_id = await AsyncStorage.getItem('plot_id');
-    TaskSuggestion.searchDroner(
-      farmer_id !== null ? farmer_id : '',
-      plot_id !== null ? plot_id : '',
-      date,
-    ).then(res => {
-     setTaskSug(res);
-    })      
-    .catch(err => console.log(err));
-    
+    const value = await AsyncStorage.getItem('token');
+    if(value){
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      TaskSuggestion.searchDroner(
+        farmer_id !== null ? farmer_id : '',
+        profilestate.plotItem[0].id,
+        date,
+      ).then(res => {
+        console.log(`length = ${res.length}`);
+        setTaskSug(res);
+      }).catch(err => console.log(err));
+    }
   };
   const dronerSugUsed = async () => {
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    const plot_id = await AsyncStorage.getItem('plot_id');
-    const limit = 8;
-    const offset = 0;
-    TaskSuggestion.DronerUsed(
-      farmer_id !== null ? farmer_id : '',
-      plot_id !== null ? plot_id : '',
-      date,
-      limit,
-      offset
-    ).then(res => {
-     setTaskSugUsed(res);
-    });
+    const value = await AsyncStorage.getItem('token');
+    if(value){
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      const limit = 8;
+      const offset = 0;
+      TaskSuggestion.DronerUsed(
+        farmer_id !== null ? farmer_id : '',
+        profilestate.plotItem[0].id,
+        date,
+        limit,
+        offset
+      ).then(res => {
+        console.log(`length = ${res.length}`);
+        setTaskSugUsed(res);
+      }).catch(err => console.log(err));
+    }
   };
   return (
     <View style={[stylesCentral.container]}>
@@ -251,7 +257,7 @@ const MainScreen: React.FC<any> = ({navigation}) => {
                 <ScrollView
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}>
-                  {taskSugUsed.map((item: any, index: any) => (
+                  {taskSugUsed.length != undefined && taskSugUsed.map((item: any, index: any) => (
                     <TouchableOpacity
                     key={index}
                     onPress={ async() => {
@@ -290,7 +296,7 @@ const MainScreen: React.FC<any> = ({navigation}) => {
                 <ScrollView
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}>
-                  {taskSug.map((item: any, index: any) => (
+                  {taskSug.length != undefined && taskSug.map((item: any, index: any) => (
                     <TouchableOpacity
                     key={index}
                       onPress={() => {
