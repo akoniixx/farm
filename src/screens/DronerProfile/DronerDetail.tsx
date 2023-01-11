@@ -41,10 +41,7 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
   const dronerDetails = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const droner_id = await AsyncStorage.getItem('droner_id');
-    console.log('droner', droner_id)
-
     const plot_id = await AsyncStorage.getItem('plot_id');
-    console.log(plot_id)
     const limit = 0;
     const offset = 0;
     TaskSuggestion.DronerDetail(

@@ -374,6 +374,8 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("DeleteAcc")}}
                   style={{
                     padding: normalize(20),
                     flexDirection: 'row',

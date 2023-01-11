@@ -13,14 +13,14 @@ import fonts from '../../assets/fonts';
 import {Avatar} from '@rneui/base';
 
 interface dronerData {
-  index: number;
-  profile: string;
-  background: string;
-  name: string;
-  rate: string;
-  total_task: string;
-  province: string;
-  distance: number;
+  index: any;
+  profile: any;
+  background: any;
+  name: any;
+  rate: any;
+  total_task: any;
+  province: any;
+  distance: any;
 }
 
 const DronerSugg: React.FC<dronerData> = ({
@@ -81,9 +81,14 @@ const DronerSugg: React.FC<dronerData> = ({
                   source={icons.star}
                   style={{width: 20, height: 20, marginRight: 10}}
                 />
-                <Text style={styles.label}>{rate + ' ' + 'คะแนน'} </Text>
+                <Text style={styles.label}>
+                  {' '}
+                  {rate !== null
+                    ? `${parseFloat(rate).toFixed(1)} คะแนน`
+                    : `0 คะแนน`}{' '}
+                </Text>
                 <Text style={[styles.label, {color: colors.gray}]}>
-                  {'(' + total_task + ')'}{' '}
+                  {total_task !== null ? `( ${total_task} )` : `  (0)`}{' '}
                 </Text>
               </View>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -92,7 +97,7 @@ const DronerSugg: React.FC<dronerData> = ({
                   style={{width: 20, height: 20, marginRight: 10}}
                 />
                 <Text numberOfLines={1} style={[styles.label, {width: 120}]}>
-                  {'จ.' + ' ' + province}
+                  {province !== null ? ' จ.' + ' ' + province : ' จ.' + '  -'}
                 </Text>
               </View>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -101,7 +106,9 @@ const DronerSugg: React.FC<dronerData> = ({
                   style={{width: 20, height: 20, marginRight: 10}}
                 />
                 <Text style={styles.label}>
-                  {'ห่างคุณ' + ' ' + distance + ' ' + 'กม.'}
+                  {distance !== null
+                    ? ` ห่างคุณ ${parseFloat(distance).toFixed(0)} กม.`
+                    : `0 กม.`}{' '}
                 </Text>
               </View>
             </View>

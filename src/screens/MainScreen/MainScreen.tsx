@@ -21,7 +21,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, font} from '../../assets';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Avatar} from '@rneui/base';
 import icons from '../../assets/icons/icons';
@@ -37,9 +37,9 @@ import {Authentication} from '../../datasource/AuthDatasource';
 import LinearGradient from 'react-native-linear-gradient';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {initProfileState, profileReducer} from '../../hook/profilefield';
-import DronerCarousel from '../../components/Carousel/DronerCarousel';
+import DronerCarousel from '../../components/Carousel/DronerSug';
 import {TaskSuggestion} from '../../datasource/TaskSuggestion';
-import DronerSugg from '../../components/Carousel/DronerCarousel';
+import DronerSugg from '../../components/Carousel/DronerSug';
 import DronerUsed from '../../components/Carousel/DronerUsed';
 import * as RootNavigation from '../../navigations/RootNavigation';
 
@@ -64,12 +64,6 @@ const MainScreen: React.FC<any> = ({navigation}) => {
     dronerSugUsed();
   }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getProfile();
-    }, []),
-  );
-
   const getProfile = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
@@ -78,36 +72,40 @@ const MainScreen: React.FC<any> = ({navigation}) => {
         dispatch({
           type: 'InitProfile',
           name: `${res.firstname}`,
-          plotItem: res.farmerPlot,
+          plotItem: res.farmerPlot[0].id,
         });
       })
       .catch(err => console.log(err));
   };
-
   const dronerSug = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
+    const plot_id = await AsyncStorage.getItem('plot_id');
     TaskSuggestion.searchDroner(
       farmer_id !== null ? farmer_id : '',
-      profilestate.plotItem[0].id,
+      plot_id !== null ? plot_id : '',
       date,
     ).then(res => {
-      setTaskSug(res);
-    });
+     setTaskSug(res);
+    })      
+    .catch(err => console.log(err));
+    
   };
   const dronerSugUsed = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
+    const plot_id = await AsyncStorage.getItem('plot_id');
     const limit = 8;
     const offset = 0;
     TaskSuggestion.DronerUsed(
       farmer_id !== null ? farmer_id : '',
-      profilestate.plotItem[0].id,
+      plot_id !== null ? plot_id : '',
       date,
       limit,
       offset
     ).then(res => {
-      setTaskSugUsed(res);
+     setTaskSugUsed(res);
     });
   };
+console.log('1',taskSugUsed[0])
   return (
     <View style={[stylesCentral.container]}>
       {fcmToken !== null ? (
@@ -260,33 +258,23 @@ const MainScreen: React.FC<any> = ({navigation}) => {
                     onPress={ async() => {
                       await AsyncStorage.setItem('droner_id', `${item.droner_id}`)
                       navigation.push('DronerDetail')
-                    }
-                    }
-                    // onPress={() =>
-                    //   navigation.push('DronerDetail',`${item.droner_id}`)
-                    // }
+                    }}
                     >
                       <DronerUsed
                         key={index}
                         index={index}
                         profile={
-                          item.image_droner !== null
-                            ? item.image_droner
-                            : image.empty_droner
+                          item.image_droner 
                         }
                         background={''}
                         name={item.firstname + ' ' + item.lastname}
                         rate={
-                          item.rating_avg !== null
-                            ? parseFloat(item.rating_avg).toFixed(1)
-                            : '0'
+                          item.rating_avg
                         }
-                        total_task={item.total_task !== null ? item.total_task : '0'}
-                        province={item.province_name !== null ? item.province_name : '-'}
+                        total_task={item.total_task }
+                        province={item.province_name }
                         distance={
-                          item.street_distance !== ''
-                            ? item.street_distance.toFixed(0)
-                            : 0
+                          item.street_distance 
                         }
                       />
                     </TouchableOpacity>
@@ -313,23 +301,17 @@ const MainScreen: React.FC<any> = ({navigation}) => {
                          index={index}
                       key={index}
                         profile={
-                          item.image_droner !== null
-                            ? item.image_droner
-                            : image.empty_droner
+                          item.image_droner 
                         }
                         background={''}
                         name={item.firstname + ' ' + item.lastname}
                         rate={
-                          item.rating_avg !== null
-                            ? parseFloat(item.rating_avg).toFixed(1)
-                            : '0'
+                          item.rating_avg 
                         }
-                        total_task={item.total_task !== null ? item.total_task : '0'}
-                        province={item.province_name !== null ? item.province_name : '-'}
+                        total_task={item.total_task}
+                        province={item.province_name }
                         distance={
-                          item.street_distance !== ''
-                            ? item.street_distance.toFixed(0)
-                            : 0
+                          item.street_distance 
                         }
                       />
                     </TouchableOpacity>

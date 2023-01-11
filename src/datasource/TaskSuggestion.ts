@@ -24,8 +24,8 @@ export class TaskSuggestion {
     farmerId: string,
     farmerPlotId: string,
     dateAppointment: string,
-    limit: number,
-    offset: number
+    limit?: number,
+    offset?: number
     ): Promise<any> {
     return axios
       .post(BASE_URL + `/tasks/task-suggestion/droner-ever-used`, {

@@ -5,6 +5,7 @@ import MainTapNavigator from './Bottom/MainTapNavigator';
 import { createStackNavigator } from '@react-navigation/stack';
 import DronerDetail from '../screens/DronerProfile/DronerDetail';
 import SeeAllDronerUsed from '../screens/DronerProfile/SeeAllDronerUsed';
+import DeleteAcc from '../screens/ProfileScreen/DeleteProfile/DeleteAcc';
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,8 @@ const AppNavigator: React.FC = () => {
       <Stack.Screen name="Main" component={MainTapNavigator} />
       <Stack.Screen name="DronerDetail" component={DronerDetail} />
       <Stack.Screen name="SeeAllDronerUsed" component={SeeAllDronerUsed} />
+      <Stack.Screen name="DeleteAcc" component={DeleteAcc} />
+
 
 
     </Stack.Navigator>
