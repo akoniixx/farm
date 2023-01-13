@@ -93,9 +93,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const [search, setSearch] = useState({term: '', fetchPredictions: false});
   const [showPredictions, setShowPredictions] = useState(false);
   const [predictions, setPredictions] = useState<PredictionType[]>([]);
-  
-
-  const GOOGLE_PACES_API_BASE_URL =
+    const GOOGLE_PACES_API_BASE_URL =
     'https://maps.googleapis.com/maps/api/place';
   const API_KEY = 'AIzaSyAymsbEe0NVhDL8iHd8oabbr5xG0TFn8Jc';
 
@@ -219,8 +217,8 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
     setplotName(null);
     actionSheet.current.hide();
   };
-  console.log(plotName);
   const deletePlots = () => {
+    // Register.deleteFarmerPlot('')
     deTailPlot.current.hide();
   };
   const selectPlants = (value: any) => {
@@ -527,12 +525,12 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   style={styles.map}
                   initialRegion={position}
                   provider={PROVIDER_GOOGLE}
-                  /* region={{
+                   region={{
                     latitude: lat,
                     longitude: long,
                     latitudeDelta: 0,
                     longitudeDelta: 0,
-                  }} */
+                  }} 
                   showsUserLocation={true}
                   showsMyLocationButton={true}
                 />

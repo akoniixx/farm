@@ -38,7 +38,7 @@ const DronerUsed: React.FC<dronerUsedData> = ({
   const [checked, setChecked] = useState<boolean>(false);
 
   return (
-    <View style={{paddingHorizontal: 2, left: '10%'}}>
+    <View style={{paddingHorizontal: 5}}>
       <View style={[styles.cards]}>
         <ImageBackground
           borderTopLeftRadius={10}
@@ -78,7 +78,7 @@ const DronerUsed: React.FC<dronerUsedData> = ({
                 }}
               />
             </View>
-            <View style={{paddingLeft: 10}}>
+            <View style={{paddingLeft: 5}}>
               <Text numberOfLines={1} style={[styles.h1, {width: 150}]}>
                 {name}
               </Text>
@@ -144,7 +144,7 @@ const DronerUsed: React.FC<dronerUsedData> = ({
           </View>
         </ImageBackground>
       </View>
-     </View>
+      </View>
   );
 };
 
@@ -167,26 +167,8 @@ const styles = StyleSheet.create({
     width: normalize(160),
     borderRadius: 10,
     borderWidth: 0.3,
-  },
-  mainButton: {
-    justifyContent: 'center',
-    alignContent: 'center',
-    borderRadius: normalize(8),
-    width: normalize(343),
-  },
-  headFont: {
-    fontFamily: font.AnuphanBold,
-    fontSize: normalize(26),
-    color: 'black',
-  },
-  detail: {
-    fontFamily: font.SarabunLight,
-    fontSize: normalize(14),
-    color: 'black',
-    textAlign: 'center',
-    marginTop: normalize(16),
-    flexShrink: 1,
-  },
+    left: '10%',
+  }
 });
 
 export default DronerUsed;

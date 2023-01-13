@@ -26,7 +26,7 @@ export const initDetailDronerState = {
   name: '',
   id: '',
   imagePro: '',
-  imageTask: '',
+  imageTask: [],
   rate: '',
   total_task: '',
   distance: '',
@@ -34,6 +34,7 @@ export const initDetailDronerState = {
   province: '',
   droneBand: '',
   price: '',
+  dronerQueue: []
 };
 
 export const detailDronerReducer = (state: any, action: any) => {
@@ -51,6 +52,7 @@ export const detailDronerReducer = (state: any, action: any) => {
         district: action.district,
         droneBand: action.droneBand,
         price: action.price,
+        dronerQueue: action.dronerQueue
       };
 
     default:

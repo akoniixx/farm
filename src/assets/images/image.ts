@@ -14,7 +14,8 @@ export default {
     empty_farmer: require('./empty_farmer.png'),
     empty_plot: require('./empty_plot.png'),
     bg_droner: require('./bg_droner.png'),
-    delete_acc: require('./delete_acc.png')
+    delete_acc: require('./delete_acc.png'),
+    empty_droner_his: require('./empty_droner_history.png')
 
     
   };

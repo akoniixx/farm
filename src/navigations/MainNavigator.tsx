@@ -1,7 +1,7 @@
 import React, { createContext, useMemo } from 'react';
 import { createStackNavigator } from '@react-navigation/stack'
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
-import MainTapNavigator from './Bottom/MainTapNavigator';
+import MainTapNavigator from './BottomTabs/MainTapNavigator';
 import DeleteAcc from '../screens/ProfileScreen/DeleteProfile/DeleteAcc';
 import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 const Stack = createStackNavigator()

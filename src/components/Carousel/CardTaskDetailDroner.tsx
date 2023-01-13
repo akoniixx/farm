@@ -1,55 +1,61 @@
-import { Image, StyleSheet, Text, View, TextInput } from 'react-native';
+import {Image, StyleSheet, Text, View, TextInput} from 'react-native';
 import React from 'react';
 import {normalize} from '../../functions/Normalize';
 import {colors, font, icons, image} from '../../assets';
 import fonts from '../../assets/fonts';
-import { Avatar } from '@rneui/base';
+import {Avatar} from '@rneui/base';
 
 interface DetailData {
   index: number;
+  day: string;
   dateTime: string;
   convenient: string;
 }
 
 const CardDetailDroner: React.FC<DetailData> = ({
   index,
+  day,
   dateTime,
-  convenient
+  convenient,
 }) => {
   return (
     <View style={{flex: 1, paddingHorizontal: 5, left: '10%'}}>
-           <View style={[styles.cards]}>
-             <View
-               key={index}
-               style={[styles.cardYes]}>
-             
-             </View>
-           </View>
-         </View>
+      <View style={[styles.cards]}>
+        <View key={index} style={[styles.cardYes]}>
+          <Text style={[styles.label, {alignSelf: 'center', top: '5%'}]}>
+            {day}
+          </Text>
+          <Text style={[styles.label, {padding: '15%'}]}>{dateTime}</Text>
+          <Text style={[styles.label, {alignSelf: 'center', top: '5%',color: colors.white}]}>
+            {convenient}
+          </Text>
+        </View>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-    cardYes: {
-        backgroundColor: colors.white,
-        height: '65%',
-        width: normalize(136),
-        borderWidth: 0.3,
-        borderTopRightRadius: 15,
-        borderTopLeftRadius: 15,
-        borderColor: colors.greenLight
-    },
-    cardNo: {
-        backgroundColor: colors.white,
-        height: '65%',
-        width: normalize(136),
-        borderWidth: 0.3,
-        borderTopRightRadius: 15,
-        borderTopLeftRadius: 15,
-        borderColor: colors.bg
-    },
+  cardYes: {
+    backgroundColor: colors.white,
+    height: '65%',
+    width: normalize(136),
+    borderWidth: 0.3,
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
+    borderColor: colors.greenDark,
+  },
+  cardNo: {
+    backgroundColor: colors.white,
+    height: '65%',
+    width: normalize(136),
+    borderWidth: 0.3,
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
+    borderColor: colors.bg,
+  },
   label: {
-    fontFamily: font.SarabunLight,
+    fontFamily: font.SarabunMedium,
     fontSize: normalize(16),
     color: colors.fontBlack,
     justifyContent: 'center',
@@ -66,7 +72,7 @@ const styles = StyleSheet.create({
     width: normalize(136),
     borderRadius: 15,
     borderWidth: 0.3,
-    borderColor: '#56D88C'
+    borderColor: colors.greenDark,
   },
   mainButton: {
     justifyContent: 'center',

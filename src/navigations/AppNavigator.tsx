@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import AppAuthNavigator from './AppAuthNavigator';
 import LoadingNavigator from './LoadingNavigator';
-import MainTapNavigator from './Bottom/MainTapNavigator';
+import MainTapNavigator from './BottomTabs/MainTapNavigator';
 import { createStackNavigator } from '@react-navigation/stack';
 import DronerDetail from '../screens/DronerProfile/DronerDetail';
 import SeeAllDronerUsed from '../screens/DronerProfile/SeeAllDronerUsed';

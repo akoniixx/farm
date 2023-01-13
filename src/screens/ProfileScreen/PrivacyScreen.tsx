@@ -9,6 +9,7 @@ import {normalize} from '../../functions/Normalize';
 import {stylesCentral} from '../../styles/StylesCentral';
 
 const PrivacyScreen: React.FC<any> = ({navigation}) => {
+  
   return (
     <View style={{flex: 1}}>
       <SafeAreaView style={stylesCentral.container}>
@@ -17,8 +18,9 @@ const PrivacyScreen: React.FC<any> = ({navigation}) => {
           showBackBtn
           onPressBack={() => navigation.goBack()}
         />
-        <View>
-          <ScrollView style={{padding: 15, height: '100%'}}>
+         <View style={styles.inner}>
+         <View style={{flex: 5}}>
+         <ScrollView>
             <Text style={[styles.head, {color: colors.greenLight}]}>
               Icon Kaset
               <Text style={[styles.head]}>
@@ -66,8 +68,10 @@ const PrivacyScreen: React.FC<any> = ({navigation}) => {
                 และให้บริการในรูปแบบและการใช้งานอื่นๆ เพิ่มเติมได้
               </Text>
             </View>
+            <View style={{height: normalize(70)}}></View>
           </ScrollView>
-        </View>
+         </View>
+         </View>
       </SafeAreaView>
     </View>
   );
@@ -79,5 +83,10 @@ const styles = StyleSheet.create({
     fontFamily: fonts.SarabunMedium,
     fontSize: normalize(16),
     color: colors.fontBlack,
+  },
+  inner: {
+    paddingHorizontal: normalize(17),
+    flex: 1,
+    justifyContent: 'space-around',
   },
 });
