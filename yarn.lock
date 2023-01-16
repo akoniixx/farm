@@ -7239,6 +7239,11 @@ react-native-splash-screen@^3.3.0:
   resolved "https://registry.npmjs.org/react-native-splash-screen/-/react-native-splash-screen-3.3.0.tgz"
   integrity sha512-rGjt6HkoSXxMqH4SQUJ1gnPQlPJV8+J47+4yhgTIan4bVvAwJhEeJH7wWt9hXSdH4+VfwTS0GTaflj1Tw83IhA==
 
+react-native-step-indicator-v2@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-step-indicator-v2/-/react-native-step-indicator-v2-1.0.3.tgz#62d3e286128c1dc62edf9012f215fc4f67fadede"
+  integrity sha512-PVuvh4KzYuqXUpBG+mCER2Rmq1OTmHQuApCaFFx9rEdGQ1FvVhwowGzq4LiX+dTBzvbC1MucWw9cu4kXzWe7pg==
+
 react-native-swipe-gestures@^1.0.5:
   version "1.0.5"
   resolved "https://registry.npmjs.org/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.5.tgz"

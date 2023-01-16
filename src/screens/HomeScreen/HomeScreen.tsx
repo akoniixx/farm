@@ -29,6 +29,7 @@ import MainScreen from '../MainScreen/MainScreen';
 import fonts from '../../assets/fonts';
 import PromotionScreen from '../PromotionScreen/PromotionScreen';
 import ProfileScreen from '../ProfileScreen/ProfileScreen';
+import AuthMainScreen from '../AuthMainScreen/AuthMainScreen';
 
 const Tab = createBottomTabNavigator();
 const HomeScreen: React.FC<any> = ({navigation, route}) => {
@@ -40,7 +41,7 @@ const HomeScreen: React.FC<any> = ({navigation, route}) => {
       }}>
       <Tab.Screen
         name="หน้าแรก"
-        component={MainScreen}
+        component={AuthMainScreen}
         options={{
           tabBarLabelStyle: {
             fontFamily: font.AnuphanMedium,

@@ -40,7 +40,8 @@ export default {
   distance: require('./distance.png'),
   heart_active: require('./heart_active.png'),
   chat: require('./chat.png'),
-  done_academy: require('./doneAcademy.png')
+  done_academy: require('./doneAcademy.png'),
+  time: require('./time.png')
 
 
 };

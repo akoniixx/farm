@@ -10,6 +10,7 @@ import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import PromotionScreen from '../../screens/PromotionScreen/PromotionScreen';
 import {responsiveHeigth, responsiveWidth} from '../../functions/responsive';
 import TaskScreen from '../../screens/MyTaskScreen/MyTaskScreen';
+import MainNavigator from '../MainNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,7 +23,7 @@ const MainTapNavigator: React.FC = () => {
       }}>
       <Tab.Screen
         name="หน้าแรก"
-        component={MainScreen}
+        component={MainScreen} 
         options={{
           tabBarLabelStyle: {
             fontFamily: font.AnuphanMedium,

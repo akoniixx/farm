@@ -6,6 +6,8 @@ import MainScreen from '../screens/MainScreen/MainScreen';
 import AllPlotScreen from '../screens/ProfileScreen/AllPlotScreen';
 import SelectDateScreen from '../screens/AutoBooking/SelectDateScreen';
 import DronerDetail from '../screens/DronerProfile/DronerDetail';
+import SeeAllDronerUsed from '../screens/DronerProfile/SeeAllDronerUsed';
+import SelectPlotScreen from '../screens/AutoBooking/SelectPlotScreen';
 const Stack = createStackNavigator()
 
 const MainNavigator: React.FC = () => {
@@ -17,9 +19,11 @@ const MainNavigator: React.FC = () => {
           }} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="AllPlotScreen" component={AllPlotScreen} />
-      <Stack.Screen name="MainScreen" component={MainScreen}/>
       <Stack.Screen name="SelectDateScreen" component={SelectDateScreen} /> 
+      <Stack.Screen name="SelectPlotScreen" component={SelectPlotScreen} /> 
       <Stack.Screen name="DronerDetail" component={DronerDetail}/>
+      <Stack.Screen name="SeeAllDronerUsed" component={SeeAllDronerUsed} />
+      
 
     </Stack.Navigator>
   )
