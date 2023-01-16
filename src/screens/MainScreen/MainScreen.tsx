@@ -63,19 +63,13 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
     dronerSugUsed();
   }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getProfile();
-    }, []),
-  );
-
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
     if (value) {
       const farmer_id = await AsyncStorage.getItem('farmer_id');
       ProfileDatasource.getProfile(farmer_id!)
         .then(async res => {
-          await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`)
+          await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
           dispatch({
             type: 'InitProfile',
             name: `${res.firstname}`,
@@ -85,7 +79,6 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
         .catch(err => console.log(err));
     }
   };
-
   const dronerSug = async () => {
     const value = await AsyncStorage.getItem('token');
     if (value) {
@@ -201,9 +194,9 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                 }}>
                 <Text
                   style={{
-                    fontFamily: font.AnuphanBold,
-                    fontSize: normalize(20),
-                    color: colors.fontGrey,
+                    flexDirection: 'row',
+                    padding: '5%',
+                    justifyContent: 'space-between',
                   }}>
                   กูรูเกษตร
                 </Text>
@@ -375,7 +368,7 @@ const styles = StyleSheet.create({
   empty: {
     width: '100%',
     height: normalize(260),
-    top: '5%',
+    top: '7%',
   },
   headCard: {
     top: '15%',

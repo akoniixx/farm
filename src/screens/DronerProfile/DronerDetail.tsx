@@ -1,6 +1,6 @@
 import {Avatar} from '@rneui/base/dist/Avatar/Avatar';
 import React, {useEffect, useReducer, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, font, icons, image} from '../../assets';
@@ -10,41 +10,36 @@ import {height, normalize} from '../../functions/Normalize';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {TaskSuggestion} from '../../datasource/TaskSuggestion';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ProfileDatasource} from '../../datasource/ProfileDatasource';
-import {initProfileState, profileReducer} from '../../hook/profilefield';
-import CardDetailDroner from '../../components/Carousel/CardTaskDetailDroner';
+import {ImageSlider} from 'react-native-image-slider-banner';
+
+import {
+  detailDronerReducer,
+  initDetailDronerState,
+} from '../../hook/profilefield';
+import moment from 'moment';
+import {
+  CardDetailDroner,
+  CardDetailDronerNo,
+} from '../../components/Carousel/CardTaskDetailDroner';
 
 const DronerDetail: React.FC<any> = ({navigation, route}) => {
-  const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
+  const [visible, setIsVisible] = useState(false);
+  const [data, setData] = useState<any[]>([])
+  const [detailState, dispatch] = useReducer(
+    detailDronerReducer,
+    initDetailDronerState,
+  );
   const date = new Date().toLocaleDateString();
-  const [data, setData] = useState<any>();
-  const [taskSugUsed, setTaskSugUsed] = useState<any>();
-
 
   useEffect(() => {
-    getProfile();
-    // dronerSugUsed();
     dronerDetails();
   }, []);
-
-  const getProfile = async () => {
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    ProfileDatasource.getProfile(farmer_id!).then(res => {
-      dispatch({
-        type: 'InitProfile',
-        name: `${res.firstname} ${res.lastname}`,
-        plotItem: res.farmerPlot,
-      });
-    });
-  };
 
   const dronerDetails = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const droner_id = await AsyncStorage.getItem('droner_id');
-    console.log('droner', droner_id)
-
     const plot_id = await AsyncStorage.getItem('plot_id');
-    console.log(plot_id)
     const limit = 0;
     const offset = 0;
     TaskSuggestion.DronerDetail(
@@ -55,14 +50,66 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
       limit,
       offset,
     ).then(res => {
-      // console.log(res)
-      // setData(res);
+      setData(res[0].droner_queue)
+      dispatch({
+        type: 'InitDroner',
+        name: `${res[0].firstname} ${res[0].lastname}`,
+        distance: `${res[0].street_distance}`,
+        imagePro: `${res[0].image_droner}`,
+        imageTask: res[0].image_task,
+        rate: res[0].rating_avg,
+        total_task: res[0].count_rating,
+        district: `${res[0].subdistrict_name}`,
+        province: `${res[0].province_name}`,
+        droneBand: `${res[0].drone_brand}`,
+        price: `${res[0].price_per_rai}`,
+        dronerQueue: res[0].droner_queue,
+      });
     });
   };
+
+  var now = new Date();
+  var daysOfYear = [];
+  for (let d = new Date(2023, 0, 1); d <= now; d.setDate(d.getDate() + 1)) {
+    daysOfYear.push(new Date(d));
+  }
+  // const weekday = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"];
+  // const d = new Date();
+  // let day = weekday[d.getDay()];
+  // console.log(day)
+
+
+  const getWeekDays = (locale: string | string[] | undefined) => {
+    const baseDate = new Date();
+    // const dronerQ = [data.map((x) => x.date_appointment)]
+
+    const weekDays = [];
+    for (let i = 0; i < 7; i++) {
+      weekDays.push(
+        baseDate.toLocaleDateString(locale, {
+          month: 'short',
+          day: 'numeric',
+          year: '2-digit',
+        }),
+      );
+      baseDate.setDate(baseDate.getDate() + 1);
+    }
+    return weekDays;
+  };
+
+// const dronerQ = [data.map((x) => x.date_appointment)]
+// const arr = [getWeekDays('th'),dronerQ];
+// const removeDuplicates = (arr: any[]) => {
+// return arr.filter((item, 
+//   index) => arr.indexOf(item) === index);
+// }
+
+
+
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
-        title="นายโดรน เกษตร"
+        title={`${detailState.name}`}
         showBackBtn
         onPressBack={() => navigation.goBack()}
         image={() => (
@@ -71,20 +118,53 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
       />
       <ScrollView>
         <View style={[styles.section]}>
-          <Text style={[styles.text]}>
-            ภาพผลงานนักบิน <Text style={{color: colors.gray}}>(15)</Text>
-          </Text>
-          <Image
-            source={image.empty_farmer}
-            style={{
-              alignSelf: 'center',
-              width: normalize(375),
-              height: normalize(200),
-              top: 10,
-            }}
-          />
+          {detailState.imageTask != null ? (
+            <Text style={[styles.text]}>
+              ภาพผลงานนักบิน
+              <Text
+                style={{
+                  color: colors.gray,
+                }}>{` (${detailState.imageTask.length})`}</Text>
+            </Text>
+          ) : (
+            ''
+          )}
+          {detailState.imageTask !== null ? (
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              {detailState.imageTask != undefined &&
+                detailState.imageTask.map((item: any, _index: any) => (
+                  <ImageSlider
+                    preview={true}
+                    data={[
+                      {
+                        img: item,
+                      },
+                    ]}
+                    previewImageContainerStyle={{
+                      width: '100%',
+                      height: '100%',
+                      backgroundColor: '#020804',
+                    }}
+                    autoPlay={true}
+                    closeIconColor="#fff"
+                    onItemChanged={() => setIsVisible(false)}
+                  />
+                ))}
+            </ScrollView>
+          ) : (
+            <Image
+              source={image.bg_droner}
+              style={{
+                height: normalize(200),
+                width: screenWidth,
+                alignSelf: 'center',
+              }}
+            />
+          )}
         </View>
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             padding: normalize(15),
@@ -113,11 +193,11 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
               ดูทั้งหมด
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View style={{height: 10, backgroundColor: '#F8F9FA'}}></View>
         <View style={[styles.section]}>
           <Text style={[styles.text, {marginBottom: '3%'}]}>
-            ราคา 50 บาท/ไร่
+            {`ราคา ${detailState.price} บาท/ไร`}่
           </Text>
           <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
             <View
@@ -130,14 +210,29 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
                 source={icons.star}
                 style={{width: 24, height: 24, right: 3}}
               />
-              <Text style={[styles.label]}>5.0 คะแนน (10)</Text>
+              <Text style={[styles.label]}>
+                {detailState.rate !== null
+                  ? `${parseFloat(detailState.rate).toFixed(1)}`
+                  : `0`}
+              </Text>
+              <Text style={[styles.label, {color: colors.gray}]}>
+                {detailState.total_task !== null
+                  ? ` (${detailState.total_task})`
+                  : ` (0)`}
+              </Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Image
                 source={icons.distance}
                 style={{width: 24, height: 24, right: 3}}
               />
-              <Text style={[styles.label]}>ห่างคุณ 10 กม.</Text>
+              <Text style={[styles.label]}>
+                ห่างคุณ{' '}
+                {detailState.distance !== null
+                  ? `${parseFloat(detailState.distance).toFixed(0)}`
+                  : 0}{' '}
+                กม.
+              </Text>
             </View>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -145,16 +240,45 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
               source={icons.location}
               style={{width: 24, height: 24, right: 3}}
             />
-            <Text style={[styles.label]}>อู่ทอง, จ. สุพรรณบุรี</Text>
+            <Text
+              style={[
+                styles.label,
+              ]}>{`${detailState.district} , จ. ${detailState.province}`}</Text>
           </View>
         </View>
         <View style={{height: 10, backgroundColor: '#F8F9FA'}}></View>
         <View style={[styles.section]}>
           <Text style={[styles.text]}>คิวงานของนักบินโดรน</Text>
         </View>
-        <View>
+        <View style={{height: normalize(155)}}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <CardDetailDroner index={0} dateTime={''} convenient={''} />
+            {detailState.dronerQueue !== null
+              ? detailState.dronerQueue.map((item: any, index: any) => (
+                  <CardDetailDroner
+                    key={index}
+                    index={index}
+                    days={moment(item.date_appointment)
+                      .locale('th')
+                      .format('dddd')}
+                    dateTime={new Date(
+                      item.date_appointment,
+                    ).toLocaleDateString('th-TH', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: '2-digit',
+                    })}
+                    convenient={item.droner_status}
+                  />
+                ))
+              : getWeekDays('th').map((item, index) => (
+                  <CardDetailDronerNo
+                    key={index}
+                    index={index}
+                    days={''}
+                    dateTime={item}
+                    convenient={'สะดวก'}
+                  />
+                ))}
           </ScrollView>
         </View>
         <View style={{height: 10, backgroundColor: '#F8F9FA'}}></View>
@@ -163,7 +287,11 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
           <View style={{flexDirection: 'row', paddingVertical: 10}}>
             <Avatar
               size={normalize(56)}
-              source={image.empty_plot}
+              source={
+                detailState.imagePro !== null
+                  ? {uri: detailState.imagePro}
+                  : image.empty_droner
+              }
               avatarStyle={{
                 borderRadius: normalize(40),
                 borderColor: colors.bg,
@@ -171,7 +299,7 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
               }}
             />
             <View style={{left: 20}}>
-              <Text style={[styles.droner]}></Text>
+              <Text style={[styles.droner]}>{detailState.name}</Text>
               <View style={{flexDirection: 'row', marginTop: 10}}>
                 <Image
                   source={icons.done_academy}
@@ -189,14 +317,14 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
             </View>
           </View>
           <Text style={[styles.droner]}>
-            ยี่ห้อโดรน :{' '}
+            ยี่ห้อโดรน :
             <Text
               style={{
                 fontFamily: font.SarabunLight,
                 fontSize: normalize(18),
                 color: colors.fontBlack,
               }}>
-              DJI T20
+              {`  ${detailState.droneBand}`}
             </Text>
           </Text>
           <Text
@@ -224,7 +352,7 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
 export default DronerDetail;
 const styles = StyleSheet.create({
   button: {
-    height: normalize(54),
+    height: 52,
     width: normalize(343),
     alignSelf: 'center',
     shadowColor: '#0CDF65',

@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     height: normalize(75),
   },
   headerTitleWraper: {
-    flex: 2,
+    flex: 3,
     justifyContent: 'center',
   },
   headerLeftWrapper: {

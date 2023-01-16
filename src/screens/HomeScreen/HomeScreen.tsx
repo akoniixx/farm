@@ -23,7 +23,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {normalize, width} from '../../functions/Normalize';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import image from '../../assets/images/image';
-import MainTapNavigator from '../../navigations/Bottom/MainTapNavigator';
+import MainTapNavigator from '../../navigations/BottomTabs/MainTapNavigator';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MainScreen from '../MainScreen/MainScreen';
 import fonts from '../../assets/fonts';

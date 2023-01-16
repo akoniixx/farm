@@ -99,7 +99,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
       })
       .catch(err => console.log(err));
   };
-
+  
   const addPlots = () => {
     const plots = [...plotData];
     console.log(plots);
@@ -140,7 +140,6 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
       );
     }
   };
-
   return (
     <SafeAreaView style={[stylesCentral.container]}>
       {fcmToken !== null ? (
@@ -355,6 +354,8 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
+                 onPress={() => {
+                  navigation.navigate("PrivacyScreen")}}
                   style={{
                     padding: normalize(20),
                     flexDirection: 'row',
@@ -374,6 +375,8 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("DeleteAcc")}}
                   style={{
                     padding: normalize(20),
                     flexDirection: 'row',
@@ -492,6 +495,8 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
               />
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("PrivacyScreen")}}
               style={{
                 alignItems: 'center',
                 padding: normalize(20),
