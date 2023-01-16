@@ -44,6 +44,7 @@ import * as RootNavigation from '../../navigations/RootNavigation';
 
 const MainScreen: React.FC<any> = ({navigation}) => {
   const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
+  const imageWidth = screenWidth / 2;
   const date = new Date().toLocaleDateString();
   const [fcmToken, setFcmToken] = useState('');
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);

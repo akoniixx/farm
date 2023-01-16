@@ -16,17 +16,22 @@ import {
   detailDronerReducer,
   initDetailDronerState,
 } from '../../hook/profilefield';
-import CardDetailDroner from '../../components/Carousel/CardTaskDetailDroner';
 import moment from 'moment';
+import {
+  CardDetailDroner,
+  CardDetailDronerNo,
+} from '../../components/Carousel/CardTaskDetailDroner';
 
 const DronerDetail: React.FC<any> = ({navigation, route}) => {
   const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
   const [visible, setIsVisible] = useState(false);
+  const [data, setData] = useState<any[]>([])
   const [detailState, dispatch] = useReducer(
     detailDronerReducer,
     initDetailDronerState,
   );
   const date = new Date().toLocaleDateString();
+
   useEffect(() => {
     dronerDetails();
   }, []);
@@ -45,6 +50,7 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
       limit,
       offset,
     ).then(res => {
+      setData(res[0].droner_queue)
       dispatch({
         type: 'InitDroner',
         name: `${res[0].firstname} ${res[0].lastname}`,
@@ -61,12 +67,44 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
       });
     });
   };
-  const getWeekDates = () => {
-    let weekDates = [];
-    for (let i = 0; i < 7; i++) weekDates.push(moment().add(i, 'd',).format('llll'));
-    return weekDates;
+
+  var now = new Date();
+  var daysOfYear = [];
+  for (let d = new Date(2023, 0, 1); d <= now; d.setDate(d.getDate() + 1)) {
+    daysOfYear.push(new Date(d));
+  }
+  // const weekday = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"];
+  // const d = new Date();
+  // let day = weekday[d.getDay()];
+  // console.log(day)
+
+
+  const getWeekDays = (locale: string | string[] | undefined) => {
+    const baseDate = new Date();
+    // const dronerQ = [data.map((x) => x.date_appointment)]
+
+    const weekDays = [];
+    for (let i = 0; i < 7; i++) {
+      weekDays.push(
+        baseDate.toLocaleDateString(locale, {
+          month: 'short',
+          day: 'numeric',
+          year: '2-digit',
+        }),
+      );
+      baseDate.setDate(baseDate.getDate() + 1);
+    }
+    return weekDays;
   };
-  console.log(getWeekDates().map((x) => x));
+
+// const dronerQ = [data.map((x) => x.date_appointment)]
+// const arr = [getWeekDays('th'),dronerQ];
+// const removeDuplicates = (arr: any[]) => {
+// return arr.filter((item, 
+//   index) => arr.indexOf(item) === index);
+// }
+
+
 
   return (
     <SafeAreaView style={stylesCentral.container}>
@@ -91,13 +129,12 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
           ) : (
             ''
           )}
-
           {detailState.imageTask !== null ? (
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}>
               {detailState.imageTask != undefined &&
-                detailState.imageTask.map((item: any, index: any) => (
+                detailState.imageTask.map((item: any, _index: any) => (
                   <ImageSlider
                     preview={true}
                     data={[
@@ -215,9 +252,33 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
         </View>
         <View style={{height: normalize(155)}}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              {getWeekDates().map((item, index) => (
-                 <CardDetailDroner index={index} dateTime={item} day={item[0]} convenient={'สะดวก'} />
-              ))}
+            {detailState.dronerQueue !== null
+              ? detailState.dronerQueue.map((item: any, index: any) => (
+                  <CardDetailDroner
+                    key={index}
+                    index={index}
+                    days={moment(item.date_appointment)
+                      .locale('th')
+                      .format('dddd')}
+                    dateTime={new Date(
+                      item.date_appointment,
+                    ).toLocaleDateString('th-TH', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: '2-digit',
+                    })}
+                    convenient={item.droner_status}
+                  />
+                ))
+              : getWeekDays('th').map((item, index) => (
+                  <CardDetailDronerNo
+                    key={index}
+                    index={index}
+                    days={''}
+                    dateTime={item}
+                    convenient={'สะดวก'}
+                  />
+                ))}
           </ScrollView>
         </View>
         <View style={{height: 10, backgroundColor: '#F8F9FA'}}></View>
