@@ -525,12 +525,12 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   style={styles.map}
                   initialRegion={position}
                   provider={PROVIDER_GOOGLE}
-                   region={{
-                    latitude: lat,
-                    longitude: long,
-                    latitudeDelta: 0,
-                    longitudeDelta: 0,
-                  }} 
+                  //  region={{
+                  //   latitude: lat,
+                  //   longitude: long,
+                  //   latitudeDelta: 0,
+                  //   longitudeDelta: 0,
+                  // }} 
                   showsUserLocation={true}
                   showsMyLocationButton={true}
                 />
@@ -567,6 +567,8 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
               <MainButton
                 style={styles.button}
                 label="บันทึก"
+                disable={!raiAmount || !plantName || !lat ||
+                  !long || !landmark ? true : false}
                 color={colors.greenLight}
                 onPress={() => {
                   addPlots();

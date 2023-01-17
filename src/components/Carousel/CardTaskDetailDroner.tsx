@@ -21,17 +21,19 @@ export const CardDetailDroner: React.FC<DetailData> = ({
   return (
     <View style={{flex: 1, paddingHorizontal: 5, left: '10%'}}>
         {convenient == 'สะดวก' ? 
-         <View key={index} style={[styles.cardNo]}>
-         <Text style={[styles.label,{alignSelf: 'center', top: 20}]}>
-           {days}
-         </Text>
-         <Text style={[styles.label,{paddingHorizontal: normalize(30), top: 35} ]}>{dateTime}</Text>
-         <Text style={[styles.label, {top: 60,color: colors.greenLight}]}>
-           {convenient}
-         </Text>
-       </View>
-       :   <View style={[styles.cards]}>
-       <View key={index} style={[styles.cardYes]}>
+          <View style={[styles.cards]}>
+          <View key={index} style={[styles.cardYes]}>
+            <Text style={[styles.label,{alignSelf: 'center', top: 20}]}>
+              {days}
+            </Text>
+            <Text style={[styles.label,{paddingHorizontal: normalize(30), top: 30} ]}>{dateTime}</Text>
+            <Text style={[styles.label, {top: 50,color: colors.white}]}>
+              {convenient}
+            </Text>
+          </View>
+        </View>
+       :   <View style={[styles.cardsNo]}>
+       <View key={index} style={[styles.cardNo]}>
          <Text style={[styles.label,,{alignSelf: 'center', top: 20}]}>
            {days}
          </Text>
@@ -45,38 +47,16 @@ export const CardDetailDroner: React.FC<DetailData> = ({
     </View>
   );
 };
-export const CardDetailDronerNo: React.FC<DetailData> = ({
-  index,
-  days,
-  dateTime,
-  convenient,
-}) => {
-  return (
-    <View style={{flex: 1, paddingHorizontal: 5, left: '10%'}}>
-      <View style={[styles.cardsNo]}>
-        <View key={index} style={[styles.cardNo]}>
-        <Text style={[styles.label,,{alignSelf: 'center', top: 20}]}>
-           {days}
-         </Text>
-          <Text style={[styles.label,{paddingHorizontal: normalize(30), top: 35} ]}>{dateTime}</Text>
-          <Text style={[styles.label, {top: 50,color: colors.white}]}>
-            {convenient}
-          </Text>
-        </View>
-      </View>
-    </View>
-  );
-};
 
 const styles = StyleSheet.create({
   cardYes: {
     backgroundColor: colors.white,
     height: '65%',
     width: normalize(136),
-    borderWidth: 0.3,
+    borderWidth: 1,
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
-    borderColor: colors.gray,
+    borderColor: colors.greenLight,
   },
   cardNo: {
     backgroundColor: colors.white,
@@ -85,7 +65,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.3,
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
-    borderColor: colors.greenDark,
+    borderColor: colors.gray,
   },
 
   label: {
@@ -101,7 +81,7 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunBold,
     fontSize: normalize(18),
   },
-  cards: {
+  cardsNo: {
     backgroundColor: '#FFD9D9',
     height: normalize(116),
     width: normalize(136),
@@ -109,13 +89,12 @@ const styles = StyleSheet.create({
     borderWidth: 0.3,
     borderColor: colors.gray,
   },
-  cardsNo: {
+  cards: {
     backgroundColor:colors.greenLight,
     height: normalize(116),
-    width: normalize(136),
     borderRadius: 15,
-    borderWidth: 0.3,
-    borderColor: colors.gray,
+    borderWidth: 1,
+    borderColor: colors.greenLight,
   },
 });
 
