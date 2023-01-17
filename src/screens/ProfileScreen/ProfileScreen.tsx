@@ -462,8 +462,14 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   label="ลงทะเบียน/เข้าสู่ระบบ"
                   color={colors.greenLight}
                   style={styles.buttomBlank}
-                  onPress={() => navigation.navigate('ConditionScreen')}
-                />
+                  onPress={async () => {
+                    const value = await AsyncStorage.getItem('PDPA');
+                    if (value === 'read') {
+                        navigation.navigate('TelNumScreen');
+                    } else {
+                        navigation.navigate('ConditionScreen');
+                    }
+                }}                />
               </View>
             </View>
           </LinearGradient>
