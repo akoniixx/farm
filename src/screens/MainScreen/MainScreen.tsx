@@ -151,7 +151,9 @@ const MainScreen: React.FC<any> = ({navigation}) => {
                     top: '30%',
                     justifyContent: 'center',
                   }}>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                   onPress={() => navigation.navigate('SelectDateScreen')}
+                  >
                     <LinearGradient
                       colors={['#61E097', '#3B996E']}
                       style={{
