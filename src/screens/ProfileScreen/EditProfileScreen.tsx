@@ -3,12 +3,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CustomHeader from "../../components/CustomHeader";
 import { stylesCentral } from "../../styles/StylesCentral";
 
-const AllPlotScreen: React.FC<any>  = ({navigation}) => {
+const EditProfileScreen: React.FC<any>  = ({navigation}) => {
     return(
         <>
         <SafeAreaView style={stylesCentral.container}>
           <CustomHeader
-            title="แปลงของคุณ"
+            title="ข้อมูลส่วนตัว"
             showBackBtn
             onPressBack={() => navigation.goBack()}
           />
@@ -17,4 +17,4 @@ const AllPlotScreen: React.FC<any>  = ({navigation}) => {
     )
 
 }
-export default AllPlotScreen;
+export default EditProfileScreen;
