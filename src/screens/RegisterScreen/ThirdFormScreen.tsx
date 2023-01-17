@@ -83,8 +83,8 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const [landmark, setlandmark] = useState<any>('');
   const [plotDataUI, setplotDataUI] = useState<any>([]);
   const [plotData, setplotData] = useState<any>([]);
-  const [lat, setlat] = useState<any>(null);
-  const [long, setlong] = useState<any>(null);
+  const [lat, setlat] = useState<any>(route.params.latitude);
+  const [long, setlong] = useState<any>(route.params.longitude);
   const [plotName, setplotName] = useState<any>(null);
   const actionSheet = useRef<any>();
   const plantSheet = useRef<any>();
@@ -525,12 +525,12 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   style={styles.map}
                   initialRegion={position}
                   provider={PROVIDER_GOOGLE}
-                  //  region={{
-                  //   latitude: lat,
-                  //   longitude: long,
-                  //   latitudeDelta: 0,
-                  //   longitudeDelta: 0,
-                  // }} 
+                    region={{
+                     latitude: lat,
+                     longitude: long,
+                     latitudeDelta: 0.0,
+                     longitudeDelta: 0.0,
+                   }} 
                   showsUserLocation={true}
                   showsMyLocationButton={true}
                 />
@@ -822,12 +822,12 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     style={styles.map}
                     initialRegion={position}
                     provider={PROVIDER_GOOGLE}
-                    /* region={{
+                    region={{
                       latitude: lat,
                       longitude: long,
-                      latitudeDelta: 0,
-                      longitudeDelta: 0,
-                    }} */
+                      latitudeDelta: 0.02,
+                      longitudeDelta: 0.02,
+                    }}
                     showsUserLocation={true}
                     showsMyLocationButton={true}
                   />
