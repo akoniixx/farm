@@ -18,6 +18,8 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
     const [date, setDate] = useState(new Date());
     const [openTimePicker, setopenTimePicker] = useState(false);
     const [note, setNote] = useState('');
+    const [hour, setHour] = useState(12);
+    const [minute, setMinute] = useState(0);
     return (
         <>
             <StepIndicatorHead
@@ -27,7 +29,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
             />
 
             <SafeAreaView style={{ flex: 1, paddingHorizontal: 10 }} >
-                <View style={{flex:1,justifyContent:'space-between'}}>
+                <View style={{ flex: 1, justifyContent: 'space-between' }}>
                     <View>
                         <Text style={styles.label}>วันที่ฉีดพ่น</Text>
                         <TouchableOpacity onPress={() => setOpenCalendar(true)}>
@@ -78,7 +80,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                                 ]}>
                                 <TextInput
                                     value={
-                                        '10:10'
+                                        ("0" + hour).slice(-2) + ':' + ("0" + minute).slice(-2) 
                                     }
                                     editable={false}
                                     placeholder={'ระบุวัน เดือน ปี'}
@@ -256,7 +258,12 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                             เลื่อนขึ้นลงเพื่อเลือกวันฉีดพ่น
                         </Text>
                         <View>
-                            <TimePicker />
+                            <TimePicker
+                               setHour={(h:number)=>{setHour(h)}}
+                               setMinute={(m:number)=>{setMinute(m)}}
+                               hour={hour}
+                               minute={minute}
+                               />
 
                         </View>
                         <View
@@ -275,7 +282,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                                 color={colors.greenLight}
                                 width={150}
                                 onPress={() => {
-                                    setOpenCalendar(false);
+                                    setopenTimePicker(false);
                                 }}
                             />
                         </View>

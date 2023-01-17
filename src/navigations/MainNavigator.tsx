@@ -11,6 +11,7 @@ import SelectPlotScreen from '../screens/AutoBooking/SelectPlotScreen';
 import DeleteAcc from '../screens/ProfileScreen/DeleteProfile/DeleteAcc';
 import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 import MainTapNavigator from './Bottom/MainTapNavigator';
+import SelectTarget from '../screens/AutoBooking/SelectTarget';
 import PrivacyScreen from '../screens/ProfileScreen/PrivacyScreen';
 import EditProfileScreen from '../screens/ProfileScreen/EditProfileScreen';
 const Stack = createStackNavigator()
@@ -26,6 +27,7 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="AllPlotScreen" component={AllPlotScreen} />
       <Stack.Screen name="SelectDateScreen" component={SelectDateScreen} /> 
       <Stack.Screen name="SelectPlotScreen" component={SelectPlotScreen} /> 
+      <Stack.Screen name="SelectTarget" component={SelectTarget} /> 
       <Stack.Screen name="DronerDetail" component={DronerDetail}/>
       <Stack.Screen name="SeeAllDronerUsed" component={SeeAllDronerUsed} />
       <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
