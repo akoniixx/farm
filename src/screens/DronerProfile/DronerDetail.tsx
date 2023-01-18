@@ -72,10 +72,20 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
   for (let i = 0; i < 7; i++) {
     weekDays.push(baseDate.toISOString());
     baseDate.setDate(baseDate.getDate() + 1);
+  }  
+  const DAYS = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"];
+  const days = [];
+  const today = new Date();
+  for (let i = 0; i < 7; i++)
+  {
+    const nameDay = new Date(today);
+    nameDay.setDate(today.getDate() + i);
+    days.push(DAYS[nameDay.getDay()]);
   }
   const dronerQ = data !== null ? data.map(x => x.date_appointment) : weekDays;
   const arr1 = weekDays;
   const arr2 = dronerQ;
+  const arr3 = days;
   const QDroner = arr1.map(el => {
     const convertDate = new Date(el);
     const day = convertDate.getDate();
@@ -87,29 +97,17 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
       return {
         status: 'ไม่สะดวก',
         date: find,
-        //dayName: values
+        // dayName: nameDate
       };
     }
     return {
       status: 'สะดวก',
       date: el,
-      //dayName: values
+      // dayName: nameDate
     };
   });
 
-  const DAYS = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"];
- 
-  const days = [];
-  const today = new Date();
-  
-  for (let i = 0; i < 7; i++)
-  {
-    const day = new Date(today);
-    day.setDate(today.getDate() + i);
-    days.push(DAYS[day.getDay()]);
-  }
- 
-  console.log(days);
+
 
   return (
     <SafeAreaView style={stylesCentral.container}>
@@ -263,7 +261,7 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
                 <CardDetailDroner
                   key={index}
                   index={index}
-                  days={item.dayName}
+                  days={moment(item.date).locale('th').format('dddd')}
                   dateTime={new Date(item.date).toLocaleDateString('th-TH', {
                     day: 'numeric',
                     month: 'short',
@@ -307,7 +305,18 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
             />
             <View style={{left: 20}}>
               <Text style={[styles.droner]}>{detailState.name}</Text>
-              <View style={{flexDirection: 'row', marginTop: 10}}>
+              <Text style={[styles.droner, {top: 10}]}>
+            ยี่ห้อโดรน :
+            <Text
+              style={{
+                fontFamily: font.SarabunLight,
+                fontSize: normalize(18),
+                color: colors.fontBlack,
+              }}>
+              {`  ${detailState.droneBand}`}
+            </Text>
+          </Text>
+              {/* <View style={{flexDirection: 'row', marginTop: 10}}>
                 <Image
                   source={icons.done_academy}
                   style={{width: 24, height: 24, right: 5}}
@@ -320,27 +329,16 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
                   }}>
                   ผ่านการยืนยันจาก ICP Academy
                 </Text>
-              </View>
+              </View> */}
             </View>
           </View>
-          <Text style={[styles.droner]}>
-            ยี่ห้อโดรน :
-            <Text
-              style={{
-                fontFamily: font.SarabunLight,
-                fontSize: normalize(18),
-                color: colors.fontBlack,
-              }}>
-              {`  ${detailState.droneBand}`}
-            </Text>
-          </Text>
           <Text
             style={{
               fontFamily: font.SarabunLight,
               fontSize: normalize(18),
               color: colors.fontBlack,
             }}>
-            ICP รับประกันคุณภาพการฉีดพ่นและยา 100%
+            {/* ICP รับประกันคุณภาพการฉีดพ่นและยา 100% */}
           </Text>
         </View>
         <View style={{height: 20, backgroundColor: '#F8F9FA'}}></View>
