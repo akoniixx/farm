@@ -111,7 +111,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
           <MainButton
             label="ถัดไป"
             color={colors.greenLight}
-            /*  onPress={() => navigation.navigate('SelectTarget')} */
+            onPress={() => navigation.navigate('SelectTarget')}
             style={{ margin: normalize(10) }}
           />
         </SafeAreaView>
