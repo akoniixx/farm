@@ -545,11 +545,11 @@ PODS:
     - FirebaseCoreExtension (= 10.2.0)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.8.0):
+  - RNGestureHandler (2.9.0):
     - React-Core
   - RNLocalize (2.2.4):
     - React-Core
-  - RNReanimated (2.13.0):
+  - RNReanimated (3.0.0-rc.10):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -881,9 +881,9 @@ SPEC CHECKSUMS:
   RNDateTimePicker: 0530a73a6f3a1a85814cbde0802736993b9e675e
   RNFBApp: a61f530d08a0f5996b1fbdcbd1b8bb077d5d61a1
   RNFBMessaging: f7a90ac199e1bc771e9e09058ed0354efd047182
-  RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
+  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNLocalize: 0df7970cfc60389f00eb62fd7c097dc75af3fb4f
-  RNReanimated: ce445c233a6ff5600223484a88ad5704945d972a
+  RNReanimated: 3eb05867410b44acaa81dd423945af3093305bd4
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: eca980a5771bf114c41a754098cd85e6e0d90ed7

@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AppNavigator from './src/navigations/AppNavigator';
@@ -6,7 +7,7 @@ import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-toast-message';
 import {SheetProvider} from 'react-native-actions-sheet';
 import {toastConfig} from './src/config/toast-config';
-import { BackHandler } from 'react-native';
+import {BackHandler} from 'react-native';
 
 const App = () => {
   useEffect(() => {
