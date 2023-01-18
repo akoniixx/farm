@@ -87,36 +87,13 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       return {
         status: 'ไม่สะดวก',
         date: find,
-        //dayName: values
       };
     }
     return {
       status: 'สะดวก',
       date: el,
-      //dayName: values
     };
   });
-
-  const DAYS = [
-    'อาทิตย์',
-    'จันทร์',
-    'อังคาร',
-    'พุธ',
-    'พฤหัส',
-    'ศุกร์',
-    'เสาร์',
-  ];
-
-  const days = [];
-  const today = new Date();
-
-  for (let i = 0; i < 7; i++) {
-    const day = new Date(today);
-    day.setDate(today.getDate() + i);
-    days.push(DAYS[day.getDay()]);
-  }
-
-  console.log(days);
 
   return (
     <SafeAreaView style={stylesCentral.container}>
@@ -265,13 +242,66 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           <Text style={[styles.text]}>คิวงานของนักบินโดรน</Text>
         </View>
         <View style={{ height: normalize(155) }}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          {detailState.dronerQueue != null ? (
+            <View style={{ height: '110%' }}>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {detailState.dronerQueue.length != undefined &&
+                  QDroner.map((item: any, index: any) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => navigation.navigate('SelectDateScreen')}>
+                      <CardDetailDroner
+                        key={index}
+                        index={index}
+                        days={moment(item.date).locale('th').format('dddd')}
+                        dateTime={new Date(item.date).toLocaleDateString(
+                          'th-TH',
+                          {
+                            day: 'numeric',
+                            month: 'short',
+                            year: '2-digit',
+                          },
+                        )}
+                        convenient={item.status}
+                      />
+                    </TouchableOpacity>
+                  ))}
+              </ScrollView>
+            </View>
+          ) : (
+            <View style={{ height: '110%' }}>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {weekDays.map((item: any, index: any) => (
+                   <TouchableOpacity
+                   key={index}
+                   onPress={() => navigation.navigate('SelectDateScreen')}>
+                  <CardDetailDroner
+                    key={index}
+                    index={index}
+                    days={moment(item).locale('th').format('dddd')}
+                    dateTime={new Date(item).toLocaleDateString('th-TH', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: '2-digit',
+                    })}
+                    convenient={'สะดวก'}
+                  />
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+          {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {detailState.dronerQueue !== null
               ? QDroner.map((item: any, index: any) => (
                   <CardDetailDroner
                     key={index}
                     index={index}
-                    days={item.dayName}
+                    days={moment(item.date).locale('th').format('dddd')}
                     dateTime={new Date(item.date).toLocaleDateString('th-TH', {
                       day: 'numeric',
                       month: 'short',
@@ -293,7 +323,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                     convenient={'สะดวก'}
                   />
                 ))}
-          </ScrollView>
+          </ScrollView> */}
         </View>
         <View style={{ height: 10, backgroundColor: '#F8F9FA' }}></View>
         <View style={[styles.section]}>
@@ -314,10 +344,21 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
             />
             <View style={{ left: 20 }}>
               <Text style={[styles.droner]}>{detailState.name}</Text>
-              <View style={{ flexDirection: 'row', marginTop: 10 }}>
+              <Text style={[styles.droner, { top: 10 }]}>
+                ยี่ห้อโดรน :
+                <Text
+                  style={{
+                    fontFamily: font.SarabunLight,
+                    fontSize: normalize(18),
+                    color: colors.fontBlack,
+                  }}>
+                  {`  ${detailState.droneBand}`}
+                </Text>
+              </Text>
+              {/* <View style={{flexDirection: 'row', marginTop: 10}}>
                 <Image
                   source={icons.done_academy}
-                  style={{ width: 24, height: 24, right: 5 }}
+                  style={{width: 24, height: 24, right: 5}}
                 />
                 <Text
                   style={{
@@ -327,27 +368,16 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                   }}>
                   ผ่านการยืนยันจาก ICP Academy
                 </Text>
-              </View>
+              </View> */}
             </View>
           </View>
-          <Text style={[styles.droner]}>
-            ยี่ห้อโดรน :
-            <Text
-              style={{
-                fontFamily: font.SarabunLight,
-                fontSize: normalize(18),
-                color: colors.fontBlack,
-              }}>
-              {`  ${detailState.droneBand}`}
-            </Text>
-          </Text>
           <Text
             style={{
               fontFamily: font.SarabunLight,
               fontSize: normalize(18),
               color: colors.fontBlack,
             }}>
-            ICP รับประกันคุณภาพการฉีดพ่นและยา 100%
+            {/* ICP รับประกันคุณภาพการฉีดพ่นและยา 100% */}
           </Text>
         </View>
         <View style={{ height: 20, backgroundColor: '#F8F9FA' }}></View>
@@ -357,7 +387,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           label="จ้างงาน"
           color={colors.greenLight}
           style={styles.button}
-          onPress={() => navigation.navigate('')}
+          onPress={() => navigation.navigate('SelectDateScreen')}
         />
       </View>
     </SafeAreaView>

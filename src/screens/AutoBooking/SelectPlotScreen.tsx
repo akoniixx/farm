@@ -23,7 +23,7 @@ import PlotInProfile from '../../components/Plots/PlotsInProfile';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
 import TimePicker from '../../components/TimePicker/TimePicker';
 import { PlotDatasource } from '../../datasource/PlotDatasource';
-import { height, normalize, width } from '../../functions/Normalize';
+import { normalize } from '../../functions/Normalize';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 
 const SelectPlotScreen: React.FC<any> = ({ navigation }) => {

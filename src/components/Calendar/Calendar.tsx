@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import {
   View,
@@ -32,17 +33,24 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
   const [years, setYears] = useState<any[]>([]);
 
   useEffect(() => {
-    const end = endYear || new Date().getFullYear() + 543;
-    const start = !startYear || startYear > end ? end - 100 : startYear;
+    const getInitDate = () => {
+      const end = endYear || new Date().getFullYear() + 543;
+      const start = !startYear || startYear > end ? end - 70 : startYear;
 
-    const _days = [...Array(31)].map((_, index) => index + 1);
-    const _months = [...Array(12)].map((_, i) => i + 1);
-    const _years = [...Array(end - start + 1)].map((_, index) => start + index);
+      const _days = [...Array(moment(value).daysInMonth())].map(
+        (_, index) => index + 1,
+      );
+      const _months = [...Array(12)].map((_, i) => i + 1);
+      const _years = [...Array(end - start + 1)].map(
+        (_, index) => start + index,
+      );
 
-    setDays(_days);
-    setMonths(_months);
-    setYears(_years);
-  }, []);
+      setDays(_days);
+      setMonths(_months);
+      setYears(_years);
+    };
+    getInitDate();
+  }, [startYear, endYear]);
 
   const pickerHeight: number = Math.round(
     height || Dimensions.get('window').height / 3.5,
@@ -157,10 +165,9 @@ const DateBlock: React.FC<DateBlockProps> = ({
   const snapScrollToIndex = (index: number) => {
     scrollRef?.current?.scrollTo({ y: dHeight * index, animated: false });
   };
-
   useEffect(() => {
     snapScrollToIndex(value - digits[6]);
-  }, [scrollRef.current]);
+  }, []);
 
   const handleMomentumScrollEnd = ({ nativeEvent }: any) => {
     const digit = Math.round(nativeEvent.contentOffset.y / dHeight + digits[0]);
@@ -266,6 +273,7 @@ export interface DatePickerProps {
   fadeColor?: string;
   format?: string;
   onHandleChange: (value: any) => void;
+  isCurrentDate?: boolean;
 }
 
 export interface DateBlockProps {
