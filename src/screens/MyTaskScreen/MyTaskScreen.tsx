@@ -10,8 +10,7 @@ const TaskScreen: React.FC<any> = ({navigation}) => {
       <SafeAreaView style={stylesCentral.container}>
         <CustomHeader
           title="งานของฉัน"
-          showBackBtn
-          onPressBack={() => navigation.goBack()}
+          
         />
       </SafeAreaView>
     </>

@@ -26,16 +26,6 @@
 	<string>1</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>NSAppTransportSecurity</key>
-	<dict/>
-	<key>NSHumanReadableCopyright</key>
-	<string></string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
-	<key>Privacy – Photo Library Additions Usage Description</key>
-	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>comgooglemaps</string>
@@ -55,6 +45,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>IconKaset Farmer would like to use access camera to take your photo for your profile.</string>
+	<key>NSHumanReadableCopyright</key>
+	<string></string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>IconKaset Farmer ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -63,7 +55,8 @@
 	<string>IconKaset Farmer ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>IconKaset Farmer would like access to your photo gallery, so you can use it as your profile.</string>
-	
+	<key>Privacy – Photo Library Additions Usage Description</key>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Anuphan-Bold.otf</string>
