@@ -8,7 +8,7 @@ import {
   ViewProps,
 } from 'react-native';
 import { normalize } from '../functions/Normalize';
-import Icon  from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/AntDesign';
 import { colors, font } from '../assets';
 
 interface Prop {
@@ -28,7 +28,7 @@ const CustomHeader: React.FC<Prop> = ({
   onPressBack,
   headerLeft,
   headerRight,
-  image
+  image,
 }) => {
   return (
     <SafeAreaView style={[styles.headerSafeArea, style]}>
@@ -36,7 +36,7 @@ const CustomHeader: React.FC<Prop> = ({
         <View style={styles.headerLeftWrapper}>
           {showBackBtn && (
             <TouchableOpacity
-              style={{paddingVertical: 14, paddingHorizontal: 24}}
+              style={{ paddingVertical: 14, paddingHorizontal: 24 }}
               onPress={onPressBack}>
               <Icon name="left" size={30} color="black" />
             </TouchableOpacity>
@@ -48,7 +48,6 @@ const CustomHeader: React.FC<Prop> = ({
         </View>
         <View style={styles.headerRightWrapper}>{headerRight?.()}</View>
         <View style={styles.fav}>{image?.()}</View>
-
       </View>
     </SafeAreaView>
   );
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
   fav: {
     flexDirection: 'row',
     alignItems: 'center',
-    right: '5%'
+    right: '5%',
   },
   headerSafeArea: {
     backgroundColor: colors.white,

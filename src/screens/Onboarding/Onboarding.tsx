@@ -1,17 +1,17 @@
-import {View,StyleSheet} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import React from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {stylesCentral} from '../../styles/StylesCentral';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { stylesCentral } from '../../styles/StylesCentral';
 import { normalize } from '../../functions/Normalize';
 import { MainButton } from '../../components/Button/MainButton';
 import HomeCarousel from '../../components/Carousel/HomeCarousel';
-import {colors, font} from '../../assets';
+import { colors, font } from '../../assets';
 
-const Onboarding: React.FC<any> = ({navigation}) => {
+const Onboarding: React.FC<any> = ({ navigation }) => {
   return (
     <SafeAreaView style={stylesCentral.container}>
       <View style={styles.inner}>
-        <View style={{flex: 1,alignItems:'center'}}>
+        <View style={{ flex: 1, alignItems: 'center' }}>
           <HomeCarousel />
         </View>
         <View>

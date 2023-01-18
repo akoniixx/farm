@@ -96,24 +96,23 @@ export class Authentication {
   //       throw err;
   //     });
   // }
-
 }
 export class Register {
   static async register1(
     firstname: string,
     lastname: string,
-    birthDate :  Date,
-    telephoneNo: string
-    ): Promise<any> {
-      const farmer_id = await AsyncStorage.getItem('farmer_id');
-      if (!farmer_id) {
-        if(!birthDate) {
-          return registerClient
+    birthDate: Date,
+    telephoneNo: string,
+  ): Promise<any> {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    if (!farmer_id) {
+      if (!birthDate) {
+        return registerClient
           .post(BASE_URL + `/auth/farmer/register`, {
             firstname: firstname,
             lastname: lastname,
             telephoneNo: telephoneNo,
-            status: 'OPEN'
+            status: 'OPEN',
           })
           .then(async response => {
             const farmer_id = response.data.id;
@@ -123,36 +122,17 @@ export class Register {
           .catch(error => {
             console.log(error);
           });
-        }else{
-          return registerClient
-          .post(BASE_URL + `/auth/farmer/register`, {
-            firstname: firstname,
-            lastname: lastname,
-            birthDate: birthDate,
-            telephoneNo: telephoneNo,
-            status: 'OPEN'
-          })
-          .then(async response => {
-            console.log(response)
-            const farmer_id = response.data.id;
-            await AsyncStorage.setItem('farmer_id', farmer_id);
-            return response.data;
-          })
-          .catch(error => {
-            console.log(error);
-          });
-        }
       } else {
         return registerClient
           .post(BASE_URL + `/auth/farmer/register`, {
-            id: farmer_id,
             firstname: firstname,
             lastname: lastname,
             birthDate: birthDate,
             telephoneNo: telephoneNo,
-            status: 'OPEN'
+            status: 'OPEN',
           })
           .then(async response => {
+            console.log(response);
             const farmer_id = response.data.id;
             await AsyncStorage.setItem('farmer_id', farmer_id);
             return response.data;
@@ -161,30 +141,15 @@ export class Register {
             console.log(error);
           });
       }
-    }
-  static async register2(
-    telephoneNo: string,
-    address1: string,
-    address2: string,
-    provinceId: number,
-    districtId: number,
-    subdistrictId: number,
-    postcode: string,
-  ): Promise<any> {
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    } else {
       return registerClient
-        .post(BASE_URL + '/auth/farmer/register', {
+        .post(BASE_URL + `/auth/farmer/register`, {
           id: farmer_id,
+          firstname: firstname,
+          lastname: lastname,
+          birthDate: birthDate,
           telephoneNo: telephoneNo,
           status: 'OPEN',
-          address: {
-            address1: address1,
-            address2: address2,
-            provinceId: provinceId,
-            districtId: districtId,
-            subdistrictId: subdistrictId,
-            postcode: postcode,
-          },
         })
         .then(async response => {
           const farmer_id = response.data.id;
@@ -195,6 +160,40 @@ export class Register {
           console.log(error);
         });
     }
+  }
+  static async register2(
+    telephoneNo: string,
+    address1: string,
+    address2: string,
+    provinceId: number,
+    districtId: number,
+    subdistrictId: number,
+    postcode: string,
+  ): Promise<any> {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    return registerClient
+      .post(BASE_URL + '/auth/farmer/register', {
+        id: farmer_id,
+        telephoneNo: telephoneNo,
+        status: 'OPEN',
+        address: {
+          address1: address1,
+          address2: address2,
+          provinceId: provinceId,
+          districtId: districtId,
+          subdistrictId: subdistrictId,
+          postcode: postcode,
+        },
+      })
+      .then(async response => {
+        const farmer_id = response.data.id;
+        await AsyncStorage.setItem('farmer_id', farmer_id);
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
   static async register3(
     telephoneNo: string,
     plotName: string,
@@ -209,58 +208,55 @@ export class Register {
     const index = 0;
     if (!plotName) {
       return registerClient
-      .post(BASE_URL + `/auth/farmer/register`, {
-        id: farmer_id,
-        status: 'PENDING',
-        telephoneNo: telephoneNo,
-        farmerPlot:[
-           {
-             plotName: `แปลงที่ ${index + 1} ${plantName}`,
-             raiAmount: raiAmount,
-             plantName: plantName,
-             lat: lat,
-             long: long,
-             locationName: locationName,
-             landmark: landmark,
-           }
-          ]
-      })
-      .then(response => {
-        return response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-
-    }else{
+        .post(BASE_URL + `/auth/farmer/register`, {
+          id: farmer_id,
+          status: 'PENDING',
+          telephoneNo: telephoneNo,
+          farmerPlot: [
+            {
+              plotName: `แปลงที่ ${index + 1} ${plantName}`,
+              raiAmount: raiAmount,
+              plantName: plantName,
+              lat: lat,
+              long: long,
+              locationName: locationName,
+              landmark: landmark,
+            },
+          ],
+        })
+        .then(response => {
+          return response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    } else {
       return registerClient
-      .post(BASE_URL + `/auth/farmer/register`, {
-        id: farmer_id,
-        status: 'PENDING',
-        telephoneNo: telephoneNo,
-        farmerPlot:[
-           {
-             plotName: plotName,
-             raiAmount: raiAmount,
-             plantName: plantName,
-             lat: lat,
-             long: long,
-             locationName: locationName,
-             landmark: landmark,
-           }
-          ]
-      })
-      .then(async response => {
-        const farmerPlot_id = response.data.id;
-        await AsyncStorage.setItem('farmerPlot_id', farmerPlot_id);
-        return response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-
+        .post(BASE_URL + `/auth/farmer/register`, {
+          id: farmer_id,
+          status: 'PENDING',
+          telephoneNo: telephoneNo,
+          farmerPlot: [
+            {
+              plotName: plotName,
+              raiAmount: raiAmount,
+              plantName: plantName,
+              lat: lat,
+              long: long,
+              locationName: locationName,
+              landmark: landmark,
+            },
+          ],
+        })
+        .then(async response => {
+          const farmerPlot_id = response.data.id;
+          await AsyncStorage.setItem('farmerPlot_id', farmerPlot_id);
+          return response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
-   
   }
   static async uploadFarmerPlot(farmerPlot: any): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -279,12 +275,12 @@ export class Register {
   }
   static deleteFarmerPlot(id?: string): Promise<any> {
     return httpClient
-      .delete(BASE_URL + "/farmer-plot/" + id)
-      .then((response) => {
+      .delete(BASE_URL + '/farmer-plot/' + id)
+      .then(response => {
         return response.data;
       })
-      .catch((err) => {
-        console.log(err, "err deleteFarmerPlot");
+      .catch(err => {
+        console.log(err, 'err deleteFarmerPlot');
       });
   }
   static async registerSkip4(): Promise<any> {
@@ -308,7 +304,6 @@ export class Register {
         id: farmer_id,
         idNo: idNo,
         status: 'OPEN',
-      
       })
       .then(response => {
         return response.data;
@@ -374,7 +369,7 @@ export class Register {
     return uploadFileClient
       .post(BASE_URL + '/file/upload', data)
       .then(response => {
-        console.log(response)
+        console.log(response);
         return response.data;
       })
       .catch(error => {

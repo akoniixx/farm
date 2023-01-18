@@ -9,20 +9,20 @@ import {
   Platform,
   Button,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {stylesCentral} from '../../styles/StylesCentral';
-import {colors, font} from '../../assets';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { stylesCentral } from '../../styles/StylesCentral';
+import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
-import {MainButton} from '../../components/Button/MainButton';
-import {normalize} from '../../functions/Normalize';
-import {InputPhone} from '../../components/InputPhone';
+import { MainButton } from '../../components/Button/MainButton';
+import { normalize } from '../../functions/Normalize';
+import { InputPhone } from '../../components/InputPhone';
 import OtpScreen from '../OtpScreen/OtpScreen';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { Authentication } from '../../datasource/AuthDatasource';
-import  Toast  from 'react-native-toast-message';
+import Toast from 'react-native-toast-message';
 
-const TelNumScreen: React.FC<any> = ({navigation}) => {
+const TelNumScreen: React.FC<any> = ({ navigation }) => {
   const [value, setValue] = useState<string>('');
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState<string>('');
@@ -31,7 +31,7 @@ const TelNumScreen: React.FC<any> = ({navigation}) => {
   const login = () => {
     Authentication.generateOtpRegister(value)
       .then(result => {
-        console.log(result)
+        console.log(result);
         navigation.navigate('OtpScreen', {
           telNumber: value,
           token: result.result.token,
@@ -40,27 +40,25 @@ const TelNumScreen: React.FC<any> = ({navigation}) => {
         });
       })
       .catch(err => {
-              if (err.response.data.statusCode === 409) {
-                Authentication.generateOtp(value)
-                    .then(result => {
-                        const telNumber = value;
-                        setValue('')
-                        navigation.navigate('OtpScreen', {
-                          telNumber: telNumber,
-                          token: result.result.token,
-                          refCode: result.result.refCode,
-                          isRegisterScreen: false,
-                        });
-                    })
-              }
-            }
-      )
+        if (err.response.data.statusCode === 409) {
+          Authentication.generateOtp(value).then(result => {
+            const telNumber = value;
+            setValue('');
+            navigation.navigate('OtpScreen', {
+              telNumber: telNumber,
+              token: result.result.token,
+              refCode: result.result.refCode,
+              isRegisterScreen: false,
+            });
+          });
+        }
+      });
   };
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}>
+      style={{ flex: 1 }}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={stylesCentral.container}>
           <CustomHeader
@@ -82,7 +80,11 @@ const TelNumScreen: React.FC<any> = ({navigation}) => {
               />
               {errMessage.length > 0 ? (
                 <Text
-                  style={{marginTop: 5, color: 'red', fontFamily: font.AnuphanMedium}}>
+                  style={{
+                    marginTop: 5,
+                    color: 'red',
+                    fontFamily: font.AnuphanMedium,
+                  }}>
                   {errMessage}
                 </Text>
               ) : null}

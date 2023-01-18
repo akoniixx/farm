@@ -6,12 +6,12 @@ import {
   TextInput,
   ImageBackground,
 } from 'react-native';
-import React, {useState} from 'react';
-import {normalize} from '../../functions/Normalize';
-import {colors, font, icons, image} from '../../assets';
+import React, { useState } from 'react';
+import { normalize } from '../../functions/Normalize';
+import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
-import {Avatar} from '@rneui/base';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { Avatar } from '@rneui/base';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { color } from 'react-native-reanimated';
 
 interface dronerUsedData {
@@ -38,16 +38,16 @@ const DronerUsed: React.FC<dronerUsedData> = ({
   const [checked, setChecked] = useState<boolean>(false);
 
   return (
-    <View style={{paddingHorizontal: 5}}>
+    <View style={{ paddingHorizontal: 5 }}>
       <View style={[styles.cards]}>
         <ImageBackground
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
-          style={{height: normalize(70)}}
-          source={background === '' ? image.bg_droner : {uri: profile}}>
+          style={{ height: normalize(70) }}
+          source={background === '' ? image.bg_droner : { uri: profile }}>
           <View key={index}>
             <Image
-              source={profile === '' ? image.empty_plot : {uri: profile}}
+              source={profile === '' ? image.empty_plot : { uri: profile }}
             />
             <View
               style={{
@@ -63,14 +63,14 @@ const DronerUsed: React.FC<dronerUsedData> = ({
               <TouchableOpacity onPress={() => setChecked(!checked)}>
                 <Image
                   source={checked ? icons.heart_active : icons.heart}
-                  style={{alignSelf: 'center', width: 20, height: 20, top: 4}}
+                  style={{ alignSelf: 'center', width: 20, height: 20, top: 4 }}
                 />
               </TouchableOpacity>
             </View>
-            <View style={{alignSelf: 'center'}}>
+            <View style={{ alignSelf: 'center' }}>
               <Avatar
                 size={normalize(56)}
-                source={profile === null ? image.empty_plot : {uri: profile}}
+                source={profile === null ? image.empty_plot : { uri: profile }}
                 avatarStyle={{
                   borderRadius: normalize(40),
                   borderColor: colors.white,
@@ -78,30 +78,30 @@ const DronerUsed: React.FC<dronerUsedData> = ({
                 }}
               />
             </View>
-            <View style={{paddingLeft: 5}}>
-              <Text numberOfLines={1} style={[styles.h1, {width: 150}]}>
+            <View style={{ paddingLeft: 5 }}>
+              <Text numberOfLines={1} style={[styles.h1, { width: 150 }]}>
                 {name}
               </Text>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                   source={icons.star}
-                  style={{width: 20, height: 20, marginRight: 10}}
+                  style={{ width: 20, height: 20, marginRight: 10 }}
                 />
                 <Text style={styles.label}>
                   {rate !== null
                     ? `${parseFloat(rate).toFixed(1)} คะแนน  `
                     : `0 คะแนน`}
                 </Text>
-                <Text style={[styles.label, {color: colors.gray}]}>
+                <Text style={[styles.label, { color: colors.gray }]}>
                   {total_task !== null ? `(${total_task})` : `  (0)`}{' '}
                 </Text>
               </View>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                   source={icons.location}
-                  style={{width: 20, height: 20, marginRight: 10}}
+                  style={{ width: 20, height: 20, marginRight: 10 }}
                 />
-                <Text numberOfLines={1} style={[styles.label, {width: 120}]}>
+                <Text numberOfLines={1} style={[styles.label, { width: 120 }]}>
                   {province !== null ? 'จ.' + ' ' + province : 'จ.' + '  -'}
                 </Text>
               </View>
@@ -113,7 +113,7 @@ const DronerUsed: React.FC<dronerUsedData> = ({
                 }}>
                 <Image
                   source={icons.distance}
-                  style={{width: 20, height: 20, marginRight: 10}}
+                  style={{ width: 20, height: 20, marginRight: 10 }}
                 />
                 <Text style={styles.label}>
                   {distance !== null
@@ -144,7 +144,7 @@ const DronerUsed: React.FC<dronerUsedData> = ({
           </View>
         </ImageBackground>
       </View>
-      </View>
+    </View>
   );
 };
 
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 0.3,
     left: '10%',
-  }
+  },
 });
 
 export default DronerUsed;

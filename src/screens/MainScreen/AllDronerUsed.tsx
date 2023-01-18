@@ -7,16 +7,16 @@ import {
   SafeAreaView,
   Image,
 } from 'react-native';
-import {colors, font, image} from '../../assets';
-import {normalize} from '../../functions/Normalize';
+import { colors, font, image } from '../../assets';
+import { normalize } from '../../functions/Normalize';
 
-const AllDronerUsed: React.FC<any> = ({navigation}) => {
+const AllDronerUsed: React.FC<any> = ({ navigation }) => {
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <View style={[styles.layout]}>
         <Image
           source={image.empty_droner_his}
-          style={{width: normalize(135), height: normalize(120)}}
+          style={{ width: normalize(135), height: normalize(120) }}
         />
         <Text style={[styles.text]}>ไม่มีนักบินโดรนที่เคยจ้าง</Text>
       </View>

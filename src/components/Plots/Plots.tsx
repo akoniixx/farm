@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, View, TextInput } from 'react-native';
 import React from 'react';
-import {normalize} from '../../functions/Normalize';
-import {colors, font, icons} from '../../assets';
+import { normalize } from '../../functions/Normalize';
+import { colors, font, icons } from '../../assets';
 import fonts from '../../assets/fonts';
 
 interface AddPlot {
@@ -20,21 +20,20 @@ export function StatusObject(status: string) {
         status: 'รอการตรวจสอบ',
         colorBg: colors.white,
         fontColor: '#E27904',
-        borderColor: colors.darkOrange
+        borderColor: colors.darkOrange,
       };
     case 'ACTIVE':
       return {
         status: 'ตรวจสอบแล้ว',
         colorBg: colors.white,
         fontColor: colors.greenLight,
-
       };
     default:
       return {
         status: 'รอการตรวจสอบ',
         colorBg: colors.white,
         fontColor: '#E27904',
-        borderColor: colors.darkOrange
+        borderColor: colors.darkOrange,
       };
   }
 }
@@ -45,7 +44,7 @@ const PlotsItem: React.FC<AddPlot> = ({
   raiAmount,
   plantName,
   status,
-  location
+  location,
 }) => {
   return (
     <View
@@ -71,14 +70,13 @@ const PlotsItem: React.FC<AddPlot> = ({
         }}>
         <View>
           <Text style={styles.title}>{plotName}</Text>
-          <View style={{flexDirection: 'row', marginTop: normalize(10) }}>
+          <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
             <Image
               source={icons.plot}
               style={{
                 width: normalize(18),
                 height: normalize(20),
                 marginRight: normalize(10),
-                
               }}
             />
             <Text
@@ -108,7 +106,7 @@ const PlotsItem: React.FC<AddPlot> = ({
               {plantName}
             </Text>
           </View>
-          <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
+          <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
             <Image
               source={icons.location}
               style={{
@@ -118,16 +116,15 @@ const PlotsItem: React.FC<AddPlot> = ({
               }}
             />
             <Text
-            numberOfLines={1}
+              numberOfLines={1}
               style={{
                 fontFamily: fonts.SarabunMedium,
                 fontSize: normalize(16),
                 color: colors.fontGrey,
                 marginRight: '10%',
-                width: normalize(140)
+                width: normalize(140),
               }}>
-                 {location}
-
+              {location}
             </Text>
             <View
               style={{
@@ -139,11 +136,13 @@ const PlotsItem: React.FC<AddPlot> = ({
                 alignItems: 'center',
                 backgroundColor: StatusObject(status).colorBg,
                 borderColor: StatusObject(status).borderColor,
-                borderWidth: 0.5
-
-                }}>
+                borderWidth: 0.5,
+              }}>
               <Text
-                style={[styles.label, {color: StatusObject(status).fontColor}]}>
+                style={[
+                  styles.label,
+                  { color: StatusObject(status).fontColor },
+                ]}>
                 {StatusObject(status).status}
               </Text>
             </View>

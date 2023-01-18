@@ -1,5 +1,5 @@
-import {Button} from '@rneui/themed';
-import React, {useEffect, useReducer, useRef, useState} from 'react';
+import { Button } from '@rneui/themed';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -12,25 +12,28 @@ import {
   View,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {ScrollView} from 'react-native-gesture-handler';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {font, icons} from '../../assets';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { font, icons } from '../../assets';
 import colors from '../../assets/colors/colors';
 import fonts from '../../assets/fonts';
 import image from '../../assets/images/image';
-import {MainButton} from '../../components/Button/MainButton';
+import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
-import {ProgressBar} from '../../components/ProgressBar';
-import {QueryLocation} from '../../datasource/LocationDatasource';
-import {normalize} from '../../functions/Normalize';
-import {registerReducer} from '../../hook/registerfield';
-import {stylesCentral} from '../../styles/StylesCentral';
+import { ProgressBar } from '../../components/ProgressBar';
+import { QueryLocation } from '../../datasource/LocationDatasource';
+import { normalize } from '../../functions/Normalize';
+import { registerReducer } from '../../hook/registerfield';
+import { stylesCentral } from '../../styles/StylesCentral';
 import ActionSheet from 'react-native-actions-sheet';
-import {Register} from '../../datasource/AuthDatasource';
+import { Register } from '../../datasource/AuthDatasource';
 import Geolocation from 'react-native-geolocation-service';
-import {LocationInPostcodeSelect, LocationSelect} from '../../components/Location/Location';
+import {
+  LocationInPostcodeSelect,
+  LocationSelect,
+} from '../../components/Location/Location';
 
-const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
+const SecondFormScreen: React.FC<any> = ({ route, navigation }) => {
   const initialFormRegisterState = {
     no: '',
     address: '',
@@ -57,7 +60,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
   useEffect(() => {
     QueryLocation.QueryProvince().then(res => {
       const Province = res.map((item: any) => {
-        return {label: item.provinceName, value: item.provinceId};
+        return { label: item.provinceName, value: item.provinceId };
       });
       setItems(Province);
     });
@@ -67,7 +70,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
     if (proVince != null) {
       QueryLocation.QueryDistrict(proVince.value).then(res => {
         const District = res.map((item: any) => {
-          return {label: item.districtName, value: item.districtId};
+          return { label: item.districtName, value: item.districtId };
         });
         setItemDistrict(District);
       });
@@ -123,7 +126,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
       field: 'postal',
       payload: value.postcode,
     });
-    setSubDistrict(value)
+    setSubDistrict(value);
     SubDistriSheet.current.hide();
   };
 
@@ -136,18 +139,18 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
       />
       <View style={styles.inner}>
         <View style={styles.container}>
-          <View style={{marginBottom: normalize(10)}}>
+          <View style={{ marginBottom: normalize(10) }}>
             <ProgressBar index={2} />
           </View>
           <Text style={styles.h3}>ขั้นตอนที่ 2 จาก 4</Text>
           <Text style={styles.h1}>
             ระบุที่อยู่
-            <Text style={{fontSize: normalize(18), color: '#A7AEB5'}}>
+            <Text style={{ fontSize: normalize(18), color: '#A7AEB5' }}>
               {' '}
               (ไม่จำเป็นต้องระบุ)
             </Text>
           </Text>
-          <ScrollView style={{top: '5%' }}>
+          <ScrollView style={{ top: '5%' }}>
             <Text style={styles.head}>บ้านเลขที่</Text>
             <TextInput
               onChangeText={value => {
@@ -219,8 +222,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
                         style={{
                           fontFamily: font.SarabunLight,
                           color: colors.fontGrey,
-                        }}
-                        >
+                        }}>
                         {proVince.label}
                       </TextInput>
                     )}
@@ -245,7 +247,9 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
               }}>
               <View
                 style={{
-                  backgroundColor: !proVince.label ? colors.disable : colors.white,
+                  backgroundColor: !proVince.label
+                    ? colors.disable
+                    : colors.white,
                   borderColor: colors.disable,
                   borderWidth: 1,
                   padding: 10,
@@ -304,7 +308,9 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
               }}>
               <View
                 style={{
-                  backgroundColor: !disTrict.label ? colors.disable : colors.white,
+                  backgroundColor: !disTrict.label
+                    ? colors.disable
+                    : colors.white,
                   borderColor: colors.disable,
                   borderWidth: 1,
                   padding: 10,
@@ -326,7 +332,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
                       fontFamily: font.SarabunLight,
                       color: colors.disable,
                     }}>
-                     {!subDistrict.label ? (
+                    {!subDistrict.label ? (
                       <Text
                         style={{
                           fontFamily: font.SarabunLight,
@@ -371,9 +377,9 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
               placeholderTextColor={colors.gray}
             />
           </ScrollView>
-          <View style={{height: 40}}></View>
+          <View style={{ height: 40 }}></View>
         </View>
-        <View style={{backgroundColor: colors.white, zIndex: 0}}>
+        <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
           <MainButton
             label="ถัดไป"
             color={colors.greenLight}
@@ -386,7 +392,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
                 formState.province.value,
                 formState.district.value,
                 formState.subdistrict.value,
-                formState.postal
+                formState.postal,
               )
                 .then(async res => {
                   console.log(res);
@@ -431,8 +437,8 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
               borderRadius: normalize(20),
             }}>
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={[styles.head, {marginBottom: normalize(10)}]}>
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
                 จังหวัด
               </Text>
               <Text
@@ -451,7 +457,7 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
               <ScrollView>
                 {items.map(
                   (
-                    v: {label: any; value: any},
+                    v: { label: any; value: any },
                     i: React.Key | null | undefined,
                   ) => (
                     <TouchableOpacity>
@@ -479,8 +485,8 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
               borderRadius: normalize(20),
             }}>
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={[styles.head, {marginBottom: normalize(10)}]}>
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
                 อำเภอ
               </Text>
               <Text
@@ -498,15 +504,16 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
             <View style={styles.container}>
               <ScrollView>
                 {itemsDistrict.map(
-                  (v: {label: any; value: any}, i: any | null | undefined) => (
+                  (
+                    v: { label: any; value: any },
+                    i: any | null | undefined,
+                  ) => (
                     <TouchableOpacity>
                       <LocationSelect
                         key={i}
                         label={v.label}
                         value={v.value}
-                        onPress={() =>
-                          selectDistrict(v,i)
-                        }
+                        onPress={() => selectDistrict(v, i)}
                       />
                     </TouchableOpacity>
                   ),
@@ -526,8 +533,8 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
               borderRadius: normalize(20),
             }}>
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={[styles.head, {marginBottom: normalize(10)}]}>
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
                 ตำบล
               </Text>
               <Text
@@ -544,17 +551,18 @@ const SecondFormScreen: React.FC<any> = ({route, navigation}) => {
             </View>
             <View style={styles.container}>
               <ScrollView>
-              {itemsSubDistrict.map(
-                  (v: {label: any; value: any, postcode: any}, i: any | null | undefined) => (
+                {itemsSubDistrict.map(
+                  (
+                    v: { label: any; value: any; postcode: any },
+                    i: any | null | undefined,
+                  ) => (
                     <TouchableOpacity>
                       <LocationInPostcodeSelect
                         key={i}
                         label={v.label}
                         value={v.value}
                         postcode={v.postcode}
-                        onPress={() =>
-                          selectSubDistrict(v,i)
-                        }
+                        onPress={() => selectSubDistrict(v, i)}
                       />
                     </TouchableOpacity>
                   ),

@@ -1,7 +1,7 @@
-import {Linking, Platform} from 'react-native';
-import {io} from 'socket.io-client';
-import {BASE_URL} from '../config/develop-config';
-import {callcenterNumber} from '../definitions/callCenterNumber';
+import { Linking, Platform } from 'react-native';
+import { io } from 'socket.io-client';
+import { BASE_URL } from '../config/develop-config';
+import { callcenterNumber } from '../definitions/callCenterNumber';
 
 export const numberWithCommas = (number: string, withOutToFix = false) => {
   let nub = parseFloat(number).toFixed(withOutToFix ? 0 : 2);
@@ -20,7 +20,7 @@ export const dialCall = (number?: string) => {
 };
 
 export const openGps = (lat: number, lng: number, name: string) => {
-  const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
+  const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
   const latLng = `${lat},${lng}`;
   const label = name;
   const url = Platform.select({

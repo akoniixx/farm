@@ -34,7 +34,7 @@ export const initDetailDronerState = {
   province: '',
   droneBand: '',
   price: '',
-  dronerQueue: []
+  dronerQueue: [],
 };
 
 export const detailDronerReducer = (state: any, action: any) => {
@@ -52,7 +52,7 @@ export const detailDronerReducer = (state: any, action: any) => {
         district: action.district,
         droneBand: action.droneBand,
         price: action.price,
-        dronerQueue: action.dronerQueue
+        dronerQueue: action.dronerQueue,
       };
 
     default:

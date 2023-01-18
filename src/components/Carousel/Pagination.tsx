@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import { View } from 'react-native';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -13,7 +13,7 @@ const PaginationItem: React.FC<{
   animValue: Animated.SharedValue<number>;
   isRotate?: boolean;
 }> = props => {
-  const {animValue, index, length, backgroundColor, isRotate} = props;
+  const { animValue, index, length, backgroundColor, isRotate } = props;
   const width = 10;
 
   const animStyle = useAnimatedStyle(() => {

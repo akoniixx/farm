@@ -1,20 +1,20 @@
 import { Switch } from '@rneui/themed';
 import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useReducer,
-    useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
 } from 'react';
 import {
-    Button,
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
-    Dimensions,
-    ImageBackground,
+  Button,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  ImageBackground,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font } from '../../assets';
@@ -43,163 +43,166 @@ import DronerUsed from '../../components/Carousel/DronerUsed';
 import * as RootNavigation from '../../navigations/RootNavigation';
 
 const AuthMainScreen: React.FC<any> = ({ navigation }) => {
-    const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-    const imageWidth = screenWidth / 2;
-    const date = new Date().toLocaleDateString();
-    const [fcmToken, setFcmToken] = useState('');
-    const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
-    const [taskSug, setTaskSug] = useState<any[]>([]);
-    const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
-    const { height, width } = Dimensions.get('window');
+  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+  const imageWidth = screenWidth / 2;
+  const date = new Date().toLocaleDateString();
+  const [fcmToken, setFcmToken] = useState('');
+  const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  const [taskSug, setTaskSug] = useState<any[]>([]);
+  const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
+  const { height, width } = Dimensions.get('window');
 
-    const getData = async () => {
-        const value = await AsyncStorage.getItem('token');
-        setFcmToken(value!);
-    };
-    useEffect(() => {
-        getData();
-        getProfile();
-        dronerSug();
-        dronerSugUsed();
-    }, []);
+  const getData = async () => {
+    const value = await AsyncStorage.getItem('token');
+    setFcmToken(value!);
+  };
+  useEffect(() => {
+    getData();
+    getProfile();
+    dronerSug();
+    dronerSugUsed();
+  }, []);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            getProfile();
-        }, []),
-    );
+  useFocusEffect(
+    React.useCallback(() => {
+      getProfile();
+    }, []),
+  );
 
-    const getProfile = async () => {
-        const value = await AsyncStorage.getItem('token');
-        if (value) {
-            const farmer_id = await AsyncStorage.getItem('farmer_id');
-            ProfileDatasource.getProfile(farmer_id!)
-                .then(async res => {
-                    await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`)
-                    dispatch({
-                        type: 'InitProfile',
-                        name: `${res.firstname}`,
-                        plotItem: res.farmerPlot,
-                    });
-                })
-                .catch(err => console.log(err));
-        }
-    };
+  const getProfile = async () => {
+    const value = await AsyncStorage.getItem('token');
+    if (value) {
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      ProfileDatasource.getProfile(farmer_id!)
+        .then(async res => {
+          await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
+          dispatch({
+            type: 'InitProfile',
+            name: `${res.firstname}`,
+            plotItem: res.farmerPlot,
+          });
+        })
+        .catch(err => console.log(err));
+    }
+  };
 
-    const dronerSug = async () => {
-        const value = await AsyncStorage.getItem('token');
-        if (value) {
-            const farmer_id = await AsyncStorage.getItem('farmer_id');
-            TaskSuggestion.searchDroner(
-                farmer_id !== null ? farmer_id : '',
-                profilestate.plotItem[0].id,
-                date,
-            ).then(res => {
-                /*  console.log(`length = ${res.length}`); */
-                setTaskSug(res);
-            }).catch(err => console.log(err));
-        }
-    };
-    const dronerSugUsed = async () => {
-        const value = await AsyncStorage.getItem('token');
-        if (value) {
-            const farmer_id = await AsyncStorage.getItem('farmer_id');
-            const limit = 8;
-            const offset = 0;
-            TaskSuggestion.DronerUsed(
-                farmer_id !== null ? farmer_id : '',
-                profilestate.plotItem[0].id,
-                date,
-                limit,
-                offset
-            ).then(res => {
-                /*  console.log(`length = ${res.length}`); */
-                setTaskSugUsed(res);
-            }).catch(err => console.log(err));
-        }
-    };
-    return (
-        <View style={[stylesCentral.container]}>
-
-            <>
-                <View style={{ backgroundColor: colors.white, height: screenHeight }}>
-                    <View style={[stylesCentral.container]}>
-                        <View style={{ flex: 1 }}>
-                            <View>
-                                <ImageBackground
-                                    source={image.bgHead}
-                                    style={{
-                                        width: (width * 380) / 375,
-                                        height: (height * 250) / 812,
-                                    }}>
-                                    <View style={styles.headCard}>
-                                        <View>
-                                            <Text
-                                                style={{
-                                                    fontFamily: font.AnuphanMedium,
-                                                    fontSize: normalize(18),
-                                                    color: colors.fontBlack,
-                                                }}>
-                                                ยินดีต้อนรับ
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontFamily: font.AnuphanBold,
-                                                    fontSize: normalize(26),
-                                                    color: colors.orange,
-                                                }}>
-                                                Icon
-                                                <Text
-                                                    style={{
-                                                        fontFamily: font.AnuphanBold,
-                                                        fontSize: normalize(26),
-                                                        color: colors.greenLight,
-                                                    }}>
-                                                    Kaset
-                                                </Text>
-                                            </Text>
-                                        </View>
-                                    </View>
-                                    <View
-                                        style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                        <View style={{ flexDirection: 'row', top: '25%' }}>
-                                            <TouchableOpacity
-                                                onPress={() => navigation.navigate('DronerBooking')}>
-                                                <LinearGradient
-                                                    colors={['#61E097', '#3B996E']}
-                                                    style={{
-                                                        marginHorizontal: 15,
-                                                        paddingVertical: normalize(10),
-                                                        width: 170,
-                                                        height: 130,
-                                                        borderRadius: 24,
-                                                        alignItems: 'center',
-                                                    }}>
-                                                    <Image source={icons.drone} />
-                                                    <Text style={styles.font}>จ้างโดรนเกษตร</Text>
-                                                </LinearGradient>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity
-                                                onPress={() => navigation.navigate('MyPlotScreen')}>
-                                                <LinearGradient
-                                                    colors={['#FFFFFF', '#ECFBF2']}
-                                                    style={{
-                                                        marginHorizontal: 15,
-                                                        paddingVertical: normalize(10),
-                                                        width: 170,
-                                                        height: 130,
-                                                        borderRadius: 24,
-                                                        alignItems: 'center',
-                                                    }}>
-                                                    <Image source={icons.plots} />
-                                                    <Text style={styles.font1}>แปลงของคุณ</Text>
-                                                </LinearGradient>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                </ImageBackground>
-                            </View>
-                            {/* <View
+  const dronerSug = async () => {
+    const value = await AsyncStorage.getItem('token');
+    if (value) {
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      TaskSuggestion.searchDroner(
+        farmer_id !== null ? farmer_id : '',
+        profilestate.plotItem[0].id,
+        date,
+      )
+        .then(res => {
+          /*  console.log(`length = ${res.length}`); */
+          setTaskSug(res);
+        })
+        .catch(err => console.log(err));
+    }
+  };
+  const dronerSugUsed = async () => {
+    const value = await AsyncStorage.getItem('token');
+    if (value) {
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      const limit = 8;
+      const offset = 0;
+      TaskSuggestion.DronerUsed(
+        farmer_id !== null ? farmer_id : '',
+        profilestate.plotItem[0].id,
+        date,
+        limit,
+        offset,
+      )
+        .then(res => {
+          /*  console.log(`length = ${res.length}`); */
+          setTaskSugUsed(res);
+        })
+        .catch(err => console.log(err));
+    }
+  };
+  return (
+    <View style={[stylesCentral.container]}>
+      <>
+        <View style={{ backgroundColor: colors.white, height: screenHeight }}>
+          <View style={[stylesCentral.container]}>
+            <View style={{ flex: 1 }}>
+              <View>
+                <ImageBackground
+                  source={image.bgHead}
+                  style={{
+                    width: (width * 380) / 375,
+                    height: (height * 250) / 812,
+                  }}>
+                  <View style={styles.headCard}>
+                    <View>
+                      <Text
+                        style={{
+                          fontFamily: font.AnuphanMedium,
+                          fontSize: normalize(18),
+                          color: colors.fontBlack,
+                        }}>
+                        ยินดีต้อนรับ
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: font.AnuphanBold,
+                          fontSize: normalize(26),
+                          color: colors.orange,
+                        }}>
+                        Icon
+                        <Text
+                          style={{
+                            fontFamily: font.AnuphanBold,
+                            fontSize: normalize(26),
+                            color: colors.greenLight,
+                          }}>
+                          Kaset
+                        </Text>
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <View style={{ flexDirection: 'row', top: '25%' }}>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate('DronerBooking')}>
+                        <LinearGradient
+                          colors={['#61E097', '#3B996E']}
+                          style={{
+                            marginHorizontal: 15,
+                            paddingVertical: normalize(10),
+                            width: 170,
+                            height: 130,
+                            borderRadius: 24,
+                            alignItems: 'center',
+                          }}>
+                          <Image source={icons.drone} />
+                          <Text style={styles.font}>จ้างโดรนเกษตร</Text>
+                        </LinearGradient>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate('MyPlotScreen')}>
+                        <LinearGradient
+                          colors={['#FFFFFF', '#ECFBF2']}
+                          style={{
+                            marginHorizontal: 15,
+                            paddingVertical: normalize(10),
+                            width: 170,
+                            height: 130,
+                            borderRadius: 24,
+                            alignItems: 'center',
+                          }}>
+                          <Image source={icons.plots} />
+                          <Text style={styles.font1}>แปลงของคุณ</Text>
+                        </LinearGradient>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </ImageBackground>
+              </View>
+              {/* <View
                   style={{
                     flexDirection: 'row',
                     padding: '5%',
@@ -223,7 +226,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                     ดูทั้งหมด
                   </Text>
                 </View> */}
-                            {/* <View
+              {/* <View
                   style={{
                     width: '100%',
                     height: normalize(60),
@@ -240,8 +243,8 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                     }}
                   />
                 </View> */}
-                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                {/* <Text
+              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                {/* <Text
                     style={[
                       styles.text,
                       {
@@ -252,101 +255,100 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                     ]}>
                     นักบินโดรนที่แนะนำ
                   </Text> */}
-                                <Image
-                                    source={image.empty_droner}
-                                    style={{
-                                        width: normalize(126),
-                                        height: normalize(120),
-                                        top: '16%',
-                                        marginBottom: normalize(32),
-                                    }}
-                                />
-                                <View style={{ height: '20%' }}></View>
-                                <Text style={[styles.textEmpty]}>
-                                    เพื่อให้สามารถจ้างงานนักบินโดรนได้
-                                </Text>
-                                <Text style={[styles.textEmpty]}>
-                                    กรุณาลงทะเบียน/เข้าสู่ระบบ
-                                </Text>
-                                <TouchableOpacity
-                                    style={{ margin: '3%' }}
-                                    onPress={async () => {
-                                        const value = await AsyncStorage.getItem('PDPA');
-                                        if (value === 'read') {
-                                            navigation.navigate('TelNumScreen');
-                                        } else {
-                                            navigation.navigate('ConditionScreen');
-                                        }
-                                    }}>
-                                    <Text
-                                        style={[
-                                            styles.textEmpty,
-                                            {
-                                                color: colors.greenLight,
-                                                textDecorationLine: 'underline',
-                                            },
-                                        ]}>
-                                        คลิกเลย!
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </>
-
+                <Image
+                  source={image.empty_droner}
+                  style={{
+                    width: normalize(126),
+                    height: normalize(120),
+                    top: '16%',
+                    marginBottom: normalize(32),
+                  }}
+                />
+                <View style={{ height: '20%' }}></View>
+                <Text style={[styles.textEmpty]}>
+                  เพื่อให้สามารถจ้างงานนักบินโดรนได้
+                </Text>
+                <Text style={[styles.textEmpty]}>
+                  กรุณาลงทะเบียน/เข้าสู่ระบบ
+                </Text>
+                <TouchableOpacity
+                  style={{ margin: '3%' }}
+                  onPress={async () => {
+                    const value = await AsyncStorage.getItem('PDPA');
+                    if (value === 'read') {
+                      navigation.navigate('TelNumScreen');
+                    } else {
+                      navigation.navigate('ConditionScreen');
+                    }
+                  }}>
+                  <Text
+                    style={[
+                      styles.textEmpty,
+                      {
+                        color: colors.greenLight,
+                        textDecorationLine: 'underline',
+                      },
+                    ]}>
+                    คลิกเลย!
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
         </View>
-    );
+      </>
+    </View>
+  );
 };
 export default AuthMainScreen;
 
 const styles = StyleSheet.create({
-    textEmpty: {
-        fontFamily: font.SarabunLight,
-        fontSize: normalize(18),
-        color: colors.gray,
-    },
-    text: {
-        fontFamily: font.AnuphanBold,
-        fontSize: normalize(20),
-        left: '5%',
-        bottom: '5%',
-        color: colors.fontGrey,
-    },
-    empty: {
-        width: '100%',
-        height: normalize(260),
-        top: '5%',
-    },
-    headCard: {
-        top: '15%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: normalize(23),
-        paddingTop: normalize(5),
-    },
-    activeContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: colors.grayBg,
-        padding: normalize(5),
-        borderRadius: normalize(12),
-        marginTop: normalize(10),
-    },
-    activeFont: {
-        fontFamily: font.AnuphanMedium,
-        fontSize: normalize(14),
-        marginLeft: normalize(18),
-        color: colors.fontBlack,
-    },
-    font: {
-        fontFamily: font.AnuphanBold,
-        fontSize: normalize(18),
-        color: colors.white,
-    },
-    font1: {
-        fontFamily: font.AnuphanBold,
-        fontSize: normalize(18),
-        color: colors.greenDark,
-    },
+  textEmpty: {
+    fontFamily: font.SarabunLight,
+    fontSize: normalize(18),
+    color: colors.gray,
+  },
+  text: {
+    fontFamily: font.AnuphanBold,
+    fontSize: normalize(20),
+    left: '5%',
+    bottom: '5%',
+    color: colors.fontGrey,
+  },
+  empty: {
+    width: '100%',
+    height: normalize(260),
+    top: '5%',
+  },
+  headCard: {
+    top: '15%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: normalize(23),
+    paddingTop: normalize(5),
+  },
+  activeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.grayBg,
+    padding: normalize(5),
+    borderRadius: normalize(12),
+    marginTop: normalize(10),
+  },
+  activeFont: {
+    fontFamily: font.AnuphanMedium,
+    fontSize: normalize(14),
+    marginLeft: normalize(18),
+    color: colors.fontBlack,
+  },
+  font: {
+    fontFamily: font.AnuphanBold,
+    fontSize: normalize(18),
+    color: colors.white,
+  },
+  font1: {
+    fontFamily: font.AnuphanBold,
+    fontSize: normalize(18),
+    color: colors.greenDark,
+  },
 });
