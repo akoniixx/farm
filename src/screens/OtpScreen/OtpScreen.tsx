@@ -9,13 +9,13 @@ import {
   Platform,
   Button,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {stylesCentral} from '../../styles/StylesCentral';
-import {colors, font} from '../../assets';
+import React, { useCallback, useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { stylesCentral } from '../../styles/StylesCentral';
+import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import {normalize} from '../../functions/Normalize';
+import { normalize } from '../../functions/Normalize';
 import {
   CodeField,
   Cursor,
@@ -23,10 +23,10 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 import fonts from '../../assets/fonts';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Authentication} from '../../datasource/AuthDatasource';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Authentication } from '../../datasource/AuthDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
+import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import * as RootNavigation from '../../navigations/RootNavigation';
 
 const CELL_COUNT = 6;
@@ -41,9 +41,9 @@ interface props {
   isFocused: boolean;
 }
 
-const OtpScreen: React.FC<any> = ({navigation, route}) => {
+const OtpScreen: React.FC<any> = ({ navigation, route }) => {
   const [value, setValue] = useState<string>('');
-  const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
+  const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [isError, setIsError] = useState(false);
   const [otpCalling, setOtpCalling] = useState(false);
   const [codeRef, setCodeRef] = useState(route.params.refCode);
@@ -54,7 +54,7 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
   const [tokenOtp, setTokenOtp] = useState(route.params.token);
   const [errOTP, setErrOTP] = useState(false);
 
-  const renderCell: React.FC<props> = ({index, symbol, isFocused}) => {
+  const renderCell: React.FC<props> = ({ index, symbol, isFocused }) => {
     return (
       <Text
         key={index}
@@ -110,48 +110,54 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
   });
 
   const onFufill = async (value: string) => {
-    if(route.params.isRegisterScreen){
+    if (route.params.isRegisterScreen) {
       setValue(value);
       if (value.length >= CELL_COUNT) {
-        setLoading(true)
+        setLoading(true);
         try {
-          Authentication.login(route.params.telNumber,value,tokenOtp,codeRef).then(async(result)=>{
-            setLoading(false)
-            setErrOTP(false)
-            await AsyncStorage.setItem('token_register',result.accessToken);
-            navigation.navigate('FirstFormScreen',{tele : route.params.telNumber});
-          }).catch((err)=>{
-            setLoading(false)
-            setErrOTP(true)
-            console.log(err)
-          })
+          Authentication.login(route.params.telNumber, value, tokenOtp, codeRef)
+            .then(async result => {
+              setLoading(false);
+              setErrOTP(false);
+              await AsyncStorage.setItem('token_register', result.accessToken);
+              navigation.navigate('FirstFormScreen', {
+                tele: route.params.telNumber,
+              });
+            })
+            .catch(err => {
+              setLoading(false);
+              setErrOTP(true);
+              console.log(err);
+            });
         } catch (e) {
-          setLoading(false)
-          setErrOTP(true)
+          setLoading(false);
+          setErrOTP(true);
           console.log(e, 'AsyncStorage.setItem');
         }
       }
-    }else{
+    } else {
       setValue(value);
       if (value.length >= CELL_COUNT) {
-        setLoading(true)
+        setLoading(true);
         try {
-          Authentication.login(route.params.telNumber,value,tokenOtp,codeRef).then(async(result)=>{
-            setLoading(false)
-            setErrOTP(false)
-            await AsyncStorage.setItem('token', result.accessToken);
-            await AsyncStorage.setItem('farmer_id', result.data.id);
-            await RootNavigation.navigate('Main', {
-              screen: 'MainScreen',
+          Authentication.login(route.params.telNumber, value, tokenOtp, codeRef)
+            .then(async result => {
+              setLoading(false);
+              setErrOTP(false);
+              await AsyncStorage.setItem('token', result.accessToken);
+              await AsyncStorage.setItem('farmer_id', result.data.id);
+              await RootNavigation.navigate('Main', {
+                screen: 'MainScreen',
+              });
             })
-          }).catch((err)=>{
-            setLoading(false)
-            setErrOTP(true)
-            console.log(err)
-          })
+            .catch(err => {
+              setLoading(false);
+              setErrOTP(true);
+              console.log(err);
+            });
         } catch (e) {
-          setLoading(false)
-          setErrOTP(true)
+          setLoading(false);
+          setErrOTP(true);
           console.log(e, 'AsyncStorage.setItem');
         }
       }
@@ -160,7 +166,7 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}>
+      style={{ flex: 1 }}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={stylesCentral.container}>
           <CustomHeader
@@ -171,19 +177,19 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
           <View style={styles.inner}>
             <View style={styles.headContainer}>
               <View>
-                <Text style={[styles.text, {bottom: '5%'}]}>
-                เลขยืนยัน 6 หลัก (OTP)
+                <Text style={[styles.text, { bottom: '5%' }]}>
+                  เลขยืนยัน 6 หลัก (OTP)
                 </Text>
-                <Text style={[styles.text, {bottom: '5%'}]}>
-                ถูกส่งไปที่กล่องข้อความของคุณ
+                <Text style={[styles.text, { bottom: '5%' }]}>
+                  ถูกส่งไปที่กล่องข้อความของคุณ
                 </Text>
-                <Text style={[styles.text,{bottom: '2%'}]}>
+                <Text style={[styles.text, { bottom: '2%' }]}>
                   เบอร์{' '}
-                  <Text style={[styles.text, {color: colors.greenLight}]}>
+                  <Text style={[styles.text, { color: colors.greenLight }]}>
                     {route.params.telNumber}
                   </Text>
                 </Text>
-                <Text style={[styles.textpass, {color: colors.gray}]}>
+                <Text style={[styles.textpass, { color: colors.gray }]}>
                   รหัสอ้างอิง OTP: {codeRef}
                 </Text>
               </View>
@@ -208,9 +214,8 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
 
             <View style={styles.otpQuestion}>
               <View>
-                <Text style={[styles.text, {bottom:'5%'}]}>
+                <Text style={[styles.text, { bottom: '5%' }]}>
                   ถ้ายังไม่ได้รับรหัสยืนยัน (OTP) ?
-                
                 </Text>
               </View>
               {otpTimeOut === 0 ? (
@@ -255,11 +260,10 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
         </SafeAreaView>
       </TouchableWithoutFeedback>
       <Spinner
-          visible={loading}
-          textContent={'Loading...'}
-          textStyle={{color: '#FFF'}}
-        />
-
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </KeyboardAvoidingView>
   );
 };

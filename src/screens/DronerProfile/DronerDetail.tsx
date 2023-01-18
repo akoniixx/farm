@@ -107,8 +107,6 @@ const DronerDetail: React.FC<any> = ({navigation, route}) => {
     };
   });
 
-
-
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader

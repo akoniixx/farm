@@ -1,8 +1,14 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity, Dimensions, useWindowDimensions} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  useWindowDimensions,
+} from 'react-native';
 
-import {normalize} from '@rneui/themed';
-import {Text} from '@rneui/base';
+import { normalize } from '@rneui/themed';
+import { Text } from '@rneui/base';
 import { colors, font } from '../../assets';
 
 interface PrantSelectProps {
@@ -19,12 +25,12 @@ export const PlantSelect: React.FC<PrantSelectProps> = ({
   return (
     <View
       style={{
-        marginRight : (width-normalize(40)-3*normalize(103))/3,
-        marginBottom : (width-normalize(40)-3*normalize(103))/3,
+        marginRight: (width - normalize(40) - 3 * normalize(103)) / 3,
+        marginBottom: (width - normalize(40) - 3 * normalize(103)) / 3,
         width: '100%',
         height: normalize(60),
         borderBottomWidth: 0.2,
-        borderColor: colors.disable
+        borderColor: colors.disable,
       }}>
       <TouchableOpacity onPress={onPress}>
         <Text
@@ -32,12 +38,10 @@ export const PlantSelect: React.FC<PrantSelectProps> = ({
             fontFamily: font.SarabunLight,
             fontSize: normalize(16),
             marginTop: normalize(15),
-          }}
-        >
+          }}>
           {label}
         </Text>
       </TouchableOpacity>
     </View>
   );
 };
-

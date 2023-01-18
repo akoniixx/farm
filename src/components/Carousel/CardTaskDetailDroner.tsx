@@ -1,9 +1,9 @@
-import {Image, StyleSheet, Text, View, TextInput} from 'react-native';
+import { Image, StyleSheet, Text, View, TextInput } from 'react-native';
 import React from 'react';
-import {normalize} from '../../functions/Normalize';
-import {colors, font, icons, image} from '../../assets';
+import { normalize } from '../../functions/Normalize';
+import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
-import {Avatar} from '@rneui/base';
+import { Avatar } from '@rneui/base';
 
 interface DetailData {
   index: number;
@@ -19,31 +19,44 @@ export const CardDetailDroner: React.FC<DetailData> = ({
   convenient,
 }) => {
   return (
-    <View style={{flex: 1, paddingHorizontal: 5, left: '10%'}}>
-        {convenient == 'สะดวก' ? 
-          <View style={[styles.cards]}>
+    <View style={{ flex: 1, paddingHorizontal: 5, left: '10%' }}>
+      {convenient == 'สะดวก' ? (
+        <View style={[styles.cards]}>
           <View key={index} style={[styles.cardYes]}>
-            <Text style={[styles.label,{alignSelf: 'center', top: 20}]}>
+            <Text style={[styles.label, { alignSelf: 'center', top: 20 }]}>
               {days}
             </Text>
-            <Text style={[styles.label,{paddingHorizontal: normalize(30), top: 30} ]}>{dateTime}</Text>
-            <Text style={[styles.label, {top: 50,color: colors.white}]}>
+            <Text
+              style={[
+                styles.label,
+                { paddingHorizontal: normalize(30), top: 30 },
+              ]}>
+              {dateTime}
+            </Text>
+            <Text style={[styles.label, { top: 50, color: colors.white }]}>
               {convenient}
             </Text>
           </View>
         </View>
-       :   <View style={[styles.cardsNo]}>
-       <View key={index} style={[styles.cardNo]}>
-         <Text style={[styles.label,,{alignSelf: 'center', top: 20}]}>
-           {days}
-         </Text>
-         <Text style={[styles.label,{paddingHorizontal: normalize(30), top: 30} ]}>{dateTime}</Text>
-         <Text style={[styles.label, {top: 50,color: colors.error}]}>
-           {convenient}
-         </Text>
-       </View>
-     </View>}
-    
+      ) : (
+        <View style={[styles.cardsNo]}>
+          <View key={index} style={[styles.cardNo]}>
+            <Text style={[styles.label, , { alignSelf: 'center', top: 20 }]}>
+              {days}
+            </Text>
+            <Text
+              style={[
+                styles.label,
+                { paddingHorizontal: normalize(30), top: 30 },
+              ]}>
+              {dateTime}
+            </Text>
+            <Text style={[styles.label, { top: 50, color: colors.error }]}>
+              {convenient}
+            </Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -74,7 +87,7 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   h1: {
     color: colors.primary,
@@ -90,11 +103,10 @@ const styles = StyleSheet.create({
     borderColor: colors.gray,
   },
   cards: {
-    backgroundColor:colors.greenLight,
+    backgroundColor: colors.greenLight,
     height: normalize(116),
     borderRadius: 15,
     borderWidth: 1,
     borderColor: colors.greenLight,
   },
 });
-

@@ -1,4 +1,4 @@
-import React, {FunctionComponent, useRef, useState} from 'react';
+import React, { FunctionComponent, useRef, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -9,9 +9,9 @@ import {
   Text,
   Image,
 } from 'react-native';
-import {colors, font, icons} from '../assets';
-import {PredictionType} from '../screens/RegisterScreen/ThirdFormScreen';
-import {normalize} from '@rneui/themed';
+import { colors, font, icons } from '../assets';
+import { PredictionType } from '../screens/RegisterScreen/ThirdFormScreen';
+import { normalize } from '@rneui/themed';
 
 type SearchBarProps = {
   value: string;
@@ -22,7 +22,7 @@ type SearchBarProps = {
   onPredictionTapped: (placeId: string, description: string) => void;
 };
 const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
-  const [inputSize, setInputSize] = useState({width: 0, height: 0});
+  const [inputSize, setInputSize] = useState({ width: 0, height: 0 });
   const {
     value,
     style,
@@ -31,8 +31,8 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
     predictions,
     showPredictions,
   } = props;
- 
-  const {container, inputStyle} = styles;
+
+  const { container, inputStyle } = styles;
   const passedStyles = Array.isArray(style)
     ? Object.assign({}, ...style)
     : style;
@@ -47,7 +47,7 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
       };
 
   const _renderPredictions = (predictions: PredictionType[]) => {
-    const {predictionsContainer, predictionRow} = styles;
+    const { predictionsContainer, predictionRow } = styles;
     const calculatedStyle = {
       width: inputSize.width,
     };
@@ -55,18 +55,23 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
     return (
       <FlatList
         data={predictions}
-        renderItem={({item, index}) => {
+        renderItem={({ item, index }) => {
           return (
             <TouchableOpacity
-              style={[predictionRow, {flexDirection: 'row'}]}
+              style={[predictionRow, { flexDirection: 'row' }]}
               onPress={() =>
                 onPredictionTapped(item.place_id, item.description)
               }>
               <Image
                 source={icons.myLocation}
-                style={{width: 26, height: 26, right: 10, alignSelf: 'center'}}
+                style={{
+                  width: 26,
+                  height: 26,
+                  right: 10,
+                  alignSelf: 'center',
+                }}
               />
-              <View style={{flex: 1}}>
+              <View style={{ flex: 1 }}>
                 <Text numberOfLines={1} style={styles.list}>
                   {item.terms[0].value}
                 </Text>
@@ -85,7 +90,7 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
   };
 
   return (
-    <View style={[container, {...passedStyles}]}>
+    <View style={[container, { ...passedStyles }]}>
       <TextInput
         style={[inputStyle, inputBottomRadius]}
         placeholder="ระบุสถานที่ใกล้แปลง"
@@ -94,8 +99,8 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
         onChangeText={onChangeText}
         returnKeyType="search"
         onLayout={event => {
-          const {height, width} = event.nativeEvent.layout;
-          setInputSize({height, width});
+          const { height, width } = event.nativeEvent.layout;
+          setInputSize({ height, width });
         }}
       />
       <TouchableOpacity>
@@ -112,11 +117,10 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
           }}>
           <Image
             source={icons.myLocation}
-            style={{width: 26, height: 26, right: 10}}
+            style={{ width: 26, height: 26, right: 10 }}
           />
           <Text style={styles.list}>ตำแหน่งที่ฉันอยู่</Text>
         </View>
-      
       </TouchableOpacity>
       {showPredictions && _renderPredictions(predictions)}
     </View>

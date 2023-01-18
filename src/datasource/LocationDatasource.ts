@@ -1,4 +1,4 @@
-import {BASE_URL, httpClient, registerClient} from '../config/develop-config';
+import { BASE_URL, httpClient, registerClient } from '../config/develop-config';
 
 export class QueryLocation {
   static async QueryProvince(): Promise<any> {
@@ -24,24 +24,16 @@ export class QueryLocation {
     districtName: string,
   ): Promise<any> {
     return registerClient
-      .get(
-        BASE_URL +
-          `/location/sub-district?districtId=${districtId}`,
-      )
+      .get(BASE_URL + `/location/sub-district?districtId=${districtId}`)
       .then(res => {
         return res.data;
       })
       .catch(err => console.log(err));
   }
 
-  static QueryProfileSubDistrict(
-    districtId: number
-  ): Promise<any> {
+  static QueryProfileSubDistrict(districtId: number): Promise<any> {
     return httpClient
-      .get(
-        BASE_URL +
-          `/location/sub-district?districtId=${districtId}`,
-      )
+      .get(BASE_URL + `/location/sub-district?districtId=${districtId}`)
       .then(res => {
         return res.data;
       })

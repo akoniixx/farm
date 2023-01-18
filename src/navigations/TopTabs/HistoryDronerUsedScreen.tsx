@@ -24,10 +24,10 @@ const TabStack = () => {
           textAlign: 'center',
           fontSize: 18,
           color: colors.fontBlack,
-          fontFamily: font.AnuphanBold
+          fontFamily: font.AnuphanBold,
         },
         tabBarIndicatorStyle: {
-          borderBottomColor:colors.greenLight,
+          borderBottomColor: colors.greenLight,
           borderBottomWidth: 2,
         },
       }}>
@@ -36,14 +36,16 @@ const TabStack = () => {
         component={AllDronerUsed}
         options={{
           tabBarLabel: 'ทั้งหมด',
-        }}  />
+        }}
+      />
       <Tab.Screen
         name="นักบินที่ถูกใจ"
         component={FavDronerUsed}
         options={{
           tabBarLabel: 'นักบินที่ถูกใจ',
-        }} />
+        }}
+      />
     </Tab.Navigator>
   );
-}
-export default TabStack
+};
+export default TabStack;

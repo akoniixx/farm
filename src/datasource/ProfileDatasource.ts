@@ -54,7 +54,7 @@ export class ProfileDatasource {
     return uploadFileProfile
       .post(BASE_URL + '/file/upload', data)
       .then(response => {
-        console.log(response)
+        console.log(response);
         return response.data;
       })
       .catch(error => {
@@ -68,7 +68,7 @@ export class ProfileDatasource {
         idNo: idcard,
       })
       .then(response => {
-        console.log(response)
+        console.log(response);
         return response.data;
       })
       .catch(error => {
@@ -102,7 +102,7 @@ export class ProfileDatasource {
       .get(BASE_URL + `/droner/${droner_id}`)
       .then(async response => {
         // const droner_id = response.data.id;
-        console.log('droner',response)
+        console.log('droner', response);
         // await AsyncStorage.setItem('droner_id', droner_id);
         // return response.data;
       })

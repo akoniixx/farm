@@ -1,5 +1,5 @@
-import {Dimensions} from 'react-native';
-export const {width, height} = Dimensions.get('window');
+import { Dimensions } from 'react-native';
+export const { width, height } = Dimensions.get('window');
 
 //Guideline sizes are based on standard ~5" screen mobile device
 const guidelineBaseWidth = 350;
@@ -12,4 +12,4 @@ const normalize = (size: number, factor = 0.5) =>
 const aspectRatio = height / width;
 const isIpad = aspectRatio > 1.6;
 
-export {scale, verticalScale, normalize};
+export { scale, verticalScale, normalize };

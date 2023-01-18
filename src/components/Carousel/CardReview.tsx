@@ -1,9 +1,9 @@
-import {Image, StyleSheet, Text, View, TextInput} from 'react-native';
+import { Image, StyleSheet, Text, View, TextInput } from 'react-native';
 import React from 'react';
-import {normalize} from '../../functions/Normalize';
-import {colors, font, icons, image} from '../../assets';
+import { normalize } from '../../functions/Normalize';
+import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
-import {Avatar} from '@rneui/themed';
+import { Avatar } from '@rneui/themed';
 
 interface DataReview {
   index: number;
@@ -44,10 +44,10 @@ const CardReview: React.FC<DataReview> = ({
           justifyContent: 'space-between',
         }}>
         <View>
-          <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
+          <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
             <Avatar
               size={normalize(56)}
-              source={img === null ? image.empty_plot : {uri: img}}
+              source={img === null ? image.empty_plot : { uri: img }}
               avatarStyle={{
                 borderRadius: normalize(40),
                 borderColor: colors.white,
@@ -55,16 +55,16 @@ const CardReview: React.FC<DataReview> = ({
               }}
             />
             <Text style={styles.title}>{name}</Text>
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                source={icons.star}
-                style={{width: 20, height: 20, marginRight: 10}}
-              />
-              <Text style={styles.label}>{rate + ' ' + 'คะแนน'} </Text>
-            </View>
-         
-          <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Image
+              source={icons.star}
+              style={{ width: 20, height: 20, marginRight: 10 }}
+            />
+            <Text style={styles.label}>{rate + ' ' + 'คะแนน'} </Text>
+          </View>
+
+          <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
             <Text
               numberOfLines={1}
               style={{
@@ -77,7 +77,7 @@ const CardReview: React.FC<DataReview> = ({
               {date}
             </Text>
           </View>
-          <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
+          <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
             <Text
               numberOfLines={1}
               style={{

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {AppState} from 'react-native';
+import { AppState } from 'react-native';
 import { ProfileDatasource } from '../datasource/ProfileDatasource';
 
 interface Props {
@@ -38,7 +38,7 @@ const AuthContext = React.createContext<Context>({
   state: initialState,
 });
 
-export const AuthProvider: React.FC<Props> = ({children}) => {
+export const AuthProvider: React.FC<Props> = ({ children }) => {
   const reducer = (prevState: State, action: Action): State => {
     switch (action.type) {
       case 'GET_ME':
@@ -63,7 +63,7 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
           const farmerId = (await AsyncStorage.getItem('farmer_id')) ?? '';
 
           const data = await ProfileDatasource.getProfile(farmerId);
-          dispatch({type: 'GET_ME', user: data});
+          dispatch({ type: 'GET_ME', user: data });
           return data;
         } catch (e: any) {
           console.log(e);
@@ -74,7 +74,7 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
   );
 
   return (
-    <AuthContext.Provider value={{authContext, state}}>
+    <AuthContext.Provider value={{ authContext, state }}>
       {children}
     </AuthContext.Provider>
   );

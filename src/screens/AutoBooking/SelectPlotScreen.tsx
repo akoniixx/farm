@@ -1,7 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Text } from '@rneui/base';
 import React, { useEffect, useReducer, useState } from 'react';
-import { Dimensions, FlatList, Image, Modal, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
@@ -12,40 +23,34 @@ import PlotInProfile from '../../components/Plots/PlotsInProfile';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
 import TimePicker from '../../components/TimePicker/TimePicker';
 import { PlotDatasource } from '../../datasource/PlotDatasource';
-import { height, normalize, width } from '../../functions/Normalize';
+import { normalize } from '../../functions/Normalize';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 
-
-
 const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
-
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
-  const [plotList, setPlotList] = useState<any>()
+  const [plotList, setPlotList] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
-  
 
   const handleCardPress = (index: number) => {
     setSelectedCard(index);
   };
 
-
   const getPlotlist = async () => {
-    setLoading(true)
+    setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     PlotDatasource.getPlotlist(farmer_id!)
       .then(res => {
-        setPlotList(res)
+        setPlotList(res);
         setTimeout(() => setLoading(false), 200);
       })
       .catch(err => console.log(err));
-  }
+  };
   useEffect(() => {
-    getPlotlist()
-
+    getPlotlist();
   }, []);
 
-  console.log(plotList)
+  console.log(plotList);
   return (
     <>
       <StepIndicatorHead
@@ -56,7 +61,6 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
 
       {plotList?.data?.length === 0 ? (
         <View>
-
           <Image
             source={image.empty_plot}
             style={{
@@ -81,10 +85,9 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
           </View>
         </View>
       ) : (
-        <SafeAreaView edges={['bottom','left','right']} style={{ flex:1,justifyContent:'space-between' }}>
-
-
-
+        <SafeAreaView
+          edges={['bottom', 'left', 'right']}
+          style={{ flex: 1, justifyContent: 'space-between' }}>
           <ScrollView
             style={{ paddingVertical: 10 }}
             horizontal
@@ -102,23 +105,21 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                   selected={index === selectedCard}
                 />
               )}
-              keyExtractor={(item) => item.id}
-
+              keyExtractor={item => item.id}
             />
           </ScrollView>
           <MainButton
             label="ถัดไป"
             color={colors.greenLight}
             onPress={() => navigation.navigate('SelectTarget')}
-            style={{margin:normalize(10)}}
+            style={{ margin: normalize(10) }}
           />
         </SafeAreaView>
       )}
-
     </>
-  )
-}
-export default SelectPlotScreen
+  );
+};
+export default SelectPlotScreen;
 
 const styles = StyleSheet.create({
   label: {
@@ -164,6 +165,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
-})
-
+});

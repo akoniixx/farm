@@ -17,5 +17,4 @@ export class PlotDatasource {
         console.log(error);
       });
   }
- 
 }

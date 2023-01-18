@@ -1,25 +1,25 @@
-import {Avatar} from '@rneui/base/dist/Avatar/Avatar';
-import React, {useEffect, useReducer, useRef, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {colors, font, icons, image} from '../../assets';
-import {MainButton} from '../../components/Button/MainButton';
+import { Avatar } from '@rneui/base/dist/Avatar/Avatar';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors, font, icons, image } from '../../assets';
+import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
-import {height, normalize} from '../../functions/Normalize';
-import {stylesCentral} from '../../styles/StylesCentral';
-import {TaskSuggestion} from '../../datasource/TaskSuggestion';
+import { height, normalize } from '../../functions/Normalize';
+import { stylesCentral } from '../../styles/StylesCentral';
+import { TaskSuggestion } from '../../datasource/TaskSuggestion';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ProfileDatasource} from '../../datasource/ProfileDatasource';
-import {initProfileState, profileReducer} from '../../hook/profilefield';
+import { ProfileDatasource } from '../../datasource/ProfileDatasource';
+import { initProfileState, profileReducer } from '../../hook/profilefield';
 import fonts from '../../assets/fonts';
 import CardReview from '../../components/Carousel/CardReview';
 import HistoryDronerUsed from '../../navigations/TopTabs/HistoryDronerUsedScreen';
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import TabStack from '../../navigations/TopTabs/HistoryDronerUsedScreen';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const SeeAllDronerUsed: React.FC<any> = ({navigation, route}) => {
+const SeeAllDronerUsed: React.FC<any> = ({ navigation, route }) => {
   const Stack = createNativeStackNavigator();
 
   const [selectDate, setSelectDate] = useState();
@@ -66,7 +66,7 @@ const SeeAllDronerUsed: React.FC<any> = ({navigation, route}) => {
       />
       <Stack.Navigator
         screenOptions={{
-          headerTintColor: colors.white
+          headerTintColor: colors.white,
         }}>
         <Stack.Screen
           name="ประวัติการจ้างนักบิน"

@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useRef, useState} from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import {
   Alert,
   Button,
@@ -19,18 +19,18 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {ScrollView} from 'react-native-gesture-handler';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {font, icons} from '../../assets';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { font, icons } from '../../assets';
 import colors from '../../assets/colors/colors';
 import fonts from '../../assets/fonts';
-import {MainButton} from '../../components/Button/MainButton';
+import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
-import {ProgressBar} from '../../components/ProgressBar';
-import {normalize} from '../../functions/Normalize';
-import {stylesCentral} from '../../styles/StylesCentral';
-import Animated, {color} from 'react-native-reanimated';
-import {plant, plantList} from '../../definitions/plants';
+import { ProgressBar } from '../../components/ProgressBar';
+import { normalize } from '../../functions/Normalize';
+import { stylesCentral } from '../../styles/StylesCentral';
+import Animated, { color } from 'react-native-reanimated';
+import { plant, plantList } from '../../definitions/plants';
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
@@ -38,20 +38,20 @@ import MapView, {
 } from 'react-native-maps';
 import ActionSheet from 'react-native-actions-sheet';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {registerReducer} from '../../hook/registerfield';
+import { registerReducer } from '../../hook/registerfield';
 import Geolocation from 'react-native-geolocation-service';
 import DroneBrandingItem from '../../components/Plots/Plots';
 import PlotsItem from '../../components/Plots/Plots';
-import {QueryLocation} from '../../datasource/LocationDatasource';
-import {ButtonGroup, ScreenWidth} from '@rneui/base';
-import {image} from '../../assets/index';
-import {PlantSelect} from '../../components/PlantSelect/PlantSelect';
+import { QueryLocation } from '../../datasource/LocationDatasource';
+import { ButtonGroup, ScreenWidth } from '@rneui/base';
+import { image } from '../../assets/index';
+import { PlantSelect } from '../../components/PlantSelect/PlantSelect';
 import axios from 'axios';
-import {Register} from '../../datasource/AuthDatasource';
+import { Register } from '../../datasource/AuthDatasource';
 import Geocoder from 'react-native-geocoding';
 import SearchBarWithAutocomplete from '../../components/SearchBarWithAutocomplete';
-import {useDebounce} from '../../hook/useDebounce';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import { useDebounce } from '../../hook/useDebounce';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export type PredictionType = {
   description: string;
@@ -63,7 +63,7 @@ export type PredictionType = {
   types: string[];
 };
 
-const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
+const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   const fall = new Animated.Value(1);
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
@@ -90,10 +90,10 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const plantSheet = useRef<any>();
   const deTailPlot = useRef<any>();
   const mapSheet = useRef<any>();
-  const [search, setSearch] = useState({term: '', fetchPredictions: false});
+  const [search, setSearch] = useState({ term: '', fetchPredictions: false });
   const [showPredictions, setShowPredictions] = useState(false);
   const [predictions, setPredictions] = useState<PredictionType[]>([]);
-    const GOOGLE_PACES_API_BASE_URL =
+  const GOOGLE_PACES_API_BASE_URL =
     'https://maps.googleapis.com/maps/api/place';
   const API_KEY = 'AIzaSyAymsbEe0NVhDL8iHd8oabbr5xG0TFn8Jc';
 
@@ -121,8 +121,8 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
         'Turn on Location Services to allow  to determine your location.',
         '',
         [
-          {text: 'Go to Settings', onPress: openSetting},
-          {text: "Don't Use Location", onPress: () => {}},
+          { text: 'Go to Settings', onPress: openSetting },
+          { text: "Don't Use Location", onPress: () => {} },
         ],
       );
     }
@@ -184,7 +184,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
         error => {
           console.log(error.code, error.message);
         },
-        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       );
     }
   };
@@ -237,7 +237,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
       });
       if (result) {
         const {
-          data: {predictions},
+          data: { predictions },
         } = result;
         setPredictions(predictions);
         setShowPredictions(true);
@@ -259,15 +259,15 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
         const {
           data: {
             result: {
-              geometry: {location},
+              geometry: { location },
             },
           },
         } = result;
-        const {lat, lng} = location;
+        const { lat, lng } = location;
         setlat(lat);
         setlong(lng);
         setShowPredictions(false);
-        setSearch({term: description, fetchPredictions: false});
+        setSearch({ term: description, fetchPredictions: false });
         mapSheet.current.hide();
       }
     } catch (e) {
@@ -283,7 +283,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
       />
       <View style={styles.inner}>
         <View style={styles.container}>
-          <View style={{marginBottom: normalize(10)}}>
+          <View style={{ marginBottom: normalize(10) }}>
             <ProgressBar index={3} />
           </View>
           <Text style={styles.h3}>ขั้นตอนที่ 3 จาก 4</Text>
@@ -307,16 +307,16 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 <Text
                   style={[
                     styles.h1,
-                    {color: colors.fontGrey, margin: normalize(10)},
+                    { color: colors.fontGrey, margin: normalize(10) },
                   ]}>
                   แปลงของคุณ
                 </Text>
                 <View style={[styles.textPending]}>
                   <Image
                     source={icons.warning}
-                    style={{width: 25, height: 25, right: 10}}
+                    style={{ width: 25, height: 25, right: 10 }}
                   />
-                  <Text style={{fontFamily: font.SarabunLight, fontSize: 18}}>
+                  <Text style={{ fontFamily: font.SarabunLight, fontSize: 18 }}>
                     {`แปลงของคุณอาจใช้เวลารอการตรวจสอบ
 จากเจ้าหน้าที`}
                     ่
@@ -348,7 +348,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 ))}
               </View>
             )}
-            <View style={[styles.buttonAdd, {top: '0%'}]}>
+            <View style={[styles.buttonAdd, { top: '0%' }]}>
               <Text
                 style={styles.textaddplot}
                 onPress={() => {
@@ -359,7 +359,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
             </View>
           </ScrollView>
         </View>
-        <View style={{backgroundColor: colors.white}}>
+        <View style={{ backgroundColor: colors.white }}>
           <MainButton
             label="ถัดไป"
             color={colors.greenLight}
@@ -380,7 +380,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
               height: windowHeight,
               borderRadius: normalize(20),
             }}>
-            <View style={{marginLeft: normalize(-20)}}>
+            <View style={{ marginLeft: normalize(-20) }}>
               <CustomHeader
                 title="เพิ่มแปลงเกษตร"
                 showBackBtn
@@ -388,7 +388,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
               />
             </View>
             <ScrollView>
-              <Text style={[styles.head, {marginTop: normalize(15)}]}>
+              <Text style={[styles.head, { marginTop: normalize(15) }]}>
                 ชื่อแปลงเกษตร
               </Text>
               <TextInput
@@ -396,7 +396,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   setplotName(value);
                 }}
                 value={plotName}
-                style={[styles.input, {borderColor: colors.disable}]}
+                style={[styles.input, { borderColor: colors.disable }]}
                 editable={true}
                 placeholder={
                   !plotName
@@ -409,14 +409,14 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
               />
               <Text style={styles.head}>
                 จำนวนไร่{' '}
-                <Text style={{fontSize: normalize(16)}}>(โดยประมาณ)</Text>
+                <Text style={{ fontSize: normalize(16) }}>(โดยประมาณ)</Text>
               </Text>
               <TextInput
                 onChangeText={value => {
                   setraiAmount(value);
                 }}
                 value={raiAmount}
-                style={[styles.input, {borderColor: colors.disable}]}
+                style={[styles.input, { borderColor: colors.disable }]}
                 editable={true}
                 placeholder={'ระบุจำนวนไร่'}
                 placeholderTextColor={colors.disable}
@@ -517,7 +517,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   </Text>
                 </View>
               </TouchableOpacity>
-              <View style={{flex: 1}}>
+              <View style={{ flex: 1 }}>
                 <MapView.Animated
                   mapType="satellite"
                   minZoomLevel={14}
@@ -525,12 +525,12 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   style={styles.map}
                   initialRegion={position}
                   provider={PROVIDER_GOOGLE}
-                    region={{
-                     latitude: lat,
-                     longitude: long,
-                     latitudeDelta: 0.0,
-                     longitudeDelta: 0.0,
-                   }} 
+                  region={{
+                    latitude: lat,
+                    longitude: long,
+                    latitudeDelta: 0.0,
+                    longitudeDelta: 0.0,
+                  }}
                   showsUserLocation={true}
                   showsMyLocationButton={true}
                 />
@@ -544,16 +544,16 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   setlandmark(value);
                 }}
                 value={landmark}
-                style={[styles.input, {borderColor: colors.disable}]}
+                style={[styles.input, { borderColor: colors.disable }]}
                 editable={true}
                 placeholder={'ระบุจุดสังเกต'}
                 placeholderTextColor={colors.disable}
               />
-              <View style={{height: 40}}></View>
+              <View style={{ height: 40 }}></View>
             </ScrollView>
 
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <MainButton
                 style={styles.button}
                 label="ยกเลิก"
@@ -567,8 +567,11 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
               <MainButton
                 style={styles.button}
                 label="บันทึก"
-                disable={!raiAmount || !plantName || !lat ||
-                  !long || !landmark ? true : false}
+                disable={
+                  !raiAmount || !plantName || !lat || !long || !landmark
+                    ? true
+                    : false
+                }
                 color={colors.greenLight}
                 onPress={() => {
                   addPlots();
@@ -583,7 +586,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     landmark,
                   )
                     .then(res => {
-                      console.log('res',res);
+                      console.log('res', res);
                     })
                     .catch(err => {
                       console.log(err);
@@ -603,8 +606,11 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 borderRadius: normalize(20),
               }}>
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={[styles.head, {marginBottom: normalize(10)}]}>
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={[styles.head, { marginBottom: normalize(10) }]}>
                   พืชที่ปลูก
                 </Text>
                 <Text
@@ -646,8 +652,11 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 borderRadius: normalize(20),
               }}>
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={[styles.head, {marginBottom: normalize(10)}]}>
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={[styles.head, { marginBottom: normalize(10) }]}>
                   สถานที่ใกล้แปลง
                 </Text>
                 <Text
@@ -666,7 +675,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 <SearchBarWithAutocomplete
                   value={search.term}
                   onChangeText={text => {
-                    setSearch({term: text, fetchPredictions: true});
+                    setSearch({ term: text, fetchPredictions: true });
                   }}
                   showPredictions={showPredictions}
                   predictions={predictions}
@@ -688,7 +697,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 height: windowHeight,
                 borderRadius: normalize(20),
               }}>
-              <View style={{marginLeft: normalize(-20)}}>
+              <View style={{ marginLeft: normalize(-20) }}>
                 <CustomHeader
                   title="รายละเอียดแปลง"
                   showBackBtn
@@ -696,7 +705,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 />
               </View>
               <ScrollView>
-                <Text style={[styles.head, {marginTop: normalize(15)}]}>
+                <Text style={[styles.head, { marginTop: normalize(15) }]}>
                   ชื่อแปลงเกษตร
                 </Text>
                 <TextInput
@@ -708,7 +717,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                       ? 'แปลงที่' + ' ' + `${index + 1}` + ' ' + item.plantName
                       : item.plotName
                   }
-                  style={[styles.input, {borderColor: colors.disable}]}
+                  style={[styles.input, { borderColor: colors.disable }]}
                   editable={true}
                   placeholder={'ระบุชื่อแปลงเกษตร'}
                   placeholderTextColor={colors.disable}
@@ -719,7 +728,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     setraiAmount(value);
                   }}
                   value={item.raiAmount}
-                  style={[styles.input, {borderColor: colors.disable}]}
+                  style={[styles.input, { borderColor: colors.disable }]}
                   editable={true}
                   placeholder={'ระบุจำนวนไร่'}
                   placeholderTextColor={colors.disable}
@@ -814,7 +823,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     </Text>
                   </View>
                 </TouchableOpacity>
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <MapView.Animated
                     mapType="satellite"
                     minZoomLevel={14}
@@ -862,7 +871,10 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                 </View>
               </ScrollView>
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
                 <MainButton
                   style={styles.button}
                   label="ยกเลิก"
@@ -903,7 +915,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   borderRadius: normalize(8),
                 }}>
                 <Text
-                  style={[styles.head, {textAlign: 'center', margin: '5%'}]}>
+                  style={[styles.head, { textAlign: 'center', margin: '5%' }]}>
                   ต้องการลบแปลงนี้
                 </Text>
                 <View
@@ -912,7 +924,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     justifyContent: 'space-between',
                   }}>
                   <MainButton
-                    style={{width: normalize(150), height: normalize(52)}}
+                    style={{ width: normalize(150), height: normalize(52) }}
                     label="ลบ"
                     color={colors.error}
                     fontColor={colors.white}
@@ -921,7 +933,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     }}
                   />
                   <MainButton
-                    style={{width: normalize(150), height: normalize(52)}}
+                    style={{ width: normalize(150), height: normalize(52) }}
                     label="ยกเลิก"
                     color={colors.white}
                     borderColor={colors.gray}

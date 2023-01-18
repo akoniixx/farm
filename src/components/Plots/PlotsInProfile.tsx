@@ -7,10 +7,10 @@ import {
   Dimensions,
 } from 'react-native';
 import React from 'react';
-import {normalize} from '../../functions/Normalize';
-import {colors, font, icons, image} from '../../assets';
+import { normalize } from '../../functions/Normalize';
+import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
-import {Avatar} from '@rneui/base';
+import { Avatar } from '@rneui/base';
 
 interface plotData {
   index: number;
@@ -55,11 +55,11 @@ const PlotInProfile: React.FC<plotData> = ({
   const windowWidth = Dimensions.get('screen').width;
 
   return (
-    <View style={{flex: 1, padding: 5, alignSelf: 'center'}}>
+    <View style={{ flex: 1, padding: 5, alignSelf: 'center' }}>
       <View key={index} style={[styles.cards]}>
         <View>
           <Text style={styles.title}>{plantName}</Text>
-          <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
+          <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
             <Image
               source={icons.plot}
               style={{
@@ -97,7 +97,7 @@ const PlotInProfile: React.FC<plotData> = ({
               {plantName}
             </Text>
           </View>
-          <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
+          <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
             <Image
               source={icons.location}
               style={{
@@ -131,7 +131,10 @@ const PlotInProfile: React.FC<plotData> = ({
                 borderWidth: 0.5,
               }}>
               <Text
-                style={[styles.label, {color: StatusObject(status).fontColor}]}>
+                style={[
+                  styles.label,
+                  { color: StatusObject(status).fontColor },
+                ]}>
                 {StatusObject(status).status}
               </Text>
             </View>

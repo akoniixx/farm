@@ -1,9 +1,9 @@
-import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
 import React from 'react';
 import * as RootNavigation from '../../navigations/RootNavigation';
-import {normalize} from '@rneui/themed';
-import {colors, font, image} from '../../assets';
-import {MainButton} from '../../components/Button/MainButton';
+import { normalize } from '@rneui/themed';
+import { colors, font, image } from '../../assets';
+import { MainButton } from '../../components/Button/MainButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Register } from '../../datasource/AuthDatasource';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
@@ -11,7 +11,7 @@ import { getFCMToken } from '../../firebase/notification';
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
-const SuccessRegister: React.FC<any> = ({navigation}) => {
+const SuccessRegister: React.FC<any> = ({ navigation }) => {
   return (
     <View
       style={{
@@ -49,14 +49,14 @@ const SuccessRegister: React.FC<any> = ({navigation}) => {
           <Text
             style={[
               styles.h1,
-              {marginTop: (windowWidth * 14) / 375, textAlign: 'center'},
+              { marginTop: (windowWidth * 14) / 375, textAlign: 'center' },
             ]}>
             ยินดีต้อนรับสู่ครอบครัว IconKeset
           </Text>
           <Text
             style={[
               styles.label,
-              {marginTop: (windowWidth * 16) / 375, textAlign: 'center'},
+              { marginTop: (windowWidth * 16) / 375, textAlign: 'center' },
             ]}>{`คุณลงทะเบียนกับเราเรียบร้อยแล้ว
 เริ่มสนุกกับการใช้งานและสร้างสรรค์
 แปลงเกษตรของคุณได้เลย!`}</Text>
@@ -65,17 +65,18 @@ const SuccessRegister: React.FC<any> = ({navigation}) => {
       <MainButton
         label="เริ่มใช้งาน"
         color={colors.greenLight}
-        onPress={async()=>{
-          const token_register = await AsyncStorage.getItem('token_register')
-          await AsyncStorage.setItem('token',token_register!)
-          Register.changeToPending().then(
-            res => {
+        onPress={async () => {
+          const token_register = await AsyncStorage.getItem('token_register');
+          await AsyncStorage.setItem('token', token_register!);
+          Register.changeToPending()
+            .then(res => {
               RootNavigation.navigate('Main', {
                 screen: 'MainScreen',
-              })
-            }
-          ).catch(err => console.log(err))
-      }}/>
+              });
+            })
+            .catch(err => console.log(err));
+        }}
+      />
     </View>
   );
 };

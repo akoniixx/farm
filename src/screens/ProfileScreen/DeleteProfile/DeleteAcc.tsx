@@ -11,22 +11,22 @@ import {
   Modal,
   Dimensions,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
-import {stylesCentral} from '../../../styles/StylesCentral';
+import { stylesCentral } from '../../../styles/StylesCentral';
 import CustomHeader from '../../../components/CustomHeader';
-import {normalize} from '../../../functions/Normalize';
-import {colors, font} from '../../../assets';
-import {MainButton} from '../../../components/Button/MainButton';
-import {InputPhone} from '../../../components/InputPhone';
+import { normalize } from '../../../functions/Normalize';
+import { colors, font } from '../../../assets';
+import { MainButton } from '../../../components/Button/MainButton';
+import { InputPhone } from '../../../components/InputPhone';
 
-const DeleteAcc: React.FC<any> = ({navigation}) => {
+const DeleteAcc: React.FC<any> = ({ navigation }) => {
   const [openModal, setOpenModal] = useState(false);
   const width = Dimensions.get('window').width;
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <SafeAreaView style={stylesCentral.container}>
         <CustomHeader
           title="ลบบัญชี"
@@ -35,7 +35,7 @@ const DeleteAcc: React.FC<any> = ({navigation}) => {
         />
         <View style={styles.inner}>
           <View style={[styles.TextAll]}>
-            <Text style={[styles.head, {fontWeight: 'bold', bottom: 10}]}>
+            <Text style={[styles.head, { fontWeight: 'bold', bottom: 10 }]}>
               เงื่อนไขการลบบัญชี
             </Text>
             <Text style={[styles.head]}>
@@ -83,16 +83,16 @@ const DeleteAcc: React.FC<any> = ({navigation}) => {
 โทร. 02-113-6159`}{' '}
                 </Text>
                 <MainButton
-                  style={{height: 52}}
+                  style={{ height: 52 }}
                   label="ยืนยันการลบบัญชี"
                   color={colors.error}
                   onPress={() => {
                     setOpenModal(false);
-                    navigation.navigate("DeleteSuccess");
+                    navigation.navigate('DeleteSuccess');
                   }}
                 />
                 <MainButton
-                  style={{height: 52}}
+                  style={{ height: 52 }}
                   label="ยกเลิก"
                   fontColor={colors.fontBlack}
                   color={colors.white}

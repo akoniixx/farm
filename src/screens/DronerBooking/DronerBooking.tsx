@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {StyleSheet, View, Image, Text} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {stylesCentral} from '../../styles/StylesCentral';
+import { StyleSheet, View, Image, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { stylesCentral } from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
-import {normalize} from '../../functions/Normalize';
-import {colors, font, image} from '../../assets';
-import {MainButton} from '../../components/Button/MainButton';
+import { normalize } from '../../functions/Normalize';
+import { colors, font, image } from '../../assets';
+import { MainButton } from '../../components/Button/MainButton';
 
-const DronerBooking: React.FC<any> = ({navigation}) => {
+const DronerBooking: React.FC<any> = ({ navigation }) => {
   const [fcmToken, setFcmToken] = useState('');
   const getToken = async () => {
     const token = await AsyncStorage.getItem('fcmtoken');
@@ -31,14 +31,14 @@ const DronerBooking: React.FC<any> = ({navigation}) => {
           />
           <View>
             <Image source={image.empty_farmer} style={[styles.empty]} />
-            <View style={{top: '35%'}}>
+            <View style={{ top: '35%' }}>
               <Text style={[styles.text]}>คุณเป็นสมาชิกหรือยัง?</Text>
               <Text style={[styles.label]}>
                 {`เข้าร่วมเป็นสมาชิกกับเรา
 เพื่อรับสิทธิประโยชน์มากมาย`}
               </Text>
             </View>
-            <View style={{top: '40%'}}>
+            <View style={{ top: '40%' }}>
               <MainButton
                 label="ลงทะเบียน/เข้าสู่ระบบ"
                 color={colors.greenLight}
@@ -46,11 +46,11 @@ const DronerBooking: React.FC<any> = ({navigation}) => {
                 onPress={async () => {
                   const value = await AsyncStorage.getItem('PDPA');
                   if (value === 'read') {
-                      navigation.navigate('TelNumScreen');
+                    navigation.navigate('TelNumScreen');
                   } else {
-                      navigation.navigate('ConditionScreen');
+                    navigation.navigate('ConditionScreen');
                   }
-              }}
+                }}
               />
             </View>
           </View>

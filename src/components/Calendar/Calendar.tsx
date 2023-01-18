@@ -1,4 +1,5 @@
-import React, {useEffect, useReducer, useRef, useState} from 'react';
+import moment from 'moment';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -7,7 +8,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import {colors, font} from '../../assets';
+import { colors, font } from '../../assets';
 import { _monthName, build12Year } from '../../definitions/constants';
 import { normalize } from '../../functions/Normalize';
 import { MainButton } from '../Button/MainButton';
@@ -32,18 +33,24 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
   const [years, setYears] = useState<any[]>([]);
 
   useEffect(() => {
-    const end = endYear || new Date().getFullYear() + 543;
-    const start = !startYear || startYear > end ? end - 100 : startYear;
+    const getInitDate = () => {
+      const end = endYear || new Date().getFullYear() + 543;
+      const start = !startYear || startYear > end ? end - 70 : startYear;
 
-    const _days = [...Array(31)].map((_, index) => index + 1);
-    const _months = [...Array(12)].map((_,i) => i + 1);
-    const _years = [...Array(end - start + 1)].map((_, index) => start + index);
+      const _days = [...Array(moment(value).daysInMonth())].map(
+        (_, index) => index + 1,
+      );
+      const _months = [...Array(12)].map((_, i) => i + 1);
+      const _years = [...Array(end - start + 1)].map(
+        (_, index) => start + index,
+      );
 
-    setDays(_days);
-    setMonths(_months);
-    setYears(_years);
-  }, []);
-
+      setDays(_days);
+      setMonths(_months);
+      setYears(_years);
+    };
+    getInitDate();
+  }, [startYear, endYear]);
 
   const pickerHeight: number = Math.round(
     height || Dimensions.get('window').height / 3.5,
@@ -60,7 +67,7 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
       case 'day':
         date.setDate(digit);
       case 'month':
-       date.setMonth(digit -1)
+        date.setMonth(digit - 1);
       case 'year':
         date.setFullYear(digit - 543);
     }
@@ -71,11 +78,11 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
     return (format || 'dd-mm-yyyy').split('-').map((type, index: any) => {
       switch (type) {
         case 'dd':
-          return {name: 'day', digits: days, value: date.getDay()};
+          return { name: 'day', digits: days, value: date.getDay() };
         case 'mm':
-          return {name: 'month', digits: months, value: date.getMonth() +1};
+          return { name: 'month', digits: months, value: date.getMonth() + 1 };
         case 'yyyy':
-          return {name: 'year', digits: years, value: date.getFullYear()};
+          return { name: 'year', digits: years, value: date.getFullYear() };
         default:
           console.warn(
             `Invalid date picker format prop: found "${type}" in ${format}. Please read documentation!`,
@@ -83,34 +90,35 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
           return {
             name: ['day', 'month', 'year'][index],
             digits: [days, months, years][index],
-            value: [date.getDate(), date.getMonth() + 1, date.getFullYear()][index]
+            value: [date.getDate(), date.getMonth() + 1, date.getFullYear()][
+              index
+            ],
           };
-          
-
       }
     });
   };
   return (
-    <View style={[styles.picker, {height: pickerHeight, width: pickerWidth}]}>
+    <View style={[styles.picker, { height: pickerHeight, width: pickerWidth }]}>
       {getOrder().map((el, index) => {
-        if(index == 2){
-          return <DateBlock
-          index={2}
-          digits={el.digits}
-          value={el.value}
-          onHandleChange={changeHandle}
-          height={pickerHeight}
-          fontSize={fontSize}
-          textColor={textColor}
-          markColor={markColor}
-          markHeight={markHeight}
-          markWidth={markWidth}
-          fadeColor={fadeColor}
-          type={el.name}
-          key={index}
-        />
-        }
-        else{
+        if (index == 2) {
+          return (
+            <DateBlock
+              index={2}
+              digits={el.digits}
+              value={el.value}
+              onHandleChange={changeHandle}
+              height={pickerHeight}
+              fontSize={fontSize}
+              textColor={textColor}
+              markColor={markColor}
+              markHeight={markHeight}
+              markWidth={markWidth}
+              fadeColor={fadeColor}
+              type={el.name}
+              key={index}
+            />
+          );
+        } else {
           return (
             <DateBlock
               index={index}
@@ -155,15 +163,13 @@ const DateBlock: React.FC<DateBlockProps> = ({
   const offsets = digits.map((_: number, index: number) => index * dHeight);
   const scrollRef = useRef<any>(null);
   const snapScrollToIndex = (index: number) => {
-    scrollRef?.current?.scrollTo({y: dHeight * index, animated: false});
+    scrollRef?.current?.scrollTo({ y: dHeight * index, animated: false });
   };
-
-
   useEffect(() => {
     snapScrollToIndex(value - digits[6]);
-  }, [scrollRef.current]);
+  }, []);
 
-  const handleMomentumScrollEnd = ({nativeEvent}: any) => {
+  const handleMomentumScrollEnd = ({ nativeEvent }: any) => {
     const digit = Math.round(nativeEvent.contentOffset.y / dHeight + digits[0]);
     onHandleChange(type, digit);
   };
@@ -186,8 +192,7 @@ const DateBlock: React.FC<DateBlockProps> = ({
         snapToOffsets={offsets}
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={0}
-        onMomentumScrollEnd={handleMomentumScrollEnd}
-        >
+        onMomentumScrollEnd={handleMomentumScrollEnd}>
         {digits.map((value: any, valIndex: any) => {
           return (
             <TouchableOpacity
@@ -195,8 +200,7 @@ const DateBlock: React.FC<DateBlockProps> = ({
               onPress={() => {
                 onHandleChange(type, digits[valIndex]);
                 snapScrollToIndex(valIndex);
-              }}
-              >
+              }}>
               <Text
                 style={[
                   styles.digit,
@@ -204,7 +208,7 @@ const DateBlock: React.FC<DateBlockProps> = ({
                     fontSize: fontSize || 20,
                     color: textColor || '#000000',
                     marginBottom:
-                    valIndex === digits.length - 1
+                      valIndex === digits.length - 1
                         ? height / 2 - dHeight / 2
                         : 0,
                     marginTop: valIndex === 0 ? height / 2 - dHeight / 2 : 0,
@@ -213,9 +217,7 @@ const DateBlock: React.FC<DateBlockProps> = ({
                     fontFamily: font.AnuphanMedium,
                   },
                 ]}>
-                {(index !== 1)?
-                  value : _monthName[valIndex].value
-                }
+                {index !== 1 ? value : _monthName[valIndex].value}
               </Text>
             </TouchableOpacity>
           );
@@ -270,11 +272,12 @@ export interface DatePickerProps {
   markWidth?: number | string;
   fadeColor?: string;
   format?: string;
-  onHandleChange : (value : any)=> void;
+  onHandleChange: (value: any) => void;
+  isCurrentDate?: boolean;
 }
 
 export interface DateBlockProps {
-  index : number;
+  index: number;
   digits: any[];
   value: any;
   type: string;
@@ -289,4 +292,3 @@ export interface DateBlockProps {
 }
 
 export default DatePickerCustom;
-

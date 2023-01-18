@@ -1,5 +1,5 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import LoginScreen from '../screens/LoginScreen/LoginScreen';
 import ConditionScreen from '../screens/RegisterScreen/ConditionScreen';
@@ -16,13 +16,11 @@ import Onboarding from '../screens/Onboarding/Onboarding';
 import DronerBooking from '../screens/DronerBooking/DronerBooking';
 import MyPlotScreen from '../screens/MyPlotScreen/MyPlotScreen';
 
-
-
 const Stack = createStackNavigator();
 
 const AppAuthNavigator: React.FC = () => {
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Onboarding" component={Onboarding} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
