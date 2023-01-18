@@ -242,7 +242,60 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           <Text style={[styles.text]}>คิวงานของนักบินโดรน</Text>
         </View>
         <View style={{ height: normalize(155) }}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          {detailState.dronerQueue != null ? (
+            <View style={{ height: '110%' }}>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {detailState.dronerQueue.length != undefined &&
+                  QDroner.map((item: any, index: any) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => navigation.navigate('SelectDateScreen')}>
+                      <CardDetailDroner
+                        key={index}
+                        index={index}
+                        days={moment(item.date).locale('th').format('dddd')}
+                        dateTime={new Date(item.date).toLocaleDateString(
+                          'th-TH',
+                          {
+                            day: 'numeric',
+                            month: 'short',
+                            year: '2-digit',
+                          },
+                        )}
+                        convenient={item.status}
+                      />
+                    </TouchableOpacity>
+                  ))}
+              </ScrollView>
+            </View>
+          ) : (
+            <View style={{ height: '110%' }}>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {weekDays.map((item: any, index: any) => (
+                   <TouchableOpacity
+                   key={index}
+                   onPress={() => navigation.navigate('SelectDateScreen')}>
+                  <CardDetailDroner
+                    key={index}
+                    index={index}
+                    days={moment(item).locale('th').format('dddd')}
+                    dateTime={new Date(item).toLocaleDateString('th-TH', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: '2-digit',
+                    })}
+                    convenient={'สะดวก'}
+                  />
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+          {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {detailState.dronerQueue !== null
               ? QDroner.map((item: any, index: any) => (
                   <CardDetailDroner
@@ -270,7 +323,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                     convenient={'สะดวก'}
                   />
                 ))}
-          </ScrollView>
+          </ScrollView> */}
         </View>
         <View style={{ height: 10, backgroundColor: '#F8F9FA' }}></View>
         <View style={[styles.section]}>
@@ -334,7 +387,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           label="จ้างงาน"
           color={colors.greenLight}
           style={styles.button}
-          onPress={() => navigation.navigate('')}
+          onPress={() => navigation.navigate('SelectDateScreen')}
         />
       </View>
     </SafeAreaView>

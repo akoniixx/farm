@@ -64,7 +64,9 @@ const DronerSugg: React.FC<dronerData> = ({
             <View style={{ alignSelf: 'center' }}>
               <Avatar
                 size={normalize(56)}
-                source={profile === null ? image.empty_droner : { uri: profile }}
+                source={
+                  profile === null ? image.empty_droner : { uri: profile }
+                }
                 avatarStyle={{
                   borderRadius: normalize(40),
                   borderColor: colors.white,
@@ -81,11 +83,14 @@ const DronerSugg: React.FC<dronerData> = ({
                   source={icons.star}
                   style={{ width: 20, height: 20, marginRight: 10 }}
                 />
-                <Text style={styles.label}> {rate !== null
+                <Text style={styles.label}>
+                  {' '}
+                  {rate !== null
                     ? `${parseFloat(rate).toFixed(1)} คะแนน  `
-                    : `0 คะแนน`} </Text>
+                    : `0 คะแนน`}{' '}
+                </Text>
                 <Text style={[styles.label, { color: colors.gray }]}>
-                {total_task !== null ? `(${total_task})` : `  (0)`}{' '}
+                  {total_task !== null ? `(${total_task})` : `  (0)`}{' '}
                 </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -94,7 +99,7 @@ const DronerSugg: React.FC<dronerData> = ({
                   style={{ width: 20, height: 20, marginRight: 10 }}
                 />
                 <Text numberOfLines={1} style={[styles.label, { width: 120 }]}>
-                {province !== null ? 'จ.' + ' ' + province : 'จ.' + '  -'}
+                  {province !== null ? 'จ.' + ' ' + province : 'จ.' + '  -'}
                 </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -103,7 +108,7 @@ const DronerSugg: React.FC<dronerData> = ({
                   style={{ width: 20, height: 20, marginRight: 10 }}
                 />
                 <Text style={styles.label}>
-                {distance !== null
+                  {distance !== null
                     ? `ห่างคุณ ${parseFloat(distance).toFixed(0)} กม.`
                     : `0 กม.`}
                 </Text>
