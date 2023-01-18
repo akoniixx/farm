@@ -50,7 +50,7 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
       setYears(_years);
     };
     getInitDate();
-  }, [startYear, endYear]);
+  }, [startYear, endYear, value]);
 
   const pickerHeight: number = Math.round(
     height || Dimensions.get('window').height / 3.5,
@@ -63,26 +63,48 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
   // const date = new Date()
 
   const changeHandle = (type: any, digit: any): void => {
+    const newDate = moment(value);
     switch (type) {
       case 'day':
-        date.setDate(digit);
+        newDate.set('date', digit);
+        break;
       case 'month':
-        date.setMonth(digit - 1);
+        newDate.set('month', digit - 1);
+        break;
       case 'year':
-        date.setFullYear(digit - 543);
+        newDate.set('year', digit - 543);
+        break;
     }
-    onHandleChange(date);
+    onHandleChange(newDate.toISOString());
   };
 
   const getOrder = () => {
     return (format || 'dd-mm-yyyy').split('-').map((type, index: any) => {
       switch (type) {
         case 'dd':
-          return { name: 'day', digits: days, value: date.getDay() };
+          return {
+            name: 'day',
+            digits: days,
+            value: date.getDay(),
+            currentIndex: days.findIndex(el => el === date.getDate()),
+          };
         case 'mm':
-          return { name: 'month', digits: months, value: date.getMonth() + 1 };
+          return {
+            name: 'month',
+            digits: months,
+            value: date.getMonth() + 1,
+
+            currentIndex: months.findIndex(el => el === date.getMonth() + 1),
+          };
         case 'yyyy':
-          return { name: 'year', digits: years, value: date.getFullYear() };
+          return {
+            name: 'year',
+            digits: years,
+            value: date.getFullYear(),
+            currentIndex: years.findIndex(
+              el => el === date.getFullYear() + 543,
+            ),
+          };
         default:
           console.warn(
             `Invalid date picker format prop: found "${type}" in ${format}. Please read documentation!`,
@@ -93,51 +115,57 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
             value: [date.getDate(), date.getMonth() + 1, date.getFullYear()][
               index
             ],
+            currentIndex: 0,
           };
       }
     });
   };
+  const isHaveData = days.length > 0 && months.length > 0 && years.length > 0;
+
   return (
     <View style={[styles.picker, { height: pickerHeight, width: pickerWidth }]}>
-      {getOrder().map((el, index) => {
-        if (index == 2) {
-          return (
-            <DateBlock
-              index={2}
-              digits={el.digits}
-              value={el.value}
-              onHandleChange={changeHandle}
-              height={pickerHeight}
-              fontSize={fontSize}
-              textColor={textColor}
-              markColor={markColor}
-              markHeight={markHeight}
-              markWidth={markWidth}
-              fadeColor={fadeColor}
-              type={el.name}
-              key={index}
-            />
-          );
-        } else {
-          return (
-            <DateBlock
-              index={index}
-              digits={el.digits}
-              value={el.value}
-              onHandleChange={changeHandle}
-              height={pickerHeight}
-              fontSize={fontSize}
-              textColor={textColor}
-              markColor={markColor}
-              markHeight={markHeight}
-              markWidth={markWidth}
-              fadeColor={fadeColor}
-              type={el.name}
-              key={index}
-            />
-          );
-        }
-      })}
+      {isHaveData &&
+        getOrder().map((el, index) => {
+          if (index == 2) {
+            return (
+              <DateBlock
+                index={2}
+                digits={el.digits}
+                value={el.value}
+                onHandleChange={changeHandle}
+                height={pickerHeight}
+                fontSize={fontSize}
+                textColor={textColor}
+                markColor={markColor}
+                markHeight={markHeight}
+                markWidth={markWidth}
+                fadeColor={fadeColor}
+                type={el.name}
+                key={index}
+                currentIndex={el.currentIndex}
+              />
+            );
+          } else {
+            return (
+              <DateBlock
+                currentIndex={el.currentIndex}
+                index={index}
+                digits={el.digits}
+                value={el.value}
+                onHandleChange={changeHandle}
+                height={pickerHeight}
+                fontSize={fontSize}
+                textColor={textColor}
+                markColor={markColor}
+                markHeight={markHeight}
+                markWidth={markWidth}
+                fadeColor={fadeColor}
+                type={el.name}
+                key={index}
+              />
+            );
+          }
+        })}
     </View>
   );
 };
@@ -151,10 +179,9 @@ const DateBlock: React.FC<DateBlockProps> = ({
   height,
   fontSize,
   textColor,
-  markColor,
   markHeight,
   markWidth,
-  fadeColor,
+  currentIndex,
 }) => {
   const dHeight: number = Math.round(height / 4);
 
@@ -166,7 +193,8 @@ const DateBlock: React.FC<DateBlockProps> = ({
     scrollRef?.current?.scrollTo({ y: dHeight * index, animated: false });
   };
   useEffect(() => {
-    snapScrollToIndex(value - digits[6]);
+    snapScrollToIndex(currentIndex);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleMomentumScrollEnd = ({ nativeEvent }: any) => {
@@ -273,7 +301,6 @@ export interface DatePickerProps {
   fadeColor?: string;
   format?: string;
   onHandleChange: (value: any) => void;
-  isCurrentDate?: boolean;
 }
 
 export interface DateBlockProps {
@@ -289,6 +316,7 @@ export interface DateBlockProps {
   markWidth?: number | string;
   fadeColor?: string;
   onHandleChange(type: any, digit: any): void;
+  currentIndex: number;
 }
 
 export default DatePickerCustom;
