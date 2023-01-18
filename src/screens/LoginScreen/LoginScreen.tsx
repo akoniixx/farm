@@ -9,19 +9,19 @@ import {
   Platform,
   Button,
 } from 'react-native';
-import React, {useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {stylesCentral} from '../../styles/StylesCentral';
-import {colors, font} from '../../assets';
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { stylesCentral } from '../../styles/StylesCentral';
+import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
-import {InputPhone} from '../../components/InputPhone';
-import {MainButton} from '../../components/Button/MainButton';
+import { InputPhone } from '../../components/InputPhone';
+import { MainButton } from '../../components/Button/MainButton';
 import Toast from 'react-native-toast-message';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { normalize } from '../../functions/Normalize';
 
-const LoginScreen: React.FC<any> = ({navigation}) => {
+const LoginScreen: React.FC<any> = ({ navigation }) => {
   const [value, setValue] = useState<string>('');
   const [isError, setIsError] = React.useState(false);
   const [errMessage, setErrMessage] = useState<string>('');
@@ -30,14 +30,14 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}>
+      style={{ flex: 1 }}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={stylesCentral.container}>
           <CustomHeader
             title="เข้าสู่ระบบ"
             showBackBtn
             onPressBack={() => navigation.goBack()}
-          /> 
+          />
           <View style={styles.inner}>
             <View style={styles.containerTopCard}>
               <Text style={styles.headText}>ระบุหมายเลขโทรศัพท์ของคุณ</Text>
@@ -51,7 +51,11 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
               />
               {errMessage.length > 0 ? (
                 <Text
-                  style={{marginTop: 5, color: 'red', fontFamily: font.AnuphanMedium}}>
+                  style={{
+                    marginTop: 5,
+                    color: 'red',
+                    fontFamily: font.AnuphanMedium,
+                  }}>
                   {errMessage}
                 </Text>
               ) : null}
@@ -77,7 +81,7 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
       <Spinner
         visible={loading}
         textContent={'Loading...'}
-        textStyle={{color: '#FFF'}}
+        textStyle={{ color: '#FFF' }}
       />
     </KeyboardAvoidingView>
   );

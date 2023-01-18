@@ -1,4 +1,4 @@
-import React, {useReducer, useRef, useState} from 'react';
+import React, { useReducer, useRef, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -9,30 +9,30 @@ import {
   Text,
   View,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {colors, font, icons, image} from '../../assets';
-import {height, normalize} from '../../functions/Normalize';
-import {stylesCentral} from '../../styles/StylesCentral';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors, font, icons, image } from '../../assets';
+import { height, normalize } from '../../functions/Normalize';
+import { stylesCentral } from '../../styles/StylesCentral';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import CustomHeader from '../../components/CustomHeader';
-import {Avatar} from '@rneui/themed';
+import { Avatar } from '@rneui/themed';
 import * as RootNavigation from '../../navigations/RootNavigation';
-import {ScrollView} from 'react-native';
-import PlotsItem, {StatusObject} from '../../components/Plots/Plots';
+import { ScrollView } from 'react-native';
+import PlotsItem, { StatusObject } from '../../components/Plots/Plots';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Authentication} from '../../datasource/AuthDatasource';
-import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
-import {socket} from '../../functions/utility';
-import {initProfileState, profileReducer} from '../../hook/profilefield';
-import {useAuth} from '../../contexts/AuthContext';
-import {useEffect} from 'react';
+import { Authentication } from '../../datasource/AuthDatasource';
+import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
+import { socket } from '../../functions/utility';
+import { initProfileState, profileReducer } from '../../hook/profilefield';
+import { useAuth } from '../../contexts/AuthContext';
+import { useEffect } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {MainButton} from '../../components/Button/MainButton';
+import { MainButton } from '../../components/Button/MainButton';
 import ConditionScreen from '../RegisterScreen/ConditionScreen';
-import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import PlotInProfile from '../../components/Plots/PlotsInProfile';
 
-const ProfileScreen: React.FC<any> = ({navigation}) => {
+const ProfileScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [value, setValue] = useState(null);
   const actionSheet = useRef<any>(null);
@@ -99,7 +99,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
       })
       .catch(err => console.log(err));
   };
-  
+
   const addPlots = () => {
     const plots = [...plotData];
     console.log(plots);
@@ -168,7 +168,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                 source={
                   profilestate.image === ''
                     ? icons.avatar
-                    : {uri: profilestate.image}
+                    : { uri: profilestate.image }
                 }
                 avatarStyle={{
                   borderRadius: normalize(40),
@@ -182,7 +182,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   marginLeft: normalize(15),
                   top: normalize(5),
                 }}>
-                <View style={{flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                   <Text style={[styles.text]}>{profilestate.name} </Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('EditProfileScreen')}>
@@ -215,12 +215,12 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   'ตรวจสอบแล้ว' ? (
                     <Image
                       source={icons.correct}
-                      style={{width: 16, height: 16, right: 5}}
+                      style={{ width: 16, height: 16, right: 5 }}
                     />
                   ) : (
                     <Image
                       source={icons.warning}
-                      style={{width: 16, height: 16, right: 5}}
+                      style={{ width: 16, height: 16, right: 5 }}
                     />
                   )}
 
@@ -238,10 +238,17 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
               </View>
             </View>
             <View
-              style={{margin: 2, backgroundColor: '#EBEEF0', height: 3}}></View>
+              style={{
+                margin: 2,
+                backgroundColor: '#EBEEF0',
+                height: 3,
+              }}></View>
             <View style={[styles.section2]}>
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
                 <Text style={[styles.head]}>
                   แปลงของคุณ ({profilestate.plotItem.length})
                 </Text>
@@ -278,9 +285,9 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   </View>
                 </View>
               ) : (
-                <View style={{top: 5}}>
+                <View style={{ top: 5 }}>
                   <ScrollView
-                    style={{paddingVertical: 10}}
+                    style={{ paddingVertical: 10 }}
                     horizontal
                     showsHorizontalScrollIndicator={false}>
                     <FlatList
@@ -288,16 +295,16 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                       contentContainerStyle={{
                         alignSelf: 'flex-start',
                       }}
-                      ItemSeparatorComponent={({highlighted}) => (
-                        <View style={[highlighted && {marginLeft: 0}]} />
+                      ItemSeparatorComponent={({ highlighted }) => (
+                        <View style={[highlighted && { marginLeft: 0 }]} />
                       )}
                       numColumns={Math.ceil(profilestate.plotItem.length / 2)}
                       showsVerticalScrollIndicator={false}
                       showsHorizontalScrollIndicator={true}
                       data={profilestate.plotItem}
-                      renderItem={({item, index}) => (
+                      renderItem={({ item, index }) => (
                         <View
-                          style={{display: 'flex', flexDirection: 'column'}}>
+                          style={{ display: 'flex', flexDirection: 'column' }}>
                           <View>
                             <PlotInProfile
                               key={index}
@@ -325,7 +332,11 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
               )}
             </View>
             <View
-              style={{margin: 2, backgroundColor: '#EBEEF0', height: 3}}></View>
+              style={{
+                margin: 2,
+                backgroundColor: '#EBEEF0',
+                height: 3,
+              }}></View>
             <View style={[styles.section3]}>
               <View
                 style={{
@@ -345,17 +356,18 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   }}>
                   <Image
                     source={image.iconAppDrone}
-                    style={[styles.icon, {marginRight: '-15%'}]}
+                    style={[styles.icon, { marginRight: '-15%' }]}
                   />
                   <Text style={[styles.h2]}>มาเป็นนักบินโดรนร่วมกับเรา</Text>
                   <Image
                     source={icons.arrowRigth}
-                    style={{width: 24, height: 24}}
+                    style={{ width: 24, height: 24 }}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
-                 onPress={() => {
-                  navigation.navigate("PrivacyScreen")}}
+                  onPress={() => {
+                    navigation.navigate('PrivacyScreen');
+                  }}
                   style={{
                     padding: normalize(20),
                     flexDirection: 'row',
@@ -366,17 +378,18 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   }}>
                   <Image
                     source={icons.lock}
-                    style={[styles.icon, {marginRight: '-23%'}]}
+                    style={[styles.icon, { marginRight: '-23%' }]}
                   />
                   <Text style={styles.h2}>นโยบายความเป็นส่วนตัว</Text>
                   <Image
                     source={icons.arrowRigth}
-                    style={{width: 24, height: 24}}
+                    style={{ width: 24, height: 24 }}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("DeleteAcc")}}
+                  onPress={() => {
+                    navigation.navigate('DeleteAcc');
+                  }}
                   style={{
                     padding: normalize(20),
                     flexDirection: 'row',
@@ -387,12 +400,12 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   }}>
                   <Image
                     source={icons.deleteUser}
-                    style={[styles.icon, {marginRight: '-55%'}]}
+                    style={[styles.icon, { marginRight: '-55%' }]}
                   />
                   <Text style={styles.h2}>ลบบัญชี</Text>
                   <Image
                     source={icons.arrowRigth}
-                    style={{width: 24, height: 24}}
+                    style={{ width: 24, height: 24 }}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -412,12 +425,12 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
                   }}>
                   <Image
                     source={icons.logout}
-                    style={[styles.icon, {marginRight: '-45%'}]}
+                    style={[styles.icon, { marginRight: '-45%' }]}
                   />
                   <Text style={styles.h2}>ออกจากระบบ</Text>
                   <Image
                     source={icons.arrowRigth}
-                    style={{width: 25, height: 25}}
+                    style={{ width: 25, height: 25 }}
                   />
                 </TouchableOpacity>
               </View>
@@ -433,11 +446,11 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
           />
 
           <LinearGradient colors={['#ECFBF2', '#FFFFFF']}>
-            <View style={{height: normalize(296)}}>
+            <View style={{ height: normalize(296) }}>
               <View style={[styles.profileBlank]}>
                 <Image
                   source={icons.profile_blank}
-                  style={{width: normalize(80), height: normalize(80)}}
+                  style={{ width: normalize(80), height: normalize(80) }}
                 />
               </View>
               <View style={[styles.textBlank]}>
@@ -467,7 +480,7 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
               </View>
             </View>
           </LinearGradient>
-          <View style={{marginTop: 10}}></View>
+          <View style={{ marginTop: 10 }}></View>
           <View
             style={{
               backgroundColor: colors.white,
@@ -486,17 +499,18 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
               }}>
               <Image
                 source={image.iconAppDrone}
-                style={[styles.icon, {marginRight: '-15%'}]}
+                style={[styles.icon, { marginRight: '-15%' }]}
               />
               <Text style={[styles.h2]}>มาเป็นนักบินโดรนร่วมกับเรา</Text>
               <Image
                 source={icons.arrowRigth}
-                style={{width: 24, height: 24}}
+                style={{ width: 24, height: 24 }}
               />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("PrivacyScreen")}}
+                navigation.navigate('PrivacyScreen');
+              }}
               style={{
                 alignItems: 'center',
                 padding: normalize(20),
@@ -507,12 +521,12 @@ const ProfileScreen: React.FC<any> = ({navigation}) => {
               }}>
               <Image
                 source={icons.lock}
-                style={[styles.icon, {marginRight: '-20%'}]}
+                style={[styles.icon, { marginRight: '-20%' }]}
               />
               <Text style={styles.h2}>นโยบายความเป็นส่วนตัว</Text>
               <Image
                 source={icons.arrowRigth}
-                style={{width: 24, height: 24}}
+                style={{ width: 24, height: 24 }}
               />
             </TouchableOpacity>
           </View>

@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {BASE_URL, httpClient} from '../config/develop-config';
+import { BASE_URL, httpClient } from '../config/develop-config';
 
 export class FCMtokenDatasource {
   static async getNotificationList(): Promise<any> {

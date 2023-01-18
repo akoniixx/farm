@@ -7,9 +7,9 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import {colors, icons} from '../assets';
+import { colors, icons } from '../assets';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {normalize} from '@rneui/themed';
+import { normalize } from '@rneui/themed';
 
 interface InputPhoneProps {
   value: string;

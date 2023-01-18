@@ -7,10 +7,10 @@ import {
   ImageBackground,
 } from 'react-native';
 import React from 'react';
-import {normalize} from '../../functions/Normalize';
-import {colors, font, icons, image} from '../../assets';
+import { normalize } from '../../functions/Normalize';
+import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
-import {Avatar} from '@rneui/base';
+import { Avatar } from '@rneui/base';
 
 interface dronerData {
   index: number;
@@ -34,16 +34,16 @@ const DronerSugg: React.FC<dronerData> = ({
   distance,
 }) => {
   return (
-    <View style={{flex: 1, top: '10%', paddingHorizontal: 8, left: '10%'}}>
+    <View style={{ flex: 1, top: '10%', paddingHorizontal: 8, left: '10%' }}>
       <View style={[styles.cards]}>
         <ImageBackground
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
-          style={{height: normalize(70)}}
-          source={background === '' ? image.bg_droner : {uri: profile}}>
+          style={{ height: normalize(70) }}
+          source={background === '' ? image.bg_droner : { uri: profile }}>
           <View key={index}>
             <Image
-              source={profile === '' ? image.empty_plot : {uri: profile}}
+              source={profile === '' ? image.empty_plot : { uri: profile }}
             />
             <View
               style={{
@@ -58,13 +58,13 @@ const DronerSugg: React.FC<dronerData> = ({
               }}>
               <Image
                 source={icons.heart}
-                style={{alignSelf: 'center', width: 20, height: 20, top: 4}}
+                style={{ alignSelf: 'center', width: 20, height: 20, top: 4 }}
               />
             </View>
-            <View style={{alignSelf: 'center'}}>
+            <View style={{ alignSelf: 'center' }}>
               <Avatar
                 size={normalize(56)}
-                source={profile === null ? image.empty_plot : {uri: profile}}
+                source={profile === null ? image.empty_plot : { uri: profile }}
                 avatarStyle={{
                   borderRadius: normalize(40),
                   borderColor: colors.white,
@@ -72,33 +72,33 @@ const DronerSugg: React.FC<dronerData> = ({
                 }}
               />
             </View>
-            <View style={{paddingLeft: 10}}>
-              <Text numberOfLines={1} style={[styles.h1, {width: 150}]}>
+            <View style={{ paddingLeft: 10 }}>
+              <Text numberOfLines={1} style={[styles.h1, { width: 150 }]}>
                 {name}
               </Text>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                   source={icons.star}
-                  style={{width: 20, height: 20, marginRight: 10}}
+                  style={{ width: 20, height: 20, marginRight: 10 }}
                 />
                 <Text style={styles.label}>{rate + ' ' + 'คะแนน'} </Text>
-                <Text style={[styles.label, {color: colors.gray}]}>
+                <Text style={[styles.label, { color: colors.gray }]}>
                   {'(' + total_task + ')'}{' '}
                 </Text>
               </View>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                   source={icons.location}
-                  style={{width: 20, height: 20, marginRight: 10}}
+                  style={{ width: 20, height: 20, marginRight: 10 }}
                 />
-                <Text numberOfLines={1} style={[styles.label, {width: 120}]}>
+                <Text numberOfLines={1} style={[styles.label, { width: 120 }]}>
                   {'จ.' + ' ' + province}
                 </Text>
               </View>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                   source={icons.distance}
-                  style={{width: 20, height: 20, marginRight: 10}}
+                  style={{ width: 20, height: 20, marginRight: 10 }}
                 />
                 <Text style={styles.label}>
                   {'ห่างคุณ' + ' ' + distance + ' ' + 'กม.'}

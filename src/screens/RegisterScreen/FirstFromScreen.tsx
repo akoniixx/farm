@@ -13,28 +13,28 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
-import React, {useCallback, useEffect, useReducer, useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {stylesCentral} from '../../styles/StylesCentral';
-import {colors, font, icons, image as img} from '../../assets';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { stylesCentral } from '../../styles/StylesCentral';
+import { colors, font, icons, image as img } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
-import {MainButton} from '../../components/Button/MainButton';
-import {ScrollView} from 'react-native-gesture-handler';
+import { MainButton } from '../../components/Button/MainButton';
+import { ScrollView } from 'react-native-gesture-handler';
 import * as ImagePicker from 'react-native-image-picker';
-import {normalize, width} from '../../functions/Normalize';
-import {ProgressBar} from '../../components/ProgressBar';
-import {registerReducer} from '../../hook/registerfield';
+import { normalize, width } from '../../functions/Normalize';
+import { ProgressBar } from '../../components/ProgressBar';
+import { registerReducer } from '../../hook/registerfield';
 import fonts from '../../assets/fonts';
-import {Avatar} from '@rneui/themed';
-import {Register} from '../../datasource/AuthDatasource';
+import { Avatar } from '@rneui/themed';
+import { Register } from '../../datasource/AuthDatasource';
 import Geolocation from 'react-native-geolocation-service';
 import moment from 'moment';
-import {_monthName, build12Year} from '../../definitions/constants';
+import { _monthName, build12Year } from '../../definitions/constants';
 import DatePicker from 'react-native-date-picker';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import DatePickerCustom from '../../components/Calendar/Calendar';
 
-const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
+const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
   const initialFormRegisterState = {
     name: '',
     surname: '',
@@ -52,13 +52,12 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const days = new Date();
-  const [date , setDate] = useState(new Date());
-  const dateFormat = "DD/MM/YYYY";
+  const [date, setDate] = useState(new Date());
+  const dateFormat = 'DD/MM/YYYY';
 
   const onChange = (event: any, selectDate: any) => {
     setDate(selectDate);
-    
-  }
+  };
 
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
@@ -94,7 +93,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
       />
       <View style={styles.inner}>
         <View style={styles.container}>
-          <View style={{marginBottom: normalize(10)}}>
+          <View style={{ marginBottom: normalize(10) }}>
             <ProgressBar index={1} />
           </View>
           <Text style={styles.h3}>ขั้นตอนที่ 1 จาก 4</Text>
@@ -116,7 +115,9 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   <Avatar
                     size={116}
                     rounded
-                    source={!image ? icons.avatar : {uri: image.assets[0].uri}}
+                    source={
+                      !image ? icons.avatar : { uri: image.assets[0].uri }
+                    }
                   />
                   <View
                     style={{
@@ -184,11 +185,11 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                   },
                 ]}>
                 <TextInput
-                 value={date.toLocaleDateString('th-TH', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                 })}
+                  value={date.toLocaleDateString('th-TH', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  })}
                   editable={false}
                   placeholder={'ระบุวัน เดือน ปี'}
                   placeholderTextColor={colors.disable}
@@ -198,8 +199,8 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                     fontSize: normalize(16),
                     fontFamily: font.SarabunLight,
                     justifyContent: 'center',
-                  alignItems: 'center'
-                                  }}
+                    alignItems: 'center',
+                  }}
                 />
                 <Image
                   source={icons.calendar}
@@ -212,14 +213,14 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
             </TouchableOpacity>
             <Text style={styles.head}>เบอร์โทรศัพท์</Text>
             <TextInput
-              style={[styles.input, {backgroundColor: colors.disable}]}
+              style={[styles.input, { backgroundColor: colors.disable }]}
               editable={false}
               value={tele}
               placeholderTextColor={colors.gray}
             />
           </ScrollView>
         </View>
-        <View style={{backgroundColor: colors.white, zIndex: 0}}>
+        <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
           <MainButton
             label="ถัดไป"
             disable={!formState.name || !formState.surname ? true : false}
@@ -309,7 +310,11 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
               <Text
                 style={[
                   styles.h1,
-                  {textAlign: 'center', bottom: '5%', color: colors.fontBlack},
+                  {
+                    textAlign: 'center',
+                    bottom: '5%',
+                    color: colors.fontBlack,
+                  },
                 ]}>
                 เลือกวันเกิด
               </Text>
@@ -359,13 +364,16 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                 /> */}
                 <DatePickerCustom
                   value={date}
-                  onHandleChange={(d : Date) => {
-                    setDate(d)
+                  onHandleChange={(d: Date) => {
+                    setDate(d);
                   }}
                 />
               </View>
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                }}>
                 <MainButton
                   label="ยกเลิก"
                   fontColor={colors.fontBlack}

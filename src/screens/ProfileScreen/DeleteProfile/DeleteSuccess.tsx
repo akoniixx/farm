@@ -1,13 +1,18 @@
-
-import {View, Text, StyleSheet, Image, useWindowDimensions} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  useWindowDimensions,
+} from 'react-native';
 import React from 'react';
 import fonts from '../../../assets/fonts';
 import colors from '../../../assets/colors/colors';
 import image from '../../../assets/images/image';
-import {MainButton} from '../../../components/Button/MainButton';
+import { MainButton } from '../../../components/Button/MainButton';
 import { normalize } from '../../../functions/Normalize';
 
-const DeleteSuccess: React.FC<any> = ({navigation}) => {
+const DeleteSuccess: React.FC<any> = ({ navigation }) => {
   return (
     <View
       style={{
@@ -15,17 +20,20 @@ const DeleteSuccess: React.FC<any> = ({navigation}) => {
         justifyContent: 'space-between',
         flex: 1,
       }}>
-      <View style={{alignItems: 'center', paddingTop: '50%'}}>
+      <View style={{ alignItems: 'center', paddingTop: '50%' }}>
         <Text style={styles.fontTitle}>บัญชีถูกลบแล้ว!</Text>
-        <Text style={[styles.fontBody,{paddingTop: '5%'}]}>
-        มีคำถามเพิ่มเติมสามารถติดต่อเจ้าหน้าที่
+        <Text style={[styles.fontBody, { paddingTop: '5%' }]}>
+          มีคำถามเพิ่มเติมสามารถติดต่อเจ้าหน้าที่
         </Text>
         <Text style={styles.fontBody}>โทร. 02-113-6159</Text>
-        <View style={{alignItems: 'center', paddingTop: '10%'}}>
-        <Image source={image.delete_acc} style={{width: 160, height: 195}}/>
+        <View style={{ alignItems: 'center', paddingTop: '10%' }}>
+          <Image
+            source={image.delete_acc}
+            style={{ width: 160, height: 195 }}
+          />
+        </View>
       </View>
-      </View>
-    
+
       <View
         style={{
           marginBottom: 16,
@@ -34,7 +42,9 @@ const DeleteSuccess: React.FC<any> = ({navigation}) => {
           label="กลับหน้าหลัก"
           color={colors.greenLight}
           fontColor={'white'}
-          onPress={() => {navigation.navigate('HomeScreen')}}
+          onPress={() => {
+            navigation.navigate('HomeScreen');
+          }}
         />
       </View>
     </View>

@@ -1,4 +1,4 @@
-import images from "../images/image";
+import images from '../images/image';
 
 export const dronerItems = [
   {

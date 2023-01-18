@@ -1,6 +1,6 @@
 import React from 'react';
-import {font} from '../assets';
-import {View, Text, Image} from 'react-native';
+import { font } from '../assets';
+import { View, Text, Image } from 'react-native';
 import icons from '../assets/icons/icons';
 import { normalize } from '../functions/Normalize';
 
@@ -26,7 +26,7 @@ const text2Style = {
 };
 
 export const toastConfig = {
-  receiveTaskSuccess: ({text1, text2, props}: any) => (
+  receiveTaskSuccess: ({ text1, text2, props }: any) => (
     <View
       style={{
         ...toastStyle,
@@ -54,8 +54,8 @@ export const toastConfig = {
           paddingLeft: 6,
           justifyContent: 'center',
         }}>
-        <Text style={{...text1Style}}>{text1}</Text>
-        <Text style={{...text2Style}}>{text2}</Text>
+        <Text style={{ ...text1Style }}>{text1}</Text>
+        <Text style={{ ...text2Style }}>{text2}</Text>
       </View>
     </View>
   ),

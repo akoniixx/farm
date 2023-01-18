@@ -1,8 +1,8 @@
-import {Button} from '@rneui/themed';
+import { Button } from '@rneui/themed';
 import React from 'react';
 import { StyleSheet, ViewStyle } from 'react-native';
-import {colors, font} from '../../assets';
-import {normalize} from '../../functions/Normalize';
+import { colors, font } from '../../assets';
+import { normalize } from '../../functions/Normalize';
 
 interface MainButtonProps {
   label: string;

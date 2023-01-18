@@ -1,14 +1,14 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MainScreen from '../../screens/MainScreen/MainScreen';
-import {colors, font, icons} from '../../assets';
-import {Text} from '@rneui/base';
+import { colors, font, icons } from '../../assets';
+import { Text } from '@rneui/base';
 import fonts from '../../assets/fonts';
-import {normalize} from '@rneui/themed';
-import {Image, Platform, StyleSheet, View} from 'react-native';
+import { normalize } from '@rneui/themed';
+import { Image, Platform, StyleSheet, View } from 'react-native';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import PromotionScreen from '../../screens/PromotionScreen/PromotionScreen';
-import {responsiveHeigth, responsiveWidth} from '../../functions/responsive';
+import { responsiveHeigth, responsiveWidth } from '../../functions/responsive';
 import TaskScreen from '../../screens/MyTaskScreen/MyTaskScreen';
 import MainNavigator from '../MainNavigator';
 
@@ -19,17 +19,17 @@ const MainTapNavigator: React.FC = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {height: '9%', borderBottomColor: colors.white},
+        tabBarStyle: { height: '9%', borderBottomColor: colors.white },
       }}>
       <Tab.Screen
         name="หน้าแรก"
-        component={MainScreen} 
+        component={MainScreen}
         options={{
           tabBarLabelStyle: {
             fontFamily: font.AnuphanMedium,
           },
           lazy: true,
-          tabBarLabel: ({focused}) => (
+          tabBarLabel: ({ focused }) => (
             <Text
               style={{
                 fontFamily: fonts.AnuphanMedium,
@@ -43,12 +43,12 @@ const MainTapNavigator: React.FC = () => {
             i.focused ? (
               <Image
                 source={icons.home_active}
-                style={{width: 20, height: 20, top: normalize(3)}}
+                style={{ width: 20, height: 20, top: normalize(3) }}
               />
             ) : (
               <Image
                 source={icons.home}
-                style={{width: 20, height: 20, top: normalize(3)}}
+                style={{ width: 20, height: 20, top: normalize(3) }}
               />
             ),
         }}
@@ -61,7 +61,7 @@ const MainTapNavigator: React.FC = () => {
             fontFamily: font.AnuphanMedium,
           },
           lazy: true,
-          tabBarLabel: ({focused}) => (
+          tabBarLabel: ({ focused }) => (
             <Text
               style={{
                 fontFamily: fonts.AnuphanMedium,
@@ -75,12 +75,12 @@ const MainTapNavigator: React.FC = () => {
             i.focused ? (
               <Image
                 source={icons.mytask_active}
-                style={{width: 22, height: 22, top: normalize(3)}}
+                style={{ width: 22, height: 22, top: normalize(3) }}
               />
             ) : (
               <Image
                 source={icons.mytask}
-                style={{width: 22, height: 22, top: normalize(3)}}
+                style={{ width: 22, height: 22, top: normalize(3) }}
               />
             ),
         }}
@@ -93,7 +93,7 @@ const MainTapNavigator: React.FC = () => {
             fontFamily: font.AnuphanMedium,
           },
           lazy: true,
-          tabBarLabel: ({focused}) => (
+          tabBarLabel: ({ focused }) => (
             <Text
               style={{
                 fontFamily: fonts.AnuphanMedium,
@@ -107,12 +107,12 @@ const MainTapNavigator: React.FC = () => {
             i.focused ? (
               <Image
                 source={icons.discount_active}
-                style={{width: 22, height: 22, top: normalize(3)}}
+                style={{ width: 22, height: 22, top: normalize(3) }}
               />
             ) : (
               <Image
                 source={icons.discount}
-                style={{width: 24, height: 24, top: normalize(3)}}
+                style={{ width: 24, height: 24, top: normalize(3) }}
               />
             ),
         }}
@@ -124,7 +124,7 @@ const MainTapNavigator: React.FC = () => {
           tabBarLabelStyle: {
             fontFamily: font.AnuphanMedium,
           },
-          tabBarLabel: ({focused}) => (
+          tabBarLabel: ({ focused }) => (
             <Text
               style={{
                 fontFamily: fonts.AnuphanMedium,
@@ -138,12 +138,12 @@ const MainTapNavigator: React.FC = () => {
             i.focused ? (
               <Image
                 source={icons.profile_active}
-                style={{width: 22, height: 22, top: normalize(3)}}
+                style={{ width: 22, height: 22, top: normalize(3) }}
               />
             ) : (
               <Image
                 source={icons.profile}
-                style={{width: 22, height: 22, top: normalize(3)}}
+                style={{ width: 22, height: 22, top: normalize(3) }}
               />
             ),
         }}

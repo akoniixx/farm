@@ -4,6 +4,5 @@ export default {
   AnuphanBold: 'Anuphan-Bold',
   SarabunLight: 'Sarabun-Light',
   SarabunMedium: 'Sarabun-Medium',
-  SarabunBold: 'Sarabun-Bold'
-  
+  SarabunBold: 'Sarabun-Bold',
 };

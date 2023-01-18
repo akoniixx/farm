@@ -1,21 +1,21 @@
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect } from 'react';
 
 /**
  * @param { (...args: any[]) => any } fn - A callback function to use debounce effect on.
  * @param { number } delay - A number that indicates how much time it waits.
  * @param { any[] } deps - A dependency list.
-*/
+ */
 export const useDebounce = (
   fn: (...args: any[]) => any,
   delay: number,
-  deps: any[]
+  deps: any[],
 ) => {
   /**
    * Store the memoized version of the callback.
    * It changes only when one of the dependencies has has changed.
    * See official documentation at: https://reactjs.org/docs/hooks-reference.html#usecallback
    * */
-  const callback = useCallback(fn, deps)
+  const callback = useCallback(fn, deps);
 
   /**
    * useEffect gets re-called whenever "callback" changes.
@@ -25,15 +25,15 @@ export const useDebounce = (
   useEffect(() => {
     // Call the memoized version of callback after the delay
     const handler = setTimeout(() => {
-      callback()
-    }, delay)
+      callback();
+    }, delay);
 
     /**
      * Clear timeout when useEffect gets re-called,
      *    in other words, when "callback" changes.
      * */
     return () => {
-      clearTimeout(handler)
-    }
-  }, [callback])
-}
+      clearTimeout(handler);
+    };
+  }, [callback]);
+};

@@ -1,17 +1,17 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, Dimensions} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {colors, font} from '../../assets';
+import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors, font } from '../../assets';
 import icons from '../../assets/icons/icons';
 import image from '../../assets/images/image';
-import {MainButton} from '../../components/Button/MainButton';
+import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
-import {ProgressBar} from '../../components/ProgressBar';
+import { ProgressBar } from '../../components/ProgressBar';
 import { Register } from '../../datasource/AuthDatasource';
-import {normalize} from '../../functions/Normalize';
-import {stylesCentral} from '../../styles/StylesCentral';
+import { normalize } from '../../functions/Normalize';
+import { stylesCentral } from '../../styles/StylesCentral';
 const width = Dimensions.get('window').width;
-const FourthFormScreen: React.FC<any> = ({route, navigation}) => {
+const FourthFormScreen: React.FC<any> = ({ route, navigation }) => {
   const telNo = route.params.tele;
   const Profile = route.params.profile ?? false;
 
@@ -24,17 +24,17 @@ const FourthFormScreen: React.FC<any> = ({route, navigation}) => {
       />
       <View style={styles.inner}>
         <View style={styles.container}>
-          <View style={{marginBottom: normalize(10)}}>
+          <View style={{ marginBottom: normalize(10) }}>
             <ProgressBar index={4} />
           </View>
           <Text style={styles.h3}>ขั้นตอนที่ 4 จาก 4</Text>
           <Text style={styles.h1}>ยืนยันเอกสาร</Text>
           <Text style={styles.h2}>{`ยืนยันตัวตน ด้วยรูปถ่ายคู่ผู้สมัคร 
 พร้อมบัตรประชาชน`}</Text>
-          <View style={{alignItems: 'center', top: '8%'}}>
+          <View style={{ alignItems: 'center', top: '8%' }}>
             <Image
               source={image.examidcard}
-              style={{width: normalize(350), height: normalize(200)}}
+              style={{ width: normalize(350), height: normalize(200) }}
             />
             <View style={styles.border}>
               <View style={styles.allText}>
@@ -53,7 +53,7 @@ const FourthFormScreen: React.FC<any> = ({route, navigation}) => {
           </View>
         </View>
 
-        <View style={{backgroundColor: colors.white, zIndex: 0}}>
+        <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
           <MainButton
             label="ถัดไป"
             color={colors.greenLight}
@@ -62,7 +62,7 @@ const FourthFormScreen: React.FC<any> = ({route, navigation}) => {
                 tele: telNo,
                 profile: Profile,
               });
-            }}  
+            }}
           />
           <MainButton
             label="ข้ามขั้นตอน"

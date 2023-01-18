@@ -1,4 +1,4 @@
-import {Switch} from '@rneui/themed';
+import { Switch } from '@rneui/themed';
 import React, {
   useCallback,
   useEffect,
@@ -7,18 +7,18 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {Image, StyleSheet, Text, View, Dimensions} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {colors, font} from '../../assets';
-import {stylesCentral} from '../../styles/StylesCentral';
+import { Image, StyleSheet, Text, View, Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors, font } from '../../assets';
+import { stylesCentral } from '../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Avatar} from '@rneui/base';
-import {normalize, width} from '../../functions/Normalize';
+import { Avatar } from '@rneui/base';
+import { normalize, width } from '../../functions/Normalize';
 import image from '../../assets/images/image';
 import CustomHeader from '../../components/CustomHeader';
-import {MainButton} from '../../components/Button/MainButton';
+import { MainButton } from '../../components/Button/MainButton';
 
-const PromotionScreen: React.FC<any> = ({navigation, route}) => {
+const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
   const [fcmToken, setFcmToken] = useState('');
 
   const getData = async () => {
@@ -48,21 +48,19 @@ const PromotionScreen: React.FC<any> = ({navigation, route}) => {
           />
           <View>
             <Image source={image.empty_farmer} style={[styles.empty]} />
-            <View style={{top: '25%'}}>
+            <View style={{ top: '25%' }}>
               <Text style={[styles.text]}>คุณเป็นสมาชิกหรือยัง?</Text>
               <Text style={[styles.label]}>
                 {`เข้าร่วมเป็นสมาชิกกับเรา
   เพื่อรับสิทธิประโยชน์มากมาย`}
               </Text>
             </View>
-            <View style={{top: '30%'}}>
+            <View style={{ top: '30%' }}>
               <MainButton
                 label="ลงทะเบียน/เข้าสู่ระบบ"
                 color={colors.greenLight}
                 style={styles.buttomBlank}
-                onPress={() => 
-                  
-                  navigation.navigate('ConditionScreen')}
+                onPress={() => navigation.navigate('ConditionScreen')}
               />
             </View>
           </View>

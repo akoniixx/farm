@@ -20,7 +20,7 @@ export default {
   plot: require('./plot.png'),
   plant: require('./plant.png'),
   location: require('./location.png'),
-  down:require('./down.png'),
+  down: require('./down.png'),
   locate: require('./locate.png'),
   delete: require('./delete.png'),
   correct: require('./correct.png'),
@@ -32,7 +32,7 @@ export default {
   mytask: require('./mytask.png'),
   mytask_active: require('./mytask_active.png'),
   profile_blank: require('./profile_blank.png'),
-  search:require('./search.png'),
+  search: require('./search.png'),
   myLocation: require('./myLocation.png'),
   warning: require('./warning.png'),
   heart: require('./heart.png'),
@@ -41,7 +41,5 @@ export default {
   heart_active: require('./heart_active.png'),
   chat: require('./chat.png'),
   done_academy: require('./doneAcademy.png'),
-  time: require('./time.png')
-
-
+  time: require('./time.png'),
 };
