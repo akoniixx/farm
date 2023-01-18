@@ -32,6 +32,7 @@ import {
   LocationInPostcodeSelect,
   LocationSelect,
 } from '../../components/Location/Location';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const SecondFormScreen: React.FC<any> = ({ route, navigation }) => {
   const initialFormRegisterState = {
@@ -572,6 +573,11 @@ const SecondFormScreen: React.FC<any> = ({ route, navigation }) => {
           </View>
         </ActionSheet>
       </View>
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </SafeAreaView>
   );
 };

@@ -64,7 +64,7 @@ export type PredictionType = {
 };
 
 const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
-  const fall = new Animated.Value(1);
+  // const fall = new Animated.Value(1);
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const [position, setPosition] = useState({
@@ -76,6 +76,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   const telNo = route.params;
 
   const [openModal, setOpenModal] = useState(false);
+  const [plotIndex, setPlotIndex] = useState();
   const [value, setValue] = useState(null);
   const [plantName, setPlantName] = useState<any>();
   const [raiAmount, setraiAmount] = useState<any>();
@@ -586,7 +587,8 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     landmark,
                   )
                     .then(res => {
-                      console.log('res', res);
+                      console.log('plot', res);
+                      setPlotIndex(res);
                     })
                     .catch(err => {
                       console.log(err);

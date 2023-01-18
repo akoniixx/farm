@@ -243,20 +243,24 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                 }}>
                 จ้างนักบินที่เคยจ้าง
               </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('SeeAllDronerUsed');
-                }}>
-                <Text
-                  style={{
-                    fontFamily: font.SarabunLight,
-                    fontSize: normalize(16),
-                    color: colors.fontGrey,
-                    height: 25,
+              {taskSugUsed.length != 0 ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('SeeAllDronerUsed');
                   }}>
-                  ดูทั้งหมด
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontFamily: font.SarabunLight,
+                      fontSize: normalize(16),
+                      color: colors.fontGrey,
+                      height: 25,
+                    }}>
+                    ดูทั้งหมด
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                ''
+              )}
             </View>
             {taskSugUsed.length != 0 ? (
               <View style={{ height: '110%' }}>
