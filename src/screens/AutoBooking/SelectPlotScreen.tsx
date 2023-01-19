@@ -5,6 +5,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  KeyboardAvoidingView,
   Modal,
   Platform,
   ScrollView,
@@ -50,72 +51,85 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
     getPlotlist();
   }, []);
 
-  console.log(plotList);
   return (
     <>
-      <StepIndicatorHead
-        curentPosition={1}
-        onPressBack={() => navigation.goBack()}
-        label={'เลือกแปลงของคุณ'}
-      />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <StepIndicatorHead
+          curentPosition={1}
+          onPressBack={() => navigation.goBack()}
+          label={'เลือกแปลงของคุณ'}
+        />
 
-      {plotList?.data?.length === 0 ? (
-        <View style={{backgroundColor:'white'}}>
-          <Image
-            source={image.empty_plot}
-            style={{
-              width: normalize(138),
-              height: normalize(120),
-              alignSelf: 'center',
-              top: '5%',
-            }}
-          />
-          <Text
-            style={{
-              fontFamily: font.SarabunLight,
-              fontSize: normalize(16),
-              color: colors.gray,
-              textAlign: 'center',
-              paddingVertical: normalize(22),
-            }}>{`คุณไม่มีแปลงเกษตร
+        {plotList?.data?.length === 0 ? (
+          <View style={{ backgroundColor: 'white' }}>
+            <Image
+              source={image.empty_plot}
+              style={{
+                width: normalize(138),
+                height: normalize(120),
+                alignSelf: 'center',
+                top: '5%',
+              }}
+            />
+            <Text
+              style={{
+                fontFamily: font.SarabunLight,
+                fontSize: normalize(16),
+                color: colors.gray,
+                textAlign: 'center',
+                paddingVertical: normalize(22),
+              }}>{`คุณไม่มีแปลงเกษตร
  กดเพิ่มแปลงเกษตรได้เลย!`}</Text>
 
-          <View style={[styles.buttonAdd]}>
-            <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
+            <View style={[styles.buttonAdd]}>
+              <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
+            </View>
           </View>
-        </View>
-      ) : (
-        <SafeAreaView
-          edges={['bottom', 'left', 'right']}
-          style={{ flex: 1, justifyContent: 'space-between',backgroundColor:'white' }}>
-          <ScrollView
-            style={{ paddingVertical: 10 }}
-            horizontal
-            showsHorizontalScrollIndicator={false}>
-            <FlatList
-              data={plotList?.data}
-              renderItem={({ item, index }) => (
-                <PlotSelect
-                  id={item.id}
-                  plotName={item.plotName}
-                  plantName={item.plantName}
-                  locationName={item.locationName}
-                  raiAmount={item.raiAmount}
-                  onPress={() => handleCardPress(index)}
-                  selected={index === selectedCard}
+        ) : (
+          <SafeAreaView
+            edges={['left', 'right']}
+            style={{
+              flex: 1,
+              justifyContent: 'space-between',
+              backgroundColor: 'white',
+            }}>
+            <ScrollView
+              style={{ paddingVertical: 10 }}
+              contentContainerStyle={{
+                flexGrow: 1,
+              }}
+              showsHorizontalScrollIndicator={false}>
+              <FlatList
+                data={plotList?.data}
+                renderItem={({ item, index }) => (
+                  <PlotSelect
+                    id={item.id}
+                    plotName={item.plotName}
+                    plantName={item.plantName}
+                    locationName={item.locationName}
+                    raiAmount={item.raiAmount}
+                    onPress={() => handleCardPress(index)}
+                    selected={index === selectedCard}
+                  />
+                )}
+                keyExtractor={item => item.id}
+              />
+              <View
+                style={{
+                  padding: 16,
+                }}>
+                <MainButton
+                  label="ถัดไป"
+                  color={colors.greenLight}
+                  onPress={() => navigation.navigate('SelectTarget')}
                 />
-              )}
-              keyExtractor={item => item.id}
-            />
-          </ScrollView>
-          <MainButton
-            label="ถัดไป"
-            color={colors.greenLight}
-            onPress={() => navigation.navigate('SelectTarget')}
-            style={{ margin: normalize(10) }}
-          />
-        </SafeAreaView>
-      )}
+              </View>
+            </ScrollView>
+          </SafeAreaView>
+        )}
+      </KeyboardAvoidingView>
     </>
   );
 };

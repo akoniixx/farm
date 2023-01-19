@@ -170,17 +170,27 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
                 );
                 setPeriodSprayValue(currentValue);
               }}>
-              <Text
-                style={{
-                  color: colors.gray,
-                  fontFamily: fonts.SarabunMedium,
-                  fontSize: 20,
-                  lineHeight: 40,
-                }}>
-                {periodSprayValue?.label
-                  ? periodSprayValue.label
-                  : 'เลือกช่วงเวลา'}
-              </Text>
+              {periodSprayValue.label ? (
+                <Text
+                  style={{
+                    color: colors.fontBlack,
+                    fontFamily: fonts.SarabunMedium,
+                    fontSize: 20,
+                    lineHeight: 40,
+                  }}>
+                  {periodSprayValue.label}
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    color: colors.disable,
+                    fontFamily: fonts.SarabunMedium,
+                    fontSize: 20,
+                    lineHeight: 40,
+                  }}>
+                  {'เลือกช่วงเวลา'}
+                </Text>
+              )}
             </TouchableOpacity>
             <Text style={[styles.label, { marginTop: normalize(20) }]}>
               ยาที่ต้องใช้
