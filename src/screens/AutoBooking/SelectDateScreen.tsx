@@ -262,6 +262,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 paddingVertical: 16,
                 flexDirection: 'row',
                 justifyContent: 'center',
+                height: 200,
               }}>
               <TimePicker
                 setHour={(h: number) => {

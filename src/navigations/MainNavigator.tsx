@@ -15,8 +15,26 @@ import SelectTarget from '../screens/AutoBooking/SelectTarget';
 import PrivacyScreen from '../screens/ProfileScreen/PrivacyScreen';
 import EditProfileScreen from '../screens/ProfileScreen/EditProfileScreen';
 import DeatilTaskScreen from '../screens/AutoBooking/DetailTaskScreen';
-const Stack = createStackNavigator();
-
+import SlipWaitingScreen from '../screens/SlipWaitingScreen';
+import SlipSuccessScreen from '../screens/SlipSuccessScreen';
+export type MainStackParamList = {
+  MainScreen: undefined;
+  ProfileScreen: undefined;
+  AllPlotScreen: undefined;
+  SelectDateScreen: undefined;
+  SelectPlotScreen: undefined;
+  SelectTarget: undefined;
+  DronerDetail: undefined;
+  SeeAllDronerUsed: undefined;
+  PrivacyScreen: undefined;
+  EditProfileScreen: undefined;
+  DeatilTaskScreen: undefined;
+  SlipWaitingScreen: { taskId: string };
+  SlipSuccessScreen: { taskId: string };
+  DeleteAcc: undefined;
+  DeleteSuccess: undefined;
+};
+const Stack = createStackNavigator<MainStackParamList>();
 const MainNavigator: React.FC = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -38,6 +56,11 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
       <Stack.Screen name="DeatilTaskScreen" component={DeatilTaskScreen} />
+
+      <Stack.Group>
+        <Stack.Screen name="SlipWaitingScreen" component={SlipWaitingScreen} />
+        <Stack.Screen name="SlipSuccessScreen" component={SlipSuccessScreen} />
+      </Stack.Group>
 
       <Stack.Screen name="DeleteAcc" component={DeleteAcc} />
       <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />

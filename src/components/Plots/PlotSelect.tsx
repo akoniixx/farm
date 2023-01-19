@@ -15,7 +15,6 @@ interface Prop {
 }
 
 const PlotSelect: React.FC<Prop> = ({
-  id,
   plotName,
   raiAmount,
   plantName,

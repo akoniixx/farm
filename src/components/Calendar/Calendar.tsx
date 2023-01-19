@@ -190,10 +190,12 @@ const DateBlock: React.FC<DateBlockProps> = ({
   const offsets = digits.map((_: number, index: number) => index * dHeight);
   const scrollRef = useRef<any>(null);
   const snapScrollToIndex = (index: number) => {
-    scrollRef?.current?.scrollTo({ y: dHeight * index, animated: false });
+    scrollRef?.current?.scrollTo({ y: dHeight * index, animated: true });
   };
   useEffect(() => {
-    snapScrollToIndex(currentIndex);
+    setTimeout(() => {
+      snapScrollToIndex(currentIndex);
+    }, 100);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

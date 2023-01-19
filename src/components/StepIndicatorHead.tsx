@@ -1,10 +1,12 @@
 import Icon from 'react-native-vector-icons/AntDesign';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View, Image } from 'react-native';
 import StepIndicator from 'react-native-step-indicator-v2';
 import { normalize } from '../functions/Normalize';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font } from '../assets';
+import images from '../assets/images/image';
+import icons from '../assets/icons/icons';
 
 interface Prop {
   onPressBack?: () => void;
@@ -23,6 +25,7 @@ const StepIndicatorHead: React.FC<Prop> = ({
     currentStepStrokeWidth: 3,
     stepStrokeCurrentColor: '#FFE26E',
     stepStrokeWidth: 3,
+
     stepStrokeFinishedColor: '#2EC46D',
     stepStrokeUnFinishedColor: '#C7F2D9',
     separatorFinishedColor: '#2EC46D',
@@ -66,6 +69,18 @@ const StepIndicatorHead: React.FC<Prop> = ({
             customStyles={customStyles}
             currentPosition={curentPosition}
             stepCount={3}
+            renderStepIndicator={({ stepStatus }) => {
+              if (stepStatus === 'finished') {
+                return (
+                  <View>
+                    {/* <Image
+                      source={icons.}
+                      style={{ width: 25, height: 25 }}
+                    /> */}
+                  </View>
+                );
+              }
+            }}
           />
         </View>
       </SafeAreaView>

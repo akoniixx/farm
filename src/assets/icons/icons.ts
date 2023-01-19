@@ -42,4 +42,7 @@ export default {
   chat: require('./chat.png'),
   done_academy: require('./doneAcademy.png'),
   time: require('./time.png'),
+  arrowUp: require('./arrowUp.png'),
+  arrowLeft: require('./arrowLeft.png'),
+  calling: require('./calling.png'),
 };

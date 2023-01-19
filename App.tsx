@@ -8,7 +8,9 @@ import Toast from 'react-native-toast-message';
 import { SheetProvider } from 'react-native-actions-sheet';
 import { toastConfig } from './src/config/toast-config';
 import { BackHandler } from 'react-native';
+import { Provider as PaperProvider } from 'react-native-paper';
 import 'moment/locale/th';
+import './src/components/SheetList';
 const App = () => {
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
@@ -17,9 +19,11 @@ const App = () => {
   return (
     <>
       <NavigationContainer ref={navigationRef}>
-        <SheetProvider>
-          <AppNavigator />
-        </SheetProvider>
+        <PaperProvider>
+          <SheetProvider>
+            <AppNavigator />
+          </SheetProvider>
+        </PaperProvider>
         <Toast config={toastConfig} />
       </NavigationContainer>
     </>
@@ -27,4 +31,3 @@ const App = () => {
 };
 
 export default App;
-178
