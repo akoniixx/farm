@@ -103,6 +103,7 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
           setInputSize({ height, width });
         }}
       />
+
       <TouchableOpacity>
         <View
           style={{

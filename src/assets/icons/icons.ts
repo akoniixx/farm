@@ -44,5 +44,5 @@ export default {
   time: require('./time.png'),
   calendarOrange: require('./CalendarOrange.png'),
   document: require('./Document.png'),
-  map: require('./Map.png')
+  map: require('./Map.png'),
 };

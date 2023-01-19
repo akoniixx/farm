@@ -52,6 +52,8 @@ import Geocoder from 'react-native-geocoding';
 import SearchBarWithAutocomplete from '../../components/SearchBarWithAutocomplete';
 import { useDebounce } from '../../hook/useDebounce';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { navigate, navigationRef } from '../../navigations/RootNavigation';
 
 export type PredictionType = {
   description: string;
@@ -74,9 +76,8 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     longitudeDelta: 0,
   });
   const telNo = route.params;
-
   const [openModal, setOpenModal] = useState(false);
-  const [plotIndex, setPlotIndex] = useState();
+  const [count, setCount] = useState(1);
   const [value, setValue] = useState(null);
   const [plantName, setPlantName] = useState<any>();
   const [raiAmount, setraiAmount] = useState<any>();
@@ -91,7 +92,10 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   const plantSheet = useRef<any>();
   const deTailPlot = useRef<any>();
   const mapSheet = useRef<any>();
-  const [search, setSearch] = useState({ term: '', fetchPredictions: false });
+  const [search, setSearch] = useState<any>({
+    term: '',
+    fetchPredictions: false,
+  });
   const [showPredictions, setShowPredictions] = useState(false);
   const [predictions, setPredictions] = useState<PredictionType[]>([]);
   const GOOGLE_PACES_API_BASE_URL =
@@ -189,23 +193,33 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
       );
     }
   };
+  const incrementCount = () => {
+    setCount(count + 1);
+  };
   const addPlots = () => {
     const plots = [...plotData];
     const plotsUI = [...plotDataUI];
     const newPlot = {
+      id: count,
       raiAmount: raiAmount,
-      plotName: plotName,
-      location: search.term,
+      plotName: !plotName
+        ? 'แปลงที่' + ' ' + count + ' ' + plantName
+        : plotName,
+      locationName: search.term,
       plantName: plantName,
       status: 'PENDING',
+      landmark: landmark,
+      lat: lat,
+      long: long,
     };
-    console.log(newPlot);
-
     const newPlotUI = {
-      plotName: plotName,
       raiAmount: raiAmount,
+      plotName: plotName,
+      locationName: search.term,
       plantName: plantName,
-      location: search.term,
+      landmark: landmark,
+      lat: lat,
+      long: long,
     };
     plots.push(newPlot);
     plotsUI.push(newPlotUI);
@@ -216,8 +230,11 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     setSearch(search);
     setraiAmount(null);
     setplotName(null);
+    setlandmark(null);
     actionSheet.current.hide();
   };
+  console.log(plotData);
+
   const deletePlots = () => {
     // Register.deleteFarmerPlot('')
     deTailPlot.current.hide();
@@ -325,8 +342,10 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                 </View>
                 {plotDataUI.map((item: any, index: number) => (
                   <TouchableOpacity
+                    key={index}
                     onPress={() => {
-                      deTailPlot.current.show();
+                      plotData[index]
+                      navigation.navigate('EditFarmerPlot')
                     }}>
                     <PlotsItem
                       index={index}
@@ -341,7 +360,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                           : item.plotName
                       }
                       raiAmount={item.raiAmount}
-                      location={item.location}
+                      locationName={item.locationName}
                       plantName={item.plantName}
                       status={item.status}
                     />
@@ -362,12 +381,18 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
         </View>
         <View style={{ backgroundColor: colors.white }}>
           <MainButton
+            disable={plotDataUI.length === 0 ? true : false}
             label="ถัดไป"
             color={colors.greenLight}
             onPress={() => {
-              navigation.navigate('FourthFormScreen', {
-                tele: telNo.tele,
-              });
+              Register.uploadFarmerPlot(plotData)
+                .then(res => {
+                  console.log(res);
+                  navigation.navigate('FourthFormScreen', {
+                    tele: telNo.tele,
+                  });
+                })
+                .catch(err => console.log(err));
             }}
           />
         </View>
@@ -402,7 +427,9 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                 placeholder={
                   !plotName
                     ? `แปลงที่ ${plotDataUI.length + 1} ${
-                        plantName !== undefined ? plantName : ''
+                        plantName !== null && plantName !== undefined
+                          ? plantName
+                          : ''
                       }`
                     : plotName
                 }
@@ -576,23 +603,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                 color={colors.greenLight}
                 onPress={() => {
                   addPlots();
-                  Register.register3(
-                    telNo.tele,
-                    plotName,
-                    raiAmount,
-                    plantName,
-                    lat,
-                    long,
-                    search.term,
-                    landmark,
-                  )
-                    .then(res => {
-                      console.log('plot', res);
-                      setPlotIndex(res);
-                    })
-                    .catch(err => {
-                      console.log(err);
-                    });
+                  incrementCount();
                 }}
               />
             </View>
@@ -688,7 +699,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
           </ActionSheet>
         </ActionSheet>
         <ActionSheet ref={deTailPlot}>
-          {plotDataUI.map((item: any, index: any) => (
+          {plotData.map((item: any, index: any) => (
             <View
               key={index}
               style={{
@@ -846,6 +857,17 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     <Image style={styles.marker} source={image.mark} />
                   </View>
                 </View>
+                <Text style={styles.head}>จุดสังเกต</Text>
+                <TextInput
+                  onChangeText={value => {
+                    setlandmark(value);
+                  }}
+                  value={landmark}
+                  style={[styles.input, { borderColor: colors.disable }]}
+                  editable={true}
+                  placeholder={'ระบุจุดสังเกต'}
+                  placeholderTextColor={colors.disable}
+                />
                 <View
                   style={{
                     justifyContent: 'center',

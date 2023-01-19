@@ -35,7 +35,8 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
         label={'เลือกวันและเวลาฉีดพ่น'}
       />
 
-      <SafeAreaView style={{ flex: 1, paddingHorizontal: 10,backgroundColor:'white' }}>
+      <SafeAreaView
+        style={{ flex: 1, paddingHorizontal: 10, backgroundColor: 'white' }}>
         <View style={{ flex: 1, justifyContent: 'space-between' }}>
           <View>
             <Text style={styles.label}>วันที่ฉีดพ่น</Text>

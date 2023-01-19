@@ -68,6 +68,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
       .then(res => {
+        console.log(res.farmerPlot);
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
@@ -318,7 +319,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                                   : item.plotName
                               }
                               raiAmount={item.raiAmount}
-                              location={item.locationName}
+                              locationName={item.locationName}
                               plantName={item.plantName}
                               status={item.status}
                               index={0}

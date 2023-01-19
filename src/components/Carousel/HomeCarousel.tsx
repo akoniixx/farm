@@ -12,7 +12,7 @@ const HomeCarousel: React.FC<any> = () => {
   const imageWidth = screen.width;
   const RenderItem: React.FC<any> = ({ index }) => {
     return (
-      <View style={[stylesCentral.center, { flex: 1}]}>
+      <View style={[stylesCentral.center, { flex: 1 }]}>
         <Image
           source={carouselItems[index].src}
           style={{ height: imageHeight, width: imageWidth }}

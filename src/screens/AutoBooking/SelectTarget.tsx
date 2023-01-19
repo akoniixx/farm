@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: normalize(10),
-    borderRadius:10
+    borderRadius: 10,
   },
   h1: {
     fontFamily: font.AnuphanBold,

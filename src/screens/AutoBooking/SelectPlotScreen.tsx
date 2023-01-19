@@ -60,7 +60,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
       />
 
       {plotList?.data?.length === 0 ? (
-        <View style={{backgroundColor:'white'}}>
+        <View style={{ backgroundColor: 'white' }}>
           <Image
             source={image.empty_plot}
             style={{
@@ -87,7 +87,11 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
       ) : (
         <SafeAreaView
           edges={['bottom', 'left', 'right']}
-          style={{ flex: 1, justifyContent: 'space-between',backgroundColor:'white' }}>
+          style={{
+            flex: 1,
+            justifyContent: 'space-between',
+            backgroundColor: 'white',
+          }}>
           <ScrollView
             style={{ paddingVertical: 10 }}
             horizontal
