@@ -260,9 +260,8 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-
               {taskSugUsed.length != 0 ? (
-                <View style={{ top: '20%', height: '110%' }}>
+                <View style={{ height: '110%' }}>
                   <ScrollView
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}>
@@ -270,12 +269,16 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                       taskSugUsed.map((item: any, index: any) => (
                         <TouchableOpacity
                           key={index}
-                          onPress={() => {
-                            // deTailPlot.current.show();
+                          onPress={async () => {
+                            await AsyncStorage.setItem(
+                              'droner_id',
+                              `${item.droner_id}`,
+                            );
+                            navigation.push('DronerDetail');
                           }}>
-                          <DronerSugg
-                            index={index}
+                          <DronerUsed
                             key={index}
+                            index={index}
                             profile={item.image_droner}
                             background={''}
                             name={item.firstname + ' ' + item.lastname}
