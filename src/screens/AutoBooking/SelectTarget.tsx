@@ -247,7 +247,7 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
           <MainButton
             label="ยืนยัน"
             color={colors.greenLight}
-            onPress={() => navigation.navigate('SelectTarget')}
+            onPress={() => navigation.navigate('DeatilTaskScreen')}
             style={{ margin: normalize(10) }}
           />
         </SafeAreaView>

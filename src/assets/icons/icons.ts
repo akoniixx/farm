@@ -45,4 +45,7 @@ export default {
   arrowUp: require('./arrowUp.png'),
   arrowLeft: require('./arrowLeft.png'),
   calling: require('./calling.png'),
+  calendarOrange: require('./CalendarOrange.png'),
+  document: require('./Document.png'),
+  map: require('./Map.png'),
 };
