@@ -42,4 +42,7 @@ export default {
   chat: require('./chat.png'),
   done_academy: require('./doneAcademy.png'),
   time: require('./time.png'),
+  calendarOrange: require('./CalendarOrange.png'),
+  document: require('./Document.png'),
+  map: require('./Map.png')
 };
