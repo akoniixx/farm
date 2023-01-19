@@ -23,7 +23,7 @@ import PlotInProfile from '../../components/Plots/PlotsInProfile';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
 import TimePicker from '../../components/TimePicker/TimePicker';
 import { PlotDatasource } from '../../datasource/PlotDatasource';
-import { height, normalize, width } from '../../functions/Normalize';
+import { normalize } from '../../functions/Normalize';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 
 const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
@@ -60,7 +60,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
       />
 
       {plotList?.data?.length === 0 ? (
-        <View>
+        <View style={{backgroundColor:'white'}}>
           <Image
             source={image.empty_plot}
             style={{
@@ -87,7 +87,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
       ) : (
         <SafeAreaView
           edges={['bottom', 'left', 'right']}
-          style={{ flex: 1, justifyContent: 'space-between' }}>
+          style={{ flex: 1, justifyContent: 'space-between',backgroundColor:'white' }}>
           <ScrollView
             style={{ paddingVertical: 10 }}
             horizontal

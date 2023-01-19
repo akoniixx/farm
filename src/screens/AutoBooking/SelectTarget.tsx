@@ -152,7 +152,7 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
           <MainButton
             label="ยืนยัน"
             color={colors.greenLight}
-            onPress={() => navigation.navigate('SelectTarget')}
+            onPress={() => navigation.navigate('DeatilTaskScreen')}
             style={{ margin: normalize(10) }}
           />
         </SafeAreaView>
@@ -175,6 +175,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: normalize(10),
+    borderRadius:10
   },
   h1: {
     fontFamily: font.AnuphanBold,

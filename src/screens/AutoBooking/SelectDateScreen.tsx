@@ -16,7 +16,8 @@ import DatePickerCustom from '../../components/Calendar/Calendar';
 import CustomHeader from '../../components/CustomHeader';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
 import TimePicker from '../../components/TimePicker/TimePicker';
-import { height, normalize, width } from '../../functions/Normalize';
+import { normalize, width } from '../../functions/Normalize';
+import { momentExtend } from '../../utils/moment-buddha-year';
 
 const SelectDateScreen: React.FC<any> = ({ navigation }) => {
   const windowWidth = Dimensions.get('window').width;
@@ -34,7 +35,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
         label={'เลือกวันและเวลาฉีดพ่น'}
       />
 
-      <SafeAreaView style={{ flex: 1, paddingHorizontal: 10 }}>
+      <SafeAreaView style={{ flex: 1, paddingHorizontal: 10,backgroundColor:'white' }}>
         <View style={{ flex: 1, justifyContent: 'space-between' }}>
           <View>
             <Text style={styles.label}>วันที่ฉีดพ่น</Text>
@@ -48,11 +49,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                   },
                 ]}>
                 <TextInput
-                  value={date.toLocaleDateString('th-TH', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                  })}
+                  value={momentExtend.toBuddhistYear(date, 'DD MMMM YYYY')}
                   editable={false}
                   placeholder={'ระบุวัน เดือน ปี'}
                   placeholderTextColor={colors.disable}

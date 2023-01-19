@@ -1,8 +1,8 @@
 import 'react-native-gesture-handler';
-import React, {useEffect} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './src/navigations/AppNavigator';
-import {navigationRef} from './src/navigations/RootNavigation';
+import { navigationRef } from './src/navigations/RootNavigation';
 import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-toast-message';
 import {SheetProvider} from 'react-native-actions-sheet';
@@ -32,3 +32,4 @@ const App = () => {
 };
 
 export default App;
+178
