@@ -7,6 +7,9 @@ import {
   Image,
   TextInput,
   Modal,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { stylesCentral } from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
@@ -21,6 +24,10 @@ import { ProgressBar } from '../../components/ProgressBar';
 import Lottie from 'lottie-react-native';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { Register } from '../../datasource/AuthDatasource';
+import {
+  TouchableWithoutFeedback,
+  ScrollView,
+} from 'react-native-gesture-handler';
 
 const width = Dimensions.get('window').width;
 
@@ -55,228 +62,233 @@ const AddIDcardScreen: React.FC<any> = ({ route, navigation }) => {
     }
   }, [image]);
   return (
-    <SafeAreaView style={stylesCentral.container}>
-      <CustomHeader
-        title="ยืนยันเอกสาร"
-        showBackBtn
-        onPressBack={() => navigation.goBack()}
-      />
-      <View style={styles.inner}>
-        <View>
-          <Text style={styles.label}>{`ยืนยันตัวตน ด้วยรูปถ่ายคู่ผู้สมัคร 
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}>
+      <SafeAreaView style={stylesCentral.container}>
+        <CustomHeader
+          title="ยืนยันเอกสาร"
+          showBackBtn
+          onPressBack={() => navigation.goBack()}
+        />
+        <View style={styles.inner}>
+          <View>
+            <Text style={styles.label}>{`ยืนยันตัวตน ด้วยรูปถ่ายคู่ผู้สมัคร 
   พร้อมบัตรประชาชน`}</Text>
-          <View style={{ paddingTop: 20 }}>
-            <TouchableOpacity
-              onPress={() => setOpenModalCard(true)}
-              style={{
-                marginVertical: 20,
-              }}>
-              {image == null ? (
-                <View style={styles.addImage}>
-                  <View style={styles.camera}>
-                    <Image
-                      source={icons.camera}
-                      style={{
-                        width: 19,
-                        height: 16,
-                      }}
-                    />
+            <View style={{ paddingTop: 20 }}>
+              <TouchableOpacity
+                onPress={() => setOpenModalCard(true)}
+                style={{
+                  marginVertical: 20,
+                }}>
+                {image == null ? (
+                  <View style={styles.addImage}>
+                    <View style={styles.camera}>
+                      <Image
+                        source={icons.camera}
+                        style={{
+                          width: 19,
+                          height: 16,
+                        }}
+                      />
+                    </View>
                   </View>
-                </View>
-              ) : (
-                <View
-                  style={{
-                    width: width * 0.9,
-                    height: normalize(220),
-                    borderRadius: 20,
-                    position: 'relative',
-                  }}>
+                ) : (
                   <View
                     style={{
-                      position: 'absolute',
-                      top: 10,
-                      left: 10,
-                      backgroundColor: colors.white,
-                      borderRadius: 12,
-                      padding: 10,
-                      height: 38,
-                      zIndex: 3,
-                    }}>
-                    <Text style={styles.h3}>เปลี่ยนรูป</Text>
-                  </View>
-                  <View
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
                       width: width * 0.9,
                       height: normalize(220),
                       borderRadius: 20,
-                      zIndex: 0,
+                      position: 'relative',
                     }}>
-                    <Image
-                      source={{ uri: image.assets[0].uri }}
+                    <View
                       style={{
+                        position: 'absolute',
+                        top: 10,
+                        left: 10,
+                        backgroundColor: colors.white,
+                        borderRadius: 12,
+                        padding: 10,
+                        height: 38,
+                        zIndex: 3,
+                      }}>
+                      <Text style={styles.h3}>เปลี่ยนรูป</Text>
+                    </View>
+                    <View
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
                         width: width * 0.9,
                         height: normalize(220),
                         borderRadius: 20,
-                      }}
-                    />
+                        zIndex: 0,
+                      }}>
+                      <Image
+                        source={{ uri: image.assets[0].uri }}
+                        style={{
+                          width: width * 0.9,
+                          height: normalize(220),
+                          borderRadius: 20,
+                        }}
+                      />
+                    </View>
                   </View>
-                </View>
-              )}
-            </TouchableOpacity>
-            <Text
-              style={{
-                fontFamily: font.AnuphanMedium,
-                fontSize: normalize(20),
-              }}>
-              บัตรประชาชน
-            </Text>
-            <TextInput
-              maxLength={13}
-              style={styles.input}
-              placeholder="ระบุเลขบัตรประชาชน"
-              placeholderTextColor={colors.disable}
-              onChangeText={value => {
-                setIdCard(value);
-              }}
-            />
-            <Text
-              style={{
-                color: colors.fontBlack,
-                fontFamily: font.SarabunLight,
-                fontSize: normalize(16),
-              }}>
-              ใส่เลข 13 หลักบนบัตรโดยไม่ต้องเว้นวรรค
-            </Text>
-          </View>
-        </View>
-        <MainButton
-          label="ยืนยันการสมัคร"
-          color={
-            idcard.length === 13 && image != null
-              ? colors.greenLight
-              : colors.disable
-          }
-          disable={idcard.length === 13 && image != null ? false : true}
-          onPress={() => {
-            if (idcard.length === 13 && image != null) {
-              if (Profile) {
-                setLoading(true);
-                ProfileDatasource.addIdCard(idcard)
-                  .then(res => {
-                    ProfileDatasource.uploadFarmerIDCard(image)
-                      .then(res => {
-                        setLoading(false);
-                        navigation.navigate('MainScreen');
-                      })
-                      .catch(err => console.log(err));
-                  })
-                  .catch(err => console.log(err));
-              } else {
-                setOpenModal(true);
-              }
-            }
-          }}
-        />
-        <Modal transparent={true} visible={openModal}>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                padding: normalize(20),
-                backgroundColor: colors.white,
-                width: width * 0.9,
-                display: 'flex',
-                justifyContent: 'center',
-                borderRadius: normalize(8),
-              }}>
-              <Text style={[styles.h2, { textAlign: 'center', bottom: '3%' }]}>
-                {`คุณต้องการยืนยันการสมัคร
-  ใช่ไหม?`}
-              </Text>
+                )}
+              </TouchableOpacity>
               <Text
-                style={[
-                  styles.label,
-                  { textAlign: 'center', marginVertical: 5 },
-                ]}>
-                กรุณาตรวจสอบรายละเอียดการสมัคร สมาชิก ของคุณให้ครบถ้วน
-                หากมีการข้าม บางขั้นตอนในการสมัครอาจทำให้ใช้งาน
-                ระบบได้เพียงบางส่วน
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  fontSize: normalize(20),
+                }}>
+                บัตรประชาชน
               </Text>
-              <MainButton
-                label="ยืนยัน"
-                color={colors.greenLight}
-                onPress={() => {
-                  setOpenModal(false);
+              <TextInput
+                maxLength={13}
+                style={styles.input}
+                placeholder="ระบุเลขบัตรประชาชน"
+                placeholderTextColor={colors.disable}
+                onChangeText={value => {
+                  setIdCard(value);
+                }}
+              />
+              <Text
+                style={{
+                  color: colors.fontBlack,
+                  fontFamily: font.SarabunLight,
+                  fontSize: normalize(16),
+                }}>
+                ใส่เลข 13 หลักบนบัตรโดยไม่ต้องเว้นวรรค
+              </Text>
+            </View>
+          </View>
+          <MainButton
+            label="ยืนยันการสมัคร"
+            color={
+              idcard.length === 13 && image != null
+                ? colors.greenLight
+                : colors.disable
+            }
+            disable={idcard.length === 13 && image != null ? false : true}
+            onPress={() => {
+              if (idcard.length === 13 && image != null) {
+                if (Profile) {
                   setLoading(true);
-                  Register.register4(telNo, idcard)
+                  ProfileDatasource.addIdCard(idcard)
                     .then(res => {
-                      Register.uploadFarmerIDCard(image)
+                      ProfileDatasource.uploadFarmerIDCard(image)
                         .then(res => {
                           setLoading(false);
-                          navigation.navigate('SuccessRegister');
+                          navigation.navigate('MainScreen');
                         })
                         .catch(err => console.log(err));
                     })
                     .catch(err => console.log(err));
-                }}
-              />
-              <MainButton
-                label="ยกเลิก"
-                fontColor={colors.fontBlack}
-                color={colors.white}
-                onPress={() => {
-                  setOpenModal(false);
-                }}
-              />
-            </View>
-          </View>
-        </Modal>
-        <Modal transparent={true} visible={openModalCard}>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+                } else {
+                  setOpenModal(true);
+                }
+              }
+            }}
+          />
+          <Modal transparent={true} visible={openModal}>
             <View
               style={{
-                padding: normalize(20),
-                backgroundColor: colors.white,
-                width: width * 0.9,
-                display: 'flex',
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.5)',
                 justifyContent: 'center',
-                borderRadius: normalize(3),
+                alignItems: 'center',
               }}>
-              <MainButton
-                fontFamily={font.SarabunLight}
-                label="ถ่ายภาพ"
-                fontColor={colors.fontBlack}
-                color={colors.white}
-                onPress={onCamera}
-                width={100}
-              />
-              <MainButton
-                fontFamily={font.SarabunLight}
-                label="เลือกรูปถ่าย"
-                fontColor={colors.fontBlack}
-                color={colors.white}
-                onPress={onAddImage}
-                width={120}
-              />
+              <View
+                style={{
+                  padding: normalize(20),
+                  backgroundColor: colors.white,
+                  width: width * 0.9,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  borderRadius: normalize(8),
+                }}>
+                <Text
+                  style={[styles.h2, { textAlign: 'center', bottom: '3%' }]}>
+                  {`คุณต้องการยืนยันการสมัคร
+  ใช่ไหม?`}
+                </Text>
+                <Text
+                  style={[
+                    styles.label,
+                    { textAlign: 'center', marginVertical: 5 },
+                  ]}>
+                  กรุณาตรวจสอบรายละเอียดการสมัคร สมาชิก ของคุณให้ครบถ้วน
+                  หากมีการข้าม บางขั้นตอนในการสมัครอาจทำให้ใช้งาน
+                  ระบบได้เพียงบางส่วน
+                </Text>
+                <MainButton
+                  label="ยืนยัน"
+                  color={colors.greenLight}
+                  onPress={() => {
+                    setOpenModal(false);
+                    setLoading(true);
+                    Register.register4(telNo, idcard)
+                      .then(res => {
+                        Register.uploadFarmerIDCard(image)
+                          .then(res => {
+                            setLoading(false);
+                            navigation.navigate('SuccessRegister');
+                          })
+                          .catch(err => console.log(err));
+                      })
+                      .catch(err => console.log(err));
+                  }}
+                />
+                <MainButton
+                  label="ยกเลิก"
+                  fontColor={colors.fontBlack}
+                  color={colors.white}
+                  onPress={() => {
+                    setOpenModal(false);
+                  }}
+                />
+              </View>
             </View>
-          </View>
-        </Modal>
-      </View>
-    </SafeAreaView>
+          </Modal>
+          <Modal transparent={true} visible={openModalCard}>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  padding: normalize(20),
+                  backgroundColor: colors.white,
+                  width: width * 0.9,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  borderRadius: normalize(3),
+                }}>
+                <MainButton
+                  fontFamily={font.SarabunLight}
+                  label="ถ่ายภาพ"
+                  fontColor={colors.fontBlack}
+                  color={colors.white}
+                  onPress={onCamera}
+                  width={100}
+                />
+                <MainButton
+                  fontFamily={font.SarabunLight}
+                  label="เลือกรูปถ่าย"
+                  fontColor={colors.fontBlack}
+                  color={colors.white}
+                  onPress={onAddImage}
+                  width={120}
+                />
+              </View>
+            </View>
+          </Modal>
+        </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
