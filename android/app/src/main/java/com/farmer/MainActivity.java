@@ -1,4 +1,4 @@
-package com.farmer;
+package com.iconkaset.farmer;
 import android.os.Bundle;
 
 import com.facebook.react.ReactActivity;

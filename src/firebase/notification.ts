@@ -6,12 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const credentials = {
   databaseURL: '',
   clientId:
-    '281602709828-2mm0cut3h2lu70ed7vnslj0haf9bemau.apps.googleusercontent.com',
-  appId: '1:281602709828:ios:b4e1d3550d4c57c1341f11',
-  apiKey: 'AIzaSyDxr86nrQS_1AlXYIo_iax0JHOEf-yORa0',
-  storageBucket: 'farmer-app1.appspot.com',
-  messagingSenderId: '281602709828',
-  projectId: 'farmer-app1',
+    '480825932340-nt6d5nh1teo5uv5cuct4u0g58p94g02a.apps.googleusercontent.com',
+  appId: '1:480825932340:ios:a65128f57e3062976f2861',
+  apiKey: 'AIzaSyDPCQdm-luxZ7Z9jKIUGJK6xkTsxPxfJs8',
+  storageBucket: 'farmer-app-eb408.appspot.com',
+  messagingSenderId: '480825932340',
+  projectId: 'farmer-app-eb408',
 };
 
 export const firebaseInitialize = async () => {
@@ -34,6 +34,7 @@ export async function requestUserPermission() {
 export const getFCMToken = async () => {
   try {
     const token = await messaging().getToken();
+    console.log(`token = ${token}`)
     await AsyncStorage.setItem('fcmtoken', token);
   } catch (err) {
     console.log(err);

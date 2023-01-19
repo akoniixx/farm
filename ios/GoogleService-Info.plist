@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>281602709828-2mm0cut3h2lu70ed7vnslj0haf9bemau.apps.googleusercontent.com</string>
+	<string>480825932340-nt6d5nh1teo5uv5cuct4u0g58p94g02a.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.281602709828-2mm0cut3h2lu70ed7vnslj0haf9bemau</string>
+	<string>com.googleusercontent.apps.480825932340-nt6d5nh1teo5uv5cuct4u0g58p94g02a</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDznStatGAHm47Z9ewbKgATGV-P_mVzPyk</string>
+	<string>AIzaSyDPCQdm-luxZ7Z9jKIUGJK6xkTsxPxfJs8</string>
 	<key>GCM_SENDER_ID</key>
-	<string>281602709828</string>
+	<string>480825932340</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>farmer-app.appspot.com</string>
+	<string>com.iconkaset.dev.farmer</string>
 	<key>PROJECT_ID</key>
-	<string>farmer-app1</string>
+	<string>farmer-app-eb408</string>
 	<key>STORAGE_BUCKET</key>
-	<string>farmer-app1.appspot.com</string>
+	<string>farmer-app-eb408.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:281602709828:ios:b4e1d3550d4c57c1341f11</string>
+	<string>1:480825932340:ios:a65128f57e3062976f2861</string>
 </dict>
 </plist>
