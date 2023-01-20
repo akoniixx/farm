@@ -17,12 +17,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
-import DatePickerCustom from '../../components/Calendar/Calendar';
-import CustomHeader from '../../components/CustomHeader';
 import PlotSelect from '../../components/Plots/PlotSelect';
-import PlotInProfile from '../../components/Plots/PlotsInProfile';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
-import TimePicker from '../../components/TimePicker/TimePicker';
 import { PlotDatasource } from '../../datasource/PlotDatasource';
 import { normalize } from '../../functions/Normalize';
 import { initProfileState, profileReducer } from '../../hook/profilefield';

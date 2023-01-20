@@ -48,4 +48,9 @@ export default {
   calendarOrange: require('./CalendarOrange.png'),
   document: require('./Document.png'),
   map: require('./Map.png'),
+  arrowRightBlue: require('./arrowRightBlue.png'),
+  callCenter: require('./callCenter.png'),
+  cash: require('./cash.png'),
+  discountOrange: require('./discountOrange.png'),
+  arrowUpBold: require('./arrowUpBold.png'),
 };

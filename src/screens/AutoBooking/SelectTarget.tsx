@@ -64,11 +64,14 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
         style={{
           flex: 1,
           backgroundColor: 'white',
-          paddingHorizontal: normalize(16),
         }}>
         <SafeAreaView
-          edges={['bottom', 'left', 'right']}
-          style={{ flex: 1, justifyContent: 'space-between' }}>
+          edges={['left', 'right']}
+          style={{
+            flex: 1,
+            justifyContent: 'space-between',
+            paddingHorizontal: normalize(16),
+          }}>
           <View>
             <Text style={[styles.label, { marginTop: normalize(20) }]}>
               เป้าหมาย
@@ -254,12 +257,18 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
               </View>
             </TouchableOpacity>
           </View>
-          <MainButton
-            label="ยืนยัน"
-            color={colors.greenLight}
-            onPress={() => navigation.navigate('DeatilTaskScreen')}
-            style={{ margin: normalize(10) }}
-          />
+          <View
+            style={{
+              padding: 16,
+              marginBottom: 8,
+            }}>
+            <MainButton
+              label="ยืนยัน"
+              color={colors.greenLight}
+              onPress={() => navigation.navigate('DetailTaskScreen')}
+              style={{}}
+            />
+          </View>
         </SafeAreaView>
       </View>
       <Spinner

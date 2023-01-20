@@ -31,37 +31,6 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
   const [days, setDays] = useState<any[]>([]);
   const [months, setMonths] = useState<any[]>([]);
   const [years, setYears] = useState<any[]>([]);
-
-  useEffect(() => {
-    const getInitDate = () => {
-      const end = endYear || new Date().getFullYear() + 543;
-      const start = !startYear || startYear > end ? end - 70 : startYear;
-
-      const _days = [...Array(moment(value).daysInMonth())].map(
-        (_, index) => index + 1,
-      );
-      const _months = [...Array(12)].map((_, i) => i + 1);
-      const _years = [...Array(end - start + 1)].map(
-        (_, index) => start + index,
-      );
-
-      setDays(_days);
-      setMonths(_months);
-      setYears(_years);
-    };
-    getInitDate();
-  }, [startYear, endYear, value]);
-
-  const pickerHeight: number = Math.round(
-    height || Dimensions.get('window').height / 3.5,
-  );
-  const pickerWidth: number | string = width || '100%';
-
-  const unexpectedDate: Date = new Date(years[0], 0, 0);
-  const date = new Date(value || unexpectedDate);
-
-  // const date = new Date()
-
   const changeHandle = (type: any, digit: any): void => {
     const newDate = moment(value);
     switch (type) {
@@ -77,6 +46,58 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
     }
     onHandleChange(newDate.toISOString());
   };
+
+  useEffect(() => {
+    const getInitDate = () => {
+      const end = endYear || new Date().getFullYear() + 543;
+      const start = !startYear || startYear > end ? end - 70 : startYear;
+
+      const _days = () => {
+        const genDate = [...Array(moment(value).daysInMonth())].map(
+          (_, index) => index + 1,
+        );
+        const isCurrentMonth = moment(value).isSame(new Date(), 'month');
+        if (isCurrentMonth) {
+          const isDayBefore = moment(value).isBefore(new Date(), 'day');
+          const newDateList = genDate.filter(
+            day => day >= new Date().getDate(),
+          );
+          // const currentIndexDate = days.findIndex(
+          //   (el: any) => el === moment(value).get('date'),
+          // );
+          // const idxCondition =
+          //   currentIndexDate >= newDateList.length - 1 ? 0 : currentIndexDate;
+
+          if (isDayBefore) {
+            changeHandle('day', newDateList[0]);
+          }
+          return newDateList;
+        }
+
+        return genDate;
+      };
+      const _months = [...Array(12)].map((_, i) => i + 1);
+      const _years = [...Array(end - start + 1)].map(
+        (_, index) => start + index,
+      );
+
+      setDays(_days);
+      setMonths(_months);
+      setYears(_years);
+    };
+    getInitDate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startYear, endYear, value]);
+
+  const pickerHeight: number = Math.round(
+    height || Dimensions.get('window').height / 3.5,
+  );
+  const pickerWidth: number | string = width || '100%';
+
+  const unexpectedDate: Date = new Date(years[0], 0, 0);
+  const date = new Date(value || unexpectedDate);
+
+  // const date = new Date()
 
   const getOrder = () => {
     return (format || 'dd-mm-yyyy').split('-').map((type, index: any) => {

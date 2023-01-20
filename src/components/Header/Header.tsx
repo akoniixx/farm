@@ -10,6 +10,7 @@ import React from 'react';
 
 import { useNavigation } from '@react-navigation/native';
 import icons from '../../assets/icons/icons';
+import { font } from '../../assets';
 
 interface Props {
   title?: string;
@@ -44,7 +45,7 @@ export default function Header({
       <Text
         style={{
           fontSize: 22,
-          fontFamily: 'AnuphanBold',
+          fontFamily: font.AnuphanBold,
           color: titleColor,
         }}>
         {title}
