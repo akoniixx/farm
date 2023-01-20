@@ -5,26 +5,34 @@ import AppNavigator from './src/navigations/AppNavigator';
 import { navigationRef } from './src/navigations/RootNavigation';
 import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-toast-message';
-import {SheetProvider} from 'react-native-actions-sheet';
-import {toastConfig} from './src/config/toast-config';
-import {BackHandler, Platform} from 'react-native';
-import { firebaseInitialize, requestUserPermission } from './src/firebase/notification';
+import { SheetProvider } from 'react-native-actions-sheet';
+import { toastConfig } from './src/config/toast-config';
+import { BackHandler, Platform } from 'react-native';
+import { Provider as PaperProvider } from 'react-native-paper';
+import 'moment/locale/th';
+import {
+  firebaseInitialize,
+  requestUserPermission,
+} from './src/firebase/notification';
 
+import './src/components/SheetList';
 const App = () => {
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
-    if(Platform.OS === 'ios'){
-      firebaseInitialize()
+    if (Platform.OS === 'ios') {
+      firebaseInitialize();
     }
-    requestUserPermission()
+    requestUserPermission();
   }, []);
   return (
     <>
       <NavigationContainer ref={navigationRef}>
-        <SheetProvider>
-          <AppNavigator />
-        </SheetProvider>
+        <PaperProvider>
+          <SheetProvider>
+            <AppNavigator />
+          </SheetProvider>
+        </PaperProvider>
         <Toast config={toastConfig} />
       </NavigationContainer>
     </>
@@ -32,4 +40,3 @@ const App = () => {
 };
 
 export default App;
-178
