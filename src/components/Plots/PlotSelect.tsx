@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { useEffect } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Dimensions,
+} from 'react-native';
 import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
+import InputWithSuffix from '../InputText/InputWithSuffix';
+import Radio from '../Radio/Radio';
 
 interface Prop {
   id: string;
@@ -15,7 +24,6 @@ interface Prop {
 }
 
 const PlotSelect: React.FC<Prop> = ({
-  id,
   plotName,
   raiAmount,
   plantName,
@@ -23,8 +31,32 @@ const PlotSelect: React.FC<Prop> = ({
   selected,
   onPress,
 }) => {
+  const radioList = [
+    {
+      title: 'ทั้งหมด',
+      value: 'all',
+      key: 'all',
+    },
+    {
+      title: 'กำหนดเอง',
+      value: 'custom',
+      key: 'custom',
+    },
+  ];
+  const [customValue, setCustomValue] = React.useState<string>('');
+  const [checkValue, setCheckValue] = React.useState<string>('all');
+  useEffect(() => {
+    if (raiAmount) {
+      setCustomValue(raiAmount.toString());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={{
+        width: '100%',
+      }}>
       <View
         style={[
           styles.card,
@@ -98,6 +130,64 @@ const PlotSelect: React.FC<Prop> = ({
             {locationName}
           </Text>
         </View>
+        {selected && (
+          <>
+            <View
+              style={{ height: 1, backgroundColor: '#C7F2D9', marginTop: 8 }}
+            />
+            <View
+              style={{
+                marginTop: 16,
+                backgroundColor: '#FFFFEB',
+                minHeight: 160,
+                borderRadius: 10,
+                padding: 8,
+              }}>
+              <Text
+                style={{
+                  fontFamily: fonts.AnuphanMedium,
+                  fontSize: 20,
+                  color: colors.primary,
+                }}>
+                จำนวนไร่ที่ต้องการฉีด
+              </Text>
+              <Radio
+                radioLists={radioList}
+                horizontal
+                value={checkValue}
+                style={{ marginVertical: 8 }}
+                onChange={(value: string) => {
+                  setCheckValue(value);
+                }}
+              />
+              <InputWithSuffix
+                value={customValue}
+                onChangeText={text => {
+                  const newNumber = text.replace(/[^0-9]/g, '');
+                  if (+text !== +customValue) {
+                    setCheckValue('custom');
+                  }
+
+                  if (+text === +raiAmount) {
+                    setCheckValue('all');
+                  }
+                  setCustomValue(newNumber);
+                }}
+                keyboardType="numeric"
+                suffixComponent={
+                  <Text
+                    style={{
+                      fontFamily: fonts.SarabunMedium,
+                      fontSize: 20,
+                      color: '#8D96A0',
+                    }}>
+                    ไร่
+                  </Text>
+                }
+              />
+            </View>
+          </>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -112,8 +202,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   card: {
-    width: normalize(340),
-    height: normalize(130),
+    width: Dimensions.get('window').width - normalize(20),
+    minHeight: normalize(130),
     backgroundColor: 'white',
     borderWidth: 1,
     borderColor: '#C0C5CA',

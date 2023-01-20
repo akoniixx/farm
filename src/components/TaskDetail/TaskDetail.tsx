@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors, font, icons } from '../../assets';
 import { normalize } from '../../functions/Normalize';
 
@@ -14,6 +14,7 @@ interface PlotDetailProp {
   plotAmout: number;
   plant: string;
   location: string;
+  onPressMap: () => void;
 }
 
 interface TargetSprayProp {
@@ -28,51 +29,63 @@ export const DateTimeDetail: React.FC<DateTimeProp> = ({
   note,
 }) => {
   return (
-    <View>
+    <>
       <View
         style={{
-          padding: normalize(10),
-          backgroundColor: '#FFF2E3',
-          borderRadius: 10,
-          marginTop: normalize(10),
+          paddingHorizontal: normalize(16),
         }}>
-        <View style={{ flexDirection: 'row' }}>
-          <View>
-            <Image
-              source={icons.calendarOrange}
-              style={{
-                width: normalize(18),
-                height: normalize(20),
-                marginRight: normalize(10),
-              }}
-            />
-          </View>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
+        <View
+          style={{
+            padding: normalize(10),
+            backgroundColor: '#FFF2E3',
+            borderRadius: 10,
+            marginTop: normalize(10),
+          }}>
+          <View style={{ flexDirection: 'row' }}>
             <View>
-              <Text style={styles.h2}>วันที่</Text>
-              <Text style={styles.h2}>เวลา</Text>
+              <Image
+                source={icons.calendarOrange}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
             </View>
-            <View>
-              <Text style={styles.h1}>{date}</Text>
-              <Text style={styles.h1}>{time} น</Text>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Text style={styles.h2}>วันที่</Text>
+                <Text style={styles.h2}>เวลา</Text>
+              </View>
+              <View>
+                <Text style={styles.h1}>{date}</Text>
+                <Text style={styles.h1}>{time} น</Text>
+              </View>
             </View>
           </View>
         </View>
       </View>
       <View
         style={{
-          borderBottomColor: colors.greyWhite,
-          borderTopWidth: StyleSheet.hairlineWidth,
+          borderBottomColor: colors.greyDivider,
+          borderTopWidth: 0.5,
+          opacity: 0.3,
           marginTop: 10,
         }}
       />
       <View
-        style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
+        style={{
+          flexDirection: 'row',
+          marginTop: 10,
+          alignItems: 'center',
+          height: 40,
+          paddingHorizontal: 16,
+        }}>
         <Image
           source={icons.document}
           style={{
@@ -83,7 +96,7 @@ export const DateTimeDetail: React.FC<DateTimeProp> = ({
         />
         <Text>{note}</Text>
       </View>
-    </View>
+    </>
   );
 };
 
@@ -92,6 +105,7 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
   plotAmout,
   plant,
   location,
+  onPressMap,
 }) => {
   const data = [
     { icon: icons.plot, text: 'จำนวนไร่' },
@@ -139,26 +153,27 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
           </View>
         </View>
         <View style={{ alignItems: 'flex-end' }}>
-          <Image
-            source={icons.map}
-            style={{
-              width: normalize(18),
-              height: 16,
-              marginBottom: normalize(10),
-            }}
-          />
-          <Text style={[styles.h1, { marginBottom: normalize(10) }]}>
+          <TouchableOpacity onPress={onPressMap}>
+            <Image
+              source={icons.map}
+              style={{
+                width: normalize(18),
+                height: 16,
+                marginBottom: normalize(10),
+              }}
+            />
+          </TouchableOpacity>
+          <Text
+            style={[styles.h1, { marginBottom: normalize(4), marginTop: 6 }]}>
             {plotAmout + ' ' + 'ไร่'}
           </Text>
-          <Text style={[styles.h1, { marginBottom: normalize(10) }]}>
+          <Text
+            style={[styles.h1, { marginBottom: normalize(8), marginTop: 4 }]}>
             {plant}
           </Text>
           <Text
             numberOfLines={1}
-            style={[
-              styles.h1,
-              { marginBottom: normalize(10), maxWidth: normalize(150) },
-            ]}>
+            style={[styles.h1, { width: '80%', lineHeight: 30, marginTop: 2 }]}>
             {location}
           </Text>
         </View>

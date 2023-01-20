@@ -31,11 +31,7 @@ import { normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
 import Animated, { color } from 'react-native-reanimated';
 import { plant, plantList } from '../../definitions/plants';
-import MapView, {
-  Marker,
-  PROVIDER_GOOGLE,
-  AnimatedRegion,
-} from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import ActionSheet from 'react-native-actions-sheet';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { registerReducer } from '../../hook/registerfield';
@@ -241,13 +237,12 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   //   console.log(array);
   //   const index = array.indexOf(value);
   //   console.log('1',index)
-  //   if (index > -1) { 
+  //   if (index > -1) {
   //     array.splice(index, 1);
   //   }
-  //   console.log(array); 
+  //   console.log(array);
   //   deTailPlot.current.hide();
   // };
-
 
   const selectPlants = (value: any) => {
     setPlantName(value);
@@ -354,8 +349,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
-                      console.log(  plotData[index],
-                        deTailPlot.current.show())
+                      console.log(plotData[index], deTailPlot.current.show());
                     }}>
                     <PlotsItem
                       index={index}
@@ -892,16 +886,20 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                       top: normalize(20),
                     }}
                   />
-
-                  <MainButton
-                    style={styles.button}
-                    label="ลบแปลงเกษตรนี้"
-                    color={colors.white}
-                    borderColor={colors.white}
-                    fontColor={colors.fontBlack}
-                    fontFamily={font.AnuphanBold}
-                    onPress={() => setOpenModal(true)}
-                  />
+                  <View
+                    style={{
+                      padding: 16,
+                    }}>
+                    <MainButton
+                      style={styles.button}
+                      label="ลบแปลงเกษตรนี้"
+                      color={colors.white}
+                      borderColor={colors.white}
+                      fontColor={colors.fontBlack}
+                      fontFamily={font.AnuphanBold}
+                      onPress={() => setOpenModal(true)}
+                    />
+                  </View>
                 </View>
               </ScrollView>
               <View

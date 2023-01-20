@@ -38,7 +38,6 @@ const AppAuthNavigator: React.FC = () => {
       <Stack.Screen name="DronerBooking" component={DronerBooking} />
       <Stack.Screen name="MyPlotScreen" component={MyPlotScreen} />
       <Stack.Screen name="EditFarmerPlot" component={EditFarmerPlot} />
-
     </Stack.Navigator>
   );
 };
