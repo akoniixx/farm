@@ -71,6 +71,7 @@ export class Authentication {
   }
   static async logout() {
     await AsyncStorage.removeItem('token');
+    await AsyncStorage.removeItem('token_register');
     await AsyncStorage.removeItem('farmer_id');
   }
   static async onDeleteAccount(id: string): Promise<any> {
@@ -369,7 +370,6 @@ export class Register {
     return uploadFileClient
       .post(BASE_URL + '/file/upload', data)
       .then(response => {
-        console.log(response);
         return response.data;
       })
       .catch(error => {

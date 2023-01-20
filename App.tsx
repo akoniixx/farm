@@ -9,6 +9,7 @@ import {SheetProvider} from 'react-native-actions-sheet';
 import {toastConfig} from './src/config/toast-config';
 import {BackHandler, Platform} from 'react-native';
 import { firebaseInitialize, requestUserPermission } from './src/firebase/notification';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
   useEffect(() => {
@@ -18,7 +19,12 @@ const App = () => {
       firebaseInitialize()
     }
     requestUserPermission()
+    getToken()
   }, []);
+
+  const getToken = async()=>{
+    console.log(`farmerid = ${await AsyncStorage.getItem("farmer_id")}`)
+  }
   return (
     <>
       <NavigationContainer ref={navigationRef}>
