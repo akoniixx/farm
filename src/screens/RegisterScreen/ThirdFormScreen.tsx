@@ -78,6 +78,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   const telNo = route.params;
   const [openModal, setOpenModal] = useState(false);
   const [count, setCount] = useState(1);
+  const [plotIndex, setPlotIndex] = useState(1);
   const [value, setValue] = useState(null);
   const [plantName, setPlantName] = useState<any>();
   const [raiAmount, setraiAmount] = useState<any>();
@@ -195,12 +196,13 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   };
   const incrementCount = () => {
     setCount(count + 1);
+    setPlotIndex(plotIndex + 1);
   };
   const addPlots = () => {
     const plots = [...plotData];
     const plotsUI = [...plotDataUI];
     const newPlot = {
-      id: count,
+      plotIndex: plotIndex,
       raiAmount: raiAmount,
       plotName: !plotName
         ? 'แปลงที่' + ' ' + count + ' ' + plantName
@@ -233,12 +235,20 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     setlandmark(null);
     actionSheet.current.hide();
   };
-  console.log(plotData);
 
-  const deletePlots = () => {
-    // Register.deleteFarmerPlot('')
-    deTailPlot.current.hide();
-  };
+  //  const deletePlots = (value: any) => {
+  //   const array = plotData;
+  //   console.log(array);
+  //   const index = array.indexOf(value);
+  //   console.log('1',index)
+  //   if (index > -1) { 
+  //     array.splice(index, 1);
+  //   }
+  //   console.log(array); 
+  //   deTailPlot.current.hide();
+  // };
+
+
   const selectPlants = (value: any) => {
     setPlantName(value);
     plantSheet.current.hide();
@@ -344,8 +354,8 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
-                      plotData[index]
-                      navigation.navigate('EditFarmerPlot')
+                      console.log(  plotData[index],
+                        deTailPlot.current.show())
                     }}>
                     <PlotsItem
                       index={index}
@@ -953,7 +963,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     color={colors.error}
                     fontColor={colors.white}
                     onPress={() => {
-                      deletePlots();
+                      //deletePlots(value);
                     }}
                   />
                   <MainButton
