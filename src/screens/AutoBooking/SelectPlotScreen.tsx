@@ -14,16 +14,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
 import PlotSelect from '../../components/Plots/PlotSelect';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
+import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { PlotDatasource } from '../../datasource/PlotDatasource';
 import { normalize } from '../../functions/Normalize';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 
 const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
+  const {
+    state: { taskData },
+    autoBookingContext: { setTaskData, getLocationPrice, searchDroner },
+  } = useAutoBookingContext();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [plotList, setPlotList] = useState<any>();
   const [loading, setLoading] = useState(false);
@@ -31,6 +37,15 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
 
   const handleCardPress = (index: number) => {
     setSelectedCard(index);
+  };
+  const onSubmit = () => {
+    if (selectedCard === null) return;
+
+    setTaskData(prev => ({
+      ...prev,
+      farmerPlotId: plotList.data[selectedCard].id,
+    }));
+    navigation.navigate('SelectTarget');
   };
 
   const getPlotlist = async () => {
@@ -46,7 +61,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
   useEffect(() => {
     getPlotlist();
   }, []);
-
+  // console.log(JSON.stringify(plotList?.data, null, 2));
   return (
     <>
       <KeyboardAvoidingView
@@ -106,7 +121,35 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                     plantName={item.plantName}
                     locationName={item.locationName}
                     raiAmount={item.raiAmount}
-                    onPress={() => handleCardPress(index)}
+                    onPress={async () => {
+                      handleCardPress(index);
+                      setTaskData(prev => ({
+                        ...prev,
+                        cropName: item.plantName,
+                        plantName: item.plantName,
+                        plotName: item.plotName,
+                        farmerId: item.farmerId,
+                        plotArea: item.plotArea,
+
+                        province: item.province,
+                        locationName: item.landmark,
+                        farmAreaAmount: item.raiAmount,
+                        purposeSpray: {
+                          id: '',
+                          name: '',
+                        },
+                        targetSpray: [],
+                        preparationBy: '',
+                      }));
+                      await getLocationPrice({
+                        provinceId: item.plotArea.provinceId,
+                        cropName: item.plantName,
+                      });
+                      await searchDroner({
+                        farmerId: item.farmerId,
+                        farmerPlotId: item.id,
+                      });
+                    }}
                     selected={index === selectedCard}
                   />
                 )}
@@ -118,13 +161,19 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                 }}>
                 <MainButton
                   label="ถัดไป"
+                  disable={selectedCard === null}
                   color={colors.greenLight}
-                  onPress={() => navigation.navigate('SelectTarget')}
+                  onPress={() => onSubmit()}
                 />
               </View>
             </ScrollView>
           </SafeAreaView>
         )}
+        <Spinner
+          visible={loading}
+          textContent={'Loading...'}
+          textStyle={{ color: '#FFF' }}
+        />
       </KeyboardAvoidingView>
     </>
   );

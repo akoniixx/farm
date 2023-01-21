@@ -53,4 +53,6 @@ export default {
   cash: require('./cash.png'),
   discountOrange: require('./discountOrange.png'),
   arrowUpBold: require('./arrowUpBold.png'),
+  checkboxWhite: require('./checkboxWhite.png'),
+  closeIcon: require('./closeIcon.png'),
 };

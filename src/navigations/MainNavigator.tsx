@@ -39,6 +39,7 @@ export type MainStackParamList = {
       latitude: string;
       longitude: string;
     };
+    plotName: string;
   };
 };
 const Stack = createStackNavigator<MainStackParamList>();
@@ -64,7 +65,10 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
       <Stack.Screen name="DetailTaskScreen" component={DetailTaskScreen} />
 
-      <Stack.Group>
+      <Stack.Group
+        screenOptions={{
+          gestureEnabled: false,
+        }}>
         <Stack.Screen name="SlipWaitingScreen" component={SlipWaitingScreen} />
         <Stack.Screen name="SlipSuccessScreen" component={SlipSuccessScreen} />
       </Stack.Group>

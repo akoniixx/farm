@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
+import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { normalize } from '../../functions/Normalize';
 import InputWithSuffix from '../InputText/InputWithSuffix';
 import Radio from '../Radio/Radio';
@@ -31,6 +32,10 @@ const PlotSelect: React.FC<Prop> = ({
   selected,
   onPress,
 }) => {
+  const {
+    state: { taskData },
+    autoBookingContext: { setTaskData },
+  } = useAutoBookingContext();
   const radioList = [
     {
       title: 'ทั้งหมด',
@@ -43,11 +48,23 @@ const PlotSelect: React.FC<Prop> = ({
       key: 'custom',
     },
   ];
-  const [customValue, setCustomValue] = React.useState<string>('');
   const [checkValue, setCheckValue] = React.useState<string>('all');
   useEffect(() => {
-    if (raiAmount) {
-      setCustomValue(raiAmount.toString());
+    if (checkValue === 'all' && raiAmount) {
+      setTaskData(prev => ({
+        ...prev,
+        farmAreaAmount: raiAmount.toString(),
+      }));
+    }
+
+    if (
+      taskData.farmAreaAmount.toString() !== raiAmount.toString() &&
+      +taskData.farmAreaAmount > 0
+    ) {
+      setTaskData(prev => ({
+        ...prev,
+        farmAreaAmount: taskData.farmAreaAmount,
+      }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -161,17 +178,25 @@ const PlotSelect: React.FC<Prop> = ({
                 }}
               />
               <InputWithSuffix
-                value={customValue}
+                value={taskData.farmAreaAmount}
                 onChangeText={text => {
                   const newNumber = text.replace(/[^0-9]/g, '');
-                  if (+text !== +customValue) {
+                  if (+text !== +taskData.farmAreaAmount) {
                     setCheckValue('custom');
                   }
 
                   if (+text === +raiAmount) {
                     setCheckValue('all');
                   }
-                  setCustomValue(newNumber);
+
+                  if (+newNumber > +raiAmount) {
+                    return null;
+                  }
+
+                  setTaskData(prev => ({
+                    ...prev,
+                    farmAreaAmount: newNumber.toString(),
+                  }));
                 }}
                 keyboardType="numeric"
                 suffixComponent={

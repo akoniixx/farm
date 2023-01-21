@@ -21,4 +21,5 @@ export default {
   waitingDroner: require('./waitingDroner.png'),
   endSlip: require('./endSlip.png'),
   successSlip: require('./successSlip.png'),
+  drone: require('./drone.png'),
 };

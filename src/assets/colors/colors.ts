@@ -13,6 +13,7 @@ export default {
   darkOrange: '#E85737',
   redDark: '#AB091E',
   error: '#EF4E4E',
+  errorText: '#DE350B',
   disable: '#DCDFE3',
   transOrange: '#FFEAD1',
   transSubOrange: '#FFFBF6',

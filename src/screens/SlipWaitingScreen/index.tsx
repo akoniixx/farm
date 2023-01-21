@@ -14,12 +14,15 @@ import { MainStackParamList } from '../../navigations/MainNavigator';
 
 export default function SlipWaitingScreen({
   navigation,
+  route,
 }: StackScreenProps<MainStackParamList, 'SlipWaitingScreen'>) {
+  const { taskId } = route.params;
+  console.log('taskId', taskId);
   return (
     <Container>
       <Header
         componentLeft={
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
             <Image
               source={icons.arrowUp}
               style={{

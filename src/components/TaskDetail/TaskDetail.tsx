@@ -62,27 +62,26 @@ export const DateTimeDetail: React.FC<DateTimeProp> = ({
                 <Text style={styles.h2}>วันที่</Text>
                 <Text style={styles.h2}>เวลา</Text>
               </View>
-              <View>
+              <View
+                style={{
+                  alignItems: 'flex-end',
+                }}>
                 <Text style={styles.h1}>{date}</Text>
-                <Text style={styles.h1}>{time} น</Text>
+                <Text style={styles.h1}>{time}</Text>
               </View>
             </View>
           </View>
         </View>
       </View>
-      <View
-        style={{
-          borderBottomColor: colors.greyDivider,
-          borderTopWidth: 0.5,
-          opacity: 0.3,
-          marginTop: 10,
-        }}
-      />
+
       <View
         style={{
           flexDirection: 'row',
           marginTop: 10,
+          paddingTop: 10,
           alignItems: 'center',
+          borderTopColor: colors.greyDivider,
+          borderTopWidth: 1,
           height: 40,
           paddingHorizontal: 16,
         }}>
@@ -173,7 +172,10 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
           </Text>
           <Text
             numberOfLines={1}
-            style={[styles.h1, { width: '80%', lineHeight: 30, marginTop: 2 }]}>
+            style={[
+              styles.h1,
+              { width: 150, lineHeight: 30, marginTop: 2, textAlign: 'right' },
+            ]}>
             {location}
           </Text>
         </View>
@@ -215,7 +217,12 @@ export const TargetSpray: React.FC<TargetSprayProp> = ({
           <Text style={[styles.h1, { marginBottom: normalize(10) }]}>
             {periodSpray}
           </Text>
-          <Text style={[styles.h1, { marginBottom: normalize(10) }]}>
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.h1,
+              { marginBottom: normalize(10), width: 180, textAlign: 'right' },
+            ]}>
             {target}
           </Text>
           <Text style={[styles.h1, { marginBottom: normalize(10) }]}>
@@ -231,10 +238,12 @@ const styles = StyleSheet.create({
   h1: {
     fontFamily: font.SarabunMedium,
     fontSize: normalize(18),
+    lineHeight: normalize(30),
   },
   h2: {
     fontFamily: font.SarabunLight,
     fontSize: normalize(18),
+    lineHeight: normalize(30),
   },
   label: {
     fontFamily: font.SarabunMedium,

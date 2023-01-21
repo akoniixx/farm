@@ -17,6 +17,7 @@ export default function ViewMapScreen({
 }: StackScreenProps<MainStackParamList, 'ViewMapScreen'>) {
   const {
     location: { latitude, longitude },
+    plotName,
   } = route.params;
   const mapRef = React.useRef<MapView>(null);
 
@@ -30,7 +31,7 @@ export default function ViewMapScreen({
   };
   return (
     <Container>
-      <Header title="Map" />
+      <Header title={plotName} />
       <Content noPadding>
         <MapView.Animated
           ref={mapRef}

@@ -9,6 +9,7 @@ import fonts from '../../assets/fonts';
 import { MainButton } from '../../components/Button/MainButton';
 import InputWithSuffix from '../../components/InputText/InputWithSuffix';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
+import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { CropDatasource } from '../../datasource/CropDatasource';
 import { PURPOSE_SPRAY_CHECKBOX } from '../../definitions/timeSpray';
 
@@ -16,6 +17,10 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
   const [checkBoxList, setCheckBoxList] = useState<
     { id: number; label: string }[]
   >(PURPOSE_SPRAY_CHECKBOX);
+  const {
+    state: { taskData },
+    autoBookingContext: { setTaskData },
+  } = useAutoBookingContext();
   const [periodSpray, setPeriodSpray] = useState<any>([
     { label: '', value: '' },
   ]);
@@ -28,19 +33,39 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
     label: '',
   });
   const [loading, setLoading] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<any>(null);
+  const [selectedOption, setSelectedOption] = useState<string[]>([]);
   const [selectedCheckbox, setSelectedCheckbox] = useState<any>(null);
+  const onSubmit = () => {
+    if (periodSprayValue.value === '') {
+      return;
+    }
+    setTaskData(prev => ({
+      ...prev,
+      targetSpray: selectedOption,
+      preparationBy: selectedCheckbox,
+      purposeSpray: {
+        id: periodSprayValue.value,
+        name: periodSprayValue.label,
+      },
+    }));
+    navigation.navigate('DetailTaskScreen');
+  };
 
   const fetchPurposeSpray = async () => {
     setLoading(true);
-    await CropDatasource.getPurposeByCroupName('นาข้าว')
+    await CropDatasource.getPurposeByCroupName(taskData?.plantName || '')
       .then(res => {
-        setPeriodSpray(
-          res.purposeSpray.map((item: any) => ({
-            label: item.purposeSprayName,
-            value: item.id,
-          })),
-        );
+        const data = res.purposeSpray.map((item: any) => ({
+          label: item.purposeSprayName,
+          value: item.id,
+        }));
+        setPeriodSpray(data);
+        setSelectedCheckbox(taskData?.preparationBy);
+        setSelectedOption(taskData?.targetSpray);
+        setPeriodSprayValue({
+          label: taskData?.purposeSpray?.name || '',
+          value: taskData?.purposeSpray?.id || '',
+        });
         setLoading(false);
       })
       .catch(err => {
@@ -51,6 +76,8 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
 
   useEffect(() => {
     fetchPurposeSpray();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -90,14 +117,22 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
                     styles.card,
                     {
                       backgroundColor:
-                        option.id === selectedOption ? '#56D88C' : '#F2F3F4',
+                        option.label &&
+                        selectedOption.includes(option.label.toString())
+                          ? '#56D88C'
+                          : '#F2F3F4',
                     },
                   ]}
                   onPress={() => {
-                    if (option.id === selectedOption) {
-                      setSelectedOption(null);
+                    if (selectedOption.includes(option.label.toString())) {
+                      setSelectedOption(prev =>
+                        prev.filter(item => item !== option.label.toString()),
+                      );
                     } else {
-                      setSelectedOption(option.id);
+                      setSelectedOption(prev => [
+                        ...prev,
+                        option.label.toString(),
+                      ]);
                     }
                   }}>
                   <Text
@@ -105,7 +140,8 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
                       fontSize: 18,
 
                       color:
-                        option.id === selectedOption
+                        option.label &&
+                        selectedOption.includes(option?.label.toString())
                           ? colors.white
                           : colors.fontBlack,
                     }}>
@@ -134,6 +170,7 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
                         ...prev,
                         { id: prev.length + 1, label: otherPlant },
                       ]);
+                      setSelectedOption(prev => [...prev, otherPlant]);
                     }}
                     style={{
                       backgroundColor: '#56D88C',
@@ -173,7 +210,7 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
                 );
                 setPeriodSprayValue(currentValue);
               }}>
-              {periodSprayValue.label ? (
+              {periodSprayValue?.label ? (
                 <Text
                   style={{
                     color: colors.fontBlack,
@@ -264,8 +301,13 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
             }}>
             <MainButton
               label="ยืนยัน"
+              disable={
+                selectedOption.length < 1 ||
+                periodSprayValue?.value === '' ||
+                selectedCheckbox === null
+              }
               color={colors.greenLight}
-              onPress={() => navigation.navigate('DetailTaskScreen')}
+              onPress={() => onSubmit()}
               style={{}}
             />
           </View>
