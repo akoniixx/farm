@@ -19,4 +19,7 @@ export default {
   uncheck: require('./uncheck.png'),
   checked: require('./checked.png'),
   emptyTask: require('./emptyTask.png'),
+  waitingDroner: require('./waitingDroner.png'),
+  endSlip: require('./endSlip.png'),
+  successSlip: require('./successSlip.png'),
 };

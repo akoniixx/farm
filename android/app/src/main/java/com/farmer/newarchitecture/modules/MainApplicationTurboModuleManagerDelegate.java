@@ -1,4 +1,4 @@
-package com.farmer.newarchitecture.modules;
+package com.iconkaset.farmer.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

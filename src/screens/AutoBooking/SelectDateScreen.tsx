@@ -1,4 +1,5 @@
 import { Text } from '@rneui/base';
+import moment from 'moment';
 import React, { useState } from 'react';
 import {
   Dimensions,
@@ -25,7 +26,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [openTimePicker, setopenTimePicker] = useState(false);
   const [note, setNote] = useState('');
-  const [hour, setHour] = useState(12);
+  const [hour, setHour] = useState(6);
   const [minute, setMinute] = useState(0);
   return (
     <>
@@ -35,7 +36,8 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
         label={'เลือกวันและเวลาฉีดพ่น'}
       />
 
-      <SafeAreaView style={{ flex: 1, paddingHorizontal: 10,backgroundColor:'white' }}>
+      <SafeAreaView
+        style={{ flex: 1, paddingHorizontal: 10, backgroundColor: 'white' }}>
         <View style={{ flex: 1, justifyContent: 'space-between' }}>
           <View>
             <Text style={styles.label}>วันที่ฉีดพ่น</Text>
@@ -193,6 +195,8 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
             <View>
               <DatePickerCustom
                 value={date}
+                startYear={moment().get('year') + 543}
+                endYear={moment().add(1, 'year').get('year') + 543}
                 onHandleChange={(d: Date) => {
                   setDate(d);
                 }}
@@ -254,7 +258,13 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
               }}>
               เลื่อนขึ้นลงเพื่อเลือกวันฉีดพ่น
             </Text>
-            <View>
+            <View
+              style={{
+                paddingVertical: 16,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                height: 200,
+              }}>
               <TimePicker
                 setHour={(h: number) => {
                   setHour(h);
