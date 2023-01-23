@@ -37,14 +37,17 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
 
   const dronerDetails = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
+    console.log(farmer_id);
     const droner_id = await AsyncStorage.getItem('droner_id');
+    console.log(droner_id);
     const plot_id = await AsyncStorage.getItem('plot_id');
+    console.log(plot_id);
     const limit = 0;
     const offset = 0;
     TaskSuggestion.DronerDetail(
-      farmer_id !== null ? farmer_id : '',
-      plot_id !== null ? plot_id : '',
-      droner_id !== null ? droner_id : '',
+      farmer_id!,
+      plot_id!,
+      droner_id!,
       date,
       limit,
       offset,
@@ -66,7 +69,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       });
     });
   };
-
+  console.log(detailState.name);
   const baseDate = new Date();
   const weekDays: string[] = [];
   for (let i = 0; i < 7; i++) {

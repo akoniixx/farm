@@ -16,6 +16,7 @@ interface MainButtonProps {
   width?: number;
   onPress?: () => void;
   style?: ViewStyle;
+  marginVertical?: number;
 }
 
 export const MainButton: React.FC<MainButtonProps> = props => {
@@ -35,6 +36,7 @@ export const MainButton: React.FC<MainButtonProps> = props => {
           borderColor: props.borderColor ? props.borderColor : props.color,
           borderWidth: props.disable ? 0 : 0.5,
           width: props.width,
+          marginVertical: props.marginVertical ? 10 : 5,
         },
         props.style,
       ]}
@@ -45,7 +47,8 @@ export const MainButton: React.FC<MainButtonProps> = props => {
 
 const styles = StyleSheet.create({
   mainButton: {
-    marginVertical: normalize(10),
+    width: normalize(343),
+    height: normalize(54),
     borderRadius: normalize(8),
   },
 });

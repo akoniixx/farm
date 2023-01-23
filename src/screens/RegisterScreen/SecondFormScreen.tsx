@@ -1,40 +1,48 @@
-import { Button } from '@rneui/themed';
-import React, { useEffect, useReducer, useRef, useState } from 'react';
 import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Button,
   Dimensions,
   Image,
   PermissionsAndroid,
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import { ScrollView } from 'react-native-gesture-handler';
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { font, icons } from '../../assets';
-import colors from '../../assets/colors/colors';
-import fonts from '../../assets/fonts';
-import image from '../../assets/images/image';
-import { MainButton } from '../../components/Button/MainButton';
-import CustomHeader from '../../components/CustomHeader';
-import { ProgressBar } from '../../components/ProgressBar';
-import { QueryLocation } from '../../datasource/LocationDatasource';
-import { normalize } from '../../functions/Normalize';
-import { registerReducer } from '../../hook/registerfield';
 import { stylesCentral } from '../../styles/StylesCentral';
-import ActionSheet from 'react-native-actions-sheet';
-import { Register } from '../../datasource/AuthDatasource';
+import { colors, font } from '../../assets';
+import CustomHeader from '../../components/CustomHeader';
+import { MainButton } from '../../components/Button/MainButton';
+import { normalize, width } from '../../functions/Normalize';
+import { Authentication, Register } from '../../datasource/AuthDatasource';
+import { ProgressBar } from '../../components/ProgressBar';
+import { ScrollView } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import { Avatar } from '@rneui/base';
+import { registerReducer } from '../../hook/registerfield';
+import icons from '../../assets/icons/icons';
+import { QueryLocation } from '../../datasource/LocationDatasource';
+import fonts from '../../assets/fonts';
 import Geolocation from 'react-native-geolocation-service';
+import ActionSheet from 'react-native-actions-sheet';
 import {
   LocationInPostcodeSelect,
   LocationSelect,
 } from '../../components/Location/Location';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 
-const SecondFormScreen: React.FC<any> = ({ route, navigation }) => {
+const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
   const initialFormRegisterState = {
     no: '',
     address: '',
@@ -132,466 +140,499 @@ const SecondFormScreen: React.FC<any> = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={stylesCentral.container}>
-      <CustomHeader
-        title="ลงทะเบียนเกษตรกร"
-        showBackBtn
-        onPressBack={() => navigation.goBack()}
-      />
-      <View style={styles.inner}>
-        <View style={styles.container}>
-          <View style={{ marginBottom: normalize(10) }}>
-            <ProgressBar index={2} />
-          </View>
-          <Text style={styles.h3}>ขั้นตอนที่ 2 จาก 4</Text>
-          <Text style={styles.h1}>
-            ระบุที่อยู่
-            <Text style={{ fontSize: normalize(18), color: '#A7AEB5' }}>
-              {' '}
-              (ไม่จำเป็นต้องระบุ)
-            </Text>
-          </Text>
-          <ScrollView style={{ top: '5%' }}>
-            <Text style={styles.head}>บ้านเลขที่</Text>
-            <TextInput
-              onChangeText={value => {
-                dispatch({
-                  type: 'Handle Input',
-                  field: 'no',
-                  payload: value,
-                });
-              }}
-              value={formState.no}
-              style={[styles.input]}
-              editable={true}
-              placeholder={'บ้านเลขที่'}
-              placeholderTextColor={colors.disable}
-            />
-            <Text style={styles.head}>รายละเอียดที่อยู่</Text>
-            <TextInput
-              onChangeText={value => {
-                dispatch({
-                  type: 'Handle Input',
-                  field: 'address',
-                  payload: value,
-                });
-              }}
-              value={formState.address}
-              style={styles.input}
-              editable={true}
-              placeholder={'รายละเอียดที่อยู่ (หมู่, ถนน)'}
-              placeholderTextColor={colors.disable}
-            />
-            <Text style={styles.head}>จังหวัด</Text>
-            <TouchableOpacity
-              onPress={() => {
-                provinceSheet.current.show();
-              }}>
-              <View
-                style={{
-                  borderColor: colors.disable,
-                  borderWidth: 1,
-                  padding: 10,
-                  borderRadius: 10,
-                  marginVertical: 10,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  height: normalize(55),
-                  justifyContent: 'space-between',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: fonts.AnuphanMedium,
-                    fontSize: normalize(16),
-                    color: colors.gray,
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView style={stylesCentral.container}>
+          <CustomHeader
+            title="ลงทะเบียนเกษตรกร"
+            showBackBtn
+            onPressBack={() => navigation.goBack()}
+          />
+          <View style={styles.inner}>
+            <View style={styles.containerTopCard}>
+              <View style={{ marginBottom: normalize(10) }}>
+                <ProgressBar index={2} />
+              </View>
+              <Text style={styles.h3}>ขั้นตอนที่ 2 จาก 4</Text>
+              <Text style={styles.h1}>
+                ระบุที่อยู่
+                <Text style={{ fontSize: normalize(18), color: '#A7AEB5' }}>
+                  (ไม่จำเป็นต้องระบุ)
+                </Text>
+              </Text>
+              <ScrollView style={{ top: '5%' }}>
+                <Text style={styles.head}>บ้านเลขที่</Text>
+                <TextInput
+                  onChangeText={value => {
+                    dispatch({
+                      type: 'Handle Input',
+                      field: 'no',
+                      payload: value,
+                    });
+                  }}
+                  value={formState.no}
+                  style={[styles.input]}
+                  editable={true}
+                  placeholder={'บ้านเลขที่'}
+                  placeholderTextColor={colors.disable}
+                />
+                <Text style={styles.head}>รายละเอียดที่อยู่</Text>
+                <TextInput
+                  onChangeText={value => {
+                    dispatch({
+                      type: 'Handle Input',
+                      field: 'address',
+                      payload: value,
+                    });
+                  }}
+                  value={formState.address}
+                  style={styles.input}
+                  editable={true}
+                  placeholder={'รายละเอียดที่อยู่ (หมู่, ถนน)'}
+                  placeholderTextColor={colors.disable}
+                />
+                <Text style={styles.head}>จังหวัด</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    provinceSheet.current.show();
                   }}>
-                  <Text
+                  <View
                     style={{
-                      fontFamily: font.SarabunLight,
-                      color: colors.disable,
+                      borderColor: colors.disable,
+                      borderWidth: 1,
+                      padding: 10,
+                      borderRadius: 10,
+                      marginVertical: 10,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      height: normalize(55),
+                      justifyContent: 'space-between',
                     }}>
-                    {!proVince.label ? (
+                    <Text
+                      style={{
+                        fontFamily: fonts.AnuphanMedium,
+                        fontSize: normalize(16),
+                        color: colors.gray,
+                      }}>
                       <Text
                         style={{
                           fontFamily: font.SarabunLight,
                           color: colors.disable,
                         }}>
-                        จังหวัด
+                        {!proVince.label ? (
+                          <Text
+                            style={{
+                              fontFamily: font.SarabunLight,
+                              color: colors.disable,
+                            }}>
+                            จังหวัด
+                          </Text>
+                        ) : (
+                          <TextInput
+                            style={{
+                              fontFamily: font.SarabunLight,
+                              color: colors.fontGrey,
+                            }}>
+                            {proVince.label}
+                          </TextInput>
+                        )}
                       </Text>
-                    ) : (
-                      <TextInput
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.fontGrey,
-                        }}>
-                        {proVince.label}
-                      </TextInput>
-                    )}
-                  </Text>
-                </Text>
-                <Image
-                  source={icons.down}
-                  style={{
-                    width: normalize(24),
-                    height: normalize(22),
-                    marginRight: 10,
-                    tintColor: colors.disable,
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-            <Text style={styles.head}>อำเภอ</Text>
-            <TouchableOpacity
-              disabled={!proVince.label ? true : false}
-              onPress={() => {
-                DistriSheet.current.show();
-              }}>
-              <View
-                style={{
-                  backgroundColor: !proVince.label
-                    ? colors.disable
-                    : colors.white,
-                  borderColor: colors.disable,
-                  borderWidth: 1,
-                  padding: 10,
-                  borderRadius: 10,
-                  marginVertical: 10,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  height: normalize(55),
-                  justifyContent: 'space-between',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: fonts.AnuphanMedium,
-                    fontSize: normalize(16),
-                    color: colors.gray,
+                    </Text>
+                    <Image
+                      source={icons.down}
+                      style={{
+                        width: normalize(24),
+                        height: normalize(22),
+                        marginRight: 10,
+                        tintColor: colors.disable,
+                      }}
+                    />
+                  </View>
+                </TouchableOpacity>
+                <Text style={styles.head}>อำเภอ</Text>
+                <TouchableOpacity
+                  disabled={!proVince.label ? true : false}
+                  onPress={() => {
+                    DistriSheet.current.show();
                   }}>
-                  <Text
+                  <View
                     style={{
-                      fontFamily: font.SarabunLight,
-                      color: colors.disable,
+                      backgroundColor: !proVince.label
+                        ? colors.disable
+                        : colors.white,
+                      borderColor: colors.disable,
+                      borderWidth: 1,
+                      padding: 10,
+                      borderRadius: 10,
+                      marginVertical: 10,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      height: normalize(55),
+                      justifyContent: 'space-between',
                     }}>
-                    {!disTrict.label ? (
+                    <Text
+                      style={{
+                        fontFamily: fonts.AnuphanMedium,
+                        fontSize: normalize(16),
+                        color: colors.gray,
+                      }}>
                       <Text
                         style={{
                           fontFamily: font.SarabunLight,
-                          color: colors.gray,
+                          color: colors.disable,
                         }}>
-                        อำเภอ
+                        {!disTrict.label ? (
+                          <Text
+                            style={{
+                              fontFamily: font.SarabunLight,
+                              color: colors.gray,
+                            }}>
+                            อำเภอ
+                          </Text>
+                        ) : (
+                          <Text
+                            style={{
+                              fontFamily: font.SarabunLight,
+                              color: colors.fontGrey,
+                            }}>
+                            {disTrict.label}
+                          </Text>
+                        )}
                       </Text>
-                    ) : (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.fontGrey,
-                        }}>
-                        {disTrict.label}
-                      </Text>
-                    )}
-                  </Text>
-                </Text>
-                <Image
-                  source={icons.down}
-                  style={{
-                    width: normalize(24),
-                    height: normalize(22),
-                    marginRight: 10,
-                    tintColor: colors.disable,
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-            <Text style={styles.head}>ตำบล</Text>
-            <TouchableOpacity
-              onPress={() => {
-                SubDistriSheet.current.show();
-              }}>
-              <View
-                style={{
-                  backgroundColor: !disTrict.label
-                    ? colors.disable
-                    : colors.white,
-                  borderColor: colors.disable,
-                  borderWidth: 1,
-                  padding: 10,
-                  borderRadius: 10,
-                  marginVertical: 10,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  height: normalize(55),
-                  justifyContent: 'space-between',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: fonts.AnuphanMedium,
-                    fontSize: normalize(16),
-                    color: colors.gray,
+                    </Text>
+                    <Image
+                      source={icons.down}
+                      style={{
+                        width: normalize(24),
+                        height: normalize(22),
+                        marginRight: 10,
+                        tintColor: colors.disable,
+                      }}
+                    />
+                  </View>
+                </TouchableOpacity>
+                <Text style={styles.head}>ตำบล</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    SubDistriSheet.current.show();
                   }}>
-                  <Text
+                  <View
                     style={{
-                      fontFamily: font.SarabunLight,
-                      color: colors.disable,
+                      backgroundColor: !disTrict.label
+                        ? colors.disable
+                        : colors.white,
+                      borderColor: colors.disable,
+                      borderWidth: 1,
+                      padding: 10,
+                      borderRadius: 10,
+                      marginVertical: 10,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      height: normalize(55),
+                      justifyContent: 'space-between',
                     }}>
-                    {!subDistrict.label ? (
+                    <Text
+                      style={{
+                        fontFamily: fonts.AnuphanMedium,
+                        fontSize: normalize(16),
+                        color: colors.gray,
+                      }}>
                       <Text
                         style={{
                           fontFamily: font.SarabunLight,
-                          color: colors.gray,
+                          color: colors.disable,
                         }}>
-                        ตำบล
+                        {!subDistrict.label ? (
+                          <Text
+                            style={{
+                              fontFamily: font.SarabunLight,
+                              color: colors.gray,
+                            }}>
+                            ตำบล
+                          </Text>
+                        ) : (
+                          <Text
+                            style={{
+                              fontFamily: font.SarabunLight,
+                              color: colors.fontGrey,
+                            }}>
+                            {subDistrict.label}
+                          </Text>
+                        )}
                       </Text>
-                    ) : (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.fontGrey,
-                        }}>
-                        {subDistrict.label}
-                      </Text>
-                    )}
-                  </Text>
-                </Text>
-                <Image
-                  source={icons.down}
-                  style={{
-                    width: normalize(24),
-                    height: normalize(22),
-                    marginRight: 10,
-                    tintColor: colors.disable,
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-            <Text style={styles.head}>รหัสไปรษณีย์</Text>
-            <TextInput
-              value={subDistrict.postcode}
-              style={[
-                styles.input,
-                {
-                  backgroundColor: colors.disable,
-                  marginBottom: normalize(bottompadding),
-                },
-              ]}
-              editable={false}
-              placeholder={'รหัสไปรษณีย์'}
-              placeholderTextColor={colors.gray}
-            />
-          </ScrollView>
-          <View style={{ height: 40 }}></View>
-        </View>
-        <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
-          <MainButton
-            label="ถัดไป"
-            color={colors.greenLight}
-            onPress={() => {
-              setLoading(true);
-              Register.register2(
-                telNo,
-                formState.no,
-                formState.address,
-                formState.province.value,
-                formState.district.value,
-                formState.subdistrict.value,
-                formState.postal,
-              )
-                .then(async res => {
-                  console.log(res);
-                  if (Platform.OS === 'ios') {
-                    await Geolocation.requestAuthorization('always');
-                  } else if (Platform.OS === 'android') {
-                    await PermissionsAndroid.request(
-                      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                    );
-                  }
-                  Geolocation.getCurrentPosition(
-                    position => {
-                      setLoading(false);
-                      navigation.navigate('ThirdFormScreen', {
-                        tele: formState.tel,
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                      });
-                    },
-                    error => {
-                      console.log(error.code, error.message);
-                    },
+                    </Text>
+                    <Image
+                      source={icons.down}
+                      style={{
+                        width: normalize(24),
+                        height: normalize(22),
+                        marginRight: 10,
+                        tintColor: colors.disable,
+                      }}
+                    />
+                  </View>
+                </TouchableOpacity>
+                <Text style={styles.head}>รหัสไปรษณีย์</Text>
+                <TextInput
+                  value={subDistrict.postcode}
+                  style={[
+                    styles.input,
                     {
-                      enableHighAccuracy: true,
-                      timeout: 15000,
-                      maximumAge: 10000,
+                      backgroundColor: colors.disable,
+                      marginBottom: normalize(bottompadding),
                     },
-                  );
-                })
-                .catch(err => console.log(err));
-            }}
-          />
-        </View>
-        <ActionSheet ref={provinceSheet}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              paddingVertical: normalize(30),
-              paddingHorizontal: normalize(20),
-              width: windowWidth,
-              height: windowHeight * 0.7,
-              borderRadius: normalize(20),
-            }}>
-            <View
-              style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
-                จังหวัด
-              </Text>
-              <Text
-                style={{
-                  color: colors.greenLight,
-                  fontFamily: font.SarabunMedium,
-                  fontSize: normalize(16),
-                }}
-                onPress={() => {
-                  provinceSheet.current.hide();
-                }}>
-                ยกเลิก
-              </Text>
-            </View>
-            <View style={styles.container}>
-              <ScrollView>
-                {items.map(
-                  (
-                    v: { label: any; value: any },
-                    i: React.Key | null | undefined,
-                  ) => (
-                    <TouchableOpacity>
-                      <LocationSelect
-                        key={i}
-                        label={v.label}
-                        value={v.value}
-                        onPress={() => selectProvince(v, i)}
-                      />
-                    </TouchableOpacity>
-                  ),
-                )}
+                  ]}
+                  editable={false}
+                  placeholder={'รหัสไปรษณีย์'}
+                  placeholderTextColor={colors.gray}
+                />
               </ScrollView>
+              <View style={{ height: 40 }}></View>
             </View>
-          </View>
-        </ActionSheet>
-        <ActionSheet ref={DistriSheet}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              paddingVertical: normalize(30),
-              paddingHorizontal: normalize(20),
-              width: windowWidth,
-              height: windowHeight * 0.7,
-              borderRadius: normalize(20),
-            }}>
-            <View
-              style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
-                อำเภอ
-              </Text>
-              <Text
-                style={{
-                  color: colors.greenLight,
-                  fontFamily: font.SarabunMedium,
-                  fontSize: normalize(16),
-                }}
+            <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
+              <MainButton
+                label="ถัดไป"
+                color={colors.greenLight}
                 onPress={() => {
-                  DistriSheet.current.hide();
-                }}>
-                ยกเลิก
-              </Text>
-            </View>
-            <View style={styles.container}>
-              <ScrollView>
-                {itemsDistrict.map(
-                  (
-                    v: { label: any; value: any },
-                    i: any | null | undefined,
-                  ) => (
-                    <TouchableOpacity>
-                      <LocationSelect
-                        key={i}
-                        label={v.label}
-                        value={v.value}
-                        onPress={() => selectDistrict(v, i)}
-                      />
-                    </TouchableOpacity>
-                  ),
-                )}
-              </ScrollView>
-            </View>
-          </View>
-        </ActionSheet>
-        <ActionSheet ref={SubDistriSheet}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              paddingVertical: normalize(30),
-              paddingHorizontal: normalize(20),
-              width: windowWidth,
-              height: windowHeight * 0.7,
-              borderRadius: normalize(20),
-            }}>
-            <View
-              style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
-                ตำบล
-              </Text>
-              <Text
-                style={{
-                  color: colors.greenLight,
-                  fontFamily: font.SarabunMedium,
-                  fontSize: normalize(16),
+                  setLoading(true);
+                  Register.register2(
+                    telNo,
+                    formState.no,
+                    formState.address,
+                    formState.province.value,
+                    formState.district.value,
+                    formState.subdistrict.value,
+                    formState.postal,
+                  )
+                    .then(async res => {
+                      console.log(res);
+                      if (Platform.OS === 'ios') {
+                        await Geolocation.requestAuthorization('always');
+                      } else if (Platform.OS === 'android') {
+                        await PermissionsAndroid.request(
+                          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                        );
+                      }
+                      Geolocation.getCurrentPosition(
+                        position => {
+                          setLoading(false);
+                          navigation.navigate('ThirdFormScreen', {
+                            tele: formState.tel,
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                          });
+                        },
+                        error => {
+                          console.log(error.code, error.message);
+                        },
+                        {
+                          enableHighAccuracy: true,
+                          timeout: 15000,
+                          maximumAge: 10000,
+                        },
+                      );
+                    })
+                    .catch(err => console.log(err));
                 }}
-                onPress={() => {
-                  SubDistriSheet.current.hide();
+              />
+            </View>
+            <ActionSheet ref={provinceSheet}>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  paddingVertical: normalize(30),
+                  paddingHorizontal: normalize(20),
+                  width: windowWidth,
+                  height: windowHeight * 0.7,
+                  borderRadius: normalize(20),
                 }}>
-                ยกเลิก
-              </Text>
-            </View>
-            <View style={styles.container}>
-              <ScrollView>
-                {itemsSubDistrict.map(
-                  (
-                    v: { label: any; value: any; postcode: any },
-                    i: any | null | undefined,
-                  ) => (
-                    <TouchableOpacity>
-                      <LocationInPostcodeSelect
-                        key={i}
-                        label={v.label}
-                        value={v.value}
-                        postcode={v.postcode}
-                        onPress={() => selectSubDistrict(v, i)}
-                      />
-                    </TouchableOpacity>
-                  ),
-                )}
-              </ScrollView>
-            </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text style={[styles.head, { marginBottom: normalize(10) }]}>
+                    จังหวัด
+                  </Text>
+                  <Text
+                    style={{
+                      color: colors.greenLight,
+                      fontFamily: font.SarabunMedium,
+                      fontSize: normalize(16),
+                    }}
+                    onPress={() => {
+                      provinceSheet.current.hide();
+                    }}>
+                    ยกเลิก
+                  </Text>
+                </View>
+                <View style={styles.container}>
+                  <ScrollView>
+                    {items.map(
+                      (
+                        v: { label: any; value: any },
+                        i: React.Key | null | undefined,
+                      ) => (
+                        <TouchableOpacity>
+                          <LocationSelect
+                            key={i}
+                            label={v.label}
+                            value={v.value}
+                            onPress={() => selectProvince(v, i)}
+                          />
+                        </TouchableOpacity>
+                      ),
+                    )}
+                  </ScrollView>
+                </View>
+              </View>
+            </ActionSheet>
+            <ActionSheet ref={DistriSheet}>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  paddingVertical: normalize(30),
+                  paddingHorizontal: normalize(20),
+                  width: windowWidth,
+                  height: windowHeight * 0.7,
+                  borderRadius: normalize(20),
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text style={[styles.head, { marginBottom: normalize(10) }]}>
+                    อำเภอ
+                  </Text>
+                  <Text
+                    style={{
+                      color: colors.greenLight,
+                      fontFamily: font.SarabunMedium,
+                      fontSize: normalize(16),
+                    }}
+                    onPress={() => {
+                      DistriSheet.current.hide();
+                    }}>
+                    ยกเลิก
+                  </Text>
+                </View>
+                <View style={styles.container}>
+                  <ScrollView>
+                    {itemsDistrict.map(
+                      (
+                        v: { label: any; value: any },
+                        i: any | null | undefined,
+                      ) => (
+                        <TouchableOpacity>
+                          <LocationSelect
+                            key={i}
+                            label={v.label}
+                            value={v.value}
+                            onPress={() => selectDistrict(v, i)}
+                          />
+                        </TouchableOpacity>
+                      ),
+                    )}
+                  </ScrollView>
+                </View>
+              </View>
+            </ActionSheet>
+            <ActionSheet ref={SubDistriSheet}>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  paddingVertical: normalize(30),
+                  paddingHorizontal: normalize(20),
+                  width: windowWidth,
+                  height: windowHeight * 0.7,
+                  borderRadius: normalize(20),
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text style={[styles.head, { marginBottom: normalize(10) }]}>
+                    ตำบล
+                  </Text>
+                  <Text
+                    style={{
+                      color: colors.greenLight,
+                      fontFamily: font.SarabunMedium,
+                      fontSize: normalize(16),
+                    }}
+                    onPress={() => {
+                      SubDistriSheet.current.hide();
+                    }}>
+                    ยกเลิก
+                  </Text>
+                </View>
+                <View style={styles.container}>
+                  <ScrollView>
+                    {itemsSubDistrict.map(
+                      (
+                        v: { label: any; value: any; postcode: any },
+                        i: any | null | undefined,
+                      ) => (
+                        <TouchableOpacity>
+                          <LocationInPostcodeSelect
+                            key={i}
+                            label={v.label}
+                            value={v.value}
+                            postcode={v.postcode}
+                            onPress={() => selectSubDistrict(v, i)}
+                          />
+                        </TouchableOpacity>
+                      ),
+                    )}
+                  </ScrollView>
+                </View>
+              </View>
+            </ActionSheet>
           </View>
-        </ActionSheet>
-      </View>
-      <Spinner
+          <Spinner
         visible={loading}
         textContent={'Loading...'}
         textStyle={{ color: '#FFF' }}
       />
-    </SafeAreaView>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 export default SecondFormScreen;
 
 const styles = StyleSheet.create({
-  inner: {
-    paddingHorizontal: normalize(17),
-    flex: 1,
-    justifyContent: 'space-around',
+  carlendar: {
+    height: '50%',
+    borderWidth: 1,
+    borderColor: colors.disable,
+    borderRadius: 10,
   },
+  date: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '60%',
+  },
+  datePart: {
+    width: 100,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '200',
+    marginBottom: 5,
+  },
+  digit: {
+    fontSize: 20,
+  },
+
   head: {
     fontFamily: font.AnuphanBold,
-    fontSize: normalize(18),
+    fontSize: normalize(16),
     color: colors.fontBlack,
   },
   h1: {
@@ -610,11 +651,6 @@ const styles = StyleSheet.create({
     fontSize: normalize(14),
     color: colors.gray,
   },
-  label: {
-    fontFamily: font.AnuphanLight,
-    fontSize: normalize(14),
-    color: colors.gray,
-  },
   container: {
     flex: 1,
   },
@@ -622,11 +658,47 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunLight,
     height: normalize(56),
     marginVertical: 12,
-    padding: 10,
+    padding: 5,
     borderColor: colors.disable,
     borderWidth: 1,
     borderRadius: normalize(10),
     color: colors.fontBlack,
     fontSize: normalize(16),
+  },
+  datePickerStyle: {
+    width: 200,
+    marginTop: 20,
+  },
+  addImg: {
+    fontFamily: font.SarabunLight,
+    fontSize: normalize(16),
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  image: {
+    marginVertical: 24,
+    alignItems: 'center',
+  },
+  inner: {
+    paddingHorizontal: normalize(17),
+    flex: 1,
+    justifyContent: 'space-around',
+  },
+  headText: {
+    fontFamily: font.AnuphanBold,
+    fontSize: normalize(20),
+    color: colors.fontBlack,
+    marginBottom: normalize(24),
+  },
+  label: {
+    fontFamily: font.AnuphanLight,
+    fontSize: normalize(14),
+    color: colors.gray,
+    marginTop: normalize(24),
+  },
+  containerTopCard: {
+    flex: 1,
   },
 });

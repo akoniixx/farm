@@ -50,7 +50,7 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
   useEffect(() => {
     const getInitDate = () => {
       const end = endYear || new Date().getFullYear() + 543;
-      const start = !startYear || startYear > end ? end - 70 : startYear;
+      const start = !startYear || startYear > end ? end - 76 : startYear;
 
       const _days = () => {
         const genDate = [...Array(moment(value).daysInMonth())].map(

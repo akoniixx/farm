@@ -8,11 +8,8 @@ import { Text } from 'react-native';
 const EditFarmerPlot: React.FC<any> = ({ route, navigation }) => {
   const [data, setData] = useState<any>();
 
-  useEffect(() => {
-    plotIndex();
-  }, []);
   const plotIndex = async () => {
-    const Index = await AsyncStorage.getItem('plotIndex');
+    const Index = await AsyncStorage.getItem('editPlot');
     setData(Index);
   };
   return (
