@@ -594,10 +594,10 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
             </ActionSheet>
           </View>
           <Spinner
-        visible={loading}
-        textContent={'Loading...'}
-        textStyle={{ color: '#FFF' }}
-      />
+            visible={loading}
+            textContent={'Loading...'}
+            textStyle={{ color: '#FFF' }}
+          />
         </SafeAreaView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

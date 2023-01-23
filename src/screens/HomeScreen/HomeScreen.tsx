@@ -59,7 +59,7 @@ const HomeScreen: React.FC<any> = ({ navigation, route }) => {
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: normalize(16),
                 color: focused ? colors.greenLight : '#8D96A0',
-                bottom: normalize(6)
+                bottom: normalize(6),
               }}>
               หน้าแรก
             </Text>
@@ -68,13 +68,10 @@ const HomeScreen: React.FC<any> = ({ navigation, route }) => {
             i.focused ? (
               <Image
                 source={icons.home_active}
-                style={{ width: 20, height: 21}}
+                style={{ width: 20, height: 21 }}
               />
             ) : (
-              <Image
-                source={icons.home}
-                style={{ width: 20, height: 21}}
-              />
+              <Image source={icons.home} style={{ width: 20, height: 21 }} />
             ),
         }}
       />
@@ -92,7 +89,7 @@ const HomeScreen: React.FC<any> = ({ navigation, route }) => {
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: normalize(16),
                 color: focused ? colors.greenLight : '#8D96A0',
-                bottom: normalize(6)
+                bottom: normalize(6),
               }}>
               โปรโมชั่น
             </Text>
@@ -124,7 +121,7 @@ const HomeScreen: React.FC<any> = ({ navigation, route }) => {
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: normalize(16),
                 color: focused ? colors.greenLight : '#8D96A0',
-                bottom: normalize(6)
+                bottom: normalize(6),
               }}>
               บัญชีของฉัน
             </Text>
@@ -136,10 +133,7 @@ const HomeScreen: React.FC<any> = ({ navigation, route }) => {
                 style={{ width: 16, height: 20 }}
               />
             ) : (
-              <Image
-                source={icons.profile}
-                style={{ width: 14, height: 18 }}
-              />
+              <Image source={icons.profile} style={{ width: 14, height: 18 }} />
             ),
         }}
       />

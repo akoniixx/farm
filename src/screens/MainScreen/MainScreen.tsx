@@ -155,7 +155,10 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                         borderWidth: 1,
                         borderColor: colors.greenLight,
                       }}>
-                      <Image source={icons.drone} style={{height: normalize(76), width: normalize(105)}}/>
+                      <Image
+                        source={icons.drone}
+                        style={{ height: normalize(76), width: normalize(105) }}
+                      />
                       <Text style={styles.font}>จ้างโดรนเกษตร</Text>
                     </LinearGradient>
                   </TouchableOpacity>
@@ -172,7 +175,10 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                         borderWidth: 1,
                         borderColor: colors.greenLight,
                       }}>
-                      <Image source={icons.plots} style={{height: normalize(76), width: normalize(105)}} />
+                      <Image
+                        source={icons.plots}
+                        style={{ height: normalize(76), width: normalize(105) }}
+                      />
                       <Text style={styles.font1}>แปลงของคุณ</Text>
                     </LinearGradient>
                   </TouchableOpacity>

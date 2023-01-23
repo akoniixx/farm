@@ -699,7 +699,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                         }}
                       />
                     </View>
-                    <View style={{ height : normalize(10) }}></View>
+                    <View style={{ height: normalize(10) }}></View>
                   </ScrollView>
                   <ActionSheet ref={plantSheet}>
                     <View

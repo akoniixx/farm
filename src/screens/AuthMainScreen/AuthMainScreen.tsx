@@ -181,7 +181,10 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                         borderWidth: 1,
                         borderColor: colors.greenLight,
                       }}>
-                      <Image source={icons.drone} style={{height: normalize(76), width: normalize(105)}} />
+                      <Image
+                        source={icons.drone}
+                        style={{ height: normalize(76), width: normalize(105) }}
+                      />
                       <Text style={styles.font}>จ้างโดรนเกษตร</Text>
                     </LinearGradient>
                   </TouchableOpacity>
@@ -199,7 +202,10 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                         borderWidth: 1,
                         borderColor: colors.greenLight,
                       }}>
-                      <Image source={icons.plots} style={{height: normalize(76), width: normalize(105)}} />
+                      <Image
+                        source={icons.plots}
+                        style={{ height: normalize(76), width: normalize(105) }}
+                      />
                       <Text style={styles.font1}>แปลงของคุณ</Text>
                     </LinearGradient>
                   </TouchableOpacity>
@@ -275,7 +281,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
               <Text style={[styles.textEmpty]}>กรุณาลงทะเบียน/เข้าสู่ระบบ</Text>
               <TouchableOpacity
                 style={{ margin: '3%' }}
-                onPress={ async () => {
+                onPress={async () => {
                   const value = await AsyncStorage.getItem('PDPA');
                   if (value === 'read') {
                     navigation.navigate('TelNumScreen');

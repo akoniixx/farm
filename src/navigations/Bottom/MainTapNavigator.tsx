@@ -35,8 +35,7 @@ const MainTapNavigator: React.FC = () => {
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: normalize(16),
                 color: focused ? colors.greenLight : '#8D96A0',
-                bottom: normalize(6)
-
+                bottom: normalize(6),
               }}>
               หน้าแรก
             </Text>
@@ -48,10 +47,7 @@ const MainTapNavigator: React.FC = () => {
                 style={{ width: 20, height: 20 }}
               />
             ) : (
-              <Image
-                source={icons.home}
-                style={{ width: 20, height: 20 }}
-              />
+              <Image source={icons.home} style={{ width: 20, height: 20 }} />
             ),
         }}
       />
@@ -69,8 +65,7 @@ const MainTapNavigator: React.FC = () => {
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: normalize(16),
                 color: focused ? colors.greenLight : '#8D96A0',
-                bottom: normalize(6)
-
+                bottom: normalize(6),
               }}>
               งานของฉัน
             </Text>
@@ -82,10 +77,7 @@ const MainTapNavigator: React.FC = () => {
                 style={{ width: 19, height: 22 }}
               />
             ) : (
-              <Image
-                source={icons.mytask}
-                style={{ width: 19, height: 22 }}
-              />
+              <Image source={icons.mytask} style={{ width: 19, height: 22 }} />
             ),
         }}
       />
@@ -103,8 +95,7 @@ const MainTapNavigator: React.FC = () => {
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: normalize(16),
                 color: focused ? colors.greenLight : '#8D96A0',
-                bottom: normalize(6)
-
+                bottom: normalize(6),
               }}>
               โปรโมชั่น
             </Text>
@@ -136,8 +127,7 @@ const MainTapNavigator: React.FC = () => {
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: normalize(16),
                 color: focused ? colors.greenLight : '#8D96A0',
-                bottom: normalize(6)
-
+                bottom: normalize(6),
               }}>
               บัญชีของฉัน
             </Text>
@@ -149,10 +139,7 @@ const MainTapNavigator: React.FC = () => {
                 style={{ width: 16, height: 20 }}
               />
             ) : (
-              <Image
-                source={icons.profile}
-                style={{ width: 14, height: 18 }}
-              />
+              <Image source={icons.profile} style={{ width: 14, height: 18 }} />
             ),
         }}
       />
