@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors, font, icons } from '../../assets';
@@ -14,7 +15,7 @@ interface PlotDetailProp {
   plotAmout: number;
   plant: string;
   location: string;
-  onPressMap: () => void;
+  onPressMap?: () => void;
 }
 
 interface TargetSprayProp {
@@ -30,10 +31,7 @@ export const DateTimeDetail: React.FC<DateTimeProp> = ({
 }) => {
   return (
     <>
-      <View
-        style={{
-          paddingHorizontal: normalize(16),
-        }}>
+      <View>
         <View
           style={{
             padding: normalize(10),
@@ -62,9 +60,17 @@ export const DateTimeDetail: React.FC<DateTimeProp> = ({
                 <Text style={styles.h2}>วันที่</Text>
                 <Text style={styles.h2}>เวลา</Text>
               </View>
-              <View>
-                <Text style={styles.h1}>{date}</Text>
-                <Text style={styles.h1}>{time} น</Text>
+              <View style={{ alignItems: 'flex-end' }}>
+                <Text style={styles.h1}>
+                  {moment(date)
+                    .add(543, 'year')
+                    .locale('th')
+                    .format('DD MMMM YYYY')}
+                </Text>
+                <Text style={styles.h1}>
+                  {' '}
+                  {moment(time).locale('th').format('hh.mm')} น
+                </Text>
               </View>
             </View>
           </View>
@@ -94,7 +100,7 @@ export const DateTimeDetail: React.FC<DateTimeProp> = ({
             marginRight: normalize(10),
           }}
         />
-        <Text>{note}</Text>
+        <Text>{note ? note : '-'}</Text>
       </View>
     </>
   );
@@ -126,8 +132,9 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
           alignItems: 'baseline',
           justifyContent: 'space-between',
         }}>
-        <View>
+        <View style={{ width: '60%' }}>
           <Text
+            numberOfLines={1}
             style={[
               styles.label,
               { color: '#1F8449', marginBottom: normalize(10) },
@@ -152,7 +159,7 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
             ))}
           </View>
         </View>
-        <View style={{ alignItems: 'flex-end' }}>
+        <View style={{ alignItems: 'flex-end', width: '40%' }}>
           <TouchableOpacity onPress={onPressMap}>
             <Image
               source={icons.map}
@@ -173,7 +180,10 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
           </Text>
           <Text
             numberOfLines={1}
-            style={[styles.h1, { width: '80%', lineHeight: 30, marginTop: 2 }]}>
+            style={[
+              styles.h1,
+              { marginBottom: normalize(10), maxWidth: normalize(150) },
+            ]}>
             {location}
           </Text>
         </View>
@@ -238,6 +248,6 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: font.SarabunMedium,
-    fontSize: normalize(20),
+    fontSize: normalize(19),
   },
 });

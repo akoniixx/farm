@@ -10,25 +10,28 @@ import {
 } from 'react-native';
 import { Picker, onOpen } from 'react-native-actions-sheet-picker';
 import { colors, font, icons } from '../../assets';
-import { sortField } from '../../definitions/taskFilter';
+import {
+  sortField,
+  sortStatusFinish,
+  sortStatusInprogress,
+} from '../../definitions/taskFilter';
 
 interface props {
-  selectedField: {
+  selectedStatus: {
     name: string;
     value: string;
-    direction: string;
   };
-  setSelectedField: (value: any) => void;
+  setSelectedStatus: (value: any) => void;
 }
 
-export const Filter: React.FC<props> = ({
-  selectedField,
-  setSelectedField,
+export const StatusFilterFinish: React.FC<props> = ({
+  selectedStatus,
+  setSelectedStatus,
 }) => {
-  const [field, setField] = useState<any>([]);
+  const [status, setStatus] = useState<any>([]);
 
   useEffect(() => {
-    setField(sortField);
+    setStatus(sortStatusFinish);
   }, []);
 
   return (
@@ -36,7 +39,7 @@ export const Filter: React.FC<props> = ({
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          onOpen('field');
+          onOpen('status');
         }}>
         <View
           style={{
@@ -44,7 +47,7 @@ export const Filter: React.FC<props> = ({
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <Text style={styles.h1}>{selectedField && selectedField.name}</Text>
+          <Text style={styles.h1}>{selectedStatus && selectedStatus.name}</Text>
           <Image
             source={icons.chevron}
             style={{
@@ -57,10 +60,10 @@ export const Filter: React.FC<props> = ({
       </TouchableOpacity>
 
       <Picker
-        id="field"
-        data={field}
-        label="เรียงลำดับงาน"
-        setSelected={setSelectedField}
+        id="status"
+        data={status}
+        label="แสดงสถานะงาน"
+        setSelected={setSelectedStatus}
       />
     </>
   );

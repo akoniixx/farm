@@ -49,16 +49,46 @@ export const socket = io(BASE_URL, {
 export const getStatusToText = (status: string) => {
   switch (status) {
     case 'WAIT_START':
-      return {label: 'รอเริ่มงาน', bgcolor: '#FB931D',border:'#FEDBB4', color: '#FFFFFF'};
+      return {
+        label: 'รอเริ่มงาน',
+        bgcolor: '#FB931D',
+        border: '#FEDBB4',
+        color: '#FFFFFF',
+      };
     case 'IN_PROGRESS':
-      return {label: 'กำลังฉีดพ่น', bgcolor: '#5FC1FC',border:'#BBE4FE',color: '#FFFFFF'};
+      return {
+        label: 'กำลังฉีดพ่น',
+        bgcolor: '#5FC1FC',
+        border: '#BBE4FE',
+        color: '#FFFFFF',
+      };
     case 'WAIT_REVIEW':
-      return {label: 'รอรีวิว', bgcolor: '#E8F6FF',border:'#8DD3FD', color: '#03649F'};
+      return {
+        label: 'รอรีวิว',
+        bgcolor: '#E8F6FF',
+        border: '#8DD3FD',
+        color: '#03649F',
+      };
     case 'CANCELED':
-      return {label: 'ถูกยกเลิก', bgcolor: '#FFD7D7',border: '#DE909A',color: '#AB091E'};
+      return {
+        label: 'ถูกยกเลิก',
+        bgcolor: '#FFD7D7',
+        border: '#DE909A',
+        color: '#AB091E',
+      };
     case 'DONE':
-      return {label: 'เสร็จสิ้น', bgcolor: '#B2FFE3',border:'#A1E9BF' ,color: '#1F8449'};
+      return {
+        label: 'เสร็จสิ้น',
+        bgcolor: '#B2FFE3',
+        border: '#A1E9BF',
+        color: '#1F8449',
+      };
     case 'WAIT_RECEIVE':
-      return {label: 'รอนักบินรับงาน', bgcolor: '#FFE26E',border:'#FFF5CC',color: '#B05E03'};
+      return {
+        label: 'รอนักบินรับงาน',
+        bgcolor: '#FFE26E',
+        border: '#FFF5CC',
+        color: '#B05E03',
+      };
   }
 };
