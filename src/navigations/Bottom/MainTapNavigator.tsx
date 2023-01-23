@@ -19,7 +19,7 @@ const MainTapNavigator: React.FC = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { height: '9%', borderBottomColor: colors.white },
+        tabBarStyle: {  borderBottomColor: colors.white },
       }}>
       <Tab.Screen
         name="หน้าแรก"

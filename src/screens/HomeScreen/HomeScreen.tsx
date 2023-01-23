@@ -43,7 +43,7 @@ const HomeScreen: React.FC<any> = ({ navigation, route }) => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { height: normalize(60), borderBottomColor: colors.white },
+        tabBarStyle: { height: normalize(80), borderBottomColor: colors.white },
       }}>
       <Tab.Screen
         name="หน้าแรก"

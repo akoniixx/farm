@@ -20,9 +20,7 @@ const DronerBooking: React.FC<any> = ({ navigation }) => {
   });
   return (
     <>
-      {fcmToken !== null ? (
-        <View></View>
-      ) : (
+      
         <SafeAreaView style={stylesCentral.container}>
           <CustomHeader
             title="จ้างโดรนเกษตร"
@@ -55,7 +53,7 @@ const DronerBooking: React.FC<any> = ({ navigation }) => {
             </View>
           </View>
         </SafeAreaView>
-      )}
+     
     </>
   );
 };

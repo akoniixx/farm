@@ -20,9 +20,7 @@ const MyPlotScreen: React.FC<any> = ({ navigation }) => {
   });
   return (
     <>
-      {fcmToken !== null ? (
-        <View></View>
-      ) : (
+     
         <SafeAreaView style={stylesCentral.container}>
           <CustomHeader
             title="แปลงของคุณ"
@@ -55,7 +53,7 @@ const MyPlotScreen: React.FC<any> = ({ navigation }) => {
             </View>
           </View>
         </SafeAreaView>
-      )}
+     
     </>
   );
 };

@@ -274,7 +274,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                 }}
               />
             </View> */}
-              <View style={[styles.empty]}>
+             {/*  <View style={[styles.empty]}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -363,8 +363,8 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                     </Text>
                   </View>
                 )}
-              </View>
-              <View style={[styles.empty]}>
+              </View> */}
+              {/* <View style={[styles.empty]}>
                 <Text
                   style={[
                     styles.text,
@@ -398,7 +398,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                       ))}
                   </ScrollView>
                 </View>
-              </View>
+              </View> */}
             </View>
           </View>
         </View>
