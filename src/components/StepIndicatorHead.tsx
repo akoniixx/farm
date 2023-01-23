@@ -73,10 +73,10 @@ const StepIndicatorHead: React.FC<Prop> = ({
               if (stepStatus === 'finished') {
                 return (
                   <View>
-                    {/* <Image
-                      source={icons.}
-                      style={{ width: 25, height: 25 }}
-                    /> */}
+                    <Image
+                      source={icons.checkboxWhite}
+                      style={{ width: 14, height: 16 }}
+                    />
                   </View>
                 );
               }
