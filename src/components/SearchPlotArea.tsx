@@ -21,7 +21,7 @@ type SearchBarProps = {
   showPredictions: boolean;
   onPredictionTapped: (placeId: string, description: string) => void;
 };
-const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
+const SearchPlotArea: FunctionComponent<SearchBarProps> = props => {
   const [inputSize, setInputSize] = useState({ width: 0, height: 0 });
   const {
     value,
@@ -62,21 +62,12 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
               onPress={() =>
                 onPredictionTapped(item.place_id, item.description)
               }>
-              <Image
-                source={icons.myLocation}
-                style={{
-                  width: 26,
-                  height: 26,
-                  right: 10,
-                  alignSelf: 'center',
-                }}
-              />
               <View style={{ flex: 1 }}>
                 <Text numberOfLines={1} style={styles.list}>
-                  {item.terms[0].value}
+                  {/* {item.terms[0].value} */}
                 </Text>
                 <Text numberOfLines={1} style={styles.list2}>
-                  {item.description}
+                  {/* {item.description} */}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -93,7 +84,7 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
     <View style={[container, { ...passedStyles }]}>
       <TextInput
         style={[inputStyle, inputBottomRadius]}
-        placeholder="ระบุสถานที่ใกล้แปลง"
+        placeholder="ระบุพื้นที่แปลงเกษตร"
         placeholderTextColor="gray"
         value={value}
         onChangeText={onChangeText}
@@ -103,26 +94,6 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
           setInputSize({ height, width });
         }}
       />
-
-      <TouchableOpacity>
-        <View
-          style={{
-            flexDirection: 'row',
-            padding: 10,
-            height: normalize(60),
-            top: 10,
-            borderColor: colors.disable,
-            borderBottomWidth: 1,
-            marginBottom: 15,
-            marginTop: 10,
-          }}>
-          <Image
-            source={icons.myLocation}
-            style={{ width: 26, height: 26, right: 10 }}
-          />
-          <Text style={styles.list}>ตำแหน่งที่ฉันอยู่</Text>
-        </View>
-      </TouchableOpacity>
       {showPredictions && _renderPredictions(predictions)}
     </View>
   );
@@ -168,4 +139,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchBarWithAutocomplete;
+export default SearchPlotArea;

@@ -28,7 +28,7 @@ export default {
   deleteUser: require('./deleteUser.png'),
   lock: require('./lock.png'),
   logout: require('./logout.png'),
-  arrowRigth: require('./arrowRight.png'),
+  arrowRigth: require('./arrowRigth.png'),
   mytask: require('./mytask.png'),
   mytask_active: require('./mytask_active.png'),
   profile_blank: require('./profile_blank.png'),
