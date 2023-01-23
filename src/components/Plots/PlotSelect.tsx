@@ -22,6 +22,7 @@ interface Prop {
   locationName: string;
   onPress: () => void;
   selected: boolean;
+  status: string;
 }
 
 const PlotSelect: React.FC<Prop> = ({
@@ -31,11 +32,13 @@ const PlotSelect: React.FC<Prop> = ({
   locationName,
   selected,
   onPress,
+  status,
 }) => {
   const {
     state: { taskData },
     autoBookingContext: { setTaskData },
   } = useAutoBookingContext();
+  const isPending = status === 'PENDING';
   const radioList = [
     {
       title: 'ทั้งหมด',
@@ -68,28 +71,49 @@ const PlotSelect: React.FC<Prop> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <TouchableOpacity
       onPress={onPress}
+      disabled={isPending}
       style={{
         width: '100%',
       }}>
       <View
         style={[
-          styles.card,
-          selected && styles.selected,
+          styles({ disable: isPending }).card,
+          selected && styles({ disable: isPending }).selected,
           { justifyContent: 'center' },
         ]}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={styles.h1}>{plotName}</Text>
+          <Text
+            style={{
+              fontFamily: fonts.SarabunMedium,
+              fontSize: 20,
+              color: isPending ? colors.grey40 : colors.fontGrey,
+            }}>
+            {plotName}
+          </Text>
           <Image
             style={{ width: normalize(24), height: normalize(24) }}
-            source={selected ? image.checked : image.uncheck}
+            source={
+              isPending
+                ? icons.disableCheck
+                : selected
+                ? image.checked
+                : image.uncheck
+            }
           />
         </View>
         <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
           <Image
-            source={icons.plot}
+            source={
+              isPending
+                ? icons.areaDisable
+                : selected
+                ? icons.plot
+                : icons.areaNormal
+            }
             style={{
               width: normalize(18),
               height: normalize(20),
@@ -100,14 +124,20 @@ const PlotSelect: React.FC<Prop> = ({
             style={{
               fontFamily: fonts.SarabunMedium,
               fontSize: normalize(16),
-              color: colors.fontGrey,
+              color: isPending ? colors.grey40 : colors.fontGrey,
               marginRight: '40%',
               bottom: 2,
             }}>
             {raiAmount + ' ' + 'ไร่'}
           </Text>
           <Image
-            source={icons.plant}
+            source={
+              isPending
+                ? icons.plantDisable
+                : selected
+                ? icons.plant
+                : icons.plantNormal
+            }
             style={{
               width: normalize(18),
               height: normalize(20),
@@ -118,7 +148,7 @@ const PlotSelect: React.FC<Prop> = ({
             style={{
               fontFamily: fonts.SarabunMedium,
               fontSize: normalize(16),
-              color: colors.fontGrey,
+              color: isPending ? colors.grey40 : colors.fontGrey,
               marginRight: '10%',
               bottom: 2,
             }}>
@@ -127,7 +157,13 @@ const PlotSelect: React.FC<Prop> = ({
         </View>
         <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
           <Image
-            source={icons.location}
+            source={
+              isPending
+                ? icons.locationDisable
+                : selected
+                ? icons.location
+                : icons.locationNormal
+            }
             style={{
               width: normalize(18),
               height: normalize(20),
@@ -139,7 +175,11 @@ const PlotSelect: React.FC<Prop> = ({
             style={{
               fontFamily: fonts.SarabunMedium,
               fontSize: normalize(16),
-              color: colors.fontGrey,
+              color: isPending
+                ? colors.grey40
+                : selected
+                ? colors.greenDark
+                : colors.fontGrey,
               marginRight: '10%',
 
               bottom: 2,
@@ -147,6 +187,30 @@ const PlotSelect: React.FC<Prop> = ({
             {locationName}
           </Text>
         </View>
+        {isPending && (
+          <View
+            style={{
+              backgroundColor: '#FFF2E3',
+              paddingVertical: 4,
+              paddingHorizontal: 8,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 18,
+              alignSelf: 'flex-start',
+              borderWidth: 1,
+              borderColor: colors.orange,
+              marginTop: 8,
+            }}>
+            <Text
+              style={{
+                fontFamily: fonts.AnuphanMedium,
+                color: colors.orange,
+                fontSize: 16,
+              }}>
+              รอการตรวจสอบ
+            </Text>
+          </View>
+        )}
         {selected && (
           <>
             <View
@@ -220,33 +284,34 @@ const PlotSelect: React.FC<Prop> = ({
 
 export default PlotSelect;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  card: {
-    width: Dimensions.get('window').width - normalize(20),
-    minHeight: normalize(130),
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: '#C0C5CA',
-    margin: normalize(10),
-    borderRadius: normalize(10),
-    padding: normalize(10),
-  },
-  selected: {
-    borderColor: '#2EC46D',
-    backgroundColor: 'rgba(46, 196, 109, 0.05)',
-    borderWidth: 2,
-  },
-  title: {
-    fontWeight: 'bold',
-  },
-  h1: {
-    fontFamily: font.SarabunMedium,
-    fontSize: normalize(20),
-    colors: '#0D381F',
-  },
-});
+const styles = ({ disable = false }: { disable?: boolean }) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    card: {
+      width: Dimensions.get('window').width - normalize(20),
+      minHeight: normalize(130),
+      backgroundColor: disable ? colors.greyDivider : 'white',
+      borderWidth: 1,
+      borderColor: '#C0C5CA',
+      margin: normalize(10),
+      borderRadius: normalize(10),
+      padding: normalize(10),
+    },
+    selected: {
+      borderColor: '#2EC46D',
+      backgroundColor: 'rgba(46, 196, 109, 0.05)',
+      borderWidth: 2,
+    },
+    title: {
+      fontWeight: 'bold',
+    },
+    h1: {
+      fontFamily: font.SarabunMedium,
+      fontSize: normalize(20),
+      colors: disable ? colors.greyDivider : '#0D381F',
+    },
+  });

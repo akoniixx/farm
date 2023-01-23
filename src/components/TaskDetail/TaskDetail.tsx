@@ -111,6 +111,23 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
     { icon: icons.plant, text: 'พืชที่ปลูก' },
     { icon: icons.location, text: 'จำนวนไร่' },
   ];
+  const dataKeyObj = {
+    amountPlot: {
+      icon: icons.plot,
+      label: 'จำนวนไร่',
+      value: `${plotAmout} ไร่`,
+    },
+    plant: {
+      icon: icons.plant,
+      label: 'พืชที่ปลูก',
+      value: plant,
+    },
+    location: {
+      icon: icons.location,
+      label: 'ตำแหน่ง',
+      value: location,
+    },
+  };
 
   return (
     <View
@@ -133,23 +150,6 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
             ]}>
             {plotName}
           </Text>
-          <View>
-            {data.map(({ icon, text }, index) => (
-              <View
-                key={index}
-                style={{ flexDirection: 'row', marginBottom: normalize(10) }}>
-                <Image
-                  source={icon}
-                  style={{
-                    width: normalize(20),
-                    height: normalize(20),
-                    marginRight: normalize(10),
-                  }}
-                />
-                <Text style={styles.h1}>{text}</Text>
-              </View>
-            ))}
-          </View>
         </View>
         <View style={{ alignItems: 'flex-end' }}>
           <TouchableOpacity onPress={onPressMap}>
@@ -162,23 +162,45 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
               }}
             />
           </TouchableOpacity>
-          <Text
-            style={[styles.h1, { marginBottom: normalize(4), marginTop: 6 }]}>
-            {plotAmout + ' ' + 'ไร่'}
-          </Text>
-          <Text
-            style={[styles.h1, { marginBottom: normalize(8), marginTop: 4 }]}>
-            {plant}
-          </Text>
-          <Text
-            numberOfLines={1}
-            style={[
-              styles.h1,
-              { width: 150, lineHeight: 30, marginTop: 2, textAlign: 'right' },
-            ]}>
-            {location}
-          </Text>
         </View>
+      </View>
+      <View style={{}}>
+        {Object.keys(dataKeyObj).map((key, index) => {
+          return (
+            <View
+              key={index}
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+                marginBottom: normalize(10),
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={dataKeyObj[key as keyof typeof dataKeyObj].icon}
+                  style={{
+                    width: normalize(20),
+                    height: normalize(20),
+                    marginRight: normalize(10),
+                  }}
+                />
+                <Text style={styles.h1}>
+                  {dataKeyObj[key as keyof typeof dataKeyObj].label}
+                </Text>
+              </View>
+              <View>
+                <Text numberOfLines={1} style={styles.h1}>
+                  {dataKeyObj[key as keyof typeof dataKeyObj].value}
+                </Text>
+              </View>
+            </View>
+          );
+        })}
       </View>
     </View>
   );

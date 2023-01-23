@@ -4,6 +4,7 @@ export default {
   blueDark: '#036EAF',
   blueLight: '#2BB0ED',
   blueMedium: '#048EE2',
+  blueBorder: '#37ABFF',
   primary: '#1F8449',
   greenDark: '#014D40',
   greenLight: '#2EC66E',

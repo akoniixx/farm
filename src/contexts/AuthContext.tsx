@@ -63,7 +63,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           const farmerId = (await AsyncStorage.getItem('farmer_id')) ?? '';
 
           const data = await ProfileDatasource.getProfile(farmerId);
-          console.log(data);
+          console.log('user', JSON.stringify(data, null, 2));
           dispatch({ type: 'GET_ME', user: data });
           return data;
         } catch (e: any) {

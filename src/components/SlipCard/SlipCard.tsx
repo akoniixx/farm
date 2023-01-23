@@ -6,36 +6,64 @@ import DashedLine from 'react-native-dashed-line';
 import { image } from '../../assets';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
+export interface TaskDataTypeSlip {
+  id: string;
+  taskNo: string;
+  farmerId: string;
+  farmerPlotId: string;
+  farmAreaAmount: string;
 
-export default function SlipCard() {
+  purposeSprayId: string;
+  dateAppointment: string;
+  targetSpray: string[];
+  cropName: string;
+  purposeSprayName: string;
+  preparationBy: string;
+  comment: string;
+  price: string;
+  totalPrice: string;
+}
+interface Props extends TaskDataTypeSlip {}
+
+export default function SlipCard({
+  taskNo,
+  dateAppointment,
+  targetSpray,
+  cropName,
+  purposeSprayName,
+  preparationBy,
+  comment,
+  price,
+  totalPrice,
+}: Props) {
   const listDataObj = {
     date: {
       label: 'วันที่',
-      value: momentExtend.toBuddhistYear(new Date(), 'DD MMMM YYYY'),
+      value: momentExtend.toBuddhistYear(dateAppointment, 'DD MMMM YYYY'),
     },
     time: {
       label: 'เวลา',
-      value: momentExtend.toBuddhistYear(new Date(), 'HH:mm น.'),
+      value: momentExtend.toBuddhistYear(dateAppointment, 'HH:mm น.'),
     },
     plantInjection: {
       label: 'พืชที่พ่น',
-      value: 'ข้าวโพด',
+      value: cropName,
     },
     timeInjection: {
       label: 'ช่วงเวลาการพ่น',
-      value: 'คุมเลน',
+      value: purposeSprayName,
     },
     targetInjection: {
       label: 'เป้าหมายการพ่น',
-      value: 'หญ้า',
+      value: [...targetSpray].join(', '),
     },
     prepareType: {
       label: 'ยาที่ต้องใช้',
-      value: 'เกษตกรเตรียมเอง',
+      value: preparationBy,
     },
     note: {
       label: 'หมายเหตุ',
-      value: 'lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      value: comment || '-',
     },
   };
   const listArray = Object.keys(listDataObj);
@@ -63,7 +91,7 @@ export default function SlipCard() {
             fontSize: 16,
             fontFamily: fonts.SarabunMedium,
           }}>
-          TK20221018TH-0000001
+          {taskNo}
         </Text>
       </View>
       <View style={styles.shadow}>
@@ -71,6 +99,7 @@ export default function SlipCard() {
           {listArray.map((item, index) => {
             return (
               <View
+                key={index}
                 style={{
                   marginBottom: 8,
                   flexDirection: 'row',
@@ -168,7 +197,9 @@ export default function SlipCard() {
               marginTop: 16,
               textAlign: 'center',
             }}>
-            {`${formatNumberWithComma(1000)} บาท`}
+            {`${formatNumberWithComma(
+              totalPrice === 'NaN' ? price : totalPrice,
+            )} บาท`}
           </Text>
         </View>
       </View>

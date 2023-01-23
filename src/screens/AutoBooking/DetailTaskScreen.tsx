@@ -5,11 +5,15 @@ import React, { useEffect, useState } from 'react';
 import {
   Image,
   Linking,
+  Modal,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SheetManager } from 'react-native-actions-sheet';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
+import { font } from '../../assets';
 import colors from '../../assets/colors/colors';
 import fonts from '../../assets/fonts';
 import icons from '../../assets/icons/icons';
@@ -47,6 +51,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const [couponCode, setCouponCode] = useState('');
   const [couponCodeError, setCouponCodeError] = useState('');
   const [disableEdit, setDisableEdit] = useState(false);
+  const [currentTel, setCurrentTel] = useState('');
+  const [showModalCall, setShowModalCall] = useState(false);
+  const [loading, setLoading] = useState(true);
   const checkCoupon = async () => {
     try {
       const res = await checkCouponOffline(couponCode);
@@ -68,6 +75,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
 
   const onSubmit = async () => {
     try {
+      setLoading(true);
       const payload: PayloadCreateTask = {
         purposeSprayId: taskData.purposeSpray.id,
         cropName: taskData.cropName || '',
@@ -87,27 +95,36 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       const res = await TaskDatasource.createTask(payload);
 
       if (res && res.success) {
-        setTaskData(initialState.taskData);
+        setLoading(false);
+
         await AsyncStorage.setItem('taskId', res.responseData.id);
         navigation.navigate('SlipWaitingScreen', {
           taskId: res.responseData.id,
         });
+        setTaskData(initialState.taskData);
       }
     } catch (e) {
       console.log(e);
     }
   };
   useEffect(() => {
-    if (taskData) {
-      getCalculatePrice({
-        farmerPlotId: taskData.farmerPlotId,
-        couponCode: taskData.couponCode || '',
-        cropName: taskData.cropName || '',
-        raiAmount: taskData.farmAreaAmount ? +taskData.farmAreaAmount : 0,
-      });
-      setCouponCode(taskData.couponCode || '');
-      setDisableEdit(!!taskData.couponCode);
-    }
+    const getInitialData = async () => {
+      try {
+        await getCalculatePrice({
+          farmerPlotId: taskData.farmerPlotId,
+          couponCode: taskData.couponCode || '',
+          cropName: taskData.cropName || '',
+          raiAmount: taskData.farmAreaAmount ? +taskData.farmAreaAmount : 0,
+        });
+        setCouponCode(taskData.couponCode || '');
+        setDisableEdit(!!taskData.couponCode);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getInitialData();
     getProfileAuth();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -144,10 +161,45 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         }}
       />
       <ScrollView>
+        {/* taskNo  */}
+        {/* <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: normalize(16),
+            alignItems: 'center',
+            paddingVertical: normalize(10),
+          }}>
+          <Text
+            style={{
+              fontFamily: fonts.AnuphanMedium,
+              fontSize: 14,
+              color: colors.grey40,
+            }}>
+            #TK20221018TH-0000003
+          </Text>
+          <View
+            style={{
+              paddingVertical: 4,
+              paddingHorizontal: 10,
+              borderRadius: 18,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: colors.orangeLight,
+            }}>
+            <Text
+              style={{
+                fontFamily: fonts.AnuphanMedium,
+                fontSize: 16,
+                color: colors.white,
+              }}>
+              รอเริ่มงาน
+            </Text>
+          </View>
+        </View> */}
         <View
           style={{
             backgroundColor: 'white',
-            marginTop: 10,
             paddingVertical: normalize(10),
           }}>
           <View
@@ -722,6 +774,161 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           />
         </View>
       </View>
+      {/* tel footer */}
+      {/* <View
+        style={{
+          backgroundColor: colors.white,
+          paddingTop: 16,
+          height: 120,
+
+          paddingHorizontal: 16,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: -4,
+          },
+          shadowOpacity: 0.06,
+          shadowRadius: 1.62,
+          elevation: 14,
+        }}>
+        <TouchableOpacity
+          onPress={async () => {
+            const tel = await SheetManager.show('sheet-select-calling');
+            // eslint-disable-next-line no-extra-boolean-cast
+            if (!!tel) {
+              setCurrentTel(tel as string);
+              setShowModalCall(true);
+            } else {
+              setShowModalCall(false);
+            }
+          }}
+          style={{
+            backgroundColor: colors.blueBorder,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: colors.blueBorder,
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: 50,
+            marginTop: 8,
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Image
+              style={{
+                width: 20,
+                height: 20,
+                marginRight: 16,
+              }}
+              source={icons.callingWhite}
+            />
+            <Text
+              style={{
+                fontFamily: font.AnuphanMedium,
+                color: colors.white,
+                fontSize: 20,
+              }}>
+              โทรหาเจ้าหน้าที่/นักบินโดรน
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View> */}
+      <Modal animationType="fade" transparent={true} visible={showModalCall}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            paddingHorizontal: 16,
+            paddingBottom: 32,
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(`tel:${currentTel}`);
+            }}
+            style={{
+              height: 60,
+              paddingVertical: 8,
+              paddingHorizontal: 16,
+              backgroundColor: colors.white,
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              width: '100%',
+              borderRadius: 12,
+              marginBottom: 8,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{
+                  width: 24,
+                  height: 24,
+                  marginRight: 16,
+                }}
+                source={icons.callBlue}
+              />
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  color: '#007AFF',
+                  fontSize: 20,
+                }}>
+                {currentTel}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setShowModalCall(false);
+            }}
+            style={{
+              height: 60,
+              paddingVertical: 8,
+              paddingHorizontal: 16,
+              backgroundColor: colors.white,
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              borderRadius: 12,
+              marginBottom: 8,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{
+                  width: 24,
+                  height: 24,
+                  marginRight: 16,
+                }}
+                source={icons.callBlue}
+              />
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  color: '#007AFF',
+                  fontSize: 20,
+                }}>
+                ยกเลิก
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </View>
   );
 };

@@ -31,7 +31,18 @@ const createTask = async (payload: PayloadCreateTask) => {
       console.log(error);
     });
 };
+const getTaskByTaskId = async (taskId: string) => {
+  return await httpClient
+    .get(BASE_URL + '/tasks/task/' + taskId)
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
 
 export const TaskDatasource = {
   createTask,
+  getTaskByTaskId,
 };

@@ -1,5 +1,16 @@
-import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Modal,
+  Dimensions,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
+import React, { useEffect, useState } from 'react';
 import Container from '../../components/Container/Container';
 import Content from '../../components/Content/Content';
 import Header from '../../components/Header/Header';
@@ -11,13 +22,58 @@ import SectionBody from './SectionBody';
 import { MainButton } from '../../components/Button/MainButton';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
+import { TaskDatasource } from '../../datasource/TaskDatasource';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
+import { TaskDataTypeSlip } from '../../components/SlipCard/SlipCard';
+import InputText from '../../components/InputText/InputText';
 
 export default function SlipWaitingScreen({
   navigation,
   route,
 }: StackScreenProps<MainStackParamList, 'SlipWaitingScreen'>) {
   const { taskId } = route.params;
-  console.log('taskId', taskId);
+  const [loading, setLoading] = useState(true);
+  const [isFocus, setIsFocus] = useState(false);
+  const [isShowModal, setIsShowModal] = useState(false);
+  const refInput = React.useRef<any>(null);
+  const [taskData, setTaskData] = useState<TaskDataTypeSlip>({
+    id: '',
+    comment: '',
+    cropName: '',
+    purposeSprayName: '',
+    dateAppointment: '',
+    farmAreaAmount: '',
+    farmerId: '',
+    farmerPlotId: '',
+    preparationBy: '',
+    price: '',
+    purposeSprayId: '',
+    taskNo: '',
+    targetSpray: [],
+    totalPrice: '',
+  });
+  useEffect(() => {
+    const getTaskByTaskId = async (taskId: string) => {
+      try {
+        const res = await TaskDatasource.getTaskByTaskId(taskId);
+        if (res && res.data) {
+          setTaskData({
+            ...res.data,
+            cropName: res.data.purposeSpray.crop.cropName || '',
+            purposeSprayName: res.data.purposeSpray.purposeSprayName || '',
+          });
+        }
+      } catch (error) {
+        console.log('error', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (taskId) {
+      getTaskByTaskId(taskId);
+    }
+  }, [taskId]);
+
   return (
     <Container>
       <Header
@@ -36,7 +92,7 @@ export default function SlipWaitingScreen({
         componentRight={
           <TouchableOpacity
             onPress={() => {
-              console.log('cancel');
+              setIsShowModal(true);
             }}>
             <Text
               style={{
@@ -66,7 +122,7 @@ export default function SlipWaitingScreen({
               }}
               resizeMode="contain"
             />
-            <SectionBody />
+            <SectionBody {...taskData} />
           </View>
           <View
             style={{
@@ -83,6 +139,143 @@ export default function SlipWaitingScreen({
           </View>
         </ScrollView>
       </Content>
+      <Modal transparent={true} visible={isShowModal} animationType="fade">
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              width: Dimensions.get('window').width - 32,
+              backgroundColor: colors.white,
+              borderRadius: 12,
+              padding: 20,
+              height: 'auto',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View
+              style={{
+                width: '100%',
+                alignItems: 'center',
+                minHeight: 200,
+              }}>
+              <Text
+                style={{
+                  fontFamily: fonts.AnuphanBold,
+                  fontSize: 22,
+                }}>
+                ขอยกเลิกการจอง
+              </Text>
+              <View
+                style={{
+                  width: '100%',
+                  alignItems: 'flex-start',
+                  marginTop: 16,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fonts.AnuphanBold,
+                    fontSize: 20,
+                    color: colors.primary,
+                  }}>
+                  เหตุผลในการยกเลิก
+                </Text>
+
+                <InputText
+                  ref={refInput}
+                  placeholder="ระบุเหตุผล"
+                  multiline={true}
+                  onFocus={() => {
+                    setIsFocus(true);
+                  }}
+                  returnKeyType="done"
+                  returnKeyLabel="done"
+                  onSubmitEditing={() => {
+                    setIsFocus(false);
+                    refInput.current?.blur();
+                  }}
+                  numberOfLines={6}
+                  style={{
+                    marginTop: 8,
+                    width: '100%',
+                    borderColor: isFocus
+                      ? colors.greenLight
+                      : colors.greyDivider,
+
+                    minHeight: Platform.OS === 'ios' ? 6 * 20 : 40,
+                  }}
+                />
+              </View>
+            </View>
+            <View
+              style={{
+                marginTop: 16,
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsShowModal(false);
+                }}
+                style={{
+                  height: 54,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: 'transparent',
+                  borderWidth: 1,
+                  borderColor: colors.grey40,
+                  borderRadius: 8,
+                  paddingHorizontal: 16,
+                  flex: 0.48,
+                }}>
+                <Text
+                  style={{
+                    color: colors.fontBlack,
+                    fontFamily: fonts.AnuphanBold,
+                    fontSize: 20,
+                  }}>
+                  ยกเลิก
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsShowModal(false);
+                }}
+                style={{
+                  height: 54,
+                  flex: 0.48,
+
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: colors.greenLight,
+                  borderWidth: 1,
+                  borderColor: colors.greenLight,
+                  borderRadius: 8,
+                  paddingHorizontal: 16,
+                }}>
+                <Text
+                  style={{
+                    color: colors.white,
+                    fontFamily: fonts.AnuphanBold,
+                    fontSize: 20,
+                  }}>
+                  ยืนยัน
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </Container>
   );
 }

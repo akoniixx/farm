@@ -5,11 +5,13 @@ import fonts from '../../assets/fonts';
 
 interface InputStyledProps {
   isError?: boolean;
+  ref?: any;
 }
 interface Props extends TextInputProps, InputStyledProps {}
 const InputText = ({ style, ...props }: Props) => {
   return (
     <TextInput
+      ref={props.ref}
       placeholderTextColor={colors.gray}
       {...props}
       style={[
