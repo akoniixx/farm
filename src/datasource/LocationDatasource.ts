@@ -39,4 +39,18 @@ export class QueryLocation {
       })
       .catch(err => console.log(err));
   }
+
+  static getSubdistrict(id?: number, text?: string): Promise<any[]> {
+    let script = null;
+    script =
+      id != 0 ? '?districtId=' + id : text == '' ? '?search=' + text : null;
+    return registerClient
+      .get(BASE_URL + '/location/sub-district/' + script)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 }

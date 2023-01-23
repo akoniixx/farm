@@ -261,7 +261,7 @@ export class Register {
   static async uploadFarmerPlot(farmerPlot: any): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     return registerClient
-      .post(BASE_URL + `/auth/farmer/register`, {
+      .post(BASE_URL + '/auth/farmer/register', {
         id: farmer_id,
         farmerPlot: farmerPlot,
         status: 'OPEN',

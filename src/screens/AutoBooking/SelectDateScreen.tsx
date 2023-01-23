@@ -1,6 +1,6 @@
 import { Text } from '@rneui/base';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -17,17 +17,42 @@ import DatePickerCustom from '../../components/Calendar/Calendar';
 import CustomHeader from '../../components/CustomHeader';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
 import TimePicker from '../../components/TimePicker/TimePicker';
+import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { normalize, width } from '../../functions/Normalize';
 import { momentExtend } from '../../utils/moment-buddha-year';
 
 const SelectDateScreen: React.FC<any> = ({ navigation }) => {
   const windowWidth = Dimensions.get('window').width;
+  const {
+    state: { taskData },
+    autoBookingContext: { setTaskData },
+  } = useAutoBookingContext();
   const [openCalendar, setOpenCalendar] = useState(false);
   const [date, setDate] = useState(new Date());
   const [openTimePicker, setopenTimePicker] = useState(false);
   const [note, setNote] = useState('');
   const [hour, setHour] = useState(6);
   const [minute, setMinute] = useState(0);
+
+  useEffect(() => {
+    if (taskData.dateAppointment) {
+      const dateAppointment = new Date(taskData.dateAppointment);
+      setDate(dateAppointment);
+      setHour(dateAppointment.getHours());
+      setMinute(dateAppointment.getMinutes());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const onSubmit = () => {
+    const newFormatDate = moment(date).set('hour', hour).set('minute', minute);
+    setTaskData(prev => ({
+      ...prev,
+      dateAppointment: newFormatDate.toISOString(),
+      comment: note,
+    }));
+    navigation.navigate('SelectPlotScreen');
+  };
+
   return (
     <>
       <StepIndicatorHead
@@ -154,7 +179,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
               fontColor={colors.white}
               color={colors.greenLight}
               width={150}
-              onPress={() => navigation.navigate('SelectPlotScreen')}
+              onPress={() => onSubmit()}
             />
           </View>
         </View>

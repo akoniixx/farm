@@ -1,36 +1,56 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Text } from '@rneui/base';
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import {
-  Dimensions,
   FlatList,
   Image,
   KeyboardAvoidingView,
-  Modal,
+  Linking,
   Platform,
   ScrollView,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
 import PlotSelect from '../../components/Plots/PlotSelect';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
+import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { PlotDatasource } from '../../datasource/PlotDatasource';
+import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { normalize } from '../../functions/Normalize';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 
 const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
+  const {
+    autoBookingContext: { setTaskData, getLocationPrice, searchDroner },
+  } = useAutoBookingContext();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [plotList, setPlotList] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
 
+  const isHaveWaitingApprove = useMemo(() => {
+    if (plotList?.data && plotList.data.length > 0) {
+      return (plotList.data || []).some((el: any) => el.status === 'PENDING');
+    }
+    return false;
+  }, [plotList?.data]);
+
   const handleCardPress = (index: number) => {
     setSelectedCard(index);
+  };
+  const onSubmit = () => {
+    if (selectedCard === null) return;
+
+    setTaskData(prev => ({
+      ...prev,
+      farmerPlotId: plotList.data[selectedCard].id,
+    }));
+    navigation.navigate('SelectTarget');
   };
 
   const getPlotlist = async () => {
@@ -46,7 +66,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
   useEffect(() => {
     getPlotlist();
   }, []);
-
+  // console.log(JSON.stringify(plotList?.data, null, 2));
   return (
     <>
       <KeyboardAvoidingView
@@ -57,6 +77,81 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
           onPressBack={() => navigation.goBack()}
           label={'เลือกแปลงของคุณ'}
         />
+        {isHaveWaitingApprove && (
+          <View style={styles.containerWarning}>
+            <View
+              style={{
+                backgroundColor: '#FFF9F2',
+                padding: 16,
+                borderRadius: 12,
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}>
+                <View
+                  style={{
+                    width: 30,
+                  }}>
+                  <Image
+                    source={icons.warningIcon}
+                    style={{
+                      width: 24,
+                      height: 24,
+                    }}
+                  />
+                </View>
+                <Text
+                  style={{
+                    fontFamily: font.SarabunLight,
+                    fontSize: 18,
+                    paddingRight: 16,
+                  }}>
+                  หากแปลงของคุณมีสถานะ “รอการตรวจ สอบ”
+                  จะส่งผลต่อขั้นตอนจ้างนักบินโดรน กรุณาติดต่อเจ้าหน้าที่
+                  เพื่อยืนยันสถานะ
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL(`tel:${callcenterNumber}`);
+                }}
+                style={{
+                  backgroundColor: colors.white,
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  borderColor: colors.blueBorder,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: 50,
+                  marginTop: 16,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    style={{
+                      width: 20,
+                      height: 20,
+                      marginRight: 8,
+                    }}
+                    source={icons.calling}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanMedium,
+                      color: colors.blueBorder,
+                      fontSize: 20,
+                    }}>
+                    โทรหาเจ้าหน้าที่
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
 
         {plotList?.data?.length === 0 ? (
           <View style={{ backgroundColor: 'white' }}>
@@ -92,6 +187,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
               backgroundColor: 'white',
             }}>
             <ScrollView
+              showsVerticalScrollIndicator={false}
               style={{ paddingVertical: 10 }}
               contentContainerStyle={{
                 flexGrow: 1,
@@ -102,11 +198,40 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                 renderItem={({ item, index }) => (
                   <PlotSelect
                     id={item.id}
+                    status={item.status}
                     plotName={item.plotName}
                     plantName={item.plantName}
                     locationName={item.locationName}
                     raiAmount={item.raiAmount}
-                    onPress={() => handleCardPress(index)}
+                    onPress={async () => {
+                      handleCardPress(index);
+                      setTaskData(prev => ({
+                        ...prev,
+                        cropName: item.plantName,
+                        plantName: item.plantName,
+                        plotName: item.plotName,
+                        farmerId: item.farmerId,
+                        plotArea: item.plotArea,
+
+                        province: item.province,
+                        locationName: item.landmark,
+                        farmAreaAmount: item.raiAmount,
+                        purposeSpray: {
+                          id: '',
+                          name: '',
+                        },
+                        targetSpray: [],
+                        preparationBy: '',
+                      }));
+                      await getLocationPrice({
+                        provinceId: item.plotArea.provinceId,
+                        cropName: item.plantName,
+                      });
+                      await searchDroner({
+                        farmerId: item.farmerId,
+                        farmerPlotId: item.id,
+                      });
+                    }}
                     selected={index === selectedCard}
                   />
                 )}
@@ -118,13 +243,19 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                 }}>
                 <MainButton
                   label="ถัดไป"
+                  disable={selectedCard === null}
                   color={colors.greenLight}
-                  onPress={() => navigation.navigate('SelectTarget')}
+                  onPress={() => onSubmit()}
                 />
               </View>
             </ScrollView>
           </SafeAreaView>
         )}
+        <Spinner
+          visible={loading}
+          textContent={'Loading...'}
+          textStyle={{ color: '#FFF' }}
+        />
       </KeyboardAvoidingView>
     </>
   );
@@ -174,5 +305,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  containerWarning: {
+    padding: 16,
+    backgroundColor: colors.white,
   },
 });

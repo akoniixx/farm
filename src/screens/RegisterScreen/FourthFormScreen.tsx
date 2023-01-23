@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font } from '../../assets';
 import icons from '../../assets/icons/icons';
@@ -64,16 +65,25 @@ const FourthFormScreen: React.FC<any> = ({ route, navigation }) => {
               });
             }}
           />
-          <MainButton
-            label="ข้ามขั้นตอน"
-            color={colors.white}
-            fontColor={'black'}
+          <TouchableOpacity
             onPress={() => {
               Register.registerSkip4()
                 .then(res => navigation.navigate('SuccessRegister'))
                 .catch(err => console.log(err));
-            }}
-          />
+            }}>
+            <View
+              style={{ height: normalize(50), paddingVertical: normalize(10) }}>
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  fontSize: normalize(16),
+                  alignSelf: 'center',
+                  textAlign: 'center',
+                }}>
+                ข้ามขั้นตอน
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

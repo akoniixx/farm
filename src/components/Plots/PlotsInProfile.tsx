@@ -18,7 +18,7 @@ interface plotData {
   raiAmount: number;
   plantName: string;
   status: string;
-  location: string;
+  locationName: string;
 }
 export function StatusObject(status: string) {
   switch (status) {
@@ -50,7 +50,7 @@ const PlotInProfile: React.FC<plotData> = ({
   raiAmount,
   plantName,
   status,
-  location,
+  locationName,
 }) => {
   const windowWidth = Dimensions.get('screen').width;
 
@@ -58,7 +58,7 @@ const PlotInProfile: React.FC<plotData> = ({
     <View style={{ flex: 1, padding: 5, alignSelf: 'center' }}>
       <View key={index} style={[styles.cards]}>
         <View>
-          <Text style={styles.title}>{plantName}</Text>
+          <Text style={styles.title}>{plotName}</Text>
           <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
             <Image
               source={icons.plot}
@@ -116,7 +116,7 @@ const PlotInProfile: React.FC<plotData> = ({
                 width: normalize(140),
                 bottom: 2,
               }}>
-              {location}
+              {locationName}
             </Text>
             <View
               style={{

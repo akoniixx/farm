@@ -115,6 +115,7 @@ const TimePicker: React.FC<Prop> = ({ setHour, setMinute, hour, minute }) => {
             const isLast = valIndex === hourList.length - 1;
             return (
               <TouchableOpacity
+                key={valIndex}
                 style={{
                   width: 50,
 

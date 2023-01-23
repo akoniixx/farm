@@ -17,6 +17,8 @@ import {
 
 import './src/components/SheetList';
 
+import { AutoBookingProvider } from './src/contexts/AutoBookingContext';
+import { AuthProvider } from './src/contexts/AuthContext';
 const App = () => {
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
@@ -30,9 +32,13 @@ const App = () => {
     <>
       <NavigationContainer ref={navigationRef}>
         <PaperProvider>
-          <SheetProvider>
-            <AppNavigator />
-          </SheetProvider>
+          <AuthProvider>
+            <AutoBookingProvider>
+              <SheetProvider>
+                <AppNavigator />
+              </SheetProvider>
+            </AutoBookingProvider>
+          </AuthProvider>
         </PaperProvider>
         <Toast config={toastConfig} />
       </NavigationContainer>
