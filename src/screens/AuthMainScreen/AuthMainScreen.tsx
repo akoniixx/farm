@@ -85,7 +85,6 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
         .catch(err => console.log(err));
     }
   };
-
   const dronerSug = async () => {
     const value = await AsyncStorage.getItem('token');
     if (value) {
@@ -122,87 +121,98 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
         .catch(err => console.log(err));
     }
   };
+
   return (
     <View style={[stylesCentral.container]}>
-      <>
-        <View style={{ backgroundColor: colors.white, height: screenHeight }}>
-          <View style={[stylesCentral.container]}>
-            <View style={{ flex: 1 }}>
-              <View>
-                <ImageBackground
-                  source={image.bgHead}
-                  style={{
-                    width: (width * 380) / 375,
-                    height: (height * 250) / 812,
-                  }}>
-                  <View style={styles.headCard}>
-                    <View>
-                      <Text
-                        style={{
-                          fontFamily: font.AnuphanMedium,
-                          fontSize: normalize(18),
-                          color: colors.fontBlack,
-                        }}>
-                        ยินดีต้อนรับ
-                      </Text>
+      <View style={{ backgroundColor: colors.white, height: screenHeight }}>
+        <View style={[stylesCentral.container]}>
+          <View style={{ flex: 1 }}>
+            <View>
+              <ImageBackground
+                source={image.bgHead}
+                style={{
+                  width: (width * 380) / 375,
+                  height: (height * 250) / 812,
+                }}>
+                <View style={styles.headCard}>
+                  <View>
+                    <Text
+                      style={{
+                        fontFamily: font.AnuphanMedium,
+                        fontSize: normalize(18),
+                        color: colors.fontBlack,
+                      }}>
+                      ยินดีต้อนรับ
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: font.AnuphanBold,
+                        fontSize: normalize(26),
+                        color: colors.orange,
+                      }}>
+                      Icon
                       <Text
                         style={{
                           fontFamily: font.AnuphanBold,
                           fontSize: normalize(26),
-                          color: colors.orange,
+                          color: colors.greenLight,
                         }}>
-                        Icon
-                        <Text
-                          style={{
-                            fontFamily: font.AnuphanBold,
-                            fontSize: normalize(26),
-                            color: colors.greenLight,
-                          }}>
-                          Kaset
-                        </Text>
+                        Kaset
                       </Text>
-                    </View>
+                    </Text>
                   </View>
-                  <View
-                    style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <View style={{ flexDirection: 'row', top: '25%' }}>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate('DronerBooking')}>
-                        <LinearGradient
-                          colors={['#61E097', '#3B996E']}
-                          style={{
-                            marginHorizontal: 15,
-                            paddingVertical: normalize(10),
-                            width: 170,
-                            height: 130,
-                            borderRadius: 24,
-                            alignItems: 'center',
-                          }}>
-                          <Image source={icons.drone} />
-                          <Text style={styles.font}>จ้างโดรนเกษตร</Text>
-                        </LinearGradient>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate('MyPlotScreen')}>
-                        <LinearGradient
-                          colors={['#FFFFFF', '#ECFBF2']}
-                          style={{
-                            marginHorizontal: 15,
-                            paddingVertical: normalize(10),
-                            width: 170,
-                            height: 130,
-                            borderRadius: 24,
-                            alignItems: 'center',
-                          }}>
-                          <Image source={icons.plots} />
-                          <Text style={styles.font1}>แปลงของคุณ</Text>
-                        </LinearGradient>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </ImageBackground>
-              </View>
-              {/* <View
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    top: '25%',
+                    alignSelf: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('DronerBooking')}>
+                    <LinearGradient
+                      colors={['#61E097', '#3B996E']}
+                      style={{
+                        paddingVertical: normalize(10),
+                        width: normalize(166),
+                        height: normalize(137),
+                        borderRadius: 24,
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: colors.greenLight,
+                      }}>
+                      <Image
+                        source={icons.drone}
+                        style={{ height: normalize(76), width: normalize(105) }}
+                      />
+                      <Text style={styles.font}>จ้างโดรนเกษตร</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                  <View style={{ width: normalize(10) }}></View>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('MyPlotScreen')}>
+                    <LinearGradient
+                      colors={['#FFFFFF', '#ECFBF2']}
+                      style={{
+                        paddingVertical: normalize(10),
+                        width: normalize(166),
+                        height: normalize(137),
+                        borderRadius: 24,
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: colors.greenLight,
+                      }}>
+                      <Image
+                        source={icons.plots}
+                        style={{ height: normalize(76), width: normalize(105) }}
+                      />
+                      <Text style={styles.font1}>แปลงของคุณ</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </View>
+              </ImageBackground>
+            </View>
+            {/* <View
                   style={{
                     flexDirection: 'row',
                     padding: '5%',
@@ -226,7 +236,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                     ดูทั้งหมด
                   </Text>
                 </View> */}
-              {/* <View
+            {/* <View
                   style={{
                     width: '100%',
                     height: normalize(60),
@@ -243,8 +253,8 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                     }}
                   />
                 </View> */}
-              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                {/* <Text
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              {/* <Text
                     style={[
                       styles.text,
                       {
@@ -255,48 +265,45 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                     ]}>
                     นักบินโดรนที่แนะนำ
                   </Text> */}
-                <Image
-                  source={image.empty_droner}
-                  style={{
-                    width: normalize(126),
-                    height: normalize(120),
-                    top: '16%',
-                    marginBottom: normalize(32),
-                  }}
-                />
-                <View style={{ height: '20%' }}></View>
-                <Text style={[styles.textEmpty]}>
-                  เพื่อให้สามารถจ้างงานนักบินโดรนได้
+              <Image
+                source={image.empty_droner}
+                style={{
+                  width: normalize(126),
+                  height: normalize(120),
+                  top: normalize(120),
+                  marginBottom: normalize(32),
+                }}
+              />
+              <View style={{ height: normalize(120) }}></View>
+              <Text style={[styles.textEmpty]}>
+                เพื่อให้สามารถจ้างงานนักบินโดรนได้
+              </Text>
+              <Text style={[styles.textEmpty]}>กรุณาลงทะเบียน/เข้าสู่ระบบ</Text>
+              <TouchableOpacity
+                style={{ margin: '3%' }}
+                onPress={async () => {
+                  const value = await AsyncStorage.getItem('PDPA');
+                  if (value === 'read') {
+                    navigation.navigate('TelNumScreen');
+                  } else {
+                    navigation.navigate('ConditionScreen');
+                  }
+                }}>
+                <Text
+                  style={[
+                    styles.textEmpty,
+                    {
+                      color: colors.greenLight,
+                      textDecorationLine: 'underline',
+                    },
+                  ]}>
+                  คลิกเลย!
                 </Text>
-                <Text style={[styles.textEmpty]}>
-                  กรุณาลงทะเบียน/เข้าสู่ระบบ
-                </Text>
-                <TouchableOpacity
-                  style={{ margin: '3%' }}
-                  onPress={async () => {
-                    const value = await AsyncStorage.getItem('PDPA');
-                    if (value === 'read') {
-                      navigation.navigate('TelNumScreen');
-                    } else {
-                      navigation.navigate('ConditionScreen');
-                    }
-                  }}>
-                  <Text
-                    style={[
-                      styles.textEmpty,
-                      {
-                        color: colors.greenLight,
-                        textDecorationLine: 'underline',
-                      },
-                    ]}>
-                    คลิกเลย!
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
-      </>
+      </View>
     </View>
   );
 };

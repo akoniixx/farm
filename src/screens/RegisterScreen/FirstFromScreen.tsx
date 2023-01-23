@@ -2,36 +2,32 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   TextInput,
-  Button,
-  PermissionsAndroid,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
   Platform,
-  Modal,
-  Image,
+  Button,
   Dimensions,
-  Pressable,
-  Alert,
+  Image,
 } from 'react-native';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../styles/StylesCentral';
-import { colors, font, icons, image as img } from '../../assets';
+import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import { MainButton } from '../../components/Button/MainButton';
-import { ScrollView } from 'react-native-gesture-handler';
-import * as ImagePicker from 'react-native-image-picker';
 import { normalize, width } from '../../functions/Normalize';
+import { Authentication, Register } from '../../datasource/AuthDatasource';
 import { ProgressBar } from '../../components/ProgressBar';
+import { ScrollView } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import { Avatar } from '@rneui/base';
 import { registerReducer } from '../../hook/registerfield';
-import fonts from '../../assets/fonts';
-import { Avatar } from '@rneui/themed';
-import { Register } from '../../datasource/AuthDatasource';
-import Geolocation from 'react-native-geolocation-service';
-import moment from 'moment';
-import { _monthName, build12Year } from '../../definitions/constants';
-import DatePicker from 'react-native-date-picker';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
+import * as ImagePicker from 'react-native-image-picker';
+import icons from '../../assets/icons/icons';
+import { momentExtend } from '../../utils/moment-buddha-year';
+import { Modal } from 'react-native';
 import DatePickerCustom from '../../components/Calendar/Calendar';
 
 const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
@@ -44,20 +40,11 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
   const tele = route.params.tele;
   const windowWidth = Dimensions.get('window').width;
   const [image, setImage] = useState<any>(null);
-  const [value, setValue] = useState(null);
-  const [birthday, setBirthday] = useState('');
   const [openCalendar, setOpenCalendar] = useState(false);
-  const [openImg, setOpenImg] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const days = new Date();
   const [date, setDate] = useState(new Date());
-  const dateFormat = 'DD/MM/YYYY';
-
-  const onChange = (event: any, selectDate: any) => {
-    setDate(selectDate);
-  };
 
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
@@ -85,318 +72,287 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
   );
 
   return (
-    <SafeAreaView style={stylesCentral.container}>
-      <CustomHeader
-        title="ลงทะเบียนเกษตรกร"
-        showBackBtn
-        onPressBack={() => navigation.goBack()}
-      />
-      <View style={styles.inner}>
-        <View style={styles.container}>
-          <View style={{ marginBottom: normalize(10) }}>
-            <ProgressBar index={1} />
-          </View>
-          <Text style={styles.h3}>ขั้นตอนที่ 1 จาก 4</Text>
-          <Text style={styles.h1}>ระบุข้อมูลส่วนตัว</Text>
-          <ScrollView>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: normalize(40),
-              }}>
-              <TouchableOpacity onPress={() => setOpenModal(true)}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView style={stylesCentral.container}>
+          <CustomHeader
+            title="ลงทะเบียนเกษตรกร"
+            showBackBtn
+            onPressBack={() => navigation.goBack()}
+          />
+
+          <View style={styles.inner}>
+            <View style={styles.containerTopCard}>
+              <View style={{ marginBottom: normalize(10) }}>
+                <ProgressBar index={1} />
+              </View>
+              <Text style={styles.h3}>ขั้นตอนที่ 1 จาก 4</Text>
+              <Text style={styles.h1}>ระบุข้อมูลส่วนตัว</Text>
+              <ScrollView>
                 <View
                   style={{
-                    width: normalize(116),
-                    height: normalize(116),
-                    position: 'relative',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: normalize(40),
                   }}>
-                  <Avatar
-                    size={116}
-                    rounded
-                    source={
-                      !image ? icons.avatar : { uri: image.assets[0].uri }
-                    }
-                  />
-                  <View
-                    style={{
-                      position: 'absolute',
-                      left: normalize(70.7),
-                      top: normalize(70.7),
-                      width: normalize(32),
-                      height: normalize(32),
-                      borderRadius: normalize(16),
-                      backgroundColor: colors.white,
-                      flex: 1,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Image
-                      source={icons.camera}
+                  <TouchableOpacity onPress={() => setOpenModal(true)}>
+                    <View
                       style={{
-                        width: normalize(20),
-                        height: normalize(20),
+                        width: normalize(116),
+                        height: normalize(116),
+                        position: 'relative',
+                      }}>
+                      <Avatar
+                        size={116}
+                        rounded
+                        source={
+                          !image ? icons.avatar : { uri: image.assets[0].uri }
+                        }
+                      />
+                      <View
+                        style={{
+                          position: 'absolute',
+                          left: normalize(70.7),
+                          top: normalize(70.7),
+                          width: normalize(32),
+                          height: normalize(32),
+                          borderRadius: normalize(16),
+                          backgroundColor: colors.white,
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Image
+                          source={icons.camera}
+                          style={{
+                            width: normalize(20),
+                            height: normalize(20),
+                          }}
+                        />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.head}>ชื่อ*</Text>
+                <TextInput
+                  onChangeText={value => {
+                    dispatch({
+                      type: 'Handle Input',
+                      field: 'name',
+                      payload: value,
+                    });
+                  }}
+                  value={formState.name}
+                  style={styles.input}
+                  editable={true}
+                  placeholder={'ระบุชื่อ'}
+                  placeholderTextColor={colors.disable}
+                />
+                <Text style={styles.head}>นามสกุล*</Text>
+                <TextInput
+                  onChangeText={value => {
+                    dispatch({
+                      type: 'Handle Input',
+                      field: 'surname',
+                      payload: value,
+                    });
+                  }}
+                  value={formState.surname}
+                  style={styles.input}
+                  editable={true}
+                  placeholder={'นามสกุล'}
+                  placeholderTextColor={colors.disable}
+                />
+
+                <Text style={styles.head}>วันเกิด</Text>
+                <TouchableOpacity onPress={() => setOpenCalendar(true)}>
+                  <View
+                    style={[
+                      styles.input,
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                      },
+                    ]}>
+                    <TextInput
+                      value={momentExtend.toBuddhistYear(date, 'DD MMMM YYYY')}
+                      editable={false}
+                      placeholder={'ระบุวัน เดือน ปี'}
+                      placeholderTextColor={colors.disable}
+                      style={{
+                        width: windowWidth * 0.78,
+                        color: colors.fontBlack,
+                        fontSize: normalize(16),
+                        fontFamily: font.SarabunLight,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    />
+                    <Image
+                      source={icons.calendar}
+                      style={{
+                        width: normalize(25),
+                        height: normalize(30),
                       }}
                     />
                   </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.head}>ชื่อ*</Text>
-            <TextInput
-              onChangeText={value => {
-                dispatch({
-                  type: 'Handle Input',
-                  field: 'name',
-                  payload: value,
-                });
-              }}
-              value={formState.name}
-              style={styles.input}
-              editable={true}
-              placeholder={'ระบุชื่อ'}
-              placeholderTextColor={colors.disable}
-            />
-            <Text style={styles.head}>นามสกุล*</Text>
-            <TextInput
-              onChangeText={value => {
-                dispatch({
-                  type: 'Handle Input',
-                  field: 'surname',
-                  payload: value,
-                });
-              }}
-              value={formState.surname}
-              style={styles.input}
-              editable={true}
-              placeholder={'นามสกุล'}
-              placeholderTextColor={colors.disable}
-            />
-
-            <Text style={styles.head}>วันเกิด</Text>
-            <TouchableOpacity onPress={() => setOpenCalendar(true)}>
-              <View
-                style={[
-                  styles.input,
-                  {
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                  },
-                ]}>
+                </TouchableOpacity>
+                <Text style={styles.head}>เบอร์โทรศัพท์</Text>
                 <TextInput
-                  value={date.toLocaleDateString('th-TH', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                  })}
+                  style={[styles.input, { backgroundColor: colors.disable }]}
                   editable={false}
-                  placeholder={'ระบุวัน เดือน ปี'}
-                  placeholderTextColor={colors.disable}
-                  style={{
-                    width: windowWidth * 0.78,
-                    color: colors.fontBlack,
-                    fontSize: normalize(16),
-                    fontFamily: font.SarabunLight,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
+                  value={tele}
+                  placeholderTextColor={colors.gray}
                 />
-                <Image
-                  source={icons.calendar}
-                  style={{
-                    width: normalize(25),
-                    height: normalize(30),
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-            <Text style={styles.head}>เบอร์โทรศัพท์</Text>
-            <TextInput
-              style={[styles.input, { backgroundColor: colors.disable }]}
-              editable={false}
-              value={tele}
-              placeholderTextColor={colors.gray}
-            />
-          </ScrollView>
-        </View>
-        <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
-          <MainButton
-            label="ถัดไป"
-            disable={!formState.name || !formState.surname ? true : false}
-            color={colors.greenLight}
-            onPress={() => {
-              Register.register1(
-                formState.name,
-                formState.surname,
-                date,
-                formState.tel,
-              )
-                .then(async res => {
-                  console.log(res);
-                  if (!image) {
-                    setLoading(false);
-                    navigation.navigate('SecondFormScreen', {
-                      formState,
-                    });
-                  } else {
-                    Register.uploadProfileImage(image)
+              </ScrollView>
+              <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
+                <MainButton
+                  label="ถัดไป"
+                  disable={!formState.name || !formState.surname ? true : false}
+                  color={colors.greenLight}
+                  onPress={() => {
+                    Register.register1(
+                      formState.name,
+                      formState.surname,
+                      date,
+                      formState.tel,
+                    )
                       .then(async res => {
-                        setLoading(false);
-                        navigation.navigate('SecondFormScreen', {
-                          formState,
-                        });
+                        console.log(res);
+                        if (!image) {
+                          setLoading(false);
+                          navigation.navigate('SecondFormScreen', {
+                            formState,
+                          });
+                        } else {
+                          Register.uploadProfileImage(image)
+                            .then(async res => {
+                              setLoading(false);
+                              navigation.navigate('SecondFormScreen', {
+                                formState,
+                              });
+                            })
+                            .catch(err => console.log(err));
+                        }
                       })
                       .catch(err => console.log(err));
-                  }
-                })
-                .catch(err => console.log(err));
-            }}
-          />
-        </View>
-        <Modal transparent={true} visible={openModal}>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                padding: normalize(20),
-                backgroundColor: colors.white,
-                width: width * 0.9,
-                display: 'flex',
-                justifyContent: 'center',
-                borderRadius: normalize(3),
-              }}>
-              <MainButton
-                fontFamily={font.SarabunLight}
-                label="ถ่ายภาพ"
-                fontColor={colors.fontBlack}
-                color={colors.white}
-                onPress={onCamera}
-                width={100}
-              />
-              <MainButton
-                fontFamily={font.SarabunLight}
-                label="เลือกรูปถ่าย"
-                fontColor={colors.fontBlack}
-                color={colors.white}
-                onPress={onAddImage}
-                width={120}
-              />
-            </View>
-          </View>
-        </Modal>
-        <Modal transparent={true} visible={openCalendar}>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                padding: normalize(20),
-                backgroundColor: colors.white,
-                width: width * 0.9,
-                display: 'flex',
-                justifyContent: 'center',
-                borderRadius: normalize(8),
-              }}>
-              <Text
-                style={[
-                  styles.h1,
-                  {
-                    textAlign: 'center',
-                    bottom: '5%',
-                    color: colors.fontBlack,
-                  },
-                ]}>
-                เลือกวันเกิด
-              </Text>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: colors.greenLight,
-                  fontFamily: font.SarabunLight,
-                  fontSize: normalize(16),
-                }}>
-                เลื่อนขึ้นลงเพื่อเลือกวันเกิดของคุณ
-              </Text>
-              <View>
-                {/* <RNDateTimePicker
-                  locale="th"
-                  themeVariant="dark"
-                  textColor={colors.fontBlack}
-                  dateFormat="dayofweek day month"
-                  mode="date"
-                  display="spinner"
-                  value={date}
-                  maximumDate={new Date()}
-                  onChange={onChange}
-                  
-                /> */}
-
-                {/* <DatePicker
-                title={'เลือกวันเกิด'}
-                  modal
-                  mode="date"
-                  locale='th'
-                  open={openCalendar}
-                  date={days}
-                 confirmText={'ยืนยัน'}
-                 cancelText={'ยกเลิก'}
-                  onConfirm={(day: Date) => {
-                    setOpenCalendar(false);
-                    setBirthday(day.toLocaleDateString('th-TH', {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric',
-                    }));
-                  }}
-                  onCancel={() => {
-                    setOpenCalendar(false);
-                  }}
-                /> */}
-                <DatePickerCustom
-                  value={date}
-                  onHandleChange={(d: Date) => {
-                    setDate(d);
                   }}
                 />
               </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                }}>
-                <MainButton
-                  label="ยกเลิก"
-                  fontColor={colors.fontBlack}
-                  borderColor={colors.fontGrey}
-                  color={colors.white}
-                  width={150}
-                  onPress={() => setOpenCalendar(false)}
-                />
-                <MainButton
-                  label="บันทึก"
-                  fontColor={colors.white}
-                  color={colors.greenLight}
-                  width={150}
-                  onPress={() => {
-                    setOpenCalendar(false);
-                  }}
-                />
-              </View>
+              <Modal transparent={true} visible={openModal}>
+                <View
+                  style={{
+                    flex: 1,
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      padding: normalize(20),
+                      backgroundColor: colors.white,
+                      width: width * 0.9,
+                      display: 'flex',
+                      justifyContent: 'center',
+                      borderRadius: normalize(3),
+                    }}>
+                    <MainButton
+                      fontFamily={font.SarabunLight}
+                      label="ถ่ายภาพ"
+                      fontColor={colors.fontBlack}
+                      color={colors.white}
+                      onPress={onCamera}
+                      width={100}
+                    />
+                    <MainButton
+                      fontFamily={font.SarabunLight}
+                      label="เลือกรูปถ่าย"
+                      fontColor={colors.fontBlack}
+                      color={colors.white}
+                      onPress={onAddImage}
+                      width={120}
+                    />
+                  </View>
+                </View>
+              </Modal>
+              <Modal transparent={true} visible={openCalendar}>
+                <View
+                  style={{
+                    flex: 1,
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      padding: normalize(20),
+                      backgroundColor: colors.white,
+                      width: width * 0.9,
+                      display: 'flex',
+                      justifyContent: 'center',
+                      borderRadius: normalize(8),
+                    }}>
+                    <Text
+                      style={[
+                        styles.h1,
+                        {
+                          textAlign: 'center',
+                          bottom: '5%',
+                          color: colors.fontBlack,
+                        },
+                      ]}>
+                      เลือกวันเกิด
+                    </Text>
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        color: colors.greenLight,
+                        fontFamily: font.SarabunLight,
+                        fontSize: normalize(16),
+                      }}>
+                      เลื่อนขึ้นลงเพื่อเลือกวันเกิดของคุณ
+                    </Text>
+                    <View>
+                      <DatePickerCustom
+                        value={date}
+                        onHandleChange={(d: Date) => {
+                          setDate(d);
+                        }}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-around',
+                      }}>
+                      <MainButton
+                        label="ยกเลิก"
+                        fontColor={colors.fontBlack}
+                        borderColor={colors.fontGrey}
+                        color={colors.white}
+                        width={150}
+                        onPress={() => setOpenCalendar(false)}
+                      />
+                      <MainButton
+                        label="บันทึก"
+                        fontColor={colors.white}
+                        color={colors.greenLight}
+                        width={150}
+                        onPress={() => {
+                          setOpenCalendar(false);
+                        }}
+                      />
+                    </View>
+                  </View>
+                </View>
+              </Modal>
             </View>
           </View>
-        </Modal>
-      </View>
-    </SafeAreaView>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 export default FirstFormScreen;
@@ -425,11 +381,7 @@ const styles = StyleSheet.create({
   digit: {
     fontSize: 20,
   },
-  inner: {
-    paddingHorizontal: normalize(17),
-    flex: 1,
-    justifyContent: 'space-around',
-  },
+
   head: {
     fontFamily: font.AnuphanBold,
     fontSize: normalize(16),
@@ -448,11 +400,6 @@ const styles = StyleSheet.create({
   },
   h3: {
     fontFamily: font.AnuphanMedium,
-    fontSize: normalize(14),
-    color: colors.gray,
-  },
-  label: {
-    fontFamily: font.AnuphanLight,
     fontSize: normalize(14),
     color: colors.gray,
   },
@@ -485,5 +432,25 @@ const styles = StyleSheet.create({
   image: {
     marginVertical: 24,
     alignItems: 'center',
+  },
+  inner: {
+    paddingHorizontal: normalize(17),
+    flex: 1,
+    justifyContent: 'space-around',
+  },
+  headText: {
+    fontFamily: font.AnuphanBold,
+    fontSize: normalize(20),
+    color: colors.fontBlack,
+    marginBottom: normalize(24),
+  },
+  label: {
+    fontFamily: font.AnuphanLight,
+    fontSize: normalize(14),
+    color: colors.gray,
+    marginTop: normalize(24),
+  },
+  containerTopCard: {
+    flex: 1,
   },
 });

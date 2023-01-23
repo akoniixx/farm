@@ -139,41 +139,46 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                 <View
                   style={{
                     flexDirection: 'row',
-                    top: '30%',
-                    justifyContent: 'center',
+                    top: '25%',
+                    alignSelf: 'center',
                   }}>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('SelectDateScreen')}>
                     <LinearGradient
                       colors={['#61E097', '#3B996E']}
                       style={{
-                        marginHorizontal: 15,
                         paddingVertical: normalize(10),
-                        width: 170,
-                        height: 130,
+                        width: normalize(166),
+                        height: normalize(137),
                         borderRadius: 24,
                         alignItems: 'center',
                         borderWidth: 1,
                         borderColor: colors.greenLight,
                       }}>
-                      <Image source={icons.drone} />
+                      <Image
+                        source={icons.drone}
+                        style={{ height: normalize(76), width: normalize(105) }}
+                      />
                       <Text style={styles.font}>จ้างโดรนเกษตร</Text>
                     </LinearGradient>
                   </TouchableOpacity>
+                  <View style={{ width: normalize(10) }}></View>
                   <TouchableOpacity>
                     <LinearGradient
                       colors={['#FFFFFF', '#ECFBF2']}
                       style={{
-                        marginHorizontal: 15,
                         paddingVertical: normalize(10),
-                        width: 170,
-                        height: 130,
+                        width: normalize(166),
+                        height: normalize(137),
                         borderRadius: 24,
                         alignItems: 'center',
                         borderWidth: 1,
                         borderColor: colors.greenLight,
                       }}>
-                      <Image source={icons.plots} />
+                      <Image
+                        source={icons.plots}
+                        style={{ height: normalize(76), width: normalize(105) }}
+                      />
                       <Text style={styles.font1}>แปลงของคุณ</Text>
                     </LinearGradient>
                   </TouchableOpacity>

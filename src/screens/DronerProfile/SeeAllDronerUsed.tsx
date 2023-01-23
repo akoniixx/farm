@@ -14,13 +14,15 @@ import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 import fonts from '../../assets/fonts';
 import CardReview from '../../components/Carousel/CardReview';
-import HistoryDronerUsed from '../../navigations/TopTabs/HistoryDronerUsedScreen';
 import { NavigationContainer } from '@react-navigation/native';
-import TabStack from '../../navigations/TopTabs/HistoryDronerUsedScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import AllDronerUsed from '../MainScreen/AllDronerUsed';
+import FavDronerUsed from '../MainScreen/FavDronerUsed';
 
 const SeeAllDronerUsed: React.FC<any> = ({ navigation, route }) => {
   const Stack = createNativeStackNavigator();
+  const Tab = createMaterialTopTabNavigator();
 
   const [selectDate, setSelectDate] = useState();
   const timeSelect = useRef<any>();
@@ -64,16 +66,40 @@ const SeeAllDronerUsed: React.FC<any> = ({ navigation, route }) => {
         showBackBtn
         onPressBack={() => navigation.goBack()}
       />
-      <Stack.Navigator
+      <Tab.Navigator
         screenOptions={{
-          headerTintColor: colors.white,
+          tabBarActiveTintColor: colors.greenLight,
+          tabBarInactiveTintColor: colors.gray,
+          tabBarStyle: {
+            backgroundColor: colors.white,
+            height: normalize(56),
+          },
+          tabBarLabelStyle: {
+            textAlign: 'center',
+            fontSize: 18,
+            color: colors.fontBlack,
+            fontFamily: font.AnuphanBold,
+          },
+          tabBarIndicatorStyle: {
+            borderBottomColor: colors.greenLight,
+            borderBottomWidth: 2,
+          },
         }}>
-        <Stack.Screen
-          name="ประวัติการจ้างนักบิน"
-          component={TabStack}
-          // options={{title: 'ประวัติการจ้างนักบิน' }}
+        <Tab.Screen
+          name="ทั้งหมด"
+          component={AllDronerUsed}
+          options={{
+            tabBarLabel: 'ทั้งหมด',
+          }}
         />
-      </Stack.Navigator>
+        <Tab.Screen
+          name="นักบินที่ถูกใจ"
+          component={FavDronerUsed}
+          options={{
+            tabBarLabel: 'นักบินที่ถูกใจ',
+          }}
+        />
+      </Tab.Navigator>
     </SafeAreaView>
   );
 };

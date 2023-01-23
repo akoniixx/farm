@@ -30,6 +30,7 @@ export default Onboarding;
 const styles = StyleSheet.create({
   btnContainer: {
     width: normalize(343),
+    height: normalize(54),
     marginVertical: normalize(10),
   },
   inner: {
