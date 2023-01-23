@@ -197,9 +197,7 @@ export default function SlipCard({
               marginTop: 16,
               textAlign: 'center',
             }}>
-            {`${formatNumberWithComma(
-              totalPrice === 'NaN' ? price : totalPrice,
-            )} บาท`}
+            {`${formatNumberWithComma(totalPrice)} บาท`}
           </Text>
         </View>
       </View>

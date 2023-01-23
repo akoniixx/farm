@@ -41,8 +41,28 @@ const getTaskByTaskId = async (taskId: string) => {
       console.log(error);
     });
 };
+const cancelTask = async ({
+  taskId,
+  reason,
+}: {
+  taskId: string;
+  reason: string;
+}) => {
+  return await httpClient
+    .patch(BASE_URL + '/tasks/task/' + taskId, {
+      status: 'CANCELLED',
+      statusRemark: reason,
+    })
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
 
 export const TaskDatasource = {
   createTask,
   getTaskByTaskId,
+  cancelTask,
 };

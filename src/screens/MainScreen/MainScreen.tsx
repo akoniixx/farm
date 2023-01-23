@@ -24,6 +24,7 @@ import DronerSugg from '../../components/Carousel/DronerCarousel';
 import { ActivityIndicator } from 'react-native-paper';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
 import { useIsFocused } from '@react-navigation/native';
+import moment from 'moment';
 
 const MainScreen: React.FC<any> = ({ navigation }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -125,6 +126,9 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
         }
         const res = await TaskDatasource.getTaskByTaskId(taskId || '');
         if (res && res.data) {
+          const endTime = await AsyncStorage.getItem('endTime');
+          const isAfter = moment(endTime).isAfter(moment());
+
           setDataFinding({
             id: res.data.id,
             taskNo: res.data.taskNo,
@@ -133,13 +137,18 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
             purposeSprayName: res.data.purposeSpray.purposeSprayName,
           });
           setShowFinding(true);
+          if (!isAfter) {
+            navigation.navigate('SlipWaitingScreen', {
+              taskId: res.data.id,
+            });
+          }
         }
       } catch (error) {
         console.log('error', error);
       }
     };
     getTaskByTaskId();
-  }, [taskId]);
+  }, [taskId, navigation]);
   return (
     <View
       style={{

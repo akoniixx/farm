@@ -36,6 +36,7 @@ import {
   PayloadCreateTask,
   TaskDatasource,
 } from '../../datasource/TaskDatasource';
+import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { numberWithCommas } from '../../functions/utility';
 import { momentExtend } from '../../utils/moment-buddha-year';
 
@@ -96,7 +97,10 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
 
       if (res && res.success) {
         setLoading(false);
-
+        await AsyncStorage.setItem(
+          'endTime',
+          moment().add(30, 'minutes').toISOString(),
+        );
         await AsyncStorage.setItem('taskId', res.responseData.id);
         navigation.navigate('SlipWaitingScreen', {
           taskId: res.responseData.id,
@@ -139,7 +143,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           return (
             <TouchableOpacity
               onPress={() => {
-                Linking.openURL('tel:0812345678');
+                Linking.openURL(`tel:${callcenterNumber}`);
               }}
               style={{
                 width: 40,
@@ -904,14 +908,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              <Image
-                style={{
-                  width: 24,
-                  height: 24,
-                  marginRight: 16,
-                }}
-                source={icons.callBlue}
-              />
               <Text
                 style={{
                   fontFamily: font.AnuphanMedium,

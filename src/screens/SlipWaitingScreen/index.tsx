@@ -7,8 +7,7 @@ import {
   Modal,
   Dimensions,
   Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
+  Linking,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Container from '../../components/Container/Container';
@@ -26,7 +25,9 @@ import { TaskDatasource } from '../../datasource/TaskDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { TaskDataTypeSlip } from '../../components/SlipCard/SlipCard';
 import InputText from '../../components/InputText/InputText';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
+import { callcenterNumber } from '../../definitions/callCenterNumber';
 export default function SlipWaitingScreen({
   navigation,
   route,
@@ -35,6 +36,9 @@ export default function SlipWaitingScreen({
   const [loading, setLoading] = useState(true);
   const [isFocus, setIsFocus] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
+  const [reason, setReason] = useState('');
+  const [showModalExtend, setShowModalExtend] = useState(false);
+  const [showModalCall, setShowModalCall] = useState(false);
   const refInput = React.useRef<any>(null);
   const [taskData, setTaskData] = useState<TaskDataTypeSlip>({
     id: '',
@@ -52,11 +56,41 @@ export default function SlipWaitingScreen({
     targetSpray: [],
     totalPrice: '',
   });
+  const onSearchExtend = async () => {
+    await AsyncStorage.setItem(
+      'endTime',
+      moment().add(30, 'minutes').toISOString(),
+    );
+    await AsyncStorage.setItem('taskId', taskId);
+    setShowModalExtend(false);
+  };
+  const onSubmitCancelTask = async () => {
+    try {
+      const res = await TaskDatasource.cancelTask({ taskId, reason });
+      if (res) {
+        await AsyncStorage.removeItem('taskId');
+        await AsyncStorage.removeItem('endTime');
+        setReason('');
+
+        navigation.navigate('MainScreen');
+      }
+    } catch (e) {
+      console.log('error', e);
+    }
+  };
   useEffect(() => {
     const getTaskByTaskId = async (taskId: string) => {
       try {
         const res = await TaskDatasource.getTaskByTaskId(taskId);
+
         if (res && res.data) {
+          const endTime = await AsyncStorage.getItem('endTime');
+          const isAfter = moment(endTime).isAfter(moment());
+          if (!isAfter) {
+            setShowModalExtend(true);
+            await AsyncStorage.removeItem('endTime');
+            await AsyncStorage.removeItem('taskId');
+          }
           setTaskData({
             ...res.data,
             cropName: res.data.purposeSpray.crop.cropName || '',
@@ -221,6 +255,7 @@ export default function SlipWaitingScreen({
               <TouchableOpacity
                 onPress={() => {
                   setIsShowModal(false);
+                  setReason('');
                 }}
                 style={{
                   height: 54,
@@ -244,6 +279,7 @@ export default function SlipWaitingScreen({
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
+                  onSubmitCancelTask();
                   setIsShowModal(false);
                 }}
                 style={{
@@ -269,6 +305,200 @@ export default function SlipWaitingScreen({
               </TouchableOpacity>
             </View>
           </View>
+        </View>
+      </Modal>
+      <Modal transparent={true} visible={showModalExtend} animationType="fade">
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              width: Dimensions.get('window').width - 32,
+              backgroundColor: colors.white,
+              borderRadius: 12,
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 20,
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                setShowModalExtend(false);
+              }}
+              style={{
+                position: 'absolute',
+                top: 20,
+                right: 20,
+              }}>
+              <Image
+                source={icons.closeBlack}
+                style={{
+                  width: 32,
+                  height: 32,
+                }}
+              />
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontFamily: fonts.AnuphanMedium,
+                fontSize: 22,
+              }}>
+              ขออภัย !
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.AnuphanMedium,
+                fontSize: 22,
+              }}>
+              ขณะนี้มีผู้ใช้งานจำนวนมาก
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.SarabunLight,
+                fontSize: 18,
+                marginVertical: 16,
+              }}>
+              ท่านสามารถกด ค้นหานักบินโดรนอีกครั้ง เพื่อค้นหาต่อไป หรือ
+              กดติดต่อเจ้าหน้าที่ เพื่อให้ช่วยในการค้นหานักบินโดรน
+            </Text>
+            <View
+              style={{
+                width: '100%',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowModalExtend(false);
+                  setShowModalCall(true);
+                }}
+                style={{
+                  backgroundColor: colors.blueBorder,
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  borderColor: colors.blueBorder,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: 50,
+                  marginVertical: 8,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    style={{
+                      width: 20,
+                      height: 20,
+                      marginRight: 16,
+                    }}
+                    source={icons.callingWhite}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: fonts.AnuphanMedium,
+                      color: colors.white,
+                      fontSize: 20,
+                    }}>
+                    ติดต่อเจ้าหน้าที่
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <MainButton
+                style={{
+                  height: 52,
+                  marginVertical: 0,
+                }}
+                onPress={onSearchExtend}
+                color={colors.white}
+                borderColor={'#202326'}
+                label="ค้นหานักบินโดรนอีกครั้ง"
+                fontColor={colors.fontBlack}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <Modal animationType="fade" transparent={true} visible={showModalCall}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            paddingHorizontal: 16,
+            paddingBottom: 32,
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(`tel:${callcenterNumber}`);
+            }}
+            style={{
+              height: 60,
+              paddingVertical: 8,
+              paddingHorizontal: 16,
+              backgroundColor: colors.white,
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              width: '100%',
+              borderRadius: 12,
+              marginBottom: 8,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{
+                  width: 24,
+                  height: 24,
+                  marginRight: 16,
+                }}
+                source={icons.callBlue}
+              />
+              <Text
+                style={{
+                  fontFamily: fonts.AnuphanMedium,
+                  color: '#007AFF',
+                  fontSize: 20,
+                }}>
+                {callcenterNumber}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setShowModalCall(false);
+            }}
+            style={{
+              height: 60,
+              paddingVertical: 8,
+              paddingHorizontal: 16,
+              backgroundColor: colors.white,
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              borderRadius: 12,
+              marginBottom: 8,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  fontFamily: fonts.AnuphanMedium,
+                  color: '#007AFF',
+                  fontSize: 20,
+                }}>
+                ยกเลิก
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </Modal>
       <Spinner

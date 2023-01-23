@@ -20,6 +20,7 @@ import PlotSelect from '../../components/Plots/PlotSelect';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
 import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { PlotDatasource } from '../../datasource/PlotDatasource';
+import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { normalize } from '../../functions/Normalize';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 
@@ -113,7 +114,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
               </View>
               <TouchableOpacity
                 onPress={() => {
-                  Linking.openURL('tel:022339000');
+                  Linking.openURL(`tel:${callcenterNumber}`);
                 }}
                 style={{
                   backgroundColor: colors.white,

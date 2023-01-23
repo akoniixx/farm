@@ -8,10 +8,11 @@ import icons from '../../assets/icons/icons';
 import fonts from '../../assets/fonts';
 import { MainButton } from '../Button/MainButton';
 import colors from '../../assets/colors/colors';
+import { callcenterNumber } from '../../definitions/callCenterNumber';
 
 export default function SelectCallingSheet(props: SheetProps) {
   const telDroner = '0812345678';
-  const telOfficer = '022339000';
+  const telOfficer = callcenterNumber;
   return (
     <ActionSheet
       id={props.sheetId}

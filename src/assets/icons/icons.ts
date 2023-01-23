@@ -66,4 +66,5 @@ export default {
   callingWhite: require('./callingWhite.png'),
   callingBlack: require('./callingBlack.png'),
   callBlue: require('./callBlue.png'),
+  closeBlack: require('./closeBlack.png'),
 };
