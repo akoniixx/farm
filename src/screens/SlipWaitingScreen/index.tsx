@@ -84,6 +84,8 @@ export default function SlipWaitingScreen({
         const res = await TaskDatasource.getTaskByTaskId(taskId);
 
         if (res && res.data) {
+          setLoading(false);
+
           const endTime = await AsyncStorage.getItem('endTime');
           const isAfter = moment(endTime).isAfter(moment());
           if (!isAfter) {
@@ -99,8 +101,6 @@ export default function SlipWaitingScreen({
         }
       } catch (error) {
         console.log('error', error);
-      } finally {
-        setLoading(false);
       }
     };
     if (taskId) {
