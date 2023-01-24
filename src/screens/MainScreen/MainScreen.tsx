@@ -274,7 +274,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                 }}
               />
             </View> */}
-             {/*  <View style={[styles.empty]}>
+              {/*  <View style={[styles.empty]}>
                 <View
                   style={{
                     flexDirection: 'row',
