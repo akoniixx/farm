@@ -74,12 +74,16 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   const windowHeight = Dimensions.get('window').height;
   const [loading, setLoading] = useState(false);
   const [position, setPosition] = useState({
-    latitude: route.params.latitude,
-    longitude: route.params.longitude,
+    latitude: 0,
+    longitude: 0,
+    // latitude: route.params.latitude,
+    // longitude: route.params.longitude,
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
-  const telNo = route.params;
+  const telNo = 0;
+
+  // const telNo = route.params;
   const [location, setLocation] = useState<any[]>([]);
   const [searchLocation] = useState('');
   const [selectPlot, setSelectPlot] = useState<any>();
@@ -92,8 +96,10 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   const [landmark, setlandmark] = useState<any>('');
   const [plotDataUI, setplotDataUI] = useState<any>([]);
   const [plotData, setplotData] = useState<any>([]);
-  const [lat, setlat] = useState<any>(route.params.latitude);
-  const [long, setlong] = useState<any>(route.params.longitude);
+  // const [lat, setlat] = useState<any>(route.params.latitude);
+  // const [long, setlong] = useState<any>(route.params.longitude);
+  const [lat, setlat] = useState<any>();
+  const [long, setlong] = useState<any>();
   const [plotName, setplotName] = useState<any>(null);
   const actionSheet = useRef<any>();
   const plantSheet = useRef<any>();
@@ -312,18 +318,19 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   };
   const searchPlotArea = (value: any) => {
     if (value !== undefined) {
-      const words = location;
-      const result = words.filter(
+      const result = location.filter(
         word =>
           word.subdistrictName === value ||
           word.districtName === value ||
           word.provinceName === value,
       );
+      // console.log(result)
       setPlotAreas(result);
     } else {
       setPosition(LAT_LNG_BANGKOK);
     }
   };
+
   const deletePlot = (value: any) => {
     let someArray = plotData;
     someArray = someArray.filter((x: any) => x != value);
@@ -331,6 +338,8 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     setplotDataUI(someArray);
     deTailPlot.current.hide();
   };
+  
+
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -420,7 +429,8 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
               Register.uploadFarmerPlot(plotData)
                 .then(res => {
                   navigation.navigate('FourthFormScreen', {
-                    tele: telNo.tele,
+                    // tele: telNo.tele,
+                    tele: '',
                   });
                 })
                 .catch(err => console.log(err));

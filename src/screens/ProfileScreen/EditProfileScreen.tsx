@@ -13,7 +13,13 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../styles/StylesCentral';
 import { colors, font, icons, image as img } from '../../assets';
@@ -37,19 +43,103 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { momentExtend } from '../../utils/moment-buddha-year';
+import { QueryLocation } from '../../datasource/LocationDatasource';
+import ActionSheet from 'react-native-actions-sheet';
+import {
+  LocationInPostcodeSelect,
+  LocationSelect,
+} from '../../components/Location/Location';
 
 const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const windowWidth = Dimensions.get('window').width;
+  const windowHeight = Dimensions.get('window').height;
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  const [items, setItems] = useState<any>([]);
+  const [itemsDistrict, setItemDistrict] = useState([]);
+  const [itemsSubDistrict, setItemSubDistrict] = useState([]);
+  const [proVince, setProVince] = useState<any>([]);
+  const [disTrict, setDisTrict] = useState<any>([]);
+  const [subDistrict, setSubDistrict] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
+  const [bottompadding, setBottomPadding] = useState(0);
+  const provinceSheet = useRef<any>();
+  const DistriSheet = useRef<any>();
+  const SubDistriSheet = useRef<any>();
 
+  useEffect(() => {
+    QueryLocation.QueryProvince().then(res => {
+      const Province = res.map((item: any) => {
+        return { label: item.provinceName, value: item.provinceId };
+      });
+      setItems(Province);
+    });
+  }, []);
+  useEffect(() => {
+    if (proVince != null) {
+      QueryLocation.QueryDistrict(proVince.value).then(res => {
+        const District = res.map((item: any) => {
+          return { label: item.districtName, value: item.districtId };
+        });
+        setItemDistrict(District);
+      });
+    }
+  }, [proVince]);
+  useEffect(() => {
+    if (proVince != null && disTrict != null) {
+      QueryLocation.QuerySubDistrict(disTrict.value, disTrict.label).then(
+        res => {
+          const SubDistrict = res.map((item: any) => {
+            return {
+              label: item.subdistrictName,
+              value: item.subdistrictId,
+              postcode: item.postcode,
+            };
+          });
+          setItemSubDistrict(SubDistrict);
+        },
+      );
+    }
+  }, [proVince, disTrict]);
   useEffect(() => {
     getProfile();
   }, []);
+  const selectProvince = (value: any, label: any) => {
+    dispatch({
+      type: 'Handle Input',
+      field: 'province',
+      payload: value,
+    });
+    setProVince(value);
+    provinceSheet.current.hide();
+  };
+  const selectDistrict = (value: any, label: any) => {
+    dispatch({
+      type: 'Handle Input',
+      field: 'district',
+      payload: value,
+    });
+    setDisTrict(value);
+    DistriSheet.current.hide();
+  };
+  const selectSubDistrict = (value: any, label: any) => {
+    dispatch({
+      type: 'Handle Input',
+      field: 'subdistrict',
+      payload: value,
+    });
+    dispatch({
+      type: 'Handle Input',
+      field: 'postal',
+      payload: value.postcode,
+    });
+    setSubDistrict(value);
+    SubDistriSheet.current.hide();
+  };
+
   const getProfile = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
       .then(res => {
-        console.log(res)
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
@@ -66,11 +156,10 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             tel: res.telephoneNo,
             address1: res.address.address1,
             address2: res.address.address2,
-            province: res.address.province,
-            subdistrict: res.address.subdistrict,
-            district: res.address.district,
+            province: res.address.provinceId,
+            subdistrict: res.address.subdistrictId,
+            district: res.address.districtId,
             postcode: res.address.postcode,
-          
           });
         } else {
           ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
@@ -85,11 +174,10 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 tel: res.telephoneNo,
                 address1: res.address.address1,
                 address2: res.address.address2,
-                province: res.address.province,
-                subdistrict: res.address.subdistrict,
-                district: res.address.district,
+                province: res.address.provinceId,
+                subdistrict: res.address.subdistrictId,
+                district: res.address.districtId,
                 postcode: res.address.postcode,
-               
               });
             })
             .catch(err => console.log(err));
@@ -97,6 +185,13 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
       })
       .catch(err => console.log(err));
   };
+  useEffect(() => {
+    QueryLocation.QueryProfileSubDistrict(profilestate.district).then(
+      res => {
+        console.log('res',res.length)
+      }
+    );
+  },[profilestate.district])
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -119,19 +214,19 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                     height: normalize(116),
                     position: 'relative',
                   }}>
-                <Avatar
-                size={normalize(109)}
-                source={
-                  profilestate.image === ''
-                    ? icons.avatar
-                    : { uri: profilestate.image }
-                }
-                avatarStyle={{
-                  borderRadius: normalize(60),
-                  borderColor: colors.greenLight,
-                  borderWidth: 1,
-                }}
-              />
+                  <Avatar
+                    size={normalize(109)}
+                    source={
+                      profilestate.image === ''
+                        ? icons.avatar
+                        : { uri: profilestate.image }
+                    }
+                    avatarStyle={{
+                      borderRadius: normalize(60),
+                      borderColor: colors.greenLight,
+                      borderWidth: 1,
+                    }}
+                  />
                   <View
                     style={{
                       borderWidth: 0.3,
@@ -159,31 +254,17 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </View>
             <Text style={styles.head}>ชื่อ*</Text>
             <TextInput
-              // onChangeText={value => {
-              //   dispatch({
-              //     type: 'Handle Input',
-              //     field: 'name',
-              //     payload: value,
-              //   });
-              // }}
               value={profilestate.name}
-              style={styles.input}
-              editable={true}
+              style={[styles.input, { backgroundColor: colors.greyDivider }]}
+              editable={false}
               placeholder={'ระบุชื่อ'}
               placeholderTextColor={colors.disable}
             />
             <Text style={styles.head}>นามสกุล*</Text>
             <TextInput
-              // onChangeText={value => {
-              //   dispatch({
-              //     type: 'Handle Input',
-              //     field: 'surname',
-              //     payload: value,
-              //   });
-              // }}
               value={profilestate.lastName}
-              style={styles.input}
-              editable={true}
+              style={[styles.input, { backgroundColor: colors.greyDivider }]}
+              editable={false}
               placeholder={'นามสกุล'}
               placeholderTextColor={colors.disable}
             />
@@ -195,10 +276,14 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   {
                     alignItems: 'center',
                     flexDirection: 'row',
+                    backgroundColor: colors.greyDivider,
                   },
                 ]}>
                 <TextInput
-                  value={momentExtend.toBuddhistYear(profilestate.birthDay, 'DD MMMM YYYY')}
+                  value={momentExtend.toBuddhistYear(
+                    profilestate.birthDay,
+                    'DD MMMM YYYY',
+                  )}
                   editable={false}
                   placeholder={'ระบุวัน เดือน ปี'}
                   placeholderTextColor={colors.disable}
@@ -222,69 +307,144 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </TouchableOpacity>
             <Text style={styles.head}>เบอร์โทรศัพท์</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: colors.disable }]}
+              style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               value={profilestate.tel}
-
             />
-
             <Text style={styles.headAdd}>ที่อยู่ของคุณ</Text>
-
             <Text style={styles.head}>บ้านเลขที่</Text>
             <TextInput
-              // onChangeText={value => {
-              //   dispatch({
-              //     type: 'Handle Input',
-              //     field: 'no',
-              //     payload: value,
-              //   });
-              // }}
               value={profilestate.address1}
-              style={[styles.input]}
-              editable={true}
+              style={[styles.input, { backgroundColor: colors.greyDivider }]}
+              editable={false}
               placeholder={'บ้านเลขที่'}
               placeholderTextColor={colors.disable}
             />
             <Text style={styles.head}>รายละเอียดที่อยู่</Text>
             <TextInput
-              // onChangeText={value => {
-              //   dispatch({
-              //     type: 'Handle Input',
-              //     field: 'address',
-              //     payload: value,
-              //   });
-              // }}
               value={profilestate.address2}
-              style={styles.input}
-              editable={true}
-              placeholder={'รายละเอียดที่อยู่ (หมู่, ถนน)'}
+              style={[styles.input, { backgroundColor: colors.greyDivider }]}
+              editable={false}
               placeholderTextColor={colors.disable}
             />
-       <Text style={styles.head}>จังหวัด</Text>
-            <TextInput
-              // onChangeText={value => {
-              //   dispatch({
-              //     type: 'Handle Input',
-              //     field: 'address',
-              //     payload: value,
-              //   });
-              // }}
-              value={profilestate.province}
-              style={styles.input}
-              editable={true}
-              placeholder={'รายละเอียดที่อยู่ (หมู่, ถนน)'}
-              placeholderTextColor={colors.disable}
-            />
+            <Text style={styles.head}>จังหวัด</Text>
+              <View
+                style={{
+                  borderColor: colors.disable,
+                  borderWidth: 1,
+                  padding: 10,
+                  borderRadius: 10,
+                  marginVertical: 10,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  height: normalize(55),
+                  justifyContent: 'space-between',
+                  backgroundColor: colors.greyDivider 
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fonts.AnuphanMedium,
+                    fontSize: normalize(16),
+                    color: colors.gray,
+                  }}>
+                  <TextInput
+                 value={profilestate.province}
+                 editable={false}
+                    style={{
+                      fontFamily: font.SarabunLight,
+                      color: colors.fontBlack,
+                    }}/>
+                </Text>
+                <Image
+                  source={icons.down}
+                  style={{
+                    width: normalize(24),
+                    height: normalize(22),
+                    marginRight: 10,
+                    tintColor: colors.disable,
+                  }}
+                />
+              </View>
+              <Text style={styles.head}>อำเภอ</Text>
+              <View
+                style={{
+                  borderColor: colors.disable,
+                  borderWidth: 1,
+                  padding: 10,
+                  borderRadius: 10,
+                  marginVertical: 10,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  height: normalize(55),
+                  justifyContent: 'space-between',
+                  backgroundColor: colors.greyDivider 
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fonts.AnuphanMedium,
+                    fontSize: normalize(16),
+                    color: colors.gray,
+                  }}>
+                  <TextInput
+                    style={{
+                      fontFamily: font.SarabunLight,
+                      color: colors.disable,
+                    }}>
+                    
+                  </TextInput>
+                </Text>
+                <Image
+                  source={icons.down}
+                  style={{
+                    width: normalize(24),
+                    height: normalize(22),
+                    marginRight: 10,
+                    tintColor: colors.disable,
+                  }}
+                />
+              </View>
+              <Text style={styles.head}>ตำบล</Text>
+              <View
+                style={{
+                  borderColor: colors.disable,
+                  borderWidth: 1,
+                  padding: 10,
+                  borderRadius: 10,
+                  marginVertical: 10,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  height: normalize(55),
+                  justifyContent: 'space-between',
+                  backgroundColor: colors.greyDivider 
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fonts.AnuphanMedium,
+                    fontSize: normalize(16),
+                    color: colors.gray,
+                  }}>
+                  <TextInput
+                    style={{
+                      fontFamily: font.SarabunLight,
+                      color: colors.disable,
+                    }}>
+                    
+                  </TextInput>
+                </Text>
+                <Image
+                  source={icons.down}
+                  style={{
+                    width: normalize(24),
+                    height: normalize(22),
+                    marginRight: 10,
+                    tintColor: colors.disable,
+                  }}
+                />
+              </View>
             <Text style={styles.head}>รหัสไปรษณีย์</Text>
             <TextInput
-              // value={subDistrict.postcode}
-              style={[
-                styles.input,
-                {
-                  backgroundColor: colors.disable,
-                  // marginBottom: normalize(bottompadding),
-                },
-              ]}
+              value={profilestate.postcode}
+              style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'รหัสไปรษณีย์'}
               placeholderTextColor={colors.gray}
@@ -294,6 +454,160 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
         <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
           <MainButton label="บันทึก" color={colors.greenLight} />
         </View>
+        <ActionSheet ref={provinceSheet}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              paddingVertical: normalize(30),
+              paddingHorizontal: normalize(20),
+              width: windowWidth,
+              height: windowHeight * 0.7,
+              borderRadius: normalize(20),
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
+                จังหวัด
+              </Text>
+              <Text
+                style={{
+                  color: colors.greenLight,
+                  fontFamily: font.SarabunMedium,
+                  fontSize: normalize(16),
+                }}
+                onPress={() => {
+                  provinceSheet.current.hide();
+                }}>
+                ยกเลิก
+              </Text>
+            </View>
+            <View style={styles.container}>
+              <ScrollView>
+                {items.map(
+                  (
+                    v: { label: any; value: any },
+                    i: React.Key | null | undefined,
+                  ) => (
+                    <TouchableOpacity>
+                      <LocationSelect
+                        key={i}
+                        label={v.label}
+                        value={v.value}
+                        onPress={() => selectProvince(v, i)}
+                      />
+                    </TouchableOpacity>
+                  ),
+                )}
+              </ScrollView>
+            </View>
+          </View>
+        </ActionSheet>
+        <ActionSheet ref={DistriSheet}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              paddingVertical: normalize(30),
+              paddingHorizontal: normalize(20),
+              width: windowWidth,
+              height: windowHeight * 0.7,
+              borderRadius: normalize(20),
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
+                อำเภอ
+              </Text>
+              <Text
+                style={{
+                  color: colors.greenLight,
+                  fontFamily: font.SarabunMedium,
+                  fontSize: normalize(16),
+                }}
+                onPress={() => {
+                  DistriSheet.current.hide();
+                }}>
+                ยกเลิก
+              </Text>
+            </View>
+            <View style={styles.container}>
+              <ScrollView>
+                {itemsDistrict.map(
+                  (
+                    v: { label: any; value: any },
+                    i: any | null | undefined,
+                  ) => (
+                    <TouchableOpacity>
+                      <LocationSelect
+                        key={i}
+                        label={v.label}
+                        value={v.value}
+                        onPress={() => selectDistrict(v, i)}
+                      />
+                    </TouchableOpacity>
+                  ),
+                )}
+              </ScrollView>
+            </View>
+          </View>
+        </ActionSheet>
+        <ActionSheet ref={SubDistriSheet}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              paddingVertical: normalize(30),
+              paddingHorizontal: normalize(20),
+              width: windowWidth,
+              height: windowHeight * 0.7,
+              borderRadius: normalize(20),
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
+                ตำบล
+              </Text>
+              <Text
+                style={{
+                  color: colors.greenLight,
+                  fontFamily: font.SarabunMedium,
+                  fontSize: normalize(16),
+                }}
+                onPress={() => {
+                  SubDistriSheet.current.hide();
+                }}>
+                ยกเลิก
+              </Text>
+            </View>
+            <View style={styles.container}>
+              <ScrollView>
+                {itemsSubDistrict.map(
+                  (
+                    v: { label: any; value: any; postcode: any },
+                    i: any | null | undefined,
+                  ) => (
+                    <TouchableOpacity>
+                      <LocationInPostcodeSelect
+                        key={i}
+                        label={v.label}
+                        value={v.value}
+                        postcode={v.postcode}
+                        onPress={() => selectSubDistrict(v, i)}
+                      />
+                    </TouchableOpacity>
+                  ),
+                )}
+              </ScrollView>
+            </View>
+          </View>
+        </ActionSheet>
       </View>
     </SafeAreaView>
   );

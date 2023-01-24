@@ -16,6 +16,7 @@ import {
 } from './src/firebase/notification';
 
 import './src/components/SheetList';
+import ThirdFormScreen from './src/screens/RegisterScreen/ThirdFormScreen';
 const App = () => {
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
@@ -30,7 +31,8 @@ const App = () => {
       <NavigationContainer ref={navigationRef}>
         <PaperProvider>
           <SheetProvider>
-            <AppNavigator />
+            <ThirdFormScreen/>
+            {/* <AppNavigator /> */}
           </SheetProvider>
         </PaperProvider>
         <Toast config={toastConfig} />
