@@ -244,8 +244,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
           <DateTimeDetail
-            time={moment(taskData?.dateAppointment).format('HH:mm น.')}
-            date={momentExtend.toBuddhistYear(taskData?.dateAppointment)}
+            time={taskData?.dateAppointment}
+            date={taskData?.dateAppointment}
             note={taskData?.comment || '-'}
           />
         </View>
@@ -542,6 +542,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               onChangeText={text => {
                 setCouponCode(text);
                 setCouponCodeError('');
+              }}
+              style={{
+                color: !disableEdit ? colors.fontBlack : colors.grey40,
               }}
               editable={!disableEdit}
               allowClear={!disableEdit}
