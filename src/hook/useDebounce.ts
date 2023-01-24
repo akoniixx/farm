@@ -15,6 +15,7 @@ export const useDebounce = (
    * It changes only when one of the dependencies has has changed.
    * See official documentation at: https://reactjs.org/docs/hooks-reference.html#usecallback
    * */
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const callback = useCallback(fn, deps);
 
   /**
@@ -35,5 +36,6 @@ export const useDebounce = (
     return () => {
       clearTimeout(handler);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [callback]);
 };

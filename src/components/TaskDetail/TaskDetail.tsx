@@ -1,6 +1,13 @@
 import moment from 'moment';
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { colors, font, icons } from '../../assets';
 import { normalize } from '../../functions/Normalize';
 
@@ -109,11 +116,6 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
   location,
   onPressMap,
 }) => {
-  const data = [
-    { icon: icons.plot, text: 'จำนวนไร่' },
-    { icon: icons.plant, text: 'พืชที่ปลูก' },
-    { icon: icons.location, text: 'จำนวนไร่' },
-  ];
   const dataKeyObj = {
     amountPlot: {
       icon: icons.plot,
@@ -166,22 +168,6 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
               }}
             />
           </TouchableOpacity>
-          <Text
-            style={[styles.h1, { marginBottom: normalize(4), marginTop: 6 }]}>
-            {plotAmout + ' ' + 'ไร่'}
-          </Text>
-          <Text
-            style={[styles.h1, { marginBottom: normalize(8), marginTop: 4 }]}>
-            {plant}
-          </Text>
-          <Text
-            numberOfLines={1}
-            style={[
-              styles.h1,
-              { marginBottom: normalize(10), maxWidth: normalize(150) },
-            ]}>
-            {location}
-          </Text>
         </View>
       </View>
       <View style={{}}>
@@ -214,7 +200,15 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
                 </Text>
               </View>
               <View>
-                <Text numberOfLines={1} style={styles.h1}>
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    styles.h1,
+                    {
+                      textAlign: 'right',
+                      width: Dimensions.get('window').width * 0.5,
+                    },
+                  ]}>
                   {dataKeyObj[key as keyof typeof dataKeyObj].value}
                 </Text>
               </View>

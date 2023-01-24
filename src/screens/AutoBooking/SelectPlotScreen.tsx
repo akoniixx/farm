@@ -214,7 +214,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                         plotArea: item.plotArea,
 
                         province: item.province,
-                        locationName: item.landmark,
+                        locationName: item.locationName,
                         farmAreaAmount: item.raiAmount,
                         purposeSpray: {
                           id: '',
