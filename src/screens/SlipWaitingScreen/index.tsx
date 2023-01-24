@@ -90,8 +90,13 @@ export default function SlipWaitingScreen({
           const isAfter = moment(endTime).isAfter(moment());
           if (!isAfter) {
             setShowModalExtend(true);
-            await AsyncStorage.removeItem('endTime');
-            await AsyncStorage.removeItem('taskId');
+            const roundTime = {
+              taskId,
+              round: 1,
+            };
+            await AsyncStorage.setItem('extendObj', JSON.stringify(roundTime));
+            // await AsyncStorage.removeItem('endTime');
+            // await AsyncStorage.removeItem('taskId');
           }
           setTaskData({
             ...res.data,
@@ -324,7 +329,7 @@ export default function SlipWaitingScreen({
               alignItems: 'center',
               padding: 20,
             }}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => {
                 setShowModalExtend(false);
               }}
@@ -340,7 +345,7 @@ export default function SlipWaitingScreen({
                   height: 32,
                 }}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <Text
               style={{
                 fontFamily: fonts.AnuphanMedium,
