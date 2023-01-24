@@ -18,7 +18,9 @@ export default {
   empty_droner_his: require('./empty_droner_history.png'),
   uncheck: require('./uncheck.png'),
   checked: require('./checked.png'),
+  emptyTask: require('./emptyTask.png'),
   waitingDroner: require('./waitingDroner.png'),
   endSlip: require('./endSlip.png'),
   successSlip: require('./successSlip.png'),
+  drone: require('./drone.png'),
 };

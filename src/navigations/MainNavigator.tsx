@@ -18,6 +18,7 @@ import DetailTaskScreen from '../screens/AutoBooking/DetailTaskScreen';
 import SlipWaitingScreen from '../screens/SlipWaitingScreen';
 import SlipSuccessScreen from '../screens/SlipSuccessScreen';
 import ViewMapScreen from '../screens/ViewMapScreen';
+import MyTaskDetailScreen from '../screens/MyTaskScreen/MyTaskDetailScreen';
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -39,7 +40,9 @@ export type MainStackParamList = {
       latitude: string;
       longitude: string;
     };
+    plotName: string;
   };
+  MyTaskDetailScreen: undefined;
 };
 const Stack = createStackNavigator<MainStackParamList>();
 const MainNavigator: React.FC = () => {
@@ -53,6 +56,7 @@ const MainNavigator: React.FC = () => {
           headerLeft: () => null,
         }}
       />
+
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="AllPlotScreen" component={AllPlotScreen} />
       <Stack.Screen name="SelectDateScreen" component={SelectDateScreen} />
@@ -63,8 +67,12 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
       <Stack.Screen name="DetailTaskScreen" component={DetailTaskScreen} />
+      <Stack.Screen name="MyTaskDetailScreen" component={MyTaskDetailScreen} />
 
-      <Stack.Group>
+      <Stack.Group
+        screenOptions={{
+          gestureEnabled: false,
+        }}>
         <Stack.Screen name="SlipWaitingScreen" component={SlipWaitingScreen} />
         <Stack.Screen name="SlipSuccessScreen" component={SlipSuccessScreen} />
       </Stack.Group>

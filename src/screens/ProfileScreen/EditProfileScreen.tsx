@@ -186,12 +186,10 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err));
   };
   useEffect(() => {
-    QueryLocation.QueryProfileSubDistrict(profilestate.district).then(
-      res => {
-        console.log('res',res.length)
-      }
-    );
-  },[profilestate.district])
+    QueryLocation.QueryProfileSubDistrict(profilestate.district).then(res => {
+      console.log('res', res.length);
+    });
+  }, [profilestate.district]);
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -328,119 +326,116 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
               placeholderTextColor={colors.disable}
             />
             <Text style={styles.head}>จังหวัด</Text>
-              <View
+            <View
+              style={{
+                borderColor: colors.disable,
+                borderWidth: 1,
+                padding: 10,
+                borderRadius: 10,
+                marginVertical: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                height: normalize(55),
+                justifyContent: 'space-between',
+                backgroundColor: colors.greyDivider,
+              }}>
+              <Text
                 style={{
-                  borderColor: colors.disable,
-                  borderWidth: 1,
-                  padding: 10,
-                  borderRadius: 10,
-                  marginVertical: 10,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  height: normalize(55),
-                  justifyContent: 'space-between',
-                  backgroundColor: colors.greyDivider 
+                  fontFamily: fonts.AnuphanMedium,
+                  fontSize: normalize(16),
+                  color: colors.gray,
                 }}>
-                <Text
+                <TextInput
+                  value={profilestate.province}
+                  editable={false}
                   style={{
-                    fontFamily: fonts.AnuphanMedium,
-                    fontSize: normalize(16),
-                    color: colors.gray,
-                  }}>
-                  <TextInput
-                 value={profilestate.province}
-                 editable={false}
-                    style={{
-                      fontFamily: font.SarabunLight,
-                      color: colors.fontBlack,
-                    }}/>
-                </Text>
-                <Image
-                  source={icons.down}
-                  style={{
-                    width: normalize(24),
-                    height: normalize(22),
-                    marginRight: 10,
-                    tintColor: colors.disable,
+                    fontFamily: font.SarabunLight,
+                    color: colors.fontBlack,
                   }}
                 />
-              </View>
-              <Text style={styles.head}>อำเภอ</Text>
-              <View
+              </Text>
+              <Image
+                source={icons.down}
                 style={{
-                  borderColor: colors.disable,
-                  borderWidth: 1,
-                  padding: 10,
-                  borderRadius: 10,
-                  marginVertical: 10,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  height: normalize(55),
-                  justifyContent: 'space-between',
-                  backgroundColor: colors.greyDivider 
-                }}>
-                <Text
-                  style={{
-                    fontFamily: fonts.AnuphanMedium,
-                    fontSize: normalize(16),
-                    color: colors.gray,
-                  }}>
-                  <TextInput
-                    style={{
-                      fontFamily: font.SarabunLight,
-                      color: colors.disable,
-                    }}>
-                    
-                  </TextInput>
-                </Text>
-                <Image
-                  source={icons.down}
-                  style={{
-                    width: normalize(24),
-                    height: normalize(22),
-                    marginRight: 10,
-                    tintColor: colors.disable,
-                  }}
-                />
-              </View>
-              <Text style={styles.head}>ตำบล</Text>
-              <View
+                  width: normalize(24),
+                  height: normalize(22),
+                  marginRight: 10,
+                  tintColor: colors.disable,
+                }}
+              />
+            </View>
+            <Text style={styles.head}>อำเภอ</Text>
+            <View
+              style={{
+                borderColor: colors.disable,
+                borderWidth: 1,
+                padding: 10,
+                borderRadius: 10,
+                marginVertical: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                height: normalize(55),
+                justifyContent: 'space-between',
+                backgroundColor: colors.greyDivider,
+              }}>
+              <Text
                 style={{
-                  borderColor: colors.disable,
-                  borderWidth: 1,
-                  padding: 10,
-                  borderRadius: 10,
-                  marginVertical: 10,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  height: normalize(55),
-                  justifyContent: 'space-between',
-                  backgroundColor: colors.greyDivider 
+                  fontFamily: fonts.AnuphanMedium,
+                  fontSize: normalize(16),
+                  color: colors.gray,
                 }}>
-                <Text
+                <TextInput
                   style={{
-                    fontFamily: fonts.AnuphanMedium,
-                    fontSize: normalize(16),
-                    color: colors.gray,
-                  }}>
-                  <TextInput
-                    style={{
-                      fontFamily: font.SarabunLight,
-                      color: colors.disable,
-                    }}>
-                    
-                  </TextInput>
-                </Text>
-                <Image
-                  source={icons.down}
+                    fontFamily: font.SarabunLight,
+                    color: colors.disable,
+                  }}></TextInput>
+              </Text>
+              <Image
+                source={icons.down}
+                style={{
+                  width: normalize(24),
+                  height: normalize(22),
+                  marginRight: 10,
+                  tintColor: colors.disable,
+                }}
+              />
+            </View>
+            <Text style={styles.head}>ตำบล</Text>
+            <View
+              style={{
+                borderColor: colors.disable,
+                borderWidth: 1,
+                padding: 10,
+                borderRadius: 10,
+                marginVertical: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                height: normalize(55),
+                justifyContent: 'space-between',
+                backgroundColor: colors.greyDivider,
+              }}>
+              <Text
+                style={{
+                  fontFamily: fonts.AnuphanMedium,
+                  fontSize: normalize(16),
+                  color: colors.gray,
+                }}>
+                <TextInput
                   style={{
-                    width: normalize(24),
-                    height: normalize(22),
-                    marginRight: 10,
-                    tintColor: colors.disable,
-                  }}
-                />
-              </View>
+                    fontFamily: font.SarabunLight,
+                    color: colors.disable,
+                  }}></TextInput>
+              </Text>
+              <Image
+                source={icons.down}
+                style={{
+                  width: normalize(24),
+                  height: normalize(22),
+                  marginRight: 10,
+                  tintColor: colors.disable,
+                }}
+              />
+            </View>
             <Text style={styles.head}>รหัสไปรษณีย์</Text>
             <TextInput
               value={profilestate.postcode}
