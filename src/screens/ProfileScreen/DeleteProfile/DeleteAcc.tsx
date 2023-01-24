@@ -46,7 +46,7 @@ const DeleteAcc: React.FC<any> = ({ navigation }) => {
             <Text style={styles.text}>
               {`หากคุณมีปัญหาในการใช้งาน 
  คุณสามารถติดต่อเจ้าหน้าที่ 
- โทร. 02-113-6159`}
+ โทร. 022339000`}
             </Text>
           </View>
           <View>

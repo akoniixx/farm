@@ -70,8 +70,10 @@ export class Authentication {
       });
   }
   static async logout() {
-    await AsyncStorage.removeItem('token');
-    await AsyncStorage.removeItem('farmer_id');
+    // await AsyncStorage.removeItem('token');
+    // await AsyncStorage.removeItem('farmer_id');
+    await AsyncStorage.multiRemove(['token', 'farmer_id', 'task_id'])
+
   }
   static async onDeleteAccount(id: string): Promise<any> {
     return httpClient
@@ -101,7 +103,7 @@ export class Register {
   static async register1(
     firstname: string,
     lastname: string,
-    birthDate: Date,
+    birthDate: string | null,
     telephoneNo: string,
   ): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');

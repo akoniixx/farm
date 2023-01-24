@@ -8,10 +8,16 @@ import {
   TouchableOpacity,
   Text,
   Image,
+  PermissionsAndroid,
+  Platform,
+  Linking,
+  Alert,
+  ToastAndroid,
 } from 'react-native';
 import { colors, font, icons } from '../assets';
 import { PredictionType } from '../screens/RegisterScreen/ThirdFormScreen';
 import { normalize } from '@rneui/themed';
+import Geolocation  from 'react-native-geolocation-service';
 
 type SearchBarProps = {
   value: string;
@@ -23,6 +29,7 @@ type SearchBarProps = {
 };
 const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
   const [inputSize, setInputSize] = useState({ width: 0, height: 0 });
+  const [location, setLocation] = useState(false);
   const {
     value,
     style,
@@ -51,7 +58,6 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
     const calculatedStyle = {
       width: inputSize.width,
     };
-
     return (
       <FlatList
         data={predictions}
@@ -88,10 +94,103 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
       />
     );
   };
+  const hasPermissionIOS = async () => {
+    const openSetting = () => {
+      Linking.openSettings().catch(() => {
+        Alert.alert('Unable to open settings');
+      });
+    };
+    const status = await Geolocation.requestAuthorization('whenInUse');
+
+    if (status === 'granted') {
+      return true;
+    }
+
+    if (status === 'denied') {
+      Alert.alert('Location permission denied');
+    }
+
+    if (status === 'disabled') {
+      Alert.alert(
+        'Turn on Location Services to allow  to determine your location.',
+        '',
+        [
+          { text: 'Go to Settings', onPress: openSetting },
+          { text: "Don't Use Location", onPress: () => {} },
+        ],
+      );
+    }
+
+    return false;
+  };
+  const hasLocationPermission = async () => {
+    if (Platform.OS === 'ios') {
+      const hasPermission = await hasPermissionIOS();
+      return hasPermission;
+    }
+
+    if (Platform.OS === 'android' && Platform.Version < 23) {
+      return true;
+    }
+
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
+    if (status === PermissionsAndroid.RESULTS.GRANTED) {
+      return true;
+    }
+
+    if (status === PermissionsAndroid.RESULTS.DENIED) {
+      ToastAndroid.show(
+        'Location permission denied by user.',
+        ToastAndroid.LONG,
+      );
+    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+      ToastAndroid.show(
+        'Location permission revoked by user.',
+        ToastAndroid.LONG,
+      );
+    }
+
+    return false;
+  };
+  const getLocation = () => {
+    const result = hasLocationPermission();
+    result.then(res => {
+      console.log('res is:', res);
+      if (res) {
+        Geolocation.getCurrentPosition(
+          (position: any) => {
+            console.log(position);
+            setLocation(position);
+          },
+          error => {
+            // See error code charts below.
+            console.log(error.code, error.message);
+            setLocation(false);
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        );
+      }
+    });
+    console.log(location);
+  };
+  console.log(1,location)
+  console.log(2,value)
 
   return (
     <View style={[container, { ...passedStyles }]}>
       <TextInput
+        clearTextOnFocus={true}
         style={[inputStyle, inputBottomRadius]}
         placeholder="ระบุสถานที่ใกล้แปลง"
         placeholderTextColor="gray"
@@ -103,8 +202,7 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
           setInputSize({ height, width });
         }}
       />
-
-      <TouchableOpacity>
+      <TouchableOpacity onPress={getLocation}>
         <View
           style={{
             flexDirection: 'row',

@@ -51,7 +51,7 @@ const SuccessRegister: React.FC<any> = ({ navigation }) => {
               styles.h1,
               { marginTop: (windowWidth * 14) / 375, textAlign: 'center' },
             ]}>
-            ยินดีต้อนรับสู่ครอบครัว IconKeset
+            ยินดีต้อนรับสู่ครอบครัว IconKaset
           </Text>
           <Text
             style={[

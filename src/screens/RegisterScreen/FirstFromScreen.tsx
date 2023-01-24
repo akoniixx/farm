@@ -29,6 +29,7 @@ import icons from '../../assets/icons/icons';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import { Modal } from 'react-native';
 import DatePickerCustom from '../../components/Calendar/Calendar';
+import Spinner  from 'react-native-loading-spinner-overlay/lib';
 
 const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
   const initialFormRegisterState = {
@@ -44,7 +45,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
   const [openModal, setOpenModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState<string | null>(null);
 
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
@@ -166,7 +167,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   placeholderTextColor={colors.disable}
                 />
 
-                <Text style={styles.head}>วันเกิด</Text>
+                <Text style={styles.head}>วันเกิด*</Text>
                 <TouchableOpacity onPress={() => setOpenCalendar(true)}>
                   <View
                     style={[
@@ -177,7 +178,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       },
                     ]}>
                     <TextInput
-                      value={momentExtend.toBuddhistYear(date, 'DD MMMM YYYY')}
+                      value={date ? momentExtend.toBuddhistYear(date, 'DD MMMM YYYY') : ''}
                       editable={false}
                       placeholder={'ระบุวัน เดือน ปี'}
                       placeholderTextColor={colors.disable}
@@ -210,9 +211,10 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
               <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
                 <MainButton
                   label="ถัดไป"
-                  disable={!formState.name || !formState.surname ? true : false}
+                  disable={!formState.name || !formState.surname || !date ? true : false}
                   color={colors.greenLight}
                   onPress={() => {
+                    setLoading(true)
                     Register.register1(
                       formState.name,
                       formState.surname,
@@ -220,7 +222,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       formState.tel,
                     )
                       .then(async res => {
-                        console.log(res);
+                        setLoading(false)
                         if (!image) {
                           setLoading(false);
                           navigation.navigate('SecondFormScreen', {
@@ -316,8 +318,8 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                     </Text>
                     <View>
                       <DatePickerCustom
-                        value={date}
-                        onHandleChange={(d: Date) => {
+                        value={date ? date : new Date()}
+                        onHandleChange={(d: string) => {
                           setDate(d);
                         }}
                       />
@@ -350,6 +352,11 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
               </Modal>
             </View>
           </View>
+          <Spinner
+            visible={loading}
+            textContent={'Loading...'}
+            textStyle={{ color: '#FFF' }}
+          />
         </SafeAreaView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

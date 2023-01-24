@@ -407,7 +407,6 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                     formState.postal,
                   )
                     .then(async res => {
-                      console.log(res);
                       if (Platform.OS === 'ios') {
                         await Geolocation.requestAuthorization('always');
                       } else if (Platform.OS === 'android') {

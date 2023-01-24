@@ -58,6 +58,7 @@ import { navigate, navigationRef } from '../../navigations/RootNavigation';
 import SearchPlotArea from '../../components/SearchPlotArea';
 import { LAT_LNG_BANGKOK } from '../../definitions/location';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import { useDebounceValue } from '../../hook/useDebounceValue';
 
 export type PredictionType = {
   description: string;
@@ -81,6 +82,8 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   });
   const telNo = route.params;
   const [location, setLocation] = useState<any[]>([]);
+  const [searchValue, setSearchValue] = useState<string>();
+  const debounceValue = useDebounceValue(searchValue, 800);
   const [searchLocation] = useState('');
   const [selectPlot, setSelectPlot] = useState<any>();
   const [count, setCount] = useState(1);
@@ -310,19 +313,34 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
       setLocation(res);
     });
   };
-  const searchPlotArea = (value: any) => {
-    if (value !== undefined) {
-      const words = location;
-      const result = words.filter(
-        word =>
-          word.subdistrictName === value ||
-          word.districtName === value ||
-          word.provinceName === value,
-      );
-      setPlotAreas(result);
-    } else {
-      setPosition(LAT_LNG_BANGKOK);
-    }
+
+  useEffect(() => {
+    const filterBySearchText = () => {
+      if (!!debounceValue ) {
+        const words: {
+          districtName: string;
+          provinceName: string;
+          subdistrictName: string;
+        }[] = location;
+        const result = words
+          .filter(word => {
+            return (
+              word.districtName.includes(debounceValue) ||
+              word.subdistrictName.includes(debounceValue) ||
+              word.provinceName.includes(debounceValue)
+            );
+          })
+          .slice(0, 10);
+        setPlotAreas(result);
+      } else {
+        setPosition(LAT_LNG_BANGKOK);
+      }
+    };
+    filterBySearchText();
+  }, [debounceValue]);
+
+  const searchPlotArea = (value: string) => {
+    setSearchValue(value);
   };
   const deletePlot = (value: any) => {
     let someArray = plotData;
@@ -337,7 +355,9 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
         <CustomHeader
           title="ลงทะเบียนเกษตรกร"
           showBackBtn
-          onPressBack={() => navigation.goBack()}
+          onPressBack={() => {
+            navigation.goBack()
+          }}
         />
         <View style={styles.inner}>
           <View style={styles.container}>
@@ -446,7 +466,16 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
             <CustomHeader
               title="เพิ่มแปลงเกษตร"
               showBackBtn
-              onPressBack={() => actionSheet.current.hide()}
+              onPressBack={() => {
+                setPlantName(null);
+                setraiAmount(null);
+                setlandmark(null);
+                setSearch({ search: null });
+                setSelectPlot(null)
+                setSearchValue('')
+                setPlotAreas([])
+                actionSheet.current.hide()
+              }}
             />
           </View>
           <KeyboardAvoidingView
@@ -481,8 +510,10 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                 </Text>
                 <TextInput
                   onChangeText={value => {
-                    setraiAmount(value);
+                    const newNumber = value.replace(/[^0-9]/g, '');
+                    setraiAmount(newNumber);
                   }}
+                  keyboardType={'numeric'}
                   value={raiAmount}
                   style={[styles.input, { borderColor: colors.disable }]}
                   editable={true}
@@ -708,190 +739,190 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
             {/*  </TouchableWithoutFeedback> */}
           </KeyboardAvoidingView>
         </View>
-      </ActionSheet>
-
-      <ActionSheet ref={plantSheet}>
-        <View
-          style={{
-            backgroundColor: 'white',
-            paddingVertical: normalize(30),
-            paddingHorizontal: normalize(20),
-            width: windowWidth,
-            height: windowHeight * 0.8,
-            borderRadius: normalize(20),
-          }}>
+        <ActionSheet ref={plantSheet}>
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
+              backgroundColor: 'white',
+              paddingVertical: normalize(30),
+              paddingHorizontal: normalize(20),
+              width: windowWidth,
+              height: windowHeight * 0.8,
+              borderRadius: normalize(20),
             }}>
-            <Text style={[styles.head, { marginBottom: normalize(10) }]}>
-              พืชที่ปลูก
-            </Text>
-            <Text
-              style={{
-                color: colors.greenLight,
-                fontFamily: font.SarabunMedium,
-                fontSize: normalize(16),
-              }}
-              onPress={() => {
-                plantSheet.current.hide();
-              }}>
-              ยกเลิก
-            </Text>
-          </View>
-          <View style={styles.container}>
-            <ScrollView>
-              {plantListSelect.map((v, i) => (
-                <TouchableOpacity>
-                  <PlantSelect
-                    key={i}
-                    label={v}
-                    id={v}
-                    onPress={() => selectPlants(v)}
-                  />
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        </View>
-      </ActionSheet>
-
-      <ActionSheet ref={plotArea}>
-        <View
-          style={{
-            backgroundColor: 'white',
-            paddingVertical: normalize(30),
-            paddingHorizontal: normalize(20),
-            width: windowWidth,
-            height: windowHeight,
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Text style={[styles.head, { marginBottom: normalize(10) }]}>
-              พื้นที่แปลงเกษตร
-            </Text>
-            <Text
-              style={{
-                color: colors.greenLight,
-                fontFamily: font.SarabunMedium,
-                fontSize: normalize(16),
-              }}
-              onPress={() => {
-                plotArea.current.hide();
-              }}>
-              ยกเลิก
-            </Text>
-          </View>
-          <View>
-            <Text
-              style={{
-                marginBottom: normalize(10),
-                fontFamily: fonts.SarabunLight,
-                fontSize: normalize(16),
-                color: colors.gray,
-              }}>
-              {`กรุณาพิมพ์ค้นหาพื้นที่แปลงเกษตรของคุณ
-ด้วยชื่อ ตำบล / อำเภอ / จังหวัด`}
-            </Text>
-          </View>
-          <View style={styles.container}>
             <View
               style={{
-                borderColor: colors.disable,
-                borderWidth: 1,
-                padding: 10,
-                borderRadius: 10,
-                marginVertical: 20,
                 flexDirection: 'row',
-                alignItems: 'center',
-                height: normalize(55),
                 justifyContent: 'space-between',
               }}>
-              <TextInput
-                onChangeText={searchPlotArea}
-                // defaultValue={plotAreas}
-                style={[
-                  {
-                    borderColor: colors.disable,
-                    fontFamily: fonts.SarabunLight,
-                    fontSize: normalize(16),
-                    color: colors.gray,
-                  },
-                ]}
-                editable={true}
-                placeholder={'ระบุพื้นที่แปลงเกษตร'}
-                placeholderTextColor={colors.disable}
-              />
+              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
+                พืชที่ปลูก
+              </Text>
+              <Text
+                style={{
+                  color: colors.greenLight,
+                  fontFamily: font.SarabunMedium,
+                  fontSize: normalize(16),
+                }}
+                onPress={() => {
+                  plantSheet.current.hide();
+                }}>
+                ยกเลิก
+              </Text>
             </View>
-            <ScrollView>
-              {plotAreas !== undefined &&
-                plotAreas.map((v: any, i: any) => (
+            <View style={styles.container}>
+              <ScrollView>
+                {plantListSelect.map((v, i) => (
                   <TouchableOpacity>
                     <PlantSelect
                       key={i}
-                      label={
-                        v.subdistrictName +
-                        '/' +
-                        v.districtName +
-                        '/' +
-                        v.provinceName
-                      }
+                      label={v}
                       id={v}
-                      onPress={() => selectPlotArea(v)}
+                      onPress={() => selectPlants(v)}
                     />
                   </TouchableOpacity>
                 ))}
-            </ScrollView>
+              </ScrollView>
+            </View>
           </View>
-        </View>
-      </ActionSheet>
+        </ActionSheet>
 
-      <ActionSheet ref={mapSheet}>
-        <View
-          style={{
-            backgroundColor: 'white',
-            paddingVertical: normalize(30),
-            paddingHorizontal: normalize(20),
-            width: windowWidth,
-            height: windowHeight * 0.7,
-            borderRadius: normalize(20),
-          }}>
+        <ActionSheet ref={plotArea}>
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
+              backgroundColor: 'white',
+              paddingVertical: normalize(30),
+              paddingHorizontal: normalize(20),
+              width: windowWidth,
+              height: windowHeight,
             }}>
-            <Text style={[styles.head, { marginBottom: normalize(10) }]}>
-              สถานที่ใกล้แปลง
-            </Text>
-            <Text
+            <View
               style={{
-                color: colors.greenLight,
-                fontFamily: font.SarabunMedium,
-                fontSize: normalize(16),
-              }}
-              onPress={() => {
-                mapSheet.current.hide();
+                flexDirection: 'row',
+                justifyContent: 'space-between',
               }}>
-              ยกเลิก
-            </Text>
+              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
+                พื้นที่แปลงเกษตร
+              </Text>
+              <Text
+                style={{
+                  color: colors.greenLight,
+                  fontFamily: font.SarabunMedium,
+                  fontSize: normalize(16),
+                }}
+                onPress={() => {
+                  plotArea.current.hide();
+                }}>
+                ยกเลิก
+              </Text>
+            </View>
+            <View>
+              <Text
+                style={{
+                  marginBottom: normalize(10),
+                  fontFamily: fonts.SarabunLight,
+                  fontSize: normalize(16),
+                  color: colors.gray,
+                }}>
+                {`กรุณาพิมพ์ค้นหาพื้นที่แปลงเกษตรของคุณ
+ด้วยชื่อ ตำบล / อำเภอ / จังหวัด`}
+              </Text>
+            </View>
+            <View style={styles.container}>
+              <View
+                style={{
+                  borderColor: colors.disable,
+                  borderWidth: 1,
+                  padding: 10,
+                  borderRadius: 10,
+                  marginVertical: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  height: normalize(55),
+                  justifyContent: 'space-between',
+                }}>
+                <TextInput
+                  onChangeText={searchPlotArea}
+                  value={searchValue}
+                  // defaultValue={plotAreas}
+                  style={[
+                    {
+                      borderColor: colors.disable,
+                      fontFamily: fonts.SarabunLight,
+                      fontSize: normalize(16),
+                      color: colors.gray,
+                    },
+                  ]}
+                  editable={true}
+                  placeholder={'ระบุพื้นที่แปลงเกษตร'}
+                  placeholderTextColor={colors.disable}
+                />
+              </View>
+              <ScrollView>
+                {plotAreas !== undefined &&
+                  plotAreas.map((v: any, i: any) => (
+                    <TouchableOpacity>
+                      <PlantSelect
+                        key={i}
+                        label={
+                          v.subdistrictName +
+                          '/' +
+                          v.districtName +
+                          '/' +
+                          v.provinceName
+                        }
+                        id={v}
+                        onPress={() => selectPlotArea(v)}
+                      />
+                    </TouchableOpacity>
+                  ))}
+              </ScrollView>
+            </View>
           </View>
-          <View style={styles.container}>
-            <SearchBarWithAutocomplete
-              value={search.term}
-              onChangeText={text => {
-                setSearch({ term: text, fetchPredictions: true });
-              }}
-              showPredictions={showPredictions}
-              predictions={predictions}
-              onPredictionTapped={onPredictionTapped}
-            />
+        </ActionSheet>
+
+        <ActionSheet ref={mapSheet}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              paddingVertical: normalize(30),
+              paddingHorizontal: normalize(20),
+              width: windowWidth,
+              height: windowHeight * 0.7,
+              borderRadius: normalize(20),
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
+                สถานที่ใกล้แปลง
+              </Text>
+              <Text
+                style={{
+                  color: colors.greenLight,
+                  fontFamily: font.SarabunMedium,
+                  fontSize: normalize(16),
+                }}
+                onPress={() => {
+                  mapSheet.current.hide();
+                }}>
+                ยกเลิก
+              </Text>
+            </View>
+            <View style={styles.container}>
+              <SearchBarWithAutocomplete
+                value={search.term}
+                onChangeText={(text: any) => {
+                  setSearch({ term: text, fetchPredictions: true });
+                }}
+                showPredictions={showPredictions}
+                predictions={predictions}
+                onPredictionTapped={onPredictionTapped}
+              />
+            </View>
           </View>
-        </View>
+        </ActionSheet>
       </ActionSheet>
     </>
   );
