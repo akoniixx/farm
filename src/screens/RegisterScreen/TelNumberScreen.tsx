@@ -33,7 +33,6 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
   const login = () => {
     Authentication.generateOtpRegister(value)
       .then(result => {
-        console.log(result)
         setLoading(false);
         navigation.navigate('OtpScreen', {
           telNumber: value,
@@ -45,6 +44,7 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
       .catch(err => {
         if (err.response.data.statusCode === 409) {
           Authentication.generateOtp(value).then(result => {
+            setLoading(false);
             const telNumber = value;
             setValue('');
             navigation.navigate('OtpScreen', {
