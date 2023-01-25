@@ -15,7 +15,7 @@ interface Prop {
   title?: string;
   showBackBtn?: boolean;
   onPressBack?: () => void;
-  headerRight?: () => JSX.Element;
+  headerRight?: () => React.ReactNode;
   headerLeft?: () => JSX.Element;
   style?: ViewProps;
   image?: () => JSX.Element;

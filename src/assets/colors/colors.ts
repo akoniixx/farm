@@ -3,6 +3,7 @@ export default {
   orangeLight: '#FF981E', // secondary
   blueDark: '#036EAF',
   blueLight: '#2BB0ED',
+  blueMedium: '#048EE2',
   primary: '#1F8449',
   greenDark: '#014D40',
   greenLight: '#2EC66E',
@@ -18,6 +19,8 @@ export default {
   white: '#FFFFFF',
   grayBg: '#FAFAFB',
   greyWhite: '#F2F2F2',
+  greyDivider: '#F2F3F4',
+  grey40: '#8D96A0',
   inkLight: '#4F5E71',
   inputText: '#2B2B2B',
   fontBlack: '#202326',

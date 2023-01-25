@@ -42,7 +42,15 @@ export default {
   chat: require('./chat.png'),
   done_academy: require('./doneAcademy.png'),
   time: require('./time.png'),
+  arrowUp: require('./arrowUp.png'),
+  arrowLeft: require('./arrowLeft.png'),
+  calling: require('./calling.png'),
   calendarOrange: require('./CalendarOrange.png'),
   document: require('./Document.png'),
-  map: require('./Map.png')
+  map: require('./Map.png'),
+  arrowRightBlue: require('./arrowRightBlue.png'),
+  callCenter: require('./callCenter.png'),
+  cash: require('./cash.png'),
+  discountOrange: require('./discountOrange.png'),
+  arrowUpBold: require('./arrowUpBold.png'),
 };

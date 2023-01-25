@@ -14,9 +14,34 @@ import MainTapNavigator from './Bottom/MainTapNavigator';
 import SelectTarget from '../screens/AutoBooking/SelectTarget';
 import PrivacyScreen from '../screens/ProfileScreen/PrivacyScreen';
 import EditProfileScreen from '../screens/ProfileScreen/EditProfileScreen';
-import DeatilTaskScreen from '../screens/AutoBooking/DetailTaskScreen';
-const Stack = createStackNavigator();
-
+import DetailTaskScreen from '../screens/AutoBooking/DetailTaskScreen';
+import SlipWaitingScreen from '../screens/SlipWaitingScreen';
+import SlipSuccessScreen from '../screens/SlipSuccessScreen';
+import ViewMapScreen from '../screens/ViewMapScreen';
+export type MainStackParamList = {
+  MainScreen: undefined;
+  ProfileScreen: undefined;
+  AllPlotScreen: undefined;
+  SelectDateScreen: undefined;
+  SelectPlotScreen: undefined;
+  SelectTarget: undefined;
+  DronerDetail: undefined;
+  SeeAllDronerUsed: undefined;
+  PrivacyScreen: undefined;
+  EditProfileScreen: undefined;
+  DetailTaskScreen: undefined;
+  SlipWaitingScreen: { taskId: string, modal?: boolean };
+  SlipSuccessScreen: { taskId: string };
+  DeleteAcc: undefined;
+  DeleteSuccess: undefined;
+  ViewMapScreen: {
+    location: {
+      latitude: string;
+      longitude: string;
+    };
+  };
+};
+const Stack = createStackNavigator<MainStackParamList>();
 const MainNavigator: React.FC = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -37,7 +62,13 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="SeeAllDronerUsed" component={SeeAllDronerUsed} />
       <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
-      <Stack.Screen name="DeatilTaskScreen" component={DeatilTaskScreen} />
+      <Stack.Screen name="DetailTaskScreen" component={DetailTaskScreen} />
+
+      <Stack.Group>
+        <Stack.Screen name="SlipWaitingScreen" component={SlipWaitingScreen} />
+        <Stack.Screen name="SlipSuccessScreen" component={SlipSuccessScreen} />
+      </Stack.Group>
+      <Stack.Screen name="ViewMapScreen" component={ViewMapScreen} />
 
       <Stack.Screen name="DeleteAcc" component={DeleteAcc} />
       <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />

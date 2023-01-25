@@ -276,20 +276,20 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}>
                 {weekDays.map((item: any, index: any) => (
-                   <TouchableOpacity
-                   key={index}
-                   onPress={() => navigation.navigate('SelectDateScreen')}>
-                  <CardDetailDroner
+                  <TouchableOpacity
                     key={index}
-                    index={index}
-                    days={moment(item).locale('th').format('dddd')}
-                    dateTime={new Date(item).toLocaleDateString('th-TH', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: '2-digit',
-                    })}
-                    convenient={'สะดวก'}
-                  />
+                    onPress={() => navigation.navigate('SelectDateScreen')}>
+                    <CardDetailDroner
+                      key={index}
+                      index={index}
+                      days={moment(item).locale('th').format('dddd')}
+                      dateTime={new Date(item).toLocaleDateString('th-TH', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: '2-digit',
+                      })}
+                      convenient={'สะดวก'}
+                    />
                   </TouchableOpacity>
                 ))}
               </ScrollView>
