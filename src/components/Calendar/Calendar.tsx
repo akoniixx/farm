@@ -14,7 +14,7 @@ import { normalize } from '../../functions/Normalize';
 import { MainButton } from '../Button/MainButton';
 
 const DatePickerCustom: React.FC<DatePickerProps> = ({
-  value ,
+  value,
   onHandleChange,
   height,
   width,

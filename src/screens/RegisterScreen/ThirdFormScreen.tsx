@@ -316,7 +316,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
 
   useEffect(() => {
     const filterBySearchText = () => {
-      if (!!debounceValue ) {
+      if (!!debounceValue) {
         const words: {
           districtName: string;
           provinceName: string;
@@ -356,7 +356,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
           title="ลงทะเบียนเกษตรกร"
           showBackBtn
           onPressBack={() => {
-            navigation.goBack()
+            navigation.goBack();
           }}
         />
         <View style={styles.inner}>
@@ -471,10 +471,10 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                 setraiAmount(null);
                 setlandmark(null);
                 setSearch({ search: null });
-                setSelectPlot(null)
-                setSearchValue('')
-                setPlotAreas([])
-                actionSheet.current.hide()
+                setSelectPlot(null);
+                setSearchValue('');
+                setPlotAreas([]);
+                actionSheet.current.hide();
               }}
             />
           </View>

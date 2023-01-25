@@ -205,50 +205,48 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <TouchableOpacity>
+              <View
+                style={{
+                  width: normalize(116),
+                  height: normalize(116),
+                  position: 'relative',
+                }}>
+                <Avatar
+                  size={normalize(109)}
+                  source={
+                    profilestate.image === ''
+                      ? icons.avatar
+                      : { uri: profilestate.image }
+                  }
+                  avatarStyle={{
+                    borderRadius: normalize(60),
+                    borderColor: colors.greenLight,
+                    borderWidth: 1,
+                  }}
+                />
                 <View
                   style={{
-                    width: normalize(116),
-                    height: normalize(116),
-                    position: 'relative',
+                    borderWidth: 0.3,
+                    position: 'absolute',
+                    left: normalize(70.7),
+                    top: normalize(70.7),
+                    width: normalize(32),
+                    height: normalize(32),
+                    borderRadius: normalize(16),
+                    backgroundColor: colors.white,
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}>
-                  <Avatar
-                    size={normalize(109)}
-                    source={
-                      profilestate.image === ''
-                        ? icons.avatar
-                        : { uri: profilestate.image }
-                    }
-                    avatarStyle={{
-                      borderRadius: normalize(60),
-                      borderColor: colors.greenLight,
-                      borderWidth: 1,
+                  <Image
+                    source={icons.camera}
+                    style={{
+                      width: normalize(20),
+                      height: normalize(20),
                     }}
                   />
-                  <View
-                    style={{
-                      borderWidth: 0.3,
-                      position: 'absolute',
-                      left: normalize(70.7),
-                      top: normalize(70.7),
-                      width: normalize(32),
-                      height: normalize(32),
-                      borderRadius: normalize(16),
-                      backgroundColor: colors.white,
-                      flex: 1,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Image
-                      source={icons.camera}
-                      style={{
-                        width: normalize(20),
-                        height: normalize(20),
-                      }}
-                    />
-                  </View>
                 </View>
-              </TouchableOpacity>
+              </View>
             </View>
             <Text style={styles.head}>ชื่อ*</Text>
             <TextInput

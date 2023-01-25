@@ -17,7 +17,7 @@ import {
 import { colors, font, icons } from '../assets';
 import { PredictionType } from '../screens/RegisterScreen/ThirdFormScreen';
 import { normalize } from '@rneui/themed';
-import Geolocation  from 'react-native-geolocation-service';
+import Geolocation from 'react-native-geolocation-service';
 
 type SearchBarProps = {
   value: string;
@@ -178,14 +178,14 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
             console.log(error.code, error.message);
             setLocation(false);
           },
-          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
         );
       }
     });
     console.log(location);
   };
-  console.log(1,location)
-  console.log(2,value)
+  console.log(1, location);
+  console.log(2, value);
 
   return (
     <View style={[container, { ...passedStyles }]}>

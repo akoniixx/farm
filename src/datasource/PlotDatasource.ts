@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState } from 'react';
 import { BASE_URL, httpClient } from '../config/develop-config';
 
 export interface PayloadDronerSearch {
@@ -76,7 +77,6 @@ export class PlotDatasource {
         console.log(error);
       });
   }
-
   static async getCalculatePrice(payload: PayloadCal) {
     return httpClient
       .post(BASE_URL + '/tasks/task/calculate-price', payload)
@@ -86,5 +86,67 @@ export class PlotDatasource {
       .catch(error => {
         console.log(error);
       });
+  }
+  static async addFarmerPlot(
+    plotName: string,
+    raiAmount: number,
+    landmark: string,
+    plantName: string,
+    lat: string,
+    long: string,
+    locationName: string,
+    plotAreaId: any,
+  ): Promise<any> {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    const index = 0
+    if (!plotName) {
+      return httpClient
+        .post(BASE_URL + `/farmer-plot`, {
+          plotName: `แปลงที่ ${index +1} ${plantName}`,          
+          raiAmount: raiAmount,
+          landmark: landmark,
+          plantName: plantName,
+          locationName: locationName,
+          farmerId: farmer_id,
+          lat: lat,
+          long: long,
+          plotAreaId: plotAreaId,
+          status: "PENDING"
+        })
+        .then(response => {
+          return response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    } else {
+      return httpClient
+        .post(BASE_URL + `/auth/farmer/register`, {
+          id: farmer_id,
+          status: 'PENDING',
+          farmerPlot: [
+            {
+              plotName: plotName,
+              raiAmount: raiAmount,
+          landmark: landmark,
+          plantName: plantName,
+          locationName: locationName,
+          farmerId: farmer_id,
+          lat: lat,
+          long: long,
+          plotAreaId: plotAreaId,
+          status: "PENDING"
+            },
+          ],
+        })
+        .then(async response => {
+          const farmerPlot_id = response.data.id;
+          await AsyncStorage.setItem('farmerPlot_id', farmerPlot_id);
+          return response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   }
 }

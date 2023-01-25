@@ -29,7 +29,7 @@ import icons from '../../assets/icons/icons';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import { Modal } from 'react-native';
 import DatePickerCustom from '../../components/Calendar/Calendar';
-import Spinner  from 'react-native-loading-spinner-overlay/lib';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
   const initialFormRegisterState = {
@@ -178,7 +178,11 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       },
                     ]}>
                     <TextInput
-                      value={date ? momentExtend.toBuddhistYear(date, 'DD MMMM YYYY') : ''}
+                      value={
+                        date
+                          ? momentExtend.toBuddhistYear(date, 'DD MMMM YYYY')
+                          : ''
+                      }
                       editable={false}
                       placeholder={'ระบุวัน เดือน ปี'}
                       placeholderTextColor={colors.disable}
@@ -211,10 +215,14 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
               <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
                 <MainButton
                   label="ถัดไป"
-                  disable={!formState.name || !formState.surname || !date ? true : false}
+                  disable={
+                    !formState.name || !formState.surname || !date
+                      ? true
+                      : false
+                  }
                   color={colors.greenLight}
                   onPress={() => {
-                    setLoading(true)
+                    setLoading(true);
                     Register.register1(
                       formState.name,
                       formState.surname,
@@ -222,7 +230,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       formState.tel,
                     )
                       .then(async res => {
-                        setLoading(false)
+                        setLoading(false);
                         if (!image) {
                           setLoading(false);
                           navigation.navigate('SecondFormScreen', {

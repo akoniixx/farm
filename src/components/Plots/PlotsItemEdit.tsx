@@ -39,7 +39,7 @@ export function StatusObject(status: string) {
   }
 }
 
-const PlotsItem: React.FC<AddPlot> = ({
+const PlotsItemEdit: React.FC<AddPlot> = ({
   index,
   plotName,
   raiAmount,
@@ -51,7 +51,7 @@ const PlotsItem: React.FC<AddPlot> = ({
     <View
       key={index}
       style={{
-        height: normalize(131),
+        height: normalize(134),
         borderWidth: 0.5,
         borderColor: colors.greenLight,
         backgroundColor: '#ECFBF2',
@@ -70,7 +70,17 @@ const PlotsItem: React.FC<AddPlot> = ({
           justifyContent: 'space-between',
         }}>
         <View>
-          <Text style={styles.title}>{plotName}</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={styles.title}>{plotName}</Text>
+            <Image
+              source={icons.arrowRigth}
+              style={{
+                width: normalize(20),
+                height: normalize(20),
+                alignSelf: 'flex-end',
+              }}
+            />
+          </View>
           <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
             <Image
               source={icons.plot}
@@ -165,4 +175,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PlotsItem;
+export default PlotsItemEdit;

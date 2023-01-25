@@ -72,8 +72,20 @@ export class Authentication {
   static async logout() {
     // await AsyncStorage.removeItem('token');
     // await AsyncStorage.removeItem('farmer_id');
-    await AsyncStorage.multiRemove(['token', 'farmer_id', 'task_id'])
-
+    await AsyncStorage.multiRemove(['token', 'farmer_id', 'task_id']);
+  }
+  static generateOtpDelete(telNumber: String): Promise<any> {
+    return axios
+      .post(BASE_URL + '/auth/farmer/request-delete-otp', {
+        telephoneNo: telNumber,
+        refCode: telNumber,
+      })
+      .then(res => {
+        return res.data;
+      })
+      .catch(err => {
+        throw err;
+      });
   }
   static async onDeleteAccount(id: string): Promise<any> {
     return httpClient
@@ -85,19 +97,6 @@ export class Authentication {
         throw err;
       });
   }
-
-  // static async genOtpDeleteAccount(telNumber: String): Promise<any> {
-  //   return httpClient
-  //     .post(BASE_URL + '/auth/farmer/request-delete-otp', {
-  //       telephoneNo: telNumber,
-  //     })
-  //     .then(res => {
-  //       return res.data;
-  //     })
-  //     .catch(err => {
-  //       throw err;
-  //     });
-  // }
 }
 export class Register {
   static async register1(
@@ -270,6 +269,7 @@ export class Register {
       })
       .then(async response => {
         return response.data;
+        
       })
       .catch(error => {
         console.log(error);

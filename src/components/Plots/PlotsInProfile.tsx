@@ -25,7 +25,7 @@ export function StatusObject(status: string) {
     case 'PENDING':
       return {
         status: 'รอการตรวจสอบ',
-        colorBg: colors.white,
+        colorBg: '#FFF2E3',
         fontColor: '#E27904',
         borderColor: colors.darkOrange,
       };
@@ -34,11 +34,19 @@ export function StatusObject(status: string) {
         status: 'ตรวจสอบแล้ว',
         colorBg: colors.white,
         fontColor: colors.greenLight,
+        borderColor: colors.greenLight,
+      };
+    case 'INACTIVE':
+      return {
+        status: 'ปิดการใช้งาน',
+        colorBg: colors.white,
+        fontColor: colors.error,
+        borderColor: colors.error,
       };
     default:
       return {
         status: 'รอการตรวจสอบ',
-        colorBg: colors.white,
+        colorBg: '#FFF2E3',
         fontColor: '#E27904',
         borderColor: colors.darkOrange,
       };
@@ -113,31 +121,29 @@ const PlotInProfile: React.FC<plotData> = ({
                 fontSize: normalize(16),
                 color: colors.fontGrey,
                 marginRight: '10%',
-                width: normalize(140),
+                width: normalize(280),
                 bottom: 2,
               }}>
               {locationName}
             </Text>
-            <View
-              style={{
-                width: normalize(109),
-                height: normalize(24),
-                borderRadius: normalize(12),
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: StatusObject(status).colorBg,
-                borderColor: StatusObject(status).borderColor,
-                borderWidth: 0.5,
-              }}>
-              <Text
-                style={[
-                  styles.label,
-                  { color: StatusObject(status).fontColor },
-                ]}>
-                {StatusObject(status).status}
-              </Text>
-            </View>
+          </View>
+          <View
+            style={{
+              top: 10,
+              width: normalize(109),
+              height: normalize(24),
+              borderRadius: normalize(12),
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: StatusObject(status).colorBg,
+              borderColor: StatusObject(status).borderColor,
+              borderWidth: 0.5,
+            }}>
+            <Text
+              style={[styles.label, { color: StatusObject(status).fontColor }]}>
+              {StatusObject(status).status}
+            </Text>
           </View>
         </View>
       </View>
@@ -162,7 +168,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
   },
   cards: {
-    height: normalize(131),
+    height: '100%',
     width: normalize(340),
     borderWidth: 0.5,
     borderColor: colors.greenLight,

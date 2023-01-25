@@ -31,6 +31,7 @@ import { MainButton } from '../../components/Button/MainButton';
 import ConditionScreen from '../RegisterScreen/ConditionScreen';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import PlotInProfile from '../../components/Plots/PlotsInProfile';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const ProfileScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -50,6 +51,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
   const [plantName, setPlantName] = useState<any>();
 
   const getData = async () => {
+    setLoading(true);
     const value = await AsyncStorage.getItem('token');
     setFcmToken(value!);
   };
@@ -65,10 +67,10 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
   }, [reload]);
 
   const getProfile = async () => {
+    setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
-      .then(res => {
-        console.log(res.farmerPlot);
+      .then(async res => {
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
@@ -95,10 +97,12 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 status: res.status,
               });
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log(err))
+            .finally(() => setLoading(false));
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   };
 
   const addPlots = () => {
@@ -277,10 +281,14 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                   paddingVertical: normalize(22),
                 }}>{`คุณไม่มีแปลงเกษตร
  กดเพิ่มแปลงเกษตรได้เลย!`}</Text>
-
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('AddPlotScreen');
+                }}>
               <View style={[styles.buttonAdd]}>
                 <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
               </View>
+              </TouchableOpacity>
             </View>
           ) : (
             <View style={{ top: 5 }}>
@@ -385,7 +393,9 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('DeleteAcc');
+                navigation.navigate('DeleteProfileScreen', {
+                  tele: profilestate.id,
+                });
               }}
               style={{
                 padding: normalize(20),
@@ -433,6 +443,11 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </SafeAreaView>
   );
 };

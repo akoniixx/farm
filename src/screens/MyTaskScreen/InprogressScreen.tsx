@@ -28,19 +28,19 @@ const InprogressScreen: React.FC<any> = ({ route, navigation }) => {
   });
   const [loading, setLoading] = useState<boolean>(false);
 
-  const toTaskDetail = (item:any) => {
-    if(item.status==='WAIT_RECEIVE'){
+  const toTaskDetail = (item: any) => {
+    if (item.status === 'WAIT_RECEIVE') {
       RootNavigation.navigate('Main', {
         screen: 'SlipWaitingScreen',
         params: { taskId: item.task_id },
-      })          
-    }else{
+      });
+    } else {
       RootNavigation.navigate('Main', {
         screen: 'MyTaskDetailScreen',
         params: { task: item },
-      })
+      });
     }
-  }
+  };
 
   const getTaskList = async () => {
     setLoading(true);
@@ -100,7 +100,7 @@ const InprogressScreen: React.FC<any> = ({ route, navigation }) => {
               renderItem={({ item, index }) => (
                 <TouchableOpacity
                   key={index}
-                  onPress={()=>toTaskDetail(item) }>
+                  onPress={() => toTaskDetail(item)}>
                   <CardTask task={item} />
                 </TouchableOpacity>
               )}

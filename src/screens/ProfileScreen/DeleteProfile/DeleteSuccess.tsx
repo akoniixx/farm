@@ -42,9 +42,7 @@ const DeleteSuccess: React.FC<any> = ({ navigation }) => {
           label="กลับหน้าหลัก"
           color={colors.greenLight}
           fontColor={'white'}
-          onPress={() => {
-            navigation.navigate('HomeScreen');
-          }}
+          onPress={() => navigation.navigate('HomeScreen')}
         />
       </View>
     </View>

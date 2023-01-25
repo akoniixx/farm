@@ -16,6 +16,7 @@ import Onboarding from '../screens/Onboarding/Onboarding';
 import DronerBooking from '../screens/DronerBooking/DronerBooking';
 import MyPlotScreen from '../screens/MyPlotScreen/MyPlotScreen';
 import EditFarmerPlot from '../screens/RegisterScreen/EditFarmerPlot';
+import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,7 @@ const AppAuthNavigator: React.FC = () => {
       <Stack.Screen name="DronerBooking" component={DronerBooking} />
       <Stack.Screen name="MyPlotScreen" component={MyPlotScreen} />
       <Stack.Screen name="EditFarmerPlot" component={EditFarmerPlot} />
+      <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
     </Stack.Navigator>
   );
 };
