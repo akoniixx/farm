@@ -99,7 +99,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         taskDronerTemp: taskData.taskDronerTemp,
         statusRemark: '',
       };
-      console.log('payload', JSON.stringify(payload, null, 2));
       const res = await TaskDatasource.createTask(payload);
 
       if (res && res.success) {
