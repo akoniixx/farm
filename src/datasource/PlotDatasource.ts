@@ -65,8 +65,6 @@ export class PlotDatasource {
       status: 'สะดวก',
       distanceMin: 0,
       distanceMax: 200,
-      ratingMin: 0,
-      ratingMax: 5,
     };
     return httpClient
       .post(BASE_URL + '/tasks/task/search-droner', payload)

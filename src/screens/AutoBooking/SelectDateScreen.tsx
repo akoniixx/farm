@@ -4,7 +4,10 @@ import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
+  Keyboard,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -28,7 +31,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
     autoBookingContext: { setTaskData },
   } = useAutoBookingContext();
   const [openCalendar, setOpenCalendar] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(moment().toDate());
   const [openTimePicker, setopenTimePicker] = useState(false);
   const [note, setNote] = useState('');
   const [hour, setHour] = useState(6);
@@ -44,17 +47,24 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const onSubmit = () => {
-    const newFormatDate = moment(date).set('hour', hour).set('minute', minute);
+    const newFormatDate = moment(date)
+      .set('hour', hour)
+      .set('minute', minute)
+      .toISOString();
     setTaskData(prev => ({
       ...prev,
-      dateAppointment: newFormatDate.toISOString(),
+      dateAppointment: newFormatDate,
       comment: note,
     }));
     navigation.navigate('SelectPlotScreen');
   };
 
   return (
-    <>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{
+        flex: 1,
+      }}>
       <StepIndicatorHead
         curentPosition={0}
         onPressBack={() => navigation.goBack()}
@@ -83,7 +93,9 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                   style={{
                     width: windowWidth * 0.78,
                     color: colors.fontBlack,
-                    fontSize: normalize(16),
+                    paddingHorizontal: 16,
+
+                    fontSize: normalize(20),
                     fontFamily: font.SarabunLight,
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -118,7 +130,8 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                   style={{
                     width: windowWidth * 0.78,
                     color: colors.fontBlack,
-                    fontSize: normalize(16),
+                    fontSize: normalize(20),
+                    paddingHorizontal: 16,
                     fontFamily: font.SarabunLight,
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -137,28 +150,41 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
 
             <View
               style={[
-                styles.input,
                 {
                   alignItems: 'center',
                   flexDirection: 'row',
+                  marginVertical: 12,
+                  padding: 5,
+                  borderColor: colors.disable,
+                  borderWidth: 1,
                 },
               ]}>
               <TextInput
                 numberOfLines={6}
-                multiline
-                onChangeText={setNote}
+                onChangeText={t => {
+                  setNote(t);
+                }}
                 value={note}
+                returnKeyType="done"
+                multiline
+                blurOnSubmit={true}
+                onSubmitEditing={() => {
+                  const newNote = note.replace(/(\r\n|\n|\r)/gm, '');
+                  setNote(newNote);
+                  Keyboard.dismiss();
+                }}
                 placeholder={'ระบุข้อมูลแจ้งนักบิน'}
                 placeholderTextColor={colors.disable}
                 style={{
                   width: windowWidth * 0.78,
                   color: colors.fontBlack,
-                  fontSize: normalize(16),
+                  fontSize: normalize(20),
                   fontFamily: font.SarabunLight,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding: 10,
-                  height: 50,
+
+                  padding: 16,
+                  textAlignVertical: 'top',
+                  writingDirection: 'ltr',
+                  height: Platform.OS === 'ios' ? 6 * 20 : 80,
                 }}
               />
             </View>
@@ -285,10 +311,9 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
             </Text>
             <View
               style={{
-                paddingVertical: 16,
                 flexDirection: 'row',
                 justifyContent: 'center',
-                height: 200,
+                paddingVertical: normalize(20),
               }}>
               <TimePicker
                 setHour={(h: number) => {
@@ -324,7 +349,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-    </>
+    </KeyboardAvoidingView>
   );
 };
 export default SelectDateScreen;

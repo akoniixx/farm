@@ -6,6 +6,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Linking,
+  LogBox,
   Platform,
   ScrollView,
   StyleSheet,
@@ -35,7 +36,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
 
   const isHaveWaitingApprove = useMemo(() => {
     if (plotList?.data && plotList.data.length > 0) {
-      return (plotList.data || []).some((el: any) => el.status === 'PENDING');
+      return (plotList.data || []).some((el: any) => el.status !== 'ACTIVE');
     }
     return false;
   }, [plotList?.data]);
@@ -64,19 +65,20 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
       .catch(err => console.log(err));
   };
   useEffect(() => {
+    LogBox.ignoreAllLogs();
     getPlotlist();
   }, []);
   // console.log(JSON.stringify(plotList?.data, null, 2));
   return (
     <>
+      <StepIndicatorHead
+        curentPosition={1}
+        onPressBack={() => navigation.goBack()}
+        label={'เลือกแปลงของคุณ'}
+      />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <StepIndicatorHead
-          curentPosition={1}
-          onPressBack={() => navigation.goBack()}
-          label={'เลือกแปลงของคุณ'}
-        />
         {isHaveWaitingApprove && (
           <View style={styles.containerWarning}>
             <View
@@ -251,12 +253,13 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
             </ScrollView>
           </SafeAreaView>
         )}
-        <Spinner
-          visible={loading}
-          textContent={'Loading...'}
-          textStyle={{ color: '#FFF' }}
-        />
       </KeyboardAvoidingView>
+
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </>
   );
 };

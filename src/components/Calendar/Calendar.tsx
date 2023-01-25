@@ -28,6 +28,7 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
   fadeColor,
   format,
 }) => {
+  console.log(value);
   const [days, setDays] = useState<any[]>([]);
   const [months, setMonths] = useState<any[]>([]);
   const [years, setYears] = useState<any[]>([]);
@@ -62,11 +63,6 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
           const newDateList = genDate.filter(
             day => day >= new Date().getDate(),
           );
-          // const currentIndexDate = days.findIndex(
-          //   (el: any) => el === moment(value).get('date'),
-          // );
-          // const idxCondition =
-          //   currentIndexDate >= newDateList.length - 1 ? 0 : currentIndexDate;
 
           if (isDayBefore) {
             changeHandle('day', newDateList[0]);
@@ -106,7 +102,7 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
           return {
             name: 'day',
             digits: days,
-            value: date.getDay(),
+            value: date.getDay() + 1,
             currentIndex: days.findIndex(el => el === date.getDate()),
           };
         case 'mm':
@@ -242,8 +238,7 @@ const DateBlock: React.FC<DateBlockProps> = ({
         style={styles.scroll}
         snapToOffsets={offsets}
         showsVerticalScrollIndicator={false}
-        scrollEventThrottle={0}
-        onMomentumScrollEnd={handleMomentumScrollEnd}>
+        scrollEventThrottle={0}>
         {digits.map((value: any, valIndex: any) => {
           return (
             <TouchableOpacity
