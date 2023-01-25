@@ -10,7 +10,7 @@ export class ProfileDatasource {
   static async getProfile(farmer_id: string): Promise<any> {
     return httpClient
       .get(BASE_URL + `/farmer/${farmer_id}`)
-      .then(async response => {
+      .then(response => {
         return response.data;
       })
       .catch(error => {
@@ -109,4 +109,5 @@ export class ProfileDatasource {
         console.log(error);
       });
   }
+ 
 }

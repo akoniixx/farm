@@ -74,7 +74,6 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
       setItems(Province);
     });
   }, []);
-
   useEffect(() => {
     if (proVince != null) {
       QueryLocation.QueryDistrict(proVince.value).then(res => {

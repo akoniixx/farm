@@ -70,7 +70,6 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const debounceValue = useDebounceValue(searchValue, 800);
   const [searchLocation] = useState('');
   const [selectPlot, setSelectPlot] = useState<any>();
-  const [count, setCount] = useState(1);
   const [plotIndex, setPlotIndex] = useState(1);
   const [value, setValue] = useState(null);
   const [plantName, setPlantName] = useState<any>();
@@ -97,7 +96,6 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const GOOGLE_PACES_API_BASE_URL =
     'https://maps.googleapis.com/maps/api/place';
   const API_KEY = 'AIzaSyAymsbEe0NVhDL8iHd8oabbr5xG0TFn8Jc';
-
   useEffect(() => {
     getProfile();
   }, []);
@@ -232,58 +230,6 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
       );
     }
   };
-  const incrementCount = () => {
-    setCount(count + 1);
-    setPlotIndex(plotIndex + 1);
-  };
-  // const addPlots = async () => {
-  //   const plots = [...plotData];
-  //   const plotsUI = [...plotDataUI];
-  //   const newPlot = {
-  //     plotIndex: plotIndex,
-  //     raiAmount: raiAmount,
-  //     plotName: !plotName
-  //       ? 'แปลงที่' + ' ' + count + ' ' + plantName
-  //       : plotName,
-  //     locationName: search.term,
-  //     plantName: plantName,
-  //     status: 'PENDING',
-  //     landmark: landmark,
-  //     lat: lat,
-  //     long: long,
-  //     plotAreaId: selectPlot.subdistrictId,
-  //   };
-  //   const newPlotUI = {
-  //     raiAmount: raiAmount,
-  //     plotName: plotName,
-  //     locationName: search.term,
-  //     plantName: plantName,
-  //     landmark: landmark,
-  //     lat: lat,
-  //     long: long,
-  //   };
-  //   plots.push(newPlot);
-  //   plotsUI.push(newPlotUI);
-  //   setValue(null);
-  //   setplotData(plots);
-  //   setplotDataUI(plotsUI);
-  //   setPlantName(null);
-  //   setSearch({ search: null });
-  //   setraiAmount(null);
-  //   setplotName(null);
-  //   setlandmark(null);
-  //   setSelectPlot(null);
-
-  //   await PlotDatasource.addFarmerPlot(
-  //   plotData
-  //   )
-  //     .then(res => {
-  //       console.log(res);
-  //       // navigation.navigate('AllPlotScreen');
-  //     })
-  //     .catch(err => console.log(err));
-  // };
-
   const selectPlants = (value: any) => {
     setPlantName(value);
     plantSheet.current.hide();
@@ -407,7 +353,8 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                     onChangeText={value => {
                       setplotName(value);
                     }}
-                    value={plotName}
+                    clearTextOnFocus={true}
+                    value={plantName}
                     style={[styles.input, { borderColor: colors.disable }]}
                     editable={true}
                     placeholder={

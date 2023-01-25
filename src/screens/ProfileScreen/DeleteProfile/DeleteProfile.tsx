@@ -236,7 +236,7 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
                   color: colors.inkLight,
                   textAlign: 'center',
                 }}>
-                โทร. 02-113-6159
+                โทร. 02-233-9000
               </Text>
             </View>
           </View>

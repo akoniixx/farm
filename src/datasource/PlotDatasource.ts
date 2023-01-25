@@ -98,11 +98,11 @@ export class PlotDatasource {
     plotAreaId: any,
   ): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-    const index = 0;
+    let count = 0
     if (!plotName) {
       return httpClient
         .post(BASE_URL + `/farmer-plot`, {
-          plotName: `แปลงที่ ${index + 1} ${plantName}`,
+          plotName: `แปลงที่ ${count + 1} ${plantName}`,
           raiAmount: raiAmount,
           landmark: landmark,
           plantName: plantName,

@@ -7,9 +7,6 @@ import SelectDateScreen from '../screens/AutoBooking/SelectDateScreen';
 import DronerDetail from '../screens/DronerProfile/DronerDetail';
 import SeeAllDronerUsed from '../screens/DronerProfile/SeeAllDronerUsed';
 import SelectPlotScreen from '../screens/AutoBooking/SelectPlotScreen';
-
-import DeleteAcc from '../screens/ProfileScreen/DeleteProfile/DeleteProfile';
-import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 import MainTapNavigator from './Bottom/MainTapNavigator';
 import SelectTarget from '../screens/AutoBooking/SelectTarget';
 import PrivacyScreen from '../screens/ProfileScreen/PrivacyScreen';

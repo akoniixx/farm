@@ -35,26 +35,8 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const ProfileScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
-  const [value, setValue] = useState(null);
-  const actionSheet = useRef<any>(null);
-  const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [fcmToken, setFcmToken] = useState('');
-  const [plotDataUI, setplotDataUI] = useState<any>([]);
-  const [plotData, setplotData] = useState<any>([]);
-  const [raiAmount, setraiAmount] = useState<any>();
-  const [plotName, setplotName] = useState<any>(null);
-  const [location, setLocation] = useState<any>({
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
-  const [plantName, setPlantName] = useState<any>();
 
-  const getData = async () => {
-    setLoading(true);
-    const value = await AsyncStorage.getItem('token');
-    setFcmToken(value!);
-  };
   const onLogout = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     socket.removeAllListeners(`send-task-${farmer_id!}`);
@@ -62,10 +44,8 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
     await Authentication.logout();
   };
   useEffect(() => {
-    getData();
     getProfile();
-  }, [reload]);
-
+  }, []);
   const getProfile = async () => {
     setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -97,42 +77,13 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 status: res.status,
               });
             })
+            
             .catch(err => console.log(err))
             .finally(() => setLoading(false));
         }
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
-  };
-
-  const addPlots = () => {
-    const plots = [...plotData];
-    console.log(plots);
-    const plotsUI = [...plotDataUI];
-    const newPlot = {
-      raiAmount: raiAmount,
-      plotName: plotName,
-      location: location,
-      plantName: plantName,
-      status: 'PENDING',
-    };
-    console.log(newPlot);
-    const newPlotUI = {
-      plotName: plotName,
-      raiAmount: raiAmount,
-      plantName: plantName,
-      location: location,
-    };
-    plots.push(newPlot);
-    plotsUI.push(newPlotUI);
-    setValue(null);
-    setplotData(plots);
-    setplotDataUI(plotsUI);
-    setPlantName(null);
-    setLocation(location);
-    setraiAmount(null);
-    setplotName(null);
-    actionSheet.current.hide();
   };
   const openGooglePlay = () => {
     if (Platform.OS === 'ios') {
@@ -285,9 +236,9 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 onPress={() => {
                   navigation.navigate('AddPlotScreen');
                 }}>
-              <View style={[styles.buttonAdd]}>
-                <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
-              </View>
+                <View style={[styles.buttonAdd]}>
+                  <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
+                </View>
               </TouchableOpacity>
             </View>
           ) : (
@@ -297,6 +248,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 horizontal
                 showsHorizontalScrollIndicator={false}>
                 <FlatList
+                horizontal={false}
                   scrollEnabled={false}
                   contentContainerStyle={{
                     alignSelf: 'flex-start',
@@ -305,8 +257,9 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                     <View style={[highlighted && { marginLeft: 0 }]} />
                   )}
                   numColumns={Math.ceil(profilestate.plotItem.length / 2)}
-                  showsVerticalScrollIndicator={false}
-                  showsHorizontalScrollIndicator={true}
+                  // numColumns={2}
+                  showsVerticalScrollIndicator={true}
+                  showsHorizontalScrollIndicator={false}
                   data={profilestate.plotItem}
                   renderItem={({ item, index }) => (
                     <View style={{ display: 'flex', flexDirection: 'column' }}>

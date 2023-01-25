@@ -41,7 +41,7 @@ import RNDateTimePicker from '@react-native-community/datetimepicker';
 import DatePickerCustom from '../../components/Calendar/Calendar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
-import { initProfileState, profileReducer } from '../../hook/profilefield';
+import { profileReducer } from '../../hook/profilefield';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import { QueryLocation } from '../../datasource/LocationDatasource';
 import ActionSheet from 'react-native-actions-sheet';
@@ -51,22 +51,141 @@ import {
 } from '../../components/Location/Location';
 
 const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
+  const [initProfile, setInitProfile] = useState({
+    firstname: '',
+    lastname: '',
+    birthDate: '',
+    telephone: '',
+    image: '',
+    address1: '',
+    address2: '',
+    province: '',
+    district: '',
+    subdistrict: '',
+    postal: '',
+  });
+
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  const [value, setValue] = useState<any>();
   const [items, setItems] = useState<any>([]);
   const [itemsDistrict, setItemDistrict] = useState([]);
   const [itemsSubDistrict, setItemSubDistrict] = useState([]);
-  const [proVince, setProVince] = useState<any>([]);
-  const [disTrict, setDisTrict] = useState<any>([]);
-  const [subDistrict, setSubDistrict] = useState<any>([]);
+  const [province, setProvince] = useState<any>([]);
+  const [district, setDistrict] = useState<any>([]);
+  const [subdistrict, setSubdistrict] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [bottompadding, setBottomPadding] = useState(0);
   const provinceSheet = useRef<any>();
   const DistriSheet = useRef<any>();
   const SubDistriSheet = useRef<any>();
+  const [address, setAddress] = useState<any>([]);
 
   useEffect(() => {
+    getProfile();
+  }, []);
+
+  const getProfile = async () => {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    ProfileDatasource.getProfile(farmer_id!)
+      .then(res => {
+        const imgPath = res.file.filter((item: any) => {
+          if (item.category === 'PROFILE_IMAGE') {
+            return item;
+          }
+        });
+        if (imgPath.length === 0) {
+          QueryLocation.QueryProfileSubDistrict(res.address.districtId).then(
+            resSub => {
+              const address = resSub.filter((item: any) => {
+                if (item.subdistrictId === res.address.subdistrictId) {
+                  return item;
+                }
+              });
+              if (!res.birthDate) {
+                setInitProfile({
+                  firstname: res.firstname,
+                  lastname: res.lastname,
+                  birthDate: '',
+                  telephone: res.telephoneNo,
+                  image: '',
+                  address1: res.address.address1,
+                  address2: res.address.address2,
+                  province: address[0].provinceName,
+                  district: address[0].districtName,
+                  subdistrict: address[0].subdistrictName,
+                  postal: res.address.postcode,
+                });
+              } else {
+                setInitProfile({
+                  firstname: res.firstname,
+                  lastname: res.lastname,
+                  birthDate: res.birthDate,
+                  telephone: res.telephoneNo,
+                  image: '',
+                  address1: res.address.address1,
+                  address2: res.address.address2,
+                  province: address[0].provinceName,
+                  district: address[0].districtName,
+                  subdistrict: address[0].subdistrictName,
+                  postal: res.address.postcode,
+                });
+              }
+            },
+          );
+        } else {
+          ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
+            .then(resImg => {
+              QueryLocation.QueryProfileSubDistrict(
+                res.address.districtId,
+              ).then(resSub => {
+                const address = resSub.filter((item: any) => {
+                  if (item.subdistrictId === res.address.subdistrictId) {
+                    return item;
+                  }
+                });
+                if (!res.birthDate) {
+                  setInitProfile({
+                    firstname: res.firstname,
+                    lastname: res.lastname,
+                    birthDate: '',
+                    telephone: res.telephoneNo,
+                    image: resImg.url,
+                    address1: res.address.address1,
+                    address2: res.address.address2,
+                    province: address[0].provinceName,
+                    district: address[0].districtName,
+                    subdistrict: address[0].subdistrictName,
+                    postal: res.address.postcode,
+                  });
+                } else {
+                  const datetime = res.birthDate;
+                  const date = datetime.split('T')[0];
+                  setInitProfile({
+                    firstname: res.firstname,
+                    lastname: res.lastname,
+                    birthDate: `${date.split('-')[2]}/${date.split('-')[1]}/${
+                      parseInt(date.split('-')[0]) + 543
+                    }`,
+                    telephone: res.telephoneNo,
+                    image: resImg.url,
+                    address1: res.address.address1,
+                    address2: res.address.address2,
+                    province: address[0].provinceName,
+                    district: address[0].districtName,
+                    subdistrict: address[0].subdistrictName,
+                    postal: res.address.postcode,
+                  });
+                }
+              });
+            })
+            .catch(err => console.log(err));
+        }
+      })
+      .catch(err => console.log(err));
+  };
+  useEffect(() => {
+    getProfile();
     QueryLocation.QueryProvince().then(res => {
       const Province = res.map((item: any) => {
         return { label: item.provinceName, value: item.provinceId };
@@ -74,19 +193,21 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
       setItems(Province);
     });
   }, []);
+
   useEffect(() => {
-    if (proVince != null) {
-      QueryLocation.QueryDistrict(proVince.value).then(res => {
+    if (province != null) {
+      QueryLocation.QueryDistrict(province.value).then(res => {
         const District = res.map((item: any) => {
           return { label: item.districtName, value: item.districtId };
         });
         setItemDistrict(District);
       });
     }
-  }, [proVince]);
+  }, [province]);
+
   useEffect(() => {
-    if (proVince != null && disTrict != null) {
-      QueryLocation.QuerySubDistrict(disTrict.value, disTrict.label).then(
+    if (province != null && district != null) {
+      QueryLocation.QuerySubDistrict(district.value, district.label).then(
         res => {
           const SubDistrict = res.map((item: any) => {
             return {
@@ -99,97 +220,8 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
         },
       );
     }
-  }, [proVince, disTrict]);
-  useEffect(() => {
-    getProfile();
-  }, []);
-  const selectProvince = (value: any, label: any) => {
-    dispatch({
-      type: 'Handle Input',
-      field: 'province',
-      payload: value,
-    });
-    setProVince(value);
-    provinceSheet.current.hide();
-  };
-  const selectDistrict = (value: any, label: any) => {
-    dispatch({
-      type: 'Handle Input',
-      field: 'district',
-      payload: value,
-    });
-    setDisTrict(value);
-    DistriSheet.current.hide();
-  };
-  const selectSubDistrict = (value: any, label: any) => {
-    dispatch({
-      type: 'Handle Input',
-      field: 'subdistrict',
-      payload: value,
-    });
-    dispatch({
-      type: 'Handle Input',
-      field: 'postal',
-      payload: value.postcode,
-    });
-    setSubDistrict(value);
-    SubDistriSheet.current.hide();
-  };
+  }, [province, district]);
 
-  const getProfile = async () => {
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    ProfileDatasource.getProfile(farmer_id!)
-      .then(res => {
-        const imgPath = res.file.filter((item: any) => {
-          if (item.category === 'PROFILE_IMAGE') {
-            return item;
-          }
-        });
-        if (imgPath.length === 0) {
-          dispatch({
-            type: 'InitProfile',
-            name: `${res.firstname}`,
-            lastName: `${res.lastname}`,
-            id: res.farmerCode,
-            image: '',
-            birthDay: res.birthDate,
-            tel: res.telephoneNo,
-            address1: res.address.address1,
-            address2: res.address.address2,
-            province: res.address.provinceId,
-            subdistrict: res.address.subdistrictId,
-            district: res.address.districtId,
-            postcode: res.address.postcode,
-          });
-        } else {
-          ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
-            .then(resImg => {
-              dispatch({
-                type: 'InitProfile',
-                name: `${res.firstname}`,
-                lastName: `${res.lastname}`,
-                id: res.farmerCode,
-                image: resImg.url,
-                birthDay: res.birthDate,
-                tel: res.telephoneNo,
-                address1: res.address.address1,
-                address2: res.address.address2,
-                province: res.address.provinceId,
-                subdistrict: res.address.subdistrictId,
-                district: res.address.districtId,
-                postcode: res.address.postcode,
-              });
-            })
-            .catch(err => console.log(err));
-        }
-      })
-      .catch(err => console.log(err));
-  };
-  useEffect(() => {
-    QueryLocation.QueryProfileSubDistrict(profilestate.district).then(res => {
-      console.log('res', res.length);
-    });
-  }, [profilestate.district]);
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -214,9 +246,9 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 <Avatar
                   size={normalize(109)}
                   source={
-                    profilestate.image === ''
+                    initProfile.image === ''
                       ? icons.avatar
-                      : { uri: profilestate.image }
+                      : { uri: initProfile.image }
                   }
                   avatarStyle={{
                     borderRadius: normalize(60),
@@ -250,7 +282,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </View>
             <Text style={styles.head}>ชื่อ*</Text>
             <TextInput
-              value={profilestate.name}
+              value={initProfile.firstname}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'ระบุชื่อ'}
@@ -258,59 +290,57 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             />
             <Text style={styles.head}>นามสกุล*</Text>
             <TextInput
-              value={profilestate.lastName}
+              value={initProfile.lastname}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'นามสกุล'}
               placeholderTextColor={colors.disable}
             />
             <Text style={styles.head}>วันเกิด</Text>
-            <TouchableOpacity>
-              <View
-                style={[
-                  styles.input,
-                  {
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    backgroundColor: colors.greyDivider,
-                  },
-                ]}>
-                <TextInput
-                  value={momentExtend.toBuddhistYear(
-                    profilestate.birthDay,
-                    'DD MMMM YYYY',
-                  )}
-                  editable={false}
-                  placeholder={'ระบุวัน เดือน ปี'}
-                  placeholderTextColor={colors.disable}
-                  style={{
-                    width: windowWidth * 0.78,
-                    color: colors.fontBlack,
-                    fontSize: normalize(16),
-                    fontFamily: font.SarabunLight,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                />
-                <Image
-                  source={icons.calendar}
-                  style={{
-                    width: normalize(25),
-                    height: normalize(30),
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
+            <View
+              style={[
+                styles.input,
+                {
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  backgroundColor: colors.greyDivider,
+                },
+              ]}>
+              <TextInput
+                value={momentExtend.toBuddhistYear(
+                  initProfile.birthDate,
+                  'DD MMMM YYYY',
+                )}
+                editable={false}
+                placeholder={'ระบุวัน เดือน ปี'}
+                placeholderTextColor={colors.disable}
+                style={{
+                  width: windowWidth * 0.78,
+                  color: colors.fontBlack,
+                  fontSize: normalize(16),
+                  fontFamily: font.SarabunLight,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              />
+              <Image
+                source={icons.calendar}
+                style={{
+                  width: normalize(25),
+                  height: normalize(30),
+                }}
+              />
+            </View>
             <Text style={styles.head}>เบอร์โทรศัพท์</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
-              value={profilestate.tel}
+              value={initProfile.telephone}
             />
             <Text style={styles.headAdd}>ที่อยู่ของคุณ</Text>
             <Text style={styles.head}>บ้านเลขที่</Text>
             <TextInput
-              value={profilestate.address1}
+              value={initProfile.address1}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'บ้านเลขที่'}
@@ -318,125 +348,38 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             />
             <Text style={styles.head}>รายละเอียดที่อยู่</Text>
             <TextInput
-              value={profilestate.address2}
+              value={initProfile.address2}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholderTextColor={colors.disable}
             />
             <Text style={styles.head}>จังหวัด</Text>
-            <View
-              style={{
-                borderColor: colors.disable,
-                borderWidth: 1,
-                padding: 10,
-                borderRadius: 10,
-                marginVertical: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                height: normalize(55),
-                justifyContent: 'space-between',
-                backgroundColor: colors.greyDivider,
-              }}>
-              <Text
-                style={{
-                  fontFamily: fonts.AnuphanMedium,
-                  fontSize: normalize(16),
-                  color: colors.gray,
-                }}>
-                <TextInput
-                  value={profilestate.province}
-                  editable={false}
-                  style={{
-                    fontFamily: font.SarabunLight,
-                    color: colors.fontBlack,
-                  }}
-                />
-              </Text>
-              <Image
-                source={icons.down}
-                style={{
-                  width: normalize(24),
-                  height: normalize(22),
-                  marginRight: 10,
-                  tintColor: colors.disable,
-                }}
-              />
-            </View>
+            <TextInput
+              value={initProfile.province}
+              style={[styles.input, { backgroundColor: colors.greyDivider }]}
+              editable={false}
+              placeholder={'ระบุชื่อ'}
+              placeholderTextColor={colors.disable}
+            />
             <Text style={styles.head}>อำเภอ</Text>
-            <View
-              style={{
-                borderColor: colors.disable,
-                borderWidth: 1,
-                padding: 10,
-                borderRadius: 10,
-                marginVertical: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                height: normalize(55),
-                justifyContent: 'space-between',
-                backgroundColor: colors.greyDivider,
-              }}>
-              <Text
-                style={{
-                  fontFamily: fonts.AnuphanMedium,
-                  fontSize: normalize(16),
-                  color: colors.gray,
-                }}>
-                <TextInput
-                  style={{
-                    fontFamily: font.SarabunLight,
-                    color: colors.disable,
-                  }}></TextInput>
-              </Text>
-              <Image
-                source={icons.down}
-                style={{
-                  width: normalize(24),
-                  height: normalize(22),
-                  marginRight: 10,
-                  tintColor: colors.disable,
-                }}
-              />
-            </View>
+            <TextInput
+              value={initProfile.district}
+              style={[styles.input, { backgroundColor: colors.greyDivider }]}
+              editable={false}
+              placeholder={'ระบุชื่อ'}
+              placeholderTextColor={colors.disable}
+            />
             <Text style={styles.head}>ตำบล</Text>
-            <View
-              style={{
-                borderColor: colors.disable,
-                borderWidth: 1,
-                padding: 10,
-                borderRadius: 10,
-                marginVertical: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                height: normalize(55),
-                justifyContent: 'space-between',
-                backgroundColor: colors.greyDivider,
-              }}>
-              <Text
-                style={{
-                  fontFamily: fonts.AnuphanMedium,
-                  fontSize: normalize(16),
-                  color: colors.gray,
-                }}>
-                <TextInput
-                  style={{
-                    fontFamily: font.SarabunLight,
-                    color: colors.disable,
-                  }}></TextInput>
-              </Text>
-              <Image
-                source={icons.down}
-                style={{
-                  width: normalize(24),
-                  height: normalize(22),
-                  marginRight: 10,
-                  tintColor: colors.disable,
-                }}
-              />
-            </View>
+            <TextInput
+              value={initProfile.subdistrict}
+              style={[styles.input, { backgroundColor: colors.greyDivider }]}
+              editable={false}
+              placeholder={'ระบุชื่อ'}
+              placeholderTextColor={colors.disable}
+            />
             <Text style={styles.head}>รหัสไปรษณีย์</Text>
             <TextInput
-              value={profilestate.postcode}
+              value={initProfile.postal}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'รหัสไปรษณีย์'}
@@ -489,7 +432,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                         key={i}
                         label={v.label}
                         value={v.value}
-                        onPress={() => selectProvince(v, i)}
+                        // onPress={() => selectProvince(v, i)}
                       />
                     </TouchableOpacity>
                   ),
@@ -540,7 +483,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                         key={i}
                         label={v.label}
                         value={v.value}
-                        onPress={() => selectDistrict(v, i)}
+                        // onPress={() => selectDistrict(v, i)}
                       />
                     </TouchableOpacity>
                   ),
@@ -592,7 +535,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                         label={v.label}
                         value={v.value}
                         postcode={v.postcode}
-                        onPress={() => selectSubDistrict(v, i)}
+                        // onPress={() => selectSubDistrict(v, i)}
                       />
                     </TouchableOpacity>
                   ),

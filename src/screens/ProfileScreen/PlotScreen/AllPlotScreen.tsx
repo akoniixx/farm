@@ -37,8 +37,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
     setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
-      .then(res => {
-        console.log('1', res.farmerPlot[0].status);
+      .then(async res => {
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
@@ -239,7 +238,13 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                             <PlotsItemEdit
                               key={index}
                               index={index}
-                              plotName={item.plotName}
+                              plotName={!item.plotName
+                                ? 'แปลงที่' +
+                                  ' ' +
+                                  `${index + 1}` +
+                                  ' ' +
+                                  item.plantName
+                                : item.plotName}
                               raiAmount={item.raiAmount}
                               plantName={item.plantName}
                               status={item.status}
