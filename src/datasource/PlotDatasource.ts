@@ -99,10 +99,10 @@ export class PlotDatasource {
   ): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     let count = 0
-    if (!plotName) {
+    // if (!plotName) {
       return httpClient
         .post(BASE_URL + `/farmer-plot`, {
-          plotName: `แปลงที่ ${count + 1} ${plantName}`,
+          plotName: plotName,
           raiAmount: raiAmount,
           landmark: landmark,
           plantName: plantName,
@@ -119,35 +119,35 @@ export class PlotDatasource {
         .catch(error => {
           console.log(error);
         });
-    } else {
-      return httpClient
-        .post(BASE_URL + `/farmer-plot`, {
-          id: farmer_id,
-          status: 'PENDING',
-          farmerPlot: [
-            {
-              plotName: plotName,
-              raiAmount: raiAmount,
-              landmark: landmark,
-              plantName: plantName,
-              locationName: locationName,
-              farmerId: farmer_id,
-              lat: lat,
-              long: long,
-              plotAreaId: plotAreaId,
-              status: 'PENDING',
-            },
-          ],
-        })
-        .then(async response => {
-          const farmerPlot_id = response.data.id;
-          await AsyncStorage.setItem('farmerPlot_id', farmerPlot_id);
-          return response.data;
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
+    // } else {
+    //   return httpClient
+    //     .post(BASE_URL + `/farmer-plot`, {
+    //       id: farmer_id,
+    //       status: 'PENDING',
+    //       farmerPlot: [
+    //         {
+    //           plotName: plotName,
+    //           raiAmount: raiAmount,
+    //           landmark: landmark,
+    //           plantName: plantName,
+    //           locationName: locationName,
+    //           farmerId: farmer_id,
+    //           lat: lat,
+    //           long: long,
+    //           plotAreaId: plotAreaId,
+    //           status: 'PENDING',
+    //         },
+    //       ],
+    //     })
+    //     .then(async response => {
+    //       const farmerPlot_id = response.data.id;
+    //       await AsyncStorage.setItem('farmerPlot_id', farmerPlot_id);
+    //       return response.data;
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // }
   }
   static async getFarmerPlotById(id: string): Promise<any> {
     return httpClient

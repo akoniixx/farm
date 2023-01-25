@@ -48,10 +48,105 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
   locationName,
 }) => {
   return (
-    <View
+    <View>
+      {StatusObject(status).status === "ตรวจสอบแล้ว" ? 
+        <View
+        key={index}
+        style={{
+          height: normalize(134),
+          borderWidth: 0.5,
+          borderColor: colors.greenLight,
+          backgroundColor: '#ECFBF2',
+          borderRadius: normalize(12),
+          paddingVertical: normalize(10),
+          paddingHorizontal: normalize(20),
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: normalize(10),
+        }}>
+        <View
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}>
+          <View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={styles.title}>{plotName}</Text>
+              <Image
+                source={icons.arrowRigth}
+                style={{
+                  width: normalize(20),
+                  height: normalize(20),
+                  alignSelf: 'flex-end',
+                }}
+              />
+            </View>
+            <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
+              <Image
+                source={icons.plot}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                  marginRight: '40%',
+                }}>
+                {raiAmount + ' ' + 'ไร่'}
+              </Text>
+              <Image
+                source={icons.plant}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                  marginRight: '10%',
+                }}>
+                {plantName}
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
+              <Image
+                source={icons.location}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                  marginRight: '10%',
+                  width: normalize(270),
+                }}>
+                {locationName}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View> :   
+      <View
       key={index}
       style={{
-        height: normalize(134),
+        height: normalize(145),
         borderWidth: 0.5,
         borderColor: colors.greenLight,
         backgroundColor: '#ECFBF2',
@@ -158,7 +253,10 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
           </View>
         </View>
       </View>
+    </View>}
+
     </View>
+  
   );
 };
 

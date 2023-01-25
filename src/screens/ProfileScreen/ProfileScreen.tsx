@@ -248,7 +248,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 horizontal
                 showsHorizontalScrollIndicator={false}>
                 <FlatList
-                horizontal={false}
+                  horizontal={false}
                   scrollEnabled={false}
                   contentContainerStyle={{
                     alignSelf: 'flex-start',
@@ -257,12 +257,11 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                     <View style={[highlighted && { marginLeft: 0 }]} />
                   )}
                   numColumns={Math.ceil(profilestate.plotItem.length / 2)}
-                  // numColumns={2}
                   showsVerticalScrollIndicator={true}
                   showsHorizontalScrollIndicator={false}
                   data={profilestate.plotItem}
                   renderItem={({ item, index }) => (
-                    <View style={{ display: 'flex', flexDirection: 'column' }}>
+                    <View style={{flexDirection: 'row' }}>
                       <View>
                         <PlotInProfile
                           key={index}
@@ -279,7 +278,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                           locationName={item.locationName}
                           plantName={item.plantName}
                           status={item.status}
-                          index={0}
+                          index={index}
                         />
                       </View>
                     </View>

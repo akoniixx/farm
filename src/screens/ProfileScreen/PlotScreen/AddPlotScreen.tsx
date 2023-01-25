@@ -41,7 +41,7 @@ import { useDebounce } from '../../../hook/useDebounce';
 import { QueryLocation } from '../../../datasource/LocationDatasource';
 import { LAT_LNG_BANGKOK } from '../../../definitions/location';
 import { PlotDatasource } from '../../../datasource/PlotDatasource';
-import  Spinner  from 'react-native-loading-spinner-overlay/lib';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 export type PredictionType = {
   description: string;
@@ -81,6 +81,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const [lat, setlat] = useState<any>();
   const [long, setlong] = useState<any>();
   const [plotName, setplotName] = useState<any>(null);
+  const [plotNameNull, setPlotNameNull] = useState<any>(null);
   const actionSheet = useRef<any>();
   const plantSheet = useRef<any>();
   const deTailPlot = useRef<any>();
@@ -586,32 +587,62 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       style={styles.button}
                       label="บันทึก"
                       disable={
-                        !raiAmount || !plantName || !lat || !long || !landmark || !selectPlot.subdistrictId
+                        !raiAmount ||
+                        !plantName ||
+                        !lat ||
+                        !long ||
+                        !landmark ||
+                        !selectPlot.subdistrictId
                           ? true
                           : false
                       }
                       color={colors.greenLight}
                       onPress={() => {
-                        setLoading(true)
-                        PlotDatasource.addFarmerPlot(
-                          plotName,
-                          raiAmount,
-                          landmark,
-                          plantName,
-                          lat,
-                          long,
-                          search.term,
-                          selectPlot.subdistrictId,
-                        )
-                          .then(res => {
-                            console.log(res)
-                            setLoading(false)
-                            navigation.navigate('AllPlotScreen')
-                          })
-                          .catch(err => {
-                            setLoading(false)
-                            console.log(err);
-                          });
+                        setLoading(true);
+                        if (!plotName) {
+                          const plotNameNull = 'แปลงที่ ' + `${
+                            profilestate.plotItem.length + 1
+                          } ${plantName}`;
+                          PlotDatasource.addFarmerPlot(
+                            plotNameNull,
+                            raiAmount,
+                            landmark,
+                            plantName,
+                            lat,
+                            long,
+                            search.term,
+                            selectPlot.subdistrictId,
+                          )
+                            .then(res => {
+                              console.log(res);
+                              setLoading(false);
+                              navigation.navigate('AllPlotScreen');
+                            })
+                            .catch(err => {
+                              setLoading(false);
+                              console.log(err);
+                            });
+                        } else {
+                          PlotDatasource.addFarmerPlot(
+                            plotName,
+                            raiAmount,
+                            landmark,
+                            plantName,
+                            lat,
+                            long,
+                            search.term,
+                            selectPlot.subdistrictId,
+                          )
+                            .then(res => {
+                              console.log(res);
+                              setLoading(false);
+                              navigation.navigate('AllPlotScreen');
+                            })
+                            .catch(err => {
+                              setLoading(false);
+                              console.log(err);
+                            });
+                        }
                       }}
                     />
                   </View>
@@ -619,10 +650,10 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 </ScrollView>
               </View>
               <Spinner
-        visible={loading}
-        textContent={'Loading...'}
-        textStyle={{ color: '#FFF' }}
-      />
+                visible={loading}
+                textContent={'Loading...'}
+                textStyle={{ color: '#FFF' }}
+              />
             </KeyboardAvoidingView>
 
             <ActionSheet ref={plantSheet}>

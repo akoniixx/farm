@@ -29,6 +29,8 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [showModalCall, setShowModalCall] = useState(false);
   const [currentTel, setCurrentTel] = useState('');
+  const [farmerPlot, setFarmerPlot] = useState<any>([]);
+  const [statusPlot, setStatusPlot] = useState<any>();
 
   useEffect(() => {
     getProfile();
@@ -38,6 +40,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
       .then(async res => {
+        setFarmerPlot(res.farmerPlot);
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
@@ -82,6 +85,8 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
     Linking.openURL(phoneNumber);
   };
 
+  const inventory = farmerPlot.map((x: any) => x.status);
+  const result = inventory.find((x: any) => x === 'PENDING');
   return (
     <>
       <SafeAreaView style={stylesCentral.container}>
@@ -93,80 +98,77 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
         <View style={styles.inner}>
           <View style={styles.container}>
             <ScrollView>
-              {/* {profilestate.plotItem[0].status === 'PENDING' ? */}
-              <View
-                style={{
-                  height: 176,
-                  width: normalize(340),
-                  alignSelf: 'center',
-                  backgroundColor: '#FFF9F2',
-                  borderRadius: 10,
-                }}>
-                <View style={{ padding: 15, alignSelf: 'center' }}>
-                  <View style={{ flexDirection: 'row' }}>
-                    <Image
-                      source={icons.warning}
-                      style={{ width: 20, height: 20, marginRight: 10 }}
-                    />
-                    <Text style={[styles.textAlert]}>
-                      หากแปลงของคุณมีสถานะ “รอการตรวจ
-                    </Text>
-                  </View>
-                  <Text style={[styles.textAlert, { marginLeft: 30 }]}>
-                    สอบ” จะส่งผลต่อขั้นตอนจ้างนักบินโดรน
-                  </Text>
-                  <Text style={[styles.textAlert, { marginLeft: 30 }]}>
-                    กรุณาติดต่อเจ้าหน้าที่ เพื่อยืนยันสถานะ
-                  </Text>
-                </View>
-                <View style={{ paddingHorizontal: 10 }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setShowModalCall(true);
-                    }}
-                    style={{
-                      height: 60,
-                      paddingVertical: 8,
-                      paddingHorizontal: 16,
-                      backgroundColor: colors.white,
-                      justifyContent: 'center',
-                      alignItems: 'flex-start',
-                      width: '100%',
-                      borderRadius: 12,
-                      marginBottom: 8,
-                      borderWidth: 1,
-                      borderColor: colors.blueBorder,
-                    }}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        alignSelf: 'center',
-                      }}>
+              {result ? (
+                <View
+                  style={{
+                    height: 176,
+                    width: normalize(340),
+                    alignSelf: 'center',
+                    backgroundColor: '#FFF9F2',
+                    borderRadius: 10,
+                  }}>
+                  <View style={{ padding: 15, alignSelf: 'center' }}>
+                    <View style={{ flexDirection: 'row' }}>
                       <Image
-                        style={{
-                          width: 24,
-                          height: 24,
-                          marginRight: 16,
-                        }}
-                        source={icons.calling}
+                        source={icons.warning}
+                        style={{ width: 20, height: 20, marginRight: 10 }}
                       />
-                      <Text
-                        style={{
-                          fontFamily: font.AnuphanMedium,
-                          color: colors.blueBorder,
-                          fontSize: 20,
-                        }}>
-                        โทรหาเจ้าหน้าที่
+                      <Text style={[styles.textAlert]}>
+                        หากแปลงของคุณมีสถานะ “รอการตรวจ
                       </Text>
                     </View>
-                  </TouchableOpacity>
+                    <Text style={[styles.textAlert, { marginLeft: 30 }]}>
+                      สอบ” จะส่งผลต่อขั้นตอนจ้างนักบินโดรน
+                    </Text>
+                    <Text style={[styles.textAlert, { marginLeft: 30 }]}>
+                      กรุณาติดต่อเจ้าหน้าที่ เพื่อยืนยันสถานะ
+                    </Text>
+                  </View>
+                  <View style={{ paddingHorizontal: 10 }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setShowModalCall(true);
+                      }}
+                      style={{
+                        height: 60,
+                        paddingVertical: 8,
+                        paddingHorizontal: 16,
+                        backgroundColor: colors.white,
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
+                        width: '100%',
+                        borderRadius: 12,
+                        marginBottom: 8,
+                        borderWidth: 1,
+                        borderColor: colors.blueBorder,
+                      }}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          alignSelf: 'center',
+                        }}>
+                        <Image
+                          style={{
+                            width: 24,
+                            height: 24,
+                            marginRight: 16,
+                          }}
+                          source={icons.calling}
+                        />
+                        <Text
+                          style={{
+                            fontFamily: font.AnuphanMedium,
+                            color: colors.blueBorder,
+                            fontSize: 20,
+                          }}>
+                          โทรหาเจ้าหน้าที่
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-
-              {/* : ''
-              }
-              */}
+              ) : null}
               {profilestate.plotItem.length === 0 ? (
                 <View style={{ top: '15%' }}>
                   <Image
@@ -226,25 +228,27 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                       </TouchableOpacity>
                       <View style={{ top: 10 }}>
                         {profilestate.plotItem.map((item: any, index: any) => (
-                         <TouchableOpacity
-                         key={index}
-                         onPress={async () => {
-                           await AsyncStorage.setItem(
-                             'plot_id',
-                             `${item.id}`,
-                           );
-                           navigation.push('EditPlotScreen');
-                         }}>
+                          <TouchableOpacity
+                            key={index}
+                            onPress={async () => {
+                              await AsyncStorage.setItem(
+                                'plot_id',
+                                `${item.id}`,
+                              );
+                              navigation.push('EditPlotScreen');
+                            }}>
                             <PlotsItemEdit
                               key={index}
                               index={index}
-                              plotName={!item.plotName
-                                ? 'แปลงที่' +
-                                  ' ' +
-                                  `${index + 1}` +
-                                  ' ' +
-                                  item.plantName
-                                : item.plotName}
+                              plotName={
+                                !item.plotName
+                                  ? 'แปลงที่' +
+                                    ' ' +
+                                    `${index + 1}` +
+                                    ' ' +
+                                    item.plantName
+                                  : item.plotName
+                              }
                               raiAmount={item.raiAmount}
                               plantName={item.plantName}
                               status={item.status}
@@ -257,6 +261,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                   </View>
                 </View>
               )}
+              <View style={{height: 40}}></View>
             </ScrollView>
           </View>
           <View style={{ backgroundColor: colors.white }}>
