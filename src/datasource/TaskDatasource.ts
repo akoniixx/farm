@@ -4,7 +4,7 @@ export interface PayloadCreateTask {
   farmerId: string;
   farmerPlotId: string;
   farmAreaAmount: string;
-  dateAppointment: string;
+  dateAppointment: any;
   targetSpray: string[];
   preparationBy: string;
   purposeSprayId: string;
@@ -50,7 +50,8 @@ const cancelTask = async ({
 }) => {
   return await httpClient
     .patch(BASE_URL + '/tasks/task/' + taskId, {
-      status: 'CANCELLED',
+      id: taskId,
+      status: 'CANCELED',
       statusRemark: reason,
     })
     .then(response => {

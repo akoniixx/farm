@@ -40,7 +40,7 @@ export class QueryLocation {
       .catch(err => console.log(err));
   }
 
-  static getSubdistrict(id?: number, text?: string): Promise<any[]> {
+  static getSubdistrict(id?: number, text?: string): Promise<any> {
     let script = null;
     script =
       id != 0 ? '?districtId=' + id : text == '' ? '?search=' + text : null;

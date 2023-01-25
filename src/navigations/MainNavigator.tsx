@@ -2,14 +2,11 @@ import React, { createContext, useMemo } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import MainScreen from '../screens/MainScreen/MainScreen';
-import AllPlotScreen from '../screens/ProfileScreen/AllPlotScreen';
+import AllPlotScreen from '../screens/ProfileScreen/PlotScreen/AllPlotScreen';
 import SelectDateScreen from '../screens/AutoBooking/SelectDateScreen';
 import DronerDetail from '../screens/DronerProfile/DronerDetail';
 import SeeAllDronerUsed from '../screens/DronerProfile/SeeAllDronerUsed';
 import SelectPlotScreen from '../screens/AutoBooking/SelectPlotScreen';
-
-import DeleteAcc from '../screens/ProfileScreen/DeleteProfile/DeleteAcc';
-import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 import MainTapNavigator from './Bottom/MainTapNavigator';
 import SelectTarget from '../screens/AutoBooking/SelectTarget';
 import PrivacyScreen from '../screens/ProfileScreen/PrivacyScreen';
@@ -19,6 +16,13 @@ import SlipWaitingScreen from '../screens/SlipWaitingScreen';
 import SlipSuccessScreen from '../screens/SlipSuccessScreen';
 import ViewMapScreen from '../screens/ViewMapScreen';
 import MyTaskDetailScreen from '../screens/MyTaskScreen/MyTaskDetailScreen';
+import VerifyOTP from '../screens/ProfileScreen/DeleteProfile/VerifyOTP';
+import { StackNavigationHelpers } from '@react-navigation/stack/lib/typescript/src/types';
+import { RouteProp } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import DeleteProfile from '../screens/ProfileScreen/DeleteProfile/DeleteProfile';
+import AddPlotScreen from '../screens/ProfileScreen/PlotScreen/AddPlotScreen';
+import EditPlotScreen from '../screens/ProfileScreen/PlotScreen/EditPlotScreen';
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -34,7 +38,6 @@ export type MainStackParamList = {
   SlipWaitingScreen: { taskId: string };
   SlipSuccessScreen: { taskId: string };
   DeleteAcc: undefined;
-  DeleteSuccess: undefined;
   ViewMapScreen: {
     location: {
       latitude: string;
@@ -43,7 +46,17 @@ export type MainStackParamList = {
     plotName: string;
   };
   MyTaskDetailScreen: undefined;
+  VerifyOTP: undefined;
+  DeleteProfileScreen: {
+    navigation: StackNavigationHelpers;
+    route: RouteProp<{ params: { id: string } }, 'params'>;
+  };
+  AddPlotScreen: undefined;
+  EditPlotScreen: undefined;
 };
+export type StackNativeScreenProps<T extends keyof MainStackParamList> =
+  NativeStackScreenProps<MainStackParamList, T>;
+
 const Stack = createStackNavigator<MainStackParamList>();
 const MainNavigator: React.FC = () => {
   return (
@@ -68,7 +81,6 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
       <Stack.Screen name="DetailTaskScreen" component={DetailTaskScreen} />
       <Stack.Screen name="MyTaskDetailScreen" component={MyTaskDetailScreen} />
-
       <Stack.Group
         screenOptions={{
           gestureEnabled: false,
@@ -77,9 +89,10 @@ const MainNavigator: React.FC = () => {
         <Stack.Screen name="SlipSuccessScreen" component={SlipSuccessScreen} />
       </Stack.Group>
       <Stack.Screen name="ViewMapScreen" component={ViewMapScreen} />
-
-      <Stack.Screen name="DeleteAcc" component={DeleteAcc} />
-      <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
+      <Stack.Screen name="DeleteProfileScreen" component={DeleteProfile} />
+      <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
+      <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
+      <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
     </Stack.Navigator>
   );
 };
