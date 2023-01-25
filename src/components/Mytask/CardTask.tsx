@@ -6,6 +6,7 @@ import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
 import { getStatusToText } from '../../functions/utility';
 import { DronerCard } from './DronerCard';
+import { WaittingCard } from './WaitingCard';
 
 interface taskListProps {
   task: {
@@ -24,6 +25,7 @@ interface taskListProps {
       telephone_no: string;
     };
     purpose_spray_name: string;
+    task_late_status: boolean;
   };
 }
 
@@ -100,6 +102,7 @@ export const CardTask: React.FC<taskListProps> = ({ task }) => {
             .add(543, 'year')
             .locale('th')
             .format('DD MMMM YYYY, hh.mm')}
+          {' น.'}
         </Text>
       </View>
       <View
@@ -120,17 +123,29 @@ export const CardTask: React.FC<taskListProps> = ({ task }) => {
           {task.plot_name + ', ' + task.rai_amount + ' ไร่'}
         </Text>
       </View>
+      {task.task_late_status&&task.status==='WAIT_START' ? (
+        <View style={styles.lateBox}>
+          <Text style={[styles.plot,{fontFamily:fonts.SarabunMedium}]}>ขณะนี้! เลยเวลานัดหมาย</Text>
+          <Text style={[styles.plot,{fontFamily:fonts.SarabunMedium}]}>กรุณาติดต่อนักบินโดรนให้กดเริ่มงาน</Text>
+        </View>
+      ) : (
+        <></>
+      )}
       <View
         style={{
           marginTop: normalize(20),
           borderTopWidth: StyleSheet.hairlineWidth,
           borderColor: colors.disable,
         }}>
-        <DronerCard
-          name={task.droner.firstname + ' ' + task.droner.lastname}
-          profile={task.droner.image_profile}
-          telnumber={task.droner.telephone_no}
-        />
+        {task.status === 'WAIT_RECEIVE' ? (
+          <WaittingCard />
+        ) : (
+          <DronerCard
+            name={task.droner.firstname + ' ' + task.droner.lastname}
+            profile={task.droner.image_profile}
+            telnumber={task.droner.telephone_no}
+          />
+        )}
       </View>
     </View>
   );
@@ -155,5 +170,16 @@ const styles = StyleSheet.create({
     fontFamily: fonts.SarabunLight,
     fontSize: normalize(18),
     color: colors.fontBlack,
+  },
+  lateBox: {
+    marginTop: normalize(20),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFF2F2',
+    borderColor: '#EF4E4E',
+    borderStyle: 'dotted',
+    borderWidth: 1,
+    borderRadius: 1,
+    padding:normalize(10)
   },
 });

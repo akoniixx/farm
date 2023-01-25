@@ -15,9 +15,11 @@ import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
 import { CallingModal } from '../../components/Modal/CallingModal';
 import { DronerCard } from '../../components/Mytask/DronerCard';
+import { MyTaskDateTimeDetail } from '../../components/Mytask/MyTaskDetail';
 import {
   DateTimeDetail,
   PlotDetail,
+  TargetSpray,
 } from '../../components/TaskDetail/TaskDetail';
 import { normalize } from '../../functions/Normalize';
 import { getStatusToText } from '../../functions/utility';
@@ -93,12 +95,14 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               marginTop: normalize(10),
             }}>
             <Text style={styles.plant}>
-              {task.plant_name}{' '}
-              {task.target_spray.map((d: string) => '|' + ' ' + d)}{' '}
+              {task.plant_name + ' | ' + task.purpose_spray_name}
+            
             </Text>
             <Text style={styles.price}>{task.total_price + ' ' + 'บาท'}</Text>
           </View>
-          <DateTimeDetail
+
+
+          <MyTaskDateTimeDetail
             date={task.date_appointment}
             time={task.date_appointment}
             note={task.comment}
@@ -118,6 +122,11 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             plant={task.plant_name}
             location={task.location_name}
           />
+          <View style={{marginTop:normalize(16)}}>
+            <Text style={styles.label}>เป้าหมายการพ่น</Text>
+          <TargetSpray target={task.target_spray.join(' , ') || '-'} periodSpray={task.purpose_spray_name} preparationBy={task.preparation_by} />
+          </View>
+         
         </View>
         <View
           style={{

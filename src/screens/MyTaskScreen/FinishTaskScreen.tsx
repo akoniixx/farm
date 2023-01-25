@@ -14,6 +14,7 @@ import { StatusFilterInprogress } from '../../components/Mytask/StatusFilterInpr
 import { EmptyTask } from '../../components/TaskDetail/emptyTask';
 import { MyJobDatasource } from '../../datasource/MyJobDatasource';
 import { SearchMyJobsEntites } from '../../entites/SearchMyJobsEntites';
+import * as RootNavigation from '../../navigations/RootNavigation';
 
 const FinishScreen: React.FC<any> = ({}) => {
   const [taskList, setTaskList] = useState([]);
@@ -84,7 +85,14 @@ const FinishScreen: React.FC<any> = ({}) => {
             <FlatList
               data={taskList}
               renderItem={({ item, index }) => (
-                <TouchableOpacity key={index}>
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    RootNavigation.navigate('Main', {
+                      screen: 'MyTaskDetailScreen',
+                      params: { task: item },
+                    })
+                  }>
                   <CardTask task={item} />
                 </TouchableOpacity>
               )}
