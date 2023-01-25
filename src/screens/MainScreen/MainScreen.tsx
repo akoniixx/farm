@@ -233,7 +233,8 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                     </LinearGradient>
                   </TouchableOpacity>
                   <View style={{ width: normalize(10) }}></View>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('AllPlotScreen')}>
                     <LinearGradient
                       colors={['#FFFFFF', '#ECFBF2']}
                       style={{
