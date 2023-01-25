@@ -84,7 +84,7 @@ export const initialState: {
     farmerId: '',
     farmerPlotId: '',
     farmAreaAmount: '',
-    dateAppointment: moment().set('hour', 6).set('minute', 0).toISOString(),
+    dateAppointment: '',
     targetSpray: [],
     preparationBy: '',
     purposeSpray: {
@@ -178,7 +178,9 @@ export const AutoBookingProvider = ({
           const res = await PlotDatasource.searchDroner({
             farmerId: farmerId,
             farmerPlotId: farmerPlotId,
-            dateAppointment: moment(taskData.dateAppointment).toISOString(),
+            dateAppointment: moment(taskData.dateAppointment).format(
+              'YYYY-MM-DD',
+            ),
           });
           const newArray: any = [];
           for (let i = 0; i < (res.length > 5 ? 5 : res.length); i++) {

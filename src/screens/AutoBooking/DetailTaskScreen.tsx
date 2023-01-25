@@ -4,8 +4,11 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import {
   Image,
+  Keyboard,
+  KeyboardAvoidingView,
   Linking,
   Modal,
+  Platform,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -38,7 +41,6 @@ import {
 } from '../../datasource/TaskDatasource';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { numberWithCommas } from '../../functions/utility';
-import { momentExtend } from '../../utils/moment-buddha-year';
 
 const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const {
@@ -66,6 +68,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           ...prev,
           couponCode: couponCode,
         }));
+        Keyboard.dismiss();
         setDisableEdit(true);
       }
     } catch (error) {
@@ -77,6 +80,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const onSubmit = async () => {
     try {
       setLoading(true);
+      const hour = moment(taskData.dateAppointment).format('HH');
+
+      const dateAppointment = moment(taskData.dateAppointment).toISOString();
       const payload: PayloadCreateTask = {
         purposeSprayId: taskData.purposeSpray.id,
         cropName: taskData.cropName || '',
@@ -84,7 +90,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         comment: taskData.comment || '',
         couponCode: taskData.couponCode || '',
         farmerPlotId: taskData.farmerPlotId,
-        dateAppointment: moment(taskData.dateAppointment).toISOString(),
+        dateAppointment,
         createBy: `${user?.firstname} ${user?.lastname}`,
         farmerId: taskData.farmerId,
         preparationBy: taskData.preparationBy,
@@ -93,6 +99,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         taskDronerTemp: taskData.taskDronerTemp,
         statusRemark: '',
       };
+      console.log('payload', JSON.stringify(payload, null, 2));
       const res = await TaskDatasource.createTask(payload);
 
       if (res && res.success) {
@@ -134,7 +141,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskData.couponCode]);
   return (
-    <View style={[{ flex: 1 }]}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={[{ flex: 1 }]}>
       <CustomHeader
         title="รายละเอียดการจอง"
         showBackBtn
@@ -543,6 +552,12 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 setCouponCode(text);
                 setCouponCodeError('');
               }}
+              onSubmitEditing={async () => {
+                if (couponCode.length > 0) {
+                  await checkCoupon();
+                }
+              }}
+              returnKeyType="done"
               style={{
                 color: !disableEdit ? colors.fontBlack : colors.grey40,
               }}
@@ -928,7 +943,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         textContent={'Loading...'}
         textStyle={{ color: '#FFF' }}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

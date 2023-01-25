@@ -67,11 +67,12 @@ export default function SlipWaitingScreen({
   const onSubmitCancelTask = async () => {
     try {
       const res = await TaskDatasource.cancelTask({ taskId, reason });
-      if (res) {
+      console.log('res', res);
+
+      if (res && res.success) {
+        setReason('');
         await AsyncStorage.removeItem('taskId');
         await AsyncStorage.removeItem('endTime');
-        setReason('');
-
         navigation.navigate('MainScreen');
       }
     } catch (e) {
@@ -231,6 +232,9 @@ export default function SlipWaitingScreen({
                   onFocus={() => {
                     setIsFocus(true);
                   }}
+                  onChangeText={text => {
+                    setReason(text);
+                  }}
                   returnKeyType="done"
                   returnKeyLabel="done"
                   onSubmitEditing={() => {
@@ -283,6 +287,7 @@ export default function SlipWaitingScreen({
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
+                disabled={reason.length === 0}
                 onPress={() => {
                   onSubmitCancelTask();
                   setIsShowModal(false);
@@ -293,15 +298,21 @@ export default function SlipWaitingScreen({
 
                   justifyContent: 'center',
                   alignItems: 'center',
-                  backgroundColor: colors.greenLight,
+                  backgroundColor:
+                    reason.length === 0
+                      ? colors.greyDivider
+                      : colors.greenLight,
                   borderWidth: 1,
-                  borderColor: colors.greenLight,
+                  borderColor:
+                    reason.length === 0
+                      ? colors.greyDivider
+                      : colors.greenLight,
                   borderRadius: 8,
                   paddingHorizontal: 16,
                 }}>
                 <Text
                   style={{
-                    color: colors.white,
+                    color: reason.length === 0 ? colors.grey40 : colors.white,
                     fontFamily: fonts.AnuphanBold,
                     fontSize: 20,
                   }}>

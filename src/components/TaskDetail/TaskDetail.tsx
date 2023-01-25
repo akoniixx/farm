@@ -205,8 +205,8 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
                   style={[
                     styles.h1,
                     {
+                      width: Dimensions.get('screen').width * 0.5,
                       textAlign: 'right',
-                      width: Dimensions.get('window').width * 0.5,
                     },
                   ]}>
                   {dataKeyObj[key as keyof typeof dataKeyObj].value}

@@ -38,7 +38,7 @@ const PlotSelect: React.FC<Prop> = ({
     state: { taskData },
     autoBookingContext: { setTaskData },
   } = useAutoBookingContext();
-  const isPending = status === 'PENDING';
+  const isPending = status !== 'ACTIVE';
   const radioList = [
     {
       title: 'ทั้งหมด',
@@ -187,7 +187,7 @@ const PlotSelect: React.FC<Prop> = ({
             {locationName}
           </Text>
         </View>
-        {isPending && (
+        {status === 'PENDING' && (
           <View
             style={{
               backgroundColor: '#FFF2E3',
@@ -238,6 +238,12 @@ const PlotSelect: React.FC<Prop> = ({
                 value={checkValue}
                 style={{ marginVertical: 8 }}
                 onChange={(value: string) => {
+                  if (value === 'all') {
+                    setTaskData(prev => ({
+                      ...prev,
+                      farmAreaAmount: raiAmount.toString(),
+                    }));
+                  }
                   setCheckValue(value);
                 }}
               />
