@@ -30,6 +30,7 @@ import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {socket} from '../../function/utility';
 import {ActionContext} from '../../../App';
+import { mixpanel } from '../../../mixpanel';
 
 interface Prop {
   isOpenReceiveTask: boolean;
@@ -403,6 +404,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                   alignItems: 'center',
                 }}
                 onPress={() => {
+                  mixpanel.track('accept task from new task list')
                   receiveTask().then(() => {
                     setOpenConfirmModal(false);
                   });
@@ -432,6 +434,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                 }}
                 onPress={() => {
                   rejectTask().then(() => {
+                    mixpanel.track('reject task from new task')
                     setOpenConfirmModal(false);
                   });
                 }}>
