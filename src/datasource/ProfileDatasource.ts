@@ -109,5 +109,4 @@ export class ProfileDatasource {
         console.log(error);
       });
   }
- 
 }

@@ -98,27 +98,27 @@ export class PlotDatasource {
     plotAreaId: any,
   ): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-    let count = 0
+    let count = 0;
     // if (!plotName) {
-      return httpClient
-        .post(BASE_URL + `/farmer-plot`, {
-          plotName: plotName,
-          raiAmount: raiAmount,
-          landmark: landmark,
-          plantName: plantName,
-          locationName: locationName,
-          farmerId: farmer_id,
-          lat: lat,
-          long: long,
-          plotAreaId: plotAreaId,
-          status: 'PENDING',
-        })
-        .then(response => {
-          return response.data;
-        })
-        .catch(error => {
-          console.log(error);
-        });
+    return httpClient
+      .post(BASE_URL + `/farmer-plot`, {
+        plotName: plotName,
+        raiAmount: raiAmount,
+        landmark: landmark,
+        plantName: plantName,
+        locationName: locationName,
+        farmerId: farmer_id,
+        lat: lat,
+        long: long,
+        plotAreaId: plotAreaId,
+        status: 'PENDING',
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
     // } else {
     //   return httpClient
     //     .post(BASE_URL + `/farmer-plot`, {
@@ -174,45 +174,42 @@ export class PlotDatasource {
     const index = 0;
     if (!plotName) {
       return httpClient
-      .patch(BASE_URL + `/farmer-plot/${plotId}`, {
-        plotName: `แปลงที่ ${index + 1} ${plantName}`,
-        raiAmount: raiAmount,
-        landmark: landmark,
-        plantName: plantName,
-        lat: lat,
-        long: long,
-        locationName: locationName,
-        plotAreaId: plotAreaId,
-        farmerId: farmer_id
-      })
-      .then(response => {
-        return response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    }else{
+        .patch(BASE_URL + `/farmer-plot/${plotId}`, {
+          plotName: `แปลงที่ ${index + 1} ${plantName}`,
+          raiAmount: raiAmount,
+          landmark: landmark,
+          plantName: plantName,
+          lat: lat,
+          long: long,
+          locationName: locationName,
+          plotAreaId: plotAreaId,
+          farmerId: farmer_id,
+        })
+        .then(response => {
+          return response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    } else {
       return httpClient
-      .patch(BASE_URL + `/farmer-plot/${plotId}`, {
-        plotName: plotName,
-        raiAmount: raiAmount,
-        landmark: landmark,
-        plantName: plantName,
-        lat: lat,
-        long: long,
-        locationName: locationName,
-        plotAreaId: plotAreaId,
-        farmerId: farmer_id
-      })
-      .then(response => {
-        return response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-
+        .patch(BASE_URL + `/farmer-plot/${plotId}`, {
+          plotName: plotName,
+          raiAmount: raiAmount,
+          landmark: landmark,
+          plantName: plantName,
+          lat: lat,
+          long: long,
+          locationName: locationName,
+          plotAreaId: plotAreaId,
+          farmerId: farmer_id,
+        })
+        .then(response => {
+          return response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
-
-  
   }
 }

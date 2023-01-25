@@ -93,7 +93,6 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
       <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
       <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
-
     </Stack.Navigator>
   );
 };

@@ -77,7 +77,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 status: res.status,
               });
             })
-            
+
             .catch(err => console.log(err))
             .finally(() => setLoading(false));
         }
@@ -261,7 +261,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                   showsHorizontalScrollIndicator={false}
                   data={profilestate.plotItem}
                   renderItem={({ item, index }) => (
-                    <View style={{flexDirection: 'row' }}>
+                    <View style={{ flexDirection: 'row' }}>
                       <View>
                         <PlotInProfile
                           key={index}

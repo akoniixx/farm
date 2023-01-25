@@ -269,7 +269,6 @@ export class Register {
       })
       .then(async response => {
         return response.data;
-        
       })
       .catch(error => {
         console.log(error);

@@ -600,9 +600,9 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       onPress={() => {
                         setLoading(true);
                         if (!plotName) {
-                          const plotNameNull = 'แปลงที่ ' + `${
-                            profilestate.plotItem.length + 1
-                          } ${plantName}`;
+                          const plotNameNull =
+                            'แปลงที่ ' +
+                            `${profilestate.plotItem.length + 1} ${plantName}`;
                           PlotDatasource.addFarmerPlot(
                             plotNameNull,
                             raiAmount,

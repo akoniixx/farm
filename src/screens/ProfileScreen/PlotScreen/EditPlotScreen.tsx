@@ -116,7 +116,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
         setSelectPlot(res.plotArea);
         setlat(res.lat);
         setlong(res.long);
-        setSearch({ term: res.locationName});
+        setSearch({ term: res.locationName });
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
@@ -225,7 +225,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
     plantSheet.current.hide();
   };
   const selectPlotArea = (value: any) => {
-    console.log(value)
+    console.log(value);
     setSelectPlot(value);
     plotArea.current.hide();
   };
@@ -576,7 +576,12 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       style={styles.button}
                       label="บันทึก"
                       disable={
-                        !raiAmount || !plantName || !lat || !long || !landmark || !selectPlot.subdistrictId
+                        !raiAmount ||
+                        !plantName ||
+                        !lat ||
+                        !long ||
+                        !landmark ||
+                        !selectPlot.subdistrictId
                           ? true
                           : false
                       }

@@ -8,6 +8,7 @@ import {
   Modal,
   Linking,
   Platform,
+  ImageBackground,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../../assets';
@@ -90,11 +91,36 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
   return (
     <>
       <SafeAreaView style={stylesCentral.container}>
-        <CustomHeader
-          title="แปลงของคุณ"
-          showBackBtn
-          onPressBack={() => navigation.goBack()}
-        />
+        <ImageBackground
+          source={image.plot_head}
+          style={{ width: '100%', height: 96 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              alignContent: 'center',
+              top: 30,
+            }}>
+            <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
+              <Image
+                source={icons.arrowLeft}
+                style={{
+                  width: normalize(30),
+                  height: normalize(30),
+                  left: 20,
+                }}
+              />
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontFamily: font.AnuphanBold,
+                fontSize: 22,
+                left: normalize(100),
+              }}>
+              แปลงของคุณ
+            </Text>
+          </View>
+        </ImageBackground>
         <View style={styles.inner}>
           <View style={styles.container}>
             <ScrollView>
@@ -261,7 +287,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                   </View>
                 </View>
               )}
-              <View style={{height: 40}}></View>
+              <View style={{ height: 40 }}></View>
             </ScrollView>
           </View>
           <View style={{ backgroundColor: colors.white }}>
@@ -269,9 +295,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
               disable={!profilestate.plotItem}
               label="บันทึก"
               color={colors.greenLight}
-              onPress={() => {
-                navigation.navigate('ProfileScreen');
-              }}
+              onPress={() => navigation.navigate('MainScreen')}
             />
           </View>
         </View>
