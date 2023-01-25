@@ -722,7 +722,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     style={styles.button}
                     label="บันทึก"
                     disable={
-                      !raiAmount || !plantName || !lat || !long || !landmark
+                      !raiAmount || !plantName || !lat || !long || !landmark || !selectPlot.subdistrictId
                         ? true
                         : false
                     }

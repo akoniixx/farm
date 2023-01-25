@@ -82,6 +82,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
 
     Linking.openURL(phoneNumber);
   };
+
   return (
     <>
       <SafeAreaView style={stylesCentral.container}>
@@ -231,7 +232,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                          onPress={async () => {
                            await AsyncStorage.setItem(
                              'plot_id',
-                             `${item.farmerPlot_id}`,
+                             `${item.id}`,
                            );
                            navigation.push('EditPlotScreen');
                          }}>

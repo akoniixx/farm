@@ -639,7 +639,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       style={styles.button}
                       label="บันทึก"
                       disable={
-                        !raiAmount || !plantName || !lat || !long || !landmark
+                        !raiAmount || !plantName || !lat || !long || !landmark || !selectPlot.subdistrictId
                           ? true
                           : false
                       }
