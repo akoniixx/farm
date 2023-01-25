@@ -33,6 +33,7 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
   const login = () => {
     Authentication.generateOtpRegister(value)
       .then(result => {
+        setLoading(false);
         navigation.navigate('OtpScreen', {
           telNumber: value,
           token: result.result.token,
@@ -43,6 +44,7 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
       .catch(err => {
         if (err.response.data.statusCode === 409) {
           Authentication.generateOtp(value).then(result => {
+            setLoading(false);
             const telNumber = value;
             setValue('');
             navigation.navigate('OtpScreen', {
@@ -97,11 +99,17 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
                 color={colors.greenLight}
                 disable={value.length != 10}
                 onPress={() => {
+                  setLoading(true);
                   login();
                 }}
               />
             </View>
           </View>
+          <Spinner
+            visible={loading}
+            textContent={'Loading...'}
+            textStyle={{ color: '#FFF' }}
+          />
         </SafeAreaView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

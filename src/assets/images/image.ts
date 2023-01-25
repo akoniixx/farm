@@ -23,4 +23,5 @@ export default {
   endSlip: require('./endSlip.png'),
   successSlip: require('./successSlip.png'),
   drone: require('./drone.png'),
+  plot_head: require('./plot_head.png'),
 };

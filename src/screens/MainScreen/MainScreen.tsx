@@ -280,6 +280,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                     flexDirection: 'row',
                     padding: '5%',
                     justifyContent: 'space-between',
+                    top: '10%'
                   }}>
                   <Text
                     style={{

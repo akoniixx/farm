@@ -25,7 +25,7 @@ export function StatusObject(status: string) {
     case 'PENDING':
       return {
         status: 'รอการตรวจสอบ',
-        colorBg: colors.white,
+        colorBg: '#FFF2E3',
         fontColor: '#E27904',
         borderColor: colors.darkOrange,
       };
@@ -34,11 +34,19 @@ export function StatusObject(status: string) {
         status: 'ตรวจสอบแล้ว',
         colorBg: colors.white,
         fontColor: colors.greenLight,
+        borderColor: colors.greenLight,
+      };
+    case 'INACTIVE':
+      return {
+        status: 'ปิดการใช้งาน',
+        colorBg: colors.white,
+        fontColor: colors.error,
+        borderColor: colors.error,
       };
     default:
       return {
         status: 'รอการตรวจสอบ',
-        colorBg: colors.white,
+        colorBg: '#FFF2E3',
         fontColor: '#E27904',
         borderColor: colors.darkOrange,
       };
@@ -56,70 +64,139 @@ const PlotInProfile: React.FC<plotData> = ({
 
   return (
     <View style={{ flex: 1, padding: 5, alignSelf: 'center' }}>
-      <View key={index} style={[styles.cards]}>
-        <View>
-          <Text style={styles.title}>{plotName}</Text>
-          <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
-            <Image
-              source={icons.plot}
-              style={{
-                width: normalize(18),
-                height: normalize(20),
-                marginRight: normalize(10),
-              }}
-            />
-            <Text
-              style={{
-                fontFamily: fonts.SarabunMedium,
-                fontSize: normalize(16),
-                color: colors.fontGrey,
-                marginRight: '40%',
-                bottom: 2,
-              }}>
-              {raiAmount + ' ' + 'ไร่'}
-            </Text>
-            <Image
-              source={icons.plant}
-              style={{
-                width: normalize(18),
-                height: normalize(20),
-                marginRight: normalize(10),
-              }}
-            />
-            <Text
-              style={{
-                fontFamily: fonts.SarabunMedium,
-                fontSize: normalize(16),
-                color: colors.fontGrey,
-                marginRight: '10%',
-                bottom: 2,
-              }}>
-              {plantName}
-            </Text>
+      {StatusObject(status).status === 'ตรวจสอบแล้ว' ? (
+        <View key={index} style={[styles.cards]}>
+          <View>
+            <Text style={styles.title}>{plotName}</Text>
+            <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
+              <Image
+                source={icons.plot}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                  marginRight: '40%',
+                  bottom: 2,
+                }}>
+                {raiAmount + ' ' + 'ไร่'}
+              </Text>
+              <Image
+                source={icons.plant}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                  marginRight: '10%',
+                  bottom: 2,
+                }}>
+                {plantName}
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
+              <Image
+                source={icons.location}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                  marginRight: '10%',
+                  width: normalize(280),
+                  bottom: 2,
+                }}>
+                {locationName}
+              </Text>
+            </View>
           </View>
-          <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
-            <Image
-              source={icons.location}
-              style={{
-                width: normalize(18),
-                height: normalize(20),
-                marginRight: normalize(10),
-              }}
-            />
-            <Text
-              numberOfLines={1}
-              style={{
-                fontFamily: fonts.SarabunMedium,
-                fontSize: normalize(16),
-                color: colors.fontGrey,
-                marginRight: '10%',
-                width: normalize(140),
-                bottom: 2,
-              }}>
-              {locationName}
-            </Text>
+        </View>
+      ) : (
+        <View key={index} style={[styles.cards]}>
+          <View>
+            <Text style={styles.title}>{plotName}</Text>
+            <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
+              <Image
+                source={icons.plot}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                  marginRight: '40%',
+                  bottom: 2,
+                }}>
+                {raiAmount + ' ' + 'ไร่'}
+              </Text>
+              <Image
+                source={icons.plant}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                  marginRight: '10%',
+                  bottom: 2,
+                }}>
+                {plantName}
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
+              <Image
+                source={icons.location}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                  marginRight: '10%',
+                  width: normalize(280),
+                  bottom: 2,
+                }}>
+                {locationName}
+              </Text>
+            </View>
             <View
               style={{
+                top: 10,
                 width: normalize(109),
                 height: normalize(24),
                 borderRadius: normalize(12),
@@ -140,7 +217,7 @@ const PlotInProfile: React.FC<plotData> = ({
             </View>
           </View>
         </View>
-      </View>
+      )}
     </View>
   );
 };
@@ -162,7 +239,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
   },
   cards: {
-    height: normalize(131),
+    height: '100%',
     width: normalize(340),
     borderWidth: 0.5,
     borderColor: colors.greenLight,
