@@ -14,7 +14,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SheetManager } from 'react-native-actions-sheet';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { font } from '../../assets';
 import colors from '../../assets/colors/colors';
@@ -80,7 +79,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const onSubmit = async () => {
     try {
       setLoading(true);
-      const hour = moment(taskData.dateAppointment).format('HH');
 
       const dateAppointment = moment(taskData.dateAppointment).toISOString();
       const payload: PayloadCreateTask = {

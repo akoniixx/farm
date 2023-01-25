@@ -37,6 +37,7 @@ export default function InputWithSuffix({
       <TextInput
         {...props}
         ref={refInput}
+        placeholderTextColor={colors.disable}
         style={[styles({ allowClear }).input, style]}
       />
       {isShowClear && (

@@ -12,6 +12,7 @@ interface props {
 }
 
 export const DronerCard: React.FC<props> = ({ name, profile, telnumber }) => {
+  console.log('profile', profile);
   return (
     <View
       style={{
@@ -27,7 +28,13 @@ export const DronerCard: React.FC<props> = ({ name, profile, telnumber }) => {
           alignItems: 'center',
         }}>
         <Image
-          source={profile ? profile : icons.avatar}
+          source={
+            profile
+              ? {
+                  uri: profile,
+                }
+              : icons.avatar
+          }
           style={{
             width: normalize(56),
             height: normalize(56),
