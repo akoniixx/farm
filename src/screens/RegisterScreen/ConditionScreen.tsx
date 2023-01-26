@@ -66,12 +66,12 @@ const ConditionScreen: React.FC<any> = ({ navigation }) => {
               {disabledCheckbox ? (
                 <Image
                   source={icons.checkdisable}
-                  style={{ width: normalize(20), height: normalize(20) }}
+                  style={{ width: normalize(18), height: normalize(18) }}
                 />
               ) : (
                 <Image
                   source={checked ? icons.checked : icons.check}
-                  style={{ width: normalize(20), height: normalize(20) }}
+                  style={{ width: normalize(22), height: normalize(22) }}
                 />
               )}
               <Text
@@ -90,12 +90,12 @@ const ConditionScreen: React.FC<any> = ({ navigation }) => {
               {disabledCheckbox ? (
                 <Image
                   source={icons.checkdisable}
-                  style={{ width: normalize(20), height: normalize(20) }}
+                  style={{ width: normalize(18), height: normalize(18) }}
                 />
               ) : (
                 <Image
                   source={checked1 ? icons.checked : icons.check}
-                  style={{ width: normalize(20), height: normalize(20) }}
+                  style={{ width: normalize(22), height: normalize(22) }}
                 />
               )}
               <Text

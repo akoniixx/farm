@@ -290,10 +290,11 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
 
   const fetchLocation = async (text?: string) => {
     await QueryLocation.getSubdistrict(0, text).then(res => {
-      setLocation(res);
+      console.log('1',res)
+      // setLocation(res);
     });
   };
-
+console.log(location)
   useEffect(() => {
     const filterBySearchText = () => {
       if (!!debounceValue) {
@@ -302,6 +303,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
           provinceName: string;
           subdistrictName: string;
         }[] = location;
+        console.log(1,words)
         const result = words
           .filter(word => {
             return (

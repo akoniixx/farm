@@ -30,6 +30,7 @@ import { momentExtend } from '../../utils/moment-buddha-year';
 import { Modal } from 'react-native';
 import DatePickerCustom from '../../components/Calendar/Calendar';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import moment from 'moment';
 
 const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
   const initialFormRegisterState = {
@@ -326,9 +327,10 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                     </Text>
                     <View>
                       <DatePickerCustom
-                        value={date ? date : new Date()}
+                        startYear={moment().subtract(76,'years').get('year') +543}
+                        value={date ? date : moment().set({date : 1}).subtract(76,'years')}
                         onHandleChange={(d: string) => {
-                          setDate(d);
+                        setDate(d);
                         }}
                       />
                     </View>

@@ -1,6 +1,6 @@
 export default {
   check: require('./check.png'),
-  checked: require('./ckecked.png'),
+  checked: require('./checked.png'),
   th: require('./TH.png'),
   camera: require('./camera.png'),
   avatar: require('./avatar.png'),

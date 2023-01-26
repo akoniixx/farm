@@ -572,7 +572,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.dev.farmer;
+				PRODUCT_BUNDLE_IDENTIFIER = "farmer-app.appspot.com";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/farmer.app/farmer";
 			};
@@ -599,7 +599,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.dev.farmer;
+				PRODUCT_BUNDLE_IDENTIFIER = "farmer-app.appspot.com";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/farmer.app/farmer";
 			};
@@ -616,7 +616,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = 9ZXXDP8F5K;
+				DEVELOPMENT_TEAM = 5Y8QC3U7CF;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = farmer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Iconkaset;
@@ -632,7 +632,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.dev.farmer;
+				PRODUCT_BUNDLE_IDENTIFIER = "farmer-app.appspot.com";
 				PRODUCT_NAME = farmer;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -652,7 +652,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = 9ZXXDP8F5K;
+				DEVELOPMENT_TEAM = 5Y8QC3U7CF;
 				INFOPLIST_FILE = farmer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Iconkaset;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
@@ -667,7 +667,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.dev.farmer;
+				PRODUCT_BUNDLE_IDENTIFIER = "farmer-app.appspot.com";
 				PRODUCT_NAME = farmer;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;

@@ -102,7 +102,7 @@ export class Register {
   static async register1(
     firstname: string,
     lastname: string,
-    birthDate: string | null,
+    birthDate: string | null ,
     telephoneNo: string,
   ): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
