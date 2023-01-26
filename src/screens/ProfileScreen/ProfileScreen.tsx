@@ -37,59 +37,60 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-
+  const windowHeight = Dimensions.get('window').height;
 
   const onLogout = async () => {
-    setLoading(true)
+    setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     socket.removeAllListeners(`send-task-${farmer_id!}`);
     socket.close();
-    setLoading(false)
+    setLoading(false);
     await Authentication.logout();
   };
   useEffect(() => {
+    const getProfile = async () => {
+      setLoading(true);
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      ProfileDatasource.getProfile(farmer_id!)
+        .then(async res => {
+          setReload(!reload);
+          const imgPath = res.file.filter((item: any) => {
+            if (item.category === 'PROFILE_IMAGE') {
+              return item;
+            }
+          });
+          if (imgPath.length === 0) {
+            dispatch({
+              type: 'InitProfile',
+              name: `${res.firstname} ${res.lastname}`,
+              id: res.farmerCode,
+              image: '',
+              plotItem: res.farmerPlot,
+              status: res.status,
+            });
+          } else {
+            ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
+              .then(resImg => {
+                dispatch({
+                  type: 'InitProfile',
+                  name: `${res.firstname} ${res.lastname}`,
+                  id: res.farmerCode,
+                  image: resImg.url,
+                  plotItem: res.farmerPlot,
+                  status: res.status,
+                });
+              })
+
+              .catch(err => console.log(err))
+              .finally(() => setLoading(false));
+          }
+        })
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
+    };
     getProfile();
   }, [reload]);
-  const getProfile = async () => {
-    setLoading(true);
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    ProfileDatasource.getProfile(farmer_id!)
-      .then(async res => {
-        setReload(!reload)
-        const imgPath = res.file.filter((item: any) => {
-          if (item.category === 'PROFILE_IMAGE') {
-            return item;
-          }
-        });
-        if (imgPath.length === 0) {
-          dispatch({
-            type: 'InitProfile',
-            name: `${res.firstname} ${res.lastname}`,
-            id: res.farmerCode,
-            image: '',
-            plotItem: res.farmerPlot,
-            status: res.status,
-          });
-        } else {
-          ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
-            .then(resImg => {
-              dispatch({
-                type: 'InitProfile',
-                name: `${res.firstname} ${res.lastname}`,
-                id: res.farmerCode,
-                image: resImg.url,
-                plotItem: res.farmerPlot,
-                status: res.status,
-              });
-            })
 
-            .catch(err => console.log(err))
-            .finally(() => setLoading(false));
-        }
-      })
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false));
-  };
   const openGooglePlay = () => {
     if (Platform.OS === 'ios') {
       Linking.openURL(
@@ -102,7 +103,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
     }
   };
   return (
-    <SafeAreaView style={[stylesCentral.container]}>
+    <SafeAreaView style={{backgroundColor: colors.white}}>
       <View
         style={{
           maxHeight: '100%',
@@ -144,7 +145,10 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
             <View style={{ flexDirection: 'row' }}>
               <Text style={[styles.text]}>{profilestate.name} </Text>
               <TouchableOpacity
-                onPress={() => navigation.navigate('EditProfileScreen')}>
+                onPress={() => {
+                  setLoading(true);
+                  navigation.navigate('EditProfileScreen');
+                }}>
                 <Image
                   source={icons.edit}
                   style={{
@@ -175,11 +179,21 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                   source={icons.correct}
                   style={{ width: 16, height: 16, right: 5 }}
                 />
-              ) : (
+              ) : StatusObject(profilestate.status).status === 'รอการตรวจสอบ' ? (
                 <Image
                   source={icons.warning}
                   style={{ width: 16, height: 16, right: 5 }}
                 />
+              ) : StatusObject(profilestate.status).status === 'ไม่อนุมัติ' ? (
+                <Image
+                source={icons.wrong}
+                style={{ width: 16, height: 16, right: 5 }}
+              />
+              ) : (
+                <Image
+                source={icons.inactive}
+                style={{ width: 16, height: 16, right: 5, tintColor: colors.bg }}
+              />
               )}
 
               <Text
@@ -188,9 +202,16 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                   fontFamily: font.AnuphanBold,
                   fontSize: normalize(14),
                 }}>
+                {/* {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
+                  ? 'ยืนยันตัวตนสำเร็จ'
+                  : 'รอการตรวจสอบ'} */}
                 {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
                   ? 'ยืนยันตัวตนสำเร็จ'
-                  : 'รอการตรวจสอบ'}
+                  : StatusObject(profilestate.status).status === 'รอการตรวจสอบ'
+                  ? 'รอการตรวจสอบ'
+                  :  StatusObject(profilestate.status).status === 'ไม่อนุมัติ'
+                  ? 'ยืนยันตัวตนไม่สำเร็จ'
+                  : 'ปิดการใช้งาน'}
               </Text>
             </View>
           </View>
@@ -212,6 +233,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
+                setLoading(true);
                 navigation.navigate('AllPlotScreen');
               }}>
               <Text style={[styles.h1]}>ดูแปลงทั้งหมด</Text>
@@ -397,6 +419,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 style={{ width: 25, height: 25 }}
               />
             </TouchableOpacity>
+            <View style={{height: 45}}></View>
           </View>
         </View>
       </ScrollView>

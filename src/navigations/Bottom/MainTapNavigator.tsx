@@ -20,6 +20,7 @@ const MainTapNavigator: React.FC = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: { borderBottomColor: colors.white },
+        
       }}>
       <Tab.Screen
         name="หน้าแรก"
@@ -27,6 +28,11 @@ const MainTapNavigator: React.FC = () => {
         options={{
           tabBarLabelStyle: {
             fontFamily: font.AnuphanMedium,
+          },
+          tabBarStyle: {
+            minHeight: Platform.OS === 'ios' ? 95 : 80,
+            alignItems: 'center',
+            justifyContent: 'center',
           },
           lazy: true,
           tabBarLabel: ({ focused }) => (
@@ -55,6 +61,11 @@ const MainTapNavigator: React.FC = () => {
         name="งานของฉัน"
         component={TaskScreen}
         options={{
+          tabBarStyle: {
+            minHeight: Platform.OS === 'ios' ? 95 : 80,
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
           tabBarLabelStyle: {
             fontFamily: font.AnuphanMedium,
           },
@@ -85,6 +96,11 @@ const MainTapNavigator: React.FC = () => {
         name="โปรโมชั่น"
         component={PromotionScreen}
         options={{
+          tabBarStyle: {
+            minHeight: Platform.OS === 'ios' ? 95 : 80,
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
           tabBarLabelStyle: {
             fontFamily: font.AnuphanMedium,
           },
@@ -118,6 +134,11 @@ const MainTapNavigator: React.FC = () => {
         name="บัญชีของฉัน"
         component={ProfileScreen}
         options={{
+          tabBarStyle: {
+            minHeight: Platform.OS === 'ios' ? 95 : 80,
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
           tabBarLabelStyle: {
             fontFamily: font.AnuphanMedium,
           },

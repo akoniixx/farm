@@ -49,6 +49,7 @@ import {
   LocationInPostcodeSelect,
   LocationSelect,
 } from '../../components/Location/Location';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [initProfile, setInitProfile] = useState({
@@ -74,7 +75,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [province, setProvince] = useState<any>([]);
   const [district, setDistrict] = useState<any>([]);
   const [subdistrict, setSubdistrict] = useState<any>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading,setLoading] = useState(false);
   const [bottompadding, setBottomPadding] = useState(0);
   const provinceSheet = useRef<any>();
   const DistriSheet = useRef<any>();
@@ -89,7 +90,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
       .then(res => {
-        console.log(res)
+        setLoading(false)
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
@@ -98,7 +99,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
         if (imgPath.length === 0) {
           QueryLocation.QueryProfileSubDistrict(res.address.districtId).then(
             resSub => {
-              const address = resSub.filter((item: any) => {
+                            const address = resSub.filter((item: any) => {
                 if (item.subdistrictId === res.address.subdistrictId) {
                   return item;
                 }
@@ -137,7 +138,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
         } else {
           ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
             .then(resImg => {
-              QueryLocation.QueryProfileSubDistrict(
+                            QueryLocation.QueryProfileSubDistrict(
                 res.address.districtId,
               ).then(resSub => {
                 const address = resSub.filter((item: any) => {
@@ -339,7 +340,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
               value={initProfile.address1}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
-              placeholder={'บ้านเลขที่'}
+              placeholder={'-'}
               placeholderTextColor={colors.disable}
             />
             <Text style={styles.head}>รายละเอียดที่อยู่</Text>
@@ -348,6 +349,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholderTextColor={colors.disable}
+              placeholder='-'
             />
             <Text style={styles.head}>จังหวัด</Text>
             <TextInput
@@ -384,7 +386,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
           </ScrollView>
         </View>
         <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
-          <MainButton label="บันทึก" color={colors.greenLight} />
+          <MainButton label="บันทึก" color={colors.greenLight} disable/>
         </View>
         <ActionSheet ref={provinceSheet}>
           <View
@@ -541,6 +543,11 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
           </View>
         </ActionSheet>
       </View>
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </SafeAreaView>
   );
 };

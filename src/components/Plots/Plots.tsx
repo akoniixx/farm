@@ -29,6 +29,20 @@ export function StatusObject(status: string) {
         fontColor: colors.greenLight,
         borderColor: colors.greenLight,
       };
+      case 'REJECTED':
+        return {
+          status: 'ไม่อนุมัติ',
+          colorBg: colors.white,
+          fontColor: colors.error,
+          borderColor: colors.error,
+        };
+        case 'INACTIVE':
+          return {
+            status: 'ปิดการใช้งาน',
+            colorBg: colors.white,
+            fontColor: colors.bg,
+            borderColor: colors.bg,
+          };
     default:
       return {
         status: 'รอการตรวจสอบ',

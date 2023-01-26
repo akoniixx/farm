@@ -318,7 +318,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
     setplotDataUI(someArray);
     deTailPlot.current.hide();
   };
-
+console.log(lat,long)
   return (
     <>
       <SafeAreaView style={stylesCentral.container}>
@@ -569,7 +569,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       borderColor={colors.gray}
                       fontColor={colors.fontBlack}
                       onPress={() => {
-                        actionSheet.current.hide();
+                        navigation.navigate('AllPlotScreen');
                       }}
                     />
                     <MainButton
@@ -580,6 +580,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                         !plantName ||
                         !lat ||
                         !long ||
+                        !search.term ||
                         !landmark ||
                         !selectPlot.subdistrictId
                           ? true

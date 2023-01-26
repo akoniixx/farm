@@ -36,7 +36,7 @@ import { normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
 import Animated, { color } from 'react-native-reanimated';
 import { plant, plantList } from '../../definitions/plants';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import ActionSheet from 'react-native-actions-sheet';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { registerReducer } from '../../hook/registerfield';
@@ -451,7 +451,6 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
           </View>
         </View>
       </SafeAreaView>
-
       <ActionSheet ref={actionSheet}>
         <View
           style={{
@@ -672,25 +671,36 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   </View>
                 </TouchableOpacity>
                 <View style={{ flex: 1 }}>
-                  <MapView.Animated
-                    mapType="satellite"
-                    minZoomLevel={14}
-                    maxZoomLevel={18}
-                    style={styles.map}
-                    initialRegion={position}
-                    provider={PROVIDER_GOOGLE}
-                    region={{
-                      latitude: lat,
-                      longitude: long,
-                      latitudeDelta: 0.0,
-                      longitudeDelta: 0.0,
-                    }}
-                    showsUserLocation={true}
-                    showsMyLocationButton={true}
-                  />
-                  <View style={styles.markerFixed}>
-                    <Image style={styles.marker} source={image.mark} />
-                  </View>
+                <MapView.Animated
+                      mapType="satellite"
+                      minZoomLevel={14}
+                      maxZoomLevel={18}
+                      style={styles.map}
+                      onPress={e => {
+                        setPosition({
+                          ...position,
+                          latitude: e.nativeEvent.coordinate.latitude,
+                          longitude: e.nativeEvent.coordinate.longitude,
+                        });
+                      }}
+                      initialRegion={position}
+                      provider={PROVIDER_GOOGLE}
+                      region={{
+                        latitude: position.latitude,
+                        longitude: position.longitude,
+                        latitudeDelta: 0.0,
+                        longitudeDelta: 0.0,
+                      }}
+                      showsUserLocation={true}
+                      showsMyLocationButton={true}>
+                      <Marker
+                        image={image.mark}
+                        coordinate={{
+                          latitude: position.latitude,
+                          longitude: position.longitude,
+                        }}
+                      />
+                    </MapView.Animated>
                 </View>
                 <Text style={styles.head}>จุดสังเกต</Text>
                 <TextInput
@@ -726,6 +736,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                       !plantName ||
                       !lat ||
                       !long ||
+                      !search.term ||
                       !landmark ||
                       !selectPlot.subdistrictId
                         ? true

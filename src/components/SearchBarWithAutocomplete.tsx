@@ -190,7 +190,7 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
   return (
     <View style={[container, { ...passedStyles }]}>
       <TextInput
-        clearTextOnFocus={true}
+       clearButtonMode='always'
         style={[inputStyle, inputBottomRadius]}
         placeholder="ระบุสถานที่ใกล้แปลง"
         placeholderTextColor="gray"

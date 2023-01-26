@@ -24,6 +24,8 @@ import PlotInProfile from '../../../components/Plots/PlotsInProfile';
 import PlotsItem from '../../../components/Plots/Plots';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import PlotsItemEdit from '../../../components/Plots/PlotsItemEdit';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
+import { callcenterNumber } from '../../../definitions/callCenterNumber';
 
 const AllPlotScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -314,7 +316,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
             }}>
             <TouchableOpacity
               onPress={() => {
-                Linking.openURL(`tel:${currentTel}`);
+                Linking.openURL(`tel:${callcenterNumber}`);
               }}
               style={{
                 height: 60,
@@ -382,6 +384,11 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </Modal>
+        <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
       </SafeAreaView>
     </>
   );

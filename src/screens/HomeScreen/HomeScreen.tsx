@@ -15,6 +15,7 @@ import {
   View,
   Dimensions,
   ImageBackground,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font } from '../../assets';
@@ -49,6 +50,11 @@ const HomeScreen: React.FC<any> = ({ navigation, route }) => {
         name="หน้าแรก"
         component={AuthMainScreen}
         options={{
+          tabBarStyle: {
+            minHeight: Platform.OS === 'ios' ? 95 : 80,
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
           tabBarLabelStyle: {
             fontFamily: font.AnuphanMedium,
           },
@@ -79,6 +85,11 @@ const HomeScreen: React.FC<any> = ({ navigation, route }) => {
         name="โปรโมชั่น"
         component={PromotionScreen}
         options={{
+          tabBarStyle: {
+            minHeight: Platform.OS === 'ios' ? 95 : 80,
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
           tabBarLabelStyle: {
             fontFamily: font.AnuphanMedium,
           },
@@ -112,6 +123,11 @@ const HomeScreen: React.FC<any> = ({ navigation, route }) => {
         name="บัญชีของฉัน"
         component={AuthProfileScreen}
         options={{
+          tabBarStyle: {
+            minHeight: Platform.OS === 'ios' ? 95 : 80,
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
           tabBarLabelStyle: {
             fontFamily: font.AnuphanMedium,
           },

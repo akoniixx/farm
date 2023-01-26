@@ -174,7 +174,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
         backgroundColor: colors.white,
         flex: 1,
       }}>
-      <ScrollView>
+      {/* <ScrollView> */}
         <View style={[stylesCentral.container]}>
           <View style={{ backgroundColor: colors.white }}>
             <View style={{ height: normalize(990) }}>
@@ -299,8 +299,8 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                   borderRadius: 10,
                 }}
               />
-            </View> */}
-              {/*  <View style={[styles.empty]}>
+            </View>  */}
+              <View style={[styles.empty]}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -316,20 +316,23 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                     }}>
                     จ้างนักบินที่เคยจ้าง
                   </Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('SeeAllDronerUsed');
-                    }}>
-                    <Text
-                      style={{
-                        fontFamily: font.SarabunLight,
-                        fontSize: normalize(16),
-                        color: colors.fontGrey,
-                        height: 25,
-                      }}>
-                      ดูทั้งหมด
-                    </Text>
-                  </TouchableOpacity>
+                  {taskSugUsed.length != 0 ?
+                   <TouchableOpacity
+                   onPress={() => {
+                     navigation.navigate('SeeAllDronerUsed');
+                   }}>
+                   <Text
+                     style={{
+                       fontFamily: font.SarabunLight,
+                       fontSize: normalize(16),
+                       color: colors.fontGrey,
+                       height: 25,
+                     }}>
+                     ดูทั้งหมด
+                   </Text>
+                 </TouchableOpacity>
+                 : null}
+                 
                 </View>
                 {taskSugUsed.length != 0 ? (
                   <View style={{ height: '110%' }}>
@@ -363,6 +366,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                     </ScrollView>
                   </View>
                 ) : (
+                  
                   <View
                     style={{
                       alignItems: 'center',
@@ -390,7 +394,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                     </Text>
                   </View>
                 )}
-              </View> */}
+              </View>
               {/* <View style={[styles.empty]}>
                 <Text
                   style={[
@@ -429,7 +433,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
             </View>
           </View>
         </View>
-      </ScrollView>
+      {/* </ScrollView> */}
       {showFinding && (
         <TouchableOpacity
           style={styles.footer}
