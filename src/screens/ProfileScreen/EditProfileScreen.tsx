@@ -89,6 +89,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
       .then(res => {
+        console.log(res)
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
@@ -164,9 +165,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   setInitProfile({
                     firstname: res.firstname,
                     lastname: res.lastname,
-                    birthDate: `${date.split('-')[2]}/${date.split('-')[1]}/${
-                      parseInt(date.split('-')[0]) + 543
-                    }`,
+                    birthDate: res.birthDate,
                     telephone: res.telephoneNo,
                     image: resImg.url,
                     address1: res.address.address1,
@@ -307,10 +306,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 },
               ]}>
               <TextInput
-                value={momentExtend.toBuddhistYear(
-                  initProfile.birthDate,
-                  'DD MMMM YYYY',
-                )}
+                value={ momentExtend.toBuddhistYear(initProfile.birthDate, 'DD MMMM YYYY')}
                 editable={false}
                 placeholder={'ระบุวัน เดือน ปี'}
                 placeholderTextColor={colors.disable}

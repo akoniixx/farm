@@ -32,15 +32,17 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
   const [currentTel, setCurrentTel] = useState('');
   const [farmerPlot, setFarmerPlot] = useState<any>([]);
   const [statusPlot, setStatusPlot] = useState<any>();
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     getProfile();
-  }, []);
+  }, [reload]);
   const getProfile = async () => {
     setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
       .then(async res => {
+        setReload(!reload)
         setFarmerPlot(res.farmerPlot);
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
@@ -132,6 +134,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                     alignSelf: 'center',
                     backgroundColor: '#FFF9F2',
                     borderRadius: 10,
+                    top: 10
                   }}>
                   <View style={{ padding: 15, alignSelf: 'center' }}>
                     <View style={{ flexDirection: 'row' }}>

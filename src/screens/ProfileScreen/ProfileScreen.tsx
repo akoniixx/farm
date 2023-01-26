@@ -36,21 +36,26 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 const ProfileScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
+  const [reload, setReload] = useState(false);
+
 
   const onLogout = async () => {
+    setLoading(true)
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     socket.removeAllListeners(`send-task-${farmer_id!}`);
     socket.close();
+    setLoading(false)
     await Authentication.logout();
   };
   useEffect(() => {
     getProfile();
-  }, []);
+  }, [reload]);
   const getProfile = async () => {
     setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
       .then(async res => {
+        setReload(!reload)
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
