@@ -37,7 +37,7 @@ export default function SlipWaitingScreen({
   const [isFocus, setIsFocus] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
   const [reason, setReason] = useState('');
-  const [showModalExtend, setShowModalExtend] = useState(false);
+  const [showModalExtend, setShowModalExtend] = useState(true);
   const [showModalExtendTwo, setModalExtendTwo] = useState(false);
   const [showModalExtendThree, setModalExtendThree] = useState(false);
   const refInput = React.useRef<any>(null);
@@ -56,28 +56,24 @@ export default function SlipWaitingScreen({
     taskNo: '',
     targetSpray: [],
     totalPrice: '',
+    countResend: '',
   });
   const onSearchExtend = async () => {
-    const extendObj = await AsyncStorage.getItem('extendObj');
-    const taskId = await AsyncStorage.getItem('taskId');
-    const { round = 1 } = JSON.parse(extendObj || '');
-    const newExtendObj = {
-      taskId,
-      round: +round + 1,
-    };
-    if (round && +round === 1) {
-      await AsyncStorage.setItem('extendObj', JSON.stringify(newExtendObj));
+    try {
+      const res = await TaskDatasource.extendFindingDroner({
+        taskId,
+        farmerPlotId: taskData.farmerPlotId,
+        dateAppointment: taskData.dateAppointment,
+        farmerId: taskData.farmerId,
+      });
+      console.log('res', res);
+      if (res && res.success) {
+        console.log('res', JSON.stringify(res.data, null, 2));
+      }
+      setShowModalExtend(false);
+    } catch (e) {
+      console.log('error', e);
     }
-    if (round && +round === 2) {
-      await AsyncStorage.setItem('roundTime', JSON.stringify(newExtendObj));
-    }
-
-    await AsyncStorage.setItem(
-      'endTime',
-      moment().add(1, 'minutes').toISOString(),
-    );
-
-    setShowModalExtend(false);
   };
   const onSubmitCancelTask = async () => {
     try {
@@ -99,30 +95,15 @@ export default function SlipWaitingScreen({
         const res = await TaskDatasource.getTaskByTaskId(taskId);
 
         if (res && res.data) {
+          const { countResend } = res.data;
           setLoading(false);
-          const extObj = await AsyncStorage.getItem('extendObj');
-          const extendObj = JSON.parse(extObj || '');
-          const endTime = await AsyncStorage.getItem('endTime');
+          const endTime = moment(res.data.updatedAt)
+            .add(30, 'minutes')
+            .toISOString();
           const isAfter = moment(endTime).isAfter(moment());
+          console.log('isAfter', isAfter);
           if (!isAfter) {
-            const roundTime = {
-              taskId,
-              round: 1,
-            };
-            if (Object.keys(extendObj).length > 0 && extendObj.round === 1) {
-              setModalExtendTwo(true);
-            } else if (
-              Object.keys(extendObj).length > 0 &&
-              extendObj.round === 2
-            ) {
-              setModalExtendThree(true);
-            } else {
-              setShowModalExtend(true);
-              await AsyncStorage.setItem(
-                'extendObj',
-                JSON.stringify(roundTime),
-              );
-            }
+            setShowModalExtend(true);
 
             // await AsyncStorage.removeItem('endTime');
             // await AsyncStorage.removeItem('taskId');

@@ -80,7 +80,9 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
   useEffect(() => {
     const getTaskId = async () => {
       const value = await AsyncStorage.getItem('taskId');
-      setTaskId(value);
+      if (value) {
+        setTaskId(value);
+      }
     };
 
     getTaskId();
@@ -141,7 +143,9 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
         }
         const res = await TaskDatasource.getTaskByTaskId(taskId || '');
         if (res && res.data) {
-          const endTime = await AsyncStorage.getItem('endTime');
+          const endTime = moment(res.data.updatedAt)
+            .add(30, 'minutes')
+            .toISOString();
           const isAfter = moment(endTime).isAfter(moment());
 
           setDataFinding({
