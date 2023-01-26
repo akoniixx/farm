@@ -12,6 +12,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons } from '../../assets';
@@ -60,296 +61,437 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{
-        flex: 1,
-      }}>
-      <StepIndicatorHead
-        curentPosition={0}
-        onPressBack={() => navigation.goBack()}
-        label={'เลือกวันและเวลาฉีดพ่น'}
-      />
+    <>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{
+          flex: 1,
+        }}>
+        <SafeAreaView
+          style={{ flex: 1, paddingHorizontal: 10, backgroundColor: 'white' }}>
+          <StepIndicatorHead
+            curentPosition={0}
+            onPressBack={() => navigation.goBack()}
+            label={'เลือกวันและเวลาฉีดพ่น'}
+          />
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1,
+            }}
+            style={{
+              flex: 1,
+            }}>
+            <View style={{ flex: 1, justifyContent: 'space-between' }}>
+              <View>
+                <Text style={styles.label}>วันที่ฉีดพ่น</Text>
+                <TouchableOpacity onPress={() => setOpenCalendar(true)}>
+                  <View
+                    style={[
+                      styles.input,
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                      },
+                    ]}>
+                    <TextInput
+                      value={momentExtend.toBuddhistYear(date, 'DD MMMM YYYY')}
+                      editable={false}
+                      placeholder={'ระบุวัน เดือน ปี'}
+                      placeholderTextColor={colors.disable}
+                      style={{
+                        width: windowWidth * 0.78,
+                        color: colors.fontBlack,
+                        paddingHorizontal: 16,
 
-      <SafeAreaView
-        style={{ flex: 1, paddingHorizontal: 10, backgroundColor: 'white' }}>
-        <View style={{ flex: 1, justifyContent: 'space-between' }}>
-          <View>
-            <Text style={styles.label}>วันที่ฉีดพ่น</Text>
-            <TouchableOpacity onPress={() => setOpenCalendar(true)}>
-              <View
-                style={[
-                  styles.input,
-                  {
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                  },
-                ]}>
-                <TextInput
-                  value={momentExtend.toBuddhistYear(date, 'DD MMMM YYYY')}
-                  editable={false}
-                  placeholder={'ระบุวัน เดือน ปี'}
-                  placeholderTextColor={colors.disable}
-                  style={{
-                    width: windowWidth * 0.78,
-                    color: colors.fontBlack,
-                    paddingHorizontal: 16,
+                        fontSize: normalize(20),
+                        fontFamily: font.SarabunLight,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    />
+                    <Image
+                      source={icons.calendar}
+                      style={{
+                        width: normalize(25),
+                        height: normalize(30),
+                      }}
+                    />
+                  </View>
+                </TouchableOpacity>
+                <Text style={styles.label}>เวลา</Text>
+                <TouchableOpacity onPress={() => setopenTimePicker(true)}>
+                  <View
+                    style={[
+                      styles.input,
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                      },
+                    ]}>
+                    <TextInput
+                      value={
+                        ('0' + hour).slice(-2) + ':' + ('0' + minute).slice(-2)
+                      }
+                      editable={false}
+                      placeholder={'ระบุวัน เดือน ปี'}
+                      placeholderTextColor={colors.disable}
+                      style={{
+                        width: windowWidth * 0.78,
+                        color: colors.fontBlack,
+                        fontSize: normalize(20),
+                        paddingHorizontal: 16,
+                        fontFamily: font.SarabunLight,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    />
+                    <Image
+                      source={icons.time}
+                      style={{
+                        width: normalize(25),
+                        height: normalize(30),
+                      }}
+                    />
+                  </View>
+                </TouchableOpacity>
+                <Text style={styles.label}>หมายเหตุ (ไม่มีก็ได้)</Text>
 
-                    fontSize: normalize(20),
-                    fontFamily: font.SarabunLight,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                />
-                <Image
-                  source={icons.calendar}
-                  style={{
-                    width: normalize(25),
-                    height: normalize(30),
-                  }}
-                />
+                <View
+                  style={[
+                    {
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                      marginVertical: 12,
+                      padding: 5,
+                      borderColor: colors.disable,
+                      borderWidth: 1,
+                    },
+                  ]}>
+                  <TextInput
+                    numberOfLines={6}
+                    onChangeText={t => {
+                      setNote(t);
+                    }}
+                    value={note}
+                    returnKeyType="done"
+                    multiline
+                    blurOnSubmit={true}
+                    onSubmitEditing={() => {
+                      const newNote = note.replace(/(\r\n|\n|\r)/gm, '');
+                      setNote(newNote);
+                      Keyboard.dismiss();
+                    }}
+                    placeholder={'ระบุข้อมูลแจ้งนักบิน'}
+                    placeholderTextColor={colors.disable}
+                    style={{
+                      width: windowWidth * 0.78,
+                      color: colors.fontBlack,
+                      fontSize: normalize(20),
+                      fontFamily: font.SarabunLight,
+
+                      padding: 16,
+                      textAlignVertical: 'top',
+                      writingDirection: 'ltr',
+                      height: Platform.OS === 'ios' ? 6 * 20 : 80,
+                    }}
+                  />
+                </View>
               </View>
-            </TouchableOpacity>
-            <Text style={styles.label}>เวลา</Text>
-            <TouchableOpacity onPress={() => setopenTimePicker(true)}>
-              <View
-                style={[
-                  styles.input,
-                  {
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                  },
-                ]}>
-                <TextInput
-                  value={
-                    ('0' + hour).slice(-2) + ':' + ('0' + minute).slice(-2)
-                  }
-                  editable={false}
-                  placeholder={'ระบุวัน เดือน ปี'}
-                  placeholderTextColor={colors.disable}
-                  style={{
-                    width: windowWidth * 0.78,
-                    color: colors.fontBlack,
-                    fontSize: normalize(20),
-                    paddingHorizontal: 16,
-                    fontFamily: font.SarabunLight,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                />
-                <Image
-                  source={icons.time}
-                  style={{
-                    width: normalize(25),
-                    height: normalize(30),
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-            <Text style={styles.label}>หมายเหตุ (ไม่มีก็ได้)</Text>
+              {/* <View>
+                <Text style={styles.label}>วันที่ฉีดพ่น</Text>
+                <TouchableOpacity onPress={() => setOpenCalendar(true)}>
+                  <View
+                    style={[
+                      styles.input,
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                      },
+                    ]}>
+                    <TextInput
+                      value={momentExtend.toBuddhistYear(date, 'DD MMMM YYYY')}
+                      editable={false}
+                      placeholder={'ระบุวัน เดือน ปี'}
+                      placeholderTextColor={colors.disable}
+                      style={{
+                        width: windowWidth * 0.78,
+                        color: colors.fontBlack,
+                        paddingHorizontal: 16,
 
-            <View
-              style={[
-                {
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  marginVertical: 12,
-                  padding: 5,
-                  borderColor: colors.disable,
-                  borderWidth: 1,
-                },
-              ]}>
-              <TextInput
-                numberOfLines={6}
-                onChangeText={t => {
-                  setNote(t);
-                }}
-                value={note}
-                returnKeyType="done"
-                multiline
-                blurOnSubmit={true}
-                onSubmitEditing={() => {
-                  const newNote = note.replace(/(\r\n|\n|\r)/gm, '');
-                  setNote(newNote);
-                  Keyboard.dismiss();
-                }}
-                placeholder={'ระบุข้อมูลแจ้งนักบิน'}
-                placeholderTextColor={colors.disable}
+                        fontSize: normalize(20),
+                        fontFamily: font.SarabunLight,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    />
+                    <Image
+                      source={icons.calendar}
+                      style={{
+                        width: normalize(25),
+                        height: normalize(30),
+                      }}
+                    />
+                  </View>
+                </TouchableOpacity>
+                <Text style={styles.label}>เวลา</Text>
+                <TouchableOpacity onPress={() => setopenTimePicker(true)}>
+                  <View
+                    style={[
+                      styles.input,
+                      {
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                      },
+                    ]}>
+                    <TextInput
+                      value={
+                        ('0' + hour).slice(-2) + ':' + ('0' + minute).slice(-2)
+                      }
+                      editable={false}
+                      placeholder={'ระบุวัน เดือน ปี'}
+                      placeholderTextColor={colors.disable}
+                      style={{
+                        width: windowWidth * 0.78,
+                        color: colors.fontBlack,
+                        fontSize: normalize(20),
+                        paddingHorizontal: 16,
+                        fontFamily: font.SarabunLight,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    />
+                    <Image
+                      source={icons.time}
+                      style={{
+                        width: normalize(25),
+                        height: normalize(30),
+                      }}
+                    />
+                  </View>
+                </TouchableOpacity>
+                <Text style={styles.label}>หมายเหตุ (ไม่มีก็ได้)</Text>
+
+                <View
+                  style={[
+                    {
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                      marginVertical: 12,
+                      padding: 5,
+                      borderColor: colors.disable,
+                      borderWidth: 1,
+                    },
+                  ]}>
+                  <TextInput
+                    numberOfLines={6}
+                    onChangeText={t => {
+                      setNote(t);
+                    }}
+                    value={note}
+                    returnKeyType="done"
+                    multiline
+                    blurOnSubmit={true}
+                    onSubmitEditing={() => {
+                      const newNote = note.replace(/(\r\n|\n|\r)/gm, '');
+                      setNote(newNote);
+                      Keyboard.dismiss();
+                    }}
+                    placeholder={'ระบุข้อมูลแจ้งนักบิน'}
+                    placeholderTextColor={colors.disable}
+                    style={{
+                      width: windowWidth * 0.78,
+                      color: colors.fontBlack,
+                      fontSize: normalize(20),
+                      fontFamily: font.SarabunLight,
+
+                      padding: 16,
+                      textAlignVertical: 'top',
+                      writingDirection: 'ltr',
+                      height: Platform.OS === 'ios' ? 6 * 20 : 80,
+                    }}
+                  />
+                </View>
+              </View> */}
+              <View
                 style={{
-                  width: windowWidth * 0.78,
-                  color: colors.fontBlack,
-                  fontSize: normalize(20),
-                  fontFamily: font.SarabunLight,
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                }}>
+                <MainButton
+                  label="ยกเลิก"
+                  fontColor={colors.fontBlack}
+                  borderColor={colors.fontGrey}
+                  color={colors.white}
+                  width={150}
+                  onPress={() => navigation.goBack()}
+                />
+                <MainButton
+                  label="บันทึก"
+                  fontColor={colors.white}
+                  color={colors.greenLight}
+                  width={150}
+                  onPress={() => onSubmit()}
+                />
+              </View>
+            </View>
+          </ScrollView>
 
-                  padding: 16,
-                  textAlignVertical: 'top',
-                  writingDirection: 'ltr',
-                  height: Platform.OS === 'ios' ? 6 * 20 : 80,
-                }}
-              />
-            </View>
-          </View>
-
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-            <MainButton
-              label="ยกเลิก"
-              fontColor={colors.fontBlack}
-              borderColor={colors.fontGrey}
-              color={colors.white}
-              width={150}
-              onPress={() => navigation.goBack()}
-            />
-            <MainButton
-              label="บันทึก"
-              fontColor={colors.white}
-              color={colors.greenLight}
-              width={150}
-              onPress={() => onSubmit()}
-            />
-          </View>
-        </View>
-      </SafeAreaView>
-      <Modal transparent={true} visible={openCalendar}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              padding: normalize(20),
-              backgroundColor: colors.white,
-              width: width * 0.9,
-              display: 'flex',
-              justifyContent: 'center',
-              borderRadius: normalize(8),
-            }}>
-            <Text
-              style={[
-                styles.h1,
-                { textAlign: 'center', bottom: '5%', color: colors.fontBlack },
-              ]}>
-              วันที่ฉีดพ่น
-            </Text>
-            <Text
-              style={{
-                textAlign: 'center',
-                color: colors.greenLight,
-                fontFamily: font.SarabunLight,
-                fontSize: normalize(16),
-              }}>
-              เลื่อนขึ้นลงเพื่อเลือกวันฉีดพ่น
-            </Text>
-            <View>
-              <DatePickerCustom
-                value={date}
-                startYear={moment().get('year') + 543}
-                endYear={moment().add(1, 'year').get('year') + 543}
-                onHandleChange={(d: Date) => {
-                  setDate(d);
-                }}
-              />
-            </View>
-            <View
-              style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-              <MainButton
-                label="ยกเลิก"
-                fontColor={colors.fontBlack}
-                borderColor={colors.fontGrey}
-                color={colors.white}
-                width={150}
-                onPress={() => setOpenCalendar(false)}
-              />
-              <MainButton
-                label="บันทึก"
-                fontColor={colors.white}
-                color={colors.greenLight}
-                width={150}
-                onPress={() => {
-                  setOpenCalendar(false);
-                }}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
-      <Modal transparent={true} visible={openTimePicker}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              padding: normalize(20),
-              backgroundColor: colors.white,
-              width: width * 0.9,
-              display: 'flex',
-              justifyContent: 'center',
-              borderRadius: normalize(8),
-            }}>
-            <Text
-              style={[
-                styles.h1,
-                { textAlign: 'center', bottom: '5%', color: colors.fontBlack },
-              ]}>
-              วันที่ฉีดพ่น
-            </Text>
-            <Text
-              style={{
-                textAlign: 'center',
-                color: colors.greenLight,
-                fontFamily: font.SarabunLight,
-                fontSize: normalize(16),
-              }}>
-              เลื่อนขึ้นลงเพื่อเลือกวันฉีดพ่น
-            </Text>
+          <Modal transparent={true} visible={openCalendar}>
             <View
               style={{
-                flexDirection: 'row',
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.5)',
                 justifyContent: 'center',
-                paddingVertical: normalize(20),
+                alignItems: 'center',
               }}>
-              <TimePicker
-                setHour={(h: number) => {
-                  setHour(h);
-                }}
-                setMinute={(m: number) => {
-                  setMinute(m);
-                }}
-                hour={hour}
-                minute={minute}
-              />
+              <View
+                style={{
+                  padding: normalize(20),
+                  backgroundColor: colors.white,
+                  width: width * 0.9,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  borderRadius: normalize(8),
+                }}>
+                <Text
+                  style={[
+                    styles.h1,
+                    {
+                      textAlign: 'center',
+                      bottom: '5%',
+                      color: colors.fontBlack,
+                    },
+                  ]}>
+                  วันที่ฉีดพ่น
+                </Text>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    color: colors.greenLight,
+                    fontFamily: font.SarabunLight,
+                    fontSize: normalize(16),
+                  }}>
+                  เลื่อนขึ้นลงเพื่อเลือกวันฉีดพ่น
+                </Text>
+                <View>
+                  <DatePickerCustom
+                    value={date}
+                    startYear={moment().get('year') + 543}
+                    endYear={moment().add(1, 'year').get('year') + 543}
+                    onHandleChange={(d: Date) => {
+                      setDate(d);
+                    }}
+                  />
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                  }}>
+                  <MainButton
+                    label="ยกเลิก"
+                    fontColor={colors.fontBlack}
+                    borderColor={colors.fontGrey}
+                    color={colors.white}
+                    width={150}
+                    onPress={() => setOpenCalendar(false)}
+                  />
+                  <MainButton
+                    label="บันทึก"
+                    fontColor={colors.white}
+                    color={colors.greenLight}
+                    width={150}
+                    onPress={() => {
+                      setOpenCalendar(false);
+                    }}
+                  />
+                </View>
+              </View>
             </View>
+          </Modal>
+          <Modal transparent={true} visible={openTimePicker}>
             <View
-              style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-              <MainButton
-                label="ยกเลิก"
-                fontColor={colors.fontBlack}
-                borderColor={colors.fontGrey}
-                color={colors.white}
-                width={150}
-                onPress={() => setopenTimePicker(false)}
-              />
-              <MainButton
-                label="บันทึก"
-                fontColor={colors.white}
-                color={colors.greenLight}
-                width={150}
-                onPress={() => {
-                  setopenTimePicker(false);
-                }}
-              />
+              style={{
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  padding: normalize(20),
+                  backgroundColor: colors.white,
+                  width: width * 0.9,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  borderRadius: normalize(8),
+                }}>
+                <Text
+                  style={[
+                    styles.h1,
+                    {
+                      textAlign: 'center',
+                      bottom: '5%',
+                      color: colors.fontBlack,
+                    },
+                  ]}>
+                  วันที่ฉีดพ่น
+                </Text>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    color: colors.greenLight,
+                    fontFamily: font.SarabunLight,
+                    fontSize: normalize(16),
+                  }}>
+                  เลื่อนขึ้นลงเพื่อเลือกวันฉีดพ่น
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    paddingVertical: normalize(20),
+                  }}>
+                  <TimePicker
+                    setHour={(h: number) => {
+                      setHour(h);
+                    }}
+                    setMinute={(m: number) => {
+                      setMinute(m);
+                    }}
+                    hour={hour}
+                    minute={minute}
+                  />
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                  }}>
+                  <MainButton
+                    label="ยกเลิก"
+                    fontColor={colors.fontBlack}
+                    borderColor={colors.fontGrey}
+                    color={colors.white}
+                    width={150}
+                    onPress={() => setopenTimePicker(false)}
+                  />
+                  <MainButton
+                    label="บันทึก"
+                    fontColor={colors.white}
+                    color={colors.greenLight}
+                    width={150}
+                    onPress={() => {
+                      setopenTimePicker(false);
+                    }}
+                  />
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
-      </Modal>
-    </KeyboardAvoidingView>
+          </Modal>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
+    </>
   );
 };
 export default SelectDateScreen;

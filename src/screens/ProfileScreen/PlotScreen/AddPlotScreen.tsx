@@ -31,7 +31,7 @@ import { plant } from '../../../definitions/plants';
 import PredictionType from '../../RegisterScreen/ThirdFormScreen';
 import fonts from '../../../assets/fonts';
 import icons from '../../../assets/icons/icons';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import ActionSheet from 'react-native-actions-sheet';
 import { PlantSelect } from '../../../components/PlantSelect/PlantSelect';
 import SearchBarWithAutocomplete from '../../../components/SearchBarWithAutocomplete';
@@ -544,20 +544,34 @@ console.log(location)
                       minZoomLevel={14}
                       maxZoomLevel={18}
                       style={styles.map}
+                      onPress={e => {
+                        setPosition({
+                          ...position,
+                          latitude: e.nativeEvent.coordinate.latitude,
+                          longitude: e.nativeEvent.coordinate.longitude,
+                        });
+                      }}
                       initialRegion={position}
                       provider={PROVIDER_GOOGLE}
                       region={{
-                        latitude: lat,
-                        longitude: long,
+                        latitude: position.latitude,
+                        longitude: position.longitude,
                         latitudeDelta: 0.0,
                         longitudeDelta: 0.0,
                       }}
                       showsUserLocation={true}
-                      showsMyLocationButton={true}
-                    />
-                    <View style={styles.markerFixed}>
+                      showsMyLocationButton={true}>
+                      <Marker
+                        image={image.mark}
+                        coordinate={{
+                          latitude: position.latitude,
+                          longitude: position.longitude,
+                        }}
+                      />
+                    </MapView.Animated>
+                    {/* <View style={styles.markerFixed}>
                       <Image style={styles.marker} source={image.mark} />
-                    </View>
+                    </View> */}
                   </View>
                   <Text style={styles.head}>จุดสังเกต</Text>
                   <TextInput

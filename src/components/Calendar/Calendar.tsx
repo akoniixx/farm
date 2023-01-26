@@ -102,7 +102,7 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
           return {
             name: 'day',
             digits: days,
-            value: date.getDay() + 1,
+            value: date.getDay(),
             currentIndex: days.findIndex(el => el === date.getDate()),
           };
         case 'mm':
@@ -237,6 +237,7 @@ const DateBlock: React.FC<DateBlockProps> = ({
         ref={scrollRef}
         style={styles.scroll}
         snapToOffsets={offsets}
+        onMomentumScrollEnd={handleMomentumScrollEnd}
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={0}>
         {digits.map((value: any, valIndex: any) => {
