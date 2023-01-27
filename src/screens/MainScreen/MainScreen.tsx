@@ -22,25 +22,44 @@ import { TaskSuggestion } from '../../datasource/TaskSuggestion';
 import DronerUsed from '../../components/Carousel/DronerUsed';
 import DronerSugg from '../../components/Carousel/DronerCarousel';
 import { ActivityIndicator } from 'react-native-paper';
+import { TaskDatasource } from '../../datasource/TaskDatasource';
+import { useIsFocused } from '@react-navigation/native';
+import moment from 'moment';
 
 const MainScreen: React.FC<any> = ({ navigation }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const imageWidth = screenWidth / 2;
   const date = new Date();
   const [fcmToken, setFcmToken] = useState('');
+  const isFocused = useIsFocused();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [taskSug, setTaskSug] = useState<any[]>([]);
+  const [taskId, setTaskId] = useState<any>(null);
   const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
   const { height, width } = Dimensions.get('window');
+  const [showFinding, setShowFinding] = useState(false);
+  const [dataFinding, setDataFinding] = useState({
+    id: '',
+    taskNo: '',
+    farmAreaAmount: '',
+    cropName: '',
+    purposeSprayName: '',
+  });
 
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
     setFcmToken(value!);
   };
+
   useEffect(() => {
+    const getTaskId = async () => {
+      const value = await AsyncStorage.getItem('taskId');
+      setTaskId(value);
+    };
+    getTaskId();
     getData();
     getProfile();
-  }, []);
+  }, [isFocused]);
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
     if (value) {
@@ -88,7 +107,6 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
           offset,
         )
           .then(res => {
-            console.log(res);
             setTaskSugUsed(res);
           })
           .catch(err => console.log(err));
@@ -100,6 +118,37 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profilestate.plotItem]);
 
+  useEffect(() => {
+    const getTaskByTaskId = async () => {
+      try {
+        if (!taskId) {
+          return setShowFinding(false);
+        }
+        const res = await TaskDatasource.getTaskByTaskId(taskId || '');
+        if (res && res.data) {
+          const endTime = await AsyncStorage.getItem('endTime');
+          const isAfter = moment(endTime).isAfter(moment());
+
+          setDataFinding({
+            id: res.data.id,
+            taskNo: res.data.taskNo,
+            farmAreaAmount: res.data.farmAreaAmount,
+            cropName: res.data.purposeSpray.crop.cropName,
+            purposeSprayName: res.data.purposeSpray.purposeSprayName,
+          });
+          setShowFinding(true);
+          if (!isAfter) {
+            navigation.navigate('SlipWaitingScreen', {
+              taskId: res.data.id,
+            });
+          }
+        }
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+    getTaskByTaskId();
+  }, [taskId, navigation]);
   return (
     <View
       style={{
@@ -135,45 +184,59 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                       {profilestate.name}
                     </Text>
                   </View>
+                  <TouchableOpacity onPress={()=> navigation.navigate("NotificationScreen")}>
+                    <View style={{
+                      width : normalize(40),
+                      height : normalize(40),
+                      backgroundColor : '#000'
+                    }}>
+
+                    </View>
+                  </TouchableOpacity>
                 </View>
                 <View
                   style={{
                     flexDirection: 'row',
-                    top: '30%',
-                    justifyContent: 'center',
+                    top: '25%',
+                    alignSelf: 'center',
                   }}>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('SelectDateScreen')}>
                     <LinearGradient
                       colors={['#61E097', '#3B996E']}
                       style={{
-                        marginHorizontal: 15,
                         paddingVertical: normalize(10),
-                        width: 170,
-                        height: 130,
+                        width: normalize(166),
+                        height: normalize(137),
                         borderRadius: 24,
                         alignItems: 'center',
                         borderWidth: 1,
                         borderColor: colors.greenLight,
                       }}>
-                      <Image source={icons.drone} />
+                      <Image
+                        source={icons.drone}
+                        style={{ height: normalize(76), width: normalize(105) }}
+                      />
                       <Text style={styles.font}>จ้างโดรนเกษตร</Text>
                     </LinearGradient>
                   </TouchableOpacity>
+                  <View style={{ width: normalize(10) }}></View>
                   <TouchableOpacity>
                     <LinearGradient
                       colors={['#FFFFFF', '#ECFBF2']}
                       style={{
-                        marginHorizontal: 15,
                         paddingVertical: normalize(10),
-                        width: 170,
-                        height: 130,
+                        width: normalize(166),
+                        height: normalize(137),
                         borderRadius: 24,
                         alignItems: 'center',
                         borderWidth: 1,
                         borderColor: colors.greenLight,
                       }}>
-                      <Image source={icons.plots} />
+                      <Image
+                        source={icons.plots}
+                        style={{ height: normalize(76), width: normalize(105) }}
+                      />
                       <Text style={styles.font1}>แปลงของคุณ</Text>
                     </LinearGradient>
                   </TouchableOpacity>
@@ -220,7 +283,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                 }}
               />
             </View> */}
-              <View style={[styles.empty]}>
+              {/*  <View style={[styles.empty]}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -309,8 +372,8 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                     </Text>
                   </View>
                 )}
-              </View>
-              <View style={[styles.empty]}>
+              </View> */}
+              {/* <View style={[styles.empty]}>
                 <Text
                   style={[
                     styles.text,
@@ -344,58 +407,61 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                       ))}
                   </ScrollView>
                 </View>
-              </View>
+              </View> */}
             </View>
           </View>
         </View>
       </ScrollView>
-      <TouchableOpacity
-        style={styles.footer}
-        onPress={() => {
-          navigation.navigate('SlipWaitingScreen', {
-            taskId: '',
-          });
-        }}>
-        <View
-          style={{
-            flexDirection: 'row',
+      {showFinding && (
+        <TouchableOpacity
+          style={styles.footer}
+          onPress={() => {
+            navigation.navigate('SlipWaitingScreen', {
+              taskId: dataFinding.id,
+            });
           }}>
-          <ActivityIndicator animating color={'#BAC7D5'} />
           <View
             style={{
-              marginLeft: 16,
+              flexDirection: 'row',
             }}>
-            <Text
+            <ActivityIndicator animating color={'#BAC7D5'} />
+            <View
               style={{
-                color: colors.primary,
-                fontSize: normalize(20),
+                marginLeft: 16,
               }}>
-              นาข้าว (คุมเลน) | 10 ไร่
-            </Text>
-            <Text
-              style={{
-                color: colors.orangeLight,
-                fontSize: normalize(18),
-              }}>
-              ระบบกำลังรอนักบินโดรนรับงาน
-            </Text>
+              <Text
+                style={{
+                  color: colors.primary,
+                  fontSize: normalize(20),
+                  fontFamily: font.SarabunMedium,
+                }}>
+                {`${dataFinding.cropName} (${dataFinding.purposeSprayName}) |  ${dataFinding.farmAreaAmount} ไร่`}
+              </Text>
+              <Text
+                style={{
+                  color: colors.orangeLight,
+                  fontSize: normalize(18),
+                }}>
+                ระบบกำลังรอนักบินโดรนรับงาน
+              </Text>
+            </View>
           </View>
-        </View>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginRight: 16,
-          }}>
-          <Image
-            source={icons.arrowUp}
+          <View
             style={{
-              width: 28,
-              height: 28,
-            }}
-          />
-        </View>
-      </TouchableOpacity>
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginRight: 16,
+            }}>
+            <Image
+              source={icons.arrowUp}
+              style={{
+                width: 28,
+                height: 28,
+              }}
+            />
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -423,6 +489,7 @@ const styles = StyleSheet.create({
     top: '15%',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems : 'center',
     paddingHorizontal: normalize(23),
     paddingTop: normalize(5),
   },

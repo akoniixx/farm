@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import Container from '../../components/Container/Container';
@@ -11,10 +11,43 @@ import colors from '../../assets/colors/colors';
 import image from '../../assets/images/image';
 import LinearGradient from 'react-native-linear-gradient';
 import { normalize } from '@rneui/themed';
+import { TaskDataTypeSlip } from '../../components/SlipCard/SlipCard';
+import { TaskDatasource } from '../../datasource/TaskDatasource';
+import Lottie from 'lottie-react-native';
 
 export default function SlipSuccessScreen({
-  navigation,
+  navigation,route
 }: StackScreenProps<MainStackParamList, 'SlipSuccessScreen'>) {
+  const { taskId } = route.params;
+  const [taskData, setTaskData] = useState<TaskDataTypeSlip>({
+    id: '',
+    comment: '',
+    cropName: '',
+    purposeSprayName: '',
+    dateAppointment: '',
+    farmAreaAmount: '',
+    farmerId: '',
+    farmerPlotId: '',
+    preparationBy: '',
+    price: '',
+    purposeSprayId: '',
+    taskNo: '',
+    targetSpray: [],
+    totalPrice: '',
+  });
+
+  useEffect(()=>{
+    TaskDatasource.getTaskByTaskId(taskId)
+    .then(
+      res =>
+      setTaskData({
+        ...res.data,
+        cropName: res.data.purposeSpray.crop.cropName || '',
+        purposeSprayName: res.data.purposeSpray.purposeSprayName || ''
+      })
+    )
+    .catch(err => console.log(err))
+  },[])
   return (
     <View style={{
       flex : 1
@@ -30,16 +63,19 @@ export default function SlipSuccessScreen({
               flex: 1,
               paddingTop : normalize(30)
             }}>
-            <Image
-              source={image.successSlip}
-              style={{
+            <View style={{
                 width: '100%',
                 height: 170,
                 marginTop: 32,
-              }}
+              }}>
+              <Lottie 
+              source={image.successfullottie} 
+              autoPlay 
+              loop 
               resizeMode="contain"
-            />
-            <SectionBody />
+              />
+            </View>
+            <SectionBody {...taskData}/>
           </LinearGradient>
           <View
             style={{

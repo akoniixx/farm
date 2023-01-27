@@ -34,6 +34,7 @@ const HomeCarousel: React.FC<any> = () => {
       pagingEnabled
       data={[1, 2, 3]}
       autoPlay
+      autoPlayInterval={900}
       renderItem={({ index }: any) => {
         return <RenderItem index={index} />;
       }}
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
   },
   detail: {
     fontFamily: font.SarabunLight,
-    fontSize: normalize(14),
+    fontSize: normalize(18),
     color: 'black',
     textAlign: 'center',
     marginTop: normalize(16),

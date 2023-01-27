@@ -5709,7 +5709,7 @@ loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.4.0:
 
 lottie-react-native@^5.1.4:
   version "5.1.4"
-  resolved "https://registry.npmjs.org/lottie-react-native/-/lottie-react-native-5.1.4.tgz"
+  resolved "https://registry.yarnpkg.com/lottie-react-native/-/lottie-react-native-5.1.4.tgz#9340a4f63ed115d5f050f1af69e53242e6e63840"
   integrity sha512-Lu6mSG92Wck+vXEX6gfj/9ciqqoz0tJQZqgX0SumGvX/oZu4MbKO/oLApyHdy2V9Rb7qvwF9whOtitADxTswPA==
   dependencies:
     invariant "^2.2.2"
@@ -7056,6 +7056,19 @@ react-moment@^1.1.2:
   resolved "https://registry.npmjs.org/react-moment/-/react-moment-1.1.2.tgz"
   integrity sha512-lfb+shYXI2tXlQrNUpNr05/1D/kzFj8Isbfp89DQrpZk0fs2JIAnLHWETR0hQS9zvtzwLWlVv0wKLffbue5HoA==
 
+react-native-actions-sheet-picker@^0.3.5:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/react-native-actions-sheet-picker/-/react-native-actions-sheet-picker-0.3.5.tgz#0f4b7407f6a54b14900995df08e0ce7aabbd1de5"
+  integrity sha512-spbPZxvBet9WC9m++G73TULTxoOYwFGmA2FpS8plXbrSaVczOdhXwaIakmlkEALG27CqyUsdoMOiGOwpC/oyNg==
+  dependencies:
+    react-native-actions-sheet "^0.6.1"
+    react-native-gesture-handler "2.2.1"
+
+react-native-actions-sheet@^0.6.1:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/react-native-actions-sheet/-/react-native-actions-sheet-0.6.2.tgz#82b2e67ee6b2b086f7ed5ed8bce7d48bf2200cea"
+  integrity sha512-MKrI3fxjxenAMwcSyI8fHwcG41ed3Jk5QUiH6/CYvuYRCJSdsxyNfC7Hc6TeM2TYz2bwfsaFBPTMdsR8mN0MRA==
+
 react-native-actions-sheet@^0.8.7:
   version "0.8.10"
   resolved "https://registry.npmjs.org/react-native-actions-sheet/-/react-native-actions-sheet-0.8.10.tgz"
@@ -7151,7 +7164,7 @@ react-native-geolocation-service@^5.3.1:
   resolved "https://registry.npmjs.org/react-native-geolocation-service/-/react-native-geolocation-service-5.3.1.tgz"
   integrity sha512-LTXPtPNmrdhx+yeWG47sAaCgQc3nG1z+HLLHlhK/5YfOgfLcAb9HAkhREPjQKPZOUx8pKZMIpdGFUGfJYtimXQ==
 
-react-native-gesture-handler@^2.8.0:
+react-native-gesture-handler@2.2.1, react-native-gesture-handler@^2.8.0:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.9.0.tgz#2f63812e523c646f25b9ad660fc6f75948e51241"
   integrity sha512-a0BcH3Qb1tgVqUutc6d3VuWQkI1AM3+fJx8dkxzZs9t06qA27QgURYFoklpabuWpsUTzuKRpxleykp25E8m7tg==

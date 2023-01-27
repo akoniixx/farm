@@ -38,6 +38,7 @@ export const PlantSelect: React.FC<PrantSelectProps> = ({
             fontFamily: font.SarabunLight,
             fontSize: normalize(16),
             marginTop: normalize(15),
+            height: '100%',
           }}>
           {label}
         </Text>

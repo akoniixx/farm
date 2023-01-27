@@ -10,7 +10,7 @@ interface AddPlot {
   raiAmount: number;
   plantName: string;
   status: string;
-  location: string;
+  locationName: string;
 }
 
 export function StatusObject(status: string) {
@@ -44,7 +44,7 @@ const PlotsItem: React.FC<AddPlot> = ({
   raiAmount,
   plantName,
   status,
-  location,
+  locationName,
 }) => {
   return (
     <View
@@ -124,7 +124,7 @@ const PlotsItem: React.FC<AddPlot> = ({
                 marginRight: '10%',
                 width: normalize(140),
               }}>
-              {location}
+              {locationName}
             </Text>
             <View
               style={{

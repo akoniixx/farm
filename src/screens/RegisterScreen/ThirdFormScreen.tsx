@@ -5,6 +5,8 @@ import {
   Dimensions,
   FlatList,
   Image,
+  Keyboard,
+  KeyboardAvoidingView,
   Linking,
   Modal,
   PermissionsAndroid,
@@ -19,7 +21,10 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ScrollView } from 'react-native-gesture-handler';
+import {
+  ScrollView,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { font, icons } from '../../assets';
 import colors from '../../assets/colors/colors';
@@ -48,6 +53,11 @@ import Geocoder from 'react-native-geocoding';
 import SearchBarWithAutocomplete from '../../components/SearchBarWithAutocomplete';
 import { useDebounce } from '../../hook/useDebounce';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { navigate, navigationRef } from '../../navigations/RootNavigation';
+import SearchPlotArea from '../../components/SearchPlotArea';
+import { LAT_LNG_BANGKOK } from '../../definitions/location';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 export type PredictionType = {
   description: string;
@@ -60,9 +70,9 @@ export type PredictionType = {
 };
 
 const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
-  const fall = new Animated.Value(1);
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
+  const [loading, setLoading] = useState(false);
   const [position, setPosition] = useState({
     latitude: route.params.latitude,
     longitude: route.params.longitude,
@@ -70,8 +80,11 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     longitudeDelta: 0,
   });
   const telNo = route.params;
-
-  const [openModal, setOpenModal] = useState(false);
+  const [location, setLocation] = useState<any[]>([]);
+  const [searchLocation] = useState('');
+  const [selectPlot, setSelectPlot] = useState<any>();
+  const [count, setCount] = useState(1);
+  const [plotIndex, setPlotIndex] = useState(1);
   const [value, setValue] = useState(null);
   const [plantName, setPlantName] = useState<any>();
   const [raiAmount, setraiAmount] = useState<any>();
@@ -86,7 +99,12 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   const plantSheet = useRef<any>();
   const deTailPlot = useRef<any>();
   const mapSheet = useRef<any>();
-  const [search, setSearch] = useState({ term: '', fetchPredictions: false });
+  const plotArea = useRef<any>();
+  const [plotAreas, setPlotAreas] = useState<any>([]);
+  const [search, setSearch] = useState<any>({
+    term: '',
+    fetchPredictions: false,
+  });
   const [showPredictions, setShowPredictions] = useState(false);
   const [predictions, setPredictions] = useState<PredictionType[]>([]);
   const GOOGLE_PACES_API_BASE_URL =
@@ -95,7 +113,9 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
 
   useEffect(() => {
     getLocation();
-  }, []);
+    fetchLocation(searchLocation);
+  }, [searchLocation]);
+
   const hasPermissionIOS = async () => {
     const openSetting = () => {
       Linking.openSettings().catch(() => {
@@ -184,23 +204,35 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
       );
     }
   };
+  const incrementCount = () => {
+    setCount(count + 1);
+    setPlotIndex(plotIndex + 1);
+  };
   const addPlots = () => {
     const plots = [...plotData];
     const plotsUI = [...plotDataUI];
     const newPlot = {
+      plotIndex: plotIndex,
       raiAmount: raiAmount,
-      plotName: plotName,
-      location: search.term,
+      plotName: !plotName
+        ? 'แปลงที่' + ' ' + count + ' ' + plantName
+        : plotName,
+      locationName: search.term,
       plantName: plantName,
       status: 'PENDING',
+      landmark: landmark,
+      lat: lat,
+      long: long,
+      plotAreaId: selectPlot.subdistrictId,
     };
-    console.log(newPlot);
-
     const newPlotUI = {
-      plotName: plotName,
       raiAmount: raiAmount,
+      plotName: plotName,
+      locationName: search.term,
       plantName: plantName,
-      location: search.term,
+      landmark: landmark,
+      lat: lat,
+      long: long,
     };
     plots.push(newPlot);
     plotsUI.push(newPlotUI);
@@ -208,18 +240,21 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     setplotData(plots);
     setplotDataUI(plotsUI);
     setPlantName(null);
-    setSearch(search);
+    setSearch({ search: null });
     setraiAmount(null);
     setplotName(null);
+    setlandmark(null);
+    setSelectPlot(null);
     actionSheet.current.hide();
   };
-  const deletePlots = () => {
-    // Register.deleteFarmerPlot('')
-    deTailPlot.current.hide();
-  };
+
   const selectPlants = (value: any) => {
     setPlantName(value);
     plantSheet.current.hide();
+  };
+  const selectPlotArea = (value: any) => {
+    setSelectPlot(value);
+    plotArea.current.hide();
   };
 
   const onChangeText = async () => {
@@ -243,7 +278,6 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     }
   };
   useDebounce(onChangeText, 0, [search.term]);
-
   const onPredictionTapped = async (placeId: string, description: string) => {
     const apiUrl = `${GOOGLE_PACES_API_BASE_URL}/details/json?key=${API_KEY}&place_id=${placeId}`;
     try {
@@ -270,59 +304,84 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
       console.log(e);
     }
   };
+
+  const fetchLocation = async (text?: string) => {
+    await QueryLocation.getSubdistrict(0, text).then(res => {
+      setLocation(res);
+    });
+  };
+  const searchPlotArea = (value: any) => {
+    if (value !== undefined) {
+      const words = location;
+      const result = words.filter(
+        word =>
+          word.subdistrictName === value ||
+          word.districtName === value ||
+          word.provinceName === value,
+      );
+      setPlotAreas(result);
+    } else {
+      setPosition(LAT_LNG_BANGKOK);
+    }
+  };
+  const deletePlot = (value: any) => {
+    let someArray = plotData;
+    someArray = someArray.filter((x: any) => x != value);
+    setplotData(someArray);
+    setplotDataUI(someArray);
+    deTailPlot.current.hide();
+  };
   return (
-    <SafeAreaView style={stylesCentral.container}>
-      <CustomHeader
-        title="ลงทะเบียนเกษตรกร"
-        showBackBtn
-        onPressBack={() => navigation.goBack()}
-      />
-      <View style={styles.inner}>
-        <View style={styles.container}>
-          <View style={{ marginBottom: normalize(10) }}>
-            <ProgressBar index={3} />
-          </View>
-          <Text style={styles.h3}>ขั้นตอนที่ 3 จาก 4</Text>
-          <Text style={styles.h1}>สร้างแปลงเกษตร</Text>
-          <ScrollView>
-            {plotDataUI.length === 0 && plotData.length === 0 ? (
-              <>
-                <View style={styles.rectangleFixed}>
-                  <Image style={styles.rectangle} source={image.rectangle} />
-                  <Text style={styles.h2}>กดเพื่อเพิ่มแปลงเกษตรของคุณ</Text>
-                </View>
-                <View style={styles.btAdd}></View>
-              </>
-            ) : (
-              <View
-                style={{
-                  marginTop: normalize(10),
-                  display: 'flex',
-                  justifyContent: 'center',
-                }}>
-                <Text
-                  style={[
-                    styles.h1,
-                    { color: colors.fontGrey, margin: normalize(10) },
-                  ]}>
-                  แปลงของคุณ
-                </Text>
-                <View style={[styles.textPending]}>
-                  <Image
-                    source={icons.warning}
-                    style={{ width: 25, height: 25, right: 10 }}
-                  />
-                  <Text style={{ fontFamily: font.SarabunLight, fontSize: 18 }}>
-                    {`แปลงของคุณอาจใช้เวลารอการตรวจสอบ
-จากเจ้าหน้าที`}
-                    ่
+    <>
+      <SafeAreaView style={stylesCentral.container}>
+        <CustomHeader
+          title="ลงทะเบียนเกษตรกร"
+          showBackBtn
+          onPressBack={() => navigation.goBack()}
+        />
+        <View style={styles.inner}>
+          <View style={styles.container}>
+            <View style={{ marginBottom: normalize(10) }}>
+              <ProgressBar index={3} />
+            </View>
+            <Text style={styles.h3}>ขั้นตอนที่ 3 จาก 4</Text>
+            <Text style={styles.h1}>สร้างแปลงเกษตร</Text>
+            <ScrollView>
+              {plotDataUI.length === 0 && plotData.length === 0 ? (
+                <>
+                  <View style={styles.rectangleFixed}>
+                    <Image style={styles.rectangle} source={image.rectangle} />
+                    <Text style={styles.h2}>กดเพื่อเพิ่มแปลงเกษตรของคุณ</Text>
+                  </View>
+                  <View style={styles.btAdd}></View>
+                </>
+              ) : (
+                <View
+                  style={{
+                    marginTop: normalize(10),
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}>
+                  <Text
+                    style={[
+                      styles.h1,
+                      { color: colors.fontGrey, margin: normalize(10) },
+                    ]}>
+                    แปลงของคุณ
                   </Text>
-                </View>
-                {plotDataUI.map((item: any, index: number) => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      deTailPlot.current.show();
-                    }}>
+                  <View style={[styles.textPending]}>
+                    <Image
+                      source={icons.warning}
+                      style={{ width: 25, height: 25, right: 10 }}
+                    />
+                    <Text
+                      style={{ fontFamily: font.SarabunLight, fontSize: 18 }}>
+                      {`แปลงของคุณอาจใช้เวลารอการตรวจสอบ
+จากเจ้าหน้าที`}
+                      ่
+                    </Text>
+                  </View>
+                  {plotDataUI.map((item: any, index: number) => (
                     <PlotsItem
                       index={index}
                       key={index}
@@ -336,370 +395,64 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                           : item.plotName
                       }
                       raiAmount={item.raiAmount}
-                      location={item.location}
+                      locationName={item.locationName}
                       plantName={item.plantName}
                       status={item.status}
                     />
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
-            <View style={[styles.buttonAdd, { top: '0%' }]}>
-              <Text
-                style={styles.textaddplot}
-                onPress={() => {
-                  actionSheet.current.show();
-                }}>
-                + เพิ่มแปลงเกษตร
-              </Text>
-            </View>
-          </ScrollView>
-        </View>
-        <View style={{ backgroundColor: colors.white }}>
-          <MainButton
-            label="ถัดไป"
-            color={colors.greenLight}
-            onPress={() => {
-              navigation.navigate('FourthFormScreen', {
-                tele: telNo.tele,
-              });
-            }}
-          />
-        </View>
-        <ActionSheet ref={actionSheet}>
-          <View
-            style={{
-              backgroundColor: colors.white,
-              paddingVertical: normalize(10),
-              paddingHorizontal: normalize(15),
-              width: windowWidth,
-              height: windowHeight,
-              borderRadius: normalize(20),
-            }}>
-            <View style={{ marginLeft: normalize(-20) }}>
-              <CustomHeader
-                title="เพิ่มแปลงเกษตร"
-                showBackBtn
-                onPressBack={() => actionSheet.current.hide()}
-              />
-            </View>
-            <ScrollView>
-              <Text style={[styles.head, { marginTop: normalize(15) }]}>
-                ชื่อแปลงเกษตร
-              </Text>
-              <TextInput
-                onChangeText={value => {
-                  setplotName(value);
-                }}
-                value={plotName}
-                style={[styles.input, { borderColor: colors.disable }]}
-                editable={true}
-                placeholder={
-                  !plotName
-                    ? `แปลงที่ ${plotDataUI.length + 1} ${
-                        plantName !== undefined ? plantName : ''
-                      }`
-                    : plotName
-                }
-                placeholderTextColor={colors.fontGrey}
-              />
-              <Text style={styles.head}>
-                จำนวนไร่{' '}
-                <Text style={{ fontSize: normalize(16) }}>(โดยประมาณ)</Text>
-              </Text>
-              <TextInput
-                onChangeText={value => {
-                  setraiAmount(value);
-                }}
-                value={raiAmount}
-                style={[styles.input, { borderColor: colors.disable }]}
-                editable={true}
-                placeholder={'ระบุจำนวนไร่'}
-                placeholderTextColor={colors.disable}
-              />
-
-              <Text style={styles.head}>พืชที่ปลูก</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  plantSheet.current.show();
-                }}>
-                <View
-                  style={{
-                    borderColor: colors.disable,
-                    borderWidth: 1,
-                    padding: 10,
-                    borderRadius: 10,
-                    marginVertical: 20,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    height: normalize(55),
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: fonts.AnuphanMedium,
-                      fontSize: normalize(16),
-                      color: colors.gray,
-                    }}>
-                    {!plantName ? (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.disable,
-                        }}>
-                        เลือกพืช
-                      </Text>
-                    ) : (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.fontGrey,
-                        }}>
-                        {plantName}
-                      </Text>
-                    )}
-                  </Text>
-                  <Image
-                    source={icons.down}
-                    style={{
-                      width: normalize(24),
-                      height: normalize(22),
-                      marginRight: 10,
-                      tintColor: colors.disable,
-                    }}
-                  />
-                </View>
-              </TouchableOpacity>
-              <Text style={styles.head}>สถานที่ใกล้แปลง</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  mapSheet.current.show();
-                }}>
-                <View
-                  style={{
-                    borderColor: colors.disable,
-                    borderWidth: 1,
-                    padding: 10,
-                    borderRadius: 10,
-                    marginVertical: 20,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    height: normalize(55),
-                  }}>
-                  <Image source={image.map} style={styles.imageStyle} />
-                  <Text
-                    style={{
-                      fontFamily: fonts.AnuphanMedium,
-                      fontSize: normalize(16),
-                      color: colors.gray,
-                    }}>
-                    {!search.term ? (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.disable,
-                        }}>
-                        เช่น วัด, โรงเรียน, ร้านค้า
-                      </Text>
-                    ) : (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.fontGrey,
-                        }}>
-                        {search.term}
-                      </Text>
-                    )}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              <View style={{ flex: 1 }}>
-                <MapView.Animated
-                  mapType="satellite"
-                  minZoomLevel={14}
-                  maxZoomLevel={18}
-                  style={styles.map}
-                  initialRegion={position}
-                  provider={PROVIDER_GOOGLE}
-                  region={{
-                    latitude: lat,
-                    longitude: long,
-                    latitudeDelta: 0.0,
-                    longitudeDelta: 0.0,
-                  }}
-                  showsUserLocation={true}
-                  showsMyLocationButton={true}
-                />
-                <View style={styles.markerFixed}>
-                  <Image style={styles.marker} source={image.mark} />
-                </View>
-              </View>
-              <Text style={styles.head}>จุดสังเกต</Text>
-              <TextInput
-                onChangeText={value => {
-                  setlandmark(value);
-                }}
-                value={landmark}
-                style={[styles.input, { borderColor: colors.disable }]}
-                editable={true}
-                placeholder={'ระบุจุดสังเกต'}
-                placeholderTextColor={colors.disable}
-              />
-              <View style={{ height: 40 }}></View>
-            </ScrollView>
-
-            <View
-              style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <MainButton
-                style={styles.button}
-                label="ยกเลิก"
-                color={colors.white}
-                borderColor={colors.gray}
-                fontColor={colors.fontBlack}
-                onPress={() => {
-                  actionSheet.current.hide();
-                }}
-              />
-              <MainButton
-                style={styles.button}
-                label="บันทึก"
-                disable={
-                  !raiAmount || !plantName || !lat || !long || !landmark
-                    ? true
-                    : false
-                }
-                color={colors.greenLight}
-                onPress={() => {
-                  addPlots();
-                  Register.register3(
-                    telNo.tele,
-                    plotName,
-                    raiAmount,
-                    plantName,
-                    lat,
-                    long,
-                    search.term,
-                    landmark,
-                  )
-                    .then(res => {
-                      console.log('res', res);
-                    })
-                    .catch(err => {
-                      console.log(err);
-                    });
-                }}
-              />
-            </View>
-          </View>
-          <ActionSheet ref={plantSheet}>
-            <View
-              style={{
-                backgroundColor: 'white',
-                paddingVertical: normalize(30),
-                paddingHorizontal: normalize(20),
-                width: windowWidth,
-                height: windowHeight * 0.8,
-                borderRadius: normalize(20),
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text style={[styles.head, { marginBottom: normalize(10) }]}>
-                  พืชที่ปลูก
-                </Text>
-                <Text
-                  style={{
-                    color: colors.greenLight,
-                    fontFamily: font.SarabunMedium,
-                    fontSize: normalize(16),
-                  }}
-                  onPress={() => {
-                    plantSheet.current.hide();
-                  }}>
-                  ยกเลิก
-                </Text>
-              </View>
-              <View style={styles.container}>
-                <ScrollView>
-                  {plantListSelect.map((v, i) => (
-                    <TouchableOpacity>
-                      <PlantSelect
-                        key={i}
-                        label={v}
-                        id={v}
-                        onPress={() => selectPlants(v)}
-                      />
-                    </TouchableOpacity>
                   ))}
-                </ScrollView>
-              </View>
-            </View>
-          </ActionSheet>
-          <ActionSheet ref={mapSheet}>
-            <View
-              style={{
-                backgroundColor: 'white',
-                paddingVertical: normalize(30),
-                paddingHorizontal: normalize(20),
-                width: windowWidth,
-                height: windowHeight * 0.7,
-                borderRadius: normalize(20),
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text style={[styles.head, { marginBottom: normalize(10) }]}>
-                  สถานที่ใกล้แปลง
-                </Text>
+                </View>
+              )}
+              <View style={[styles.buttonAdd, { top: '0%' }]}>
                 <Text
-                  style={{
-                    color: colors.greenLight,
-                    fontFamily: font.SarabunMedium,
-                    fontSize: normalize(16),
-                  }}
+                  style={styles.textaddplot}
                   onPress={() => {
-                    mapSheet.current.hide();
+                    actionSheet.current.show();
                   }}>
-                  ยกเลิก
+                  + เพิ่มแปลงเกษตร
                 </Text>
               </View>
-              <View style={styles.container}>
-                <SearchBarWithAutocomplete
-                  value={search.term}
-                  onChangeText={text => {
-                    setSearch({ term: text, fetchPredictions: true });
-                  }}
-                  showPredictions={showPredictions}
-                  predictions={predictions}
-                  onPredictionTapped={onPredictionTapped}
-                />
-              </View>
-            </View>
-          </ActionSheet>
-        </ActionSheet>
-        <ActionSheet ref={deTailPlot}>
-          {plotDataUI.map((item: any, index: any) => (
-            <View
-              key={index}
-              style={{
-                backgroundColor: colors.white,
-                paddingVertical: normalize(10),
-                paddingHorizontal: normalize(15),
-                width: windowWidth,
-                height: windowHeight,
-                borderRadius: normalize(20),
-              }}>
-              <View style={{ marginLeft: normalize(-20) }}>
-                <CustomHeader
-                  title="รายละเอียดแปลง"
-                  showBackBtn
-                  onPressBack={() => deTailPlot.current.hide()}
-                />
-              </View>
+            </ScrollView>
+          </View>
+          <View style={{ backgroundColor: colors.white }}>
+            <MainButton
+              disable={plotDataUI.length === 0 ? true : false}
+              label="ถัดไป"
+              color={colors.greenLight}
+              onPress={() => {
+                Register.uploadFarmerPlot(plotData)
+                  .then(res => {
+                    navigation.navigate('FourthFormScreen', {
+                      tele: telNo.tele,
+                    });
+                  })
+                  .catch(err => console.log(err));
+              }}
+            />
+          </View>
+        </View>
+      </SafeAreaView>
+
+      <ActionSheet ref={actionSheet}>
+        <View
+          style={{
+            backgroundColor: colors.white,
+            paddingVertical: normalize(10),
+            paddingHorizontal: normalize(15),
+            width: windowWidth,
+            height: windowHeight,
+            borderRadius: normalize(20),
+          }}>
+          <View style={{ marginLeft: normalize(-20) }}>
+            <CustomHeader
+              title="เพิ่มแปลงเกษตร"
+              showBackBtn
+              onPressBack={() => actionSheet.current.hide()}
+            />
+          </View>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            {/*  <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
+            <View style={{ justifyContent: 'space-around' }}>
               <ScrollView>
                 <Text style={[styles.head, { marginTop: normalize(15) }]}>
                   ชื่อแปลงเกษตร
@@ -708,22 +461,29 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   onChangeText={value => {
                     setplotName(value);
                   }}
-                  value={
-                    !item.plotName
-                      ? 'แปลงที่' + ' ' + `${index + 1}` + ' ' + item.plantName
-                      : item.plotName
-                  }
+                  value={plotName}
                   style={[styles.input, { borderColor: colors.disable }]}
                   editable={true}
-                  placeholder={'ระบุชื่อแปลงเกษตร'}
-                  placeholderTextColor={colors.disable}
+                  placeholder={
+                    !plotName
+                      ? `แปลงที่ ${plotDataUI.length + 1} ${
+                          plantName !== null && plantName !== undefined
+                            ? plantName
+                            : ''
+                        }`
+                      : plotName
+                  }
+                  placeholderTextColor={colors.fontGrey}
                 />
-                <Text style={styles.head}>จำนวนไร่</Text>
+                <Text style={styles.head}>
+                  จำนวนไร่{' '}
+                  <Text style={{ fontSize: normalize(16) }}>(โดยประมาณ)</Text>
+                </Text>
                 <TextInput
                   onChangeText={value => {
                     setraiAmount(value);
                   }}
-                  value={item.raiAmount}
+                  value={raiAmount}
                   style={[styles.input, { borderColor: colors.disable }]}
                   editable={true}
                   placeholder={'ระบุจำนวนไร่'}
@@ -749,11 +509,11 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     }}>
                     <Text
                       style={{
-                        fontFamily: fonts.SarabunLight,
+                        fontFamily: fonts.AnuphanMedium,
                         fontSize: normalize(16),
-                        color: colors.fontGrey,
+                        color: colors.gray,
                       }}>
-                      {!item.plantName ? (
+                      {!plantName ? (
                         <Text
                           style={{
                             fontFamily: font.SarabunLight,
@@ -762,7 +522,13 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                           เลือกพืช
                         </Text>
                       ) : (
-                        item.plantName
+                        <Text
+                          style={{
+                            fontFamily: font.SarabunLight,
+                            color: colors.fontGrey,
+                          }}>
+                          {plantName}
+                        </Text>
                       )}
                     </Text>
                     <Image
@@ -774,6 +540,61 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                         tintColor: colors.disable,
                       }}
                     />
+                  </View>
+                </TouchableOpacity>
+                <Text style={styles.head}>พื้นที่แปลงเกษตร</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    plotArea.current.show();
+                  }}>
+                  <View
+                    style={{
+                      borderColor: colors.disable,
+                      borderWidth: 1,
+                      padding: 10,
+                      borderRadius: 10,
+                      marginVertical: 20,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      height: normalize(55),
+                    }}>
+                    <Image
+                      source={icons.search}
+                      style={{
+                        width: normalize(22),
+                        height: normalize(22),
+                        marginRight: 10,
+                        tintColor: colors.disable,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: fonts.AnuphanMedium,
+                        fontSize: normalize(16),
+                        color: colors.gray,
+                      }}>
+                      {!selectPlot ? (
+                        <Text
+                          style={{
+                            fontFamily: font.SarabunLight,
+                            color: colors.disable,
+                          }}>
+                          ระบุตำบล / อำเภอ / จังหวัด
+                        </Text>
+                      ) : (
+                        <Text
+                          style={{
+                            fontFamily: font.SarabunLight,
+                            color: colors.fontGrey,
+                          }}>
+                          {selectPlot.subdistrictName +
+                            '/' +
+                            selectPlot.districtName +
+                            '/' +
+                            selectPlot.provinceName}
+                        </Text>
+                      )}
+                    </Text>
                   </View>
                 </TouchableOpacity>
                 <Text style={styles.head}>สถานที่ใกล้แปลง</Text>
@@ -799,7 +620,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                         fontSize: normalize(16),
                         color: colors.gray,
                       }}>
-                      {!search ? (
+                      {!search.term ? (
                         <Text
                           style={{
                             fontFamily: font.SarabunLight,
@@ -823,15 +644,15 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   <MapView.Animated
                     mapType="satellite"
                     minZoomLevel={14}
-                    maxZoomLevel={20}
+                    maxZoomLevel={18}
                     style={styles.map}
                     initialRegion={position}
                     provider={PROVIDER_GOOGLE}
                     region={{
                       latitude: lat,
                       longitude: long,
-                      latitudeDelta: 0.02,
-                      longitudeDelta: 0.02,
+                      latitudeDelta: 0.0,
+                      longitudeDelta: 0.0,
                     }}
                     showsUserLocation={true}
                     showsMyLocationButton={true}
@@ -840,115 +661,239 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     <Image style={styles.marker} source={image.mark} />
                   </View>
                 </View>
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    flexDirection: 'row',
-                    marginTop: normalize(15),
-                  }}>
-                  <Image
-                    source={icons.delete}
-                    style={{
-                      width: normalize(24),
-                      height: normalize(24),
-                      top: normalize(20),
-                    }}
-                  />
-                  <View
-                    style={{
-                      padding: 16,
-                    }}>
-                    <MainButton
-                      style={styles.button}
-                      label="ลบแปลงเกษตรนี้"
-                      color={colors.white}
-                      borderColor={colors.white}
-                      fontColor={colors.fontBlack}
-                      fontFamily={font.AnuphanBold}
-                      onPress={() => setOpenModal(true)}
-                    />
-                  </View>
-                </View>
-              </ScrollView>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <MainButton
-                  style={styles.button}
-                  label="ยกเลิก"
-                  color={colors.white}
-                  borderColor={colors.gray}
-                  fontColor={colors.fontBlack}
-                  onPress={() => {
-                    deTailPlot.current.hide();
+                <Text style={styles.head}>จุดสังเกต</Text>
+                <TextInput
+                  onChangeText={value => {
+                    setlandmark(value);
                   }}
+                  value={landmark}
+                  style={[styles.input, { borderColor: colors.disable }]}
+                  editable={true}
+                  placeholder={'ระบุจุดสังเกต'}
+                  placeholderTextColor={colors.disable}
                 />
-                <MainButton
-                  style={styles.button}
-                  label="บันทึก"
-                  color={colors.greenLight}
-                  onPress={() => {
-                    deTailPlot.current.hide();
-                  }}
-                />
-              </View>
-            </View>
-          ))}
-          <Modal transparent={true} visible={openModal}>
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: 'rgba(0,0,0,0.5)',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <View
-                style={{
-                  padding: normalize(20),
-                  backgroundColor: colors.white,
-                  width: normalize(345),
-                  height: normalize(141),
-                  display: 'flex',
-                  justifyContent: 'center',
-                  borderRadius: normalize(8),
-                }}>
-                <Text
-                  style={[styles.head, { textAlign: 'center', margin: '5%' }]}>
-                  ต้องการลบแปลงนี้
-                </Text>
                 <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
                   <MainButton
-                    style={{ width: normalize(150), height: normalize(52) }}
-                    label="ลบ"
-                    color={colors.error}
-                    fontColor={colors.white}
-                    onPress={() => {
-                      deletePlots();
-                    }}
-                  />
-                  <MainButton
-                    style={{ width: normalize(150), height: normalize(52) }}
+                    style={styles.button}
                     label="ยกเลิก"
                     color={colors.white}
                     borderColor={colors.gray}
-                    fontColor={colors.fontGrey}
+                    fontColor={colors.fontBlack}
                     onPress={() => {
-                      setOpenModal(false);
+                      actionSheet.current.hide();
+                    }}
+                  />
+                  <MainButton
+                    style={styles.button}
+                    label="บันทึก"
+                    disable={
+                      !raiAmount || !plantName || !lat || !long || !landmark
+                        ? true
+                        : false
+                    }
+                    color={colors.greenLight}
+                    onPress={() => {
+                      addPlots();
+                      incrementCount();
                     }}
                   />
                 </View>
-              </View>
+                <View style={{ height: normalize(10) }}></View>
+              </ScrollView>
             </View>
-          </Modal>
-        </ActionSheet>
-      </View>
-    </SafeAreaView>
+            {/*  </TouchableWithoutFeedback> */}
+          </KeyboardAvoidingView>
+        </View>
+      </ActionSheet>
+
+      <ActionSheet ref={plantSheet}>
+        <View
+          style={{
+            backgroundColor: 'white',
+            paddingVertical: normalize(30),
+            paddingHorizontal: normalize(20),
+            width: windowWidth,
+            height: windowHeight * 0.8,
+            borderRadius: normalize(20),
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={[styles.head, { marginBottom: normalize(10) }]}>
+              พืชที่ปลูก
+            </Text>
+            <Text
+              style={{
+                color: colors.greenLight,
+                fontFamily: font.SarabunMedium,
+                fontSize: normalize(16),
+              }}
+              onPress={() => {
+                plantSheet.current.hide();
+              }}>
+              ยกเลิก
+            </Text>
+          </View>
+          <View style={styles.container}>
+            <ScrollView>
+              {plantListSelect.map((v, i) => (
+                <TouchableOpacity>
+                  <PlantSelect
+                    key={i}
+                    label={v}
+                    id={v}
+                    onPress={() => selectPlants(v)}
+                  />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      </ActionSheet>
+
+      <ActionSheet ref={plotArea}>
+        <View
+          style={{
+            backgroundColor: 'white',
+            paddingVertical: normalize(30),
+            paddingHorizontal: normalize(20),
+            width: windowWidth,
+            height: windowHeight,
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={[styles.head, { marginBottom: normalize(10) }]}>
+              พื้นที่แปลงเกษตร
+            </Text>
+            <Text
+              style={{
+                color: colors.greenLight,
+                fontFamily: font.SarabunMedium,
+                fontSize: normalize(16),
+              }}
+              onPress={() => {
+                plotArea.current.hide();
+              }}>
+              ยกเลิก
+            </Text>
+          </View>
+          <View>
+            <Text
+              style={{
+                marginBottom: normalize(10),
+                fontFamily: fonts.SarabunLight,
+                fontSize: normalize(16),
+                color: colors.gray,
+              }}>
+              {`กรุณาพิมพ์ค้นหาพื้นที่แปลงเกษตรของคุณ
+ด้วยชื่อ ตำบล / อำเภอ / จังหวัด`}
+            </Text>
+          </View>
+          <View style={styles.container}>
+            <View
+              style={{
+                borderColor: colors.disable,
+                borderWidth: 1,
+                padding: 10,
+                borderRadius: 10,
+                marginVertical: 20,
+                flexDirection: 'row',
+                alignItems: 'center',
+                height: normalize(55),
+                justifyContent: 'space-between',
+              }}>
+              <TextInput
+                onChangeText={searchPlotArea}
+                // defaultValue={plotAreas}
+                style={[
+                  {
+                    borderColor: colors.disable,
+                    fontFamily: fonts.SarabunLight,
+                    fontSize: normalize(16),
+                    color: colors.gray,
+                  },
+                ]}
+                editable={true}
+                placeholder={'ระบุพื้นที่แปลงเกษตร'}
+                placeholderTextColor={colors.disable}
+              />
+            </View>
+            <ScrollView>
+              {plotAreas !== undefined &&
+                plotAreas.map((v: any, i: any) => (
+                  <TouchableOpacity>
+                    <PlantSelect
+                      key={i}
+                      label={
+                        v.subdistrictName +
+                        '/' +
+                        v.districtName +
+                        '/' +
+                        v.provinceName
+                      }
+                      id={v}
+                      onPress={() => selectPlotArea(v)}
+                    />
+                  </TouchableOpacity>
+                ))}
+            </ScrollView>
+          </View>
+        </View>
+      </ActionSheet>
+
+      <ActionSheet ref={mapSheet}>
+        <View
+          style={{
+            backgroundColor: 'white',
+            paddingVertical: normalize(30),
+            paddingHorizontal: normalize(20),
+            width: windowWidth,
+            height: windowHeight * 0.7,
+            borderRadius: normalize(20),
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={[styles.head, { marginBottom: normalize(10) }]}>
+              สถานที่ใกล้แปลง
+            </Text>
+            <Text
+              style={{
+                color: colors.greenLight,
+                fontFamily: font.SarabunMedium,
+                fontSize: normalize(16),
+              }}
+              onPress={() => {
+                mapSheet.current.hide();
+              }}>
+              ยกเลิก
+            </Text>
+          </View>
+          <View style={styles.container}>
+            <SearchBarWithAutocomplete
+              value={search.term}
+              onChangeText={text => {
+                setSearch({ term: text, fetchPredictions: true });
+              }}
+              showPredictions={showPredictions}
+              predictions={predictions}
+              onPredictionTapped={onPredictionTapped}
+            />
+          </View>
+        </View>
+      </ActionSheet>
+    </>
   );
 };
 export default ThirdFormScreen;

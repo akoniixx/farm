@@ -20,42 +20,38 @@ const MyPlotScreen: React.FC<any> = ({ navigation }) => {
   });
   return (
     <>
-      {fcmToken !== null ? (
-        <View></View>
-      ) : (
-        <SafeAreaView style={stylesCentral.container}>
-          <CustomHeader
-            title="แปลงของคุณ"
-            showBackBtn
-            onPressBack={() => navigation.goBack()}
-          />
-          <View>
-            <Image source={image.empty_farmer} style={[styles.empty]} />
-            <View style={{ top: '35%' }}>
-              <Text style={[styles.text]}>คุณเป็นสมาชิกหรือยัง?</Text>
-              <Text style={[styles.label]}>
-                {`เข้าร่วมเป็นสมาชิกกับเรา
+      <SafeAreaView style={stylesCentral.container}>
+        <CustomHeader
+          title="แปลงของคุณ"
+          showBackBtn
+          onPressBack={() => navigation.goBack()}
+        />
+        <View>
+          <Image source={image.empty_farmer} style={[styles.empty]} />
+          <View style={{ top: '35%' }}>
+            <Text style={[styles.text]}>คุณเป็นสมาชิกหรือยัง?</Text>
+            <Text style={[styles.label]}>
+              {`เข้าร่วมเป็นสมาชิกกับเรา
 เพื่อรับสิทธิประโยชน์มากมาย`}
-              </Text>
-            </View>
-            <View style={{ top: '40%' }}>
-              <MainButton
-                label="ลงทะเบียน/เข้าสู่ระบบ"
-                color={colors.greenLight}
-                style={styles.buttomBlank}
-                onPress={async () => {
-                  const value = await AsyncStorage.getItem('PDPA');
-                  if (value === 'read') {
-                    navigation.navigate('TelNumScreen');
-                  } else {
-                    navigation.navigate('ConditionScreen');
-                  }
-                }}
-              />
-            </View>
+            </Text>
           </View>
-        </SafeAreaView>
-      )}
+          <View style={{ top: '40%' }}>
+            <MainButton
+              label="ลงทะเบียน/เข้าสู่ระบบ"
+              color={colors.greenLight}
+              style={styles.buttomBlank}
+              onPress={async () => {
+                const value = await AsyncStorage.getItem('PDPA');
+                if (value === 'read') {
+                  navigation.navigate('TelNumScreen');
+                } else {
+                  navigation.navigate('ConditionScreen');
+                }
+              }}
+            />
+          </View>
+        </View>
+      </SafeAreaView>
     </>
   );
 };

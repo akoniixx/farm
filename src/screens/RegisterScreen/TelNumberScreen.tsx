@@ -21,17 +21,18 @@ import OtpScreen from '../OtpScreen/OtpScreen';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { Authentication } from '../../datasource/AuthDatasource';
 import Toast from 'react-native-toast-message';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const TelNumScreen: React.FC<any> = ({ navigation }) => {
   const [value, setValue] = useState<string>('');
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState<string>('');
   const [errMessage, setErrMessage] = useState<string>('');
+  const [loading, setLoading] = useState(false);
 
   const login = () => {
     Authentication.generateOtpRegister(value)
       .then(result => {
-        console.log(result);
         navigation.navigate('OtpScreen', {
           telNumber: value,
           token: result.result.token,
@@ -42,6 +43,7 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
       .catch(err => {
         if (err.response.data.statusCode === 409) {
           Authentication.generateOtp(value).then(result => {
+            console.log(result)
             const telNumber = value;
             setValue('');
             navigation.navigate('OtpScreen', {
@@ -50,7 +52,7 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
               refCode: result.result.refCode,
               isRegisterScreen: false,
             });
-          });
+          }).catch(err => console.log(err))
         }
       });
   };
@@ -95,7 +97,9 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
                 label="ถัดไป"
                 color={colors.greenLight}
                 disable={value.length != 10}
-                onPress={() => login()}
+                onPress={() => {
+                  login();
+                }}
               />
             </View>
           </View>

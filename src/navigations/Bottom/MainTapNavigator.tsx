@@ -17,10 +17,12 @@ import FarmerPlotSuccess from '../../components/Modal/FarmerPlotSuccess';
 import FarmerRegisterSuccess from '../../components/Modal/FarmerRegisterSuccess';
 import FarmerRegisterFailed from '../../components/Modal/FarmerRegisterFailed';
 import FarmerPlotFailed from '../../components/Modal/FarmerPlotFailed';
+import { TaskDatasource } from '../../datasource/TaskDatasource';
+import {TabActions} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
-const MainTapNavigator: React.FC = () => {
+const MainTapNavigator: React.FC<any> = ({navigation}) => {
   const [loading, setLoading] = useState(true);
   const [farmerRegisterSuccess,setFarmerRegisterSuccess] = useState<boolean>(false)
   const [farmerRegisterFailed,setFarmerRegisterFailed] = useState<boolean>(false)
@@ -30,37 +32,116 @@ const MainTapNavigator: React.FC = () => {
   useEffect(()=>{
     messaging().getInitialNotification().then(
       message =>{
-        console.log(message)
+        if(message){
+          const type = message.notification?.body;
+          switch (type){
+            case "find droner success":
+              TaskDatasource.getTaskByTaskId("3dc03f2b-9f4d-4861-8124-f576fdac3834").then(
+                res => {
+                  console.log(res.data)
+                  // RootNavigation.navigate('Main', {
+                  //   screen: 'MyTaskDetailScreen',
+                  //   params : {
+                  //     task: res.data,
+                  //   }
+                  // })
+                }
+              ).catch(err => console.log(err))
+            break;
+            case "find droner failed":
+              RootNavigation.navigate('Main', {
+                screen: 'SlipWaitingScreen',
+                params: {
+                  taskId: message.data?.taskId
+                },
+              });
+            break;
+            case "farmer register success":
+              setInitialRouteName("บัญชีของฉัน")
+            break;
+            case "farmer register failed":
+              setInitialRouteName("บัญชีของฉัน")
+            break;
+            case "farmer plot success" :
+              setInitialRouteName("บัญชีของฉัน")
+            break;
+            case "farmer plot failed" :
+              setInitialRouteName("บัญชีของฉัน")
+            break;
+          }
+        }
         setLoading(false);
       }
     )
     messaging().onNotificationOpenedApp(async message => {
       console.log(message)
+      const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
+      const type = message.notification?.body;
+      switch (type){
+        case "find droner success":
+          console.log("find droner success")
+          RootNavigation.navigate('Main', {
+            screen: 'MyTaskDetailScreen',
+            params : {
+              task: "3dc03f2b-9f4d-4861-8124-f576fdac3834",
+            }
+          });
+        break;
+        case "find droner failed":
+          RootNavigation.navigate('Main', {
+            screen: 'SlipWaitingScreen',
+            params: {
+              taskId: message.data?.taskId
+            },
+          });
+        break;
+        case "farmer register success":
+          navigation.dispatch(jumpAction);
+        break;
+        case "farmer register failed":
+          navigation.dispatch(jumpAction);
+        break;
+        case "farmer plot success" :
+          navigation.dispatch(jumpAction);
+        break;
+        case "farmer plot failed" :
+          navigation.dispatch(jumpAction);
+        break;
+      }
     })
 
     messaging().onMessage(async message =>{
-      if(message.notification?.body === "find droner success"){
-        RootNavigation.navigate('Main', {
-          screen: 'SlipSuccessScreen',
-        });
-      }
-      else if(message.notification?.body === "find droner failed"){
-        RootNavigation.navigate('Main', {
-          screen: 'SlipWaitingScreen',
-          params : {modal : true}
-        });
-      }
-      else if(message.notification?.body === "farmer register success"){
-        setFarmerRegisterSuccess(true)
-      }
-      else if(message.notification?.body === "farmer register failed"){
-        setFarmerRegisterFailed(true)
-      }
-      else if(message.notification?.body === "farmer plot success"){
-        setFarmerPlotSuccess(true)
-      }
-      else if(message.notification?.body === "farmer plot failed"){
-        setFarmerPlotFailed(true)
+      const type = message.notification?.body;
+      console.log(message)
+      switch (type){
+        case "find droner success":
+          RootNavigation.navigate('Main', {
+            screen: 'SlipSuccessScreen',
+            params : {
+              taskId: message.data?.taskId,
+            }
+          });
+        break;
+        case "find droner failed":
+          RootNavigation.navigate('Main', {
+            screen: 'SlipWaitingScreen',
+            params: {
+              taskId: message.data?.taskId
+            },
+          });
+        break;
+        case "farmer register success":
+          setFarmerRegisterSuccess(true)
+        break;
+        case "farmer register failed":
+          setFarmerRegisterFailed(true)
+        break;
+        case "farmer plot success" :
+          setFarmerPlotSuccess(true)
+        break;
+        case "farmer plot failed" :
+          setFarmerPlotFailed(true)
+        break;
       }
     })
   },[])
@@ -107,6 +188,7 @@ const MainTapNavigator: React.FC = () => {
           }}
         />
         <Tab.Navigator
+          initialRouteName={initialRouteName}
           screenOptions={{
             headerShown: false,
             tabBarStyle: { height: '9%', borderBottomColor: colors.white },

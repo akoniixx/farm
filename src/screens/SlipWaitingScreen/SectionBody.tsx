@@ -2,9 +2,9 @@ import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import fonts from '../../assets/fonts';
 import { colors } from '../../assets';
-import SlipCard from '../../components/SlipCard/SlipCard';
+import SlipCard, { TaskDataTypeSlip } from '../../components/SlipCard/SlipCard';
 
-export default function SectionBody() {
+export default function SectionBody(props: TaskDataTypeSlip) {
   return (
     <View style={styled.container}>
       <View>
@@ -27,7 +27,7 @@ export default function SectionBody() {
           }}>
           อาจจะใช้เวลาสักครู่ คุณสามารถใช้ส่วนอื่นๆ เพื่อรอนักบินโดรนรับงาน
         </Text>
-        <SlipCard />
+        <SlipCard {...props} />
       </View>
     </View>
   );

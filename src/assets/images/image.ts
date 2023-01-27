@@ -18,11 +18,15 @@ export default {
   empty_droner_his: require('./empty_droner_history.png'),
   uncheck: require('./uncheck.png'),
   checked: require('./checked.png'),
+  emptyTask: require('./emptyTask.png'),
   waitingDroner: require('./waitingDroner.png'),
   endSlip: require('./endSlip.png'),
   successSlip: require('./successSlip.png'),
   registerSuccess: require('./registersuccess.png'),
   registerFailed: require('./registerfailed.png'),
   plotSuccess: require('./plotsuccess.png'),
-  plotFailed: require('./plotfailed.png')
+  plotFailed: require('./plotfailed.png'),
+  drone: require('./drone.png'),
+  successfullottie: require('./sucessfullottie.json'),
+  waitinglottie: require('./waitingdroner.json')
 };

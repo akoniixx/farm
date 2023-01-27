@@ -1,5 +1,13 @@
+import moment from 'moment';
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { colors, font, icons } from '../../assets';
 import { normalize } from '../../functions/Normalize';
 
@@ -14,7 +22,7 @@ interface PlotDetailProp {
   plotAmout: number;
   plant: string;
   location: string;
-  onPressMap: () => void;
+  onPressMap?: () => void;
 }
 
 interface TargetSprayProp {
@@ -30,10 +38,7 @@ export const DateTimeDetail: React.FC<DateTimeProp> = ({
 }) => {
   return (
     <>
-      <View
-        style={{
-          paddingHorizontal: normalize(16),
-        }}>
+      <View>
         <View
           style={{
             padding: normalize(10),
@@ -62,27 +67,31 @@ export const DateTimeDetail: React.FC<DateTimeProp> = ({
                 <Text style={styles.h2}>วันที่</Text>
                 <Text style={styles.h2}>เวลา</Text>
               </View>
-              <View>
-                <Text style={styles.h1}>{date}</Text>
-                <Text style={styles.h1}>{time} น</Text>
+              <View style={{ alignItems: 'flex-end' }}>
+                <Text style={styles.h1}>
+                  {moment(date)
+                    .add(543, 'year')
+                    .locale('th')
+                    .format('DD MMMM YYYY')}
+                </Text>
+                <Text style={styles.h1}>
+                  {' '}
+                  {moment(time).locale('th').format('hh.mm')} น
+                </Text>
               </View>
             </View>
           </View>
         </View>
       </View>
-      <View
-        style={{
-          borderBottomColor: colors.greyDivider,
-          borderTopWidth: 0.5,
-          opacity: 0.3,
-          marginTop: 10,
-        }}
-      />
+
       <View
         style={{
           flexDirection: 'row',
           marginTop: 10,
+          paddingTop: 10,
           alignItems: 'center',
+          borderTopColor: colors.greyDivider,
+          borderTopWidth: 1,
           height: 40,
           paddingHorizontal: 16,
         }}>
@@ -94,7 +103,7 @@ export const DateTimeDetail: React.FC<DateTimeProp> = ({
             marginRight: normalize(10),
           }}
         />
-        <Text>{note}</Text>
+        <Text>{note ? note : '-'}</Text>
       </View>
     </>
   );
@@ -107,11 +116,23 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
   location,
   onPressMap,
 }) => {
-  const data = [
-    { icon: icons.plot, text: 'จำนวนไร่' },
-    { icon: icons.plant, text: 'พืชที่ปลูก' },
-    { icon: icons.location, text: 'จำนวนไร่' },
-  ];
+  const dataKeyObj = {
+    amountPlot: {
+      icon: icons.plot,
+      label: 'จำนวนไร่',
+      value: `${plotAmout} ไร่`,
+    },
+    plant: {
+      icon: icons.plant,
+      label: 'พืชที่ปลูก',
+      value: plant,
+    },
+    location: {
+      icon: icons.location,
+      label: 'ตำแหน่ง',
+      value: location,
+    },
+  };
 
   return (
     <View
@@ -126,33 +147,17 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
           alignItems: 'baseline',
           justifyContent: 'space-between',
         }}>
-        <View>
+        <View style={{ width: '60%' }}>
           <Text
+            numberOfLines={1}
             style={[
               styles.label,
               { color: '#1F8449', marginBottom: normalize(10) },
             ]}>
             {plotName}
           </Text>
-          <View>
-            {data.map(({ icon, text }, index) => (
-              <View
-                key={index}
-                style={{ flexDirection: 'row', marginBottom: normalize(10) }}>
-                <Image
-                  source={icon}
-                  style={{
-                    width: normalize(20),
-                    height: normalize(20),
-                    marginRight: normalize(10),
-                  }}
-                />
-                <Text style={styles.h1}>{text}</Text>
-              </View>
-            ))}
-          </View>
         </View>
-        <View style={{ alignItems: 'flex-end' }}>
+        <View style={{ alignItems: 'flex-end', width: '40%' }}>
           <TouchableOpacity onPress={onPressMap}>
             <Image
               source={icons.map}
@@ -163,20 +168,53 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
               }}
             />
           </TouchableOpacity>
-          <Text
-            style={[styles.h1, { marginBottom: normalize(4), marginTop: 6 }]}>
-            {plotAmout + ' ' + 'ไร่'}
-          </Text>
-          <Text
-            style={[styles.h1, { marginBottom: normalize(8), marginTop: 4 }]}>
-            {plant}
-          </Text>
-          <Text
-            numberOfLines={1}
-            style={[styles.h1, { width: '80%', lineHeight: 30, marginTop: 2 }]}>
-            {location}
-          </Text>
         </View>
+      </View>
+      <View style={{}}>
+        {Object.keys(dataKeyObj).map((key, index) => {
+          return (
+            <View
+              key={index}
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+                marginBottom: normalize(10),
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={dataKeyObj[key as keyof typeof dataKeyObj].icon}
+                  style={{
+                    width: normalize(20),
+                    height: normalize(20),
+                    marginRight: normalize(10),
+                  }}
+                />
+                <Text style={styles.h1}>
+                  {dataKeyObj[key as keyof typeof dataKeyObj].label}
+                </Text>
+              </View>
+              <View>
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    styles.h1,
+                    {
+                      textAlign: 'right',
+                      width: Dimensions.get('window').width * 0.5,
+                    },
+                  ]}>
+                  {dataKeyObj[key as keyof typeof dataKeyObj].value}
+                </Text>
+              </View>
+            </View>
+          );
+        })}
       </View>
     </View>
   );
@@ -215,7 +253,12 @@ export const TargetSpray: React.FC<TargetSprayProp> = ({
           <Text style={[styles.h1, { marginBottom: normalize(10) }]}>
             {periodSpray}
           </Text>
-          <Text style={[styles.h1, { marginBottom: normalize(10) }]}>
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.h1,
+              { marginBottom: normalize(10), width: 180, textAlign: 'right' },
+            ]}>
             {target}
           </Text>
           <Text style={[styles.h1, { marginBottom: normalize(10) }]}>
@@ -231,13 +274,15 @@ const styles = StyleSheet.create({
   h1: {
     fontFamily: font.SarabunMedium,
     fontSize: normalize(18),
+    lineHeight: normalize(30),
   },
   h2: {
     fontFamily: font.SarabunLight,
     fontSize: normalize(18),
+    lineHeight: normalize(30),
   },
   label: {
     fontFamily: font.SarabunMedium,
-    fontSize: normalize(20),
+    fontSize: normalize(19),
   },
 });
