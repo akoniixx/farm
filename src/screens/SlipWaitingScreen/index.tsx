@@ -37,7 +37,7 @@ export default function SlipWaitingScreen({
   const [isFocus, setIsFocus] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
   const [reason, setReason] = useState('');
-  const [showModalExtend, setShowModalExtend] = useState(true);
+  const [showModalExtend, setShowModalExtend] = useState(false);
   const [showModalExtendTwo, setModalExtendTwo] = useState(false);
   const [showModalExtendThree, setModalExtendThree] = useState(false);
   const refInput = React.useRef<any>(null);
@@ -66,11 +66,10 @@ export default function SlipWaitingScreen({
         dateAppointment: taskData.dateAppointment,
         farmerId: taskData.farmerId,
       });
-      console.log('res', res);
       if (res && res.success) {
-        console.log('res', JSON.stringify(res.data, null, 2));
+        setShowModalExtend(false);
+        setModalExtendTwo(false);
       }
-      setShowModalExtend(false);
     } catch (e) {
       console.log('error', e);
     }
@@ -82,7 +81,6 @@ export default function SlipWaitingScreen({
       if (res && res.success) {
         setReason('');
         await AsyncStorage.removeItem('taskId');
-        await AsyncStorage.removeItem('endTime');
         navigation.navigate('MainScreen');
       }
     } catch (e) {
@@ -95,18 +93,14 @@ export default function SlipWaitingScreen({
         const res = await TaskDatasource.getTaskByTaskId(taskId);
 
         if (res && res.data) {
-          const { countResend } = res.data;
+          const { countResend, updatedAt } = res.data;
           setLoading(false);
-          const endTime = moment(res.data.updatedAt)
-            .add(30, 'minutes')
-            .toISOString();
+          const endTime = moment(updatedAt).add(30, 'minutes').toISOString();
           const isAfter = moment(endTime).isAfter(moment());
-          console.log('isAfter', isAfter);
           if (!isAfter) {
-            setShowModalExtend(true);
-
-            // await AsyncStorage.removeItem('endTime');
-            // await AsyncStorage.removeItem('taskId');
+            (countResend === null || !countResend) && setShowModalExtend(true);
+            +countResend === 1 && setModalExtendTwo(true);
+            +countResend >= 2 && setModalExtendThree(true);
           }
           setTaskData({
             ...res.data,
@@ -257,8 +251,9 @@ export default function SlipWaitingScreen({
                     borderColor: isFocus
                       ? colors.greenLight
                       : colors.greyDivider,
+                    textAlignVertical: 'top',
 
-                    minHeight: Platform.OS === 'ios' ? 6 * 20 : 40,
+                    minHeight: Platform.OS === 'ios' ? 6 * 20 : 6 * 20,
                   }}
                 />
               </View>

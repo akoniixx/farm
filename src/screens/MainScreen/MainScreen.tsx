@@ -8,10 +8,11 @@ import {
   Dimensions,
   ImageBackground,
   Modal,
+  TouchableOpacity,
+  Platform,
 } from 'react-native';
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import icons from '../../assets/icons/icons';
 import { normalize } from '../../functions/Normalize';
@@ -20,8 +21,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
-import DronerUsed from '../../components/Carousel/DronerUsed';
-import DronerSugg from '../../components/Carousel/DronerCarousel';
+
 import { ActivityIndicator } from 'react-native-paper';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
 import { useIsFocused } from '@react-navigation/native';
@@ -626,6 +626,6 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
     borderTopRightRadius: normalize(30),
     borderTopLeftRadius: normalize(30),
-    height: 80,
+    height: Platform.OS === 'ios' ? normalize(80) : normalize(90),
   },
 });
