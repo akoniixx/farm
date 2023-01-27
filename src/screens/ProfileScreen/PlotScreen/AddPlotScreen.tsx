@@ -99,14 +99,14 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const API_KEY = 'AIzaSyAymsbEe0NVhDL8iHd8oabbr5xG0TFn8Jc';
   const { container, inputStyle } = styles;
   const inputBottomRadius = showPredictions
-  ? {
-      borderBottomLeftRadius: 10,
-      borderBottomRightRadius: 10,
-    }
-  : {
-      borderBottomLeftRadius: 10,
-      borderBottomRightRadius: 10,
-    };
+    ? {
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+      }
+    : {
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+      };
 
   useEffect(() => {
     getProfile();
@@ -771,8 +771,8 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                     </Text>
                   </View>
                   <View style={styles.container}>
-                    <View style={{paddingVertical: 20}}>
-                    <TextInput
+                    <View style={{ paddingVertical: 20 }}>
+                      <TextInput
                         clearButtonMode="always"
                         style={[inputStyle, inputBottomRadius]}
                         placeholder="ระบุพื้นที่แปลงเกษตร"
@@ -781,8 +781,8 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                         onChangeText={searchPlotArea}
                       />
                     </View>
-                     
-                    <ScrollView >
+
+                    <ScrollView>
                       {plotAreas !== undefined &&
                         plotAreas.map((v: any, i: any) => (
                           <TouchableOpacity>

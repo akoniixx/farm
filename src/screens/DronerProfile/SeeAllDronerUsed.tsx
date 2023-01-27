@@ -18,6 +18,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import AllDronerUsed from '../MainScreen/AllDronerUsed';
 import FavDronerUsed from '../MainScreen/FavDronerUsed';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const SeeAllDronerUsed: React.FC<any> = ({ navigation, route }) => {
   const Stack = createNativeStackNavigator();
@@ -28,6 +29,7 @@ const SeeAllDronerUsed: React.FC<any> = ({ navigation, route }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
   const date = new Date().toLocaleDateString();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getProfile();
@@ -36,13 +38,16 @@ const SeeAllDronerUsed: React.FC<any> = ({ navigation, route }) => {
 
   const getProfile = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-    ProfileDatasource.getProfile(farmer_id!).then(res => {
-      dispatch({
-        type: 'InitProfile',
-        name: `${res.firstname} ${res.lastname}`,
-        plotItem: res.farmerPlot,
-      });
-    });
+    ProfileDatasource.getProfile(farmer_id!)
+      .then(res => {
+        dispatch({
+          type: 'InitProfile',
+          name: `${res.firstname} ${res.lastname}`,
+          plotItem: res.farmerPlot,
+        });
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   };
   const dronerSugUsed = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -54,9 +59,12 @@ const SeeAllDronerUsed: React.FC<any> = ({ navigation, route }) => {
       date,
       limit,
       offset,
-    ).then(res => {
-      setTaskSugUsed(res);
-    });
+    )
+      .then(res => {
+        setTaskSugUsed(res);
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   };
   return (
     <SafeAreaView style={[stylesCentral.container]}>
@@ -99,6 +107,11 @@ const SeeAllDronerUsed: React.FC<any> = ({ navigation, route }) => {
           }}
         />
       </Tab.Navigator>
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </SafeAreaView>
   );
 };

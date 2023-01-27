@@ -183,9 +183,11 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                       }}>
                       <Image
                         source={icons.drone}
-                        style={{ height: normalize(76), width: normalize(105)}}
+                        style={{ height: normalize(76), width: normalize(105) }}
                       />
-                      <Text style={[styles.font, {top: 6}]}>จ้างโดรนเกษตร</Text>
+                      <Text style={[styles.font, { top: 6 }]}>
+                        จ้างโดรนเกษตร
+                      </Text>
                     </LinearGradient>
                   </TouchableOpacity>
                   <View style={{ width: normalize(10) }}></View>
@@ -206,7 +208,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                         source={icons.plots}
                         style={{ height: normalize(76), width: normalize(105) }}
                       />
-                      <Text style={[styles.font1, {top: 6}]}>แปลงของคุณ</Text>
+                      <Text style={[styles.font1, { top: 6 }]}>แปลงของคุณ</Text>
                     </LinearGradient>
                   </TouchableOpacity>
                 </View>

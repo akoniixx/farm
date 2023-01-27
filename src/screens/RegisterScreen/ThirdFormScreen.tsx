@@ -668,36 +668,36 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   </View>
                 </TouchableOpacity>
                 <View style={{ flex: 1 }}>
-                <MapView.Animated
-                      mapType="satellite"
-                      minZoomLevel={14}
-                      maxZoomLevel={18}
-                      style={styles.map}
-                      onPress={e => {
-                        setPosition({
-                          ...position,
-                          latitude: e.nativeEvent.coordinate.latitude,
-                          longitude: e.nativeEvent.coordinate.longitude,
-                        });
-                      }}
-                      initialRegion={position}
-                      provider={PROVIDER_GOOGLE}
-                      region={{
+                  <MapView.Animated
+                    mapType="satellite"
+                    minZoomLevel={14}
+                    maxZoomLevel={18}
+                    style={styles.map}
+                    onPress={e => {
+                      setPosition({
+                        ...position,
+                        latitude: e.nativeEvent.coordinate.latitude,
+                        longitude: e.nativeEvent.coordinate.longitude,
+                      });
+                    }}
+                    initialRegion={position}
+                    provider={PROVIDER_GOOGLE}
+                    region={{
+                      latitude: position.latitude,
+                      longitude: position.longitude,
+                      latitudeDelta: 0.0,
+                      longitudeDelta: 0.0,
+                    }}
+                    showsUserLocation={true}
+                    showsMyLocationButton={true}>
+                    <Marker
+                      image={image.mark}
+                      coordinate={{
                         latitude: position.latitude,
                         longitude: position.longitude,
-                        latitudeDelta: 0.0,
-                        longitudeDelta: 0.0,
                       }}
-                      showsUserLocation={true}
-                      showsMyLocationButton={true}>
-                      <Marker
-                        image={image.mark}
-                        coordinate={{
-                          latitude: position.latitude,
-                          longitude: position.longitude,
-                        }}
-                      />
-                    </MapView.Animated>
+                    />
+                  </MapView.Animated>
                 </View>
                 <Text style={styles.head}>จุดสังเกต</Text>
                 <TextInput

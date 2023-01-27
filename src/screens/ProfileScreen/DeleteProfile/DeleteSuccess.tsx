@@ -14,12 +14,11 @@ import { normalize } from '../../../functions/Normalize';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../../styles/StylesCentral';
 import * as RootNavigation from '../../../navigations/RootNavigation';
-import AsyncStorage  from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { socket } from '../../../functions/utility';
 import { Authentication } from '../../../datasource/AuthDatasource';
 
 const DeleteSuccess: React.FC<any> = ({ navigation }) => {
-
   const onLogout = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     socket.removeAllListeners(`send-task-${farmer_id!}`);
@@ -58,11 +57,10 @@ const DeleteSuccess: React.FC<any> = ({ navigation }) => {
             color={colors.greenLight}
             fontColor={'white'}
             onPress={async () => {
-              await onLogout()
+              await onLogout();
               RootNavigation.navigate('Auth', {
-               screen: 'Onboarding',
-             });
-
+                screen: 'Onboarding',
+              });
             }}
           />
         </View>

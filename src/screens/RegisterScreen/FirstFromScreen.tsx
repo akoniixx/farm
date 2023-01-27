@@ -327,10 +327,16 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                     </Text>
                     <View>
                       <DatePickerCustom
-                        startYear={moment().subtract(76,'years').get('year') +543}
-                        value={date ? date : moment().set({date : 1}).subtract(76,'years')}
+                        startYear={
+                          moment().subtract(76, 'years').get('year') + 543
+                        }
+                        value={
+                          date
+                            ? date
+                            : moment().set({ date: 1 }).subtract(76, 'years')
+                        }
                         onHandleChange={(d: string) => {
-                        setDate(d);
+                          setDate(d);
                         }}
                       />
                     </View>

@@ -1,6 +1,15 @@
 import { Avatar } from '@rneui/base/dist/Avatar/Avatar';
 import React, { useEffect, useReducer, useState } from 'react';
-import { Dimensions, Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  Image,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
@@ -19,11 +28,13 @@ import moment from 'moment';
 import { CardDetailDroner } from '../../components/Carousel/CardTaskDetailDroner';
 import { SliderHeader } from 'react-native-image-slider-banner/src/sliderHeader';
 import Animated from 'react-native-reanimated';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const [visible, setIsVisible] = useState(false);
   const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const [detailState, dispatch] = useReducer(
     detailDronerReducer,
     initDetailDronerState,
@@ -35,12 +46,10 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   }, []);
 
   const dronerDetails = async () => {
+    setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-    console.log(farmer_id);
     const droner_id = await AsyncStorage.getItem('droner_id');
-    console.log(droner_id);
     const plot_id = await AsyncStorage.getItem('plot_id');
-    console.log(plot_id);
     const limit = 0;
     const offset = 0;
     TaskSuggestion.DronerDetail(
@@ -50,25 +59,27 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       date,
       limit,
       offset,
-    ).then(res => {
-      setData(res[0].droner_queue);
-      dispatch({
-        type: 'InitDroner',
-        name: `${res[0].firstname} ${res[0].lastname}`,
-        distance: `${res[0].street_distance}`,
-        imagePro: `${res[0].image_droner}`,
-        imageTask: res[0].image_task,
-        rate: res[0].rating_avg,
-        total_task: res[0].count_rating,
-        district: `${res[0].subdistrict_name}`,
-        province: `${res[0].province_name}`,
-        droneBand: `${res[0].drone_brand}`,
-        price: `${res[0].price_per_rai}`,
-        dronerQueue: res[0].droner_queue,
-      });
-    });
+    )
+      .then(res => {
+        setData(res[0].droner_queue);
+        dispatch({
+          type: 'InitDroner',
+          name: `${res[0].firstname} ${res[0].lastname}`,
+          distance: `${res[0].street_distance}`,
+          imagePro: `${res[0].image_droner}`,
+          imageTask: res[0].image_task,
+          rate: res[0].rating_avg,
+          total_task: res[0].count_rating,
+          district: `${res[0].subdistrict_name}`,
+          province: `${res[0].province_name}`,
+          droneBand: `${res[0].drone_brand}`,
+          price: `${res[0].price_per_rai}`,
+          dronerQueue: res[0].droner_queue,
+        });
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   };
-  console.log(detailState.name);
   const baseDate = new Date();
   const weekDays: string[] = [];
   for (let i = 0; i < 7; i++) {
@@ -383,6 +394,11 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           </Text>
         </View>
         <View style={{ height: 20, backgroundColor: '#F8F9FA' }}></View>
+        <Spinner
+          visible={loading}
+          textContent={'Loading...'}
+          textStyle={{ color: '#FFF' }}
+        />
       </ScrollView>
       <View>
         <MainButton

@@ -318,7 +318,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
     setplotDataUI(someArray);
     deTailPlot.current.hide();
   };
-console.log(lat,long)
+  console.log(lat, long);
   return (
     <>
       <SafeAreaView style={stylesCentral.container}>

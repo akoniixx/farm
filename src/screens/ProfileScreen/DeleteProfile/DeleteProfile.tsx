@@ -55,11 +55,11 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
         stepTab: '0',
         sortField: selectedField.value,
         sortDirection: selectedField.direction,
-        filterStatus: 'WAIT_RECEIVE' || 'IN_PROGRESS'
+        filterStatus: 'WAIT_RECEIVE' || 'IN_PROGRESS',
       };
       MyJobDatasource.getMyJobsList(params)
         .then(res => {
-          console.log(res.length)
+          console.log(res.length);
           if (res !== undefined) {
             setTask(res);
             setLoading(false);
@@ -191,8 +191,7 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
               color={colors.error}
               fontColor={'white'}
               onPress={() => {
-                setToggleModal(!toggleModal)
-                
+                setToggleModal(!toggleModal);
               }}
             />
           </View>

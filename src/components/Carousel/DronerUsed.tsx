@@ -6,6 +6,7 @@ import {
   TextInput,
   ImageBackground,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import React, { useState } from 'react';
 import { normalize } from '../../functions/Normalize';
@@ -43,7 +44,7 @@ const DronerUsed: React.FC<dronerUsedData> = ({
         <ImageBackground
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
-          style={{ height: normalize(70) }}
+          style={{ height: normalize(60) }}
           source={background === '' ? image.bg_droner : { uri: profile }}>
           <View key={index}>
             <Image
@@ -67,7 +68,7 @@ const DronerUsed: React.FC<dronerUsedData> = ({
                 />
               </TouchableOpacity>
             </View>
-            <View style={{ alignSelf: 'center' }}>
+            <View style={{ alignSelf: 'center', bottom: 10 }}>
               <Avatar
                 size={normalize(56)}
                 source={profile === null ? image.empty_plot : { uri: profile }}
@@ -78,7 +79,7 @@ const DronerUsed: React.FC<dronerUsedData> = ({
                 }}
               />
             </View>
-            <View style={{ paddingLeft: 5 }}>
+            <View style={{ paddingLeft: 5, bottom: 10 }}>
               <Text numberOfLines={1} style={[styles.h1, { width: 150 }]}>
                 {name}
               </Text>
@@ -162,12 +163,26 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
   },
   cards: {
-    backgroundColor: '#F7FFF0',
-    height: normalize(220),
-    width: normalize(160),
-    borderRadius: 10,
-    borderWidth: 0.3,
-    left: '10%',
+    ...Platform.select({
+      ios: {
+        backgroundColor: '#F7FFF0',
+        height: normalize(220),
+        width: normalize(160),
+        borderRadius: 10,
+        borderWidth: 1,
+        left: '10%',
+        borderColor: colors.bg,
+      },
+      android: {
+        backgroundColor: '#F7FFF0',
+        height: normalize(250),
+        width: normalize(160),
+        borderRadius: 10,
+        borderWidth: 1,
+        left: '10%',
+        borderColor: colors.bg,
+      },
+    }),
   },
 });
 

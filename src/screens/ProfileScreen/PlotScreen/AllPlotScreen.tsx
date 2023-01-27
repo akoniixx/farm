@@ -44,7 +44,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
       .then(async res => {
-        setReload(!reload)
+        setReload(!reload);
         setFarmerPlot(res.farmerPlot);
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
@@ -117,9 +117,19 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
             </TouchableOpacity>
             <Text
               style={{
-                fontFamily: font.AnuphanBold,
-                fontSize: 22,
-                left: normalize(100),
+                ...Platform.select({
+                  ios: {
+                    fontFamily: font.AnuphanBold,
+                    fontSize: 22,
+                    left: normalize(100),
+                  },
+                  android: {
+                    fontFamily: font.AnuphanBold,
+                    fontSize: 22,
+                    left: normalize(100),
+                    color: colors.fontBlack,
+                  },
+                }),
               }}>
               แปลงของคุณ
             </Text>
@@ -136,7 +146,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                     alignSelf: 'center',
                     backgroundColor: '#FFF9F2',
                     borderRadius: 10,
-                    top: 10
+                    top: 10,
                   }}>
                   <View style={{ padding: 15, alignSelf: 'center' }}>
                     <View style={{ flexDirection: 'row' }}>
@@ -385,10 +395,10 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
           </View>
         </Modal>
         <Spinner
-        visible={loading}
-        textContent={'Loading...'}
-        textStyle={{ color: '#FFF' }}
-      />
+          visible={loading}
+          textContent={'Loading...'}
+          textStyle={{ color: '#FFF' }}
+        />
       </SafeAreaView>
     </>
   );
