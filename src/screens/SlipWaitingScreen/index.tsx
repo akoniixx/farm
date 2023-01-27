@@ -56,28 +56,23 @@ export default function SlipWaitingScreen({
     taskNo: '',
     targetSpray: [],
     totalPrice: '',
+    countResend: '',
   });
   const onSearchExtend = async () => {
-    const extendObj = await AsyncStorage.getItem('extendObj');
-    const taskId = await AsyncStorage.getItem('taskId');
-    const { round = 1 } = JSON.parse(extendObj || '');
-    const newExtendObj = {
-      taskId,
-      round: +round + 1,
-    };
-    if (round && +round === 1) {
-      await AsyncStorage.setItem('extendObj', JSON.stringify(newExtendObj));
+    try {
+      const res = await TaskDatasource.extendFindingDroner({
+        taskId,
+        farmerPlotId: taskData.farmerPlotId,
+        dateAppointment: taskData.dateAppointment,
+        farmerId: taskData.farmerId,
+      });
+      if (res && res.success) {
+        setShowModalExtend(false);
+        setModalExtendTwo(false);
+      }
+    } catch (e) {
+      console.log('error', e);
     }
-    if (round && +round === 2) {
-      await AsyncStorage.setItem('roundTime', JSON.stringify(newExtendObj));
-    }
-
-    await AsyncStorage.setItem(
-      'endTime',
-      moment().add(1, 'minutes').toISOString(),
-    );
-
-    setShowModalExtend(false);
   };
   const onSubmitCancelTask = async () => {
     try {
@@ -86,7 +81,6 @@ export default function SlipWaitingScreen({
       if (res && res.success) {
         setReason('');
         await AsyncStorage.removeItem('taskId');
-        await AsyncStorage.removeItem('endTime');
         navigation.navigate('MainScreen');
       }
     } catch (e) {
@@ -99,33 +93,14 @@ export default function SlipWaitingScreen({
         const res = await TaskDatasource.getTaskByTaskId(taskId);
 
         if (res && res.data) {
+          const { countResend, updatedAt } = res.data;
           setLoading(false);
-          const extObj = await AsyncStorage.getItem('extendObj');
-          const extendObj = JSON.parse(extObj || '');
-          const endTime = await AsyncStorage.getItem('endTime');
+          const endTime = moment(updatedAt).add(30, 'minutes').toISOString();
           const isAfter = moment(endTime).isAfter(moment());
           if (!isAfter) {
-            const roundTime = {
-              taskId,
-              round: 1,
-            };
-            if (Object.keys(extendObj).length > 0 && extendObj.round === 1) {
-              setModalExtendTwo(true);
-            } else if (
-              Object.keys(extendObj).length > 0 &&
-              extendObj.round === 2
-            ) {
-              setModalExtendThree(true);
-            } else {
-              setShowModalExtend(true);
-              await AsyncStorage.setItem(
-                'extendObj',
-                JSON.stringify(roundTime),
-              );
-            }
-
-            // await AsyncStorage.removeItem('endTime');
-            // await AsyncStorage.removeItem('taskId');
+            (countResend === null || !countResend) && setShowModalExtend(true);
+            +countResend === 1 && setModalExtendTwo(true);
+            +countResend >= 2 && setModalExtendThree(true);
           }
           setTaskData({
             ...res.data,
@@ -276,8 +251,9 @@ export default function SlipWaitingScreen({
                     borderColor: isFocus
                       ? colors.greenLight
                       : colors.greyDivider,
+                    textAlignVertical: 'top',
 
-                    minHeight: Platform.OS === 'ios' ? 6 * 20 : 40,
+                    minHeight: Platform.OS === 'ios' ? 6 * 20 : 6 * 20,
                   }}
                 />
               </View>
