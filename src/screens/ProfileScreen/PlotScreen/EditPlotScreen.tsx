@@ -327,7 +327,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
     setplotDataUI(someArray);
     deTailPlot.current.hide();
   };
- 
+
   return (
     <>
       <SafeAreaView style={stylesCentral.container}>
@@ -509,7 +509,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       }}>
                       <Image source={image.map} style={styles.imageStyle} />
                       <Text
-                      numberOfLines={1}
+                        numberOfLines={1}
                         style={{
                           fontFamily: fonts.AnuphanMedium,
                           fontSize: normalize(16),

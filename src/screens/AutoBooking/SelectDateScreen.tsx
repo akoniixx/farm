@@ -69,7 +69,8 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
         curentPosition={0}
         onPressBack={() => {
           mixpanel.track('Tab back from select date screen');
-          navigation.goBack()}}
+          navigation.goBack();
+        }}
         label={'เลือกวันและเวลาฉีดพ่น'}
       />
 
@@ -299,7 +300,8 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 width={150}
                 onPress={() => {
                   mixpanel.track('Tab cancel calendar');
-                  setOpenCalendar(false)}}
+                  setOpenCalendar(false);
+                }}
               />
               <MainButton
                 label="บันทึก"
@@ -382,7 +384,8 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 width={150}
                 onPress={() => {
                   mixpanel.track('Tab cancel time picker');
-                  setopenTimePicker(false)}}
+                  setopenTimePicker(false);
+                }}
               />
               <MainButton
                 label="บันทึก"

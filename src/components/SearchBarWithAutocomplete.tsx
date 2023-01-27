@@ -15,7 +15,9 @@ import {
   ToastAndroid,
 } from 'react-native';
 import { colors, font, icons } from '../assets';
-import ThirdFormScreen, { PredictionType } from '../screens/RegisterScreen/ThirdFormScreen';
+import ThirdFormScreen, {
+  PredictionType,
+} from '../screens/RegisterScreen/ThirdFormScreen';
 import { normalize } from '@rneui/themed';
 import Geolocation from 'react-native-geolocation-service';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -203,9 +205,10 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
             setInputSize({ height, width });
           }}
         />
-          </View>
-      <TouchableOpacity onPress={() => {
-        getLocation
+      </View>
+      <TouchableOpacity
+        onPress={() => {
+          getLocation;
         }}>
         <View
           style={{

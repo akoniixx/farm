@@ -157,8 +157,8 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
               <Text style={styles.h3}>ขั้นตอนที่ 2 จาก 4</Text>
               <Text style={[styles.h1]}>
                 ระบุที่อยู่
-                <Text style={{ fontSize: normalize(18), color: '#A7AEB5'}}>
-                 {`  (ไม่จำเป็นต้องระบุ)`}
+                <Text style={{ fontSize: normalize(18), color: '#A7AEB5' }}>
+                  {`  (ไม่จำเป็นต้องระบุ)`}
                 </Text>
               </Text>
               <ScrollView style={{ top: '5%' }}>

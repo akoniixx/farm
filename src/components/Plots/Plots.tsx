@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, View, TextInput, Platform } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Platform,
+} from 'react-native';
 import React from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons } from '../../assets';
@@ -94,7 +101,7 @@ const PlotsItem: React.FC<AddPlot> = ({
             alignItems: 'center',
             marginBottom: normalize(10),
           },
-        })
+        }),
       }}>
       <View
         style={{

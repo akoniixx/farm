@@ -49,25 +49,25 @@ import {
   LocationInPostcodeSelect,
   LocationSelect,
 } from '../../components/Location/Location';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
-  const initialFormRegisterState = {
-    name: '',
-    surname: '',
+  const [initProfile, setInitProfile] = useState({
+    firstname: '',
+    lastname: '',
     birthDate: '',
-    tel: '',
-    no: '',
-    address: '',
+    telephone: '',
+    image: '',
+    address1: '',
+    address2: '',
     province: '',
     district: '',
     subdistrict: '',
     postal: '',
-  };
+  });
 
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  const [value, setValue] = useState<any>();
+  const [value, setValue] = useState<any>([]);
   const [items, setItems] = useState<any>([]);
   const [itemsDistrict, setItemDistrict] = useState([]);
   const [itemsSubDistrict, setItemSubDistrict] = useState([]);
@@ -80,10 +80,6 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const DistriSheet = useRef<any>();
   const SubDistriSheet = useRef<any>();
   const [address, setAddress] = useState<any>([]);
-  const [formState, dispatch] = useReducer(
-    registerReducer,
-    initialFormRegisterState,
-  );
 
   useEffect(() => {
     getProfile();
@@ -93,7 +89,9 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
       .then(res => {
-        setLoading(false);
+        console.log(res);
+        setValue(res);
+        setAddress(res.address);
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
@@ -108,7 +106,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 }
               });
               if (!res.birthDate) {
-                formState({
+                setInitProfile({
                   firstname: res.firstname,
                   lastname: res.lastname,
                   birthDate: '',
@@ -122,7 +120,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   postal: res.address.postcode,
                 });
               } else {
-                formState({
+                setInitProfile({
                   firstname: res.firstname,
                   lastname: res.lastname,
                   birthDate: res.birthDate,
@@ -150,7 +148,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   }
                 });
                 if (!res.birthDate) {
-                  dispatch({
+                  setInitProfile({
                     firstname: res.firstname,
                     lastname: res.lastname,
                     birthDate: '',
@@ -166,10 +164,12 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 } else {
                   const datetime = res.birthDate;
                   const date = datetime.split('T')[0];
-                  dispatch({
+                  setInitProfile({
                     firstname: res.firstname,
                     lastname: res.lastname,
-                    birthDate: res.birthDate,
+                    birthDate: `${date.split('-')[2]}/${date.split('-')[1]}/${
+                      parseInt(date.split('-')[0]) + 543
+                    }`,
                     telephone: res.telephoneNo,
                     image: resImg.url,
                     address1: res.address.address1,
@@ -224,7 +224,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
       );
     }
   }, [province, district]);
-console.log(1,formState)
+
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -249,9 +249,9 @@ console.log(1,formState)
                 <Avatar
                   size={normalize(109)}
                   source={
-                    formState.image === ''
+                    initProfile.image === ''
                       ? icons.avatar
-                      : { uri: formState.image }
+                      : { uri: initProfile.image }
                   }
                   avatarStyle={{
                     borderRadius: normalize(60),
@@ -285,7 +285,7 @@ console.log(1,formState)
             </View>
             <Text style={styles.head}>ชื่อ*</Text>
             <TextInput
-              value={formState.firstname}
+              value={initProfile.firstname}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'ระบุชื่อ'}
@@ -293,7 +293,7 @@ console.log(1,formState)
             />
             <Text style={styles.head}>นามสกุล*</Text>
             <TextInput
-              value={formState.lastname}
+              value={initProfile.lastname}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'นามสกุล'}
@@ -311,7 +311,7 @@ console.log(1,formState)
               ]}>
               <TextInput
                 value={momentExtend.toBuddhistYear(
-                  formState.birthDate,
+                  value.birthDate,
                   'DD MMMM YYYY',
                 )}
                 editable={false}
@@ -338,28 +338,27 @@ console.log(1,formState)
             <TextInput
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
-              value={formState.telephone}
+              value={initProfile.telephone}
             />
             <Text style={styles.headAdd}>ที่อยู่ของคุณ</Text>
             <Text style={styles.head}>บ้านเลขที่</Text>
             <TextInput
-              value={formState.address1}
+              value={initProfile.address1}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
-              placeholder={'-'}
+              placeholder={'บ้านเลขที่'}
               placeholderTextColor={colors.disable}
             />
             <Text style={styles.head}>รายละเอียดที่อยู่</Text>
             <TextInput
-              value={formState.address2}
+              value={initProfile.address2}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholderTextColor={colors.disable}
-              placeholder="-"
             />
             <Text style={styles.head}>จังหวัด</Text>
             <TextInput
-              value={formState.province}
+              value={initProfile.province}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'ระบุชื่อ'}
@@ -367,7 +366,7 @@ console.log(1,formState)
             />
             <Text style={styles.head}>อำเภอ</Text>
             <TextInput
-              value={formState.district}
+              value={initProfile.district}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'ระบุชื่อ'}
@@ -375,7 +374,7 @@ console.log(1,formState)
             />
             <Text style={styles.head}>ตำบล</Text>
             <TextInput
-              value={formState.subdistrict}
+              value={initProfile.subdistrict}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'ระบุชื่อ'}
@@ -383,7 +382,7 @@ console.log(1,formState)
             />
             <Text style={styles.head}>รหัสไปรษณีย์</Text>
             <TextInput
-              value={formState.postal}
+              value={initProfile.postal}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'รหัสไปรษณีย์'}
@@ -549,11 +548,6 @@ console.log(1,formState)
           </View>
         </ActionSheet>
       </View>
-      <Spinner
-        visible={loading}
-        textContent={'Loading...'}
-        textStyle={{ color: '#FFF' }}
-      />
     </SafeAreaView>
   );
 };

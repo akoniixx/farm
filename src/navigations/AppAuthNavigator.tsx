@@ -42,7 +42,6 @@ const AppAuthNavigator: React.FC = () => {
       <Stack.Screen name="EditFarmerPlot" component={EditFarmerPlot} />
       <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
       <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
-
     </Stack.Navigator>
   );
 };

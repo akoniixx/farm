@@ -125,8 +125,12 @@ export const CardTask: React.FC<taskListProps> = ({ task }) => {
       </View>
       {task.task_late_status && task.status === 'WAIT_START' ? (
         <View style={styles.lateBox}>
-          <Text style={[styles.plot, { fontFamily: fonts.SarabunMedium }]}>ขณะนี้! เลยเวลานัดหมาย</Text>
-          <Text style={[styles.plot, { fontFamily: fonts.SarabunMedium }]}>กรุณาติดต่อนักบินโดรนให้กดเริ่มงาน</Text>
+          <Text style={[styles.plot, { fontFamily: fonts.SarabunMedium }]}>
+            ขณะนี้! เลยเวลานัดหมาย
+          </Text>
+          <Text style={[styles.plot, { fontFamily: fonts.SarabunMedium }]}>
+            กรุณาติดต่อนักบินโดรนให้กดเริ่มงาน
+          </Text>
         </View>
       ) : (
         <></>
@@ -139,15 +143,15 @@ export const CardTask: React.FC<taskListProps> = ({ task }) => {
         }}>
         {task.status === 'WAIT_RECEIVE' ? (
           <WaittingCard />
-        ) : task.status === 'CANCELED' ? <>
-        </> :
+        ) : task.status === 'CANCELED' ? (
+          <></>
+        ) : (
           <DronerCard
             name={task.droner.firstname + ' ' + task.droner.lastname}
             profile={task.droner.image_profile}
             telnumber={task.droner.telephone_no}
           />
-
-        }
+        )}
       </View>
     </View>
   );

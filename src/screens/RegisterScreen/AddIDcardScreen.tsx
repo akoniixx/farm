@@ -271,15 +271,14 @@ const AddIDcardScreen: React.FC<any> = ({ navigation, route }) => {
                     justifyContent: 'center',
                     borderRadius: normalize(3),
                   }}>
-                     <TouchableOpacity   
-                      onPress={() => {
-                        setOpenModalCard(false)
-                      }}>
-                      <View style={{alignSelf: 'flex-end'}}>
-                        <Image source={icons.close} 
-                      />
-                      </View>
-                      </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setOpenModalCard(false);
+                    }}>
+                    <View style={{ alignSelf: 'flex-end' }}>
+                      <Image source={icons.close} />
+                    </View>
+                  </TouchableOpacity>
                   {/* <MainButton
                     fontFamily={font.SarabunLight}
                     label="ถ่ายภาพ"

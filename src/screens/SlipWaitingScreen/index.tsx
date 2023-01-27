@@ -130,9 +130,11 @@ export default function SlipWaitingScreen({
       <Header
         style={styles.header}
         componentLeft={
-          <TouchableOpacity onPress={() => {
-            mixpanel.track('Tab back to main screen from waiting screen');
-            navigation.navigate('MainScreen')}}>
+          <TouchableOpacity
+            onPress={() => {
+              mixpanel.track('Tab back to main screen from waiting screen');
+              navigation.navigate('MainScreen');
+            }}>
             <Image
               source={icons.arrowUp}
               style={{
@@ -146,7 +148,7 @@ export default function SlipWaitingScreen({
         componentRight={
           <TouchableOpacity
             onPress={() => {
-               mixpanel.track('Tab cancel booking from waiting screen');
+              mixpanel.track('Tab cancel booking from waiting screen');
               setIsShowModal(true);
             }}>
             <Text

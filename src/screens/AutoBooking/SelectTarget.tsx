@@ -87,7 +87,8 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
         curentPosition={2}
         onPressBack={() => {
           mixpanel.track('Tab back from select target screen');
-          navigation.goBack()}}
+          navigation.goBack();
+        }}
         label={'เป้าหมายการพ่น'}
       />
       <View
@@ -244,7 +245,8 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => {
                 mixpanel.track('Tab เกษตรกรเตรียมเอง');
-                setSelectedCheckbox('เกษตรกรเตรียมเอง')}}>
+                setSelectedCheckbox('เกษตรกรเตรียมเอง');
+              }}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -275,7 +277,8 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => {
                 mixpanel.track('Tab ให้นักบินโดรนเตรียมให้');
-                setSelectedCheckbox('ให้นักบินโดรนเตรียมให้')}}>
+                setSelectedCheckbox('ให้นักบินโดรนเตรียมให้');
+              }}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -319,7 +322,8 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
               color={colors.greenLight}
               onPress={() => {
                 mixpanel.track('Tab submit from select target screen');
-                onSubmit()}}
+                onSubmit();
+              }}
               style={{}}
             />
           </View>

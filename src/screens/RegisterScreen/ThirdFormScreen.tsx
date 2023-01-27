@@ -304,7 +304,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
       console.log(e);
     }
   };
-console.log(1,lat,long)
+  console.log(1, lat, long);
   const fetchLocation = async (text?: string) => {
     await QueryLocation.getSubdistrict(0, text).then(res => {
       setLocation(res);
@@ -485,7 +485,7 @@ console.log(1,lat,long)
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <View style={{ justifyContent: 'space-around' }}>
               <ScrollView>
-                  <Text style={[styles.head, { marginTop: normalize(15) }]}>
+                <Text style={[styles.head, { marginTop: normalize(15) }]}>
                   ชื่อแปลงเกษตร
                 </Text>
                 <TextInput
@@ -648,12 +648,11 @@ console.log(1,lat,long)
                     }}>
                     <Image source={image.map} style={styles.imageStyle} />
                     <Text
-                    numberOfLines={1}
+                      numberOfLines={1}
                       style={{
                         fontFamily: fonts.AnuphanMedium,
                         fontSize: normalize(16),
                         color: colors.gray,
-                        
                       }}>
                       {!search.term ? (
                         <Text
@@ -665,7 +664,7 @@ console.log(1,lat,long)
                         </Text>
                       ) : (
                         <Text
-                        numberOfLines={1}
+                          numberOfLines={1}
                           style={{
                             fontFamily: font.SarabunLight,
                             color: colors.fontGrey,
@@ -758,16 +757,17 @@ console.log(1,lat,long)
                     }}
                   />
                 </View>
-                <View style={{ 
-                   ...Platform.select({
-                    ios: {
-                    height: normalize(10)
-                    },
-                    android: {
-                      height: normalize(100)
-                    },
-                  })
-                 }}></View>
+                <View
+                  style={{
+                    ...Platform.select({
+                      ios: {
+                        height: normalize(10),
+                      },
+                      android: {
+                        height: normalize(100),
+                      },
+                    }),
+                  }}></View>
               </ScrollView>
             </View>
           </KeyboardAvoidingView>

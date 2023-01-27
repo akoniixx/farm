@@ -269,16 +269,15 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       justifyContent: 'center',
                       borderRadius: normalize(3),
                     }}>
-                      <TouchableOpacity   
+                    <TouchableOpacity
                       onPress={() => {
-                        setOpenModal(false)
+                        setOpenModal(false);
                       }}>
-                      <View style={{alignSelf: 'flex-end'}}>
-                        <Image source={icons.close} 
-                      />
+                      <View style={{ alignSelf: 'flex-end' }}>
+                        <Image source={icons.close} />
                       </View>
-                      </TouchableOpacity>
-                      
+                    </TouchableOpacity>
+
                     {/* <MainButton
                       fontFamily={font.SarabunLight}
                       label="ถ่ายภาพ"

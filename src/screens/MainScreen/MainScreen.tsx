@@ -145,7 +145,6 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profilestate.plotItem]);
-
   useEffect(() => {
     const getTaskByTaskId = async () => {
       try {
@@ -187,97 +186,95 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
         flex: 1,
       }}>
       <ScrollView>
-      <View style={[stylesCentral.container]}>
-        <View style={{ backgroundColor: colors.white }}>
-          <View style={{ height: normalize(990) }}>
-            <ImageBackground
-              source={image.bgHead}
-              style={{
-                width: (width * 380) / 375,
-                height: (height * 250) / 812,
-              }}>
-              <View style={styles.headCard}>
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: font.AnuphanMedium,
-                      fontSize: normalize(18),
-                      color: colors.fontBlack,
-                    }}>
-                    ยินดีต้อนรับ
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: font.AnuphanBold,
-                      fontSize: normalize(26),
-                      color: colors.fontBlack,
-                    }}>
-                    {profilestate.name}
-                  </Text>
-                </View>
-              </View>
-              <View
+        <View style={[stylesCentral.container]}>
+          <View style={{ backgroundColor: colors.white }}>
+            <View style={{ height: normalize(990) }}>
+              <ImageBackground
+                source={image.bgHead}
                 style={{
-                  flexDirection: 'row',
-                  top: '25%',
-                  alignSelf: 'center',
+                  width: (width * 380) / 375,
+                  height: (height * 250) / 812,
                 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    if (disableBooking) {
-                      setShowModalCantBooking(true);
-                    } else {
-                      mixpanel.track('Tab booking with login');
-                      navigation.navigate('SelectDateScreen');
-                    }
+                <View style={styles.headCard}>
+                  <View>
+                    <Text
+                      style={{
+                        fontFamily: font.AnuphanMedium,
+                        fontSize: normalize(18),
+                        color: colors.fontBlack,
+                      }}>
+                      ยินดีต้อนรับ
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: font.AnuphanBold,
+                        fontSize: normalize(26),
+                        color: colors.fontBlack,
+                      }}>
+                      {profilestate.name}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    top: '25%',
+                    alignSelf: 'center',
                   }}>
-                  <LinearGradient                     
-
-                    colors={['#61E097', '#3B996E']}
-                    style={{
-                      paddingVertical: normalize(10),
-                      width: normalize(166),
-                      height: normalize(137),
-                      borderRadius: 24,
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      borderColor: colors.greenLight,
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (disableBooking) {
+                        setShowModalCantBooking(true);
+                      } else {
+                        mixpanel.track('Tab booking with login');
+                        navigation.navigate('SelectDateScreen');
+                      }
                     }}>
-                    <Image
-                      source={icons.drone}
-                      style={{ height: normalize(76), width: normalize(105) }}
-                    />
-                    <Text style={styles.font}>จ้างโดรนเกษตร</Text>
-                  </LinearGradient>
-                </TouchableOpacity>
-                <View style={{ width: normalize(10) }}></View>
-                <TouchableOpacity
-                  onPress={() => {
-                    mixpanel.track('Tab your plot with login')
-                    navigation.navigate('AllPlotScreen')}
-                  }
-                   >
-                  <LinearGradient
-                    colors={['#FFFFFF', '#ECFBF2']}
-                    style={{
-                      paddingVertical: normalize(10),
-                      width: normalize(166),
-                      height: normalize(137),
-                      borderRadius: 24,
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      borderColor: colors.greenLight,
+                    <LinearGradient
+                      colors={['#61E097', '#3B996E']}
+                      style={{
+                        paddingVertical: normalize(10),
+                        width: normalize(166),
+                        height: normalize(137),
+                        borderRadius: 24,
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: colors.greenLight,
+                      }}>
+                      <Image
+                        source={icons.drone}
+                        style={{ height: normalize(76), width: normalize(105) }}
+                      />
+                      <Text style={styles.font}>จ้างโดรนเกษตร</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                  <View style={{ width: normalize(10) }}></View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      mixpanel.track('Tab your plot with login');
+                      navigation.navigate('AllPlotScreen');
                     }}>
-                    <Image
-                      source={icons.plots}
-                      style={{ height: normalize(76), width: normalize(105) }}
-                    />
-                    <Text style={styles.font1}>แปลงของคุณ</Text>
-                  </LinearGradient>
-                </TouchableOpacity>
-              </View>
-            </ImageBackground>
-            {/* <View
+                    <LinearGradient
+                      colors={['#FFFFFF', '#ECFBF2']}
+                      style={{
+                        paddingVertical: normalize(10),
+                        width: normalize(166),
+                        height: normalize(137),
+                        borderRadius: 24,
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: colors.greenLight,
+                      }}>
+                      <Image
+                        source={icons.plots}
+                        style={{ height: normalize(76), width: normalize(105) }}
+                      />
+                      <Text style={styles.font1}>แปลงของคุณ</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </View>
+              </ImageBackground>
+              {/* <View
               style={{
                 flexDirection: 'row',
                 padding: '5%',
@@ -301,7 +298,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                 ดูทั้งหมด
               </Text>
             </View> */}
-            {/* <View
+              {/* <View
               style={{
                 width: '100%',
                 height: normalize(60),
@@ -318,193 +315,193 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                 }}
               />
             </View>  */}
-            <View style={[styles.empty]}>
-              {profilestate.status === 'REJECTED' ? (
-                <View
-                  style={{
-                    height: 176,
-                    width: normalize(340),
-                    alignSelf: 'center',
-                    backgroundColor: '#FFF9F2',
-                    borderWidth: 1,
-                    borderColor: '#FEDBB4',
-                    borderRadius: 10,
-                  }}>
-                  <View style={{ padding: 15, alignSelf: 'center' }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Image
-                        source={icons.warning}
-                        style={{ width: 20, height: 20, marginRight: 10 }}
-                      />
-                      <Text style={[styles.textAlert]}>
-                        การยืนยันตัวตนไม่สำเร็จ อาจะส่งผลต่อ
-                      </Text>
-                    </View>
-                    <Text style={[styles.textAlert, { marginLeft: 30 }]}>
-                      การจ้างงานโดรนเกษตร กรุณาติดต่อ
-                    </Text>
-                    <Text style={[styles.textAlert, { marginLeft: 30 }]}>
-                      เจ้าหน้าที่ เพื่อยืนยันสถานะ
-                    </Text>
-                  </View>
-                  <View style={{ paddingHorizontal: 10 }}>
-                    <TouchableOpacity
-                      onPress={() => {
-                       setShowModalCall(true);
-                      }}
-                      style={{
-                        ...Platform.select({
-                          ios: {
-                            height: 60,
-                            paddingVertical: 8,
-                            paddingHorizontal: 16,
-                            backgroundColor: colors.white,
-                            justifyContent: 'center',
-                            alignItems: 'flex-start',
-                            width: '100%',
-                            borderRadius: 12,
-                            marginBottom: 8,
-                            borderWidth: 1,
-                            borderColor: colors.blueBorder,
-                          },
-                          android: {
-                            height: 60,
-                            paddingVertical: 8,
-                            paddingHorizontal: 16,
-                            backgroundColor: colors.white,
-                            justifyContent: 'center',
-                            alignItems: 'flex-start',
-                            width: '100%',
-                            borderRadius: 12,
-                            marginBottom: 8,
-                            borderWidth: 1,
-                            borderColor: colors.blueBorder,
-                            bottom: 15,
-                          },
-                        }),
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          alignSelf: 'center',
-                        }}>
+              <View style={[styles.empty]}>
+                {profilestate.status === 'REJECTED' ? (
+                  <View
+                    style={{
+                      height: 176,
+                      width: normalize(340),
+                      alignSelf: 'center',
+                      backgroundColor: '#FFF9F2',
+                      borderWidth: 1,
+                      borderColor: '#FEDBB4',
+                      borderRadius: 10,
+                    }}>
+                    <View style={{ padding: 15, alignSelf: 'center' }}>
+                      <View style={{ flexDirection: 'row' }}>
                         <Image
-                          style={{
-                            width: 24,
-                            height: 24,
-                            marginRight: 16,
-                          }}
-                          source={icons.calling}
+                          source={icons.warning}
+                          style={{ width: 20, height: 20, marginRight: 10 }}
                         />
-                        <Text
-                          style={{
-                            fontFamily: font.AnuphanMedium,
-                            color: colors.blueBorder,
-                            fontSize: 20,
-                          }}>
-                          โทรหาเจ้าหน้าที่
+                        <Text style={[styles.textAlert]}>
+                          การยืนยันตัวตนไม่สำเร็จ อาจะส่งผลต่อ
                         </Text>
                       </View>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              ) : null}
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: font.AnuphanBold,
-                    fontSize: normalize(20),
-                    color: colors.fontGrey,
-                    paddingHorizontal: 20,
-                    paddingVertical: 10,
-                  }}>
-                  จ้างนักบินที่เคยจ้าง
-                </Text>
-                {taskSugUsed.length != 0 ? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('SeeAllDronerUsed');
-                    }}>
-                    <Text
-                      style={{
-                        fontFamily: font.SarabunLight,
-                        fontSize: normalize(16),
-                        color: colors.fontGrey,
-                        height: 55,
-                        paddingHorizontal: 10,
-                        paddingVertical: 10,
-                      }}>
-                      ดูทั้งหมด
-                    </Text>
-                  </TouchableOpacity>
-                ) : null}
-              </View>
-              {taskSugUsed.length != 0 ? (
-                <View style={{ height: '110%' }}>
-                  <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}>
-                    {taskSugUsed.length != undefined &&
-                      taskSugUsed.map((item: any, index: any) => (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={async () => {
-                            await AsyncStorage.setItem(
-                              'droner_id',
-                              `${item.droner_id}`,
-                            );
-                            navigation.push('DronerDetail');
+                      <Text style={[styles.textAlert, { marginLeft: 30 }]}>
+                        การจ้างงานโดรนเกษตร กรุณาติดต่อ
+                      </Text>
+                      <Text style={[styles.textAlert, { marginLeft: 30 }]}>
+                        เจ้าหน้าที่ เพื่อยืนยันสถานะ
+                      </Text>
+                    </View>
+                    <View style={{ paddingHorizontal: 10 }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setShowModalCall(true);
+                        }}
+                        style={{
+                          ...Platform.select({
+                            ios: {
+                              height: 60,
+                              paddingVertical: 8,
+                              paddingHorizontal: 16,
+                              backgroundColor: colors.white,
+                              justifyContent: 'center',
+                              alignItems: 'flex-start',
+                              width: '100%',
+                              borderRadius: 12,
+                              marginBottom: 8,
+                              borderWidth: 1,
+                              borderColor: colors.blueBorder,
+                            },
+                            android: {
+                              height: 60,
+                              paddingVertical: 8,
+                              paddingHorizontal: 16,
+                              backgroundColor: colors.white,
+                              justifyContent: 'center',
+                              alignItems: 'flex-start',
+                              width: '100%',
+                              borderRadius: 12,
+                              marginBottom: 8,
+                              borderWidth: 1,
+                              borderColor: colors.blueBorder,
+                              bottom: 15,
+                            },
+                          }),
+                        }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            alignSelf: 'center',
                           }}>
-                          <DronerUsed
-                            key={index}
-                            index={index}
-                            profile={item.image_droner}
-                            background={''}
-                            name={item.firstname + ' ' + item.lastname}
-                            rate={item.rating_avg}
-                            total_task={item.total_task}
-                            province={item.province_name}
-                            distance={item.street_distance}
+                          <Image
+                            style={{
+                              width: 24,
+                              height: 24,
+                              marginRight: 16,
+                            }}
+                            source={icons.calling}
                           />
-                        </TouchableOpacity>
-                      ))}
-                  </ScrollView>
-                </View>
-              ) : (
+                          <Text
+                            style={{
+                              fontFamily: font.AnuphanMedium,
+                              color: colors.blueBorder,
+                              fontSize: 20,
+                            }}>
+                            โทรหาเจ้าหน้าที่
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                ) : null}
                 <View
                   style={{
-                    alignItems: 'center',
-                    width: '100%',
-                    height: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
                   }}>
-                  <Image
-                    source={image.empty_droner}
-                    style={{
-                      width: normalize(136),
-                      height: normalize(130),
-                      top: '10%',
-                      marginBottom: normalize(32),
-                    }}
-                  />
                   <Text
                     style={{
-                      top: '5%',
-                      fontFamily: font.SarabunBold,
-                      fontSize: normalize(16),
-                      fontWeight: '300',
-                      color: colors.gray,
+                      fontFamily: font.AnuphanBold,
+                      fontSize: normalize(20),
+                      color: colors.fontGrey,
+                      paddingHorizontal: 20,
+                      paddingVertical: 10,
                     }}>
-                    ไม่มีนักบินโดรนที่เคยจ้าง
+                    จ้างนักบินที่เคยจ้าง
                   </Text>
+                  {taskSugUsed.length != 0 ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate('SeeAllDronerUsed');
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: font.SarabunLight,
+                          fontSize: normalize(16),
+                          color: colors.fontGrey,
+                          height: 55,
+                          paddingHorizontal: 10,
+                          paddingVertical: 10,
+                        }}>
+                        ดูทั้งหมด
+                      </Text>
+                    </TouchableOpacity>
+                  ) : null}
                 </View>
-              )}
-            </View>
-            {/* <View style={[styles.empty]}>
+                {taskSugUsed.length != 0 ? (
+                  <View style={{ height: '110%' }}>
+                    <ScrollView
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}>
+                      {taskSugUsed.length != undefined &&
+                        taskSugUsed.map((item: any, index: any) => (
+                          <TouchableOpacity
+                            key={index}
+                            onPress={async () => {
+                              await AsyncStorage.setItem(
+                                'droner_id',
+                                `${item.droner_id}`,
+                              );
+                              navigation.push('DronerDetail');
+                            }}>
+                            <DronerUsed
+                              key={index}
+                              index={index}
+                              profile={item.image_droner}
+                              background={''}
+                              name={item.firstname + ' ' + item.lastname}
+                              rate={item.rating_avg}
+                              total_task={item.total_task}
+                              province={item.province_name}
+                              distance={item.street_distance}
+                            />
+                          </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                  </View>
+                ) : (
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      width: '100%',
+                      height: '100%',
+                    }}>
+                    <Image
+                      source={image.empty_droner}
+                      style={{
+                        width: normalize(136),
+                        height: normalize(130),
+                        top: '10%',
+                        marginBottom: normalize(32),
+                      }}
+                    />
+                    <Text
+                      style={{
+                        top: '5%',
+                        fontFamily: font.SarabunBold,
+                        fontSize: normalize(16),
+                        fontWeight: '300',
+                        color: colors.gray,
+                      }}>
+                      ไม่มีนักบินโดรนที่เคยจ้าง
+                    </Text>
+                  </View>
+                )}
+              </View>
+              {/* <View style={[styles.empty]}>
                 <Text
                   style={[
                     styles.text,
@@ -539,94 +536,97 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                   </ScrollView>
                 </View>
               </View> */}
+            </View>
           </View>
-        </View>
-        <Modal animationType="fade" transparent={true} visible={showModalCall}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            paddingHorizontal: 16,
-            paddingBottom: 32,
-          }}>
-          <TouchableOpacity
-            onPress={() => {
-              Linking.openURL(`tel:${callcenterNumber}`);
-            }}
-            style={{
-              height: 60,
-              paddingVertical: 8,
-              paddingHorizontal: 16,
-              backgroundColor: colors.white,
-              justifyContent: 'center',
-              alignItems: 'flex-start',
-              width: '100%',
-              borderRadius: 12,
-              marginBottom: 8,
-            }}>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={showModalCall}>
             <View
               style={{
-                flexDirection: 'row',
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                justifyContent: 'flex-end',
                 alignItems: 'center',
+                paddingHorizontal: 16,
+                paddingBottom: 32,
               }}>
-              <Image
-                style={{
-                  width: 24,
-                  height: 24,
-                  marginRight: 16,
+              <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL(`tel:${callcenterNumber}`);
                 }}
-                source={icons.callBlue}
-              />
-              <Text
                 style={{
-                  fontFamily: font.AnuphanMedium,
-                  color: '#007AFF',
-                  fontSize: 20,
+                  height: 60,
+                  paddingVertical: 8,
+                  paddingHorizontal: 16,
+                  backgroundColor: colors.white,
+                  justifyContent: 'center',
+                  alignItems: 'flex-start',
+                  width: '100%',
+                  borderRadius: 12,
+                  marginBottom: 8,
                 }}>
-                {'โทร +66 2-113-6159'}
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setShowModalCall(false);
-            }}
-            style={{
-              height: 60,
-              paddingVertical: 8,
-              paddingHorizontal: 16,
-              backgroundColor: colors.white,
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%',
-              borderRadius: 12,
-              marginBottom: 8,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <Text
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    style={{
+                      width: 24,
+                      height: 24,
+                      marginRight: 16,
+                    }}
+                    source={icons.callBlue}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanMedium,
+                      color: '#007AFF',
+                      fontSize: 20,
+                    }}>
+                    {'โทร +66 2-113-6159'}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowModalCall(false);
+                }}
                 style={{
-                  fontFamily: font.AnuphanMedium,
-                  color: '#007AFF',
-                  fontSize: 20,
+                  height: 60,
+                  paddingVertical: 8,
+                  paddingHorizontal: 16,
+                  backgroundColor: colors.white,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%',
+                  borderRadius: 12,
+                  marginBottom: 8,
                 }}>
-                ยกเลิก
-              </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanMedium,
+                      color: '#007AFF',
+                      fontSize: 20,
+                    }}>
+                    ยกเลิก
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+          </Modal>
+          <Spinner
+            visible={loading}
+            textContent={'Loading...'}
+            textStyle={{ color: '#FFF' }}
+          />
         </View>
-      </Modal>
-        <Spinner
-          visible={loading}
-          textContent={'Loading...'}
-          textStyle={{ color: '#FFF' }}
-        />
-      </View>
       </ScrollView>
       {showFinding && (
         <TouchableOpacity

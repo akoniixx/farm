@@ -37,7 +37,6 @@ export const sortFieldFinish = [
     value: 'total_price',
     direction: 'DESC',
   },
-  
 ];
 
 export const sortStatusInprogress = [
