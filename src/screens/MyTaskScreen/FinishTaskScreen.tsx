@@ -8,6 +8,7 @@ import { font, image } from '../../assets';
 import colors from '../../assets/colors/colors';
 import { CardTask } from '../../components/Mytask/CardTask';
 import { Filter } from '../../components/Mytask/Filter';
+import { FilterFinish } from '../../components/Mytask/FilterFinish';
 import { StatusFilterFinish } from '../../components/Mytask/StatusFilterFinish';
 import { StatusFilterInprogress } from '../../components/Mytask/StatusFilterInprogress';
 
@@ -19,8 +20,8 @@ import * as RootNavigation from '../../navigations/RootNavigation';
 const FinishScreen: React.FC<any> = ({}) => {
   const [taskList, setTaskList] = useState([]);
   const [selectedField, setSelectedField] = useState({
-    name: 'ใกล้ถึงวันงาน',
-    value: 'coming_task',
+    name: 'งานล่าสุด',
+    value: 'date_appointment',
     direction: '',
   });
   const [selectedStatus, setSelectedStatus] = useState({
@@ -71,7 +72,7 @@ const FinishScreen: React.FC<any> = ({}) => {
             justifyContent: 'space-between',
             marginVertical: normalize(10),
           }}>
-          <Filter
+          <FilterFinish
             selectedField={selectedField}
             setSelectedField={setSelectedField}
           />

@@ -123,10 +123,10 @@ export const CardTask: React.FC<taskListProps> = ({ task }) => {
           {task.plot_name + ', ' + task.rai_amount + ' ไร่'}
         </Text>
       </View>
-      {task.task_late_status&&task.status==='WAIT_START' ? (
+      {task.task_late_status && task.status === 'WAIT_START' ? (
         <View style={styles.lateBox}>
-          <Text style={[styles.plot,{fontFamily:fonts.SarabunMedium}]}>ขณะนี้! เลยเวลานัดหมาย</Text>
-          <Text style={[styles.plot,{fontFamily:fonts.SarabunMedium}]}>กรุณาติดต่อนักบินโดรนให้กดเริ่มงาน</Text>
+          <Text style={[styles.plot, { fontFamily: fonts.SarabunMedium }]}>ขณะนี้! เลยเวลานัดหมาย</Text>
+          <Text style={[styles.plot, { fontFamily: fonts.SarabunMedium }]}>กรุณาติดต่อนักบินโดรนให้กดเริ่มงาน</Text>
         </View>
       ) : (
         <></>
@@ -139,13 +139,15 @@ export const CardTask: React.FC<taskListProps> = ({ task }) => {
         }}>
         {task.status === 'WAIT_RECEIVE' ? (
           <WaittingCard />
-        ) : (
+        ) : task.status === 'CANCELED' ? <>
+        </> :
           <DronerCard
             name={task.droner.firstname + ' ' + task.droner.lastname}
             profile={task.droner.image_profile}
             telnumber={task.droner.telephone_no}
           />
-        )}
+
+        }
       </View>
     </View>
   );
@@ -180,6 +182,6 @@ const styles = StyleSheet.create({
     borderStyle: 'dotted',
     borderWidth: 1,
     borderRadius: 1,
-    padding:normalize(10)
+    padding: normalize(10)
   },
 });

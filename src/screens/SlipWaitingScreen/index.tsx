@@ -28,6 +28,7 @@ import InputText from '../../components/InputText/InputText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
+import { mixpanel } from '../../../mixpanel';
 export default function SlipWaitingScreen({
   navigation,
   route,
@@ -146,7 +147,9 @@ export default function SlipWaitingScreen({
     <Container>
       <Header
         componentLeft={
-          <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
+          <TouchableOpacity onPress={() => {
+            mixpanel.track('Tab back to main screen from waiting screen');
+            navigation.navigate('MainScreen')}}>
             <Image
               source={icons.arrowUp}
               style={{
@@ -160,6 +163,7 @@ export default function SlipWaitingScreen({
         componentRight={
           <TouchableOpacity
             onPress={() => {
+               mixpanel.track('Tab cancel booking from waiting screen');
               setIsShowModal(true);
             }}>
             <Text
@@ -291,6 +295,7 @@ export default function SlipWaitingScreen({
               }}>
               <TouchableOpacity
                 onPress={async () => {
+                  mixpanel.track('Tab cancel button from cancel booking modal');
                   const extendObj = await AsyncStorage.getItem('extendObj');
                   const parseExtendObj = JSON.parse(extendObj || '{}');
                   if (parseExtendObj && parseExtendObj.round > 0) {
@@ -326,6 +331,7 @@ export default function SlipWaitingScreen({
               <TouchableOpacity
                 disabled={reason.length === 0}
                 onPress={() => {
+                  mixpanel.track('Tab submit button from cancel booking modal');
                   onSubmitCancelTask();
                   setIsShowModal(false);
                 }}

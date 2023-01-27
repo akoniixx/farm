@@ -28,6 +28,7 @@ import { useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import { useAuth } from '../../contexts/AuthContext';
 import fonts from '../../assets/fonts';
+import { mixpanel } from '../../../mixpanel';
 
 const MainScreen: React.FC<any> = ({ navigation }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -208,6 +209,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                   }}>
                   <TouchableOpacity
                     onPress={() => {
+                      mixpanel.track('Tab booking with login');
                       if (disableBooking) {
                         setShowModalCantBooking(true);
                       } else {
@@ -234,7 +236,9 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                   </TouchableOpacity>
                   <View style={{ width: normalize(10) }}></View>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('AllPlotScreen')}>
+                    onPress={() => {
+                      mixpanel.track('Tab your plot with login');
+                      navigation.navigate('AllPlotScreen')}}>
                     <LinearGradient
                       colors={['#FFFFFF', '#ECFBF2']}
                       style={{

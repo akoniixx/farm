@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { mixpanel } from '../../../mixpanel';
 import { colors, font, icons, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
 import PlotSelect from '../../components/Plots/PlotSelect';
@@ -73,7 +74,9 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
     <>
       <StepIndicatorHead
         curentPosition={1}
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('Tab back from select plot screen');
+          navigation.goBack()}}
         label={'เลือกแปลงของคุณ'}
       />
       <KeyboardAvoidingView
@@ -116,6 +119,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
               </View>
               <TouchableOpacity
                 onPress={() => {
+                  mixpanel.track('Tab callcenter from select plot screen');
                   Linking.openURL(`tel:${callcenterNumber}`);
                 }}
                 style={{
@@ -206,6 +210,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                     locationName={item.locationName}
                     raiAmount={item.raiAmount}
                     onPress={async () => {
+                      mixpanel.track('Tab select plot from select plot screen');
                       handleCardPress(index);
                       setTaskData(prev => ({
                         ...prev,
@@ -247,7 +252,9 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                   label="ถัดไป"
                   disable={selectedCard === null}
                   color={colors.greenLight}
-                  onPress={() => onSubmit()}
+                  onPress={() => {
+                    mixpanel.track('Tab submit from select plot screen');
+                    onSubmit()}}
                 />
               </View>
             </ScrollView>

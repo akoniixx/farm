@@ -19,8 +19,10 @@ import './src/components/SheetList';
 
 import { AutoBookingProvider } from './src/contexts/AutoBookingContext';
 import { AuthProvider } from './src/contexts/AuthContext';
+import { mixpanel } from './mixpanel';
 const App = () => {
   useEffect(() => {
+    mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
     if (Platform.OS === 'ios') {

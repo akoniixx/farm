@@ -16,9 +16,28 @@ export const sortField = [
   },
   {
     name: 'งานนัดหมายล่าสุด',
-    value: 'coming_task',
+    value: 'date_appointment',
     direction: '',
   },
+];
+
+export const sortFieldFinish = [
+  {
+    name: 'งานล่าสุด',
+    value: 'date_appointment',
+    direction: '',
+  },
+  {
+    name: 'ค่าบริการต่ำ-สูง',
+    value: 'total_price',
+    direction: 'ASC',
+  },
+  {
+    name: 'ค่าบริการสูง-ต่ำ',
+    value: 'total_price',
+    direction: 'DESC',
+  },
+  
 ];
 
 export const sortStatusInprogress = [
