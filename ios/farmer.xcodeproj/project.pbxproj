@@ -615,8 +615,13 @@
 				CODE_SIGN_ENTITLEMENTS = farmer/farmer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+<<<<<<< HEAD
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 5Y8QC3U7CF;
+=======
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = 9ZXXDP8F5K;
+>>>>>>> develop
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = farmer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Iconkaset;
@@ -651,8 +656,8 @@
 				CODE_SIGN_ENTITLEMENTS = farmer/farmer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = 5Y8QC3U7CF;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = 9ZXXDP8F5K;
 				INFOPLIST_FILE = farmer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Iconkaset;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";

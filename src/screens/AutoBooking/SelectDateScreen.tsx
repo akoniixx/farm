@@ -15,6 +15,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { mixpanel } from '../../../mixpanel';
 import { colors, font, icons } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
 import DatePickerCustom from '../../components/Calendar/Calendar';
@@ -66,7 +67,9 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
     <>
       <StepIndicatorHead
         curentPosition={0}
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('Tab back from select date screen');
+          navigation.goBack()}}
         label={'เลือกวันและเวลาฉีดพ่น'}
       />
 
@@ -183,6 +186,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 multiline
                 blurOnSubmit={true}
                 onSubmitEditing={() => {
+                  mixpanel.track('Tab set note booking');
                   const newNote = note.replace(/(\r\n|\n|\r)/gm, '');
                   setNote(newNote);
                   Keyboard.dismiss();
@@ -291,7 +295,9 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 borderColor={colors.fontGrey}
                 color={colors.white}
                 width={150}
-                onPress={() => setOpenCalendar(false)}
+                onPress={() => {
+                  mixpanel.track('Tab cancel calendar');
+                  setOpenCalendar(false)}}
               />
               <MainButton
                 label="บันทึก"
@@ -299,6 +305,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 color={colors.greenLight}
                 width={150}
                 onPress={() => {
+                  mixpanel.track('Tab submit calendar');
                   setOpenCalendar(false);
                 }}
               />
@@ -371,7 +378,9 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 borderColor={colors.fontGrey}
                 color={colors.white}
                 width={150}
-                onPress={() => setopenTimePicker(false)}
+                onPress={() => {
+                  mixpanel.track('Tab cancel time picker');
+                  setopenTimePicker(false)}}
               />
               <MainButton
                 label="บันทึก"
@@ -379,6 +388,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 color={colors.greenLight}
                 width={150}
                 onPress={() => {
+                  mixpanel.track('Tab submit time picker');
                   setopenTimePicker(false);
                 }}
               />

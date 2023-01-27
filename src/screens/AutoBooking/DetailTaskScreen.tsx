@@ -15,6 +15,7 @@ import {
   View,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import { mixpanel } from '../../../mixpanel';
 import { font } from '../../assets';
 import colors from '../../assets/colors/colors';
 import fonts from '../../assets/fonts';
@@ -100,6 +101,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       const res = await TaskDatasource.createTask(payload);
 
       if (res && res.success) {
+         mixpanel.track('Tab submit booking');
         setLoading(false);
 
         await AsyncStorage.setItem('taskId', res.responseData.id);
@@ -141,11 +143,14 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       <CustomHeader
         title="รายละเอียดการจอง"
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('Tab back from booking detail screen');
+          navigation.goBack()}}
         headerRight={() => {
           return (
             <TouchableOpacity
               onPress={() => {
+                mixpanel.track('Tab callcenter from booking detail screen');
                 Linking.openURL(`tel:${callcenterNumber}`);
               }}
               style={{
@@ -224,7 +229,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               วันและเวลา
             </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('SelectDateScreen')}
+              onPress={() => {
+                mixpanel.track('Tab edit date time');
+                navigation.navigate('SelectDateScreen')}}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -275,7 +282,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               แปลงเกษตร
             </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('SelectPlotScreen')}
+              onPress={() => {
+                mixpanel.track('Tab edit select plot');
+                navigation.navigate('SelectPlotScreen')}}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -335,7 +344,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               เป้าหมายการพ่น
             </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('SelectTarget')}
+              onPress={() => {
+                mixpanel.track('Tab edit select target');
+                navigation.navigate('SelectTarget')}}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -571,6 +582,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                       return setDisableEdit(false);
                     }
                     if (couponCode.length > 0) {
+                      mixpanel.track('Tab submit coupon');
                       await checkCoupon();
                     }
                   }}

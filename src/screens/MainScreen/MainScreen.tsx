@@ -31,6 +31,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import DronerUsed from '../../components/Carousel/DronerUsed';
+import { mixpanel } from '../../../mixpanel';
 
 const MainScreen: React.FC<any> = ({ navigation }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');

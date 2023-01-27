@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { mixpanel } from '../../../mixpanel';
 import { colors, font, icons } from '../../assets';
 import fonts from '../../assets/fonts';
 import { MainButton } from '../../components/Button/MainButton';
@@ -84,7 +85,9 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
     <>
       <StepIndicatorHead
         curentPosition={2}
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('Tab back from select target screen');
+          navigation.goBack()}}
         label={'เป้าหมายการพ่น'}
       />
       <View
@@ -124,6 +127,7 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
                     },
                   ]}
                   onPress={() => {
+                    mixpanel.track('Tab select target spray');
                     if (selectedOption.includes(option.label.toString())) {
                       setSelectedOption(prev =>
                         prev.filter(item => item !== option.label.toString()),
@@ -170,6 +174,7 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
                         ...prev,
                         { id: prev.length + 1, label: otherPlant },
                       ]);
+                      mixpanel.track('Tab add other target spray');
                       setSelectedOption(prev => [...prev, otherPlant]);
                     }}
                     style={{
@@ -199,6 +204,7 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
             <TouchableOpacity
               style={styles.injectionInput}
               onPress={async () => {
+                mixpanel.track('Tab select purpose spray');
                 const currentValue: any = await SheetManager.show(
                   'sheet-select-injection',
                   {
@@ -236,7 +242,9 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
               ยาที่ต้องใช้
             </Text>
             <TouchableOpacity
-              onPress={() => setSelectedCheckbox('เกษตรกรเตรียมเอง')}>
+              onPress={() => {
+                mixpanel.track('Tab เกษตรกรเตรียมเอง');
+                setSelectedCheckbox('เกษตรกรเตรียมเอง')}}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -265,7 +273,9 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => setSelectedCheckbox('ให้นักบินโดรนเตรียมให้')}>
+              onPress={() => {
+                mixpanel.track('Tab ให้นักบินโดรนเตรียมให้');
+                setSelectedCheckbox('ให้นักบินโดรนเตรียมให้')}}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -307,7 +317,9 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
                 selectedCheckbox === null
               }
               color={colors.greenLight}
-              onPress={() => onSubmit()}
+              onPress={() => {
+                mixpanel.track('Tab submit from select target screen');
+                onSubmit()}}
               style={{}}
             />
           </View>

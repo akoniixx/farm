@@ -212,6 +212,12 @@ PODS:
   - lottie-react-native (5.1.4):
     - lottie-ios (~> 3.4.0)
     - React-Core
+  - Mixpanel-swift (4.0.2):
+    - Mixpanel-swift/Complete (= 4.0.2)
+  - Mixpanel-swift/Complete (4.0.2)
+  - MixpanelReactNative (2.1.0):
+    - Mixpanel-swift (= 4.0.2)
+    - React-Core
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -618,6 +624,7 @@ DEPENDENCIES:
   - hermes-engine (from `../node_modules/react-native/sdks/hermes/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
   - lottie-react-native (from `../node_modules/lottie-react-native`)
+  - MixpanelReactNative (from `../node_modules/mixpanel-react-native`)
   - OpenSSL-Universal (= 1.1.1100)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -693,6 +700,7 @@ SPEC REPOS:
     - GoogleUtilities
     - libevent
     - lottie-ios
+    - Mixpanel-swift
     - nanopb
     - OpenSSL-Universal
     - PromisesObjC
@@ -716,6 +724,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/sdks/hermes/hermes-engine.podspec"
   lottie-react-native:
     :path: "../node_modules/lottie-react-native"
+  MixpanelReactNative:
+    :path: "../node_modules/mixpanel-react-native"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -839,6 +849,8 @@ SPEC CHECKSUMS:
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: 8f97d3271e155c2d688875c29cd3c74908aef5f8
   lottie-react-native: b702fab740cdb952a8e2354713d3beda63ff97b0
+  Mixpanel-swift: 91fc28834402720682f4cce760e95571fbb388c3
+  MixpanelReactNative: f509f0674e7f80a7a294ff5afa88ac1e8ec61640
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
