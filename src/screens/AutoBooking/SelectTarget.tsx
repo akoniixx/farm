@@ -306,7 +306,7 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
           </View>
           <View
             style={{
-              padding: 16,
+              paddingVertical: 16,
               marginBottom: 8,
             }}>
             <MainButton

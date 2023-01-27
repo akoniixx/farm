@@ -221,7 +221,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
       );
     }
   }, [province, district]);
-
+console.log(initProfile.firstname)
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader

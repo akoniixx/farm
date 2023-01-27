@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   Platform,
   SafeAreaView,
+  Linking,
 } from 'react-native';
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
@@ -32,6 +33,7 @@ import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import DronerUsed from '../../components/Carousel/DronerUsed';
 import { mixpanel } from '../../../mixpanel';
+import { callcenterNumber } from '../../definitions/callCenterNumber';
 
 const MainScreen: React.FC<any> = ({ navigation }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -52,6 +54,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
   const [showModalCantBooking, setShowModalCantBooking] = useState(false);
   const { height, width } = Dimensions.get('window');
   const [showFinding, setShowFinding] = useState(false);
+  const [showModalCall, setShowModalCall] = useState(false);
   const [dataFinding, setDataFinding] = useState({
     id: '',
     taskNo: '',
@@ -224,10 +227,12 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                     if (disableBooking) {
                       setShowModalCantBooking(true);
                     } else {
+                      mixpanel.track('Tab booking with login');
                       navigation.navigate('SelectDateScreen');
                     }
                   }}>
-                  <LinearGradient
+                  <LinearGradient                     
+
                     colors={['#61E097', '#3B996E']}
                     style={{
                       paddingVertical: normalize(10),
@@ -247,7 +252,11 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                 </TouchableOpacity>
                 <View style={{ width: normalize(10) }}></View>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('AllPlotScreen')}>
+                  onPress={() => {
+                    mixpanel.track('Tab your plot with login')
+                    navigation.navigate('AllPlotScreen')}
+                  }
+                   >
                   <LinearGradient
                     colors={['#FFFFFF', '#ECFBF2']}
                     style={{
@@ -341,7 +350,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                   <View style={{ paddingHorizontal: 10 }}>
                     <TouchableOpacity
                       onPress={() => {
-                        // setShowModalCall(true);
+                       setShowModalCall(true);
                       }}
                       style={{
                         ...Platform.select({
@@ -532,6 +541,86 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
               </View> */}
           </View>
         </View>
+        <Modal animationType="fade" transparent={true} visible={showModalCall}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            paddingHorizontal: 16,
+            paddingBottom: 32,
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(`tel:${callcenterNumber}`);
+            }}
+            style={{
+              height: 60,
+              paddingVertical: 8,
+              paddingHorizontal: 16,
+              backgroundColor: colors.white,
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              width: '100%',
+              borderRadius: 12,
+              marginBottom: 8,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{
+                  width: 24,
+                  height: 24,
+                  marginRight: 16,
+                }}
+                source={icons.callBlue}
+              />
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  color: '#007AFF',
+                  fontSize: 20,
+                }}>
+                {'โทร +66 2-113-6159'}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setShowModalCall(false);
+            }}
+            style={{
+              height: 60,
+              paddingVertical: 8,
+              paddingHorizontal: 16,
+              backgroundColor: colors.white,
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              borderRadius: 12,
+              marginBottom: 8,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  color: '#007AFF',
+                  fontSize: 20,
+                }}>
+                ยกเลิก
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </Modal>
         <Spinner
           visible={loading}
           textContent={'Loading...'}

@@ -56,9 +56,7 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
                 isRegisterScreen: false,
               });
             })
-            .catch(err => {
-              console.log(err);
-            });
+            .catch(err => console.log(err));
         }
       });
   };

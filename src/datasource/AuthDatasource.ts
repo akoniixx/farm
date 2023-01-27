@@ -370,7 +370,6 @@ export class Register {
     return uploadFileClient
       .post(BASE_URL + '/file/upload', data)
       .then(response => {
-        console.log(response);
         return response.data;
       })
       .catch(error => {

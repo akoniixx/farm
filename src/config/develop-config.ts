@@ -8,7 +8,13 @@ export const MIXPANEL_PROD = '0bae055d89d622289e54453d6285c4cf'
 
 axios.interceptors.request.use(async (config: any) => {
   const token = await AsyncStorage.getItem('token');
-  config.headers.Authorization = `Bearer ${token}`;
+  const token_register = await AsyncStorage.getItem('token_register');
+  if(!token){
+    config.headers.Authorization = `Bearer ${token_register}`;
+  }
+  else{
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 

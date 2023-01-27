@@ -22,7 +22,13 @@ export default {
   waitingDroner: require('./waitingDroner.png'),
   endSlip: require('./endSlip.png'),
   successSlip: require('./successSlip.png'),
+  registerSuccess: require('./registersuccess.png'),
+  registerFailed: require('./registerfailed.png'),
+  plotSuccess: require('./plotsuccess.png'),
+  plotFailed: require('./plotfailed.png'),
   drone: require('./drone.png'),
   droneBrown: require('./droneBrown.png'),
   plot_head: require('./plot_head.png'),
+  successfullottie: require('./sucessfullottie.json'),
+  waitinglottie: require('./waitingdroner.json'),
 };

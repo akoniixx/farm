@@ -289,8 +289,13 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
           },
         } = result;
         const { lat, lng } = location;
-        setlat(lat);
+        setlat(lng);
         setlong(lng);
+        setPosition(prev => ({
+          ...prev,
+          latitude: parseFloat(lat),
+          longitude: parseFloat(lng),
+        }));
         setShowPredictions(false);
         setSearch({ term: description, fetchPredictions: false });
         mapSheet.current.hide();
