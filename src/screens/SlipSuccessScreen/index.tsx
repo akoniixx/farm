@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import Container from '../../components/Container/Container';
@@ -9,38 +9,82 @@ import SectionBody from './SectionBody';
 import { MainButton } from '../../components/Button/MainButton';
 import colors from '../../assets/colors/colors';
 import image from '../../assets/images/image';
+import LinearGradient from 'react-native-linear-gradient';
+import { normalize } from '@rneui/themed';
+import { TaskDataTypeSlip } from '../../components/SlipCard/SlipCard';
+import { TaskDatasource } from '../../datasource/TaskDatasource';
+import Lottie from 'lottie-react-native';
 
 export default function SlipSuccessScreen({
-  navigation,
+  navigation,route
 }: StackScreenProps<MainStackParamList, 'SlipSuccessScreen'>) {
+  const { taskId } = route.params;
+  const [taskData, setTaskData] = useState<TaskDataTypeSlip>({
+    id: '',
+    comment: '',
+    cropName: '',
+    purposeSprayName: '',
+    dateAppointment: '',
+    farmAreaAmount: '',
+    farmerId: '',
+    farmerPlotId: '',
+    preparationBy: '',
+    price: '',
+    purposeSprayId: '',
+    taskNo: '',
+    targetSpray: [],
+    totalPrice: '',
+  });
+
+  useEffect(()=>{
+    TaskDatasource.getTaskByTaskId(taskId)
+    .then(
+      res =>
+      setTaskData({
+        ...res.data,
+        cropName: res.data.purposeSpray.crop.cropName || '',
+        purposeSprayName: res.data.purposeSpray.purposeSprayName || ''
+      })
+    )
+    .catch(err => console.log(err))
+  },[])
   return (
-    <Container>
+    <View style={{
+      flex : 1
+    }}>
       <Content noPadding>
         <ScrollView
           contentContainerStyle={{
             flexGrow: 1,
           }}>
-          <View
+          <LinearGradient
+            colors={['#FFFEFA', '#41A97A']}
             style={{
               flex: 1,
+              paddingTop : normalize(30)
             }}>
-            <Image
-              source={image.successSlip}
-              style={{
+            <View style={{
                 width: '100%',
                 height: 170,
                 marginTop: 32,
-              }}
+              }}>
+              <Lottie 
+              source={image.successfullottie} 
+              autoPlay 
+              loop 
               resizeMode="contain"
-            />
-            <SectionBody />
-          </View>
+              />
+            </View>
+            <SectionBody {...taskData}/>
+          </LinearGradient>
           <View
             style={{
               padding: 16,
               flexDirection: 'row',
               justifyContent: 'space-between',
+              backgroundColor : '#41A97A',
               width: '100%',
+              paddingBottom : normalize(40)
             }}>
             <TouchableOpacity
               onPress={() => navigation.navigate('MainScreen')}
@@ -89,6 +133,6 @@ export default function SlipSuccessScreen({
           </View>
         </ScrollView>
       </Content>
-    </Container>
+    </View>
   );
 }

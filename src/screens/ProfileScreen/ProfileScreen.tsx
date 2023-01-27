@@ -39,9 +39,14 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
 
   const onLogout = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
+    const fcmtoken = await AsyncStorage.getItem('fcmtoken');
     socket.removeAllListeners(`send-task-${farmer_id!}`);
     socket.close();
-    await Authentication.logout();
+    FCMtokenDatasource.deleteFCMtoken(fcmtoken!).then(
+      async result=>{
+        await Authentication.logout();
+      }
+    ).catch(err => console.log(err))
   };
   useEffect(() => {
     getProfile();

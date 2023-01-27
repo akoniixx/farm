@@ -23,6 +23,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import DeleteProfile from '../screens/ProfileScreen/DeleteProfile/DeleteProfile';
 import AddPlotScreen from '../screens/ProfileScreen/PlotScreen/AddPlotScreen';
 import EditPlotScreen from '../screens/ProfileScreen/PlotScreen/EditPlotScreen';
+import NotificationScreen from '../screens/NotificationScreen/NotificationScreen';
+import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -35,9 +37,9 @@ export type MainStackParamList = {
   PrivacyScreen: undefined;
   EditProfileScreen: undefined;
   DetailTaskScreen: undefined;
-  SlipWaitingScreen: { taskId: string };
+  SlipWaitingScreen: { taskId: string; modal?: boolean };
   SlipSuccessScreen: { taskId: string };
-  DeleteAcc: undefined;
+  NotificationScreen: undefined;
   ViewMapScreen: {
     location: {
       latitude: string;
@@ -53,6 +55,7 @@ export type MainStackParamList = {
   };
   AddPlotScreen: undefined;
   EditPlotScreen: undefined;
+  DeleteSuccess: undefined;
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
@@ -93,6 +96,8 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
       <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
       <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
+      <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
+      <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
     </Stack.Navigator>
   );
 };

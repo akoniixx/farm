@@ -6,7 +6,13 @@ export const BASE_URL = 'https://api-dev-dnds.iconkaset.com';
 
 axios.interceptors.request.use(async (config: any) => {
   const token = await AsyncStorage.getItem('token');
-  config.headers.Authorization = `Bearer ${token}`;
+  const token_register = await AsyncStorage.getItem('token_register');
+  if(!token){
+    config.headers.Authorization = `Bearer ${token_register}`;
+  }
+  else{
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 

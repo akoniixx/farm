@@ -19,7 +19,15 @@ import './src/components/SheetList';
 
 import { AutoBookingProvider } from './src/contexts/AutoBookingContext';
 import { AuthProvider } from './src/contexts/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
 const App = () => {
+  // messaging().setBackgroundMessageHandler(async remoteMessage => {
+  //   console.log('Message handled in the background!', remoteMessage);
+  // });
+  // messaging().onMessage(async message =>{
+  //   console.log(message)
+  // });
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
@@ -27,7 +35,14 @@ const App = () => {
       firebaseInitialize();
     }
     requestUserPermission();
+    getToken()
   }, []);
+
+  const getToken = async()=>{
+    console.log(`farmerid = ${await AsyncStorage.getItem("farmer_id")}`)
+    console.log(`token = ${await AsyncStorage.getItem("token")}`)
+    // console.log(`fcmtoken = ${await AsyncStorage.getItem("fcmtoken")}`)
+  }
   return (
     <>
       <NavigationContainer ref={navigationRef}>

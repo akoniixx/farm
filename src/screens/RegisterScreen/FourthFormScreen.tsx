@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -9,6 +10,7 @@ import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
 import { ProgressBar } from '../../components/ProgressBar';
 import { Register } from '../../datasource/AuthDatasource';
+import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
 const width = Dimensions.get('window').width;
@@ -68,7 +70,7 @@ const FourthFormScreen: React.FC<any> = ({ route, navigation }) => {
           <TouchableOpacity
             onPress={() => {
               Register.registerSkip4()
-                .then(res => navigation.navigate('SuccessRegister'))
+                .then(async res => navigation.navigate('SuccessRegister'))
                 .catch(err => console.log(err));
             }}>
             <View

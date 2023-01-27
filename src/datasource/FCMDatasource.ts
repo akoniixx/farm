@@ -3,7 +3,7 @@ import { BASE_URL, httpClient } from '../config/develop-config';
 
 export class FCMtokenDatasource {
   static async getNotificationList(): Promise<any> {
-    const farmer_id = await AsyncStorage.getItem('faremr_id');
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
     return httpClient
       .get(BASE_URL + `/fcm/notification/${farmer_id}`)
       .then(res => {
@@ -31,9 +31,11 @@ export class FCMtokenDatasource {
         token: fcmtoken,
       })
       .then(res => {
+        console.log(res.data)
         return res.data;
       })
       .catch(err => {
+        console.log(err)
         throw err;
       });
   }

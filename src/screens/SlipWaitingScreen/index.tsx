@@ -28,6 +28,9 @@ import InputText from '../../components/InputText/InputText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
+import { normalize } from '../../functions/Normalize';
+import LinearGradient from 'react-native-linear-gradient';
+import Lottie from 'lottie-react-native';
 export default function SlipWaitingScreen({
   navigation,
   route,
@@ -118,8 +121,14 @@ export default function SlipWaitingScreen({
   }, [taskId]);
 
   return (
-    <Container>
+    <View style={{
+      flex : 1,
+      backgroundColor : '#FFFEFA'
+    }}>
       <Header
+        style={{
+          paddingTop : 60
+        }}
         componentLeft={
           <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
             <Image
@@ -153,22 +162,29 @@ export default function SlipWaitingScreen({
           contentContainerStyle={{
             flexGrow: 1,
           }}>
-          <View
+          <LinearGradient
+            colors={['#FFFEFA', '#41A97A']}
             style={{
               flex: 1,
+              paddingTop : normalize(30)
             }}>
-            <Image
-              source={image.waitingDroner}
-              style={{
+            <View style={{
                 width: '100%',
-                height: 320,
-              }}
+                height: 170,
+                marginTop: 32,
+              }}>
+              <Lottie 
+              source={image.waitinglottie} 
+              autoPlay 
+              loop 
               resizeMode="contain"
-            />
+              />
+            </View>
             <SectionBody {...taskData} />
-          </View>
+          </LinearGradient>
           <View
             style={{
+              backgroundColor : '#41A97A',
               padding: 16,
             }}>
             <MainButton
@@ -704,6 +720,6 @@ export default function SlipWaitingScreen({
         textContent={'Loading...'}
         textStyle={{ color: '#FFF' }}
       />
-    </Container>
+    </View>
   );
 }

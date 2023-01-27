@@ -208,6 +208,15 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                       {profilestate.name}
                     </Text>
                   </View>
+                  <TouchableOpacity onPress={()=> navigation.navigate("NotificationScreen")}>
+                    <View style={{
+                      width : normalize(40),
+                      height : normalize(40),
+                      backgroundColor : '#000'
+                    }}>
+
+                    </View>
+                  </TouchableOpacity>
                 </View>
                 <View
                   style={{
@@ -594,6 +603,7 @@ const styles = StyleSheet.create({
     top: '15%',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems : 'center',
     paddingHorizontal: normalize(23),
     paddingTop: normalize(5),
   },
