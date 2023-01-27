@@ -16,6 +16,7 @@ import { MainButton } from '../Button/MainButton';
 const DatePickerCustom: React.FC<DatePickerProps> = ({
   value,
   onHandleChange,
+  startDate = new Date(),
   height,
   width,
   fontSize,
@@ -28,7 +29,6 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
   fadeColor,
   format,
 }) => {
-  console.log(value);
   const [days, setDays] = useState<any[]>([]);
   const [months, setMonths] = useState<any[]>([]);
   const [years, setYears] = useState<any[]>([]);
@@ -59,9 +59,9 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
         );
         const isCurrentMonth = moment(value).isSame(new Date(), 'month');
         if (isCurrentMonth) {
-          const isDayBefore = moment(value).isBefore(new Date(), 'day');
+          const isDayBefore = moment(value).isBefore(startDate, 'day');
           const newDateList = genDate.filter(
-            day => day >= new Date().getDate(),
+            day => day >= startDate?.getDate(),
           );
 
           if (isDayBefore) {
@@ -76,7 +76,6 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
       const _years = [...Array(end - start + 1)].map(
         (_, index) => start + index,
       );
-
       setDays(_days);
       setMonths(_months);
       setYears(_years);
@@ -102,7 +101,7 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
           return {
             name: 'day',
             digits: days,
-            value: date.getDay() + 1,
+            value: date.getDay(),
             currentIndex: days.findIndex(el => el === date.getDate()),
           };
         case 'mm':
@@ -138,7 +137,6 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
     });
   };
   const isHaveData = days.length > 0 && months.length > 0 && years.length > 0;
-
   return (
     <View style={[styles.picker, { height: pickerHeight, width: pickerWidth }]}>
       {isHaveData &&
@@ -237,6 +235,7 @@ const DateBlock: React.FC<DateBlockProps> = ({
         ref={scrollRef}
         style={styles.scroll}
         snapToOffsets={offsets}
+        onMomentumScrollEnd={handleMomentumScrollEnd}
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={0}>
         {digits.map((value: any, valIndex: any) => {
@@ -318,6 +317,7 @@ export interface DatePickerProps {
   markWidth?: number | string;
   fadeColor?: string;
   format?: string;
+  startDate?: Date;
   onHandleChange: (value: any) => void;
 }
 

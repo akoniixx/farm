@@ -103,10 +103,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       if (res && res.success) {
          mixpanel.track('Tab submit booking');
         setLoading(false);
-        await AsyncStorage.setItem(
-          'endTime',
-          moment().add(30, 'minutes').toISOString(),
-        );
+
         await AsyncStorage.setItem('taskId', res.responseData.id);
         navigation.navigate('SlipWaitingScreen', {
           taskId: res.responseData.id,
@@ -556,6 +553,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               paddingHorizontal: normalize(16),
             }}>
             <InputWithSuffix
+              pointerEvents={disableEdit ? 'none' : 'auto'}
               onChangeText={text => {
                 setCouponCode(text);
                 setCouponCodeError('');

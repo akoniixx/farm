@@ -31,7 +31,7 @@ import { plant } from '../../../definitions/plants';
 import PredictionType from '../../RegisterScreen/ThirdFormScreen';
 import fonts from '../../../assets/fonts';
 import icons from '../../../assets/icons/icons';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import ActionSheet from 'react-native-actions-sheet';
 import { PlantSelect } from '../../../components/PlantSelect/PlantSelect';
 import SearchBarWithAutocomplete from '../../../components/SearchBarWithAutocomplete';
@@ -60,10 +60,10 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const windowHeight = Dimensions.get('window').height;
   const [loading, setLoading] = useState(false);
   const [position, setPosition] = useState({
-    latitude: 0,
-    longitude: 0,
-    latitudeDelta: 0,
-    longitudeDelta: 0,
+    latitude: LAT_LNG_BANGKOK.lat,
+    longitude: LAT_LNG_BANGKOK.lng,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.042,
   });
   const telNo = route.params;
   const [location, setLocation] = useState<any[]>([]);
@@ -107,15 +107,19 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
     const plotId = await AsyncStorage.getItem('plot_id');
     PlotDatasource.getFarmerPlotById(plotId!)
       .then(res => {
-        console.log(res.locationName);
         setData(res);
         setplotName(res.plotName);
         setPlantName(res.plantName);
         setraiAmount(res.raiAmount);
         setlandmark(res.landmark);
         setSelectPlot(res.plotArea);
-        setlat(res.lat);
-        setlong(res.long);
+        // setlat(res.lat);
+        // setlong(res.long);
+        setPosition(prev => ({
+          ...prev,
+          latitude: parseFloat(res.lat),
+          longitude: parseFloat(res.long),
+        }));
         setSearch({ term: res.locationName });
       })
       .catch(err => console.log(err))
@@ -124,8 +128,9 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
 
   useEffect(() => {
     getLocation();
-    fetchLocation(searchLocation);
-  }, [searchLocation]);
+    fetchLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const hasPermissionIOS = async () => {
     const openSetting = () => {
@@ -278,14 +283,14 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
   };
 
   const fetchLocation = async (text?: string) => {
-    await QueryLocation.getSubdistrict(0, text).then(res => {
+    await QueryLocation.getSubdistrictIdCreateNewPlot().then(res => {
       setLocation(res);
     });
   };
 
   useEffect(() => {
     const filterBySearchText = () => {
-      if (!!debounceValue) {
+      if (!!debounceValue && location) {
         const words: {
           districtName: string;
           provinceName: string;
@@ -301,12 +306,10 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
           })
           .slice(0, 10);
         setPlotAreas(result);
-      } else {
-        setPosition(LAT_LNG_BANGKOK);
       }
     };
     filterBySearchText();
-  }, [debounceValue]);
+  }, [debounceValue, location]);
 
   const searchPlotArea = (value: string) => {
     setSearchValue(value);
@@ -335,7 +338,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 <View style={styles.inner}>
                   <View style={styles.container}></View>
                 </View>
-                <ScrollView>
+                <ScrollView showsVerticalScrollIndicator={false}>
                   <Text style={[styles.head, { marginTop: normalize(15) }]}>
                     ชื่อแปลงเกษตร
                   </Text>
@@ -525,27 +528,44 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       </Text>
                     </View>
                   </TouchableOpacity>
-                  <View style={{ flex: 1 }}>
-                    <MapView.Animated
-                      mapType="satellite"
-                      minZoomLevel={14}
-                      maxZoomLevel={18}
-                      style={styles.map}
-                      initialRegion={position}
-                      provider={PROVIDER_GOOGLE}
-                      region={{
-                        latitude: lat,
-                        longitude: long,
-                        latitudeDelta: 0.0,
-                        longitudeDelta: 0.0,
-                      }}
-                      showsUserLocation={true}
-                      showsMyLocationButton={true}
-                    />
-                    <View style={styles.markerFixed}>
+                  {position.latitude && position.longitude ? (
+                    <View style={{ flex: 1 }}>
+                      <MapView.Animated
+                        mapType="satellite"
+                        minZoomLevel={14}
+                        maxZoomLevel={18}
+                        style={styles.map}
+                        onPress={e => {
+                          setPosition({
+                            ...position,
+                            latitude: e.nativeEvent.coordinate.latitude,
+                            longitude: e.nativeEvent.coordinate.longitude,
+                          });
+                        }}
+                        provider={PROVIDER_GOOGLE}
+                        region={{
+                          latitude: position.latitude,
+                          latitudeDelta: 0.0922,
+                          longitudeDelta: 0.042,
+                          longitude: position.longitude,
+                        }}
+                        showsUserLocation={true}
+                        showsMyLocationButton={true}>
+                        <Marker
+                          image={image.mark}
+                          coordinate={{
+                            latitude: position?.latitude,
+                            longitude: position?.longitude,
+                          }}
+                        />
+                      </MapView.Animated>
+                      {/* <View style={styles.markerFixed}>
                       <Image style={styles.marker} source={image.mark} />
+                    </View> */}
                     </View>
-                  </View>
+                  ) : (
+                    <View />
+                  )}
                   <Text style={styles.head}>จุดสังเกต</Text>
                   <TextInput
                     onChangeText={value => {
@@ -752,7 +772,14 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                               v.provinceName
                             }
                             id={v}
-                            onPress={() => selectPlotArea(v)}
+                            onPress={() => {
+                              selectPlotArea(v);
+                              setPosition(prev => ({
+                                ...prev,
+                                latitude: parseFloat(v.lat),
+                                longitude: parseFloat(v.long),
+                              }));
+                            }}
                           />
                         </TouchableOpacity>
                       ))}
