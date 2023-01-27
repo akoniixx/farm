@@ -143,6 +143,11 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
         }
         const res = await TaskDatasource.getTaskByTaskId(taskId || '');
         if (res && res.data) {
+          const countResend = res.data?.countResend;
+          if (countResend >= 2) {
+            await AsyncStorage.removeItem('taskId');
+            return setShowFinding(false);
+          }
           const endTime = moment(res.data.updatedAt)
             .add(30, 'minutes')
             .toISOString();
@@ -626,6 +631,6 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
     borderTopRightRadius: normalize(30),
     borderTopLeftRadius: normalize(30),
-    height: Platform.OS === 'ios' ? normalize(80) : normalize(90),
+    height: Platform.OS === 'ios' ? normalize(80) : normalize(85),
   },
 });
