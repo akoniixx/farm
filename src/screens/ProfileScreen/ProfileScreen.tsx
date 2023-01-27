@@ -13,11 +13,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { height, normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import CustomHeader from '../../components/CustomHeader';
 import { Avatar } from '@rneui/themed';
 import * as RootNavigation from '../../navigations/RootNavigation';
-import { ScrollView } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native';
 import PlotsItem, { StatusObject } from '../../components/Plots/Plots';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Authentication } from '../../datasource/AuthDatasource';
@@ -160,7 +159,61 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 />
               </TouchableOpacity>
             </View>
-            <View
+            {StatusObject(profilestate.status).status === 'ไม่อนุมัติ' ?
+               <View
+               style={{
+                 marginTop: normalize(10),
+                 width: normalize(150),
+                 height: normalize(28),
+                 borderRadius: normalize(12),
+                 display: 'flex',
+                 justifyContent: 'center',
+                 alignItems: 'center',
+                 borderWidth: 1,
+                 borderColor: StatusObject(profilestate.status).fontColor,
+                 backgroundColor: StatusObject(profilestate.status).colorBg,
+                 flexDirection: 'row',
+               }}>
+               {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว' ? (
+                 <Image
+                   source={icons.correct}
+                   style={{ width: 16, height: 16, right: 5 }}
+                 />
+               ) : StatusObject(profilestate.status).status === 'รอการตรวจสอบ' ? (
+                 <Image
+                   source={icons.warning}
+                   style={{ width: 16, height: 16, right: 5 }}
+                 />
+               ) : StatusObject(profilestate.status).status === 'ไม่อนุมัติ' ? (
+                 <Image
+                 source={icons.wrong}
+                 style={{ width: 16, height: 16, right: 5 }}
+               />
+               ) : (
+                 <Image
+                 source={icons.inactive}
+                 style={{ width: 16, height: 16, right: 5, tintColor: colors.bg }}
+               />
+               )}
+ 
+               <Text
+                 style={{
+                   color: StatusObject(profilestate.status).fontColor,
+                   fontFamily: font.AnuphanBold,
+                   fontSize: normalize(14),
+                 }}>
+                 {/* {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
+                   ? 'ยืนยันตัวตนสำเร็จ'
+                   : 'รอการตรวจสอบ'} */}
+                 {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
+                   ? 'ยืนยันตัวตนสำเร็จ'
+                   : StatusObject(profilestate.status).status === 'รอการตรวจสอบ'
+                   ? 'รอการตรวจสอบ'
+                   :  StatusObject(profilestate.status).status === 'ไม่อนุมัติ'
+                   ? 'ยืนยันตัวตนไม่สำเร็จ'
+                   : 'ปิดการใช้งาน'}
+               </Text>
+             </View>:   <View
               style={{
                 marginTop: normalize(10),
                 width: normalize(135),
@@ -213,7 +266,8 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                   ? 'ยืนยันตัวตนไม่สำเร็จ'
                   : 'ปิดการใช้งาน'}
               </Text>
-            </View>
+            </View>}
+          
           </View>
         </View>
         <View
@@ -331,7 +385,8 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
             <TouchableOpacity
               onPress={openGooglePlay}
               style={{
-                padding: normalize(20),
+                paddingHorizontal: normalize(20),
+                alignItems: 'center',
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',
@@ -353,7 +408,8 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 navigation.navigate('PrivacyScreen');
               }}
               style={{
-                padding: normalize(20),
+                paddingHorizontal: normalize(20),
+                alignItems: 'center',
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',
@@ -377,7 +433,8 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 });
               }}
               style={{
-                padding: normalize(20),
+                paddingHorizontal: normalize(20),
+                alignItems: 'center',
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',
@@ -402,7 +459,8 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 });
               }}
               style={{
-                padding: normalize(20),
+                paddingHorizontal: normalize(20),
+                alignItems: 'center',
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',

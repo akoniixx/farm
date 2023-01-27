@@ -40,7 +40,7 @@ export class Authentication {
     return axios
       .post(BASE_URL + '/auth/farmer/request-register-otp', {
         telephoneNo: telNumber,
-        refCode: telNumber,
+        // refCode: telNumber,
       })
       .then(res => {
         return res.data;

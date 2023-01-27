@@ -8,10 +8,10 @@ import {
   Dimensions,
   ImageBackground,
   Modal,
+  TouchableOpacity,
 } from 'react-native';
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import icons from '../../assets/icons/icons';
 import { normalize } from '../../functions/Normalize';

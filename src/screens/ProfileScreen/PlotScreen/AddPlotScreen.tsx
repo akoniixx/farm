@@ -14,6 +14,7 @@ import {
   Alert,
   PermissionsAndroid,
   ToastAndroid,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, image } from '../../../assets';
@@ -24,7 +25,6 @@ import { initProfileState, profileReducer } from '../../../hook/profilefield';
 import { stylesCentral } from '../../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
-import { ScrollView } from 'react-native-gesture-handler';
 import PlotsItem from '../../../components/Plots/Plots';
 import { useDebounceValue } from '../../../hook/useDebounceValue';
 import { plant } from '../../../definitions/plants';

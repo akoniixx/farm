@@ -12,6 +12,7 @@ import {
   Dimensions,
   Pressable,
   Alert,
+  ScrollView,
 } from 'react-native';
 import React, {
   useCallback,
@@ -25,7 +26,6 @@ import { stylesCentral } from '../../styles/StylesCentral';
 import { colors, font, icons, image as img } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import { MainButton } from '../../components/Button/MainButton';
-import { ScrollView } from 'react-native-gesture-handler';
 import * as ImagePicker from 'react-native-image-picker';
 import { normalize, width } from '../../functions/Normalize';
 import { ProgressBar } from '../../components/ProgressBar';

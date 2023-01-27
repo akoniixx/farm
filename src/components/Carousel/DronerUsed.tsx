@@ -5,13 +5,13 @@ import {
   View,
   TextInput,
   ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 import React, { useState } from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { Avatar } from '@rneui/base';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { color } from 'react-native-reanimated';
 
 interface dronerUsedData {

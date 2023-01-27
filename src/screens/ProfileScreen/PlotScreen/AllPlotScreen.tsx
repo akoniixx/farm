@@ -9,6 +9,8 @@ import {
   Linking,
   Platform,
   ImageBackground,
+  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../../assets';
@@ -19,10 +21,8 @@ import { initProfileState, profileReducer } from '../../../hook/profilefield';
 import { stylesCentral } from '../../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
-import { ScrollView } from 'react-native-gesture-handler';
 import PlotInProfile from '../../../components/Plots/PlotsInProfile';
 import PlotsItem from '../../../components/Plots/Plots';
-import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import PlotsItemEdit from '../../../components/Plots/PlotsItemEdit';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { callcenterNumber } from '../../../definitions/callCenterNumber';

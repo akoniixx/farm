@@ -21,7 +21,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Avatar } from '@rneui/base';
 import icons from '../../assets/icons/icons';

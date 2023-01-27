@@ -1,7 +1,6 @@
 import { Avatar } from '@rneui/base/dist/Avatar/Avatar';
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';

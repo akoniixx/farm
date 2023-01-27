@@ -11,6 +11,7 @@ import {
   Modal,
   PermissionsAndroid,
   Platform,
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -21,10 +22,6 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {
-  ScrollView,
-  TouchableWithoutFeedback,
-} from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { font, icons } from '../../assets';
 import colors from '../../assets/colors/colors';

@@ -5,13 +5,13 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../../styles/StylesCentral';
 import { colors, font, icons, image as img } from '../../../assets';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ScrollView } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal/dist/modal';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { callcenterNumber } from '../../../definitions/callCenterNumber';
