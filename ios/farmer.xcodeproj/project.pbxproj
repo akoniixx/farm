@@ -617,13 +617,8 @@
 				CODE_SIGN_ENTITLEMENTS = farmer/farmerDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-<<<<<<< HEAD
-				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = 5Y8QC3U7CF;
-=======
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 9ZXXDP8F5K;
->>>>>>> develop
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = farmer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Iconkaset;

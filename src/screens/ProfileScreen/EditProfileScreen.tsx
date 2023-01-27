@@ -52,19 +52,18 @@ import {
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
-  const [initProfile, setInitProfile] = useState({
-    firstname: '',
-    lastname: '',
+  const initialFormRegisterState = {
+    name: '',
+    surname: '',
     birthDate: '',
-    telephone: '',
-    image: '',
-    address1: '',
-    address2: '',
+    tel: '',
+    no: '',
+    address: '',
     province: '',
     district: '',
     subdistrict: '',
     postal: '',
-  });
+  };
 
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
@@ -81,6 +80,10 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const DistriSheet = useRef<any>();
   const SubDistriSheet = useRef<any>();
   const [address, setAddress] = useState<any>([]);
+  const [formState, dispatch] = useReducer(
+    registerReducer,
+    initialFormRegisterState,
+  );
 
   useEffect(() => {
     getProfile();
@@ -105,7 +108,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 }
               });
               if (!res.birthDate) {
-                setInitProfile({
+                formState({
                   firstname: res.firstname,
                   lastname: res.lastname,
                   birthDate: '',
@@ -119,7 +122,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   postal: res.address.postcode,
                 });
               } else {
-                setInitProfile({
+                formState({
                   firstname: res.firstname,
                   lastname: res.lastname,
                   birthDate: res.birthDate,
@@ -147,7 +150,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   }
                 });
                 if (!res.birthDate) {
-                  setInitProfile({
+                  dispatch({
                     firstname: res.firstname,
                     lastname: res.lastname,
                     birthDate: '',
@@ -163,7 +166,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 } else {
                   const datetime = res.birthDate;
                   const date = datetime.split('T')[0];
-                  setInitProfile({
+                  dispatch({
                     firstname: res.firstname,
                     lastname: res.lastname,
                     birthDate: res.birthDate,
@@ -221,7 +224,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
       );
     }
   }, [province, district]);
-console.log(initProfile.firstname)
+console.log(1,formState)
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -246,9 +249,9 @@ console.log(initProfile.firstname)
                 <Avatar
                   size={normalize(109)}
                   source={
-                    initProfile.image === ''
+                    formState.image === ''
                       ? icons.avatar
-                      : { uri: initProfile.image }
+                      : { uri: formState.image }
                   }
                   avatarStyle={{
                     borderRadius: normalize(60),
@@ -282,7 +285,7 @@ console.log(initProfile.firstname)
             </View>
             <Text style={styles.head}>ชื่อ*</Text>
             <TextInput
-              value={initProfile.firstname}
+              value={formState.firstname}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'ระบุชื่อ'}
@@ -290,7 +293,7 @@ console.log(initProfile.firstname)
             />
             <Text style={styles.head}>นามสกุล*</Text>
             <TextInput
-              value={initProfile.lastname}
+              value={formState.lastname}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'นามสกุล'}
@@ -308,7 +311,7 @@ console.log(initProfile.firstname)
               ]}>
               <TextInput
                 value={momentExtend.toBuddhistYear(
-                  initProfile.birthDate,
+                  formState.birthDate,
                   'DD MMMM YYYY',
                 )}
                 editable={false}
@@ -335,12 +338,12 @@ console.log(initProfile.firstname)
             <TextInput
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
-              value={initProfile.telephone}
+              value={formState.telephone}
             />
             <Text style={styles.headAdd}>ที่อยู่ของคุณ</Text>
             <Text style={styles.head}>บ้านเลขที่</Text>
             <TextInput
-              value={initProfile.address1}
+              value={formState.address1}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'-'}
@@ -348,7 +351,7 @@ console.log(initProfile.firstname)
             />
             <Text style={styles.head}>รายละเอียดที่อยู่</Text>
             <TextInput
-              value={initProfile.address2}
+              value={formState.address2}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholderTextColor={colors.disable}
@@ -356,7 +359,7 @@ console.log(initProfile.firstname)
             />
             <Text style={styles.head}>จังหวัด</Text>
             <TextInput
-              value={initProfile.province}
+              value={formState.province}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'ระบุชื่อ'}
@@ -364,7 +367,7 @@ console.log(initProfile.firstname)
             />
             <Text style={styles.head}>อำเภอ</Text>
             <TextInput
-              value={initProfile.district}
+              value={formState.district}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'ระบุชื่อ'}
@@ -372,7 +375,7 @@ console.log(initProfile.firstname)
             />
             <Text style={styles.head}>ตำบล</Text>
             <TextInput
-              value={initProfile.subdistrict}
+              value={formState.subdistrict}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'ระบุชื่อ'}
@@ -380,7 +383,7 @@ console.log(initProfile.firstname)
             />
             <Text style={styles.head}>รหัสไปรษณีย์</Text>
             <TextInput
-              value={initProfile.postal}
+              value={formState.postal}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'รหัสไปรษณีย์'}

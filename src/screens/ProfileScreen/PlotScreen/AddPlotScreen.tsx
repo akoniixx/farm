@@ -41,6 +41,7 @@ import { QueryLocation } from '../../../datasource/LocationDatasource';
 import { LAT_LNG_BANGKOK } from '../../../definitions/location';
 import { PlotDatasource } from '../../../datasource/PlotDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 export type PredictionType = {
   description: string;
@@ -343,7 +344,14 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
     setplotDataUI(someArray);
     deTailPlot.current.hide();
   };
-
+  console.log(1,
+    raiAmount ,
+   plantName ,
+   lat ,
+   long ,
+   search.term ,
+   landmark ,
+   selectPlot.subdistrictId);
   return (
     <>
       <KeyboardAvoidingView
@@ -526,6 +534,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       }}>
                       <Image source={image.map} style={styles.imageStyle} />
                       <Text
+                        numberOfLines={1}
                         style={{
                           fontFamily: fonts.AnuphanMedium,
                           fontSize: normalize(16),
@@ -737,7 +746,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 </View>
               </ActionSheet>
 
-              <ActionSheet ref={plotArea}>
+              {/* <ActionSheet ref={plotArea}>
                 <View
                   style={{
                     backgroundColor: 'white',
@@ -789,6 +798,13 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                         defaultValue={searchValue}
                         onChangeText={searchPlotArea}
                       />
+                      {searchValue ? (
+                        <TouchableOpacity
+                          style={styles.clearBtn}
+                          onPress={() => setSearchValue('')}>
+                          <Icon name="close" />
+                        </TouchableOpacity>
+                      ) : null}
                     </View>
 
                     <ScrollView>
@@ -813,7 +829,119 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                                   longitude: parseFloat(v.long),
                                 }));
                               }}
-  
+                            />
+                          </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                  </View>
+                </View>
+              </ActionSheet> */}
+              <ActionSheet ref={plotArea}>
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    paddingVertical: normalize(30),
+                    paddingHorizontal: normalize(20),
+                    width: windowWidth,
+                    height: windowHeight,
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <Text
+                      style={[styles.head, { marginBottom: normalize(10) }]}>
+                      พื้นที่แปลงเกษตร
+                    </Text>
+                    <Text
+                      style={{
+                        color: colors.greenLight,
+                        fontFamily: font.SarabunMedium,
+                        fontSize: normalize(16),
+                      }}
+                      onPress={() => {
+                        plotArea.current.hide();
+                      }}>
+                      ยกเลิก
+                    </Text>
+                  </View>
+                  <View>
+                    <Text
+                      style={{
+                        marginBottom: normalize(10),
+                        fontFamily: fonts.SarabunLight,
+                        fontSize: normalize(16),
+                        color: colors.gray,
+                      }}>
+                      {`กรุณาพิมพ์ค้นหาพื้นที่แปลงเกษตรของคุณ
+ด้วยชื่อ ตำบล / อำเภอ / จังหวัด`}
+                    </Text>
+                  </View>
+                  <View style={styles.container}>
+                    <View
+                      style={{
+                        borderColor: colors.disable,
+                        borderWidth: 1,
+                        padding: 10,
+                        borderRadius: 10,
+                        marginVertical: 20,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        height: normalize(55),
+                        justifyContent: 'space-between',
+                      }}>
+                      <TextInput
+                        onChangeText={searchPlotArea}
+                        value={searchValue}
+                        defaultValue={searchValue}
+                        style={[
+                          {
+                            marginLeft: 5,
+                            height: 60,
+                            justifyContent: 'center',
+                            lineHeight: 19,
+                            fontSize: 19,
+                            flex: 1,
+                            width: '100%',
+                            color: colors.fontBlack,
+                            fontFamily: font.SarabunLight,
+                          },
+                        ]}
+                        editable={true}
+                        placeholder={'ระบุพื้นที่แปลงเกษตร'}
+                        placeholderTextColor={colors.disable}
+                      />
+                      {searchValue ? (
+                        <TouchableOpacity
+                          style={styles.clearBtn}
+                          onPress={() => setSearchValue('')}>
+                          <Icon name="close" />
+                        </TouchableOpacity>
+                      ) : null}
+                    </View>
+                    <ScrollView>
+                      {plotAreas !== undefined &&
+                        plotAreas.map((v: any, i: any) => (
+                          <TouchableOpacity>
+                            <PlantSelect
+                              key={i}
+                              label={
+                                v.subdistrictName +
+                                '/' +
+                                v.districtName +
+                                '/' +
+                                v.provinceName
+                              }
+                              id={v}
+                              onPress={() => {
+                                selectPlotArea(v);
+                                setPosition(prev => ({
+                                  ...prev,
+                                  latitude: parseFloat(v.lat),
+                                  longitude: parseFloat(v.long),
+                                }));
+                              }}
                             />
                           </TouchableOpacity>
                         ))}
@@ -880,6 +1008,12 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
 };
 export default AddPlotScreen;
 const styles = StyleSheet.create({
+  clearBtn: {
+    flex: 0.1,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   inputStyle: {
     paddingVertical: 16,
     paddingHorizontal: 16,

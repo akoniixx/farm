@@ -150,7 +150,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   style={styles.input}
                   editable={true}
                   placeholder={'ระบุชื่อ'}
-                  placeholderTextColor={colors.disable}
+                  placeholderTextColor={colors.gray}
                 />
                 <Text style={styles.head}>นามสกุล*</Text>
                 <TextInput
@@ -165,7 +165,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   style={styles.input}
                   editable={true}
                   placeholder={'นามสกุล'}
-                  placeholderTextColor={colors.disable}
+                  placeholderTextColor={colors.gray}
                 />
 
                 <Text style={styles.head}>วันเกิด*</Text>
@@ -186,7 +186,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       }
                       editable={false}
                       placeholder={'ระบุวัน เดือน ปี'}
-                      placeholderTextColor={colors.disable}
+                      placeholderTextColor={colors.gray}
                       style={{
                         width: windowWidth * 0.78,
                         color: colors.fontBlack,
@@ -210,7 +210,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   style={[styles.input, { backgroundColor: colors.disable }]}
                   editable={false}
                   value={tele}
-                  placeholderTextColor={colors.gray}
+                  placeholderTextColor={colors.disable}
                 />
               </ScrollView>
               <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
@@ -269,6 +269,16 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       justifyContent: 'center',
                       borderRadius: normalize(3),
                     }}>
+                      <TouchableOpacity   
+                      onPress={() => {
+                        setOpenModal(false)
+                      }}>
+                      <View style={{alignSelf: 'flex-end'}}>
+                        <Image source={icons.close} 
+                      />
+                      </View>
+                      </TouchableOpacity>
+                      
                     {/* <MainButton
                       fontFamily={font.SarabunLight}
                       label="ถ่ายภาพ"

@@ -327,7 +327,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
     setplotDataUI(someArray);
     deTailPlot.current.hide();
   };
-  console.log(lat, long);
+ 
   return (
     <>
       <SafeAreaView style={stylesCentral.container}>
@@ -509,6 +509,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       }}>
                       <Image source={image.map} style={styles.imageStyle} />
                       <Text
+                      numberOfLines={1}
                         style={{
                           fontFamily: fonts.AnuphanMedium,
                           fontSize: normalize(16),
@@ -565,9 +566,6 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                           }}
                         />
                       </MapView.Animated>
-                      {/* <View style={styles.markerFixed}>
-                      <Image style={styles.marker} source={image.mark} />
-                    </View> */}
                     </View>
                   ) : (
                     <View />
@@ -626,7 +624,6 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                           selectPlot.subdistrictId,
                         )
                           .then(res => {
-                            console.log(res);
                             setLoading(false);
                             navigation.navigate('AllPlotScreen');
                           })

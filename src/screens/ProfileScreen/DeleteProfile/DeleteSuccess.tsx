@@ -39,7 +39,7 @@ const DeleteSuccess: React.FC<any> = ({ navigation }) => {
           <Text style={[styles.fontBody, { paddingTop: '5%' }]}>
             มีคำถามเพิ่มเติมสามารถติดต่อเจ้าหน้าที่
           </Text>
-          <Text style={styles.fontBody}>โทร. 02-113-6159</Text>
+          <Text style={styles.fontBody}>โทร. 02-233-9000</Text>
           <View style={{ alignItems: 'center', paddingTop: '10%' }}>
             <Image
               source={image.delete_acc}

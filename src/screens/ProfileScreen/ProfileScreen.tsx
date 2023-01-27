@@ -13,10 +13,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { height, normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import CustomHeader from '../../components/CustomHeader';
 import { Avatar } from '@rneui/themed';
 import * as RootNavigation from '../../navigations/RootNavigation';
-import { ScrollView, TouchableOpacity } from 'react-native';
+import { ScrollView } from 'react-native';
 import PlotsItem, { StatusObject } from '../../components/Plots/Plots';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Authentication } from '../../datasource/AuthDatasource';
@@ -36,19 +37,12 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const windowHeight = Dimensions.get('window').height;
 
   const onLogout = async () => {
-    setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-    const fcmtoken = await AsyncStorage.getItem('fcmtoken');
     socket.removeAllListeners(`send-task-${farmer_id!}`);
     socket.close();
-    FCMtokenDatasource.deleteFCMtoken(fcmtoken!).then(
-      async result=>{
-        await Authentication.logout();
-      }
-    ).catch(err => console.log(err))
+    await Authentication.logout();
   };
   useEffect(() => {
     const getProfile = async () => {
@@ -56,7 +50,6 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
       const farmer_id = await AsyncStorage.getItem('farmer_id');
       ProfileDatasource.getProfile(farmer_id!)
         .then(async res => {
-          setReload(!reload);
           const imgPath = res.file.filter((item: any) => {
             if (item.category === 'PROFILE_IMAGE') {
               return item;
@@ -71,6 +64,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
               plotItem: res.farmerPlot,
               status: res.status,
             });
+            setReload(!reload);
           } else {
             ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
               .then(resImg => {
@@ -82,6 +76,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                   plotItem: res.farmerPlot,
                   status: res.status,
                 });
+                setReload(!reload);
               })
 
               .catch(err => console.log(err))
@@ -106,7 +101,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
     }
   };
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView style={[stylesCentral.container]}>
       <View
         style={{
           maxHeight: '100%',
@@ -148,10 +143,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
             <View style={{ flexDirection: 'row' }}>
               <Text style={[styles.text]}>{profilestate.name} </Text>
               <TouchableOpacity
-                onPress={() => {
-                  setLoading(true);
-                  navigation.navigate('EditProfileScreen');
-                }}>
+                onPress={() => navigation.navigate('EditProfileScreen')}>
                 <Image
                   source={icons.edit}
                   style={{
@@ -163,6 +155,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 />
               </TouchableOpacity>
             </View>
+           
             {StatusObject(profilestate.status).status === 'ไม่อนุมัติ' ? (
               <View
                 style={{
@@ -213,9 +206,6 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                     fontFamily: font.AnuphanBold,
                     fontSize: normalize(14),
                   }}>
-                  {/* {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
-                   ? 'ยืนยันตัวตนสำเร็จ'
-                   : 'รอการตรวจสอบ'} */}
                   {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
                     ? 'ยืนยันตัวตนสำเร็จ'
                     : StatusObject(profilestate.status).status ===
@@ -276,13 +266,9 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                     fontFamily: font.AnuphanBold,
                     fontSize: normalize(14),
                   }}>
-                  {/* {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
-                  ? 'ยืนยันตัวตนสำเร็จ'
-                  : 'รอการตรวจสอบ'} */}
                   {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
                     ? 'ยืนยันตัวตนสำเร็จ'
-                    : StatusObject(profilestate.status).status ===
-                      'รอการตรวจสอบ'
+                    : StatusObject(profilestate.status).status ==='รอการตรวจสอบ'
                     ? 'รอการตรวจสอบ'
                     : StatusObject(profilestate.status).status === 'ไม่อนุมัติ'
                     ? 'ยืนยันตัวตนไม่สำเร็จ'
@@ -309,7 +295,6 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                setLoading(true);
                 navigation.navigate('AllPlotScreen');
               }}>
               <Text style={[styles.h1]}>ดูแปลงทั้งหมด</Text>
@@ -407,8 +392,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
             <TouchableOpacity
               onPress={openGooglePlay}
               style={{
-                paddingHorizontal: normalize(20),
-                alignItems: 'center',
+                padding: normalize(20),
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',
@@ -430,8 +414,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 navigation.navigate('PrivacyScreen');
               }}
               style={{
-                paddingHorizontal: normalize(20),
-                alignItems: 'center',
+                padding: normalize(20),
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',
@@ -455,8 +438,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 });
               }}
               style={{
-                paddingHorizontal: normalize(20),
-                alignItems: 'center',
+                padding: normalize(20),
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',
@@ -481,8 +463,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 });
               }}
               style={{
-                paddingHorizontal: normalize(20),
-                alignItems: 'center',
+                padding: normalize(20),
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',
@@ -499,7 +480,6 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 style={{ width: 25, height: 25 }}
               />
             </TouchableOpacity>
-            <View style={{ height: 45 }}></View>
           </View>
         </View>
       </ScrollView>
@@ -631,16 +611,5 @@ const styles = StyleSheet.create({
   icon: {
     width: normalize(24),
     height: normalize(24),
-  },
-  screen: {
-    ...Platform.select({
-      ios: {
-        backgroundColor: colors.white,
-      },
-      android: {
-        flex: 1,
-        backgroundColor: colors.white,
-      },
-    }),
   },
 });

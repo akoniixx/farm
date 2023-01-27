@@ -155,10 +155,10 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                 <ProgressBar index={2} />
               </View>
               <Text style={styles.h3}>ขั้นตอนที่ 2 จาก 4</Text>
-              <Text style={styles.h1}>
+              <Text style={[styles.h1]}>
                 ระบุที่อยู่
-                <Text style={{ fontSize: normalize(18), color: '#A7AEB5' }}>
-                  (ไม่จำเป็นต้องระบุ)
+                <Text style={{ fontSize: normalize(18), color: '#A7AEB5'}}>
+                 {`  (ไม่จำเป็นต้องระบุ)`}
                 </Text>
               </Text>
               <ScrollView style={{ top: '5%' }}>
@@ -175,7 +175,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                   style={[styles.input]}
                   editable={true}
                   placeholder={'บ้านเลขที่'}
-                  placeholderTextColor={colors.disable}
+                  placeholderTextColor={colors.gray}
                 />
                 <Text style={styles.head}>รายละเอียดที่อยู่</Text>
                 <TextInput
@@ -190,7 +190,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                   style={styles.input}
                   editable={true}
                   placeholder={'รายละเอียดที่อยู่ (หมู่, ถนน)'}
-                  placeholderTextColor={colors.disable}
+                  placeholderTextColor={colors.gray}
                 />
                 <Text style={styles.head}>จังหวัด</Text>
                 <TouchableOpacity
@@ -224,7 +224,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                           <Text
                             style={{
                               fontFamily: font.SarabunLight,
-                              color: colors.disable,
+                              color: colors.gray,
                             }}>
                             จังหวัด
                           </Text>

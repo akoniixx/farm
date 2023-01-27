@@ -304,7 +304,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
       console.log(e);
     }
   };
-
+console.log(1,lat,long)
   const fetchLocation = async (text?: string) => {
     await QueryLocation.getSubdistrict(0, text).then(res => {
       setLocation(res);
@@ -423,6 +423,13 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                 <Text
                   style={styles.textaddplot}
                   onPress={() => {
+                    setPlantName(null);
+                    setraiAmount(null);
+                    setlandmark(null);
+                    setSearch({ search: null });
+                    setSelectPlot(null);
+                    setSearchValue('');
+                    setPlotAreas([]);
                     actionSheet.current.show();
                   }}>
                   + เพิ่มแปลงเกษตร
@@ -641,10 +648,12 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     }}>
                     <Image source={image.map} style={styles.imageStyle} />
                     <Text
+                    numberOfLines={1}
                       style={{
                         fontFamily: fonts.AnuphanMedium,
                         fontSize: normalize(16),
                         color: colors.gray,
+                        
                       }}>
                       {!search.term ? (
                         <Text
@@ -656,6 +665,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                         </Text>
                       ) : (
                         <Text
+                        numberOfLines={1}
                           style={{
                             fontFamily: font.SarabunLight,
                             color: colors.fontGrey,
