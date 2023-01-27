@@ -97,7 +97,6 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
                 </Text>
               ) : null}
             </View>
-
             <View>
               <MainButton
                 label="ถัดไป"

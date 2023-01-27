@@ -58,15 +58,15 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
     }
   }, [image]);
 
-  const onCamera = useCallback(async () => {
-    const result = await ImagePicker.launchCamera({
-      mediaType: 'photo',
-    });
-    if (!result.didCancel) {
-      setImage(result);
-      setOpenModal(false);
-    }
-  }, [image]);
+  // const onCamera = useCallback(async () => {
+  //   const result = await ImagePicker.launchCamera({
+  //     mediaType: 'photo',
+  //   });
+  //   if (!result.didCancel) {
+  //     setImage(result);
+  //     setOpenModal(false);
+  //   }
+  // }, [image]);
 
   const [formState, dispatch] = useReducer(
     registerReducer,
@@ -269,14 +269,14 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       justifyContent: 'center',
                       borderRadius: normalize(3),
                     }}>
-                    <MainButton
+                    {/* <MainButton
                       fontFamily={font.SarabunLight}
                       label="ถ่ายภาพ"
                       fontColor={colors.fontBlack}
                       color={colors.white}
                       onPress={onCamera}
                       width={100}
-                    />
+                    /> */}
                     <MainButton
                       fontFamily={font.SarabunLight}
                       label="เลือกรูปถ่าย"
@@ -344,24 +344,29 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-around',
+                        top: 10,
                       }}>
-                      <MainButton
-                        label="ยกเลิก"
-                        fontColor={colors.fontBlack}
-                        borderColor={colors.fontGrey}
-                        color={colors.white}
-                        width={150}
-                        onPress={() => setOpenCalendar(false)}
-                      />
-                      <MainButton
-                        label="บันทึก"
-                        fontColor={colors.white}
-                        color={colors.greenLight}
-                        width={150}
-                        onPress={() => {
-                          setOpenCalendar(false);
-                        }}
-                      />
+                      <View style={{ right: 10 }}>
+                        <MainButton
+                          label="ยกเลิก"
+                          fontColor={colors.fontBlack}
+                          borderColor={colors.fontGrey}
+                          color={colors.white}
+                          width={150}
+                          onPress={() => setOpenCalendar(false)}
+                        />
+                      </View>
+                      <View style={{ left: 10 }}>
+                        <MainButton
+                          label="บันทึก"
+                          fontColor={colors.white}
+                          color={colors.greenLight}
+                          width={150}
+                          onPress={() => {
+                            setOpenCalendar(false);
+                          }}
+                        />
+                      </View>
                     </View>
                   </View>
                 </View>

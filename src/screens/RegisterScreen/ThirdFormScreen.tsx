@@ -476,10 +476,9 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
           </View>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            {/*  <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
             <View style={{ justifyContent: 'space-around' }}>
               <ScrollView>
-                <Text style={[styles.head, { marginTop: normalize(15) }]}>
+                  <Text style={[styles.head, { marginTop: normalize(15) }]}>
                   ชื่อแปลงเกษตร
                 </Text>
                 <TextInput
@@ -667,38 +666,41 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     </Text>
                   </View>
                 </TouchableOpacity>
-                <View style={{ flex: 1 }}>
-                  <MapView.Animated
-                    mapType="satellite"
-                    minZoomLevel={14}
-                    maxZoomLevel={18}
-                    style={styles.map}
-                    onPress={e => {
-                      setPosition({
-                        ...position,
-                        latitude: e.nativeEvent.coordinate.latitude,
-                        longitude: e.nativeEvent.coordinate.longitude,
-                      });
-                    }}
-                    initialRegion={position}
-                    provider={PROVIDER_GOOGLE}
-                    region={{
-                      latitude: position.latitude,
-                      longitude: position.longitude,
-                      latitudeDelta: 0.0,
-                      longitudeDelta: 0.0,
-                    }}
-                    showsUserLocation={true}
-                    showsMyLocationButton={true}>
-                    <Marker
-                      image={image.mark}
-                      coordinate={{
+                {position.latitude && position.longitude ? (
+                  <View style={{ flex: 1 }}>
+                    <MapView.Animated
+                      mapType="satellite"
+                      minZoomLevel={14}
+                      maxZoomLevel={18}
+                      style={styles.map}
+                      onPress={e => {
+                        setPosition({
+                          ...position,
+                          latitude: e.nativeEvent.coordinate.latitude,
+                          longitude: e.nativeEvent.coordinate.longitude,
+                        });
+                      }}
+                      provider={PROVIDER_GOOGLE}
+                      region={{
                         latitude: position.latitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.042,
                         longitude: position.longitude,
                       }}
-                    />
-                  </MapView.Animated>
-                </View>
+                      showsUserLocation={true}
+                      showsMyLocationButton={true}>
+                      <Marker
+                        image={image.mark}
+                        coordinate={{
+                          latitude: position?.latitude,
+                          longitude: position?.longitude,
+                        }}
+                      />
+                    </MapView.Animated>
+                  </View>
+                ) : (
+                  <View />
+                )}
                 <Text style={styles.head}>จุดสังเกต</Text>
                 <TextInput
                   onChangeText={value => {
@@ -746,10 +748,18 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     }}
                   />
                 </View>
-                <View style={{ height: normalize(10) }}></View>
+                <View style={{ 
+                   ...Platform.select({
+                    ios: {
+                    height: normalize(10)
+                    },
+                    android: {
+                      height: normalize(100)
+                    },
+                  })
+                 }}></View>
               </ScrollView>
             </View>
-            {/*  </TouchableWithoutFeedback> */}
           </KeyboardAvoidingView>
         </View>
         <ActionSheet ref={plantSheet}>
@@ -856,19 +866,31 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                 <TextInput
                   onChangeText={searchPlotArea}
                   value={searchValue}
-                  // defaultValue={plotAreas}
+                  defaultValue={searchValue}
                   style={[
                     {
-                      borderColor: colors.disable,
-                      fontFamily: fonts.SarabunLight,
-                      fontSize: normalize(16),
-                      color: colors.gray,
+                      marginLeft: 5,
+                      height: 60,
+                      justifyContent: 'center',
+                      lineHeight: 19,
+                      fontSize: 19,
+                      flex: 1,
+                      width: '100%',
+                      color: colors.fontBlack,
+                      fontFamily: font.SarabunLight,
                     },
                   ]}
                   editable={true}
                   placeholder={'ระบุพื้นที่แปลงเกษตร'}
                   placeholderTextColor={colors.disable}
                 />
+                {searchValue ? (
+                  <TouchableOpacity
+                    style={styles.clearBtn}
+                    onPress={() => setSearchValue('')}>
+                    <Icon name="close" />
+                  </TouchableOpacity>
+                ) : null}
               </View>
               <ScrollView>
                 {plotAreas !== undefined &&
@@ -884,7 +906,14 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                           v.provinceName
                         }
                         id={v}
-                        onPress={() => selectPlotArea(v)}
+                        onPress={() => {
+                          selectPlotArea(v);
+                          setPosition(prev => ({
+                            ...prev,
+                            latitude: parseFloat(v.lat),
+                            longitude: parseFloat(v.long),
+                          }));
+                        }}
                       />
                     </TouchableOpacity>
                   ))}
@@ -943,6 +972,12 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
 export default ThirdFormScreen;
 
 const styles = StyleSheet.create({
+  clearBtn: {
+    flex: 0.1,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   list: {
     fontFamily: font.SarabunMedium,
     fontSize: normalize(18),

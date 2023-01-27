@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font } from '../../assets';
@@ -164,13 +165,26 @@ const styles = StyleSheet.create({
     top: '30%',
   },
   border: {
-    top: '5%',
+    ...Platform.select({
+      ios: {
+        top: '5%',
     borderColor: colors.yellow,
     backgroundColor: colors.yellowLight,
     borderWidth: 1,
     borderRadius: 15,
     height: normalize(110),
     width: normalize(350),
+      },
+      android: {
+    top: '5%',
+    borderColor: colors.yellow,
+    backgroundColor: colors.yellowLight,
+    borderWidth: 1,
+    borderRadius: 15,
+    height: normalize(130),
+    width: normalize(350),
+      },
+    })
   },
   rectangleFixed: {
     left: '0%',

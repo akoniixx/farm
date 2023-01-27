@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View, TextInput } from 'react-native';
+import { Image, StyleSheet, Text, View, TextInput, Platform } from 'react-native';
 import React from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons } from '../../assets';
@@ -65,18 +65,36 @@ const PlotsItem: React.FC<AddPlot> = ({
     <View
       key={index}
       style={{
-        height: normalize(131),
-        borderWidth: 0.5,
-        borderColor: colors.greenLight,
-        backgroundColor: '#ECFBF2',
-        borderRadius: normalize(12),
-        paddingVertical: normalize(10),
-        paddingHorizontal: normalize(20),
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: normalize(10),
+        ...Platform.select({
+          ios: {
+            height: normalize(131),
+            borderWidth: 0.5,
+            borderColor: colors.greenLight,
+            backgroundColor: '#ECFBF2',
+            borderRadius: normalize(12),
+            paddingVertical: normalize(10),
+            paddingHorizontal: normalize(20),
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: normalize(10),
+          },
+          android: {
+            height: normalize(155),
+            borderWidth: 0.5,
+            borderColor: colors.greenLight,
+            backgroundColor: '#ECFBF2',
+            borderRadius: normalize(12),
+            paddingVertical: normalize(10),
+            paddingHorizontal: normalize(20),
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: normalize(10),
+          },
+        })
       }}>
       <View
         style={{

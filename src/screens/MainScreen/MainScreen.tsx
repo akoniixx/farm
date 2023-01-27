@@ -22,8 +22,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
-import DronerUsed from '../../components/Carousel/DronerUsed';
-import DronerSugg from '../../components/Carousel/DronerCarousel';
+
 import { ActivityIndicator } from 'react-native-paper';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
 import { useIsFocused } from '@react-navigation/native';
@@ -31,6 +30,7 @@ import moment from 'moment';
 import { useAuth } from '../../contexts/AuthContext';
 import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import DronerUsed from '../../components/Carousel/DronerUsed';
 
 const MainScreen: React.FC<any> = ({ navigation }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -739,6 +739,6 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
     borderTopRightRadius: normalize(30),
     borderTopLeftRadius: normalize(30),
-    height: 80,
+    height: Platform.OS === 'ios' ? normalize(80) : normalize(90),
   },
 });
