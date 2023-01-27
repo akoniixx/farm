@@ -199,11 +199,12 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                   marginVertical: 12,
                   borderColor: colors.disable,
                   borderWidth: 1,
-                  padding: 16,
+                  paddingHorizontal: 16,
+                  paddingVertical: 4,
                   borderRadius: 8,
                   textAlignVertical: 'top',
                   writingDirection: 'ltr',
-                  height: Platform.OS === 'ios' ? 6 * 20 : 80,
+                  height: Platform.OS === 'ios' ? 6 * 20 : 120,
                 }}
               />
             </View>
@@ -217,14 +218,14 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 fontColor={colors.fontBlack}
                 borderColor={colors.fontGrey}
                 color={colors.white}
-                width={150}
+                width={Dimensions.get('window').width * 0.45 - 16}
                 onPress={() => navigation.goBack()}
               />
               <MainButton
                 label="บันทึก"
                 fontColor={colors.white}
                 color={colors.greenLight}
-                width={150}
+                width={Dimensions.get('window').width * 0.45 - 16}
                 onPress={() => onSubmit()}
               />
             </View>
@@ -283,7 +284,8 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
             <View
               style={{
                 flexDirection: 'row',
-                justifyContent: 'space-around',
+                justifyContent: 'space-between',
+                width: '100%',
               }}>
               <MainButton
                 label="ยกเลิก"

@@ -13,7 +13,7 @@ interface MainButtonProps {
   borderColor?: string;
   fontFamily?: string;
   disable?: boolean;
-  width?: number;
+  width?: number | string;
   onPress?: () => void;
   style?: ViewStyle;
   marginVertical?: number;

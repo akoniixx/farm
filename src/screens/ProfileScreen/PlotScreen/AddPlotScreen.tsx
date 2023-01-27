@@ -100,7 +100,6 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   useEffect(() => {
     getProfile();
   }, []);
-  console.log('location', JSON.stringify(position, null, 2));
   const getProfile = async () => {
     setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -279,8 +278,13 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
           },
         } = result;
         const { lat, lng } = location;
-        setlat(lat);
+        setlat(lng);
         setlong(lng);
+        setPosition(prev => ({
+          ...prev,
+          latitude: parseFloat(lat),
+          longitude: parseFloat(lng),
+        }));
         setShowPredictions(false);
         setSearch({ term: description, fetchPredictions: false });
         mapSheet.current.hide();
