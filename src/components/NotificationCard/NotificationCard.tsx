@@ -29,7 +29,7 @@ const NotificationCard : React.FC<NotificationCardEntity> = prop =>{
                 <View style={style.header}>
                     <Text style={style.headerText}>{prop.title}</Text>
                     <Pressable onPress={()=> setExpand(!expand)}>
-                        <Image source={icons.arrowUp} style={style.arrow}/>
+                        <Image source={expand?icons.arrowUp:icons.arrowDown} style={style.arrow}/>
                     </Pressable>
                 </View>
                 {

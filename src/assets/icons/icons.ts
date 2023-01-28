@@ -43,6 +43,7 @@ export default {
   done_academy: require('./doneAcademy.png'),
   time: require('./time.png'),
   arrowUp: require('./arrowUp.png'),
+  arrowDown: require('./arrowDown.png'),
   arrowLeft: require('./arrowLeft.png'),
   calling: require('./calling.png'),
   calendarOrange: require('./CalendarOrange.png'),
@@ -75,4 +76,6 @@ export default {
   iconnews : require('./iconnews.png'),
   iconpromotion : require('./iconpromotion.png'),
   iconverify : require('./iconverify.png'),
+  notification : require('./notification.png'),
+  newnotification : require('./notificationnew.png'),
 };

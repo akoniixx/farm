@@ -7,7 +7,7 @@ import { colors, icons, image } from '../../assets'
 import fonts from '../../assets/fonts'
 import { normalize, width } from '../../functions/Normalize'
 
-const FarmerPlotFailed:React.FC<ModalEntity> = ({show,onClose,onMainClick,onBottomClick})=>{
+const FarmerPlotFailed:React.FC<ModalEntity> = ({show,onClose,onMainClick,onBottomClick,text})=>{
   return (
     <Modal visible={show} transparent={true}>
         <View style={ModalStyle.modal}>
@@ -23,9 +23,7 @@ const FarmerPlotFailed:React.FC<ModalEntity> = ({show,onClose,onMainClick,onBott
                       />
                     </TouchableOpacity>
                 </View>
-                <Text style={ModalStyle.modalHeader}>แปลงเกษตรของท่าน</Text>
-                <Text style={ModalStyle.modalHeader}>(แปลง 3 อ้อย)ยืนยันไม่สำเร็จ</Text>
-                <Text style={[ModalStyle.modalHeader,{paddingBottom : normalize(20)}]}>โปรดติดต่อเจ้าหน้าที่</Text>
+                <Text style={[ModalStyle.modalHeader,{paddingVertical : normalize(20)}]}>{text}</Text>
                 <Image source={image.plotFailed} style={ModalStyle.image}/>
                 <MainButton 
                     label="ตกลง"

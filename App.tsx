@@ -22,12 +22,6 @@ import { AuthProvider } from './src/contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 const App = () => {
-  // messaging().setBackgroundMessageHandler(async remoteMessage => {
-  //   console.log('Message handled in the background!', remoteMessage);
-  // });
-  // messaging().onMessage(async message =>{
-  //   console.log(message)
-  // });
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();

@@ -19,14 +19,14 @@ import LinearGradient from 'react-native-linear-gradient';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
-import DronerUsed from '../../components/Carousel/DronerUsed';
-import DronerSugg from '../../components/Carousel/DronerCarousel';
 import { ActivityIndicator } from 'react-native-paper';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
 import { useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
+import {TabActions} from '@react-navigation/native';
+import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 
-const MainScreen: React.FC<any> = ({ navigation }) => {
+const MainScreen: React.FC<any> = ({ navigation,route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const imageWidth = screenWidth / 2;
   const date = new Date();
@@ -45,11 +45,33 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
     cropName: '',
     purposeSprayName: '',
   });
-
+  const [showBell,setShowBell] = useState(false)
+  const [notiData,setNotiData] = useState<{
+    count : Number,
+    data : any
+  }>({
+    count : 0,
+    data : []
+  })
+  const noti = route.params?.noti??false
+  
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
+    const farmerId = await AsyncStorage.getItem('farmer_id')
+    if(farmerId){
+      setShowBell(true)
+    }
     setFcmToken(value!);
   };
+
+  const getNotificationData = async () =>{
+    FCMtokenDatasource.getNotificationList().then(
+      res => setNotiData({
+        count : res.count,
+        data : res.data
+      })
+    ).catch(err => console.log(err));
+  }
 
   useEffect(() => {
     const getTaskId = async () => {
@@ -59,6 +81,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
     getTaskId();
     getData();
     getProfile();
+    getNotificationData()
   }, [isFocused]);
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -87,7 +110,6 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
           date.toDateString(),
         )
           .then(res => {
-            console.log(`length = ${res.length}`);
             setTaskSug(res);
           })
           .catch(err => console.log(err));
@@ -184,14 +206,17 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                       {profilestate.name}
                     </Text>
                   </View>
-                  <TouchableOpacity onPress={()=> navigation.navigate("NotificationScreen")}>
-                    <View style={{
-                      width : normalize(40),
-                      height : normalize(40),
-                      backgroundColor : '#000'
-                    }}>
-
-                    </View>
+                  <TouchableOpacity onPress={()=> navigation.navigate("NotificationScreen",{
+                    data : notiData.data
+                  })}>
+                    {
+                      showBell?
+                      <Image source={notiData.count != 0?icons.newnotification:icons.notification} style={{
+                        width : normalize(30),
+                        height : normalize(35)
+                      }}/>:
+                      <></>
+                    }
                   </TouchableOpacity>
                 </View>
                 <View

@@ -31,8 +31,9 @@ import { MainButton } from '../../components/Button/MainButton';
 import ConditionScreen from '../RegisterScreen/ConditionScreen';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import PlotInProfile from '../../components/Plots/PlotsInProfile';
+import { useFocusEffect } from '@react-navigation/native';
 
-const ProfileScreen: React.FC<any> = ({ navigation }) => {
+const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [value, setValue] = useState(null);
   const actionSheet = useRef<any>(null);
@@ -48,7 +49,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
     longitudeDelta: 0.0421,
   });
   const [plantName, setPlantName] = useState<any>();
-
+  const noti = route.params?.noti??false
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
     setFcmToken(value!);
@@ -68,6 +69,13 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
     getData();
     getProfile();
   }, [reload]);
+
+  useFocusEffect(
+    React.useCallback(()=>{
+      getData();
+      getProfile();
+    },[])
+  )
 
   const getProfile = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -153,6 +161,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
           maxHeight: '100%',
           backgroundColor: '#F7FFF0',
           justifyContent: 'center',
+          position : 'relative',
           padding: 25,
         }}>
         <Text
@@ -164,6 +173,21 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
           }}>
           บัญชีของฉัน
         </Text>
+        {
+          noti?
+          <View style={{
+            position : 'absolute',
+            left : normalize(20)
+          }}>
+            <TouchableOpacity onPress={()=> navigation.goBack()}>
+            <Image source={icons.arrowLeft} style={{
+              width : normalize(30),
+              height : normalize(30)
+            }}/>
+          </TouchableOpacity>
+          </View>:
+          <></>
+        }
       </View>
       <ScrollView>
         <View style={styles.section1}>

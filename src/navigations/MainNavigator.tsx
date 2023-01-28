@@ -20,12 +20,14 @@ import SlipSuccessScreen from '../screens/SlipSuccessScreen';
 import ViewMapScreen from '../screens/ViewMapScreen';
 import MyTaskDetailScreen from '../screens/MyTaskScreen/MyTaskDetailScreen';
 import NotificationScreen from '../screens/NotificationScreen/NotificationScreen';
+import MyTaskDetailScreenNoti from '../screens/MyTaskScreen/MyTaskDetailScreenNoti';
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
   AllPlotScreen: undefined;
   SelectDateScreen: undefined;
   SelectPlotScreen: undefined;
+  MyTaskDetailScreenNoti : undefined;
   SelectTarget: undefined;
   DronerDetail: undefined;
   SeeAllDronerUsed: undefined;
@@ -70,6 +72,7 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
       <Stack.Screen name="DetailTaskScreen" component={DetailTaskScreen} />
       <Stack.Screen name="MyTaskDetailScreen" component={MyTaskDetailScreen} />
+      <Stack.Screen name="MyTaskDetailScreenNoti" component={MyTaskDetailScreenNoti} />
       <Stack.Group
         screenOptions={{
           gestureEnabled: false,

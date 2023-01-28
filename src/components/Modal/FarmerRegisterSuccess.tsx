@@ -7,7 +7,7 @@ import { colors, icons, image } from '../../assets'
 import fonts from '../../assets/fonts'
 import { normalize, width } from '../../functions/Normalize'
 
-const FarmerRegisterSuccess:React.FC<ModalEntity> = ({show,onClose,onMainClick,onBottomClick})=>{
+const FarmerRegisterSuccess:React.FC<ModalEntity> = ({show,onClose,onMainClick,onBottomClick,text})=>{
   return (
     <Modal visible={show} transparent={true}>
         <View style={ModalStyle.modal}>
@@ -23,8 +23,7 @@ const FarmerRegisterSuccess:React.FC<ModalEntity> = ({show,onClose,onMainClick,o
                       />
                     </TouchableOpacity>
                 </View>
-                <Text style={ModalStyle.modalHeader}>การยืนยันตัวตนของท่าน</Text>
-                <Text style={[ModalStyle.modalHeader,{paddingBottom : normalize(20)}]}>ได้รับการยืนยันเรียบร้อย</Text>
+                <Text style={[ModalStyle.modalHeader,{paddingVertical : normalize(20)}]}>{text}</Text>
                 <Image source={image.registerSuccess} style={ModalStyle.image}/>
                 <MainButton 
                     label="ตกลง"
