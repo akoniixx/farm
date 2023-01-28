@@ -42,18 +42,21 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
         });
       })
       .catch(err => {
+        console.log(err);
         if (err.response.data.statusCode === 409) {
-          Authentication.generateOtp(value).then(result => {
-            setLoading(false);
-            const telNumber = value;
-            setValue('');
-            navigation.navigate('OtpScreen', {
-              telNumber: telNumber,
-              token: result.result.token,
-              refCode: result.result.refCode,
-              isRegisterScreen: false,
-            });
-          });
+          Authentication.generateOtp(value)
+            .then(result => {
+              setLoading(false);
+              const telNumber = value;
+              setValue('');
+              navigation.navigate('OtpScreen', {
+                telNumber: telNumber,
+                token: result.result.token,
+                refCode: result.result.refCode,
+                isRegisterScreen: false,
+              });
+            })
+            .catch(err => console.log(err));
         }
       });
   };
@@ -92,7 +95,6 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
                 </Text>
               ) : null}
             </View>
-
             <View>
               <MainButton
                 label="ถัดไป"

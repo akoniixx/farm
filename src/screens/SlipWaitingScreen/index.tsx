@@ -8,9 +8,9 @@ import {
   Dimensions,
   Platform,
   Linking,
+  StyleSheet,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import Container from '../../components/Container/Container';
 import Content from '../../components/Content/Content';
 import Header from '../../components/Header/Header';
 import icons from '../../assets/icons/icons';
@@ -28,6 +28,9 @@ import InputText from '../../components/InputText/InputText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
+import { normalize } from '../../functions/Normalize';
+import LinearGradient from 'react-native-linear-gradient';
+import Lottie from 'lottie-react-native';
 import { mixpanel } from '../../../mixpanel';
 export default function SlipWaitingScreen({
   navigation,
@@ -119,12 +122,19 @@ export default function SlipWaitingScreen({
   }, [taskId]);
 
   return (
-    <Container>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: '#FFFEFA',
+      }}>
       <Header
+        style={styles.header}
         componentLeft={
-          <TouchableOpacity onPress={() => {
-            mixpanel.track('Tab back to main screen from waiting screen');
-            navigation.navigate('MainScreen')}}>
+          <TouchableOpacity
+            onPress={() => {
+              mixpanel.track('Tab back to main screen from waiting screen');
+              navigation.navigate('MainScreen');
+            }}>
             <Image
               source={icons.arrowUp}
               style={{
@@ -138,7 +148,7 @@ export default function SlipWaitingScreen({
         componentRight={
           <TouchableOpacity
             onPress={() => {
-               mixpanel.track('Tab cancel booking from waiting screen');
+              mixpanel.track('Tab cancel booking from waiting screen');
               setIsShowModal(true);
             }}>
             <Text
@@ -157,22 +167,32 @@ export default function SlipWaitingScreen({
           contentContainerStyle={{
             flexGrow: 1,
           }}>
-          <View
+          <LinearGradient
+            colors={['#FFFEFA', '#41A97A']}
+            start={{ x: 0.65, y: 0.35 }}
             style={{
               flex: 1,
+              paddingTop: normalize(30),
             }}>
-            <Image
-              source={image.waitingDroner}
+            <View
               style={{
                 width: '100%',
-                height: 320,
-              }}
-              resizeMode="contain"
-            />
+                height: 170,
+                marginTop: 32,
+                marginBottom: 32,
+              }}>
+              <Lottie
+                source={image.waitinglottie}
+                autoPlay
+                loop
+                resizeMode="cover"
+              />
+            </View>
             <SectionBody {...taskData} />
-          </View>
+          </LinearGradient>
           <View
             style={{
+              backgroundColor: '#41A97A',
               padding: 16,
             }}>
             <MainButton
@@ -271,12 +291,9 @@ export default function SlipWaitingScreen({
               }}>
               <TouchableOpacity
                 onPress={async () => {
-                  mixpanel.track('Tab cancel button from cancel booking modal');
-                  const extendObj = await AsyncStorage.getItem('extendObj');
-                  const parseExtendObj = JSON.parse(extendObj || '{}');
-                  if (parseExtendObj && parseExtendObj.round > 0) {
+                  if (taskData?.countResend && +taskData.countResend > 0) {
                     setIsShowModal(false);
-                    return parseExtendObj.round === 2
+                    return +taskData.countResend === 1
                       ? setModalExtendTwo(true)
                       : setModalExtendThree(true);
                   }
@@ -710,6 +727,19 @@ export default function SlipWaitingScreen({
         textContent={'Loading...'}
         textStyle={{ color: '#FFF' }}
       />
-    </Container>
+    </View>
   );
 }
+const styles = StyleSheet.create({
+  header: {
+    ...Platform.select({
+      ios: {
+        paddingTop: 60,
+      },
+      android: {
+        paddingVertical: 0,
+        paddingHorizontal: 16,
+      },
+    }),
+  },
+});

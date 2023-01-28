@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
 import React from 'react';
 import colors from '../../assets/colors/colors';
 import fonts from '../../assets/fonts';
@@ -12,7 +12,7 @@ export interface TaskDataTypeSlip {
   farmerId: string;
   farmerPlotId: string;
   farmAreaAmount: string;
-  countResend: string;
+  countResend: string | null;
   purposeSprayId: string;
   dateAppointment: string;
   targetSpray: string[];
@@ -134,13 +134,19 @@ export default function SlipCard({
         </View>
       </View>
 
-      <DashedLine
-        dashColor={colors.grayBg}
-        dashGap={16}
+      <View
         style={{
-          width: '98%',
-        }}
-      />
+          flexDirection: 'row',
+          justifyContent: 'center',
+        }}>
+        <DashedLine
+          dashColor={colors.grayBg}
+          dashGap={16}
+          style={{
+            width: Dimensions.get('window').width - 64,
+          }}
+        />
+      </View>
 
       <View style={styles.shadow}>
         <View
@@ -202,7 +208,7 @@ export default function SlipCard({
       </View>
       <Image
         source={image.endSlip}
-        resizeMode="center"
+        resizeMode="cover"
         style={{
           width: '100%',
           height: 14,

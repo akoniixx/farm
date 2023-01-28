@@ -3,12 +3,17 @@ import axios from 'axios';
 import * as RootNavigation from '../navigations/RootNavigation';
 
 export const BASE_URL = 'https://api-dev-dnds.iconkaset.com';
-export const MIXPANEL_DEV = '7771b1854fb89d185debcd38023348d9'
-export const MIXPANEL_PROD = '0bae055d89d622289e54453d6285c4cf'
+export const MIXPANEL_DEV = '7771b1854fb89d185debcd38023348d9';
+export const MIXPANEL_PROD = '0bae055d89d622289e54453d6285c4cf';
 
 axios.interceptors.request.use(async (config: any) => {
   const token = await AsyncStorage.getItem('token');
-  config.headers.Authorization = `Bearer ${token}`;
+  const token_register = await AsyncStorage.getItem('token_register');
+  if (!token) {
+    config.headers.Authorization = `Bearer ${token_register}`;
+  } else {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 

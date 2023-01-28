@@ -10,6 +10,8 @@ import {
   Modal,
   TouchableOpacity,
   Platform,
+  SafeAreaView,
+  Linking,
 } from 'react-native';
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
@@ -28,7 +30,10 @@ import { useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import { useAuth } from '../../contexts/AuthContext';
 import fonts from '../../assets/fonts';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
+import DronerUsed from '../../components/Carousel/DronerUsed';
 import { mixpanel } from '../../../mixpanel';
+import { callcenterNumber } from '../../definitions/callCenterNumber';
 
 const MainScreen: React.FC<any> = ({ navigation }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -39,6 +44,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
     authContext: { getProfileAuth },
     state: { user },
   } = useAuth();
+  const [loading, setLoading] = useState(false);
   const isFocused = useIsFocused();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [taskSug, setTaskSug] = useState<any[]>([]);
@@ -48,6 +54,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
   const [showModalCantBooking, setShowModalCantBooking] = useState(false);
   const { height, width } = Dimensions.get('window');
   const [showFinding, setShowFinding] = useState(false);
+  const [showModalCall, setShowModalCall] = useState(false);
   const [dataFinding, setDataFinding] = useState({
     id: '',
     taskNo: '',
@@ -55,7 +62,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
     cropName: '',
     purposeSprayName: '',
   });
-
+  const [reload, setReload] = useState(false);
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
     setFcmToken(value!);
@@ -65,19 +72,20 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
     if (value) {
       const farmer_id = await AsyncStorage.getItem('farmer_id');
       getProfileAuth();
-
       ProfileDatasource.getProfile(farmer_id!)
         .then(async res => {
+          setReload(!reload);
           await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
           dispatch({
             type: 'InitProfile',
             name: `${res.firstname}`,
             plotItem: res.farmerPlot,
+            status: res.status,
           });
         })
         .catch(err => console.log(err));
     }
-  }, [getProfileAuth]);
+  }, [reload, getProfileAuth]);
   useEffect(() => {
     const getTaskId = async () => {
       const value = await AsyncStorage.getItem('taskId');
@@ -89,10 +97,11 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
     getTaskId();
     getData();
     getProfile();
-  }, [isFocused, getProfile]);
+  }, [isFocused]);
 
   useEffect(() => {
     const dronerSug = async () => {
+      setLoading(true);
       const value = await AsyncStorage.getItem('token');
       if (value) {
         const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -105,7 +114,8 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
             console.log(`length = ${res.length}`);
             setTaskSug(res);
           })
-          .catch(err => console.log(err));
+          .catch(err => console.log(err))
+          .finally(() => setLoading(false));
       }
     };
     const dronerSugUsed = async () => {
@@ -135,7 +145,6 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profilestate.plotItem]);
-
   useEffect(() => {
     const getTaskByTaskId = async () => {
       try {
@@ -169,8 +178,9 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
     };
     getTaskByTaskId();
   }, [taskId, navigation]);
+
   return (
-    <View
+    <SafeAreaView
       style={{
         backgroundColor: colors.white,
         flex: 1,
@@ -213,10 +223,10 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                   }}>
                   <TouchableOpacity
                     onPress={() => {
-                      mixpanel.track('Tab booking with login');
                       if (disableBooking) {
                         setShowModalCantBooking(true);
                       } else {
+                        mixpanel.track('Tab booking with login');
                         navigation.navigate('SelectDateScreen');
                       }
                     }}>
@@ -242,7 +252,8 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                   <TouchableOpacity
                     onPress={() => {
                       mixpanel.track('Tab your plot with login');
-                      navigation.navigate('AllPlotScreen')}}>
+                      navigation.navigate('AllPlotScreen');
+                    }}>
                     <LinearGradient
                       colors={['#FFFFFF', '#ECFBF2']}
                       style={{
@@ -303,37 +314,132 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                   borderRadius: 10,
                 }}
               />
-            </View> */}
-              {/*  <View style={[styles.empty]}>
+            </View>  */}
+              <View style={[styles.empty]}>
+                {profilestate.status === 'REJECTED' ? (
+                  <View
+                    style={{
+                      height: 176,
+                      width: normalize(340),
+                      alignSelf: 'center',
+                      backgroundColor: '#FFF9F2',
+                      borderWidth: 1,
+                      borderColor: '#FEDBB4',
+                      borderRadius: 10,
+                    }}>
+                    <View style={{ padding: 15, alignSelf: 'center' }}>
+                      <View style={{ flexDirection: 'row' }}>
+                        <Image
+                          source={icons.warning}
+                          style={{ width: 20, height: 20, marginRight: 10 }}
+                        />
+                        <Text style={[styles.textAlert]}>
+                          การยืนยันตัวตนไม่สำเร็จ อาจะส่งผลต่อ
+                        </Text>
+                      </View>
+                      <Text style={[styles.textAlert, { marginLeft: 30 }]}>
+                        การจ้างงานโดรนเกษตร กรุณาติดต่อ
+                      </Text>
+                      <Text style={[styles.textAlert, { marginLeft: 30 }]}>
+                        เจ้าหน้าที่ เพื่อยืนยันสถานะ
+                      </Text>
+                    </View>
+                    <View style={{ paddingHorizontal: 10 }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setShowModalCall(true);
+                        }}
+                        style={{
+                          ...Platform.select({
+                            ios: {
+                              height: 60,
+                              paddingVertical: 8,
+                              paddingHorizontal: 16,
+                              backgroundColor: colors.white,
+                              justifyContent: 'center',
+                              alignItems: 'flex-start',
+                              width: '100%',
+                              borderRadius: 12,
+                              marginBottom: 8,
+                              borderWidth: 1,
+                              borderColor: colors.blueBorder,
+                            },
+                            android: {
+                              height: 60,
+                              paddingVertical: 8,
+                              paddingHorizontal: 16,
+                              backgroundColor: colors.white,
+                              justifyContent: 'center',
+                              alignItems: 'flex-start',
+                              width: '100%',
+                              borderRadius: 12,
+                              marginBottom: 8,
+                              borderWidth: 1,
+                              borderColor: colors.blueBorder,
+                              bottom: 15,
+                            },
+                          }),
+                        }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            alignSelf: 'center',
+                          }}>
+                          <Image
+                            style={{
+                              width: 24,
+                              height: 24,
+                              marginRight: 16,
+                            }}
+                            source={icons.calling}
+                          />
+                          <Text
+                            style={{
+                              fontFamily: font.AnuphanMedium,
+                              color: colors.blueBorder,
+                              fontSize: 20,
+                            }}>
+                            โทรหาเจ้าหน้าที่
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                ) : null}
                 <View
                   style={{
                     flexDirection: 'row',
-                    padding: '5%',
                     justifyContent: 'space-between',
-                    top: '10%'
                   }}>
                   <Text
                     style={{
                       fontFamily: font.AnuphanBold,
                       fontSize: normalize(20),
                       color: colors.fontGrey,
+                      paddingHorizontal: 20,
+                      paddingVertical: 10,
                     }}>
                     จ้างนักบินที่เคยจ้าง
                   </Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('SeeAllDronerUsed');
-                    }}>
-                    <Text
-                      style={{
-                        fontFamily: font.SarabunLight,
-                        fontSize: normalize(16),
-                        color: colors.fontGrey,
-                        height: 25,
+                  {taskSugUsed.length != 0 ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate('SeeAllDronerUsed');
                       }}>
-                      ดูทั้งหมด
-                    </Text>
-                  </TouchableOpacity>
+                      <Text
+                        style={{
+                          fontFamily: font.SarabunLight,
+                          fontSize: normalize(16),
+                          color: colors.fontGrey,
+                          height: 55,
+                          paddingHorizontal: 10,
+                          paddingVertical: 10,
+                        }}>
+                        ดูทั้งหมด
+                      </Text>
+                    </TouchableOpacity>
+                  ) : null}
                 </View>
                 {taskSugUsed.length != 0 ? (
                   <View style={{ height: '110%' }}>
@@ -378,13 +484,13 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                       style={{
                         width: normalize(136),
                         height: normalize(130),
-                        top: '16%',
+                        top: '10%',
                         marginBottom: normalize(32),
                       }}
                     />
                     <Text
                       style={{
-                        top: '10%',
+                        top: '5%',
                         fontFamily: font.SarabunBold,
                         fontSize: normalize(16),
                         fontWeight: '300',
@@ -394,7 +500,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                     </Text>
                   </View>
                 )}
-              </View> */}
+              </View>
               {/* <View style={[styles.empty]}>
                 <Text
                   style={[
@@ -432,6 +538,94 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
               </View> */}
             </View>
           </View>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={showModalCall}>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                paddingHorizontal: 16,
+                paddingBottom: 32,
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL(`tel:${callcenterNumber}`);
+                }}
+                style={{
+                  height: 60,
+                  paddingVertical: 8,
+                  paddingHorizontal: 16,
+                  backgroundColor: colors.white,
+                  justifyContent: 'center',
+                  alignItems: 'flex-start',
+                  width: '100%',
+                  borderRadius: 12,
+                  marginBottom: 8,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    style={{
+                      width: 24,
+                      height: 24,
+                      marginRight: 16,
+                    }}
+                    source={icons.callBlue}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanMedium,
+                      color: '#007AFF',
+                      fontSize: 20,
+                    }}>
+                    {'โทร +66 2-113-6159'}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowModalCall(false);
+                }}
+                style={{
+                  height: 60,
+                  paddingVertical: 8,
+                  paddingHorizontal: 16,
+                  backgroundColor: colors.white,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%',
+                  borderRadius: 12,
+                  marginBottom: 8,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanMedium,
+                      color: '#007AFF',
+                      fontSize: 20,
+                    }}>
+                    ยกเลิก
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+          <Spinner
+            visible={loading}
+            textContent={'Loading...'}
+            textStyle={{ color: '#FFF' }}
+          />
         </View>
       </ScrollView>
       {showFinding && (
@@ -566,12 +760,17 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 export default MainScreen;
 
 const styles = StyleSheet.create({
+  textAlert: {
+    fontFamily: font.SarabunLight,
+    fontSize: normalize(16),
+    color: colors.fontBlack,
+  },
   textEmpty: {
     fontFamily: font.SarabunLight,
     fontSize: normalize(18),

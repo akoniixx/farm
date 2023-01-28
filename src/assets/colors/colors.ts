@@ -22,6 +22,7 @@ export default {
   grayBg: '#FAFAFB',
   greyWhite: '#F2F2F2',
   greyDivider: '#F2F3F4',
+  grey60: '#5F6872',
   grey40: '#8D96A0',
   inkLight: '#4F5E71',
   inputText: '#2B2B2B',

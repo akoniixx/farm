@@ -30,6 +30,7 @@ import { momentExtend } from '../../utils/moment-buddha-year';
 import { Modal } from 'react-native';
 import DatePickerCustom from '../../components/Calendar/Calendar';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import moment from 'moment';
 
 const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
   const initialFormRegisterState = {
@@ -57,15 +58,15 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
     }
   }, [image]);
 
-  const onCamera = useCallback(async () => {
-    const result = await ImagePicker.launchCamera({
-      mediaType: 'photo',
-    });
-    if (!result.didCancel) {
-      setImage(result);
-      setOpenModal(false);
-    }
-  }, [image]);
+  // const onCamera = useCallback(async () => {
+  //   const result = await ImagePicker.launchCamera({
+  //     mediaType: 'photo',
+  //   });
+  //   if (!result.didCancel) {
+  //     setImage(result);
+  //     setOpenModal(false);
+  //   }
+  // }, [image]);
 
   const [formState, dispatch] = useReducer(
     registerReducer,
@@ -149,7 +150,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   style={styles.input}
                   editable={true}
                   placeholder={'ระบุชื่อ'}
-                  placeholderTextColor={colors.disable}
+                  placeholderTextColor={colors.gray}
                 />
                 <Text style={styles.head}>นามสกุล*</Text>
                 <TextInput
@@ -164,7 +165,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   style={styles.input}
                   editable={true}
                   placeholder={'นามสกุล'}
-                  placeholderTextColor={colors.disable}
+                  placeholderTextColor={colors.gray}
                 />
 
                 <Text style={styles.head}>วันเกิด*</Text>
@@ -185,7 +186,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       }
                       editable={false}
                       placeholder={'ระบุวัน เดือน ปี'}
-                      placeholderTextColor={colors.disable}
+                      placeholderTextColor={colors.gray}
                       style={{
                         width: windowWidth * 0.78,
                         color: colors.fontBlack,
@@ -209,7 +210,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   style={[styles.input, { backgroundColor: colors.disable }]}
                   editable={false}
                   value={tele}
-                  placeholderTextColor={colors.gray}
+                  placeholderTextColor={colors.disable}
                 />
               </ScrollView>
               <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
@@ -268,14 +269,23 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       justifyContent: 'center',
                       borderRadius: normalize(3),
                     }}>
-                    <MainButton
+                    <TouchableOpacity
+                      onPress={() => {
+                        setOpenModal(false);
+                      }}>
+                      <View style={{ alignSelf: 'flex-end' }}>
+                        <Image source={icons.close} />
+                      </View>
+                    </TouchableOpacity>
+
+                    {/* <MainButton
                       fontFamily={font.SarabunLight}
                       label="ถ่ายภาพ"
                       fontColor={colors.fontBlack}
                       color={colors.white}
                       onPress={onCamera}
                       width={100}
-                    />
+                    /> */}
                     <MainButton
                       fontFamily={font.SarabunLight}
                       label="เลือกรูปถ่าย"
@@ -326,7 +336,14 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                     </Text>
                     <View>
                       <DatePickerCustom
-                        value={date ? date : new Date()}
+                        startYear={
+                          moment().subtract(76, 'years').get('year') + 543
+                        }
+                        value={
+                          date
+                            ? date
+                            : moment().set({ date: 1 }).subtract(76, 'years')
+                        }
                         onHandleChange={(d: string) => {
                           setDate(d);
                         }}
@@ -336,24 +353,29 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-around',
+                        top: 10,
                       }}>
-                      <MainButton
-                        label="ยกเลิก"
-                        fontColor={colors.fontBlack}
-                        borderColor={colors.fontGrey}
-                        color={colors.white}
-                        width={150}
-                        onPress={() => setOpenCalendar(false)}
-                      />
-                      <MainButton
-                        label="บันทึก"
-                        fontColor={colors.white}
-                        color={colors.greenLight}
-                        width={150}
-                        onPress={() => {
-                          setOpenCalendar(false);
-                        }}
-                      />
+                      <View style={{ right: 10 }}>
+                        <MainButton
+                          label="ยกเลิก"
+                          fontColor={colors.fontBlack}
+                          borderColor={colors.fontGrey}
+                          color={colors.white}
+                          width={150}
+                          onPress={() => setOpenCalendar(false)}
+                        />
+                      </View>
+                      <View style={{ left: 10 }}>
+                        <MainButton
+                          label="บันทึก"
+                          fontColor={colors.white}
+                          color={colors.greenLight}
+                          width={150}
+                          onPress={() => {
+                            setOpenCalendar(false);
+                          }}
+                        />
+                      </View>
                     </View>
                   </View>
                 </View>

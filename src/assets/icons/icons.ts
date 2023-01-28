@@ -1,6 +1,6 @@
 export default {
   check: require('./check.png'),
-  checked: require('./ckecked.png'),
+  checked: require('./checked.png'),
   th: require('./TH.png'),
   camera: require('./camera.png'),
   avatar: require('./avatar.png'),
@@ -71,4 +71,10 @@ export default {
   callingBlack: require('./callingBlack.png'),
   callBlue: require('./callBlue.png'),
   closeBlack: require('./closeBlack.png'),
+  icontask: require('./icontask.png'),
+  iconnews: require('./iconnews.png'),
+  iconpromotion: require('./iconpromotion.png'),
+  iconverify: require('./iconverify.png'),
+  wrong: require('./wrong.png'),
+  inactive: require('./inactive.png'),
 };

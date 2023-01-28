@@ -1,11 +1,17 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../styles/StylesCentral';
 import { MainButton } from '../../components/Button/MainButton';
 import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
-import { ScrollView } from 'react-native-gesture-handler';
 import { condition } from '../../assets/constant/constant';
 import { normalize } from '../../functions/Normalize';
 import icons from '../../assets/icons/icons';
@@ -66,12 +72,12 @@ const ConditionScreen: React.FC<any> = ({ navigation }) => {
               {disabledCheckbox ? (
                 <Image
                   source={icons.checkdisable}
-                  style={{ width: normalize(20), height: normalize(20) }}
+                  style={{ width: normalize(18), height: normalize(18) }}
                 />
               ) : (
                 <Image
                   source={checked ? icons.checked : icons.check}
-                  style={{ width: normalize(20), height: normalize(20) }}
+                  style={{ width: normalize(22), height: normalize(22) }}
                 />
               )}
               <Text
@@ -90,12 +96,12 @@ const ConditionScreen: React.FC<any> = ({ navigation }) => {
               {disabledCheckbox ? (
                 <Image
                   source={icons.checkdisable}
-                  style={{ width: normalize(20), height: normalize(20) }}
+                  style={{ width: normalize(18), height: normalize(18) }}
                 />
               ) : (
                 <Image
                   source={checked1 ? icons.checked : icons.check}
-                  style={{ width: normalize(20), height: normalize(20) }}
+                  style={{ width: normalize(22), height: normalize(22) }}
                 />
               )}
               <Text

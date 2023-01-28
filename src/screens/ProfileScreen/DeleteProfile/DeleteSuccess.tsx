@@ -13,8 +13,19 @@ import { MainButton } from '../../../components/Button/MainButton';
 import { normalize } from '../../../functions/Normalize';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../../styles/StylesCentral';
+import * as RootNavigation from '../../../navigations/RootNavigation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { socket } from '../../../functions/utility';
+import { Authentication } from '../../../datasource/AuthDatasource';
 
 const DeleteSuccess: React.FC<any> = ({ navigation }) => {
+  const onLogout = async () => {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    socket.removeAllListeners(`send-task-${farmer_id!}`);
+    socket.close();
+    await Authentication.logout();
+  };
+
   return (
     <SafeAreaView style={stylesCentral.container}>
       <View
@@ -28,7 +39,7 @@ const DeleteSuccess: React.FC<any> = ({ navigation }) => {
           <Text style={[styles.fontBody, { paddingTop: '5%' }]}>
             มีคำถามเพิ่มเติมสามารถติดต่อเจ้าหน้าที่
           </Text>
-          <Text style={styles.fontBody}>โทร. 02-113-6159</Text>
+          <Text style={styles.fontBody}>โทร. 02-233-9000</Text>
           <View style={{ alignItems: 'center', paddingTop: '10%' }}>
             <Image
               source={image.delete_acc}
@@ -45,7 +56,12 @@ const DeleteSuccess: React.FC<any> = ({ navigation }) => {
             label="กลับหน้าหลัก"
             color={colors.greenLight}
             fontColor={'white'}
-            onPress={() => navigation.navigate('Onboarding')}
+            onPress={async () => {
+              await onLogout();
+              RootNavigation.navigate('Auth', {
+                screen: 'Onboarding',
+              });
+            }}
           />
         </View>
       </View>

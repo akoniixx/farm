@@ -96,11 +96,9 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             }}>
             <Text style={styles.plant}>
               {task.plant_name + ' | ' + task.purpose_spray_name}
-            
             </Text>
             <Text style={styles.price}>{task.total_price + ' ' + 'บาท'}</Text>
           </View>
-
 
           <MyTaskDateTimeDetail
             date={task.date_appointment}
@@ -122,11 +120,14 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             plant={task.plant_name}
             location={task.location_name}
           />
-          <View style={{marginTop:normalize(16)}}>
+          <View style={{ marginTop: normalize(16) }}>
             <Text style={styles.label}>เป้าหมายการพ่น</Text>
-          <TargetSpray target={task.target_spray.join(' , ') || '-'} periodSpray={task.purpose_spray_name} preparationBy={task.preparation_by} />
+            <TargetSpray
+              target={task.target_spray.join(' , ') || '-'}
+              periodSpray={task.purpose_spray_name}
+              preparationBy={task.preparation_by}
+            />
           </View>
-         
         </View>
         <View
           style={{

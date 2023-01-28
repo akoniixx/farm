@@ -46,7 +46,7 @@ export const DronerCard: React.FC<props> = ({ name, profile, telnumber }) => {
       </View>
       <TouchableOpacity onPress={() => dialCall(telnumber)}>
         <Image
-          source={ icons.telephon}
+          source={icons.telephon}
           style={{ width: normalize(40), height: normalize(40) }}
         />
       </TouchableOpacity>

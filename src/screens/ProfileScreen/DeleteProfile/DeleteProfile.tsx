@@ -5,13 +5,13 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../../styles/StylesCentral';
 import { colors, font, icons, image as img } from '../../../assets';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ScrollView } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal/dist/modal';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { callcenterNumber } from '../../../definitions/callCenterNumber';
@@ -26,6 +26,8 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { normalize, width } from '../../../functions/Normalize';
 import { StackNativeScreenProps } from '../../../navigations/MainNavigator';
 import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
+import { MyJobDatasource } from '../../../datasource/MyJobDatasource';
+import { SearchMyJobsEntites } from '../../../entites/SearchMyJobsEntites';
 
 type DeleteProfileScreenProps = StackNativeScreenProps<'DeleteProfileScreen'>;
 
@@ -38,12 +40,26 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
   const [task, setTask] = useState([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [tel, setTel] = useState<any>();
+  const [selectedField, setSelectedField] = useState({
+    name: 'ใกล้ถึงวันงาน',
+    value: 'coming_task',
+    direction: '',
+  });
+
   useEffect(() => {
     const getData = async () => {
+      setLoading(true);
       const farmer_id = (await AsyncStorage.getItem('farmer_id')) ?? '';
-      console.log(farmer_id);
-      TaskDatasource.getTaskByTaskId(farmer_id)
+      const params: SearchMyJobsEntites = {
+        farmerId: farmer_id,
+        stepTab: '0',
+        sortField: selectedField.value,
+        sortDirection: selectedField.direction,
+        filterStatus: 'WAIT_RECEIVE' || 'IN_PROGRESS',
+      };
+      MyJobDatasource.getMyJobsList(params)
         .then(res => {
+          console.log(res.length);
           if (res !== undefined) {
             setTask(res);
             setLoading(false);
@@ -59,6 +75,7 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
   useEffect(() => {
     getProfile();
   }, []);
+
   const getProfile = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
@@ -173,7 +190,9 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
               disable={task?.length > 0}
               color={colors.error}
               fontColor={'white'}
-              onPress={() => setToggleModal(!toggleModal)}
+              onPress={() => {
+                setToggleModal(!toggleModal);
+              }}
             />
           </View>
         </View>

@@ -7,13 +7,13 @@ import {
   Platform,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { height, normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import CustomHeader from '../../components/CustomHeader';
 import { Avatar } from '@rneui/themed';
 import * as RootNavigation from '../../navigations/RootNavigation';
@@ -36,6 +36,7 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 const ProfileScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
+  const [reload, setReload] = useState(false);
 
   const onLogout = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -44,47 +45,52 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
     await Authentication.logout();
   };
   useEffect(() => {
-    getProfile();
-  }, []);
-  const getProfile = async () => {
-    setLoading(true);
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    ProfileDatasource.getProfile(farmer_id!)
-      .then(async res => {
-        const imgPath = res.file.filter((item: any) => {
-          if (item.category === 'PROFILE_IMAGE') {
-            return item;
-          }
-        });
-        if (imgPath.length === 0) {
-          dispatch({
-            type: 'InitProfile',
-            name: `${res.firstname} ${res.lastname}`,
-            id: res.farmerCode,
-            image: '',
-            plotItem: res.farmerPlot,
-            status: res.status,
+    const getProfile = async () => {
+      setLoading(true);
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      ProfileDatasource.getProfile(farmer_id!)
+        .then(async res => {
+          setLoading(true);
+          const imgPath = res.file.filter((item: any) => {
+            if (item.category === 'PROFILE_IMAGE') {
+              return item;
+            }
           });
-        } else {
-          ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
-            .then(resImg => {
-              dispatch({
-                type: 'InitProfile',
-                name: `${res.firstname} ${res.lastname}`,
-                id: res.farmerCode,
-                image: resImg.url,
-                plotItem: res.farmerPlot,
-                status: res.status,
-              });
-            })
+          if (imgPath.length === 0) {
+            dispatch({
+              type: 'InitProfile',
+              name: `${res.firstname} ${res.lastname}`,
+              id: res.farmerCode,
+              image: '',
+              plotItem: res.farmerPlot,
+              status: res.status,
+            });
+            setReload(!reload);
+          } else {
+            ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
+              .then(resImg => {
+                setLoading(true);
+                dispatch({
+                  type: 'InitProfile',
+                  name: `${res.firstname} ${res.lastname}`,
+                  id: res.farmerCode,
+                  image: resImg.url,
+                  plotItem: res.farmerPlot,
+                  status: res.status,
+                });
+                setReload(!reload);
+              })
 
-            .catch(err => console.log(err))
-            .finally(() => setLoading(false));
-        }
-      })
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false));
-  };
+              .catch(err => console.log(err))
+              .finally(() => setLoading(false));
+          }
+        })
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
+    };
+    getProfile();
+  }, [reload]);
+
   const openGooglePlay = () => {
     if (Platform.OS === 'ios') {
       Linking.openURL(
@@ -138,56 +144,142 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
             }}>
             <View style={{ flexDirection: 'row' }}>
               <Text style={[styles.text]}>{profilestate.name} </Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('EditProfileScreen')}>
-                <Image
-                  source={icons.edit}
-                  style={{
-                    width: normalize(20),
-                    height: normalize(20),
-                    tintColor: colors.fontBlack,
-                    marginLeft: '55%',
-                  }}
-                />
-              </TouchableOpacity>
+              <View style={{ alignSelf: 'center', paddingHorizontal: 20 }}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('EditProfileScreen')}>
+                  <Image
+                    source={icons.edit}
+                    style={{
+                      width: normalize(20),
+                      height: normalize(20),
+                      tintColor: colors.fontBlack,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-            <View
-              style={{
-                marginTop: normalize(10),
-                width: normalize(135),
-                height: normalize(28),
-                borderRadius: normalize(12),
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderWidth: 1,
-                borderColor: StatusObject(profilestate.status).fontColor,
-                backgroundColor: StatusObject(profilestate.status).colorBg,
-                flexDirection: 'row',
-              }}>
-              {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว' ? (
-                <Image
-                  source={icons.correct}
-                  style={{ width: 16, height: 16, right: 5 }}
-                />
-              ) : (
-                <Image
-                  source={icons.warning}
-                  style={{ width: 16, height: 16, right: 5 }}
-                />
-              )}
 
-              <Text
+            {StatusObject(profilestate.status).status === 'ไม่อนุมัติ' ? (
+              <View
                 style={{
-                  color: StatusObject(profilestate.status).fontColor,
-                  fontFamily: font.AnuphanBold,
-                  fontSize: normalize(14),
+                  marginTop: normalize(10),
+                  width: normalize(150),
+                  height: normalize(28),
+                  borderRadius: normalize(12),
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderColor: StatusObject(profilestate.status).fontColor,
+                  backgroundColor: StatusObject(profilestate.status).colorBg,
+                  flexDirection: 'row',
                 }}>
-                {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
-                  ? 'ยืนยันตัวตนสำเร็จ'
-                  : 'รอการตรวจสอบ'}
-              </Text>
-            </View>
+                {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว' ? (
+                  <Image
+                    source={icons.correct}
+                    style={{ width: 16, height: 16, right: 5 }}
+                  />
+                ) : StatusObject(profilestate.status).status ===
+                  'รอการตรวจสอบ' ? (
+                  <Image
+                    source={icons.warning}
+                    style={{ width: 16, height: 16, right: 5 }}
+                  />
+                ) : StatusObject(profilestate.status).status ===
+                  'ไม่อนุมัติ' ? (
+                  <Image
+                    source={icons.wrong}
+                    style={{ width: 16, height: 16, right: 5 }}
+                  />
+                ) : (
+                  <Image
+                    source={icons.inactive}
+                    style={{
+                      width: 16,
+                      height: 16,
+                      right: 5,
+                      tintColor: colors.bg,
+                    }}
+                  />
+                )}
+
+                <Text
+                  style={{
+                    color: StatusObject(profilestate.status).fontColor,
+                    fontFamily: font.AnuphanBold,
+                    fontSize: normalize(14),
+                  }}>
+                  {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
+                    ? 'ยืนยันตัวตนสำเร็จ'
+                    : StatusObject(profilestate.status).status ===
+                      'รอการตรวจสอบ'
+                    ? 'รอการตรวจสอบ'
+                    : StatusObject(profilestate.status).status === 'ไม่อนุมัติ'
+                    ? 'ยืนยันตัวตนไม่สำเร็จ'
+                    : 'ปิดการใช้งาน'}
+                </Text>
+              </View>
+            ) : (
+              <View
+                style={{
+                  marginTop: normalize(10),
+                  width: normalize(135),
+                  height: normalize(28),
+                  borderRadius: normalize(12),
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderColor: StatusObject(profilestate.status).fontColor,
+                  backgroundColor: StatusObject(profilestate.status).colorBg,
+                  flexDirection: 'row',
+                }}>
+                {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว' ? (
+                  <Image
+                    source={icons.correct}
+                    style={{ width: 16, height: 16, right: 5 }}
+                  />
+                ) : StatusObject(profilestate.status).status ===
+                  'รอการตรวจสอบ' ? (
+                  <Image
+                    source={icons.warning}
+                    style={{ width: 16, height: 16, right: 5 }}
+                  />
+                ) : StatusObject(profilestate.status).status ===
+                  'ไม่อนุมัติ' ? (
+                  <Image
+                    source={icons.wrong}
+                    style={{ width: 16, height: 16, right: 5 }}
+                  />
+                ) : (
+                  <Image
+                    source={icons.inactive}
+                    style={{
+                      width: 16,
+                      height: 16,
+                      right: 5,
+                      tintColor: colors.bg,
+                    }}
+                  />
+                )}
+
+                <Text
+                  style={{
+                    color: StatusObject(profilestate.status).fontColor,
+                    fontFamily: font.AnuphanBold,
+                    fontSize: normalize(14),
+                  }}>
+                  {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
+                    ? 'ยืนยันตัวตนสำเร็จ'
+                    : StatusObject(profilestate.status).status ===
+                      'รอการตรวจสอบ'
+                    ? 'รอการตรวจสอบ'
+                    : StatusObject(profilestate.status).status === 'ไม่อนุมัติ'
+                    ? 'ยืนยันตัวตนไม่สำเร็จ'
+                    : 'ปิดการใช้งาน'}
+                </Text>
+              </View>
+            )}
           </View>
         </View>
         <View

@@ -9,10 +9,10 @@ import {
 import React from 'react';
 import fonts from '../../assets/fonts';
 import { colors, image } from '../../assets';
-import SlipCard from '../../components/SlipCard/SlipCard';
+import SlipCard, { TaskDataTypeSlip } from '../../components/SlipCard/SlipCard';
 import icons from '../../assets/icons/icons';
 
-export default function SectionBody() {
+export default function SectionBody(props: TaskDataTypeSlip) {
   return (
     <View style={styled.container}>
       <View>
@@ -106,7 +106,7 @@ export default function SectionBody() {
             </TouchableOpacity>
           </View>
         </View>
-        <SlipCard />
+        <SlipCard {...props} />
       </View>
     </View>
   );
