@@ -6,6 +6,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Linking,
+  LogBox,
   Platform,
   ScrollView,
   StyleSheet,
@@ -14,6 +15,7 @@ import {
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { mixpanel } from '../../../mixpanel';
 import { colors, font, icons, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
 import PlotSelect from '../../components/Plots/PlotSelect';
@@ -35,7 +37,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
 
   const isHaveWaitingApprove = useMemo(() => {
     if (plotList?.data && plotList.data.length > 0) {
-      return (plotList.data || []).some((el: any) => el.status === 'PENDING');
+      return (plotList.data || []).some((el: any) => el.status !== 'ACTIVE');
     }
     return false;
   }, [plotList?.data]);
@@ -64,19 +66,22 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
       .catch(err => console.log(err));
   };
   useEffect(() => {
+    LogBox.ignoreAllLogs();
     getPlotlist();
   }, []);
   // console.log(JSON.stringify(plotList?.data, null, 2));
   return (
     <>
+      <StepIndicatorHead
+        curentPosition={1}
+        onPressBack={() => {
+          mixpanel.track('Tab back from select plot screen');
+          navigation.goBack()}}
+        label={'เลือกแปลงของคุณ'}
+      />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <StepIndicatorHead
-          curentPosition={1}
-          onPressBack={() => navigation.goBack()}
-          label={'เลือกแปลงของคุณ'}
-        />
         {isHaveWaitingApprove && (
           <View style={styles.containerWarning}>
             <View
@@ -114,6 +119,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
               </View>
               <TouchableOpacity
                 onPress={() => {
+                  mixpanel.track('Tab callcenter from select plot screen');
                   Linking.openURL(`tel:${callcenterNumber}`);
                 }}
                 style={{
@@ -204,6 +210,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                     locationName={item.locationName}
                     raiAmount={item.raiAmount}
                     onPress={async () => {
+                      mixpanel.track('Tab select plot from select plot screen');
                       handleCardPress(index);
                       setTaskData(prev => ({
                         ...prev,
@@ -245,18 +252,21 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                   label="ถัดไป"
                   disable={selectedCard === null}
                   color={colors.greenLight}
-                  onPress={() => onSubmit()}
+                  onPress={() => {
+                    mixpanel.track('Tab submit from select plot screen');
+                    onSubmit()}}
                 />
               </View>
             </ScrollView>
           </SafeAreaView>
         )}
-        <Spinner
-          visible={loading}
-          textContent={'Loading...'}
-          textStyle={{ color: '#FFF' }}
-        />
       </KeyboardAvoidingView>
+
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </>
   );
 };

@@ -4,7 +4,7 @@ export interface PayloadCreateTask {
   farmerId: string;
   farmerPlotId: string;
   farmAreaAmount: string;
-  dateAppointment: string;
+  dateAppointment: any;
   targetSpray: string[];
   preparationBy: string;
   purposeSprayId: string;
@@ -38,7 +38,33 @@ const getTaskByTaskId = async (taskId: string) => {
       return response.data;
     })
     .catch(error => {
-      console.log(error);
+      throw error;
+    });
+};
+const extendFindingDroner = async ({
+  farmerId,
+  farmerPlotId,
+  taskId,
+  dateAppointment,
+}: {
+  farmerId: string;
+  farmerPlotId: string;
+  taskId: string;
+  dateAppointment: string;
+}) => {
+  const payload = {
+    farmerId,
+    farmerPlotId,
+    taskId,
+    dateAppointment,
+  };
+  return await httpClient
+    .post(BASE_URL + '/tasks/task/extend-finding', payload)
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      throw error;
     });
 };
 const cancelTask = async ({
@@ -50,14 +76,15 @@ const cancelTask = async ({
 }) => {
   return await httpClient
     .patch(BASE_URL + '/tasks/task/' + taskId, {
-      status: 'CANCELLED',
+      id: taskId,
+      status: 'CANCELED',
       statusRemark: reason,
     })
     .then(response => {
       return response.data;
     })
     .catch(error => {
-      console.log(error);
+      throw error;
     });
 };
 
@@ -65,4 +92,5 @@ export const TaskDatasource = {
   createTask,
   getTaskByTaskId,
   cancelTask,
+  extendFindingDroner,
 };

@@ -178,7 +178,7 @@ const OtpScreen: React.FC<any> = ({ navigation, route }) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={stylesCentral.container}>
           <CustomHeader
-            title="ยืนยันรหัส OTP"
+            title="ยืนยันรหัสเลข OTP"
             showBackBtn
             onPressBack={() => navigation.goBack()}
           />

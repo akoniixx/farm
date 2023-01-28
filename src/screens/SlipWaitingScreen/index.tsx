@@ -28,8 +28,9 @@ import InputText from '../../components/InputText/InputText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
-import { normalize } from '../../functions/Normalize';
+import { mixpanel } from '../../../mixpanel';
 import LinearGradient from 'react-native-linear-gradient';
+import { normalize } from '../../functions/Normalize';
 import Lottie from 'lottie-react-native';
 export default function SlipWaitingScreen({
   navigation,
@@ -41,7 +42,8 @@ export default function SlipWaitingScreen({
   const [isShowModal, setIsShowModal] = useState(false);
   const [reason, setReason] = useState('');
   const [showModalExtend, setShowModalExtend] = useState(false);
-  const [showModalCall, setShowModalCall] = useState(false);
+  const [showModalExtendTwo, setModalExtendTwo] = useState(false);
+  const [showModalExtendThree, setModalExtendThree] = useState(false);
   const refInput = React.useRef<any>(null);
   const [taskData, setTaskData] = useState<TaskDataTypeSlip>({
     id: '',
@@ -58,23 +60,31 @@ export default function SlipWaitingScreen({
     taskNo: '',
     targetSpray: [],
     totalPrice: '',
+    countResend: '',
   });
   const onSearchExtend = async () => {
-    await AsyncStorage.setItem(
-      'endTime',
-      moment().add(30, 'minutes').toISOString(),
-    );
-    await AsyncStorage.setItem('taskId', taskId);
-    setShowModalExtend(false);
+    try {
+      const res = await TaskDatasource.extendFindingDroner({
+        taskId,
+        farmerPlotId: taskData.farmerPlotId,
+        dateAppointment: taskData.dateAppointment,
+        farmerId: taskData.farmerId,
+      });
+      if (res && res.success) {
+        setShowModalExtend(false);
+        setModalExtendTwo(false);
+      }
+    } catch (e) {
+      console.log('error', e);
+    }
   };
   const onSubmitCancelTask = async () => {
     try {
       const res = await TaskDatasource.cancelTask({ taskId, reason });
-      if (res) {
-        await AsyncStorage.removeItem('taskId');
-        await AsyncStorage.removeItem('endTime');
-        setReason('');
 
+      if (res && res.success) {
+        setReason('');
+        await AsyncStorage.removeItem('taskId');
         navigation.navigate('MainScreen');
       }
     } catch (e) {
@@ -87,19 +97,14 @@ export default function SlipWaitingScreen({
         const res = await TaskDatasource.getTaskByTaskId(taskId);
 
         if (res && res.data) {
+          const { countResend, updatedAt } = res.data;
           setLoading(false);
-
-          const endTime = await AsyncStorage.getItem('endTime');
+          const endTime = moment(updatedAt).add(30, 'minutes').toISOString();
           const isAfter = moment(endTime).isAfter(moment());
           if (!isAfter) {
-            setShowModalExtend(true);
-            const roundTime = {
-              taskId,
-              round: 1,
-            };
-            await AsyncStorage.setItem('extendObj', JSON.stringify(roundTime));
-            // await AsyncStorage.removeItem('endTime');
-            // await AsyncStorage.removeItem('taskId');
+            (countResend === null || !countResend) && setShowModalExtend(true);
+            +countResend === 1 && setModalExtendTwo(true);
+            +countResend >= 2 && setModalExtendThree(true);
           }
           setTaskData({
             ...res.data,
@@ -126,7 +131,9 @@ export default function SlipWaitingScreen({
           paddingTop : 60
         }}
         componentLeft={
-          <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
+          <TouchableOpacity onPress={() => {
+            mixpanel.track('Tab back to main screen from waiting screen');
+            navigation.navigate('MainScreen')}}>
             <Image
               source={icons.arrowUp}
               style={{
@@ -140,6 +147,7 @@ export default function SlipWaitingScreen({
         componentRight={
           <TouchableOpacity
             onPress={() => {
+               mixpanel.track('Tab cancel booking from waiting screen');
               setIsShowModal(true);
             }}>
             <Text
@@ -247,6 +255,9 @@ export default function SlipWaitingScreen({
                   onFocus={() => {
                     setIsFocus(true);
                   }}
+                  onChangeText={text => {
+                    setReason(text);
+                  }}
                   returnKeyType="done"
                   returnKeyLabel="done"
                   onSubmitEditing={() => {
@@ -260,8 +271,9 @@ export default function SlipWaitingScreen({
                     borderColor: isFocus
                       ? colors.greenLight
                       : colors.greyDivider,
+                    textAlignVertical: 'top',
 
-                    minHeight: Platform.OS === 'ios' ? 6 * 20 : 40,
+                    minHeight: Platform.OS === 'ios' ? 6 * 20 : 6 * 20,
                   }}
                 />
               </View>
@@ -274,7 +286,17 @@ export default function SlipWaitingScreen({
                 justifyContent: 'space-between',
               }}>
               <TouchableOpacity
-                onPress={() => {
+                onPress={async () => {
+                  mixpanel.track('Tab cancel button from cancel booking modal');
+                  const extendObj = await AsyncStorage.getItem('extendObj');
+                  const parseExtendObj = JSON.parse(extendObj || '{}');
+                  if (parseExtendObj && parseExtendObj.round > 0) {
+                    setIsShowModal(false);
+                    return parseExtendObj.round === 2
+                      ? setModalExtendTwo(true)
+                      : setModalExtendThree(true);
+                  }
+
                   setIsShowModal(false);
                   setReason('');
                 }}
@@ -299,7 +321,9 @@ export default function SlipWaitingScreen({
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
+                disabled={reason.length === 0}
                 onPress={() => {
+                  mixpanel.track('Tab submit button from cancel booking modal');
                   onSubmitCancelTask();
                   setIsShowModal(false);
                 }}
@@ -309,15 +333,21 @@ export default function SlipWaitingScreen({
 
                   justifyContent: 'center',
                   alignItems: 'center',
-                  backgroundColor: colors.greenLight,
+                  backgroundColor:
+                    reason.length === 0
+                      ? colors.greyDivider
+                      : colors.greenLight,
                   borderWidth: 1,
-                  borderColor: colors.greenLight,
+                  borderColor:
+                    reason.length === 0
+                      ? colors.greyDivider
+                      : colors.greenLight,
                   borderRadius: 8,
                   paddingHorizontal: 16,
                 }}>
                 <Text
                   style={{
-                    color: colors.white,
+                    color: reason.length === 0 ? colors.grey40 : colors.white,
                     fontFamily: fonts.AnuphanBold,
                     fontSize: 20,
                   }}>
@@ -391,8 +421,7 @@ export default function SlipWaitingScreen({
               }}>
               <TouchableOpacity
                 onPress={() => {
-                  setShowModalExtend(false);
-                  setShowModalCall(true);
+                  Linking.openURL(`tel:${callcenterNumber}`);
                 }}
                 style={{
                   backgroundColor: colors.blueBorder,
@@ -442,84 +471,254 @@ export default function SlipWaitingScreen({
           </View>
         </View>
       </Modal>
-      <Modal animationType="fade" transparent={true} visible={showModalCall}>
+      <Modal
+        transparent={true}
+        visible={showModalExtendTwo}
+        animationType="fade">
         <View
           style={{
             flex: 1,
             backgroundColor: 'rgba(0,0,0,0.5)',
-            justifyContent: 'flex-end',
+            justifyContent: 'center',
             alignItems: 'center',
-            paddingHorizontal: 16,
-            paddingBottom: 32,
           }}>
-          <TouchableOpacity
-            onPress={() => {
-              Linking.openURL(`tel:${callcenterNumber}`);
-            }}
+          <View
             style={{
-              height: 60,
-              paddingVertical: 8,
-              paddingHorizontal: 16,
+              width: Dimensions.get('window').width - 32,
               backgroundColor: colors.white,
-              justifyContent: 'center',
-              alignItems: 'flex-start',
-              width: '100%',
               borderRadius: 12,
-              marginBottom: 8,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <Image
-                style={{
-                  width: 24,
-                  height: 24,
-                  marginRight: 16,
-                }}
-                source={icons.callBlue}
-              />
-              <Text
-                style={{
-                  fontFamily: fonts.AnuphanMedium,
-                  color: '#007AFF',
-                  fontSize: 20,
-                }}>
-                {callcenterNumber}
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setShowModalCall(false);
-            }}
-            style={{
-              height: 60,
-              paddingVertical: 8,
-              paddingHorizontal: 16,
-              backgroundColor: colors.white,
               justifyContent: 'center',
               alignItems: 'center',
-              width: '100%',
-              borderRadius: 12,
-              marginBottom: 8,
+              padding: 20,
             }}>
+            <Text
+              style={{
+                fontFamily: fonts.AnuphanMedium,
+                fontSize: 22,
+              }}>
+              ขออภัย !
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.AnuphanMedium,
+                fontSize: 22,
+              }}>
+              ขณะนี้มีผู้ใช้งานจำนวนมาก
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.SarabunLight,
+                fontSize: 18,
+                textAlign: 'center',
+                marginVertical: 16,
+              }}>
+              ท่านสามารถกด ค้นหานักบินโดรนอีกครั้ง เพื่อค้นหาต่อไป หรือ
+              กดติดต่อเจ้าหน้าที่ เพื่อให้ช่วยในการค้นหานักบินโดรน
+            </Text>
             <View
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
+                width: '100%',
               }}>
-              <Text
+              <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL(`tel:${callcenterNumber}`);
+                }}
                 style={{
-                  fontFamily: fonts.AnuphanMedium,
-                  color: '#007AFF',
-                  fontSize: 20,
+                  backgroundColor: colors.blueBorder,
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  borderColor: colors.blueBorder,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: 50,
+                  marginVertical: 8,
                 }}>
-                ยกเลิก
-              </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    style={{
+                      width: 20,
+                      height: 20,
+                      marginRight: 16,
+                    }}
+                    source={icons.callingWhite}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: fonts.AnuphanMedium,
+                      color: colors.white,
+                      fontSize: 20,
+                    }}>
+                    ติดต่อเจ้าหน้าที่
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <MainButton
+                style={{
+                  height: 52,
+                  marginVertical: 0,
+                }}
+                onPress={onSearchExtend}
+                color={colors.white}
+                borderColor={'#202326'}
+                label="ค้นหานักบินโดรนอีกครั้ง"
+                fontColor={colors.fontBlack}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  setModalExtendTwo(false);
+                  setIsShowModal(true);
+                }}
+                style={{
+                  backgroundColor: 'transparent',
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  borderColor: 'transparent',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: 50,
+                  marginVertical: 8,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.AnuphanMedium,
+                      color: colors.fontBlack,
+                      fontSize: 20,
+                    }}>
+                    ยกเลิกการจอง
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        transparent={true}
+        visible={showModalExtendThree}
+        animationType="fade">
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              width: Dimensions.get('window').width - 32,
+              backgroundColor: colors.white,
+              borderRadius: 12,
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 20,
+            }}>
+            <Text
+              style={{
+                fontFamily: fonts.AnuphanMedium,
+                fontSize: 22,
+              }}>
+              ขออภัย !
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.AnuphanMedium,
+                fontSize: 22,
+              }}>
+              ขณะนี้มีผู้ใช้งานจำนวนมาก
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.SarabunLight,
+                fontSize: 18,
+                textAlign: 'center',
+                marginVertical: 16,
+              }}>
+              ท่านสามารถกด ค้นหานักบินโดรนอีกครั้ง เพื่อค้นหาต่อไป หรือ
+              กดติดต่อเจ้าหน้าที่ เพื่อให้ช่วยในการค้นหานักบินโดรน
+            </Text>
+            <View
+              style={{
+                width: '100%',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL(`tel:${callcenterNumber}`);
+                }}
+                style={{
+                  backgroundColor: colors.blueBorder,
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  borderColor: colors.blueBorder,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: 50,
+                  marginVertical: 8,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    style={{
+                      width: 20,
+                      height: 20,
+                      marginRight: 16,
+                    }}
+                    source={icons.callingWhite}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: fonts.AnuphanMedium,
+                      color: colors.white,
+                      fontSize: 20,
+                    }}>
+                    ติดต่อเจ้าหน้าที่
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setModalExtendThree(false);
+                  setIsShowModal(true);
+                }}
+                style={{
+                  backgroundColor: 'transparent',
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  borderColor: 'transparent',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: 50,
+                  marginVertical: 8,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.AnuphanMedium,
+                      color: colors.fontBlack,
+                      fontSize: 20,
+                    }}>
+                    ยกเลิกการจอง
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </Modal>
       <Spinner

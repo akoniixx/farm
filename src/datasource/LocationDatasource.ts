@@ -39,11 +39,19 @@ export class QueryLocation {
       })
       .catch(err => console.log(err));
   }
+  static async getSubdistrictIdCreateNewPlot(): Promise<any> {
+    return httpClient
+      .get(BASE_URL + '/location/sub-district')
+      .then(res => {
+        return res.data;
+      })
+      .catch(err => console.log(err));
+  }
 
-  static getSubdistrict(id?: number, text?: string): Promise<any[]> {
+  static getSubdistrict(id?: number, text?: string): Promise<any> {
     let script = null;
     script =
-      id != 0 ? '?districtId=' + id : text == '' ? '?search=' + text : null;
+      id != 0 ? '?districtId=' + id : text === '' ? '?search=' + text : null;
     return registerClient
       .get(BASE_URL + '/location/sub-district/' + script)
       .then(response => {

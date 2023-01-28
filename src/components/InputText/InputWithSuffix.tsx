@@ -6,6 +6,7 @@ import {
   ViewStyle,
   TouchableOpacity,
   Image,
+  Platform,
 } from 'react-native';
 import React from 'react';
 import fonts from '../../assets/fonts';
@@ -24,12 +25,14 @@ export default function InputWithSuffix({
   styleContainer,
   suffixComponent,
   allowClear = false,
+  pointerEvents,
   ...props
 }: Props) {
   const refInput = React.useRef<TextInput>(null);
   const isShowClear = allowClear && props.value && props.value?.length > 0;
   return (
     <Pressable
+      pointerEvents={pointerEvents}
       style={[styles({ allowClear }).container, styleContainer]}
       onPress={() => {
         refInput.current?.focus();
@@ -37,6 +40,7 @@ export default function InputWithSuffix({
       <TextInput
         {...props}
         ref={refInput}
+        placeholderTextColor={colors.disable}
         style={[styles({ allowClear }).input, style]}
       />
       {isShowClear && (
@@ -69,7 +73,7 @@ const styles = ({ allowClear = false }: { allowClear?: boolean }) => {
       borderColor: '#A7AEB5',
       borderRadius: 10,
       paddingHorizontal: 16,
-      height: 52,
+      height: 54,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -80,6 +84,7 @@ const styles = ({ allowClear = false }: { allowClear?: boolean }) => {
       fontSize: 20,
       fontFamily: fonts.SarabunMedium,
       width: allowClear ? '70%' : '80%',
+      height: Platform.OS === 'ios' ? 'auto' : 56,
     },
   });
 };

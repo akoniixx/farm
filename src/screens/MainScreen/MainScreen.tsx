@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -7,10 +7,12 @@ import {
   View,
   Dimensions,
   ImageBackground,
+  Modal,
+  TouchableOpacity,
+  Platform,
 } from 'react-native';
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import icons from '../../assets/icons/icons';
 import { normalize } from '../../functions/Normalize';
@@ -19,23 +21,33 @@ import LinearGradient from 'react-native-linear-gradient';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
+
 import { ActivityIndicator } from 'react-native-paper';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
 import { useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import {TabActions} from '@react-navigation/native';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
+import { useAuth } from '../../contexts/AuthContext';
+import fonts from '../../assets/fonts';
+import { mixpanel } from '../../../mixpanel';
 
 const MainScreen: React.FC<any> = ({ navigation,route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const imageWidth = screenWidth / 2;
   const date = new Date();
   const [fcmToken, setFcmToken] = useState('');
+  const {
+    authContext: { getProfileAuth },
+    state: { user },
+  } = useAuth();
   const isFocused = useIsFocused();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [taskSug, setTaskSug] = useState<any[]>([]);
   const [taskId, setTaskId] = useState<any>(null);
   const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
+  const [disableBooking, setDisableBooking] = useState(false);
+  const [showModalCantBooking, setShowModalCantBooking] = useState(false);
   const { height, width } = Dimensions.get('window');
   const [showFinding, setShowFinding] = useState(false);
   const [dataFinding, setDataFinding] = useState({
@@ -87,6 +99,8 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
     const value = await AsyncStorage.getItem('token');
     if (value) {
       const farmer_id = await AsyncStorage.getItem('farmer_id');
+      getProfileAuth();
+
       ProfileDatasource.getProfile(farmer_id!)
         .then(async res => {
           await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
@@ -98,7 +112,20 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
         })
         .catch(err => console.log(err));
     }
-  };
+  }
+  useEffect(() => {
+    const getTaskId = async () => {
+      const value = await AsyncStorage.getItem('taskId');
+      if (value) {
+        setTaskId(value);
+      }
+    };
+
+    getTaskId();
+    getData();
+    getProfile();
+  }, [isFocused, getProfile]);
+
   useEffect(() => {
     const dronerSug = async () => {
       const value = await AsyncStorage.getItem('token');
@@ -136,6 +163,9 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
     };
     dronerSug();
     dronerSugUsed();
+    if (user) {
+      setDisableBooking(user.status === 'ACTIVE' ? false : true);
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profilestate.plotItem]);
@@ -148,7 +178,9 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
         }
         const res = await TaskDatasource.getTaskByTaskId(taskId || '');
         if (res && res.data) {
-          const endTime = await AsyncStorage.getItem('endTime');
+          const endTime = moment(res.data.updatedAt)
+            .add(30, 'minutes')
+            .toISOString();
           const isAfter = moment(endTime).isAfter(moment());
 
           setDataFinding({
@@ -226,7 +258,14 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
                     alignSelf: 'center',
                   }}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('SelectDateScreen')}>
+                    onPress={() => {
+                      mixpanel.track('Tab booking with login');
+                      if (disableBooking) {
+                        setShowModalCantBooking(true);
+                      } else {
+                        navigation.navigate('SelectDateScreen');
+                      }
+                    }}>
                     <LinearGradient
                       colors={['#61E097', '#3B996E']}
                       style={{
@@ -246,7 +285,10 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
                     </LinearGradient>
                   </TouchableOpacity>
                   <View style={{ width: normalize(10) }}></View>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      mixpanel.track('Tab your plot with login');
+                      navigation.navigate('AllPlotScreen')}}>
                     <LinearGradient
                       colors={['#FFFFFF', '#ECFBF2']}
                       style={{
@@ -314,6 +356,7 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
                     flexDirection: 'row',
                     padding: '5%',
                     justifyContent: 'space-between',
+                    top: '10%'
                   }}>
                   <Text
                     style={{
@@ -487,6 +530,88 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
           </View>
         </TouchableOpacity>
       )}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={showModalCantBooking}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingHorizontal: 16,
+            paddingBottom: 32,
+          }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              marginTop: 10,
+              width: '100%',
+              paddingVertical: normalize(16),
+              borderRadius: 12,
+              paddingHorizontal: 16,
+            }}>
+            <Text
+              style={{
+                fontFamily: font.AnuphanMedium,
+                fontSize: 22,
+                textAlign: 'center',
+              }}>
+              ท่านไม่สามารถจ้าง
+            </Text>
+            <Text
+              style={{
+                fontFamily: font.AnuphanMedium,
+                fontSize: 22,
+                textAlign: 'center',
+              }}>
+              โดรนเกษตรได้ในขณะนี้ เนื่องจาก
+            </Text>
+            <Text
+              style={{
+                fontFamily: font.AnuphanMedium,
+                fontSize: 22,
+                textAlign: 'center',
+              }}>
+              ท่านยังยืนยันตัวตนไม่สำเร็จ
+            </Text>
+            <Text
+              style={{
+                fontFamily: font.SarabunLight,
+                textAlign: 'center',
+                fontSize: 20,
+                marginVertical: 16,
+              }}>
+              กรุณาติดต่อเจ้าหน้าที่ เพื่อยืนยันสถานะ
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                setShowModalCantBooking(false);
+              }}
+              style={{
+                height: 60,
+                paddingVertical: 8,
+                paddingHorizontal: 16,
+                backgroundColor: colors.greenLight,
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                borderRadius: 8,
+                marginBottom: 8,
+              }}>
+              <Text
+                style={{
+                  fontFamily: fonts.AnuphanMedium,
+                  color: colors.white,
+                  fontSize: 20,
+                }}>
+                ตกลง
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -552,6 +677,6 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
     borderTopRightRadius: normalize(30),
     borderTopLeftRadius: normalize(30),
-    height: 80,
+    height: Platform.OS === 'ios' ? normalize(80) : normalize(90),
   },
 });

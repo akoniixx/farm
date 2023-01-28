@@ -28,5 +28,7 @@ export default {
   plotFailed: require('./plotfailed.png'),
   drone: require('./drone.png'),
   successfullottie: require('./sucessfullottie.json'),
-  waitinglottie: require('./waitingdroner.json')
+  waitinglottie: require('./waitingdroner.json'),
+  droneBrown: require('./droneBrown.png'),
+  plot_head: require('./plot_head.png'),
 };

@@ -94,7 +94,6 @@ export class ProfileDatasource {
         console.log(error);
       });
   }
-
   //Droner
   static async getDroner(droner_id: string): Promise<any> {
     return httpClient

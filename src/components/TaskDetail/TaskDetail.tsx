@@ -114,7 +114,7 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
   plotAmout,
   plant,
   location,
-  onPressMap,
+  // onPressMap,
 }) => {
   const dataKeyObj = {
     amountPlot: {
@@ -158,7 +158,9 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
           </Text>
         </View>
         <View style={{ alignItems: 'flex-end', width: '40%' }}>
-          <TouchableOpacity onPress={onPressMap}>
+          <View
+          // onPress={onPressMap}
+          >
             <Image
               source={icons.map}
               style={{
@@ -167,7 +169,7 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
                 marginBottom: normalize(10),
               }}
             />
-          </TouchableOpacity>
+          </View>
         </View>
       </View>
       <View style={{}}>
@@ -205,8 +207,8 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
                   style={[
                     styles.h1,
                     {
+                      width: Dimensions.get('screen').width * 0.5,
                       textAlign: 'right',
-                      width: Dimensions.get('window').width * 0.5,
                     },
                   ]}>
                   {dataKeyObj[key as keyof typeof dataKeyObj].value}

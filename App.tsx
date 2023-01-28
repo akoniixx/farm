@@ -21,8 +21,10 @@ import { AutoBookingProvider } from './src/contexts/AutoBookingContext';
 import { AuthProvider } from './src/contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
+import { mixpanel } from './mixpanel';
 const App = () => {
   useEffect(() => {
+    mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
     if (Platform.OS === 'ios') {

@@ -16,6 +16,7 @@ import { MainButton } from '../Button/MainButton';
 const DatePickerCustom: React.FC<DatePickerProps> = ({
   value,
   onHandleChange,
+  startDate = new Date(),
   height,
   width,
   fontSize,
@@ -58,15 +59,10 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
         );
         const isCurrentMonth = moment(value).isSame(new Date(), 'month');
         if (isCurrentMonth) {
-          const isDayBefore = moment(value).isBefore(new Date(), 'day');
+          const isDayBefore = moment(value).isBefore(startDate, 'day');
           const newDateList = genDate.filter(
-            day => day >= new Date().getDate(),
+            day => day >= startDate?.getDate(),
           );
-          // const currentIndexDate = days.findIndex(
-          //   (el: any) => el === moment(value).get('date'),
-          // );
-          // const idxCondition =
-          //   currentIndexDate >= newDateList.length - 1 ? 0 : currentIndexDate;
 
           if (isDayBefore) {
             changeHandle('day', newDateList[0]);
@@ -80,7 +76,6 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
       const _years = [...Array(end - start + 1)].map(
         (_, index) => start + index,
       );
-
       setDays(_days);
       setMonths(_months);
       setYears(_years);
@@ -142,7 +137,6 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
     });
   };
   const isHaveData = days.length > 0 && months.length > 0 && years.length > 0;
-
   return (
     <View style={[styles.picker, { height: pickerHeight, width: pickerWidth }]}>
       {isHaveData &&
@@ -241,9 +235,9 @@ const DateBlock: React.FC<DateBlockProps> = ({
         ref={scrollRef}
         style={styles.scroll}
         snapToOffsets={offsets}
+        onMomentumScrollEnd={handleMomentumScrollEnd}
         showsVerticalScrollIndicator={false}
-        scrollEventThrottle={0}
-        onMomentumScrollEnd={handleMomentumScrollEnd}>
+        scrollEventThrottle={0}>
         {digits.map((value: any, valIndex: any) => {
           return (
             <TouchableOpacity
@@ -323,6 +317,7 @@ export interface DatePickerProps {
   markWidth?: number | string;
   fadeColor?: string;
   format?: string;
+  startDate?: Date;
   onHandleChange: (value: any) => void;
 }
 

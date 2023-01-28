@@ -1,18 +1,11 @@
-import { normalize } from '@rneui/themed';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { colors, icons } from '../../assets';
+import { colors, image } from '../../assets';
 import fonts from '../../assets/fonts';
+import { normalize } from '../../functions/Normalize';
 import { dialCall } from '../../functions/utility';
 
-interface props {
-  name: string;
-  profile: string;
-  telnumber: string;
-}
-
-export const DronerCard: React.FC<props> = ({ name, profile, telnumber }) => {
-  console.log('profile', profile);
+export const WaittingCard = () => {
   return (
     <View
       style={{
@@ -28,13 +21,7 @@ export const DronerCard: React.FC<props> = ({ name, profile, telnumber }) => {
           alignItems: 'center',
         }}>
         <Image
-          source={
-            profile
-              ? {
-                  uri: profile,
-                }
-              : icons.avatar
-          }
+          source={image.droneBrown}
           style={{
             width: normalize(56),
             height: normalize(56),
@@ -42,14 +29,11 @@ export const DronerCard: React.FC<props> = ({ name, profile, telnumber }) => {
             marginRight: normalize(10),
           }}
         />
-        <Text style={styles.name}>{name}</Text>
+        <View>
+          <Text style={styles.name}>ระบบค้นหาอัตโนมัติ</Text>
+          <Text style={styles.h2}>คัดสรรนักบินคุณภาพ</Text>
+        </View>
       </View>
-      <TouchableOpacity onPress={() => dialCall(telnumber)}>
-        <Image
-          source={ icons.telephon}
-          style={{ width: normalize(40), height: normalize(40) }}
-        />
-      </TouchableOpacity>
     </View>
   );
 };
@@ -58,5 +42,10 @@ const styles = StyleSheet.create({
     fontFamily: fonts.SarabunMedium,
     fontSize: normalize(18),
     color: colors.fontBlack,
+  },
+  h2: {
+    fontFamily: fonts.SarabunLight,
+    fontSize: normalize(16),
+    color: '#8D96A0',
   },
 });

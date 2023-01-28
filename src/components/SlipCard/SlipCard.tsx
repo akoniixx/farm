@@ -12,7 +12,7 @@ export interface TaskDataTypeSlip {
   farmerId: string;
   farmerPlotId: string;
   farmAreaAmount: string;
-
+  countResend: string;
   purposeSprayId: string;
   dateAppointment: string;
   targetSpray: string[];
@@ -33,7 +33,6 @@ export default function SlipCard({
   purposeSprayName,
   preparationBy,
   comment,
-  price,
   totalPrice,
 }: Props) {
   const listDataObj = {

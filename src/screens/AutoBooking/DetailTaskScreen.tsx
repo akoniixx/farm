@@ -4,15 +4,18 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import {
   Image,
+  Keyboard,
+  KeyboardAvoidingView,
   Linking,
   Modal,
+  Platform,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SheetManager } from 'react-native-actions-sheet';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import { mixpanel } from '../../../mixpanel';
 import { font } from '../../assets';
 import colors from '../../assets/colors/colors';
 import fonts from '../../assets/fonts';
@@ -38,7 +41,6 @@ import {
 } from '../../datasource/TaskDatasource';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { numberWithCommas } from '../../functions/utility';
-import { momentExtend } from '../../utils/moment-buddha-year';
 
 const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const {
@@ -66,6 +68,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           ...prev,
           couponCode: couponCode,
         }));
+        Keyboard.dismiss();
         setDisableEdit(true);
       }
     } catch (error) {
@@ -77,6 +80,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const onSubmit = async () => {
     try {
       setLoading(true);
+
+      const dateAppointment = moment(taskData.dateAppointment).toISOString();
       const payload: PayloadCreateTask = {
         purposeSprayId: taskData.purposeSpray.id,
         cropName: taskData.cropName || '',
@@ -84,7 +89,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         comment: taskData.comment || '',
         couponCode: taskData.couponCode || '',
         farmerPlotId: taskData.farmerPlotId,
-        dateAppointment: moment(taskData.dateAppointment).toISOString(),
+        dateAppointment,
         createBy: `${user?.firstname} ${user?.lastname}`,
         farmerId: taskData.farmerId,
         preparationBy: taskData.preparationBy,
@@ -96,11 +101,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       const res = await TaskDatasource.createTask(payload);
 
       if (res && res.success) {
+         mixpanel.track('Tab submit booking');
         setLoading(false);
-        await AsyncStorage.setItem(
-          'endTime',
-          moment().add(30, 'minutes').toISOString(),
-        );
+
         await AsyncStorage.setItem('taskId', res.responseData.id);
         navigation.navigate('SlipWaitingScreen', {
           taskId: res.responseData.id,
@@ -134,15 +137,20 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskData.couponCode]);
   return (
-    <View style={[{ flex: 1 }]}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={[{ flex: 1 }]}>
       <CustomHeader
         title="รายละเอียดการจอง"
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('Tab back from booking detail screen');
+          navigation.goBack()}}
         headerRight={() => {
           return (
             <TouchableOpacity
               onPress={() => {
+                mixpanel.track('Tab callcenter from booking detail screen');
                 Linking.openURL(`tel:${callcenterNumber}`);
               }}
               style={{
@@ -221,7 +229,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               วันและเวลา
             </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('SelectDateScreen')}
+              onPress={() => {
+                mixpanel.track('Tab edit date time');
+                navigation.navigate('SelectDateScreen')}}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -272,7 +282,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               แปลงเกษตร
             </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('SelectPlotScreen')}
+              onPress={() => {
+                mixpanel.track('Tab edit select plot');
+                navigation.navigate('SelectPlotScreen')}}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -332,7 +344,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               เป้าหมายการพ่น
             </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('SelectTarget')}
+              onPress={() => {
+                mixpanel.track('Tab edit select target');
+                navigation.navigate('SelectTarget')}}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -539,10 +553,17 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               paddingHorizontal: normalize(16),
             }}>
             <InputWithSuffix
+              pointerEvents={disableEdit ? 'none' : 'auto'}
               onChangeText={text => {
                 setCouponCode(text);
                 setCouponCodeError('');
               }}
+              onSubmitEditing={async () => {
+                if (couponCode.length > 0) {
+                  await checkCoupon();
+                }
+              }}
+              returnKeyType="done"
               style={{
                 color: !disableEdit ? colors.fontBlack : colors.grey40,
               }}
@@ -561,6 +582,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                       return setDisableEdit(false);
                     }
                     if (couponCode.length > 0) {
+                      mixpanel.track('Tab submit coupon');
                       await checkCoupon();
                     }
                   }}
@@ -928,7 +950,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         textContent={'Loading...'}
         textStyle={{ color: '#FFF' }}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

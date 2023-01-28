@@ -1,5 +1,14 @@
 export const initProfileState = {
   name: '',
+  lastName: '',
+  birthDay: '',
+  tel: '',
+  address1: '',
+  address2: '',
+  province: '',
+  subdistrict: '',
+  district: '',
+  postcode: '',
   id: '',
   image: '',
   plotItem: [],
@@ -11,10 +20,19 @@ export const profileReducer = (state: any, action: any) => {
     case 'InitProfile':
       return {
         name: action.name,
+        lastName: action.lastName,
         id: action.id,
         image: action.image,
         plotItem: action.plotItem,
         status: action.status,
+        birthDay: action.birthDay,
+        tel: action.tel,
+        address1: action.address1,
+        address2: action.address2,
+        province: action.province,
+        subdistrict: action.subdistrict,
+        district: action.district,
+        postcode: action.postcode,
       };
 
     default:

@@ -8,18 +8,20 @@ import { font, image } from '../../assets';
 import colors from '../../assets/colors/colors';
 import { CardTask } from '../../components/Mytask/CardTask';
 import { Filter } from '../../components/Mytask/Filter';
+import { FilterFinish } from '../../components/Mytask/FilterFinish';
 import { StatusFilterFinish } from '../../components/Mytask/StatusFilterFinish';
 import { StatusFilterInprogress } from '../../components/Mytask/StatusFilterInprogress';
 
 import { EmptyTask } from '../../components/TaskDetail/emptyTask';
 import { MyJobDatasource } from '../../datasource/MyJobDatasource';
 import { SearchMyJobsEntites } from '../../entites/SearchMyJobsEntites';
+import * as RootNavigation from '../../navigations/RootNavigation';
 
 const FinishScreen: React.FC<any> = ({}) => {
   const [taskList, setTaskList] = useState([]);
   const [selectedField, setSelectedField] = useState({
-    name: 'ใกล้ถึงวันงาน',
-    value: 'coming_task',
+    name: 'งานล่าสุด',
+    value: 'date_appointment',
     direction: '',
   });
   const [selectedStatus, setSelectedStatus] = useState({
@@ -70,7 +72,7 @@ const FinishScreen: React.FC<any> = ({}) => {
             justifyContent: 'space-between',
             marginVertical: normalize(10),
           }}>
-          <Filter
+          <FilterFinish
             selectedField={selectedField}
             setSelectedField={setSelectedField}
           />
@@ -84,7 +86,14 @@ const FinishScreen: React.FC<any> = ({}) => {
             <FlatList
               data={taskList}
               renderItem={({ item, index }) => (
-                <TouchableOpacity key={index}>
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    RootNavigation.navigate('Main', {
+                      screen: 'MyTaskDetailScreen',
+                      params: { task: item },
+                    })
+                  }>
                   <CardTask task={item} />
                 </TouchableOpacity>
               )}

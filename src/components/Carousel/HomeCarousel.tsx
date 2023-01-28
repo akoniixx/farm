@@ -34,7 +34,7 @@ const HomeCarousel: React.FC<any> = () => {
       pagingEnabled
       data={[1, 2, 3]}
       autoPlay
-      autoPlayInterval={900}
+      scrollAnimationDuration={900}
       renderItem={({ index }: any) => {
         return <RenderItem index={index} />;
       }}
