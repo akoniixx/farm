@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, View, TextInput } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Platform,
+} from 'react-native';
 import React from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons } from '../../assets';
@@ -28,6 +35,20 @@ export function StatusObject(status: string) {
         colorBg: colors.white,
         fontColor: colors.greenLight,
         borderColor: colors.greenLight,
+      };
+    case 'REJECTED':
+      return {
+        status: 'ไม่อนุมัติ',
+        colorBg: colors.white,
+        fontColor: colors.error,
+        borderColor: colors.error,
+      };
+    case 'INACTIVE':
+      return {
+        status: 'ปิดการใช้งาน',
+        colorBg: colors.white,
+        fontColor: colors.fontGrey,
+        borderColor: colors.bg,
       };
     default:
       return {
@@ -81,9 +102,19 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
                 <Image
                   source={icons.arrowRigth}
                   style={{
-                    width: normalize(20),
-                    height: normalize(20),
-                    alignSelf: 'flex-end',
+                    ...Platform.select({
+                      ios: {
+                        width: normalize(20),
+                        height: normalize(20),
+                        alignSelf: 'flex-end',
+                      },
+                      android: {
+                        width: normalize(20),
+                        height: normalize(20),
+                        alignSelf: 'flex-end',
+                        right: 30,
+                      },
+                    }),
                   }}
                 />
               </View>
@@ -151,18 +182,36 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
         <View
           key={index}
           style={{
-            height: normalize(145),
-            borderWidth: 0.5,
-            borderColor: colors.greenLight,
-            backgroundColor: '#ECFBF2',
-            borderRadius: normalize(12),
-            paddingVertical: normalize(10),
-            paddingHorizontal: normalize(20),
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: normalize(10),
+            ...Platform.select({
+              ios: {
+                height: normalize(145),
+                borderWidth: 0.5,
+                borderColor: colors.greenLight,
+                backgroundColor: '#ECFBF2',
+                borderRadius: normalize(12),
+                paddingVertical: normalize(10),
+                paddingHorizontal: normalize(20),
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: normalize(10),
+              },
+              android: {
+                height: normalize(165),
+                borderWidth: 0.5,
+                borderColor: colors.greenLight,
+                backgroundColor: '#ECFBF2',
+                borderRadius: normalize(12),
+                paddingVertical: normalize(10),
+                paddingHorizontal: normalize(20),
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: normalize(10),
+              },
+            }),
           }}>
           <View
             style={{
@@ -175,13 +224,29 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Text style={styles.title}>{plotName}</Text>
+                <View>
+                  <Text
+                    style={[styles.title, { width: normalize(200) }]}
+                    numberOfLines={1}>
+                    {plotName}
+                  </Text>
+                </View>
                 <Image
                   source={icons.arrowRigth}
                   style={{
-                    width: normalize(20),
-                    height: normalize(20),
-                    alignSelf: 'flex-end',
+                    ...Platform.select({
+                      ios: {
+                        width: normalize(20),
+                        height: normalize(20),
+                        alignSelf: 'flex-end',
+                      },
+                      android: {
+                        width: normalize(20),
+                        height: normalize(20),
+                        alignSelf: 'flex-end',
+                        right: 30,
+                      },
+                    }),
                   }}
                 />
               </View>

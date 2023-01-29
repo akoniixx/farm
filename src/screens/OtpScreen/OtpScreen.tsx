@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Button,
+  TouchableOpacity,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -23,7 +24,6 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 import fonts from '../../assets/fonts';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Authentication } from '../../datasource/AuthDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
@@ -147,16 +147,16 @@ const OtpScreen: React.FC<any> = ({ navigation, route }) => {
               await AsyncStorage.setItem('token', result.accessToken);
               await AsyncStorage.setItem('farmer_id', result.data.id);
               const fcmToken = await AsyncStorage.getItem('fcmtoken');
-              console.log("save")
-              FCMtokenDatasource.saveFCMtoken(fcmToken!).then(
-                async result=>{
+              console.log('save');
+              FCMtokenDatasource.saveFCMtoken(fcmToken!)
+                .then(async result => {
                   await RootNavigation.navigate('Main', {
                     screen: 'MainScreen',
                   });
-                }
-              ).catch(err => {
-                console.log(err)
-              })
+                })
+                .catch(err => {
+                  console.log(err);
+                });
             })
             .catch(err => {
               setLoading(false);

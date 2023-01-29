@@ -7,13 +7,13 @@ import {
   Platform,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { height, normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import CustomHeader from '../../components/CustomHeader';
 import { Avatar } from '@rneui/themed';
 import * as RootNavigation from '../../navigations/RootNavigation';

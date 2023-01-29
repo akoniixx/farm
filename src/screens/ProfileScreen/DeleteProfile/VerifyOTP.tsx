@@ -66,13 +66,6 @@ const VerifyOTP: React.FC<any> = ({ navigation, route }) => {
   const [time, setTime] = useState('05:00');
   const [loading, setLoading] = useState(false);
 
-  const onLogout = async () => {
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    socket.removeAllListeners(`send-task-${farmer_id!}`);
-    socket.close();
-    await Authentication.logout();
-  };
-
   useEffect(() => {
     if (otpCalling) {
       setOTPtimeout(300);
@@ -151,10 +144,7 @@ const VerifyOTP: React.FC<any> = ({ navigation, route }) => {
               const fcmtoken = await AsyncStorage.getItem('fcmtoken');
               FCMtokenDatasource.deleteFCMtoken(fcmtoken!)
                 .then(async res => {
-                  await onLogout();
-                  RootNavigation.navigate('Auth', {
-                    screen: 'DeleteSuccess',
-                  });
+                  navigation.navigate('DeleteSuccess');
                 })
                 .catch(err => console.log(err));
             }

@@ -12,6 +12,7 @@ import {
   Dimensions,
   Pressable,
   Alert,
+  ScrollView,
 } from 'react-native';
 import React, {
   useCallback,
@@ -25,7 +26,6 @@ import { stylesCentral } from '../../styles/StylesCentral';
 import { colors, font, icons, image as img } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import { MainButton } from '../../components/Button/MainButton';
-import { ScrollView } from 'react-native-gesture-handler';
 import * as ImagePicker from 'react-native-image-picker';
 import { normalize, width } from '../../functions/Normalize';
 import { ProgressBar } from '../../components/ProgressBar';
@@ -67,7 +67,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
 
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  const [value, setValue] = useState<any>();
+  const [value, setValue] = useState<any>([]);
   const [items, setItems] = useState<any>([]);
   const [itemsDistrict, setItemDistrict] = useState([]);
   const [itemsSubDistrict, setItemSubDistrict] = useState([]);
@@ -89,6 +89,9 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
       .then(res => {
+        console.log(res);
+        setValue(res);
+        setAddress(res.address);
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
@@ -308,7 +311,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
               ]}>
               <TextInput
                 value={momentExtend.toBuddhistYear(
-                  initProfile.birthDate,
+                  value.birthDate,
                   'DD MMMM YYYY',
                 )}
                 editable={false}
@@ -388,7 +391,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
           </ScrollView>
         </View>
         <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
-          <MainButton label="บันทึก" color={colors.greenLight} />
+          <MainButton label="บันทึก" color={colors.greenLight} disable />
         </View>
         <ActionSheet ref={provinceSheet}>
           <View

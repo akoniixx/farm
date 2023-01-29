@@ -10,6 +10,7 @@ import {
 import { colors, icons } from '../assets';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { normalize } from '@rneui/themed';
+import { font } from '../assets/index';
 
 interface InputPhoneProps {
   value: string;
@@ -39,7 +40,10 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
     <View style={styles.container}>
       <View style={!onError ? styles.boder : styles.boderError}>
         <View style={!onError ? styles.flagBorder : styles.flagBorderError}>
-          <Image source={icons.th} />
+          <Image
+            source={icons.th}
+            style={{ width: 32, height: 24, borderRadius: 3 }}
+          />
         </View>
         <TextInput
           style={styles.numberText}
@@ -49,10 +53,16 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
           onChangeText={onTextChange}
           maxLength={maxLength}
           autoFocus={autoFocus}
+          placeholder={'หมายเลขโทรศัพท์'}
+          placeholderTextColor={colors.gray}
         />
-        <TouchableOpacity style={styles.clearBtn} onPress={() => setNumber('')}>
-          <Icon name="close" />
-        </TouchableOpacity>
+        {number ? (
+          <TouchableOpacity
+            style={styles.clearBtn}
+            onPress={() => setNumber('')}>
+            <Icon name="close" />
+          </TouchableOpacity>
+        ) : null}
       </View>
       {!onError ? null : <Text style={styles.textError}>{errorMessage}</Text>}
     </View>
@@ -65,18 +75,18 @@ const styles = StyleSheet.create({
   },
   boder: {
     alignItems: 'center',
-    height: 44,
+    height: normalize(56),
     flexDirection: 'row',
     borderColor: '#E8E8E8',
-    borderRadius: 6,
+    borderRadius: 10,
     borderWidth: 1,
   },
   boderError: {
     alignItems: 'center',
-    height: 44,
+    height: normalize(56),
     flexDirection: 'row',
     borderColor: '#EB2C21',
-    borderRadius: 6,
+    borderRadius: 10,
     borderWidth: 1,
   },
   flag: {
@@ -86,7 +96,7 @@ const styles = StyleSheet.create({
   },
   flagBorder: {
     alignItems: 'center',
-    height: 44,
+    height: normalize(56),
     flexDirection: 'row',
     borderColor: '#E8E8E8',
     borderTopLeftRadius: 6,
@@ -96,7 +106,7 @@ const styles = StyleSheet.create({
   },
   flagBorderError: {
     alignItems: 'center',
-    height: 44,
+    height: normalize(56),
     flexDirection: 'row',
     borderColor: '#EB2C21',
     borderTopLeftRadius: 6,
@@ -116,13 +126,14 @@ const styles = StyleSheet.create({
   },
   numberText: {
     marginLeft: 5,
-    height: 40,
+    height: 60,
     justifyContent: 'center',
     lineHeight: 19,
-    fontSize: 16,
+    fontSize: 19,
     flex: 1,
     width: '100%',
     color: colors.fontBlack,
+    fontFamily: font.SarabunLight,
   },
   textError: {
     color: '#EB2C21',

@@ -15,9 +15,13 @@ import {
   ToastAndroid,
 } from 'react-native';
 import { colors, font, icons } from '../assets';
-import { PredictionType } from '../screens/RegisterScreen/ThirdFormScreen';
+import ThirdFormScreen, {
+  PredictionType,
+} from '../screens/RegisterScreen/ThirdFormScreen';
 import { normalize } from '@rneui/themed';
 import Geolocation from 'react-native-geolocation-service';
+import Icon from 'react-native-vector-icons/AntDesign';
+import { navigationRef } from '../navigations/RootNavigation';
 
 type SearchBarProps = {
   value: string;
@@ -184,25 +188,28 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
     });
     console.log(location);
   };
-  console.log(1, location);
-  console.log(2, value);
 
   return (
     <View style={[container, { ...passedStyles }]}>
-      <TextInput
-        clearTextOnFocus={true}
-        style={[inputStyle, inputBottomRadius]}
-        placeholder="ระบุสถานที่ใกล้แปลง"
-        placeholderTextColor="gray"
-        value={value}
-        onChangeText={onChangeText}
-        returnKeyType="search"
-        onLayout={event => {
-          const { height, width } = event.nativeEvent.layout;
-          setInputSize({ height, width });
-        }}
-      />
-      <TouchableOpacity onPress={getLocation}>
+      <View>
+        <TextInput
+          clearButtonMode="always"
+          style={[inputStyle, inputBottomRadius]}
+          placeholder="ระบุสถานที่ใกล้แปลง"
+          placeholderTextColor="gray"
+          value={value}
+          onChangeText={onChangeText}
+          returnKeyType="search"
+          onLayout={event => {
+            const { height, width } = event.nativeEvent.layout;
+            setInputSize({ height, width });
+          }}
+        />
+      </View>
+      <TouchableOpacity
+        onPress={() => {
+          getLocation;
+        }}>
         <View
           style={{
             flexDirection: 'row',
@@ -227,6 +234,12 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
 };
 
 const styles = StyleSheet.create({
+  clearBtn: {
+    flex: 0.1,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     justifyContent: 'center',
   },
@@ -242,23 +255,45 @@ const styles = StyleSheet.create({
     borderColor: colors.disable,
   },
   predictionsContainer: {
-    backgroundColor: colors.white,
-    padding: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    borderRadius: 10,
+    ...Platform.select({
+      ios: {
+        backgroundColor: colors.white,
+        padding: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        borderRadius: 10,
+      },
+      android: {
+        backgroundColor: colors.white,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        borderRadius: 10,
+      },
+    }),
   },
   predictionRow: {
-    height: normalize(65),
-    marginBottom: 15,
-    borderBottomColor: colors.disable,
-    borderBottomWidth: 1,
+    ...Platform.select({
+      ios: {
+        height: normalize(65),
+        marginBottom: 15,
+        borderBottomColor: colors.disable,
+        borderBottomWidth: 1,
+      },
+      android: {
+        left: 10,
+        height: normalize(65),
+        marginBottom: 15,
+        borderBottomColor: colors.disable,
+        borderBottomWidth: 1,
+      },
+    }),
   },
   list: {
     fontFamily: font.SarabunMedium,
     fontSize: normalize(18),
     color: colors.fontGrey,
   },
+
   list2: {
     fontFamily: font.SarabunLight,
     fontSize: normalize(16),

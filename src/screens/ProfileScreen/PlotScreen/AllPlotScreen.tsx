@@ -9,6 +9,8 @@ import {
   Linking,
   Platform,
   ImageBackground,
+  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../../assets';
@@ -19,11 +21,11 @@ import { initProfileState, profileReducer } from '../../../hook/profilefield';
 import { stylesCentral } from '../../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
-import { ScrollView } from 'react-native-gesture-handler';
 import PlotInProfile from '../../../components/Plots/PlotsInProfile';
 import PlotsItem from '../../../components/Plots/Plots';
-import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import PlotsItemEdit from '../../../components/Plots/PlotsItemEdit';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
+import { callcenterNumber } from '../../../definitions/callCenterNumber';
 
 const AllPlotScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -32,15 +34,17 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
   const [currentTel, setCurrentTel] = useState('');
   const [farmerPlot, setFarmerPlot] = useState<any>([]);
   const [statusPlot, setStatusPlot] = useState<any>();
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     getProfile();
-  }, []);
+  }, [reload]);
   const getProfile = async () => {
     setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
       .then(async res => {
+        setReload(!reload);
         setFarmerPlot(res.farmerPlot);
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
@@ -113,9 +117,19 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
             </TouchableOpacity>
             <Text
               style={{
-                fontFamily: font.AnuphanBold,
-                fontSize: 22,
-                left: normalize(100),
+                ...Platform.select({
+                  ios: {
+                    fontFamily: font.AnuphanBold,
+                    fontSize: 22,
+                    left: normalize(100),
+                  },
+                  android: {
+                    fontFamily: font.AnuphanBold,
+                    fontSize: 22,
+                    left: normalize(100),
+                    color: colors.fontBlack,
+                  },
+                }),
               }}>
               แปลงของคุณ
             </Text>
@@ -132,6 +146,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                     alignSelf: 'center',
                     backgroundColor: '#FFF9F2',
                     borderRadius: 10,
+                    top: 10,
                   }}>
                   <View style={{ padding: 15, alignSelf: 'center' }}>
                     <View style={{ flexDirection: 'row' }}>
@@ -311,7 +326,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
             }}>
             <TouchableOpacity
               onPress={() => {
-                Linking.openURL(`tel:${currentTel}`);
+                Linking.openURL(`tel:${callcenterNumber}`);
               }}
               style={{
                 height: 60,
@@ -379,6 +394,11 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </Modal>
+        <Spinner
+          visible={loading}
+          textContent={'Loading...'}
+          textStyle={{ color: '#FFF' }}
+        />
       </SafeAreaView>
     </>
   );

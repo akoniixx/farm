@@ -101,7 +101,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       const res = await TaskDatasource.createTask(payload);
 
       if (res && res.success) {
-         mixpanel.track('Tab submit booking');
+        mixpanel.track('Tab submit booking');
         setLoading(false);
 
         await AsyncStorage.setItem('taskId', res.responseData.id);
@@ -145,7 +145,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         showBackBtn
         onPressBack={() => {
           mixpanel.track('Tab back from booking detail screen');
-          navigation.goBack()}}
+          navigation.goBack();
+        }}
         headerRight={() => {
           return (
             <TouchableOpacity
@@ -231,7 +232,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             <TouchableOpacity
               onPress={() => {
                 mixpanel.track('Tab edit date time');
-                navigation.navigate('SelectDateScreen')}}
+                navigation.navigate('SelectDateScreen');
+              }}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -284,7 +286,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             <TouchableOpacity
               onPress={() => {
                 mixpanel.track('Tab edit select plot');
-                navigation.navigate('SelectPlotScreen')}}
+                navigation.navigate('SelectPlotScreen');
+              }}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -346,7 +349,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             <TouchableOpacity
               onPress={() => {
                 mixpanel.track('Tab edit select target');
-                navigation.navigate('SelectTarget')}}
+                navigation.navigate('SelectTarget');
+              }}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',

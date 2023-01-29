@@ -1,11 +1,11 @@
-import { View, Text, Modal, TouchableOpacity, Image } from 'react-native'
-import React from 'react'
-import { ModalEntity } from './ModalEntity'
-import { ModalStyle } from './ModalStyle'
-import { MainButton } from '../Button/MainButton'
-import { colors, icons, image } from '../../assets'
-import fonts from '../../assets/fonts'
-import { normalize, width } from '../../functions/Normalize'
+import { View, Text, Modal, TouchableOpacity, Image } from 'react-native';
+import React from 'react';
+import { ModalEntity } from './ModalEntity';
+import { ModalStyle } from './ModalStyle';
+import { MainButton } from '../Button/MainButton';
+import { colors, icons, image } from '../../assets';
+import fonts from '../../assets/fonts';
+import { normalize, width } from '../../functions/Normalize';
 
 const FarmerPlotFailed:React.FC<ModalEntity> = ({show,onClose,onMainClick,onBottomClick,text})=>{
   return (
@@ -36,7 +36,7 @@ const FarmerPlotFailed:React.FC<ModalEntity> = ({show,onClose,onMainClick,onBott
             </View>
         </View>
     </Modal>
-  )
-}
+  );
+};
 
-export default FarmerPlotFailed
+export default FarmerPlotFailed;

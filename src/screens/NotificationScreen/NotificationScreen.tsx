@@ -117,7 +117,7 @@ const NotificationScreen : React.FC<any> = ({navigation,route}) => {
            )}
         />
     </SafeAreaView>
-  )
-}
+  );
+};
 
 export default NotificationScreen;

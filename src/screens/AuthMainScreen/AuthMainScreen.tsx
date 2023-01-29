@@ -15,12 +15,12 @@ import {
   View,
   Dimensions,
   ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Avatar } from '@rneui/base';
 import icons from '../../assets/icons/icons';
@@ -150,14 +150,14 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                         fontSize: normalize(26),
                         color: colors.orange,
                       }}>
-                      Icon
+                      ไอคอน
                       <Text
                         style={{
                           fontFamily: font.AnuphanBold,
                           fontSize: normalize(26),
                           color: colors.greenLight,
                         }}>
-                        Kaset
+                        เกษตร
                       </Text>
                     </Text>
                   </View>
@@ -185,7 +185,9 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                         source={icons.drone}
                         style={{ height: normalize(76), width: normalize(105) }}
                       />
-                      <Text style={styles.font}>จ้างโดรนเกษตร</Text>
+                      <Text style={[styles.font, { top: 6 }]}>
+                        จ้างโดรนเกษตร
+                      </Text>
                     </LinearGradient>
                   </TouchableOpacity>
                   <View style={{ width: normalize(10) }}></View>
@@ -206,7 +208,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                         source={icons.plots}
                         style={{ height: normalize(76), width: normalize(105) }}
                       />
-                      <Text style={styles.font1}>แปลงของคุณ</Text>
+                      <Text style={[styles.font1, { top: 6 }]}>แปลงของคุณ</Text>
                     </LinearGradient>
                   </TouchableOpacity>
                 </View>

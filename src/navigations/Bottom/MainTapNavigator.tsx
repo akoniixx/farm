@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MainScreen from '../../screens/MainScreen/MainScreen';
 import { colors, font, icons } from '../../assets';
 import { Text } from '@rneui/base';
 import fonts from '../../assets/fonts';
@@ -18,11 +17,12 @@ import FarmerRegisterSuccess from '../../components/Modal/FarmerRegisterSuccess'
 import FarmerRegisterFailed from '../../components/Modal/FarmerRegisterFailed';
 import FarmerPlotFailed from '../../components/Modal/FarmerPlotFailed';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
-import {TabActions} from '@react-navigation/native';
+import { TabActions } from '@react-navigation/native';
+import MainScreen from '../../screens/MainScreen/MainScreen';
 
 const Tab = createBottomTabNavigator();
 
-const MainTapNavigator: React.FC<any> = ({navigation}) => {
+const MainTapNavigator: React.FC<any> = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [farmerRegisterSuccess,setFarmerRegisterSuccess] = useState<boolean>(false)
   const [farmerRegisterFailed,setFarmerRegisterFailed] = useState<boolean>(false)
@@ -52,7 +52,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
               RootNavigation.navigate('Main', {
                 screen: 'SlipWaitingScreen',
                 params: {
-                  taskId: message.data?.taskId
+                  taskId: message.data?.taskId,
                 },
               });
             break;
@@ -71,8 +71,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           }
         }
         setLoading(false);
-      }
-    )
+      });
     messaging().onNotificationOpenedApp(async message => {
       const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
       const type = message.data?.type;
@@ -93,7 +92,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           RootNavigation.navigate('Main', {
             screen: 'SlipWaitingScreen',
             params: {
-              taskId: message.data?.taskId
+              taskId: message.data?.taskId,
             },
           });
         break;
@@ -108,9 +107,9 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
         break;
         case "APPROVE_FARMER_PLOT_FAIL" :
           navigation.dispatch(jumpAction);
-        break;
+          break;
       }
-    })
+    });
 
     messaging().onMessage(async message =>{
       const type = message.data?.type;
@@ -118,16 +117,16 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
         case "RECEIVE_TASK_SUCCESS":
           RootNavigation.navigate('Main', {
             screen: 'SlipSuccessScreen',
-            params : {
+            params: {
               taskId: message.data?.taskId,
-            }
+            },
           });
         break;
         case "THIRTY_MINUTE_REMIND":
           RootNavigation.navigate('Main', {
             screen: 'SlipWaitingScreen',
             params: {
-              taskId: message.data?.taskId
+              taskId: message.data?.taskId,
             },
           });
         break;
@@ -148,19 +147,18 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           setFarmerPlotFailed(true)
         break;
       }
-    })
-  },[])
-  if(loading){
-    return <></>
-  }
-  else{
+    });
+  }, []);
+  if (loading) {
+    return <></>;
+  } else {
     return (
       <>
         <FarmerRegisterSuccess
           text={messageNoti}
           show={farmerRegisterSuccess}
-          onClose={()=>{
-            setFarmerRegisterSuccess(false)
+          onClose={() => {
+            setFarmerRegisterSuccess(false);
           }}
           onMainClick={()=>{
             setFarmerRegisterSuccess(false)
@@ -171,8 +169,8 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
         <FarmerRegisterFailed
           text={messageNoti}
           show={farmerRegisterFailed}
-          onClose={()=>{
-            setFarmerRegisterFailed(false)
+          onClose={() => {
+            setFarmerRegisterFailed(false);
           }}
           onMainClick={()=>{
             setFarmerRegisterFailed(false)
@@ -183,8 +181,8 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
         <FarmerPlotSuccess
           text={messageNoti}
           show={farmerPlotSuccess}
-          onClose={()=>{
-            setFarmerPlotSuccess(false)
+          onClose={() => {
+            setFarmerPlotSuccess(false);
           }}
           onMainClick={()=>{
             setFarmerPlotSuccess(false)
@@ -195,8 +193,8 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
         <FarmerPlotFailed
           text={messageNoti}
           show={farmerPlotFailed}
-          onClose={()=>{
-            setFarmerPlotFailed(false)
+          onClose={() => {
+            setFarmerPlotFailed(false);
           }}
           onMainClick={()=>{
             setFarmerPlotFailed(false)
@@ -296,12 +294,12 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                 i.focused ? (
                   <Image
                     source={icons.discount_active}
-                    style={{ width: 22, height: 22, top: normalize(3) }}
+                    style={{ width: 19, height: 19, top: normalize(3) }}
                   />
                 ) : (
                   <Image
                     source={icons.discount}
-                    style={{ width: 24, height: 24, top: normalize(3) }}
+                    style={{ width: 19, height: 19, top: normalize(3) }}
                   />
                 ),
             }}
@@ -327,12 +325,12 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                 i.focused ? (
                   <Image
                     source={icons.profile_active}
-                    style={{ width: 22, height: 22, top: normalize(3) }}
+                    style={{ width: 17, height: 21, top: normalize(3) }}
                   />
                 ) : (
                   <Image
                     source={icons.profile}
-                    style={{ width: 22, height: 22, top: normalize(3) }}
+                    style={{ width: 16, height: 20, top: normalize(3) }}
                   />
                 ),
             }}

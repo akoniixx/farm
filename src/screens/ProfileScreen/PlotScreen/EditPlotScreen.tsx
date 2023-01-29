@@ -14,7 +14,9 @@ import {
   Alert,
   PermissionsAndroid,
   ToastAndroid,
+  ScrollView,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/AntDesign';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, image } from '../../../assets';
 import { MainButton } from '../../../components/Button/MainButton';
@@ -24,7 +26,6 @@ import { initProfileState, profileReducer } from '../../../hook/profilefield';
 import { stylesCentral } from '../../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
-import { ScrollView } from 'react-native-gesture-handler';
 import PlotsItem from '../../../components/Plots/Plots';
 import { useDebounceValue } from '../../../hook/useDebounceValue';
 import { plant } from '../../../definitions/plants';
@@ -273,6 +274,11 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
         const { lat, lng } = location;
         setlat(lat);
         setlong(lng);
+        setPosition(prev => ({
+          ...prev,
+          latitude: parseFloat(lat),
+          longitude: parseFloat(lng),
+        }));
         setShowPredictions(false);
         setSearch({ term: description, fetchPredictions: false });
         mapSheet.current.hide();
@@ -503,6 +509,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       }}>
                       <Image source={image.map} style={styles.imageStyle} />
                       <Text
+                        numberOfLines={1}
                         style={{
                           fontFamily: fonts.AnuphanMedium,
                           fontSize: normalize(16),
@@ -559,9 +566,6 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                           }}
                         />
                       </MapView.Animated>
-                      {/* <View style={styles.markerFixed}>
-                      <Image style={styles.marker} source={image.mark} />
-                    </View> */}
                     </View>
                   ) : (
                     <View />
@@ -589,7 +593,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       borderColor={colors.gray}
                       fontColor={colors.fontBlack}
                       onPress={() => {
-                        actionSheet.current.hide();
+                        navigation.navigate('AllPlotScreen');
                       }}
                     />
                     <MainButton
@@ -600,6 +604,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                         !plantName ||
                         !lat ||
                         !long ||
+                        !search.term ||
                         !landmark ||
                         !selectPlot.subdistrictId
                           ? true
@@ -619,7 +624,6 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                           selectPlot.subdistrictId,
                         )
                           .then(res => {
-                            console.log(res);
                             setLoading(false);
                             navigation.navigate('AllPlotScreen');
                           })
@@ -744,19 +748,32 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                     <TextInput
                       onChangeText={searchPlotArea}
                       value={searchValue}
-                      defaultValue={plotAreas}
+                      defaultValue={searchValue}
                       style={[
                         {
-                          borderColor: colors.disable,
-                          fontFamily: fonts.SarabunLight,
-                          fontSize: normalize(16),
-                          color: colors.gray,
+                          marginLeft: 5,
+                          height: 60,
+                          justifyContent: 'center',
+                          lineHeight: 19,
+                          fontSize: 19,
+                          flex: 1,
+                          width: '100%',
+                          color: colors.fontBlack,
+                          fontFamily: font.SarabunLight,
                         },
                       ]}
                       editable={true}
                       placeholder={'ระบุพื้นที่แปลงเกษตร'}
                       placeholderTextColor={colors.disable}
                     />
+
+                    {searchValue ? (
+                      <TouchableOpacity
+                        style={styles.clearBtn}
+                        onPress={() => setSearchValue('')}>
+                        <Icon name="close" />
+                      </TouchableOpacity>
+                    ) : null}
                   </View>
                   <ScrollView>
                     {plotAreas !== undefined &&
@@ -925,6 +942,12 @@ const styles = StyleSheet.create({
     fontFamily: font.AnuphanBold,
     fontSize: normalize(20),
     color: colors.greenLight,
+  },
+  clearBtn: {
+    flex: 0.1,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   h2: {
     fontFamily: font.SarabunLight,

@@ -76,7 +76,8 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
         curentPosition={1}
         onPressBack={() => {
           mixpanel.track('Tab back from select plot screen');
-          navigation.goBack()}}
+          navigation.goBack();
+        }}
         label={'เลือกแปลงของคุณ'}
       />
       <KeyboardAvoidingView
@@ -254,7 +255,8 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                   color={colors.greenLight}
                   onPress={() => {
                     mixpanel.track('Tab submit from select plot screen');
-                    onSubmit()}}
+                    onSubmit();
+                  }}
                 />
               </View>
             </ScrollView>

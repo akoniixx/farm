@@ -70,14 +70,14 @@ const SuccessRegister: React.FC<any> = ({ navigation }) => {
           await AsyncStorage.setItem('token', token_register!);
           Register.changeToPending()
             .then(async res => {
-              const fcmtoken = await AsyncStorage.getItem('fcmtoken')
-              FCMtokenDatasource.saveFCMtoken(fcmtoken!).then(
-                res => {
+              const fcmtoken = await AsyncStorage.getItem('fcmtoken');
+              FCMtokenDatasource.saveFCMtoken(fcmtoken!)
+                .then(res => {
                   RootNavigation.navigate('Main', {
                     screen: 'MainScreen',
                   });
-                }
-              ).catch(err => console.log(err));            
+                })
+                .catch(err => console.log(err));
             })
             .catch(err => console.log(err));
         }}

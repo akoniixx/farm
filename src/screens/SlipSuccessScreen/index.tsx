@@ -16,7 +16,8 @@ import { TaskDatasource } from '../../datasource/TaskDatasource';
 import Lottie from 'lottie-react-native';
 
 export default function SlipSuccessScreen({
-  navigation,route
+  navigation,
+  route,
 }: StackScreenProps<MainStackParamList, 'SlipSuccessScreen'>) {
   const { taskId } = route.params;
   const [taskData, setTaskData] = useState<TaskDataTypeSlip>({
@@ -34,24 +35,25 @@ export default function SlipSuccessScreen({
     taskNo: '',
     targetSpray: [],
     totalPrice: '',
+    countResend: null,
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     TaskDatasource.getTaskByTaskId(taskId)
-    .then(
-      res =>
-      setTaskData({
-        ...res.data,
-        cropName: res.data.purposeSpray.crop.cropName || '',
-        purposeSprayName: res.data.purposeSpray.purposeSprayName || ''
-      })
-    )
-    .catch(err => console.log(err))
-  },[])
+      .then(res =>
+        setTaskData({
+          ...res.data,
+          cropName: res.data.purposeSpray.crop.cropName || '',
+          purposeSprayName: res.data.purposeSpray.purposeSprayName || '',
+        }),
+      )
+      .catch(err => console.log(err));
+  }, [taskId]);
   return (
-    <View style={{
-      flex : 1
-    }}>
+    <View
+      style={{
+        flex: 1,
+      }}>
       <Content noPadding>
         <ScrollView
           contentContainerStyle={{
@@ -59,32 +61,35 @@ export default function SlipSuccessScreen({
           }}>
           <LinearGradient
             colors={['#FFFEFA', '#41A97A']}
+            start={{ x: 0.65, y: 0.35 }}
             style={{
               flex: 1,
-              paddingTop : normalize(30)
+              paddingTop: normalize(30),
             }}>
-            <View style={{
+            <View
+              style={{
                 width: '100%',
                 height: 170,
                 marginTop: 32,
+                marginBottom: 32,
               }}>
-              <Lottie 
-              source={image.successfullottie} 
-              autoPlay 
-              loop 
-              resizeMode="contain"
+              <Lottie
+                source={image.successfullottie}
+                autoPlay
+                loop
+                resizeMode="cover"
               />
             </View>
-            <SectionBody {...taskData}/>
+            <SectionBody {...taskData} />
           </LinearGradient>
           <View
             style={{
               padding: 16,
               flexDirection: 'row',
               justifyContent: 'space-between',
-              backgroundColor : '#41A97A',
+              backgroundColor: '#41A97A',
               width: '100%',
-              paddingBottom : normalize(40)
+              paddingBottom: normalize(40),
             }}>
             <TouchableOpacity
               onPress={() => navigation.navigate('MainScreen')}

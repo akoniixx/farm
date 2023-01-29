@@ -18,7 +18,7 @@ export const stylesCentral = StyleSheet.create({
     paddingTop: StatusBar.currentHeight,
   },
   blankFont: {
-    fontFamily: fonts.medium,
+    fontFamily: fonts.AnuphanMedium,
     fontSize: normalize(15),
     color: colors.disable,
   },

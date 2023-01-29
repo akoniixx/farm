@@ -1,7 +1,7 @@
-import { Dimensions, StyleSheet } from "react-native";
-import { colors } from "../../assets";
-import fonts from "../../assets/fonts";
-import { normalize } from "../../functions/Normalize";
+import { Dimensions, StyleSheet } from 'react-native';
+import { colors } from '../../assets';
+import fonts from '../../assets/fonts';
+import { normalize } from '../../functions/Normalize';
 
 const width = Dimensions.get('screen').width;
 
