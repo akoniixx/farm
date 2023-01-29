@@ -16,6 +16,11 @@ import SlipWaitingScreen from '../screens/SlipWaitingScreen';
 import SlipSuccessScreen from '../screens/SlipSuccessScreen';
 import ViewMapScreen from '../screens/ViewMapScreen';
 import MyTaskDetailScreen from '../screens/MyTaskScreen/MyTaskDetailScreen';
+<<<<<<< HEAD
+import NotificationScreen from '../screens/NotificationScreen/NotificationScreen';
+import MyTaskDetailScreenNoti from '../screens/MyTaskScreen/MyTaskDetailScreenNoti';
+=======
+>>>>>>> develop
 import VerifyOTP from '../screens/ProfileScreen/DeleteProfile/VerifyOTP';
 import { StackNavigationHelpers } from '@react-navigation/stack/lib/typescript/src/types';
 import { RouteProp } from '@react-navigation/native';
@@ -23,7 +28,10 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import DeleteProfile from '../screens/ProfileScreen/DeleteProfile/DeleteProfile';
 import AddPlotScreen from '../screens/ProfileScreen/PlotScreen/AddPlotScreen';
 import EditPlotScreen from '../screens/ProfileScreen/PlotScreen/EditPlotScreen';
+<<<<<<< HEAD
+=======
 import NotificationScreen from '../screens/NotificationScreen/NotificationScreen';
+>>>>>>> develop
 import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 export type MainStackParamList = {
   MainScreen: undefined;
@@ -31,6 +39,7 @@ export type MainStackParamList = {
   AllPlotScreen: undefined;
   SelectDateScreen: undefined;
   SelectPlotScreen: undefined;
+  MyTaskDetailScreenNoti : undefined;
   SelectTarget: undefined;
   DronerDetail: undefined;
   SeeAllDronerUsed: undefined;
@@ -55,7 +64,11 @@ export type MainStackParamList = {
   };
   AddPlotScreen: undefined;
   EditPlotScreen: undefined;
+<<<<<<< HEAD
+  DeleteSuccess : undefined
+=======
   DeleteSuccess: undefined;
+>>>>>>> develop
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
@@ -84,6 +97,7 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
       <Stack.Screen name="DetailTaskScreen" component={DetailTaskScreen} />
       <Stack.Screen name="MyTaskDetailScreen" component={MyTaskDetailScreen} />
+      <Stack.Screen name="MyTaskDetailScreenNoti" component={MyTaskDetailScreenNoti} />
       <Stack.Group
         screenOptions={{
           gestureEnabled: false,
@@ -92,12 +106,20 @@ const MainNavigator: React.FC = () => {
         <Stack.Screen name="SlipSuccessScreen" component={SlipSuccessScreen} />
       </Stack.Group>
       <Stack.Screen name="ViewMapScreen" component={ViewMapScreen} />
+<<<<<<< HEAD
+      <Stack.Screen name="NotificationScreen" component={NotificationScreen}/>
+      <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
+=======
+>>>>>>> develop
       <Stack.Screen name="DeleteProfileScreen" component={DeleteProfile} />
       <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
       <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
       <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
+<<<<<<< HEAD
+=======
       <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
       <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
+>>>>>>> develop
     </Stack.Navigator>
   );
 };

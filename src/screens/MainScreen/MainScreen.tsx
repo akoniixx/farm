@@ -28,6 +28,8 @@ import { ActivityIndicator } from 'react-native-paper';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
 import { useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
+import {TabActions} from '@react-navigation/native';
+import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { useAuth } from '../../contexts/AuthContext';
 import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
@@ -35,7 +37,7 @@ import DronerUsed from '../../components/Carousel/DronerUsed';
 import { mixpanel } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 
-const MainScreen: React.FC<any> = ({ navigation }) => {
+const MainScreen: React.FC<any> = ({ navigation,route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const imageWidth = screenWidth / 2;
   const date = new Date();
@@ -62,12 +64,46 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
     cropName: '',
     purposeSprayName: '',
   });
+  const [showBell,setShowBell] = useState(false)
+  const [notiData,setNotiData] = useState<{
+    count : Number,
+    data : any
+  }>({
+    count : 0,
+    data : []
+  })
+  const noti = route.params?.noti??false
+  
   const [reload, setReload] = useState(false);
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
+    const farmerId = await AsyncStorage.getItem('farmer_id')
+    if(farmerId){
+      setShowBell(true)
+    }
     setFcmToken(value!);
   };
-  const getProfile = useCallback(async () => {
+
+  const getNotificationData = async () =>{
+    FCMtokenDatasource.getNotificationList().then(
+      res => setNotiData({
+        count : res.count,
+        data : res.data
+      })
+    ).catch(err => console.log(err));
+  }
+
+  useEffect(() => {
+    const getTaskId = async () => {
+      const value = await AsyncStorage.getItem('taskId');
+      setTaskId(value);
+    };
+    getTaskId();
+    getData();
+    getProfile();
+    getNotificationData()
+  }, [isFocused]);
+  const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
     if (value) {
       const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -85,7 +121,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
         })
         .catch(err => console.log(err));
     }
-  }, [reload, getProfileAuth]);
+  }
   useEffect(() => {
     const getTaskId = async () => {
       const value = await AsyncStorage.getItem('taskId');
@@ -111,7 +147,6 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
           date.toDateString(),
         )
           .then(res => {
-            console.log(`length = ${res.length}`);
             setTaskSug(res);
           })
           .catch(err => console.log(err))
@@ -214,6 +249,18 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                       {profilestate.name}
                     </Text>
                   </View>
+                  <TouchableOpacity onPress={()=> navigation.navigate("NotificationScreen",{
+                    data : notiData.data
+                  })}>
+                    {
+                      showBell?
+                      <Image source={notiData.count != 0?icons.newnotification:icons.notification} style={{
+                        width : normalize(30),
+                        height : normalize(35)
+                      }}/>:
+                      <></>
+                    }
+                  </TouchableOpacity>
                 </View>
                 <View
                   style={{

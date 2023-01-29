@@ -5,7 +5,7 @@ export class FCMtokenDatasource {
   static async getNotificationList(): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     return httpClient
-      .get(BASE_URL + `/fcm/notification/${farmer_id}`)
+      .get(BASE_URL + `/fcm/notification/farmer/${farmer_id}`)
       .then(res => {
         return res.data;
       })

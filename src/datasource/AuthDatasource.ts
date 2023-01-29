@@ -70,6 +70,9 @@ export class Authentication {
       });
   }
   static async logout() {
+    await AsyncStorage.removeItem('token');
+    await AsyncStorage.removeItem('token_register');
+    await AsyncStorage.removeItem('farmer_id');
     // await AsyncStorage.removeItem('token');
     // await AsyncStorage.removeItem('farmer_id');
     await AsyncStorage.multiRemove(['token', 'farmer_id', 'task_id']);

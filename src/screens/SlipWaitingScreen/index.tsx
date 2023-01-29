@@ -28,10 +28,10 @@ import InputText from '../../components/InputText/InputText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
-import { normalize } from '../../functions/Normalize';
-import LinearGradient from 'react-native-linear-gradient';
-import Lottie from 'lottie-react-native';
 import { mixpanel } from '../../../mixpanel';
+import LinearGradient from 'react-native-linear-gradient';
+import { normalize } from '../../functions/Normalize';
+import Lottie from 'lottie-react-native';
 export default function SlipWaitingScreen({
   navigation,
   route,
