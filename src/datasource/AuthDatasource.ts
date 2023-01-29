@@ -136,7 +136,6 @@ export class Register {
             status: 'OPEN',
           })
           .then(async response => {
-            console.log(response);
             const farmer_id = response.data.id;
             await AsyncStorage.setItem('farmer_id', farmer_id);
             return response.data;

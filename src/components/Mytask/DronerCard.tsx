@@ -12,7 +12,6 @@ interface props {
 }
 
 export const DronerCard: React.FC<props> = ({ name, profile, telnumber }) => {
-  console.log('profile', profile);
   return (
     <View
       style={{

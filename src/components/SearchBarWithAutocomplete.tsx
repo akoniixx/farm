@@ -170,11 +170,9 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
   const getLocation = () => {
     const result = hasLocationPermission();
     result.then(res => {
-      console.log('res is:', res);
       if (res) {
         Geolocation.getCurrentPosition(
           (position: any) => {
-            console.log(position);
             setLocation(position);
           },
           error => {
@@ -186,7 +184,6 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
         );
       }
     });
-    console.log(location);
   };
 
   return (

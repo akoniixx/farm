@@ -10,7 +10,6 @@ import {
   Modal,
   TouchableOpacity,
   Platform,
-  SafeAreaView,
   Linking,
 } from 'react-native';
 import { colors, font } from '../../assets';
@@ -28,7 +27,7 @@ import { ActivityIndicator } from 'react-native-paper';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
 import { useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
-import {TabActions} from '@react-navigation/native';
+import { TabActions } from '@react-navigation/native';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { useAuth } from '../../contexts/AuthContext';
 import fonts from '../../assets/fonts';
@@ -36,8 +35,9 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import DronerUsed from '../../components/Carousel/DronerUsed';
 import { mixpanel } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const MainScreen: React.FC<any> = ({ navigation,route }) => {
+const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const imageWidth = screenWidth / 2;
   const date = new Date();
@@ -64,34 +64,36 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
     cropName: '',
     purposeSprayName: '',
   });
-  const [showBell,setShowBell] = useState(false)
-  const [notiData,setNotiData] = useState<{
-    count : Number,
-    data : any
+  const [showBell, setShowBell] = useState(false);
+  const [notiData, setNotiData] = useState<{
+    count: Number;
+    data: any;
   }>({
-    count : 0,
-    data : []
-  })
-  const noti = route.params?.noti??false
-  
+    count: 0,
+    data: [],
+  });
+  const noti = route.params?.noti ?? false;
+
   const [reload, setReload] = useState(false);
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
-    const farmerId = await AsyncStorage.getItem('farmer_id')
-    if(farmerId){
-      setShowBell(true)
+    const farmerId = await AsyncStorage.getItem('farmer_id');
+    if (farmerId) {
+      setShowBell(true);
     }
     setFcmToken(value!);
   };
 
-  const getNotificationData = async () =>{
-    FCMtokenDatasource.getNotificationList().then(
-      res => setNotiData({
-        count : res.count,
-        data : res.data
-      })
-    ).catch(err => console.log(err));
-  }
+  const getNotificationData = async () => {
+    FCMtokenDatasource.getNotificationList()
+      .then(res =>
+        setNotiData({
+          count: res.count,
+          data: res.data,
+        }),
+      )
+      .catch(err => console.log(err));
+  };
 
   useEffect(() => {
     const getTaskId = async () => {
@@ -101,7 +103,7 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
     getTaskId();
     getData();
     getProfile();
-    getNotificationData()
+    getNotificationData();
   }, [isFocused]);
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -121,7 +123,7 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
         })
         .catch(err => console.log(err));
     }
-  }
+  };
   useEffect(() => {
     const getTaskId = async () => {
       const value = await AsyncStorage.getItem('taskId');
@@ -215,7 +217,7 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
   }, [taskId, navigation]);
 
   return (
-    <SafeAreaView
+    <View
       style={{
         backgroundColor: colors.white,
         flex: 1,
@@ -223,14 +225,14 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
       <ScrollView>
         <View style={[stylesCentral.container]}>
           <View style={{ backgroundColor: colors.white }}>
-            <View style={{ height: normalize(990) }}>
+            <View style={{ height: normalize(990)}}>
               <ImageBackground
                 source={image.bgHead}
                 style={{
                   width: (width * 380) / 375,
                   height: (height * 250) / 812,
                 }}>
-                <View style={styles.headCard}>
+                <SafeAreaView edges={['top']} style={styles.headCard}>
                   <View>
                     <Text
                       style={{
@@ -249,19 +251,29 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
                       {profilestate.name}
                     </Text>
                   </View>
-                  <TouchableOpacity onPress={()=> navigation.navigate("NotificationScreen",{
-                    data : notiData.data
-                  })}>
-                    {
-                      showBell?
-                      <Image source={notiData.count != 0?icons.newnotification:icons.notification} style={{
-                        width : normalize(30),
-                        height : normalize(35)
-                      }}/>:
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('NotificationScreen', {
+                        data: notiData.data,
+                      })
+                    }>
+                    {showBell ? (
+                      <Image
+                        source={
+                          notiData.count != 0
+                            ? icons.newnotification
+                            : icons.notification
+                        }
+                        style={{
+                          width: normalize(30),
+                          height: normalize(35),
+                        }}
+                      />
+                    ) : (
                       <></>
-                    }
+                    )}
                   </TouchableOpacity>
-                </View>
+                </SafeAreaView>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -454,7 +466,7 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
                     </View>
                   </View>
                 ) : null}
-                <View
+                {/* <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -546,7 +558,7 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
                       ไม่มีนักบินโดรนที่เคยจ้าง
                     </Text>
                   </View>
-                )}
+                )} */}
               </View>
               {/* <View style={[styles.empty]}>
                 <Text
@@ -807,7 +819,7 @@ const MainScreen: React.FC<any> = ({ navigation,route }) => {
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 export default MainScreen;
@@ -836,11 +848,10 @@ const styles = StyleSheet.create({
     top: '7%',
   },
   headCard: {
-    top: '15%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: normalize(23),
-    paddingTop: normalize(5),
+    top: '5%'
   },
   activeContainer: {
     flexDirection: 'row',

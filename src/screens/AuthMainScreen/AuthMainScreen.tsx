@@ -95,7 +95,6 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
         date,
       )
         .then(res => {
-          /*  console.log(`length = ${res.length}`); */
           setTaskSug(res);
         })
         .catch(err => console.log(err));
@@ -115,7 +114,6 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
         offset,
       )
         .then(res => {
-          /*  console.log(`length = ${res.length}`); */
           setTaskSugUsed(res);
         })
         .catch(err => console.log(err));

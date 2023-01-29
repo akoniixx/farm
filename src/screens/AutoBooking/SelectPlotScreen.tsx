@@ -69,7 +69,6 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
     LogBox.ignoreAllLogs();
     getPlotlist();
   }, []);
-  // console.log(JSON.stringify(plotList?.data, null, 2));
   return (
     <>
       <StepIndicatorHead

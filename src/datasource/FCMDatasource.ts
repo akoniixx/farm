@@ -31,7 +31,6 @@ export class FCMtokenDatasource {
         token: fcmtoken,
       })
       .then(res => {
-        console.log(res.data);
         return res.data;
       })
       .catch(err => {

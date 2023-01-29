@@ -93,9 +93,7 @@ const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
               alignItems: 'center',
               marginTop: normalize(10),
             }}>
-            <Text style={styles.label}>
-                วันและเวลา
-            </Text>
+            <Text style={styles.label}>วันและเวลา</Text>
           </View>
           <DateTimeDetail
             date={task.date_appointment}
@@ -127,7 +125,7 @@ const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
           <TargetSpray
             periodSpray={task.purposeSpray.purposeSprayName}
             preparationBy={task.preparationBy}
-            target={task.targetSpray.map((d: string) => ' '+ d + ' ' )}
+            target={task.targetSpray.map((d: string) => ' ' + d + ' ')}
           />
         </View>
         <View

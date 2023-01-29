@@ -33,7 +33,7 @@ export type MainStackParamList = {
   AllPlotScreen: undefined;
   SelectDateScreen: undefined;
   SelectPlotScreen: undefined;
-  MyTaskDetailScreenNoti : undefined;
+  MyTaskDetailScreenNoti: undefined;
   SelectTarget: undefined;
   DronerDetail: undefined;
   SeeAllDronerUsed: undefined;
@@ -87,7 +87,10 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
       <Stack.Screen name="DetailTaskScreen" component={DetailTaskScreen} />
       <Stack.Screen name="MyTaskDetailScreen" component={MyTaskDetailScreen} />
-      <Stack.Screen name="MyTaskDetailScreenNoti" component={MyTaskDetailScreenNoti} />
+      <Stack.Screen
+        name="MyTaskDetailScreenNoti"
+        component={MyTaskDetailScreenNoti}
+      />
       <Stack.Group
         screenOptions={{
           gestureEnabled: false,
@@ -96,14 +99,12 @@ const MainNavigator: React.FC = () => {
         <Stack.Screen name="SlipSuccessScreen" component={SlipSuccessScreen} />
       </Stack.Group>
       <Stack.Screen name="ViewMapScreen" component={ViewMapScreen} />
-      <Stack.Screen name="NotificationScreen" component={NotificationScreen}/>
+      <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
       <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
       <Stack.Screen name="DeleteProfileScreen" component={DeleteProfile} />
       <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
       <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
       <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
-     
-      
     </Stack.Navigator>
   );
 };
