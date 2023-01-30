@@ -487,7 +487,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
           </View>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <View style={{ justifyContent: 'space-around'}}>
+            <View style={{ justifyContent: 'space-around', paddingVertical: 10}}>
               <ScrollView>
                 <Text style={[styles.head, { marginTop: normalize(15) }]}>
                   ชื่อแปลงเกษตร
@@ -741,6 +741,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
+                    paddingVertical: 20
                   }}>
                   <MainButton
                     style={styles.button}
