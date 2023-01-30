@@ -34,7 +34,7 @@ import {
   initialState,
   useAutoBookingContext,
 } from '../../contexts/AutoBookingContext';
-import { checkCouponOffline } from '../../datasource/PromotionDatasource';
+import { checkCouponOffline, usedCoupon } from '../../datasource/PromotionDatasource';
 import {
   PayloadCreateTask,
   TaskDatasource,
@@ -101,14 +101,18 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       const res = await TaskDatasource.createTask(payload);
 
       if (res && res.success) {
-        mixpanel.track('Tab submit booking');
-        setLoading(false);
+        usedCoupon(couponCode).then(
+         async result => {
+           mixpanel.track('Tab submit booking');
+           setLoading(false);
 
-        await AsyncStorage.setItem('taskId', res.responseData.id);
-        navigation.navigate('SlipWaitingScreen', {
-          taskId: res.responseData.id,
-        });
-        setTaskData(initialState.taskData);
+           await AsyncStorage.setItem('taskId', res.responseData.id);
+           navigation.navigate('SlipWaitingScreen', {
+             taskId: res.responseData.id,
+           });
+           setTaskData(initialState.taskData);
+          }
+        ).catch(err => console.log(err))
       }
     } catch (e) {
       console.log(e);

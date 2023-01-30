@@ -32,6 +32,7 @@ import { mixpanel } from '../../../mixpanel';
 import LinearGradient from 'react-native-linear-gradient';
 import { normalize } from '../../functions/Normalize';
 import Lottie from 'lottie-react-native';
+import messaging from '@react-native-firebase/messaging';
 export default function SlipWaitingScreen({
   navigation,
   route,
@@ -92,6 +93,7 @@ export default function SlipWaitingScreen({
     }
   };
   useEffect(() => {
+    NotiFication()
     const getTaskByTaskId = async (taskId: string) => {
       try {
         const res = await TaskDatasource.getTaskByTaskId(taskId);
@@ -120,6 +122,19 @@ export default function SlipWaitingScreen({
       getTaskByTaskId(taskId);
     }
   }, [taskId]);
+
+  const NotiFication = ()=>{
+    messaging().onMessage(async message => {
+      const type = message.data?.type;
+      if(type === "RECEIVE_TASK_SUCCESS"){
+        navigation.navigate('SlipSuccessScreen', 
+          {
+            taskId: message.data?.taskId!
+          }
+        );
+      }
+    })
+  }
 
   return (
     <View
