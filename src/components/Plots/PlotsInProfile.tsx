@@ -43,6 +43,13 @@ export function StatusObject(status: string) {
         fontColor: colors.error,
         borderColor: colors.error,
       };
+      case 'REJECTED':
+        return {
+          status: 'ไม่อนุมัติ',
+          colorBg: colors.white,
+          fontColor: colors.error,
+          borderColor: colors.error,
+        };
     default:
       return {
         status: 'รอการตรวจสอบ',

@@ -31,5 +31,6 @@ export default {
   plot_head: require('./plot_head.png'),
   successfullottie: require('./sucessfullottie.json'),
   waitinglottie: require('./waitingdroner.json'),
-  emptyNoti: require('./emptyNoti.png')
+  emptyNoti: require('./emptyNoti.png'),
+  empryState: require('./empty_state.png')
 };
