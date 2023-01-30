@@ -91,7 +91,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
   };
 
   const inventory = farmerPlot.map((x: any) => x.status);
-  const result = inventory.find((x: any) => x === 'PENDING');
+  const result = inventory.find((x: any) => x !== 'ACTIVE');
   return (
     <>
       <SafeAreaView style={stylesCentral.container}>

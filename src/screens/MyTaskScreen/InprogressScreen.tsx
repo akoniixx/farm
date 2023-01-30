@@ -64,11 +64,11 @@ const InprogressScreen: React.FC<any> = ({ route, navigation }) => {
     getTaskList();
   }, [selectedField, selectedStatus]);
 
-  useFocusEffect(
+ /*  useFocusEffect(
     React.useCallback(() => {
       getTaskList();
     }, []),
-  );
+  ); */
 
   return (
     <>

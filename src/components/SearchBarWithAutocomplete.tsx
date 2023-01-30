@@ -188,43 +188,50 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
 
   return (
     <View style={[container, { ...passedStyles }]}>
-      <View>
+      <View
+        style={{
+          borderColor: colors.disable,
+          borderWidth: 1,
+          borderRadius: 10,
+          marginVertical: 20,
+          flexDirection: 'row',
+          alignItems: 'center',
+          height: normalize(55),
+          justifyContent: 'space-between',
+        }}>
         <TextInput
-          clearButtonMode="always"
-          style={[inputStyle, inputBottomRadius]}
-          placeholder="ระบุสถานที่ใกล้แปลง"
-          placeholderTextColor="gray"
-          value={value}
           onChangeText={onChangeText}
+          value={value}
           returnKeyType="search"
+          style={[
+            [inputBottomRadius,container],
+            {
+              fontSize: 19,
+              flex: 1,
+              color: colors.fontBlack,
+              fontFamily: font.SarabunLight,
+
+            },
+          ]}
           onLayout={event => {
             const { height, width } = event.nativeEvent.layout;
             setInputSize({ height, width });
           }}
+          placeholder={'ระบุสถานที่ใกล้แปลง'}
+          placeholderTextColor={colors.disable}
         />
+        {value ? (
+          <TouchableOpacity
+            style={styles.clearBtn}
+            onPress={() => {
+              onChangeText('')
+              onPredictionTapped('','')
+            }}
+          >
+            <Icon name="close" />
+          </TouchableOpacity>
+        ) : null}
       </View>
-      <TouchableOpacity
-        onPress={() => {
-          getLocation;
-        }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            padding: 10,
-            height: normalize(60),
-            top: 10,
-            borderColor: colors.disable,
-            borderBottomWidth: 1,
-            marginBottom: 15,
-            marginTop: 10,
-          }}>
-          <Image
-            source={icons.myLocation}
-            style={{ width: 26, height: 26, right: 10 }}
-          />
-          <Text style={styles.list}>ตำแหน่งที่ฉันอยู่</Text>
-        </View>
-      </TouchableOpacity>
       {showPredictions && _renderPredictions(predictions)}
     </View>
   );

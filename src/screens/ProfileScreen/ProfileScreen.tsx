@@ -31,29 +31,13 @@ import { MainButton } from '../../components/Button/MainButton';
 import ConditionScreen from '../RegisterScreen/ConditionScreen';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import PlotInProfile from '../../components/Plots/PlotsInProfile';
-import { useFocusEffect } from '@react-navigation/native';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
-const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
+const ProfileScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
-  const [value, setValue] = useState(null);
-  const actionSheet = useRef<any>(null);
-  const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [fcmToken, setFcmToken] = useState('');
-  const [plotDataUI, setplotDataUI] = useState<any>([]);
-  const [plotData, setplotData] = useState<any>([]);
-  const [raiAmount, setraiAmount] = useState<any>();
-  const [plotName, setplotName] = useState<any>(null);
-  const [location, setLocation] = useState<any>({
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
-  const [plantName, setPlantName] = useState<any>();
-  const noti = route.params?.noti ?? false;
-  const getData = async () => {
-    const value = await AsyncStorage.getItem('token');
-    setFcmToken(value!);
-  };
+  const [reload, setReload] = useState(false);
+
   const onLogout = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     socket.removeAllListeners(`send-task-${farmer_id!}`);
@@ -61,81 +45,52 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
     await Authentication.logout();
   };
   useEffect(() => {
-    getData();
+    const getProfile = async () => {
+      setLoading(true);
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      ProfileDatasource.getProfile(farmer_id!)
+        .then(async res => {
+          setLoading(true);
+          const imgPath = res.file.filter((item: any) => {
+            if (item.category === 'PROFILE_IMAGE') {
+              return item;
+            }
+          });
+          if (imgPath.length === 0) {
+            dispatch({
+              type: 'InitProfile',
+              name: `${res.firstname} ${res.lastname}`,
+              id: res.farmerCode,
+              image: '',
+              plotItem: res.farmerPlot,
+              status: res.status,
+            });
+            setReload(!reload);
+          } else {
+            ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
+              .then(resImg => {
+                setLoading(true);
+                dispatch({
+                  type: 'InitProfile',
+                  name: `${res.firstname} ${res.lastname}`,
+                  id: res.farmerCode,
+                  image: resImg.url,
+                  plotItem: res.farmerPlot,
+                  status: res.status,
+                });
+                setReload(!reload);
+              })
+
+              .catch(err => console.log(err))
+              .finally(() => setLoading(false));
+          }
+        })
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
+    };
     getProfile();
   }, [reload]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getData();
-      getProfile();
-    }, []),
-  );
-
-  const getProfile = async () => {
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    ProfileDatasource.getProfile(farmer_id!)
-      .then(res => {
-        console.log(res.farmerPlot);
-        const imgPath = res.file.filter((item: any) => {
-          if (item.category === 'PROFILE_IMAGE') {
-            return item;
-          }
-        });
-        if (imgPath.length === 0) {
-          dispatch({
-            type: 'InitProfile',
-            name: `${res.firstname} ${res.lastname}`,
-            id: res.farmerCode,
-            image: '',
-            plotItem: res.farmerPlot,
-            status: res.status,
-          });
-        } else {
-          ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
-            .then(resImg => {
-              dispatch({
-                type: 'InitProfile',
-                name: `${res.firstname} ${res.lastname}`,
-                id: res.farmerCode,
-                image: resImg.url,
-                plotItem: res.farmerPlot,
-                status: res.status,
-              });
-            })
-            .catch(err => console.log(err));
-        }
-      })
-      .catch(err => console.log(err));
-  };
-
-  const addPlots = () => {
-    const plots = [...plotData];
-    const plotsUI = [...plotDataUI];
-    const newPlot = {
-      raiAmount: raiAmount,
-      plotName: plotName,
-      location: location,
-      plantName: plantName,
-      status: 'PENDING',
-    };
-    const newPlotUI = {
-      plotName: plotName,
-      raiAmount: raiAmount,
-      plantName: plantName,
-      location: location,
-    };
-    plots.push(newPlot);
-    plotsUI.push(newPlotUI);
-    setValue(null);
-    setplotData(plots);
-    setplotDataUI(plotsUI);
-    setPlantName(null);
-    setLocation(location);
-    setraiAmount(null);
-    setplotName(null);
-    actionSheet.current.hide();
-  };
   const openGooglePlay = () => {
     if (Platform.OS === 'ios') {
       Linking.openURL(
@@ -154,7 +109,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
           maxHeight: '100%',
           backgroundColor: '#F7FFF0',
           justifyContent: 'center',
-          position: 'relative',
           padding: 25,
         }}>
         <Text
@@ -166,25 +120,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
           }}>
           บัญชีของฉัน
         </Text>
-        {noti ? (
-          <View
-            style={{
-              position: 'absolute',
-              left: normalize(20),
-            }}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Image
-                source={icons.arrowLeft}
-                style={{
-                  width: normalize(30),
-                  height: normalize(30),
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <></>
-        )}
       </View>
       <ScrollView>
         <View style={styles.section1}>
@@ -389,10 +324,14 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   paddingVertical: normalize(22),
                 }}>{`คุณไม่มีแปลงเกษตร
  กดเพิ่มแปลงเกษตรได้เลย!`}</Text>
-
-              <View style={[styles.buttonAdd]}>
-                <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
-              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('AddPlotScreen');
+                }}>
+                <View style={[styles.buttonAdd]}>
+                  <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           ) : (
             <View style={{ top: 5 }}>
@@ -401,6 +340,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 horizontal
                 showsHorizontalScrollIndicator={false}>
                 <FlatList
+                  horizontal={false}
                   scrollEnabled={false}
                   contentContainerStyle={{
                     alignSelf: 'flex-start',
@@ -409,11 +349,11 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                     <View style={[highlighted && { marginLeft: 0 }]} />
                   )}
                   numColumns={Math.ceil(profilestate.plotItem.length / 2)}
-                  showsVerticalScrollIndicator={false}
-                  showsHorizontalScrollIndicator={true}
+                  showsVerticalScrollIndicator={true}
+                  showsHorizontalScrollIndicator={false}
                   data={profilestate.plotItem}
                   renderItem={({ item, index }) => (
-                    <View style={{ display: 'flex', flexDirection: 'column' }}>
+                    <View style={{ flexDirection: 'row' }}>
                       <View>
                         <PlotInProfile
                           key={index}
@@ -430,7 +370,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                           locationName={item.locationName}
                           plantName={item.plantName}
                           status={item.status}
-                          index={0}
+                          index={index}
                         />
                       </View>
                     </View>
@@ -456,7 +396,8 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             <TouchableOpacity
               onPress={openGooglePlay}
               style={{
-                padding: normalize(20),
+                paddingHorizontal: normalize(20),
+                alignItems: 'center',
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',
@@ -478,7 +419,8 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 navigation.navigate('PrivacyScreen');
               }}
               style={{
-                padding: normalize(20),
+                paddingHorizontal: normalize(20),
+                alignItems: 'center',
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',
@@ -497,10 +439,13 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('DeleteAcc');
+                navigation.navigate('DeleteProfileScreen', {
+                  tele: profilestate.id,
+                });
               }}
               style={{
-                padding: normalize(20),
+                paddingHorizontal: normalize(20),
+                alignItems: 'center',
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',
@@ -525,7 +470,8 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 });
               }}
               style={{
-                padding: normalize(20),
+                paddingHorizontal: normalize(20),
+                alignItems: 'center',
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',
@@ -545,6 +491,11 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
           </View>
         </View>
       </ScrollView>
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </SafeAreaView>
   );
 };

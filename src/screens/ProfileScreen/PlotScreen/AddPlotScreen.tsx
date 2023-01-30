@@ -357,9 +357,6 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
           <View style={styles.inner}>
             <View style={styles.container}>
               <View style={{ justifyContent: 'space-around' }}>
-                <View style={styles.inner}>
-                  <View style={styles.container}></View>
-                </View>
                 <ScrollView>
                   <Text style={[styles.head, { marginTop: normalize(15) }]}>
                     ชื่อแปลงเกษตร
@@ -601,7 +598,9 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                     placeholder={'ระบุจุดสังเกต'}
                     placeholderTextColor={colors.disable}
                   />
-                  <View
+                  <View style={{ height: normalize(10) }}></View>
+                </ScrollView>
+                <View
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
@@ -679,8 +678,6 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       }}
                     />
                   </View>
-                  <View style={{ height: normalize(10) }}></View>
-                </ScrollView>
               </View>
               <Spinner
                 visible={loading}

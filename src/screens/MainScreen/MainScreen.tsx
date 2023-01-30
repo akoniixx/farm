@@ -73,7 +73,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     data: [],
   });
   const noti = route.params?.noti ?? false;
-
   const [reload, setReload] = useState(false);
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -378,6 +377,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 {profilestate.status === 'REJECTED' ? (
                   <View
                     style={{
+                      top: 55,
                       height: 176,
                       width: normalize(340),
                       alignSelf: 'center',
@@ -466,11 +466,12 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     </View>
                   </View>
                 ) : null}
-                {/* <View
+                <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
+                    {taskSugUsed.length != 0 && (
                   <Text
                     style={{
                       fontFamily: font.AnuphanBold,
@@ -481,6 +482,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     }}>
                     จ้างนักบินที่เคยจ้าง
                   </Text>
+                    )}
                   {taskSugUsed.length != 0 ? (
                     <TouchableOpacity
                       onPress={() => {
@@ -539,26 +541,26 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       height: '100%',
                     }}>
                     <Image
-                      source={image.empty_droner}
+                      source={image.empryState}
                       style={{
-                        width: normalize(136),
-                        height: normalize(130),
-                        top: '10%',
+                        width: normalize(126),
+                        height: normalize(120),
+                        top: 120,
                         marginBottom: normalize(32),
                       }}
                     />
                     <Text
                       style={{
-                        top: '5%',
+                        top: 120,
                         fontFamily: font.SarabunBold,
                         fontSize: normalize(16),
                         fontWeight: '300',
                         color: colors.gray,
                       }}>
-                      ไม่มีนักบินโดรนที่เคยจ้าง
+                      ติดตามบริการส่วนอื่นได้เร็วๆนี้
                     </Text>
                   </View>
-                )} */}
+                )}
               </View>
               {/* <View style={[styles.empty]}>
                 <Text
@@ -644,7 +646,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       color: '#007AFF',
                       fontSize: 20,
                     }}>
-                    {'โทร +66 2-113-6159'}
+                    {`โทร +66 2-223-9000`}
                   </Text>
                 </View>
               </TouchableOpacity>

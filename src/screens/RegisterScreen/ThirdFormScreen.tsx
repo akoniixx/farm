@@ -29,7 +29,7 @@ import fonts from '../../assets/fonts';
 import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
 import { ProgressBar } from '../../components/ProgressBar';
-import { normalize } from '../../functions/Normalize';
+import { height, normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
 import Animated, { color } from 'react-native-reanimated';
 import { plant, plantList } from '../../definitions/plants';
@@ -76,6 +76,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
+  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const telNo = route.params;
   const [location, setLocation] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>();
@@ -295,6 +296,12 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
         const { lat, lng } = location;
         setlat(lat);
         setlong(lng);
+        setPosition({
+          latitude: lat,
+          longitude:lng,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        })
         setShowPredictions(false);
         setSearch({ term: description, fetchPredictions: false });
         mapSheet.current.hide();
@@ -303,7 +310,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
       console.log(e);
     }
   };
-  console.log(1, lat, long);
+
   const fetchLocation = async (text?: string) => {
     await QueryLocation.getSubdistrict(0, text).then(res => {
       setLocation(res);
@@ -328,8 +335,6 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
           })
           .slice(0, 10);
         setPlotAreas(result);
-      } else {
-        setPosition(LAT_LNG_BANGKOK);
       }
     };
     filterBySearchText();
@@ -482,7 +487,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
           </View>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <View style={{ justifyContent: 'space-around' }}>
+            <View style={{ justifyContent: 'space-around', paddingVertical: 10}}>
               <ScrollView>
                 <Text style={[styles.head, { marginTop: normalize(15) }]}>
                   ชื่อแปลงเกษตร
@@ -722,8 +727,21 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                 />
                 <View
                   style={{
+                    ...Platform.select({
+                      ios: {
+                        height: normalize(10),
+                      },
+                      android: {
+                        height: normalize(100),
+                      },
+                    }),
+                  }}></View>
+              </ScrollView>
+              <View
+                  style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
+                    paddingVertical: 20
                   }}>
                   <MainButton
                     style={styles.button}
@@ -756,18 +774,6 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     }}
                   />
                 </View>
-                <View
-                  style={{
-                    ...Platform.select({
-                      ios: {
-                        height: normalize(10),
-                      },
-                      android: {
-                        height: normalize(100),
-                      },
-                    }),
-                  }}></View>
-              </ScrollView>
             </View>
           </KeyboardAvoidingView>
         </View>
