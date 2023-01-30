@@ -31,6 +31,7 @@ import { Modal } from 'react-native';
 import DatePickerCustom from '../../components/Calendar/Calendar';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import moment from 'moment';
+import { mixpanel } from '../../../mixpanel';
 
 const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
   const initialFormRegisterState = {
@@ -82,7 +83,9 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
           <CustomHeader
             title="ลงทะเบียนเกษตรกร"
             showBackBtn
-            onPressBack={() => navigation.goBack()}
+            onPressBack={() => {
+              mixpanel.track('Tab back first form register');
+              navigation.goBack()}}
           />
 
           <View style={styles.inner}>
@@ -99,7 +102,9 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                     alignItems: 'center',
                     marginTop: normalize(40),
                   }}>
-                  <TouchableOpacity onPress={() => setOpenModal(true)}>
+                  <TouchableOpacity onPress={() =>{
+                     mixpanel.track('Tab add profile image in register');
+                    setOpenModal(true)}}>
                     <View
                       style={{
                         width: normalize(116),
@@ -223,6 +228,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   }
                   color={colors.greenLight}
                   onPress={() => {
+                    mixpanel.track('Tab next first form register');
                     setLoading(true);
                     Register.register1(
                       formState.name,

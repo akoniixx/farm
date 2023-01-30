@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Register } from '../../datasource/AuthDatasource';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { getFCMToken } from '../../firebase/notification';
+import { mixpanel } from '../../../mixpanel';
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
@@ -66,6 +67,7 @@ const SuccessRegister: React.FC<any> = ({ navigation }) => {
         label="เริ่มใช้งาน"
         color={colors.greenLight}
         onPress={async () => {
+          mixpanel.track('Tab success register');
           const token_register = await AsyncStorage.getItem('token_register');
           await AsyncStorage.setItem('token', token_register!);
           Register.changeToPending()

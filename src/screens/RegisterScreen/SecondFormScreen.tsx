@@ -41,6 +41,7 @@ import {
   LocationSelect,
 } from '../../components/Location/Location';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import { mixpanel } from '../../../mixpanel';
 
 const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
   const initialFormRegisterState = {
@@ -147,7 +148,9 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
           <CustomHeader
             title="ลงทะเบียนเกษตรกร"
             showBackBtn
-            onPressBack={() => navigation.goBack()}
+            onPressBack={() => {
+              mixpanel.track('Tab back second form register');
+              navigation.goBack()}}
           />
           <View style={styles.inner}>
             <View style={styles.containerTopCard}>
@@ -395,6 +398,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                 label="ถัดไป"
                 color={colors.greenLight}
                 onPress={() => {
+                  mixpanel.track('Tab next second form register');
                   setLoading(true);
                   Register.register2(
                     telNo,

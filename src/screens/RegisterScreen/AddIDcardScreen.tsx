@@ -30,6 +30,7 @@ import { momentExtend } from '../../utils/moment-buddha-year';
 import { Modal } from 'react-native';
 import DatePickerCustom from '../../components/Calendar/Calendar';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
+import { mixpanel } from '../../../mixpanel';
 
 const AddIDcardScreen: React.FC<any> = ({ navigation, route }) => {
   const telNo = route.params.tele;
@@ -70,7 +71,9 @@ const AddIDcardScreen: React.FC<any> = ({ navigation, route }) => {
           <CustomHeader
             title="ลงทะเบียนเกษตรกร"
             showBackBtn
-            onPressBack={() => navigation.goBack()}
+            onPressBack={() => {
+              mixpanel.track('Tab back from add id card register');
+              navigation.goBack()}}
           />
 
           <View style={styles.inner}>
@@ -177,6 +180,7 @@ const AddIDcardScreen: React.FC<any> = ({ navigation, route }) => {
               onPress={() => {
                 if (idcard.length === 13 && image != null) {
                   if (Profile) {
+                    mixpanel.track('Tab confirm from add id card register');
                     setLoading(true);
                     ProfileDatasource.addIdCard(idcard)
                       .then(res => {

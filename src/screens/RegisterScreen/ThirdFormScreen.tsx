@@ -56,6 +56,7 @@ import SearchPlotArea from '../../components/SearchPlotArea';
 import { LAT_LNG_BANGKOK } from '../../definitions/location';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { useDebounceValue } from '../../hook/useDebounceValue';
+import { mixpanel } from '../../../mixpanel';
 
 export type PredictionType = {
   description: string;
@@ -138,7 +139,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
         '',
         [
           { text: 'Go to Settings', onPress: openSetting },
-          { text: "Don't Use Location", onPress: () => {} },
+          { text: "Don't Use Location", onPress: () => { } },
         ],
       );
     }
@@ -357,6 +358,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
           title="ลงทะเบียนเกษตรกร"
           showBackBtn
           onPressBack={() => {
+            mixpanel.track('Tab back third form register');
             navigation.goBack();
           }}
         />
@@ -409,10 +411,10 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                       plotName={
                         !item.plotName
                           ? 'แปลงที่' +
-                            ' ' +
-                            `${index + 1}` +
-                            ' ' +
-                            item.plantName
+                          ' ' +
+                          `${index + 1}` +
+                          ' ' +
+                          item.plantName
                           : item.plotName
                       }
                       raiAmount={item.raiAmount}
@@ -427,6 +429,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                 <Text
                   style={styles.textaddplot}
                   onPress={() => {
+                    mixpanel.track('Tab add plot form register');
                     setPlantName(null);
                     setraiAmount(null);
                     setlandmark(null);
@@ -447,6 +450,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
               label="ถัดไป"
               color={colors.greenLight}
               onPress={() => {
+                mixpanel.track('Tab next third form register');
                 Register.uploadFarmerPlot(plotData)
                   .then(res => {
                     navigation.navigate('FourthFormScreen', {
@@ -465,6 +469,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
             backgroundColor: colors.white,
             paddingVertical: normalize(10),
             paddingHorizontal: normalize(15),
+            paddingBottom:'15%',
             width: windowWidth,
             height: windowHeight,
             borderRadius: normalize(20),
@@ -501,11 +506,10 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   editable={true}
                   placeholder={
                     !plotName
-                      ? `แปลงที่ ${plotDataUI.length + 1} ${
-                          plantName !== null && plantName !== undefined
-                            ? plantName
-                            : ''
-                        }`
+                      ? `แปลงที่ ${plotDataUI.length + 1} ${plantName !== null && plantName !== undefined
+                        ? plantName
+                        : ''
+                      }`
                       : plotName
                   }
                   placeholderTextColor={colors.fontGrey}
@@ -758,17 +762,18 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     label="บันทึก"
                     disable={
                       !raiAmount ||
-                      !plantName ||
-                      !lat ||
-                      !long ||
-                      !search.term ||
-                      !landmark ||
-                      !selectPlot.subdistrictId
+                        !plantName ||
+                        !lat ||
+                        !long ||
+                        !search.term ||
+                        !landmark ||
+                        !selectPlot.subdistrictId
                         ? true
                         : false
                     }
                     color={colors.greenLight}
                     onPress={() => {
+                      mixpanel.track('Tab save plot form register');
                       addPlots();
                       incrementCount();
                     }}
@@ -825,13 +830,13 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
         </ActionSheet>
 
         <ActionSheet ref={plotArea}>
-          <View
+          <SafeAreaView
             style={{
               backgroundColor: 'white',
               paddingVertical: normalize(30),
               paddingHorizontal: normalize(20),
               width: windowWidth,
-              height: windowHeight,
+              height: windowHeight*0.9,
             }}>
             <View
               style={{
@@ -862,7 +867,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   color: colors.gray,
                 }}>
                 {`กรุณาพิมพ์ค้นหาพื้นที่แปลงเกษตรของคุณ
-ด้วยชื่อ ตำบล / อำเภอ / จังหวัด`}
+                  ด้วยชื่อ ตำบล / อำเภอ / จังหวัด`}
               </Text>
             </View>
             <View style={styles.container}>
@@ -934,7 +939,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   ))}
               </ScrollView>
             </View>
-          </View>
+          </SafeAreaView>
         </ActionSheet>
 
         <ActionSheet ref={mapSheet}>

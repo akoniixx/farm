@@ -10,6 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { mixpanel } from '../../../mixpanel';
 import { colors, font } from '../../assets';
 import icons from '../../assets/icons/icons';
 import image from '../../assets/images/image';
@@ -30,7 +31,9 @@ const FourthFormScreen: React.FC<any> = ({ route, navigation }) => {
       <CustomHeader
         title="ลงทะเบียนเกษตรกร"
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() =>{
+          mixpanel.track('Tab back fourth form register');
+          navigation.goBack()}}
       />
       <View style={styles.inner}>
         <View style={styles.container}>
@@ -68,6 +71,7 @@ const FourthFormScreen: React.FC<any> = ({ route, navigation }) => {
             label="ถัดไป"
             color={colors.greenLight}
             onPress={() => {
+              mixpanel.track('Tab next to add id card form register');
               navigation.navigate('AddIDCardScreen', {
                 tele: telNo,
                 profile: Profile,
@@ -76,6 +80,7 @@ const FourthFormScreen: React.FC<any> = ({ route, navigation }) => {
           />
           <TouchableOpacity
             onPress={() => {
+              mixpanel.track('Tab skip to add id card form register');
               Register.registerSkip4()
                 .then(async res => navigation.navigate('SuccessRegister'))
                 .catch(err => console.log(err));
