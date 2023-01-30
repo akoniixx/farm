@@ -344,16 +344,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
     setplotDataUI(someArray);
     deTailPlot.current.hide();
   };
-  console.log(
-    1,
-    raiAmount,
-    plantName,
-    lat,
-    long,
-    search.term,
-    landmark,
-    selectPlot.subdistrictId,
-  );
+
   return (
     <>
       <KeyboardAvoidingView

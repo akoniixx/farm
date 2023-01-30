@@ -396,7 +396,8 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
             <TouchableOpacity
               onPress={openGooglePlay}
               style={{
-                padding: normalize(20),
+                paddingHorizontal: normalize(20),
+                alignItems: 'center',
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',
@@ -418,7 +419,8 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 navigation.navigate('PrivacyScreen');
               }}
               style={{
-                padding: normalize(20),
+                paddingHorizontal: normalize(20),
+                alignItems: 'center',
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',
@@ -442,7 +444,8 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 });
               }}
               style={{
-                padding: normalize(20),
+                paddingHorizontal: normalize(20),
+                alignItems: 'center',
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',
@@ -467,7 +470,8 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 });
               }}
               style={{
-                padding: normalize(20),
+                paddingHorizontal: normalize(20),
+                alignItems: 'center',
                 flexDirection: 'row',
                 height: normalize(62),
                 justifyContent: 'space-between',

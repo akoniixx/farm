@@ -34,6 +34,7 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import DronerUsed from '../../components/Carousel/DronerUsed';
 import { mixpanel } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
+import DronerSugg from '../../components/Carousel/DronerCarousel';
 
 const MainScreen: React.FC<any> = ({ navigation }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -585,7 +586,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                       color: '#007AFF',
                       fontSize: 20,
                     }}>
-                    {'โทร +66 2-113-6159'}
+                    {`โทร +66 2-233-9000`}
                   </Text>
                 </View>
               </TouchableOpacity>
