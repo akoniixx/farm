@@ -67,7 +67,6 @@ export class ProfileDatasource {
         idNo: idcard,
       })
       .then(response => {
-        console.log(response);
         return response.data;
       })
       .catch(error => {

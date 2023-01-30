@@ -12,6 +12,7 @@ const FarmerRegisterFailed: React.FC<ModalEntity> = ({
   onClose,
   onMainClick,
   onBottomClick,
+  text,
 }) => {
   return (
     <Modal visible={show} transparent={true}>
@@ -28,10 +29,12 @@ const FarmerRegisterFailed: React.FC<ModalEntity> = ({
               />
             </TouchableOpacity>
           </View>
-          <Text style={ModalStyle.modalHeader}>ท่านยืนยันตัวตนไม่สำเร็จ</Text>
           <Text
-            style={[ModalStyle.modalHeader, { paddingBottom: normalize(20) }]}>
-            โปรดติดต่อเจ้าหน้าที่
+            style={[
+              ModalStyle.modalHeader,
+              { paddingVertical: normalize(20) },
+            ]}>
+            {text}
           </Text>
           <Image source={image.registerFailed} style={ModalStyle.image} />
           <MainButton

@@ -581,7 +581,9 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                     placeholder={'ระบุจุดสังเกต'}
                     placeholderTextColor={colors.disable}
                   />
-                  <View
+                  <View style={{ height: normalize(10) }}></View>
+                </ScrollView>
+                <View
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
@@ -634,8 +636,6 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       }}
                     />
                   </View>
-                  <View style={{ height: normalize(10) }}></View>
-                </ScrollView>
               </View>
               <Spinner
                 visible={loading}

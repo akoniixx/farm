@@ -23,12 +23,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import { mixpanel } from './mixpanel';
 const App = () => {
-  // messaging().setBackgroundMessageHandler(async remoteMessage => {
-  //   console.log('Message handled in the background!', remoteMessage);
-  // });
-  // messaging().onMessage(async message =>{
-  //   console.log(message)
-  // });
   useEffect(() => {
     mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);

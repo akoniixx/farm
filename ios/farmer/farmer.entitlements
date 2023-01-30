@@ -5,6 +5,8 @@
 	<key>aps-environment</key>
 	<string>development</string>
 	<key>keychain-access-groups</key>
-	<array/>
+	<array>
+		<string>$(AppIdentifierPrefix)com.iconkaset.dev.farmer</string>
+	</array>
 </dict>
 </plist>

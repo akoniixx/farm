@@ -77,6 +77,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
+  console.log(2,route.params)
   const telNo = route.params;
   const [location, setLocation] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>();
@@ -296,6 +297,12 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
         const { lat, lng } = location;
         setlat(lat);
         setlong(lng);
+        setPosition({
+          latitude: lat,
+          longitude:lng,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        })
         setShowPredictions(false);
         setSearch({ term: description, fetchPredictions: false });
         mapSheet.current.hide();
@@ -304,7 +311,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
       console.log(e);
     }
   };
-  console.log(1, lat, long);
+
   const fetchLocation = async (text?: string) => {
     await QueryLocation.getSubdistrict(0, text).then(res => {
       setLocation(res);
@@ -329,8 +336,6 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
           })
           .slice(0, 10);
         setPlotAreas(result);
-      } else {
-        setPosition(LAT_LNG_BANGKOK);
       }
     };
     filterBySearchText();

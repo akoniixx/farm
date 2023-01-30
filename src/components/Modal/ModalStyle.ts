@@ -31,6 +31,7 @@ export const ModalStyle = StyleSheet.create({
   modalHeader: {
     color: colors.fontBlack,
     fontFamily: fonts.AnuphanMedium,
+    textAlign: 'center',
     fontSize: normalize(19),
   },
   modalMain: {

@@ -36,7 +36,10 @@ const NotificationCard: React.FC<NotificationCardEntity> = prop => {
           <View style={style.header}>
             <Text style={style.headerText}>{prop.title}</Text>
             <Pressable onPress={() => setExpand(!expand)}>
-              <Image source={icons.arrowUp} style={style.arrow} />
+              <Image
+                source={expand ? icons.arrowUp : icons.arrowDown}
+                style={style.arrow}
+              />
             </Pressable>
           </View>
           {expand ? (
@@ -47,6 +50,34 @@ const NotificationCard: React.FC<NotificationCardEntity> = prop => {
             </Text>
           )}
           <Text style={style.dateText}>{prop.dateString}</Text>
+        </View>
+        <View
+          style={[
+            style.body,
+            { backgroundColor: prop.isRead ? colors.white : '#F7FFF0' },
+          ]}>
+          <View style={style.viewIcon}>
+            <Image
+              source={iconType(prop.notificationType)}
+              style={style.icon}
+            />
+          </View>
+          <View style={style.viewBody}>
+            <View style={style.header}>
+              <Text style={style.headerText}>{prop.title}</Text>
+              <Pressable onPress={() => setExpand(!expand)}>
+                <Image source={icons.arrowUp} style={style.arrow} />
+              </Pressable>
+            </View>
+            {expand ? (
+              <Text style={style.subtitleText}>{prop.subtitle}</Text>
+            ) : (
+              <Text style={style.subtitleText} numberOfLines={1}>
+                {prop.subtitle}
+              </Text>
+            )}
+            <Text style={style.dateText}>{prop.dateString}</Text>
+          </View>
         </View>
       </View>
     </Pressable>

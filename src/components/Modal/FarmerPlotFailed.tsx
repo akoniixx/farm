@@ -12,6 +12,7 @@ const FarmerPlotFailed: React.FC<ModalEntity> = ({
   onClose,
   onMainClick,
   onBottomClick,
+  text,
 }) => {
   return (
     <Modal visible={show} transparent={true}>
@@ -28,13 +29,12 @@ const FarmerPlotFailed: React.FC<ModalEntity> = ({
               />
             </TouchableOpacity>
           </View>
-          <Text style={ModalStyle.modalHeader}>แปลงเกษตรของท่าน</Text>
-          <Text style={ModalStyle.modalHeader}>
-            (แปลง 3 อ้อย)ยืนยันไม่สำเร็จ
-          </Text>
           <Text
-            style={[ModalStyle.modalHeader, { paddingBottom: normalize(20) }]}>
-            โปรดติดต่อเจ้าหน้าที่
+            style={[
+              ModalStyle.modalHeader,
+              { paddingVertical: normalize(20) },
+            ]}>
+            {text}
           </Text>
           <Image source={image.plotFailed} style={ModalStyle.image} />
           <MainButton
