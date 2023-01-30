@@ -4,7 +4,6 @@ import {
   View,
   StyleSheet,
   Text,
-  FlatList,
   KeyboardAvoidingView,
   Platform,
   TextInput,
@@ -620,8 +619,8 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                           raiAmount,
                           landmark,
                           plantName,
-                          lat,
-                          long,
+                          position.latitude,
+                          position.longitude,
                           search.term,
                           selectPlot.subdistrictId,
                         )

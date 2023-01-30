@@ -97,7 +97,7 @@ const readIt = (notiId: string) => {
 
 const NotificationScreen: React.FC<any> = ({ navigation, route }) => {
   const data = route.params.data;
-  console.log(route.params.data, 'dadad');
+
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -106,35 +106,36 @@ const NotificationScreen: React.FC<any> = ({ navigation, route }) => {
         onPressBack={() => navigation.goBack()}
       />
 
-      {data.length!== 0 ?
-      <FlatList
-        data={generateDataNotification(data)}
-        renderItem={({ item }: any) => (
-          <NotificationCard
-            expand={item.expand}
-            title={item.title}
-            notificationType={item.notificationType}
-            isRead={item.isRead}
-            subtitle={item.subtitle}
-            dateString={item.dateString}
-            onClick={() => {
-              readIt(item.notiId);
-            }}
+      {data.length !== 0 ? (
+        <FlatList
+          data={generateDataNotification(data)}
+          renderItem={({ item }: any) => (
+            <NotificationCard
+              expand={item?.expand}
+              title={item?.title}
+              notificationType={item?.notificationType}
+              isRead={item?.isRead}
+              subtitle={item?.subtitle}
+              dateString={item?.dateString}
+              onClick={() => {
+                readIt(item?.notiId);
+              }}
+            />
+          )}
+        />
+      ) : (
+        <View
+          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Image
+            source={image.emptyNoti}
+            style={{ width: normalize(130), height: normalize(133) }}
           />
-        )}
-      />: 
-      <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-        <Image source={image.emptyNoti} style={{width:normalize(130),height:normalize(133)}} />
-        <Text style={styles.text}>
-        ไม่มีข้อความแจ้งเตือน
-        </Text>
-        <Text  style={styles.text}>
-        เมื่อคุณได้รับข้อความใหม่ กลับมาดูได้ที่นี่
-        </Text>
-      </View>
-      
-      }
-      
+          <Text style={styles.text}>ไม่มีข้อความแจ้งเตือน</Text>
+          <Text style={styles.text}>
+            เมื่อคุณได้รับข้อความใหม่ กลับมาดูได้ที่นี่
+          </Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -142,9 +143,9 @@ const NotificationScreen: React.FC<any> = ({ navigation, route }) => {
 export default NotificationScreen;
 
 const styles = StyleSheet.create({
-  text:{
+  text: {
     fontFamily: fonts.SarabunLight,
     fontSize: normalize(18),
-    color: '#8D96A0'
-  }
-})
+    color: '#8D96A0',
+  },
+});

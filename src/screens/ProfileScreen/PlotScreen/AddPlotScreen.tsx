@@ -64,7 +64,6 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.042,
   });
-  const telNo = route.params;
   const [location, setLocation] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>();
   const debounceValue = useDebounceValue(searchValue, 800);
@@ -358,9 +357,6 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
           <View style={styles.inner}>
             <View style={styles.container}>
               <View style={{ justifyContent: 'space-around' }}>
-                <View style={styles.inner}>
-                  <View style={styles.container}></View>
-                </View>
                 <ScrollView>
                   <Text style={[styles.head, { marginTop: normalize(15) }]}>
                     ชื่อแปลงเกษตร
@@ -645,13 +641,12 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                             raiAmount,
                             landmark,
                             plantName,
-                            lat,
-                            long,
+                            position.latitude,
+                            position.longitude,
                             search.term,
                             selectPlot.subdistrictId,
                           )
                             .then(res => {
-                              console.log(res);
                               setLoading(false);
                               navigation.navigate('AllPlotScreen');
                             })

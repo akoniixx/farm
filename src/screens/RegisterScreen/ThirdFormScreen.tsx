@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Button,
@@ -29,7 +29,7 @@ import fonts from '../../assets/fonts';
 import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
 import { ProgressBar } from '../../components/ProgressBar';
-import { normalize } from '../../functions/Normalize';
+import { height, normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
 import Animated, { color } from 'react-native-reanimated';
 import { plant, plantList } from '../../definitions/plants';
@@ -70,14 +70,13 @@ export type PredictionType = {
 const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  const [loading, setLoading] = useState(false);
   const [position, setPosition] = useState({
     latitude: route.params.latitude,
     longitude: route.params.longitude,
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
-  console.log(2,route.params)
+  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const telNo = route.params;
   const [location, setLocation] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>();
@@ -488,7 +487,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
           </View>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <View style={{ justifyContent: 'space-around' }}>
+            <View style={{ justifyContent: 'space-around'}}>
               <ScrollView>
                 <Text style={[styles.head, { marginTop: normalize(15) }]}>
                   ชื่อแปลงเกษตร
@@ -728,6 +727,18 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                 />
                 <View
                   style={{
+                    ...Platform.select({
+                      ios: {
+                        height: normalize(10),
+                      },
+                      android: {
+                        height: normalize(100),
+                      },
+                    }),
+                  }}></View>
+              </ScrollView>
+              <View
+                  style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
@@ -762,18 +773,6 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     }}
                   />
                 </View>
-                <View
-                  style={{
-                    ...Platform.select({
-                      ios: {
-                        height: normalize(10),
-                      },
-                      android: {
-                        height: normalize(100),
-                      },
-                    }),
-                  }}></View>
-              </ScrollView>
             </View>
           </KeyboardAvoidingView>
         </View>

@@ -60,10 +60,12 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const checkCoupon = async () => {
     try {
       const res = await checkCouponOffline(couponCode);
-      if (res && res.data === null) {
-        setCouponCodeError(res.userMessage);
+      if (res && !res.canUsed) {
+        setCouponCodeError(res.userMessage || res.message);
       }
       if (res && res.canUsed) {
+        mixpanel.track('Tab submit coupon');
+
         setTaskData(prev => ({
           ...prev,
           couponCode: couponCode,
@@ -555,38 +557,90 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           <View
             style={{
               paddingHorizontal: normalize(16),
+              marginBottom: 16,
             }}>
-            <InputWithSuffix
-              pointerEvents={disableEdit ? 'none' : 'auto'}
-              onChangeText={text => {
-                setCouponCode(text);
-                setCouponCodeError('');
-              }}
-              onSubmitEditing={async () => {
-                if (couponCode.length > 0) {
-                  await checkCoupon();
+            {!disableEdit ? (
+              <InputWithSuffix
+                onChangeText={text => {
+                  setCouponCode(text);
+                  setCouponCodeError('');
+                }}
+                onSubmitEditing={async () => {
+                  if (couponCode.length > 0) {
+                    await checkCoupon();
+                  }
+                }}
+                returnKeyType="done"
+                style={{
+                  color: !disableEdit ? colors.fontBlack : colors.grey40,
+                }}
+                editable={!disableEdit}
+                allowClear={!disableEdit}
+                placeholder="ระบุรหัสคูปองที่นี่"
+                styleContainer={{
+                  backgroundColor: '#F2F3F4',
+                  borderWidth: 0,
+                }}
+                value={couponCode}
+                suffixComponent={
+                  <TouchableOpacity
+                    onPress={async () => {
+                      if (disableEdit) {
+                        return setDisableEdit(false);
+                      }
+                      if (couponCode.length > 0) {
+                        mixpanel.track('Tab submit coupon');
+                        await checkCoupon();
+                      }
+                    }}
+                    style={{
+                      backgroundColor: '#56D88C',
+                      width: 60,
+                      height: 35,
+                      borderRadius: 8,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      zIndex: 1,
+                    }}>
+                    <Text
+                      style={{
+                        color: colors.white,
+                        fontSize: 18,
+                        fontFamily: fonts.AnuphanMedium,
+                      }}>
+                      {disableEdit ? 'แก้ไข' : 'ยืนยัน'}
+                    </Text>
+                  </TouchableOpacity>
                 }
-              }}
-              returnKeyType="done"
-              style={{
-                color: !disableEdit ? colors.fontBlack : colors.grey40,
-              }}
-              editable={!disableEdit}
-              allowClear={!disableEdit}
-              placeholder="ระบุรหัสคูปองที่นี่"
-              styleContainer={{
-                backgroundColor: '#F2F3F4',
-                borderWidth: 0,
-              }}
-              value={couponCode}
-              suffixComponent={
+              />
+            ) : (
+              <View
+                style={{
+                  borderColor: '#A7AEB5',
+                  backgroundColor: '#F2F3F4',
+                  borderRadius: 10,
+                  paddingHorizontal: 16,
+                  height: 54,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '100%',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: fonts.SarabunMedium,
+                    height: Platform.OS === 'ios' ? 'auto' : 56,
+                    color: !disableEdit ? colors.fontBlack : colors.grey40,
+                  }}>
+                  {couponCode}
+                </Text>
                 <TouchableOpacity
                   onPress={async () => {
                     if (disableEdit) {
                       return setDisableEdit(false);
                     }
                     if (couponCode.length > 0) {
-                      mixpanel.track('Tab submit coupon');
                       await checkCoupon();
                     }
                   }}
@@ -597,6 +651,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                     borderRadius: 8,
                     justifyContent: 'center',
                     alignItems: 'center',
+                    zIndex: 1,
                   }}>
                   <Text
                     style={{
@@ -607,8 +662,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                     {disableEdit ? 'แก้ไข' : 'ยืนยัน'}
                   </Text>
                 </TouchableOpacity>
-              }
-            />
+              </View>
+            )}
+
             {couponCodeError.length > 0 && (
               <Text
                 style={{
@@ -617,7 +673,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                   marginTop: 8,
                   fontFamily: fonts.SarabunLight,
                 }}>
-                ไม่มีรหัสคูปองดังกล่าว โปรดตรวจสอบหมายเลขคูปอง ของท่านอีกครั้ง
+                {couponCodeError}
               </Text>
             )}
           </View>

@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Platform,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
@@ -69,15 +76,15 @@ export default function SlipSuccessScreen({
             <View
               style={{
                 width: '100%',
-                height: 170,
+                height: Platform.OS === 'ios' ? 200 : 170,
+
                 marginTop: 32,
-                marginBottom: 32,
               }}>
               <Lottie
-                source={image.successfullottie}
                 autoPlay
-                loop
-                resizeMode="cover"
+                speed={0.4}
+                source={image.successfullottie}
+                resizeMode="contain"
               />
             </View>
             <SectionBody {...taskData} />

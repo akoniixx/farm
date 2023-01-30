@@ -10,7 +10,6 @@ import {
   Modal,
   TouchableOpacity,
   Platform,
-  SafeAreaView,
   Linking,
 } from 'react-native';
 import { colors, font } from '../../assets';
@@ -28,14 +27,17 @@ import { ActivityIndicator } from 'react-native-paper';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
 import { useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
+import { TabActions } from '@react-navigation/native';
+import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { useAuth } from '../../contexts/AuthContext';
 import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import DronerUsed from '../../components/Carousel/DronerUsed';
 import { mixpanel } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const MainScreen: React.FC<any> = ({ navigation }) => {
+const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const imageWidth = screenWidth / 2;
   const date = new Date();
@@ -62,12 +64,48 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
     cropName: '',
     purposeSprayName: '',
   });
+  const [showBell, setShowBell] = useState(false);
+  const [notiData, setNotiData] = useState<{
+    count: Number;
+    data: any;
+  }>({
+    count: 0,
+    data: [],
+  });
+  const noti = route.params?.noti ?? false;
+
   const [reload, setReload] = useState(false);
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
+    const farmerId = await AsyncStorage.getItem('farmer_id');
+    if (farmerId) {
+      setShowBell(true);
+    }
     setFcmToken(value!);
   };
-  const getProfile = useCallback(async () => {
+
+  const getNotificationData = async () => {
+    FCMtokenDatasource.getNotificationList()
+      .then(res =>
+        setNotiData({
+          count: res.count,
+          data: res.data,
+        }),
+      )
+      .catch(err => console.log(err));
+  };
+
+  useEffect(() => {
+    const getTaskId = async () => {
+      const value = await AsyncStorage.getItem('taskId');
+      setTaskId(value);
+    };
+    getTaskId();
+    getData();
+    getProfile();
+    getNotificationData();
+  }, [isFocused]);
+  const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
     if (value) {
       const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -85,7 +123,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
         })
         .catch(err => console.log(err));
     }
-  }, [reload, getProfileAuth]);
+  };
   useEffect(() => {
     const getTaskId = async () => {
       const value = await AsyncStorage.getItem('taskId');
@@ -111,7 +149,6 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
           date.toDateString(),
         )
           .then(res => {
-            console.log(`length = ${res.length}`);
             setTaskSug(res);
           })
           .catch(err => console.log(err))
@@ -180,7 +217,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
   }, [taskId, navigation]);
 
   return (
-    <SafeAreaView
+    <View
       style={{
         backgroundColor: colors.white,
         flex: 1,
@@ -195,7 +232,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                   width: (width * 380) / 375,
                   height: (height * 250) / 812,
                 }}>
-                <View style={styles.headCard}>
+                <SafeAreaView edges={['top']} style={styles.headCard}>
                   <View>
                     <Text
                       style={{
@@ -214,7 +251,29 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                       {profilestate.name}
                     </Text>
                   </View>
-                </View>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('NotificationScreen', {
+                        data: notiData?.data,
+                      })
+                    }>
+                    {showBell ? (
+                      <Image
+                        source={
+                          notiData.count != 0
+                            ? icons.newnotification
+                            : icons.notification
+                        }
+                        style={{
+                          width: normalize(28),
+                          height: normalize(28),
+                        }}
+                      />
+                    ) : (
+                      <></>
+                    )}
+                  </TouchableOpacity>
+                </SafeAreaView>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -412,6 +471,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
+                    {taskSugUsed.length != 0 && (
                   <Text
                     style={{
                       fontFamily: font.AnuphanBold,
@@ -422,6 +482,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                     }}>
                     จ้างนักบินที่เคยจ้าง
                   </Text>
+                    )}
                   {taskSugUsed.length != 0 ? (
                     <TouchableOpacity
                       onPress={() => {
@@ -480,23 +541,23 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                       height: '100%',
                     }}>
                     <Image
-                      source={image.empty_droner}
+                      source={image.empryState}
                       style={{
-                        width: normalize(136),
-                        height: normalize(130),
-                        top: '10%',
+                        width: normalize(126),
+                        height: normalize(120),
+                        top: 120,
                         marginBottom: normalize(32),
                       }}
                     />
                     <Text
                       style={{
-                        top: '5%',
+                        top: 120,
                         fontFamily: font.SarabunBold,
                         fontSize: normalize(16),
                         fontWeight: '300',
                         color: colors.gray,
                       }}>
-                      ไม่มีนักบินโดรนที่เคยจ้าง
+                      ติดตามบริการส่วนอื่นได้เร็วๆนี้
                     </Text>
                   </View>
                 )}
@@ -585,7 +646,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
                       color: '#007AFF',
                       fontSize: 20,
                     }}>
-                    {`โทร +66 2-233-9000 `}
+                    {'โทร +66 2-113-6159'}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -760,7 +821,7 @@ const MainScreen: React.FC<any> = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 export default MainScreen;
@@ -789,11 +850,10 @@ const styles = StyleSheet.create({
     top: '7%',
   },
   headCard: {
-    top: '15%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: normalize(23),
-    paddingTop: normalize(5),
+    top: '5%',
   },
   activeContainer: {
     flexDirection: 'row',
