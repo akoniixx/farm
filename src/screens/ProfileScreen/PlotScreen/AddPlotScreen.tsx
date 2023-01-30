@@ -343,7 +343,6 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
     setplotDataUI(someArray);
     deTailPlot.current.hide();
   };
-
   return (
     <>
       <KeyboardAvoidingView
