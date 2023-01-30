@@ -52,11 +52,11 @@ const FinishScreen: React.FC<any> = ({}) => {
     getTaskList();
   }, [selectedField, selectedStatus]);
 
-  useFocusEffect(
+  /* useFocusEffect(
     React.useCallback(() => {
       getTaskList();
     }, []),
-  );
+  ); */
 
   return (
     <>
