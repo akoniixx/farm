@@ -64,7 +64,6 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.042,
   });
-  const telNo = route.params;
   const [location, setLocation] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>();
   const debounceValue = useDebounceValue(searchValue, 800);
@@ -344,16 +343,6 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
     setplotDataUI(someArray);
     deTailPlot.current.hide();
   };
-  console.log(
-    1,
-    raiAmount,
-    plantName,
-    lat,
-    long,
-    search.term,
-    landmark,
-    selectPlot?.subdistrictId,
-  );
   return (
     <>
       <KeyboardAvoidingView
@@ -653,13 +642,12 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                             raiAmount,
                             landmark,
                             plantName,
-                            lat,
-                            long,
+                            position.latitude,
+                            position.longitude,
                             search.term,
                             selectPlot.subdistrictId,
                           )
                             .then(res => {
-                              console.log(res);
                               setLoading(false);
                               navigation.navigate('AllPlotScreen');
                             })

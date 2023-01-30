@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Button,
@@ -70,7 +70,6 @@ export type PredictionType = {
 const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  const [loading, setLoading] = useState(false);
   const [position, setPosition] = useState({
     latitude: route.params.latitude,
     longitude: route.params.longitude,

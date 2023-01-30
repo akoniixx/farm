@@ -225,7 +225,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       <ScrollView>
         <View style={[stylesCentral.container]}>
           <View style={{ backgroundColor: colors.white }}>
-            <View style={{ height: normalize(990)}}>
+            <View style={{ height: normalize(990) }}>
               <ImageBackground
                 source={image.bgHead}
                 style={{
@@ -254,7 +254,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   <TouchableOpacity
                     onPress={() =>
                       navigation.navigate('NotificationScreen', {
-                        data: notiData.data,
+                        data: notiData?.data,
                       })
                     }>
                     {showBell ? (
@@ -265,8 +265,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                             : icons.notification
                         }
                         style={{
-                          width: normalize(30),
-                          height: normalize(35),
+                          width: normalize(28),
+                          height: normalize(28),
                         }}
                       />
                     ) : (
@@ -851,7 +851,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: normalize(23),
-    top: '5%'
+    top: '5%',
   },
   activeContainer: {
     flexDirection: 'row',
