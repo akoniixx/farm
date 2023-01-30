@@ -73,7 +73,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     data: [],
   });
   const noti = route.params?.noti ?? false;
-  // const [reload, setReload] = useState(false);
+  const [reload, setReload] = useState(false);
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
     const farmerId = await AsyncStorage.getItem('farmer_id');
@@ -111,7 +111,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       getProfileAuth();
       ProfileDatasource.getProfile(farmer_id!)
         .then(async res => {
-          // setReload(!reload);
+          setReload(!reload);
           await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
           dispatch({
             type: 'InitProfile',
@@ -377,6 +377,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 {profilestate.status === 'REJECTED' ? (
                   <View
                     style={{
+                      top: 55,
                       height: 176,
                       width: normalize(340),
                       alignSelf: 'center',
