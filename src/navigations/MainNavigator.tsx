@@ -25,7 +25,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import DeleteProfile from '../screens/ProfileScreen/DeleteProfile/DeleteProfile';
 import AddPlotScreen from '../screens/ProfileScreen/PlotScreen/AddPlotScreen';
 import EditPlotScreen from '../screens/ProfileScreen/PlotScreen/EditPlotScreen';
-
 import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 export type MainStackParamList = {
   MainScreen: undefined;
@@ -58,7 +57,7 @@ export type MainStackParamList = {
   };
   AddPlotScreen: undefined;
   EditPlotScreen: undefined;
-  DeleteSuccess: undefined;
+  DeleteSuccess : undefined
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
