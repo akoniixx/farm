@@ -646,7 +646,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       color: '#007AFF',
                       fontSize: 20,
                     }}>
-                    {'โทร +66 2-113-6159'}
+                    {`โทร +66 2-223-9000`}
                   </Text>
                 </View>
               </TouchableOpacity>
