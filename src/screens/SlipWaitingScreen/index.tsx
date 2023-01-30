@@ -9,6 +9,7 @@ import {
   Platform,
   Linking,
   StyleSheet,
+  Keyboard,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Content from '../../components/Content/Content';
@@ -97,8 +98,14 @@ export default function SlipWaitingScreen({
         const res = await TaskDatasource.getTaskByTaskId(taskId);
 
         if (res && res.data) {
-          const { countResend, updatedAt } = res.data;
           setLoading(false);
+
+          if (res.data.status === 'WAIT_START') {
+            await AsyncStorage.removeItem('taskId');
+            navigation.navigate('SlipSuccessScreen', { taskId: res.data.id });
+          }
+
+          const { countResend, updatedAt } = res.data;
           const endTime = moment(updatedAt).add(30, 'minutes').toISOString();
           const isAfter = moment(endTime).isAfter(moment());
           if (!isAfter) {
@@ -119,7 +126,7 @@ export default function SlipWaitingScreen({
     if (taskId) {
       getTaskByTaskId(taskId);
     }
-  }, [taskId]);
+  }, [taskId, navigation]);
 
   return (
     <View
@@ -177,7 +184,8 @@ export default function SlipWaitingScreen({
             <View
               style={{
                 width: '100%',
-                height: 170,
+                height: Platform.OS === 'ios' ? 220 : 170,
+
                 marginTop: 32,
                 marginBottom: 32,
               }}>
@@ -197,7 +205,11 @@ export default function SlipWaitingScreen({
             }}>
             <MainButton
               label="กลับหน้าหลัก"
-              onPress={() => navigation.navigate('MainScreen')}
+              onPress={() => {
+                mixpanel.track('Tab back to main screen from waiting screen');
+
+                navigation.navigate('MainScreen');
+              }}
               color={colors.orangeLight}
               style={{
                 height: 52,
@@ -264,8 +276,10 @@ export default function SlipWaitingScreen({
                   }}
                   returnKeyType="done"
                   returnKeyLabel="done"
+                  blurOnSubmit={true}
                   onSubmitEditing={() => {
                     setIsFocus(false);
+                    Keyboard.dismiss();
                     refInput.current?.blur();
                   }}
                   numberOfLines={6}
