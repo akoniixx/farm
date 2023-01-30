@@ -352,7 +352,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
     long,
     search.term,
     landmark,
-    selectPlot.subdistrictId,
+    selectPlot?.subdistrictId,
   );
   return (
     <>

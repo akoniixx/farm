@@ -588,7 +588,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = 5Y8QC3U7CF;
+				DEVELOPMENT_TEAM = 9ZXXDP8F5K;
 				INFOPLIST_FILE = farmerTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -601,7 +601,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "farmer-app.appspot.com";
+				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.dev.farmer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/farmer.app/farmer";
 			};
@@ -617,7 +617,7 @@
 				CODE_SIGN_ENTITLEMENTS = farmer/farmerDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 9ZXXDP8F5K;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = farmer/Info.plist;
@@ -653,7 +653,7 @@
 				CODE_SIGN_ENTITLEMENTS = farmer/farmer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 9ZXXDP8F5K;
 				INFOPLIST_FILE = farmer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Iconkaset;
@@ -669,7 +669,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "farmer-app.appspot.com";
+				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.dev.farmer;
 				PRODUCT_NAME = farmer;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;

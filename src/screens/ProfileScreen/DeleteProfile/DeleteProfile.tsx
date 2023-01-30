@@ -59,7 +59,6 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
       };
       MyJobDatasource.getMyJobsList(params)
         .then(res => {
-          console.log(res.length);
           if (res !== undefined) {
             setTask(res);
             setLoading(false);

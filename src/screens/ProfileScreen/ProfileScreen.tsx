@@ -49,7 +49,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
     longitudeDelta: 0.0421,
   });
   const [plantName, setPlantName] = useState<any>();
-  const noti = route.params?.noti??false
+  const noti = route.params?.noti ?? false;
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
     setFcmToken(value!);
@@ -66,11 +66,11 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   }, [reload]);
 
   useFocusEffect(
-    React.useCallback(()=>{
+    React.useCallback(() => {
       getData();
       getProfile();
-    },[])
-  )
+    }, []),
+  );
 
   const getProfile = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -111,7 +111,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
 
   const addPlots = () => {
     const plots = [...plotData];
-    console.log(plots);
     const plotsUI = [...plotDataUI];
     const newPlot = {
       raiAmount: raiAmount,
@@ -120,7 +119,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
       plantName: plantName,
       status: 'PENDING',
     };
-    console.log(newPlot);
     const newPlotUI = {
       plotName: plotName,
       raiAmount: raiAmount,
@@ -156,7 +154,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
           maxHeight: '100%',
           backgroundColor: '#F7FFF0',
           justifyContent: 'center',
-          position : 'relative',
+          position: 'relative',
           padding: 25,
         }}>
         <Text
@@ -168,21 +166,25 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
           }}>
           บัญชีของฉัน
         </Text>
-        {
-          noti?
-          <View style={{
-            position : 'absolute',
-            left : normalize(20)
-          }}>
-            <TouchableOpacity onPress={()=> navigation.goBack()}>
-            <Image source={icons.arrowLeft} style={{
-              width : normalize(30),
-              height : normalize(30)
-            }}/>
-          </TouchableOpacity>
-          </View>:
+        {noti ? (
+          <View
+            style={{
+              position: 'absolute',
+              left: normalize(20),
+            }}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Image
+                source={icons.arrowLeft}
+                style={{
+                  width: normalize(30),
+                  height: normalize(30),
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
           <></>
-        }
+        )}
       </View>
       <ScrollView>
         <View style={styles.section1}>
