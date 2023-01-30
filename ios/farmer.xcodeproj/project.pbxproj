@@ -557,7 +557,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				DEVELOPMENT_TEAM = 5Y8QC3U7CF;
+				DEVELOPMENT_TEAM = 9ZXXDP8F5K;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -574,7 +574,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "farmer-app.appspot.com";
+				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.dev.farmer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/farmer.app/farmer";
 			};
@@ -634,7 +634,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "farmer-app.appspot.com";
+				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.dev.farmer;
 				PRODUCT_NAME = farmer;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
