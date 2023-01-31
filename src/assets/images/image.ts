@@ -33,5 +33,5 @@ export default {
   waitinglottie: require('./waitingdroner.json'),
   emptyNoti: require('./emptyNoti.png'),
   empryState: require('./empty_state.png'),
-  empty_coupon: require('./empty_coupon.png')
+  empty_coupon: require('./empty_coupon.png'),
 };

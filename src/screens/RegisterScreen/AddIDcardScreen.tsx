@@ -73,7 +73,8 @@ const AddIDcardScreen: React.FC<any> = ({ navigation, route }) => {
             showBackBtn
             onPressBack={() => {
               mixpanel.track('Tab back from add id card register');
-              navigation.goBack()}}
+              navigation.goBack();
+            }}
           />
 
           <View style={styles.inner}>

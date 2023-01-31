@@ -253,7 +253,12 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                     }}
                   />
                 </View> */}
-            <View style={{ justifyContent: 'center', alignItems: 'center',paddingVertical: '10%' }}>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingVertical: '10%',
+              }}>
               {/* <Text
                     style={[
                       styles.text,

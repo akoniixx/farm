@@ -103,7 +103,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
     }
   };
   return (
-    <SafeAreaView style={[stylesCentral.container]}>
+    <SafeAreaView style={{ backgroundColor: colors.white }}>
       <View
         style={{
           maxHeight: '100%',
@@ -334,7 +334,12 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           ) : (
-            <View style={{ top: 5 }}>
+            <View style={{ 
+              // top: 5 
+              flex: 1,
+              justifyContent: 'space-between',
+              backgroundColor: 'white',
+              }}>
               <ScrollView
                 style={{ paddingVertical: 10 }}
                 horizontal
@@ -488,6 +493,17 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 style={{ width: 25, height: 25 }}
               />
             </TouchableOpacity>
+            <View
+              style={{
+                ...Platform.select({
+                  ios: {
+                    paddingVertical: 20,
+                  },
+                  android: {
+                    paddingVertical: 40,
+                  },
+                }),
+              }}></View>
           </View>
         </View>
       </ScrollView>

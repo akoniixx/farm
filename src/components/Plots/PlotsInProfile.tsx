@@ -43,13 +43,13 @@ export function StatusObject(status: string) {
         fontColor: colors.error,
         borderColor: colors.error,
       };
-      case 'REJECTED':
-        return {
-          status: 'ไม่อนุมัติ',
-          colorBg: colors.white,
-          fontColor: colors.error,
-          borderColor: colors.error,
-        };
+    case 'REJECTED':
+      return {
+        status: 'ไม่อนุมัติ',
+        colorBg: colors.white,
+        fontColor: colors.error,
+        borderColor: colors.error,
+      };
     default:
       return {
         status: 'รอการตรวจสอบ',
@@ -70,7 +70,14 @@ const PlotInProfile: React.FC<plotData> = ({
   const windowWidth = Dimensions.get('screen').width;
 
   return (
-    <View style={{ flex: 1, padding: 5, alignSelf: 'center' }}>
+    <View
+      style={{
+        flex: 1,
+        paddingVertical: 5,
+        alignSelf: 'center',
+        paddingHorizontal: 10,
+        width: '100%'
+      }}>
       {StatusObject(status).status === 'ตรวจสอบแล้ว' ? (
         <View key={index} style={[styles.cards]}>
           <View>

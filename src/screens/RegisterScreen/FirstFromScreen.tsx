@@ -41,7 +41,6 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
     tel: route.params.tele,
   };
   const tele = route.params.tele;
-
   const windowWidth = Dimensions.get('window').width;
   const [image, setImage] = useState<any>(null);
   const [openCalendar, setOpenCalendar] = useState(false);
@@ -226,7 +225,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                 <MainButton
                   label="ถัดไป"
                   disable={
-                    !formState.name || !formState.surname || !date
+                    !formState.name || !formState.surname || !date || !date
                       ? true
                       : false
                   }
@@ -346,10 +345,11 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                     </Text>
                     <View>
                       <DatePickerCustom
+                        value={date ? date : moment()}
                         startYear={
                           moment().subtract(76, 'years').get('year') + 543
                         }
-                        value={date ? date : moment()}
+                        endYear={moment().add(0, 'year').get('year') + 543}
                         onHandleChange={(d: string) => {
                           setDate(d);
                         }}
@@ -382,6 +382,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                           }}
                         />
                       </View>
+                      {}
                     </View>
                   </View>
                 </View>

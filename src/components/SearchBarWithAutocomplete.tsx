@@ -204,13 +204,12 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
           value={value}
           returnKeyType="search"
           style={[
-            [inputBottomRadius,container],
+            [inputBottomRadius, container],
             {
               fontSize: 19,
               flex: 1,
               color: colors.fontBlack,
               fontFamily: font.SarabunLight,
-
             },
           ]}
           onLayout={event => {
@@ -224,10 +223,9 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
           <TouchableOpacity
             style={styles.clearBtn}
             onPress={() => {
-              onChangeText('')
-              onPredictionTapped('','')
-            }}
-          >
+              onChangeText('');
+              onPredictionTapped('', '');
+            }}>
             <Icon name="close" />
           </TouchableOpacity>
         ) : null}

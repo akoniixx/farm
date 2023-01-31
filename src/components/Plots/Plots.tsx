@@ -74,7 +74,7 @@ const PlotsItem: React.FC<AddPlot> = ({
       style={{
         ...Platform.select({
           ios: {
-            height: normalize(131),
+            height: normalize(140),
             borderWidth: 0.5,
             borderColor: colors.greenLight,
             backgroundColor: '#ECFBF2',

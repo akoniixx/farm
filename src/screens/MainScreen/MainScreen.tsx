@@ -224,7 +224,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       <ScrollView>
         <View style={[stylesCentral.container]}>
           <View style={{ backgroundColor: colors.white }}>
-            <View style={{ height: normalize(990) }}>
+            <View style={{ height: screenHeight}}>
               <ImageBackground
                 source={image.bgHead}
                 style={{
@@ -375,7 +375,17 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
             </View>  */}
               <View style={[styles.empty]}>
                 {profilestate.status === 'REJECTED' ? (
-                  <View style={{ paddingVertical: 30 }}>
+                  <View
+                    style={{
+                      ...Platform.select({
+                        ios: {
+                          paddingVertical: 75,
+                        },
+                        android: {
+                          paddingVertical: 30,
+                        },
+                      }),
+                    }}>
                     <View
                       style={{
                         paddingHorizontal: 20,
@@ -467,33 +477,56 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       </View>
                     </View>
                     <View
-                  style={{
-                    alignItems: 'center',
-                    paddingVertical: '5%'
-                  }}>
-                  <Image
-                    source={image.empryState}
-                    style={{
-                      width: normalize(126),
-                      height: normalize(120),
-                      marginBottom: normalize(32),
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: font.SarabunBold,
-                      fontSize: normalize(16),
-                      fontWeight: '300',
-                      color: colors.gray,
-                      bottom: 15
-                    }}>
-                    ติดตามบริการส่วนอื่นได้เร็วๆนี้
-                  </Text>
-                </View>
+                      style={{
+                        alignItems: 'center',
+                        paddingVertical: '5%',
+                      }}>
+                      <Image
+                        source={image.empryState}
+                        style={{
+                          width: normalize(126),
+                          height: normalize(120),
+                          marginBottom: normalize(32),
+                        }}
+                      />
+                      <Text
+                        style={{
+                          fontFamily: font.SarabunBold,
+                          fontSize: normalize(16),
+                          fontWeight: '300',
+                          color: colors.gray,
+                          bottom: 15,
+                        }}>
+                        ติดตามบริการส่วนอื่นได้เร็วๆนี้
+                      </Text>
+                    </View>
                   </View>
-                  
-
-                ) : null}
+                ) : (
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      paddingVertical: '25%',
+                    }}>
+                    <Image
+                      source={image.empryState}
+                      style={{
+                        width: normalize(126),
+                        height: normalize(120),
+                        marginBottom: normalize(32),
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: font.SarabunBold,
+                        fontSize: normalize(16),
+                        fontWeight: '300',
+                        color: colors.gray,
+                        bottom: 15,
+                      }}>
+                      ติดตามบริการส่วนอื่นได้เร็วๆนี้
+                    </Text>
+                  </View>
+                )}
                 {/* <View
                   style={{
                     flexDirection: 'row',
@@ -562,33 +595,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     </ScrollView>
                   </View>
                 ) : ( */}
-                <View
-                  style={{
-                    alignItems: 'center',
-                    paddingVertical: '25%'
-                  }}>
-                  <Image
-                    source={image.empryState}
-                    style={{
-                      width: normalize(126),
-                      height: normalize(120),
-                      marginBottom: normalize(32),
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: font.SarabunBold,
-                      fontSize: normalize(16),
-                      fontWeight: '300',
-                      color: colors.gray,
-                      bottom: 15
-                    }}>
-                    ติดตามบริการส่วนอื่นได้เร็วๆนี้
-                  </Text>
-                </View>
                 {/* )} */}
               </View>
-              
+
               {/* <View style={[styles.empty]}>
                 <Text
                   style={[
