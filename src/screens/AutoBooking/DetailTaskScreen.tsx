@@ -669,7 +669,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               </View>
             )}
 
-            {couponCodeError.length > 0 && (
+            {couponCodeError?.length > 0 && (
               <Text
                 style={{
                   color: colors.error,

@@ -111,7 +111,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       getProfileAuth();
       ProfileDatasource.getProfile(farmer_id!)
         .then(async res => {
-          setReload(!reload);
           await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
           dispatch({
             type: 'InitProfile',
@@ -119,6 +118,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
             plotItem: res.farmerPlot,
             status: res.status,
           });
+          setReload(!reload);
         })
         .catch(err => console.log(err));
     }
