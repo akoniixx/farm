@@ -466,7 +466,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     </View>
                   </View>
                 ) : null}
-                <View
+                {/* <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -560,7 +560,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       ติดตามบริการส่วนอื่นได้เร็วๆนี้
                     </Text>
                   </View>
-                )}
+                )} */}
               </View>
               {/* <View style={[styles.empty]}>
                 <Text
