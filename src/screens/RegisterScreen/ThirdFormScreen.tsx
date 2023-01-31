@@ -106,6 +106,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     term: '',
     fetchPredictions: false,
   });
+  const [loading, setLoading] = useState(false);
   const [showPredictions, setShowPredictions] = useState(false);
   const [predictions, setPredictions] = useState<PredictionType[]>([]);
   const GOOGLE_PACES_API_BASE_URL =
@@ -450,9 +451,11 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
               label="ถัดไป"
               color={colors.greenLight}
               onPress={() => {
+                setLoading(true);
                 mixpanel.track('Tab next third form register');
                 Register.uploadFarmerPlot(plotData)
                   .then(res => {
+                    setLoading(false);
                     navigation.navigate('FourthFormScreen', {
                       tele: telNo.tele,
                     });
@@ -462,6 +465,11 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
             />
           </View>
         </View>
+        <Spinner
+            visible={loading}
+            textContent={'Loading...'}
+            textStyle={{ color: '#FFF' }}
+          />
       </SafeAreaView>
       <ActionSheet ref={actionSheet}>
         <View
@@ -736,7 +744,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                         height: normalize(10),
                       },
                       android: {
-                        height: normalize(100),
+                        height: normalize(10),
                       },
                     }),
                   }}></View>

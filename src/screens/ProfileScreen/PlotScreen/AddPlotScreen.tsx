@@ -621,8 +621,8 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       disable={
                         !raiAmount ||
                         !plantName ||
-                        !lat ||
-                        !long ||
+                        !position.latitude ||
+                        !position.longitude ||
                         !search.term ||
                         !landmark ||
                         !selectPlot.subdistrictId

@@ -41,6 +41,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
     tel: route.params.tele,
   };
   const tele = route.params.tele;
+
   const windowWidth = Dimensions.get('window').width;
   const [image, setImage] = useState<any>(null);
   const [openCalendar, setOpenCalendar] = useState(false);
@@ -85,7 +86,8 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
             showBackBtn
             onPressBack={() => {
               mixpanel.track('Tab back first form register');
-              navigation.goBack()}}
+              navigation.goBack();
+            }}
           />
 
           <View style={styles.inner}>
@@ -102,9 +104,11 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                     alignItems: 'center',
                     marginTop: normalize(40),
                   }}>
-                  <TouchableOpacity onPress={() =>{
-                     mixpanel.track('Tab add profile image in register');
-                    setOpenModal(true)}}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      mixpanel.track('Tab add profile image in register');
+                      setOpenModal(true);
+                    }}>
                     <View
                       style={{
                         width: normalize(116),
@@ -345,11 +349,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                         startYear={
                           moment().subtract(76, 'years').get('year') + 543
                         }
-                        value={
-                          date
-                            ? date
-                            : moment().set({ date: 1 }).subtract(76, 'years')
-                        }
+                        value={date ? date : moment()}
                         onHandleChange={(d: string) => {
                           setDate(d);
                         }}

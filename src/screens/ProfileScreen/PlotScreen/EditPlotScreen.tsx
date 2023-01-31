@@ -220,10 +220,6 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
       );
     }
   };
-  const incrementCount = () => {
-    setCount(count + 1);
-    setPlotIndex(plotIndex + 1);
-  };
 
   const selectPlants = (value: any) => {
     setPlantName(value);
@@ -326,7 +322,6 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
     setplotDataUI(someArray);
     deTailPlot.current.hide();
   };
-
   return (
     <>
       <SafeAreaView style={stylesCentral.container}>
@@ -583,58 +578,58 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   <View style={{ height: normalize(10) }}></View>
                 </ScrollView>
                 <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <MainButton
-                      style={styles.button}
-                      label="ยกเลิก"
-                      color={colors.white}
-                      borderColor={colors.gray}
-                      fontColor={colors.fontBlack}
-                      onPress={() => {
-                        navigation.navigate('AllPlotScreen');
-                      }}
-                    />
-                    <MainButton
-                      style={styles.button}
-                      label="บันทึก"
-                      disable={
-                        !raiAmount ||
-                        !plantName ||
-                        !lat ||
-                        !long ||
-                        !search.term ||
-                        !landmark ||
-                        !selectPlot.subdistrictId
-                          ? true
-                          : false
-                      }
-                      color={colors.greenLight}
-                      onPress={() => {
-                        setLoading(true);
-                        PlotDatasource.updateFarmerPlot(
-                          plotName,
-                          raiAmount,
-                          landmark,
-                          plantName,
-                          position.latitude,
-                          position.longitude,
-                          search.term,
-                          selectPlot.subdistrictId,
-                        )
-                          .then(res => {
-                            setLoading(false);
-                            navigation.navigate('AllPlotScreen');
-                          })
-                          .catch(err => {
-                            setLoading(false);
-                            console.log(err);
-                          });
-                      }}
-                    />
-                  </View>
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <MainButton
+                    style={styles.button}
+                    label="ยกเลิก"
+                    color={colors.white}
+                    borderColor={colors.gray}
+                    fontColor={colors.fontBlack}
+                    onPress={() => {
+                      navigation.navigate('AllPlotScreen');
+                    }}
+                  />
+                  <MainButton
+                    style={styles.button}
+                    label="บันทึก"
+                    disable={
+                      !raiAmount ||
+                      !plantName ||
+                      !search.term ||
+                      !landmark ||
+                      !position.latitude ||
+                      !position.longitude ||
+                      !selectPlot.subdistrictId
+                        ? true
+                        : false
+                    }
+                    color={colors.greenLight}
+                    onPress={() => {
+                      setLoading(true);
+                      PlotDatasource.updateFarmerPlot(
+                        plotName,
+                        raiAmount,
+                        landmark,
+                        plantName,
+                        position.latitude,
+                        position.longitude,
+                        search.term,
+                        selectPlot.subdistrictId,
+                      )
+                        .then(res => {
+                          setLoading(false);
+                          navigation.navigate('AllPlotScreen');
+                        })
+                        .catch(err => {
+                          setLoading(false);
+                          console.log(err);
+                        });
+                    }}
+                  />
+                </View>
               </View>
               <Spinner
                 visible={loading}

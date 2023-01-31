@@ -31,84 +31,47 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
 
   return (
     <>
-      {fcmToken !== null ? (
-        <SafeAreaView style={stylesCentral.container}>
-          <CustomHeader
-            title="โปรโมชั่น"
-            showBackBtn
-            onPressBack={() => navigation.goBack()}
+      <SafeAreaView
+        style={[stylesCentral.container, { backgroundColor: '#F5FCF8' }]}>
+        <CustomHeader
+          title="โปรโมชั่น"
+          showBackBtn
+          onPressBack={() => navigation.goBack()}
+        />
+        <View style={styles.empty}>
+          <Image
+            source={image.empty_coupon}
+            style={{ width: 130, height: 122 }}
           />
-        </SafeAreaView>
-      ) : (
-        <SafeAreaView style={stylesCentral.container}>
-          <CustomHeader
-            title="โปรโมชั่น"
-            showBackBtn
-            onPressBack={() => navigation.goBack()}
-          />
-          <View>
-            <Image source={image.empty_farmer} style={[styles.empty]} />
-            <View style={{ top: '25%' }}>
-              <Text style={[styles.text]}>คุณเป็นสมาชิกหรือยัง?</Text>
-              <Text style={[styles.label]}>
-                {`เข้าร่วมเป็นสมาชิกกับเรา
-  เพื่อรับสิทธิประโยชน์มากมาย`}
-              </Text>
-            </View>
-            <View style={{ top: '30%' }}>
-              <MainButton
-                label="ลงทะเบียน/เข้าสู่ระบบ"
-                color={colors.greenLight}
-                style={styles.buttomBlank}
-                onPress={async () => {
-                  const value = await AsyncStorage.getItem('PDPA');
-                  if (value === 'read') {
-                    navigation.navigate('TelNumScreen');
-                  } else {
-                    navigation.navigate('ConditionScreen');
-                  }
-                }}
-              />
-            </View>
+          <View
+            style={{
+              alignItems: 'center',
+              alignContent: 'center',
+              paddingVertical: 10,
+            }}>
+            <Text style={styles.textEmpty}>ติดตามคูปองและสิทธิพิเศษมากมาย</Text>
+            <Text style={styles.textEmpty}>ได้ที่หน้าโปรโมชั่น เร็วๆนี้ </Text>
           </View>
-        </SafeAreaView>
-      )}
+        </View>
+      </SafeAreaView>
     </>
   );
 };
 export default PromotionScreen;
 
 const styles = StyleSheet.create({
-  buttomBlank: {
-    height: normalize(54),
-    width: normalize(343),
-    alignSelf: 'center',
-  },
-  text: {
-    fontFamily: font.AnuphanBold,
-    fontSize: normalize(22),
-    color: colors.fontBlack,
-    textAlign: 'center',
-    bottom: '10%',
-  },
-  label: {
-    fontFamily: font.SarabunLight,
-    fontSize: normalize(16),
-    color: colors.fontBlack,
-    textAlign: 'center',
-  },
   empty: {
-    width: normalize(240),
-    height: normalize(250),
+    alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
     display: 'flex',
-    top: '20%',
+    paddingVertical: '50%',
   },
   textEmpty: {
     fontFamily: font.SarabunLight,
     fontSize: normalize(18),
-    top: '16%',
+    paddingVertical: 2,
     color: colors.gray,
+    alignItems: 'center'
   },
 });

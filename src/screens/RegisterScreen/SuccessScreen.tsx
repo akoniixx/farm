@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { normalize } from '@rneui/themed';
 import { colors, font, image } from '../../assets';
@@ -9,10 +9,13 @@ import { Register } from '../../datasource/AuthDatasource';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { getFCMToken } from '../../firebase/notification';
 import { mixpanel } from '../../../mixpanel';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
 const SuccessRegister: React.FC<any> = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
+
   return (
     <View
       style={{
@@ -67,11 +70,13 @@ const SuccessRegister: React.FC<any> = ({ navigation }) => {
         label="เริ่มใช้งาน"
         color={colors.greenLight}
         onPress={async () => {
+          setLoading(true)
           mixpanel.track('Tab success register');
           const token_register = await AsyncStorage.getItem('token_register');
           await AsyncStorage.setItem('token', token_register!);
           Register.changeToPending()
             .then(async res => {
+              setLoading(false)
               const fcmtoken = await AsyncStorage.getItem('fcmtoken');
               FCMtokenDatasource.saveFCMtoken(fcmtoken!)
                 .then(res => {
@@ -84,6 +89,11 @@ const SuccessRegister: React.FC<any> = ({ navigation }) => {
             .catch(err => console.log(err));
         }}
       />
+        <Spinner
+            visible={loading}
+            textContent={'Loading...'}
+            textStyle={{ color: '#FFF' }}
+          />
     </View>
   );
 };
