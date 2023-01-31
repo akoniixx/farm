@@ -561,7 +561,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     <Text
                       style={{
                         fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(16),
+                        fontSize: normalize(20),
                         color: colors.gray,
                       }}>
                       {!plantName ? (
@@ -621,7 +621,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     <Text
                       style={{
                         fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(16),
+                        fontSize: normalize(20),
                         color: colors.gray,
                       }}>
                       {!selectPlot ? (
@@ -669,7 +669,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                       numberOfLines={1}
                       style={{
                         fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(16),
+                        fontSize: normalize(20),
                         color: colors.gray,
                       }}>
                       {!search.term ? (
@@ -1071,8 +1071,9 @@ const styles = StyleSheet.create({
   },
   head: {
     fontFamily: font.AnuphanBold,
-    fontSize: normalize(18),
+    fontSize: normalize(20),
     color: colors.fontGrey,
+    top: 5
   },
   first: {
     flex: 1,
@@ -1186,6 +1187,6 @@ const styles = StyleSheet.create({
     borderRadius: normalize(10),
     color: colors.fontBlack,
     fontFamily: font.SarabunLight,
-    fontSize: normalize(16),
+    fontSize: normalize(20),
   },
 });

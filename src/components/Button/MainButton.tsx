@@ -26,7 +26,7 @@ export const MainButton: React.FC<MainButtonProps> = props => {
       title={props.label}
       titleStyle={{
         color: props.fontColor ? props.fontColor : colors.white,
-        fontSize: props.fontSize ?? normalize(18),
+        fontSize: props.fontSize ?? normalize(20),
         fontFamily: props.fontFamily ?? font.AnuphanMedium,
       }}
       buttonStyle={[

@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: font.SarabunLight,
-    fontSize: normalize(16),
+    fontSize: normalize(18),
     color: colors.fontBlack,
   },
 });

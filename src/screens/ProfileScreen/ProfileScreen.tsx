@@ -103,7 +103,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
     }
   };
   return (
-    <SafeAreaView style={{ backgroundColor: colors.white }}>
+    <SafeAreaView style={{ backgroundColor: '#F7FFF0' }}>
       <View
         style={{
           maxHeight: '100%',
@@ -142,9 +142,9 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
               marginLeft: normalize(15),
               top: normalize(5),
             }}>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row'}}>
               <Text style={[styles.text]}>{profilestate.name} </Text>
-              <View style={{ alignSelf: 'center', paddingHorizontal: 20 }}>
+              <View style={{ alignSelf: 'center', paddingHorizontal: 20, }}>
                 <TouchableOpacity
                   onPress={() => navigation.navigate('EditProfileScreen')}>
                   <Image
@@ -284,7 +284,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
         </View>
         <View
           style={{
-            margin: 2,
+            paddingHorizontal: 2,
             backgroundColor: '#EBEEF0',
             height: 3,
           }}></View>
@@ -334,11 +334,12 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           ) : (
-            <View style={{ 
-              // top: 5 
-              flex: 1,
-              justifyContent: 'space-between',
-              backgroundColor: 'white',
+            <View
+              style={{
+                // top: 5
+                flex: 1,
+                justifyContent: 'space-between',
+                backgroundColor: 'white',
               }}>
               <ScrollView
                 style={{ paddingVertical: 10 }}
@@ -387,7 +388,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
         </View>
         <View
           style={{
-            margin: 2,
+            paddingHorizontal: 2,
             backgroundColor: '#EBEEF0',
             height: 3,
           }}></View>
@@ -397,6 +398,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
               backgroundColor: colors.white,
               width: '100%',
               justifyContent: 'space-around',
+              paddingHorizontal: 10,
             }}>
             <TouchableOpacity
               onPress={openGooglePlay}
@@ -493,17 +495,31 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 style={{ width: 25, height: 25 }}
               />
             </TouchableOpacity>
-            <View
-              style={{
-                ...Platform.select({
-                  ios: {
-                    paddingVertical: 20,
-                  },
-                  android: {
-                    paddingVertical: 40,
-                  },
-                }),
-              }}></View>
+            {profilestate.plotItem.length > 1 ? (
+              <View
+                style={{
+                  ...Platform.select({
+                    ios: {
+                      paddingVertical: 20,
+                    },
+                    android: {
+                      paddingVertical: 40,
+                    },
+                  }),
+                }}></View>
+            ) : (
+              <View
+                style={{
+                  ...Platform.select({
+                    ios: {
+                      paddingVertical: 50,
+                    },
+                    android: {
+                      paddingVertical: 40,
+                    },
+                  }),
+                }}></View>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -597,7 +613,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: font.AnuphanMedium,
-    fontSize: normalize(18),
+    fontWeight: '800',
+    fontSize: normalize(20),
     color: colors.fontBlack,
   },
   section1: {

@@ -216,7 +216,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                     <Text
                       style={{
                         fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(16),
+                        fontSize: normalize(20),
                         color: colors.gray,
                       }}>
                       <Text
@@ -263,7 +263,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                   <View
                     style={{
                       backgroundColor: !proVince.label
-                        ? colors.disable
+                        ? '#F2F3F4'
                         : colors.white,
                       borderColor: colors.disable,
                       borderWidth: 1,
@@ -278,7 +278,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                     <Text
                       style={{
                         fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(16),
+                        fontSize: normalize(20),
                         color: colors.gray,
                       }}>
                       <Text
@@ -324,8 +324,8 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                   <View
                     style={{
                       backgroundColor: !disTrict.label
-                        ? colors.disable
-                        : colors.white,
+                      ? '#F2F3F4'
+                      : colors.white,
                       borderColor: colors.disable,
                       borderWidth: 1,
                       padding: 10,
@@ -339,7 +339,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                     <Text
                       style={{
                         fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(16),
+                        fontSize: normalize(20),
                         color: colors.gray,
                       }}>
                       <Text
@@ -383,7 +383,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                   style={[
                     styles.input,
                     {
-                      backgroundColor: colors.disable,
+                      backgroundColor: '#F2F3F4',
                       marginBottom: normalize(bottompadding),
                     },
                   ]}
@@ -635,7 +635,7 @@ const styles = StyleSheet.create({
 
   head: {
     fontFamily: font.AnuphanBold,
-    fontSize: normalize(16),
+    fontSize: normalize(20),
     color: colors.fontBlack,
   },
   h1: {
@@ -666,7 +666,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: normalize(10),
     color: colors.fontBlack,
-    fontSize: normalize(16),
+    fontSize: normalize(20),
   },
   datePickerStyle: {
     width: 200,
