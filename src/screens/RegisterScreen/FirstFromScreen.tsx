@@ -85,7 +85,8 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
             showBackBtn
             onPressBack={() => {
               mixpanel.track('Tab back first form register');
-              navigation.goBack()}}
+              navigation.goBack();
+            }}
           />
 
           <View style={styles.inner}>
@@ -102,9 +103,11 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                     alignItems: 'center',
                     marginTop: normalize(40),
                   }}>
-                  <TouchableOpacity onPress={() =>{
-                     mixpanel.track('Tab add profile image in register');
-                    setOpenModal(true)}}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      mixpanel.track('Tab add profile image in register');
+                      setOpenModal(true);
+                    }}>
                     <View
                       style={{
                         width: normalize(116),

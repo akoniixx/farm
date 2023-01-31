@@ -12,6 +12,7 @@ import {
   Platform,
   Linking,
 } from 'react-native';
+
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -471,8 +472,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
+                    marginTop: 24,
                   }}>
-                  {taskSugUsed.length != 0 && (
+                  {/* {taskSugUsed.length != 0 && (
                     <Text
                       style={{
                         fontFamily: font.AnuphanBold,
@@ -501,9 +503,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         ดูทั้งหมด
                       </Text>
                     </TouchableOpacity>
-                  ) : null}
+                  ) : null} */}
                 </View>
-                {taskSugUsed.length != 0 ? (
+                {/* {taskSugUsed.length != 0 ? (
                   <View style={{ height: '110%' }}>
                     <ScrollView
                       horizontal={true}
@@ -534,34 +536,34 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         ))}
                     </ScrollView>
                   </View>
-                ) : (
-                  <View
+                ) : ( */}
+                <View
+                  style={{
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                  }}>
+                  <Image
+                    source={image.empryState}
                     style={{
-                      alignItems: 'center',
-                      width: '100%',
-                      height: '100%',
+                      width: normalize(126),
+                      height: normalize(120),
+                      top: 120,
+                      marginBottom: normalize(32),
+                    }}
+                  />
+                  <Text
+                    style={{
+                      top: 120,
+                      fontFamily: font.SarabunBold,
+                      fontSize: normalize(16),
+                      fontWeight: '300',
+                      color: colors.gray,
                     }}>
-                    <Image
-                      source={image.empryState}
-                      style={{
-                        width: normalize(126),
-                        height: normalize(120),
-                        top: 120,
-                        marginBottom: normalize(32),
-                      }}
-                    />
-                    <Text
-                      style={{
-                        top: 120,
-                        fontFamily: font.SarabunBold,
-                        fontSize: normalize(16),
-                        fontWeight: '300',
-                        color: colors.gray,
-                      }}>
-                      ติดตามบริการส่วนอื่นได้เร็วๆนี้
-                    </Text>
-                  </View>
-                )}
+                    ติดตามบริการส่วนอื่นได้เร็วๆนี้
+                  </Text>
+                </View>
+                {/* )} */}
               </View>
               {/* <View style={[styles.empty]}>
                 <Text

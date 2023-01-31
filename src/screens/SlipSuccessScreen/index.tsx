@@ -9,8 +9,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
-import Container from '../../components/Container/Container';
-import Header from '../../components/Header/Header';
+
 import Content from '../../components/Content/Content';
 import SectionBody from './SectionBody';
 import colors from '../../assets/colors/colors';

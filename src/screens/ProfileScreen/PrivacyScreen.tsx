@@ -41,7 +41,7 @@ const PrivacyScreen: React.FC<any> = ({ navigation }) => {
                     styles.head,
                     { fontWeight: '200', top: normalize(40) },
                   ]}>
-                 {condition}
+                  {condition}
                 </Text>
               </View>
               <View style={{ height: normalize(70) }}></View>

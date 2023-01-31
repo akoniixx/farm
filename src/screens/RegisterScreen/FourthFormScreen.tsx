@@ -31,9 +31,10 @@ const FourthFormScreen: React.FC<any> = ({ route, navigation }) => {
       <CustomHeader
         title="ลงทะเบียนเกษตรกร"
         showBackBtn
-        onPressBack={() =>{
+        onPressBack={() => {
           mixpanel.track('Tab back fourth form register');
-          navigation.goBack()}}
+          navigation.goBack();
+        }}
       />
       <View style={styles.inner}>
         <View style={styles.container}>

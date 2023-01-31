@@ -24,7 +24,6 @@ import { initProfileState, profileReducer } from '../../../hook/profilefield';
 import { stylesCentral } from '../../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
-import PlotsItem from '../../../components/Plots/Plots';
 import { useDebounceValue } from '../../../hook/useDebounceValue';
 import { plant } from '../../../definitions/plants';
 import PredictionType from '../../RegisterScreen/ThirdFormScreen';
@@ -61,8 +60,8 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const [position, setPosition] = useState({
     latitude: LAT_LNG_BANGKOK.lat,
     longitude: LAT_LNG_BANGKOK.lng,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.042,
+    latitudeDelta: 0.004757,
+    longitudeDelta: 0.006866,
   });
   const [location, setLocation] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>();
@@ -232,8 +231,8 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
           setPosition({
             latitude: pos.coords.latitude,
             longitude: pos.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitudeDelta: 0.004757,
+            longitudeDelta: 0.006866,
           });
         },
         error => {
@@ -555,29 +554,44 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                         minZoomLevel={14}
                         maxZoomLevel={18}
                         style={styles.map}
-                        onPress={e => {
+                        zoomEnabled={true}
+                        scrollEnabled={true}
+                        showsScale={true}
+                        onPress={async e => {
                           setPosition({
                             ...position,
                             latitude: e.nativeEvent.coordinate.latitude,
                             longitude: e.nativeEvent.coordinate.longitude,
                           });
+                          const res =
+                            await QueryLocation.getLocationNameByLatLong({
+                              lat: e.nativeEvent.coordinate.latitude,
+                              long: e.nativeEvent.coordinate.longitude,
+                            });
+                          setSearch({
+                            term: res.results[0].formatted_address,
+                            fetchPredictions: true,
+                          });
                         }}
                         provider={PROVIDER_GOOGLE}
                         region={{
-                          latitude: position.latitude,
-                          latitudeDelta: 0.0922,
-                          longitudeDelta: 0.042,
-                          longitude: position.longitude,
+                          ...position,
                         }}
                         showsUserLocation={true}
                         showsMyLocationButton={true}>
                         <Marker
-                          image={image.mark}
                           coordinate={{
                             latitude: position?.latitude,
                             longitude: position?.longitude,
-                          }}
-                        />
+                          }}>
+                          <Image
+                            source={image.mark}
+                            style={{
+                              width: normalize(40),
+                              height: normalize(48),
+                            }}
+                          />
+                        </Marker>
                       </MapView.Animated>
                       {/* <View style={styles.markerFixed}>
                       <Image style={styles.marker} source={image.mark} />
@@ -601,83 +615,83 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   <View style={{ height: normalize(10) }}></View>
                 </ScrollView>
                 <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <MainButton
-                      style={styles.button}
-                      label="ยกเลิก"
-                      color={colors.white}
-                      borderColor={colors.gray}
-                      fontColor={colors.fontBlack}
-                      onPress={() => {
-                        navigation.navigate('AllPlotScreen');
-                      }}
-                    />
-                    <MainButton
-                      style={styles.button}
-                      label="บันทึก"
-                      disable={
-                        !raiAmount ||
-                        !plantName ||
-                        !lat ||
-                        !long ||
-                        !search.term ||
-                        !landmark ||
-                        !selectPlot.subdistrictId
-                          ? true
-                          : false
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <MainButton
+                    style={styles.button}
+                    label="ยกเลิก"
+                    color={colors.white}
+                    borderColor={colors.gray}
+                    fontColor={colors.fontBlack}
+                    onPress={() => {
+                      navigation.navigate('AllPlotScreen');
+                    }}
+                  />
+                  <MainButton
+                    style={styles.button}
+                    label="บันทึก"
+                    disable={
+                      !raiAmount ||
+                      !plantName ||
+                      !lat ||
+                      !long ||
+                      !search.term ||
+                      !landmark ||
+                      !selectPlot.subdistrictId
+                        ? true
+                        : false
+                    }
+                    color={colors.greenLight}
+                    onPress={() => {
+                      setLoading(true);
+                      if (!plotName) {
+                        const plotNameNull =
+                          'แปลงที่ ' +
+                          `${profilestate.plotItem.length + 1} ${plantName}`;
+                        PlotDatasource.addFarmerPlot(
+                          plotNameNull,
+                          raiAmount,
+                          landmark,
+                          plantName,
+                          position.latitude,
+                          position.longitude,
+                          search.term,
+                          selectPlot.subdistrictId,
+                        )
+                          .then(res => {
+                            setLoading(false);
+                            navigation.navigate('AllPlotScreen');
+                          })
+                          .catch(err => {
+                            setLoading(false);
+                            console.log(err);
+                          });
+                      } else {
+                        PlotDatasource.addFarmerPlot(
+                          plotName,
+                          raiAmount,
+                          landmark,
+                          plantName,
+                          lat,
+                          long,
+                          search.term,
+                          selectPlot.subdistrictId,
+                        )
+                          .then(res => {
+                            console.log(res);
+                            setLoading(false);
+                            navigation.navigate('AllPlotScreen');
+                          })
+                          .catch(err => {
+                            setLoading(false);
+                            console.log(err);
+                          });
                       }
-                      color={colors.greenLight}
-                      onPress={() => {
-                        setLoading(true);
-                        if (!plotName) {
-                          const plotNameNull =
-                            'แปลงที่ ' +
-                            `${profilestate.plotItem.length + 1} ${plantName}`;
-                          PlotDatasource.addFarmerPlot(
-                            plotNameNull,
-                            raiAmount,
-                            landmark,
-                            plantName,
-                            position.latitude,
-                            position.longitude,
-                            search.term,
-                            selectPlot.subdistrictId,
-                          )
-                            .then(res => {
-                              setLoading(false);
-                              navigation.navigate('AllPlotScreen');
-                            })
-                            .catch(err => {
-                              setLoading(false);
-                              console.log(err);
-                            });
-                        } else {
-                          PlotDatasource.addFarmerPlot(
-                            plotName,
-                            raiAmount,
-                            landmark,
-                            plantName,
-                            lat,
-                            long,
-                            search.term,
-                            selectPlot.subdistrictId,
-                          )
-                            .then(res => {
-                              console.log(res);
-                              setLoading(false);
-                              navigation.navigate('AllPlotScreen');
-                            })
-                            .catch(err => {
-                              setLoading(false);
-                              console.log(err);
-                            });
-                        }
-                      }}
-                    />
-                  </View>
+                    }}
+                  />
+                </View>
               </View>
               <Spinner
                 visible={loading}
@@ -923,11 +937,11 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                               id={v}
                               onPress={() => {
                                 selectPlotArea(v);
-                                setPosition(prev => ({
-                                  ...prev,
-                                  latitude: parseFloat(v.lat),
-                                  longitude: parseFloat(v.long),
-                                }));
+                                // setPosition(prev => ({
+                                //   ...prev,
+                                //   latitude: parseFloat(v.lat),
+                                //   longitude: parseFloat(v.long),
+                                // }));
                               }}
                             />
                           </TouchableOpacity>

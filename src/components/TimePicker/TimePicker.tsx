@@ -144,7 +144,8 @@ const TimeBlock = ({
                   {
                     fontSize: fontSize || 20,
                     color: textColor || '#000000',
-                    opacity: currentIndex === valIndex ? 1 : 0.3,
+                    opacity: currentIndex === valIndex ? 1 : 0.25,
+
                     marginBottom:
                       valIndex === digits.length - 1
                         ? height / 2 - dHeight / 2
@@ -152,6 +153,7 @@ const TimeBlock = ({
                     marginTop: valIndex === 0 ? height / 2 - dHeight / 2 : 0,
                     lineHeight: dHeight,
                     height: dHeight,
+
                     fontFamily: font.AnuphanMedium,
                   },
                 ]}>

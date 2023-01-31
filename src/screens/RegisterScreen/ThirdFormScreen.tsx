@@ -74,8 +74,8 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   const [position, setPosition] = useState({
     latitude: route.params.latitude,
     longitude: route.params.longitude,
-    latitudeDelta: 0,
-    longitudeDelta: 0,
+    latitudeDelta: 0.004757,
+    longitudeDelta: 0.006866,
   });
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const telNo = route.params;
@@ -139,7 +139,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
         '',
         [
           { text: 'Go to Settings', onPress: openSetting },
-          { text: "Don't Use Location", onPress: () => { } },
+          { text: "Don't Use Location", onPress: () => {} },
         ],
       );
     }
@@ -192,10 +192,9 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
       Geolocation.getCurrentPosition(
         pos => {
           setPosition({
+            ...position,
             latitude: pos.coords.latitude,
             longitude: pos.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
           });
         },
         error => {
@@ -298,11 +297,10 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
         setlat(lat);
         setlong(lng);
         setPosition({
+          ...position,
           latitude: lat,
-          longitude:lng,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        })
+          longitude: lng,
+        });
         setShowPredictions(false);
         setSearch({ term: description, fetchPredictions: false });
         mapSheet.current.hide();
@@ -411,10 +409,10 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                       plotName={
                         !item.plotName
                           ? 'แปลงที่' +
-                          ' ' +
-                          `${index + 1}` +
-                          ' ' +
-                          item.plantName
+                            ' ' +
+                            `${index + 1}` +
+                            ' ' +
+                            item.plantName
                           : item.plotName
                       }
                       raiAmount={item.raiAmount}
@@ -469,7 +467,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
             backgroundColor: colors.white,
             paddingVertical: normalize(10),
             paddingHorizontal: normalize(15),
-            paddingBottom:'15%',
+            paddingBottom: '15%',
             width: windowWidth,
             height: windowHeight,
             borderRadius: normalize(20),
@@ -492,7 +490,8 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
           </View>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <View style={{ justifyContent: 'space-around', paddingVertical: 10}}>
+            <View
+              style={{ justifyContent: 'space-around', paddingVertical: 10 }}>
               <ScrollView>
                 <Text style={[styles.head, { marginTop: normalize(15) }]}>
                   ชื่อแปลงเกษตร
@@ -506,10 +505,11 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   editable={true}
                   placeholder={
                     !plotName
-                      ? `แปลงที่ ${plotDataUI.length + 1} ${plantName !== null && plantName !== undefined
-                        ? plantName
-                        : ''
-                      }`
+                      ? `แปลงที่ ${plotDataUI.length + 1} ${
+                          plantName !== null && plantName !== undefined
+                            ? plantName
+                            : ''
+                        }`
                       : plotName
                   }
                   placeholderTextColor={colors.fontGrey}
@@ -690,20 +690,24 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                       minZoomLevel={14}
                       maxZoomLevel={18}
                       style={styles.map}
-                      onPress={e => {
+                      onPress={async e => {
                         setPosition({
                           ...position,
                           latitude: e.nativeEvent.coordinate.latitude,
                           longitude: e.nativeEvent.coordinate.longitude,
                         });
+                        const res =
+                          await QueryLocation.getLocationNameByLatLong({
+                            lat: e.nativeEvent.coordinate.latitude,
+                            long: e.nativeEvent.coordinate.longitude,
+                          });
+                        setSearch({
+                          term: res.results[0].formatted_address,
+                          fetchPredictions: true,
+                        });
                       }}
                       provider={PROVIDER_GOOGLE}
-                      region={{
-                        latitude: position.latitude,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.042,
-                        longitude: position.longitude,
-                      }}
+                      region={position}
                       showsUserLocation={true}
                       showsMyLocationButton={true}>
                       <Marker
@@ -742,43 +746,43 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   }}></View>
               </ScrollView>
               <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    paddingVertical: 20
-                  }}>
-                  <MainButton
-                    style={styles.button}
-                    label="ยกเลิก"
-                    color={colors.white}
-                    borderColor={colors.gray}
-                    fontColor={colors.fontBlack}
-                    onPress={() => {
-                      actionSheet.current.hide();
-                    }}
-                  />
-                  <MainButton
-                    style={styles.button}
-                    label="บันทึก"
-                    disable={
-                      !raiAmount ||
-                        !plantName ||
-                        !lat ||
-                        !long ||
-                        !search.term ||
-                        !landmark ||
-                        !selectPlot.subdistrictId
-                        ? true
-                        : false
-                    }
-                    color={colors.greenLight}
-                    onPress={() => {
-                      mixpanel.track('Tab save plot form register');
-                      addPlots();
-                      incrementCount();
-                    }}
-                  />
-                </View>
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingVertical: 20,
+                }}>
+                <MainButton
+                  style={styles.button}
+                  label="ยกเลิก"
+                  color={colors.white}
+                  borderColor={colors.gray}
+                  fontColor={colors.fontBlack}
+                  onPress={() => {
+                    actionSheet.current.hide();
+                  }}
+                />
+                <MainButton
+                  style={styles.button}
+                  label="บันทึก"
+                  disable={
+                    !raiAmount ||
+                    !plantName ||
+                    !lat ||
+                    !long ||
+                    !search.term ||
+                    !landmark ||
+                    !selectPlot.subdistrictId
+                      ? true
+                      : false
+                  }
+                  color={colors.greenLight}
+                  onPress={() => {
+                    mixpanel.track('Tab save plot form register');
+                    addPlots();
+                    incrementCount();
+                  }}
+                />
+              </View>
             </View>
           </KeyboardAvoidingView>
         </View>
@@ -836,7 +840,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
               paddingVertical: normalize(30),
               paddingHorizontal: normalize(20),
               width: windowWidth,
-              height: windowHeight*0.9,
+              height: windowHeight * 0.9,
             }}>
             <View
               style={{
@@ -928,11 +932,11 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                         id={v}
                         onPress={() => {
                           selectPlotArea(v);
-                          setPosition(prev => ({
-                            ...prev,
-                            latitude: parseFloat(v.lat),
-                            longitude: parseFloat(v.long),
-                          }));
+                          // setPosition(prev => ({
+                          //   ...prev,
+                          //   latitude: parseFloat(v.lat),
+                          //   longitude: parseFloat(v.long),
+                          // }));
                         }}
                       />
                     </TouchableOpacity>

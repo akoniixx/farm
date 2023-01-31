@@ -1,5 +1,6 @@
 import moment from 'moment';
 import * as React from 'react';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { PayloadCal, PlotDatasource } from '../datasource/PlotDatasource';
 export interface TaskDataType {
   farmerId: string;
@@ -59,6 +60,10 @@ interface State {
   taskData: TaskDataType;
   locationPrice: LocationPriceType;
   calPrice: CalPriceType;
+  plotDisable: {
+    plotId: string;
+    isHaveDroner: boolean;
+  }[];
 }
 interface Context {
   autoBookingContext: {
@@ -79,6 +84,10 @@ export const initialState: {
   taskData: TaskDataType;
   locationPrice: LocationPriceType;
   calPrice: CalPriceType;
+  plotDisable: {
+    plotId: string;
+    isHaveDroner: boolean;
+  }[];
 } = {
   taskData: {
     farmerId: '',
@@ -127,6 +136,7 @@ export const initialState: {
     priceBefore: 0,
     priceCouponDiscount: 0,
   },
+  plotDisable: [],
 };
 const AutoBookingContext = React.createContext<Context>({
   autoBookingContext: {
@@ -153,6 +163,13 @@ export const AutoBookingProvider = ({
   const [calPrice, setCalPrice] = React.useState<CalPriceType>(
     initialState.calPrice,
   );
+  const [plotDisable, setPlotDisable] = React.useState<
+    {
+      plotId: string;
+      isHaveDroner: boolean;
+    }[]
+  >([]);
+  const [loading, setLoading] = React.useState(false);
 
   const { getLocationPrice, searchDroner, getCalculatePrice } =
     React.useMemo(() => {
@@ -175,6 +192,8 @@ export const AutoBookingProvider = ({
         farmerPlotId: string;
       }) => {
         try {
+          setLoading(true);
+
           const res = await PlotDatasource.searchDroner({
             farmerId: farmerId,
             farmerPlotId: farmerPlotId,
@@ -182,25 +201,57 @@ export const AutoBookingProvider = ({
               'YYYY-MM-DD',
             ),
           });
-          const newArray: any = [];
-          for (let i = 0; i < (res.length > 5 ? 5 : res.length); i++) {
-            newArray.push({
-              dronerId: res[i].droner_id,
-              status: 'WAIT_RECEIVE',
-              dronerDetail: [
-                JSON.stringify({
-                  ...res[i],
-                  isChecked: true,
-                }),
-              ],
+
+          if (res && res.length > 0) {
+            const newDronerFilter = res.filter((el: any) => {
+              return el.is_open_receive_task && el.distance < 60;
             });
+            const newArray: any = [];
+            for (
+              let i = 0;
+              i < (newDronerFilter.length > 5 ? 5 : newDronerFilter.length);
+              i++
+            ) {
+              newArray.push({
+                dronerId: newDronerFilter[i].droner_id,
+                status: 'WAIT_RECEIVE',
+                dronerDetail: [
+                  JSON.stringify({
+                    ...newDronerFilter[i],
+                    isChecked: true,
+                  }),
+                ],
+              });
+            }
+            const isAlreadyInDisable = plotDisable.findIndex((el: any) => {
+              return el.plotId === farmerPlotId;
+            });
+
+            if (newArray.length <= 0 && isAlreadyInDisable === -1) {
+              setPlotDisable(prev => [
+                ...prev,
+                {
+                  plotId: farmerPlotId,
+                  isHaveDroner: false,
+                },
+              ]);
+              return;
+            }
+            if (isAlreadyInDisable !== -1 && newArray.length === 0) {
+              const newData = [...plotDisable];
+              newData[isAlreadyInDisable].isHaveDroner = false;
+              return;
+            }
+
+            setTaskData(prev => ({
+              ...prev,
+              taskDronerTemp: newArray,
+            }));
           }
-          setTaskData(prev => ({
-            ...prev,
-            taskDronerTemp: newArray,
-          }));
         } catch (e) {
           console.log(e);
+        } finally {
+          setLoading(false);
         }
       };
       const getCalculatePrice = async (payload: PayloadCal) => {
@@ -214,7 +265,7 @@ export const AutoBookingProvider = ({
         }
       };
       return { getLocationPrice, searchDroner, getCalculatePrice };
-    }, [taskData.dateAppointment]);
+    }, [taskData.dateAppointment, plotDisable]);
   return (
     <AutoBookingContext.Provider
       value={{
@@ -228,9 +279,15 @@ export const AutoBookingProvider = ({
           taskData,
           locationPrice,
           calPrice,
+          plotDisable,
         },
       }}>
       {children}
+      <Spinner
+        visible={loading}
+        textContent={'กำลังค้นหา...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </AutoBookingContext.Provider>
   );
 };

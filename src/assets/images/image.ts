@@ -32,5 +32,5 @@ export default {
   successfullottie: require('./sucessfullottie.json'),
   waitinglottie: require('./waitingdroner.json'),
   emptyNoti: require('./emptyNoti.png'),
-  empryState: require('./empty_state.png')
+  empryState: require('./empty_state.png'),
 };

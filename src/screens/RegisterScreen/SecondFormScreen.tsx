@@ -150,7 +150,8 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
             showBackBtn
             onPressBack={() => {
               mixpanel.track('Tab back second form register');
-              navigation.goBack()}}
+              navigation.goBack();
+            }}
           />
           <View style={styles.inner}>
             <View style={styles.containerTopCard}>
