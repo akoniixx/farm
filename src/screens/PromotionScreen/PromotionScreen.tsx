@@ -38,6 +38,9 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
           showBackBtn
           onPressBack={() => navigation.goBack()}
         />
+         <View style={styles.inner}>
+        <View style={styles.container}>
+          </View></View>
         <View style={styles.empty}>
           <Image
             source={image.empty_coupon}
@@ -60,6 +63,14 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
 export default PromotionScreen;
 
 const styles = StyleSheet.create({
+  inner: {
+    paddingHorizontal: normalize(17),
+    flex: 1,
+    justifyContent: 'space-around',
+  },
+  container: {
+flex:1
+  },
   empty: {
     alignItems: 'center',
     justifyContent: 'center',
