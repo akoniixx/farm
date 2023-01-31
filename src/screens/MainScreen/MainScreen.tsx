@@ -134,6 +134,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     getTaskId();
     getData();
     getProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
 
   useEffect(() => {
@@ -471,18 +472,18 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
-                    {taskSugUsed.length != 0 && (
-                  <Text
-                    style={{
-                      fontFamily: font.AnuphanBold,
-                      fontSize: normalize(20),
-                      color: colors.fontGrey,
-                      paddingHorizontal: 20,
-                      paddingVertical: 10,
-                    }}>
-                    จ้างนักบินที่เคยจ้าง
-                  </Text>
-                    )}
+                  {taskSugUsed.length != 0 && (
+                    <Text
+                      style={{
+                        fontFamily: font.AnuphanBold,
+                        fontSize: normalize(20),
+                        color: colors.fontGrey,
+                        paddingHorizontal: 20,
+                        paddingVertical: 10,
+                      }}>
+                      จ้างนักบินที่เคยจ้าง
+                    </Text>
+                  )}
                   {taskSugUsed.length != 0 ? (
                     <TouchableOpacity
                       onPress={() => {
