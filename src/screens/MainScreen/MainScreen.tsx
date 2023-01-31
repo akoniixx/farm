@@ -468,24 +468,23 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     </View>
                   </View>
                 ) : null}
-                <View
+                {/* <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    marginTop: 24,
                   }}>
-                  {/* {taskSugUsed.length != 0 && (
-                    <Text
-                      style={{
-                        fontFamily: font.AnuphanBold,
-                        fontSize: normalize(20),
-                        color: colors.fontGrey,
-                        paddingHorizontal: 20,
-                        paddingVertical: 10,
-                      }}>
-                      จ้างนักบินที่เคยจ้าง
-                    </Text>
-                  )}
+                    {taskSugUsed.length != 0 && (
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanBold,
+                      fontSize: normalize(20),
+                      color: colors.fontGrey,
+                      paddingHorizontal: 20,
+                      paddingVertical: 10,
+                    }}>
+                    จ้างนักบินที่เคยจ้าง
+                  </Text>
+                    )}
                   {taskSugUsed.length != 0 ? (
                     <TouchableOpacity
                       onPress={() => {
@@ -503,9 +502,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         ดูทั้งหมด
                       </Text>
                     </TouchableOpacity>
-                  ) : null} */}
+                  ) : null}
                 </View>
-                {/* {taskSugUsed.length != 0 ? (
+                {taskSugUsed.length != 0 ? (
                   <View style={{ height: '110%' }}>
                     <ScrollView
                       horizontal={true}
@@ -536,34 +535,34 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         ))}
                     </ScrollView>
                   </View>
-                ) : ( */}
-                <View
-                  style={{
-                    alignItems: 'center',
-                    width: '100%',
-                    height: '100%',
-                  }}>
-                  <Image
-                    source={image.empryState}
+                ) : (
+                  <View
                     style={{
-                      width: normalize(126),
-                      height: normalize(120),
-                      top: 120,
-                      marginBottom: normalize(32),
-                    }}
-                  />
-                  <Text
-                    style={{
-                      top: 120,
-                      fontFamily: font.SarabunBold,
-                      fontSize: normalize(16),
-                      fontWeight: '300',
-                      color: colors.gray,
+                      alignItems: 'center',
+                      width: '100%',
+                      height: '100%',
                     }}>
-                    ติดตามบริการส่วนอื่นได้เร็วๆนี้
-                  </Text>
-                </View>
-                {/* )} */}
+                    <Image
+                      source={image.empryState}
+                      style={{
+                        width: normalize(126),
+                        height: normalize(120),
+                        top: 120,
+                        marginBottom: normalize(32),
+                      }}
+                    />
+                    <Text
+                      style={{
+                        top: 120,
+                        fontFamily: font.SarabunBold,
+                        fontSize: normalize(16),
+                        fontWeight: '300',
+                        color: colors.gray,
+                      }}>
+                      ติดตามบริการส่วนอื่นได้เร็วๆนี้
+                    </Text>
+                  </View>
+                )} */}
               </View>
               {/* <View style={[styles.empty]}>
                 <Text
@@ -692,6 +691,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           />
         </View>
       </ScrollView>
+
       {showFinding && (
         <TouchableOpacity
           style={styles.footer}
