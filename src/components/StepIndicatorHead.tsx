@@ -1,6 +1,6 @@
 import Icon from 'react-native-vector-icons/AntDesign';
 import React from 'react';
-import { Text, TouchableOpacity, View, Image } from 'react-native';
+import { Text, TouchableOpacity, View, Image, Dimensions } from 'react-native';
 import StepIndicator from 'react-native-step-indicator-v2';
 import { normalize } from '../functions/Normalize';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -19,8 +19,8 @@ const StepIndicatorHead: React.FC<Prop> = ({
   label,
 }) => {
   const customStyles = {
-    stepIndicatorSize: 25,
-    currentStepIndicatorSize: 30,
+    stepIndicatorSize: 20,
+    currentStepIndicatorSize: 20,
     separatorStrokeWidth: 2,
     currentStepStrokeWidth: 3,
     stepStrokeCurrentColor: '#FFE26E',
@@ -48,40 +48,56 @@ const StepIndicatorHead: React.FC<Prop> = ({
         edges={['top', 'left', 'right']}>
         <View
           style={{
-            flex: 1,
+            paddingTop: 16,
             flexDirection: 'row',
             alignItems: 'center',
+            flex: 1,
+            minHeight: 50,
           }}>
-          <TouchableOpacity
-            style={{ paddingVertical: 14, paddingHorizontal: normalize(10) }}
-            onPress={onPressBack}>
-            <Icon name="left" size={30} color="black" />
-          </TouchableOpacity>
-        </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              position: 'absolute',
+              top: 8,
+            }}>
+            <TouchableOpacity
+              style={{ paddingVertical: 14, paddingHorizontal: normalize(10) }}
+              onPress={onPressBack}>
+              <Icon name="left" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
 
-        <View
-          style={{
-            flex: 5,
-            justifyContent: 'center',
-            paddingHorizontal: normalize(50),
-          }}>
-          <StepIndicator
-            customStyles={customStyles}
-            currentPosition={curentPosition}
-            stepCount={3}
-            renderStepIndicator={({ stepStatus }) => {
-              if (stepStatus === 'finished') {
-                return (
-                  <View>
-                    <Image
-                      source={icons.checkboxWhite}
-                      style={{ width: 14, height: 16 }}
-                    />
-                  </View>
-                );
-              }
-            }}
-          />
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'relative',
+            }}>
+            <View
+              style={{
+                width: '40%',
+              }}>
+              <StepIndicator
+                customStyles={customStyles}
+                currentPosition={curentPosition}
+                stepCount={3}
+                renderStepIndicator={({ stepStatus }) => {
+                  if (stepStatus === 'finished') {
+                    return (
+                      <View>
+                        <Image
+                          source={icons.checkboxWhite}
+                          style={{ width: 12, height: 14 }}
+                        />
+                      </View>
+                    );
+                  }
+                }}
+              />
+            </View>
+          </View>
         </View>
       </SafeAreaView>
 
@@ -105,7 +121,7 @@ const StepIndicatorHead: React.FC<Prop> = ({
           style={{
             fontFamily: font.AnuphanBold,
             fontSize: normalize(26),
-            color: colors.greenLight,
+            color: colors.primary60,
           }}>
           {label}
         </Text>

@@ -176,8 +176,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               <Image
                 source={icons.callCenter}
                 style={{
-                  width: 24,
-                  height: 24,
+                  width: 28,
+                  height: 28,
                 }}
               />
             </TouchableOpacity>
@@ -238,6 +238,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               style={{
                 fontSize: 20,
                 fontFamily: fonts.AnuphanMedium,
+                color: colors.fontBlack,
               }}>
               วันและเวลา
             </Text>
@@ -292,6 +293,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               style={{
                 fontSize: 20,
                 fontFamily: fonts.AnuphanMedium,
+                color: colors.fontBlack,
               }}>
               แปลงเกษตร
             </Text>
@@ -354,6 +356,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             <Text
               style={{
                 fontSize: 20,
+                color: colors.fontBlack,
+
                 fontFamily: fonts.AnuphanMedium,
               }}>
               เป้าหมายการพ่น
@@ -510,6 +514,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               style={{
                 fontSize: 20,
                 fontFamily: fonts.AnuphanMedium,
+                color: colors.fontBlack,
               }}>
               วิธีการชำระเงิน
             </Text>
@@ -559,6 +564,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             <Text
               style={{
                 fontSize: 18,
+                color: colors.fontBlack,
+
                 fontFamily: fonts.SarabunMedium,
               }}>
               คูปองส่วนลด
@@ -719,7 +726,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         </View>
         <View
           style={{
-            height: 60,
+            height: 40,
           }}
         />
       </ScrollView>
@@ -840,6 +847,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           <Text
             style={{
               fontSize: 18,
+              color: colors.fontBlack,
+
               fontFamily: fonts.AnuphanMedium,
             }}>
             รวมค่าบริการ

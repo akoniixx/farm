@@ -238,6 +238,13 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
                   {'เลือกช่วงเวลา'}
                 </Text>
               )}
+              <Image
+                source={icons.arrowDown}
+                style={{
+                  width: 24,
+                  height: 24,
+                }}
+              />
             </TouchableOpacity>
             <Text style={[styles.label, { marginTop: normalize(20) }]}>
               ยาที่ต้องใช้
@@ -363,10 +370,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#A7AEB5',
     borderRadius: 6,
-    paddingLeft: 16,
+    paddingHorizontal: 16,
     height: 52,
     fontSize: 20,
     fontFamily: fonts.SarabunMedium,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 });
