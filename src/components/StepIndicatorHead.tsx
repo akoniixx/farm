@@ -60,6 +60,7 @@ const StepIndicatorHead: React.FC<Prop> = ({
               alignItems: 'center',
               position: 'absolute',
               top: 8,
+              zIndex: 1,
             }}>
             <TouchableOpacity
               style={{ paddingVertical: 14, paddingHorizontal: normalize(10) }}
