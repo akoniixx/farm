@@ -19,6 +19,7 @@ import { normalize } from '@rneui/themed';
 import { TaskDataTypeSlip } from '../../components/SlipCard/SlipCard';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
 import Lottie from 'lottie-react-native';
+import * as RootNavigation from '../../navigations/RootNavigation';
 
 export default function SlipSuccessScreen({
   navigation,
@@ -41,6 +42,7 @@ export default function SlipSuccessScreen({
     targetSpray: [],
     totalPrice: '',
     countResend: null,
+    droner : null
   });
 
   useEffect(() => {
@@ -98,7 +100,12 @@ export default function SlipSuccessScreen({
               paddingBottom: normalize(40),
             }}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('MainScreen')}
+              onPress={() => RootNavigation.navigate('Main', {
+                screen: 'MyTaskDetailScreenNoti',
+                params: {
+                  task: taskData,
+                },
+              })}
               style={{
                 height: 52,
                 justifyContent: 'center',

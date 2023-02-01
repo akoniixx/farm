@@ -6,13 +6,28 @@ import {
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import fonts from '../../assets/fonts';
 import { colors, image } from '../../assets';
 import SlipCard, { TaskDataTypeSlip } from '../../components/SlipCard/SlipCard';
 import icons from '../../assets/icons/icons';
+import { DronerDatasource } from '../../datasource/DronerDatasource';
+import { DronerCard } from '../../components/Mytask/DronerCard';
 
 export default function SectionBody(props: TaskDataTypeSlip) {
+  const [profilePath,setProfilePath] = useState<string>("")
+  useEffect(()=>{
+    DronerDatasource.getDronerData(props.droner.dronerId).then(
+      res => {
+        res.file.map((item : any) => {
+          if(item.category === "PROFILE_IMAGE"){
+            DronerDatasource.getDronerProfileImage(item.path).then(
+              res => setProfilePath(res)
+            )
+          }
+        })
+      })
+  },[])
   return (
     <View style={styled.container}>
       <View>
@@ -36,75 +51,11 @@ export default function SectionBody(props: TaskDataTypeSlip) {
           คุณสามารถติดต่อพูดคุย กับนักบินโดรนได้เลย
         </Text>
         <View style={styled.shadow}>
-          <View style={styled.dronerCard}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={image.bg_droner}
-                style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 24,
-                }}
-              />
-              <View
-                style={{
-                  marginLeft: 16,
-                }}>
-                <Text
-                  style={{
-                    color: colors.fontBlack,
-                    fontFamily: fonts.SarabunMedium,
-                    fontSize: 18,
-                  }}>
-                  นายโดรน เกษตร
-                </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={icons.star}
-                    style={{
-                      width: 16,
-                      height: 16,
-                    }}
-                  />
-                  <Text
-                    style={{
-                      marginLeft: 4,
-                      color: colors.gray,
-                    }}>
-                    5.0 คะแนน (10)
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <TouchableOpacity
-              onPress={() => {
-                Linking.openURL('tel:0812345678');
-              }}
-              style={{
-                backgroundColor: '#E8F6FF',
-                borderRadius: 20,
-                width: 40,
-                height: 40,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Image
-                source={icons.calling}
-                style={{
-                  width: 24,
-                  height: 24,
-                }}
-              />
-            </TouchableOpacity>
-          </View>
+          <DronerCard 
+            name={props.droner.firstname + ' ' + props.droner.lastname}
+            profile={profilePath}
+            telnumber={props.droner.telephoneNo}
+          />
         </View>
         <SlipCard {...props} />
       </View>

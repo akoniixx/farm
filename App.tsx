@@ -20,7 +20,7 @@ import './src/components/SheetList';
 import { AutoBookingProvider } from './src/contexts/AutoBookingContext';
 import { AuthProvider } from './src/contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import messaging from '@react-native-firebase/messaging';
+import messaging, { firebase } from '@react-native-firebase/messaging';
 import { mixpanel } from './mixpanel';
 const App = () => {
   useEffect(() => {
@@ -28,7 +28,9 @@ const App = () => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
     if (Platform.OS === 'ios') {
-      firebaseInitialize();
+      if(!firebase.apps.length){
+        firebaseInitialize();
+      }
     }
     requestUserPermission();
     getToken();
