@@ -6,10 +6,13 @@ import {
   StyleSheet,
   Image,
   Dimensions,
+  Linking,
 } from 'react-native';
+import { mixpanel } from '../../../mixpanel';
 import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
+import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { normalize } from '../../functions/Normalize';
 import InputWithSuffix from '../InputText/InputWithSuffix';
 import Radio from '../Radio/Radio';
@@ -23,6 +26,7 @@ interface Prop {
   onPress: () => void;
   selected: boolean;
   status: string;
+  isHaveDroner: boolean;
 }
 
 const PlotSelect: React.FC<Prop> = ({
@@ -33,12 +37,13 @@ const PlotSelect: React.FC<Prop> = ({
   selected,
   onPress,
   status,
+  isHaveDroner,
 }) => {
   const {
     state: { taskData },
     autoBookingContext: { setTaskData },
   } = useAutoBookingContext();
-  const isPending = status !== 'ACTIVE';
+  const isPending = status !== 'ACTIVE' || !isHaveDroner;
   const radioList = [
     {
       title: 'ทั้งหมด',
@@ -81,9 +86,8 @@ const PlotSelect: React.FC<Prop> = ({
       }}>
       <View
         style={[
-          styles({ disable: isPending }).card,
-          selected && styles({ disable: isPending }).selected,
-          { justifyContent: 'center' },
+          styles({ disable: isPending, selected }).card,
+          // selected && styles({ disable: isPending, selected }).selected,
         ]}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text
@@ -122,8 +126,8 @@ const PlotSelect: React.FC<Prop> = ({
           />
           <Text
             style={{
-              fontFamily: fonts.SarabunMedium,
-              fontSize: normalize(16),
+              fontFamily: fonts.SarabunLight,
+              fontSize: normalize(18),
               color: isPending ? colors.grey40 : colors.fontGrey,
               marginRight: '40%',
               bottom: 2,
@@ -146,8 +150,8 @@ const PlotSelect: React.FC<Prop> = ({
           />
           <Text
             style={{
-              fontFamily: fonts.SarabunMedium,
-              fontSize: normalize(16),
+              fontFamily: fonts.SarabunLight,
+              fontSize: normalize(18),
               color: isPending ? colors.grey40 : colors.fontGrey,
               marginRight: '10%',
               bottom: 2,
@@ -173,8 +177,8 @@ const PlotSelect: React.FC<Prop> = ({
           <Text
             numberOfLines={1}
             style={{
-              fontFamily: fonts.SarabunMedium,
-              fontSize: normalize(16),
+              fontFamily: fonts.SarabunLight,
+              fontSize: normalize(18),
               color: isPending
                 ? colors.grey40
                 : selected
@@ -187,6 +191,76 @@ const PlotSelect: React.FC<Prop> = ({
             {locationName}
           </Text>
         </View>
+        {!isHaveDroner && (
+          <View
+            style={{
+              backgroundColor: '#FFF2F2',
+              padding: 8,
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 6,
+
+              borderWidth: 1,
+              borderColor: '#EF4E4E',
+              borderStyle: 'dashed',
+              marginTop: 8,
+            }}>
+            <Text
+              style={{
+                fontFamily: fonts.SarabunMedium,
+                fontSize: 18,
+                lineHeight: 28,
+              }}>
+              พื้นที่แปลงเกษตรไม่อยู่ในระยะทาง
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.SarabunMedium,
+                fontSize: 18,
+                lineHeight: 26,
+              }}>
+              การให้บริการของนักบินโดรน
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                mixpanel.track('Tab callcenter from select plot screen');
+                Linking.openURL(`tel:${callcenterNumber}`);
+              }}
+              style={{
+                backgroundColor: colors.white,
+                borderRadius: 8,
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 42,
+                marginTop: 6,
+                width: '100%',
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  style={{
+                    width: 20,
+                    height: 20,
+                    marginRight: 8,
+                  }}
+                  source={icons.callingDarkblue}
+                />
+                <Text
+                  style={{
+                    fontFamily: font.AnuphanMedium,
+                    color: colors.blueMedium,
+                    fontSize: 18,
+                  }}>
+                  ติดต่อเจ้าหน้าที่
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
         {status === 'PENDING' && (
           <View
             style={{
@@ -205,9 +279,33 @@ const PlotSelect: React.FC<Prop> = ({
               style={{
                 fontFamily: fonts.AnuphanMedium,
                 color: colors.orange,
-                fontSize: 16,
+                fontSize: 18,
               }}>
               รอการตรวจสอบ
+            </Text>
+          </View>
+        )}
+        {status === 'INACTIVE' && (
+          <View
+            style={{
+              backgroundColor: '#FFF0F0',
+              paddingVertical: 4,
+              paddingHorizontal: 8,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 18,
+              alignSelf: 'flex-start',
+              borderWidth: 1,
+              borderColor: colors.error,
+              marginTop: 8,
+            }}>
+            <Text
+              style={{
+                fontFamily: fonts.AnuphanMedium,
+                color: colors.error,
+                fontSize: 18,
+              }}>
+              ปิดการใช้งาน
             </Text>
           </View>
         )}
@@ -218,9 +316,9 @@ const PlotSelect: React.FC<Prop> = ({
             />
             <View
               style={{
-                marginTop: 16,
+                marginTop: 18,
                 backgroundColor: '#FFFFEB',
-                minHeight: 160,
+                minHeight: 180,
                 borderRadius: 10,
                 padding: 8,
               }}>
@@ -290,7 +388,13 @@ const PlotSelect: React.FC<Prop> = ({
 
 export default PlotSelect;
 
-const styles = ({ disable = false }: { disable?: boolean }) =>
+const styles = ({
+  disable = false,
+  selected = false,
+}: {
+  disable?: boolean;
+  selected: boolean;
+}) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -299,10 +403,14 @@ const styles = ({ disable = false }: { disable?: boolean }) =>
     },
     card: {
       width: Dimensions.get('window').width - normalize(20),
-      minHeight: normalize(130),
-      backgroundColor: disable ? colors.greyDivider : 'white',
-      borderWidth: 1,
-      borderColor: '#C0C5CA',
+      height: 'auto',
+      backgroundColor: disable
+        ? colors.greyDivider
+        : selected
+        ? 'rgba(46, 196, 109, 0.05)'
+        : 'white',
+      borderWidth: selected ? 2 : 1,
+      borderColor: selected ? '#2EC46D' : '#C0C5CA',
       margin: normalize(10),
       borderRadius: normalize(10),
       padding: normalize(10),
@@ -310,7 +418,6 @@ const styles = ({ disable = false }: { disable?: boolean }) =>
     selected: {
       borderColor: '#2EC46D',
       backgroundColor: 'rgba(46, 196, 109, 0.05)',
-      borderWidth: 2,
     },
     title: {
       fontWeight: 'bold',

@@ -94,7 +94,7 @@ export default function SlipWaitingScreen({
     }
   };
   useEffect(() => {
-    NotiFication()
+    NotiFication();
     const getTaskByTaskId = async (taskId: string) => {
       try {
         const res = await TaskDatasource.getTaskByTaskId(taskId);
@@ -130,18 +130,17 @@ export default function SlipWaitingScreen({
     }
   }, [taskId, navigation]);
 
-  const NotiFication = ()=>{
+  const NotiFication = () => {
     messaging().onMessage(async message => {
       const type = message.data?.type;
-      if(type === "RECEIVE_TASK_SUCCESS"){
-        navigation.navigate('SlipSuccessScreen', 
-          {
-            taskId: message.data?.taskId!
-          }
-        );
+      if (type === 'RECEIVE_TASK_SUCCESS') {
+        await AsyncStorage.removeItem('taskId');
+        navigation.navigate('SlipSuccessScreen', {
+          taskId: message.data?.taskId!,
+        });
       }
-    })
-  }
+    });
+  };
 
   return (
     <View

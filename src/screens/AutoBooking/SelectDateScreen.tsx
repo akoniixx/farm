@@ -14,12 +14,10 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { mixpanel } from '../../../mixpanel';
 import { colors, font, icons } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
 import DatePickerCustom from '../../components/Calendar/Calendar';
-import CustomHeader from '../../components/CustomHeader';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
 import TimePicker from '../../components/TimePicker/TimePicker';
 import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
@@ -260,7 +258,6 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 styles.h1,
                 {
                   textAlign: 'center',
-                  bottom: '5%',
                   color: colors.fontBlack,
                 },
               ]}>
@@ -271,7 +268,10 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 textAlign: 'center',
                 color: colors.greenLight,
                 fontFamily: font.SarabunLight,
-                fontSize: normalize(16),
+                fontSize: normalize(18),
+                marginTop: normalize(4),
+
+                lineHeight: normalize(30),
               }}>
               เลื่อนขึ้นลงเพื่อเลือกวันฉีดพ่น
             </Text>
@@ -297,7 +297,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 fontColor={colors.fontBlack}
                 borderColor={colors.fontGrey}
                 color={colors.white}
-                width={150}
+                width={Dimensions.get('window').width * 0.45 - 32}
                 onPress={() => {
                   mixpanel.track('Tab cancel calendar');
                   setOpenCalendar(false);
@@ -307,7 +307,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 label="บันทึก"
                 fontColor={colors.white}
                 color={colors.greenLight}
-                width={150}
+                width={Dimensions.get('window').width * 0.45 - 32}
                 onPress={() => {
                   mixpanel.track('Tab submit calendar');
                   setOpenCalendar(false);
@@ -339,20 +339,21 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 styles.h1,
                 {
                   textAlign: 'center',
-                  bottom: '5%',
                   color: colors.fontBlack,
                 },
               ]}>
-              วันที่ฉีดพ่น
+              เวลาที่ฉีดพ่น
             </Text>
             <Text
               style={{
                 textAlign: 'center',
                 color: colors.greenLight,
                 fontFamily: font.SarabunLight,
-                fontSize: normalize(16),
+                fontSize: normalize(18),
+                marginTop: normalize(4),
+                lineHeight: normalize(30),
               }}>
-              เลื่อนขึ้นลงเพื่อเลือกวันฉีดพ่น
+              เลื่อนขึ้นลงเพื่อเลือกเวลาฉีดพ่น
             </Text>
             <View
               style={{
@@ -374,14 +375,14 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
             <View
               style={{
                 flexDirection: 'row',
-                justifyContent: 'space-around',
+                justifyContent: 'space-between',
               }}>
               <MainButton
                 label="ยกเลิก"
                 fontColor={colors.fontBlack}
                 borderColor={colors.fontGrey}
                 color={colors.white}
-                width={150}
+                width={Dimensions.get('window').width * 0.45 - 32}
                 onPress={() => {
                   mixpanel.track('Tab cancel time picker');
                   setopenTimePicker(false);
@@ -391,7 +392,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 label="บันทึก"
                 fontColor={colors.white}
                 color={colors.greenLight}
-                width={150}
+                width={Dimensions.get('window').width * 0.45 - 32}
                 onPress={() => {
                   mixpanel.track('Tab submit time picker');
                   setopenTimePicker(false);

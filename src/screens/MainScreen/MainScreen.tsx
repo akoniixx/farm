@@ -12,6 +12,7 @@ import {
   Platform,
   Linking,
 } from 'react-native';
+
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -134,6 +135,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     getTaskId();
     getData();
     getProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
 
   useEffect(() => {
@@ -725,6 +727,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           />
         </View>
       </ScrollView>
+
       {showFinding && (
         <TouchableOpacity
           style={styles.footer}

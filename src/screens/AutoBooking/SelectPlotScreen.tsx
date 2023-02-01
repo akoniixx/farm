@@ -28,10 +28,11 @@ import { initProfileState, profileReducer } from '../../hook/profilefield';
 
 const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
   const {
+    state: { plotDisable },
     autoBookingContext: { setTaskData, getLocationPrice, searchDroner },
   } = useAutoBookingContext();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
-  const [plotList, setPlotList] = useState<any>();
+  const [plotList, setPlotList] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
 
@@ -60,7 +61,13 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     PlotDatasource.getPlotlist(farmer_id!)
       .then(res => {
-        setPlotList(res);
+        const newData = res.data.map((el: any) => {
+          const find =
+            plotDisable.length > 0 &&
+            plotDisable.find((item: any) => item.plotId === el.id);
+          return { ...el, isHaveDroner: find ? find.isHaveDroner : true };
+        });
+        setPlotList(newData);
         setTimeout(() => setLoading(false), 200);
       })
       .catch(err => console.log(err));
@@ -68,7 +75,32 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
   useEffect(() => {
     LogBox.ignoreAllLogs();
     getPlotlist();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (plotDisable.length > 0) {
+      const matchData = (plotList || []).map((el: any) => {
+        const find = plotDisable.find((item: any) => item.plotId === el.id);
+
+        return {
+          ...el,
+          isHaveDroner: find ? find.isHaveDroner : true,
+        };
+      });
+
+      setPlotList(matchData);
+      const currentSelected = matchData.find(
+        (el: any) => el.id === selectedCard,
+      );
+      if (currentSelected && currentSelected.isHaveDroner === false) {
+        setSelectedCard(null);
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plotDisable]);
+
   return (
     <>
       <StepIndicatorHead
@@ -79,119 +111,43 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
         }}
         label={'เลือกแปลงของคุณ'}
       />
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        {isHaveWaitingApprove && (
-          <View style={styles.containerWarning}>
-            <View
-              style={{
-                backgroundColor: '#FFF9F2',
-                padding: 16,
-                borderRadius: 12,
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                }}>
-                <View
-                  style={{
-                    width: 30,
-                  }}>
-                  <Image
-                    source={icons.warningIcon}
-                    style={{
-                      width: 24,
-                      height: 24,
-                    }}
-                  />
-                </View>
-                <Text
-                  style={{
-                    fontFamily: font.SarabunLight,
-                    fontSize: 18,
-                    paddingRight: 16,
-                  }}>
-                  หากแปลงของคุณมีสถานะ “รอการตรวจ สอบ”
-                  จะส่งผลต่อขั้นตอนจ้างนักบินโดรน กรุณาติดต่อเจ้าหน้าที่
-                  เพื่อยืนยันสถานะ
-                </Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  mixpanel.track('Tab callcenter from select plot screen');
-                  Linking.openURL(`tel:${callcenterNumber}`);
-                }}
-                style={{
-                  backgroundColor: colors.white,
-                  borderRadius: 8,
-                  borderWidth: 1,
-                  borderColor: colors.blueBorder,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: 50,
-                  marginTop: 16,
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    style={{
-                      width: 20,
-                      height: 20,
-                      marginRight: 8,
-                    }}
-                    source={icons.calling}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: font.AnuphanMedium,
-                      color: colors.blueBorder,
-                      fontSize: 20,
-                    }}>
-                    โทรหาเจ้าหน้าที่
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
 
-        {plotList?.data?.length === 0 ? (
-          <View style={{ backgroundColor: 'white' }}>
-            <Image
-              source={image.empty_plot}
-              style={{
-                width: normalize(138),
-                height: normalize(120),
-                alignSelf: 'center',
-                top: '5%',
-              }}
-            />
-            <Text
-              style={{
-                fontFamily: font.SarabunLight,
-                fontSize: normalize(16),
-                color: colors.gray,
-                textAlign: 'center',
-                paddingVertical: normalize(22),
-              }}>{`คุณไม่มีแปลงเกษตร
+      {plotList.length === 0 ? (
+        <View style={{ backgroundColor: 'white' }}>
+          <Image
+            source={image.empty_plot}
+            style={{
+              width: normalize(138),
+              height: normalize(120),
+              alignSelf: 'center',
+              top: '5%',
+            }}
+          />
+          <Text
+            style={{
+              fontFamily: font.SarabunLight,
+              fontSize: normalize(16),
+              color: colors.gray,
+              textAlign: 'center',
+              paddingVertical: normalize(22),
+            }}>{`คุณไม่มีแปลงเกษตร
  กดเพิ่มแปลงเกษตรได้เลย!`}</Text>
 
-            <View style={[styles.buttonAdd]}>
-              <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
-            </View>
+          <View style={[styles.buttonAdd]}>
+            <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
           </View>
-        ) : (
-          <SafeAreaView
-            edges={['left', 'right']}
-            style={{
-              flex: 1,
-              justifyContent: 'space-between',
-              backgroundColor: 'white',
-            }}>
+        </View>
+      ) : (
+        <SafeAreaView
+          edges={['left', 'right']}
+          style={{
+            flex: 1,
+            justifyContent: 'space-between',
+            backgroundColor: 'white',
+          }}>
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{ paddingVertical: 10 }}
@@ -199,11 +155,90 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                 flexGrow: 1,
               }}
               showsHorizontalScrollIndicator={false}>
+              {isHaveWaitingApprove && (
+                <View style={styles.containerWarning}>
+                  <View
+                    style={{
+                      backgroundColor: '#FFF9F2',
+                      padding: 16,
+                      borderRadius: 12,
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                      }}>
+                      <View
+                        style={{
+                          width: 30,
+                        }}>
+                        <Image
+                          source={icons.warningIcon}
+                          style={{
+                            width: 24,
+                            height: 24,
+                          }}
+                        />
+                      </View>
+                      <Text
+                        style={{
+                          fontFamily: font.SarabunLight,
+                          fontSize: 18,
+                          paddingRight: 16,
+                        }}>
+                        หากแปลงของคุณมีสถานะ “รอการตรวจ สอบ”
+                        จะส่งผลต่อขั้นตอนจ้างนักบินโดรน กรุณาติดต่อเจ้าหน้าที่
+                        เพื่อยืนยันสถานะ
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        mixpanel.track(
+                          'Tab callcenter from select plot screen',
+                        );
+                        Linking.openURL(`tel:${callcenterNumber}`);
+                      }}
+                      style={{
+                        backgroundColor: colors.white,
+                        borderRadius: 8,
+                        borderWidth: 1,
+                        borderColor: colors.blueBorder,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: 50,
+                        marginTop: 16,
+                      }}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                        }}>
+                        <Image
+                          style={{
+                            width: 20,
+                            height: 20,
+                            marginRight: 8,
+                          }}
+                          source={icons.callingDarkblue}
+                        />
+                        <Text
+                          style={{
+                            fontFamily: font.AnuphanMedium,
+                            color: colors.blueDark,
+                            fontSize: 20,
+                          }}>
+                          โทรหาเจ้าหน้าที่
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
               <FlatList
-                data={plotList?.data}
+                data={plotList}
                 renderItem={({ item, index }) => (
                   <PlotSelect
                     id={item.id}
+                    isHaveDroner={item.isHaveDroner}
                     status={item.status}
                     plotName={item.plotName}
                     plantName={item.plantName}
@@ -211,7 +246,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                     raiAmount={item.raiAmount}
                     onPress={async () => {
                       mixpanel.track('Tab select plot from select plot screen');
-                      handleCardPress(index);
+                      handleCardPress(item.id);
                       setTaskData(prev => ({
                         ...prev,
                         cropName: item.plantName,
@@ -239,7 +274,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                         farmerPlotId: item.id,
                       });
                     }}
-                    selected={index === selectedCard}
+                    selected={item.id === selectedCard}
                   />
                 )}
                 keyExtractor={item => item.id}
@@ -259,9 +294,9 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                 />
               </View>
             </ScrollView>
-          </SafeAreaView>
-        )}
-      </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+      )}
 
       <Spinner
         visible={loading}

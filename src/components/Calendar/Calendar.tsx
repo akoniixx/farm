@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -57,7 +57,7 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
         const genDate = [...Array(moment(value).daysInMonth())].map(
           (_, index) => index + 1,
         );
-        const isCurrentMonth = moment(value).isSame(new Date(), 'month');
+        const isCurrentMonth = moment(value).isSame(startDate, 'month');
         if (isCurrentMonth) {
           const isDayBefore = moment(value).isBefore(startDate, 'day');
           const newDateList = genDate.filter(
@@ -72,7 +72,22 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
 
         return genDate;
       };
-      const _months = [...Array(12)].map((_, i) => i + 1);
+
+      const _months = [...Array(12)]
+        .map((_, i) => i + 1)
+        .filter((_, i) => {
+          if (
+            moment(value).isSame(
+              moment().set({
+                year: startYear && startYear - 543,
+              }),
+              'year',
+            )
+          ) {
+            return i >= startDate?.getMonth();
+          }
+          return true;
+        });
       const _years = [...Array(end - start + 1)].map(
         (_, index) => start + index,
       );
@@ -90,52 +105,64 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
   const pickerWidth: number | string = width || '100%';
 
   const unexpectedDate: Date = new Date(years[0], 0, 0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const date = new Date(value || unexpectedDate);
 
   // const date = new Date()
+  const startMonth = moment(value).isSame(
+    moment().set({
+      year: startYear && startYear - 543,
+    }),
+    'year',
+  )
+    ? startDate?.getMonth()
+    : 0;
+  const getOrder = useMemo(() => {
+    const getOrder = () => {
+      return (format || 'dd-mm-yyyy').split('-').map((type, index: any) => {
+        switch (type) {
+          case 'dd':
+            return {
+              name: 'day',
+              digits: days || [],
+              value: date.getDay(),
+              currentIndex: days.findIndex(el => el === date.getDate()),
+            };
+          case 'mm':
+            return {
+              name: 'month',
+              digits: months || [],
+              value: date.getMonth() + 1,
 
-  const getOrder = () => {
-    return (format || 'dd-mm-yyyy').split('-').map((type, index: any) => {
-      switch (type) {
-        case 'dd':
-          return {
-            name: 'day',
-            digits: days,
-            value: date.getDay(),
-            currentIndex: days.findIndex(el => el === date.getDate()),
-          };
-        case 'mm':
-          return {
-            name: 'month',
-            digits: months,
-            value: date.getMonth() + 1,
+              currentIndex: months.findIndex(el => el === date.getMonth() + 1),
+            };
+          case 'yyyy':
+            return {
+              name: 'year',
+              digits: years || [],
+              value: date.getFullYear(),
+              currentIndex: years.findIndex(
+                el => el === date.getFullYear() + 543,
+              ),
+            };
+          default:
+            console.warn(
+              `Invalid date picker format prop: found "${type}" in ${format}. Please read documentation!`,
+            );
+            return {
+              name: ['day', 'month', 'year'][index],
+              digits: [days, months, years][index],
+              value: [date.getDate(), date.getMonth() + 1, date.getFullYear()][
+                index
+              ],
+              currentIndex: 0,
+            };
+        }
+      });
+    };
+    return getOrder;
+  }, [days, months, years, date, format]);
 
-            currentIndex: months.findIndex(el => el === date.getMonth() + 1),
-          };
-        case 'yyyy':
-          return {
-            name: 'year',
-            digits: years,
-            value: date.getFullYear(),
-            currentIndex: years.findIndex(
-              el => el === date.getFullYear() + 543,
-            ),
-          };
-        default:
-          console.warn(
-            `Invalid date picker format prop: found "${type}" in ${format}. Please read documentation!`,
-          );
-          return {
-            name: ['day', 'month', 'year'][index],
-            digits: [days, months, years][index],
-            value: [date.getDate(), date.getMonth() + 1, date.getFullYear()][
-              index
-            ],
-            currentIndex: 0,
-          };
-      }
-    });
-  };
   const isHaveData = days.length > 0 && months.length > 0 && years.length > 0;
   return (
     <View style={[styles.picker, { height: pickerHeight, width: pickerWidth }]}>
@@ -145,6 +172,7 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
             return (
               <DateBlock
                 index={2}
+                startMonth={startMonth}
                 digits={el.digits}
                 value={el.value}
                 onHandleChange={changeHandle}
@@ -167,6 +195,7 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
                 index={index}
                 digits={el.digits}
                 value={el.value}
+                startMonth={startMonth}
                 onHandleChange={changeHandle}
                 height={pickerHeight}
                 fontSize={fontSize}
@@ -187,9 +216,9 @@ const DatePickerCustom: React.FC<DatePickerProps> = ({
 
 const DateBlock: React.FC<DateBlockProps> = ({
   index,
-  value,
-  digits,
+  digits = [],
   type,
+  startMonth = 0,
   onHandleChange,
   height,
   fontSize,
@@ -198,7 +227,7 @@ const DateBlock: React.FC<DateBlockProps> = ({
   markWidth,
   currentIndex,
 }) => {
-  const dHeight: number = Math.round(height / 4);
+  const dHeight: number = Math.round(height / 3.4);
 
   const mHeight: number = markHeight || Math.min(dHeight, 65);
   const mWidth: number | string = markWidth || '70%';
@@ -218,7 +247,9 @@ const DateBlock: React.FC<DateBlockProps> = ({
     const digit = Math.round(nativeEvent.contentOffset.y / dHeight + digits[0]);
     onHandleChange(type, digit);
   };
-
+  if (digits.length === 0) {
+    return null;
+  }
   return (
     <View style={styles.block}>
       <View
@@ -252,6 +283,8 @@ const DateBlock: React.FC<DateBlockProps> = ({
                   {
                     fontSize: fontSize || 20,
                     color: textColor || '#000000',
+                    opacity: currentIndex === valIndex ? 1 : 0.25,
+
                     marginBottom:
                       valIndex === digits.length - 1
                         ? height / 2 - dHeight / 2
@@ -262,7 +295,11 @@ const DateBlock: React.FC<DateBlockProps> = ({
                     fontFamily: font.AnuphanMedium,
                   },
                 ]}>
-                {index !== 1 ? value : _monthName[valIndex].value}
+                {type !== 'month'
+                  ? value
+                  : _monthName.slice(startMonth, 12)[valIndex]
+                  ? _monthName.slice(startMonth, 12)[valIndex].value
+                  : ''}
               </Text>
             </TouchableOpacity>
           );
@@ -327,6 +364,7 @@ export interface DateBlockProps {
   value: any;
   type: string;
   height: number;
+  startMonth?: number;
   fontSize?: number;
   textColor?: string;
   markColor?: string;

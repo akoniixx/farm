@@ -62,9 +62,6 @@ export class PlotDatasource {
       farmerId,
       farmerPlotId,
       dateAppointment,
-      status: 'สะดวก',
-      distanceMin: 0,
-      distanceMax: 200,
     };
     return httpClient
       .post(BASE_URL + '/tasks/task/search-droner', payload)
