@@ -34,7 +34,7 @@ const FarmerRegisterFailed: React.FC<ModalEntity> = ({
               ModalStyle.modalHeader,
               { paddingVertical: normalize(20) },
             ]}>
-            {text}
+            {'ท่านยืนยันตัวตนไม่สำเร็จ โปรดติดต่อเจ้าหน้าที่ โทร. 02-233-9000'}
           </Text>
           <Image source={image.registerFailed} style={ModalStyle.image} />
           <MainButton

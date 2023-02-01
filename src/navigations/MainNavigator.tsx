@@ -57,7 +57,7 @@ export type MainStackParamList = {
   };
   AddPlotScreen: undefined;
   EditPlotScreen: undefined;
-  DeleteSuccess : undefined
+  DeleteSuccess: undefined;
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;

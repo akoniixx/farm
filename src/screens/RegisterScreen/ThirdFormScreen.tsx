@@ -106,6 +106,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     term: '',
     fetchPredictions: false,
   });
+  const [loading, setLoading] = useState(false);
   const [showPredictions, setShowPredictions] = useState(false);
   const [predictions, setPredictions] = useState<PredictionType[]>([]);
   const GOOGLE_PACES_API_BASE_URL =
@@ -139,7 +140,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
         '',
         [
           { text: 'Go to Settings', onPress: openSetting },
-          { text: "Don't Use Location", onPress: () => { } },
+          { text: "Don't Use Location", onPress: () => {} },
         ],
       );
     }
@@ -299,10 +300,10 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
         setlong(lng);
         setPosition({
           latitude: lat,
-          longitude:lng,
+          longitude: lng,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
-        })
+        });
         setShowPredictions(false);
         setSearch({ term: description, fetchPredictions: false });
         mapSheet.current.hide();
@@ -411,10 +412,10 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                       plotName={
                         !item.plotName
                           ? 'แปลงที่' +
-                          ' ' +
-                          `${index + 1}` +
-                          ' ' +
-                          item.plantName
+                            ' ' +
+                            `${index + 1}` +
+                            ' ' +
+                            item.plantName
                           : item.plotName
                       }
                       raiAmount={item.raiAmount}
@@ -450,9 +451,11 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
               label="ถัดไป"
               color={colors.greenLight}
               onPress={() => {
+                setLoading(true);
                 mixpanel.track('Tab next third form register');
                 Register.uploadFarmerPlot(plotData)
                   .then(res => {
+                    setLoading(false);
                     navigation.navigate('FourthFormScreen', {
                       tele: telNo.tele,
                     });
@@ -462,6 +465,11 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
             />
           </View>
         </View>
+        <Spinner
+          visible={loading}
+          textContent={'Loading...'}
+          textStyle={{ color: '#FFF' }}
+        />
       </SafeAreaView>
       <ActionSheet ref={actionSheet}>
         <View
@@ -469,7 +477,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
             backgroundColor: colors.white,
             paddingVertical: normalize(10),
             paddingHorizontal: normalize(15),
-            paddingBottom:'15%',
+            paddingBottom: '15%',
             width: windowWidth,
             height: windowHeight,
             borderRadius: normalize(20),
@@ -492,7 +500,8 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
           </View>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <View style={{ justifyContent: 'space-around', paddingVertical: 10}}>
+            <View
+              style={{ justifyContent: 'space-around', paddingVertical: 10 }}>
               <ScrollView>
                 <Text style={[styles.head, { marginTop: normalize(15) }]}>
                   ชื่อแปลงเกษตร
@@ -506,10 +515,11 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   editable={true}
                   placeholder={
                     !plotName
-                      ? `แปลงที่ ${plotDataUI.length + 1} ${plantName !== null && plantName !== undefined
-                        ? plantName
-                        : ''
-                      }`
+                      ? `แปลงที่ ${plotDataUI.length + 1} ${
+                          plantName !== null && plantName !== undefined
+                            ? plantName
+                            : ''
+                        }`
                       : plotName
                   }
                   placeholderTextColor={colors.fontGrey}
@@ -551,7 +561,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     <Text
                       style={{
                         fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(16),
+                        fontSize: normalize(20),
                         color: colors.gray,
                       }}>
                       {!plantName ? (
@@ -611,7 +621,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     <Text
                       style={{
                         fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(16),
+                        fontSize: normalize(20),
                         color: colors.gray,
                       }}>
                       {!selectPlot ? (
@@ -659,7 +669,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                       numberOfLines={1}
                       style={{
                         fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(16),
+                        fontSize: normalize(20),
                         color: colors.gray,
                       }}>
                       {!search.term ? (
@@ -736,49 +746,49 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                         height: normalize(10),
                       },
                       android: {
-                        height: normalize(100),
+                        height: normalize(10),
                       },
                     }),
                   }}></View>
               </ScrollView>
               <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    paddingVertical: 20
-                  }}>
-                  <MainButton
-                    style={styles.button}
-                    label="ยกเลิก"
-                    color={colors.white}
-                    borderColor={colors.gray}
-                    fontColor={colors.fontBlack}
-                    onPress={() => {
-                      actionSheet.current.hide();
-                    }}
-                  />
-                  <MainButton
-                    style={styles.button}
-                    label="บันทึก"
-                    disable={
-                      !raiAmount ||
-                        !plantName ||
-                        !lat ||
-                        !long ||
-                        !search.term ||
-                        !landmark ||
-                        !selectPlot.subdistrictId
-                        ? true
-                        : false
-                    }
-                    color={colors.greenLight}
-                    onPress={() => {
-                      mixpanel.track('Tab save plot form register');
-                      addPlots();
-                      incrementCount();
-                    }}
-                  />
-                </View>
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingVertical: 20,
+                }}>
+                <MainButton
+                  style={styles.button}
+                  label="ยกเลิก"
+                  color={colors.white}
+                  borderColor={colors.gray}
+                  fontColor={colors.fontBlack}
+                  onPress={() => {
+                    actionSheet.current.hide();
+                  }}
+                />
+                <MainButton
+                  style={styles.button}
+                  label="บันทึก"
+                  disable={
+                    !raiAmount ||
+                    !plantName ||
+                    !lat ||
+                    !long ||
+                    !search.term ||
+                    !landmark ||
+                    !selectPlot.subdistrictId
+                      ? true
+                      : false
+                  }
+                  color={colors.greenLight}
+                  onPress={() => {
+                    mixpanel.track('Tab save plot form register');
+                    addPlots();
+                    incrementCount();
+                  }}
+                />
+              </View>
             </View>
           </KeyboardAvoidingView>
         </View>
@@ -836,7 +846,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
               paddingVertical: normalize(30),
               paddingHorizontal: normalize(20),
               width: windowWidth,
-              height: windowHeight*0.9,
+              height: windowHeight * 0.9,
             }}>
             <View
               style={{
@@ -867,7 +877,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   color: colors.gray,
                 }}>
                 {`กรุณาพิมพ์ค้นหาพื้นที่แปลงเกษตรของคุณ
-                  ด้วยชื่อ ตำบล / อำเภอ / จังหวัด`}
+ด้วยชื่อ ตำบล / อำเภอ / จังหวัด`}
               </Text>
             </View>
             <View style={styles.container}>
@@ -1061,8 +1071,9 @@ const styles = StyleSheet.create({
   },
   head: {
     fontFamily: font.AnuphanBold,
-    fontSize: normalize(18),
+    fontSize: normalize(20),
     color: colors.fontGrey,
+    top: 5
   },
   first: {
     flex: 1,
@@ -1176,6 +1187,6 @@ const styles = StyleSheet.create({
     borderRadius: normalize(10),
     color: colors.fontBlack,
     fontFamily: font.SarabunLight,
-    fontSize: normalize(16),
+    fontSize: normalize(20),
   },
 });

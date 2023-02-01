@@ -163,7 +163,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                 <View
                   style={{
                     flexDirection: 'row',
-                    top: '25%',
+                    paddingVertical: 130,
                     alignSelf: 'center',
                   }}>
                   <TouchableOpacity
@@ -253,7 +253,12 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                     }}
                   />
                 </View> */}
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingVertical: '10%',
+              }}>
               {/* <Text
                     style={[
                       styles.text,

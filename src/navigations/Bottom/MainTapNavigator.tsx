@@ -165,7 +165,8 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
           }}
           onMainClick={() => {
             setFarmerRegisterSuccess(false);
-            const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
+            // setInitialRouteName("หน้าแรก")
+            const jumpAction = TabActions.jumpTo('หน้าแรก');
             navigation.dispatch(jumpAction);
           }}
         />

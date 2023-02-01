@@ -36,6 +36,7 @@ import PromotionScreen from '../PromotionScreen/PromotionScreen';
 import ProfileScreen from '../ProfileScreen/ProfileScreen';
 import AuthMainScreen from '../AuthMainScreen/AuthMainScreen';
 import AuthProfileScreen from '../AuthProfileScreen/AuthProfileScreen';
+import AuthPromotionScreen from '../AuthPromotionScreen.tsx/AuthPromotionScreen';
 
 const Tab = createBottomTabNavigator();
 const HomeScreen: React.FC<any> = ({ navigation, route }) => {
@@ -82,7 +83,7 @@ const HomeScreen: React.FC<any> = ({ navigation, route }) => {
       />
       <Tab.Screen
         name="โปรโมชั่น"
-        component={PromotionScreen}
+        component={AuthPromotionScreen}
         options={{
           tabBarStyle: {
             minHeight: Platform.OS === 'ios' ? 95 : 80,

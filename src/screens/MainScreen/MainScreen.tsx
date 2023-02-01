@@ -111,7 +111,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       getProfileAuth();
       ProfileDatasource.getProfile(farmer_id!)
         .then(async res => {
-          setReload(!reload);
           await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
           dispatch({
             type: 'InitProfile',
@@ -119,6 +118,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
             plotItem: res.farmerPlot,
             status: res.status,
           });
+          setReload(!reload);
         })
         .catch(err => console.log(err));
     }
@@ -224,7 +224,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       <ScrollView>
         <View style={[stylesCentral.container]}>
           <View style={{ backgroundColor: colors.white }}>
-            <View style={{ height: normalize(990) }}>
+            <View style={{ height: screenHeight}}>
               <ImageBackground
                 source={image.bgHead}
                 style={{
@@ -276,7 +276,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 <View
                   style={{
                     flexDirection: 'row',
-                    top: '25%',
+                    paddingVertical: 130,
                     alignSelf: 'center',
                   }}>
                   <TouchableOpacity
@@ -377,95 +377,156 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 {profilestate.status === 'REJECTED' ? (
                   <View
                     style={{
-                      top: 55,
-                      height: 176,
-                      width: normalize(340),
-                      alignSelf: 'center',
-                      backgroundColor: '#FFF9F2',
-                      borderWidth: 1,
-                      borderColor: '#FEDBB4',
-                      borderRadius: 10,
+                      ...Platform.select({
+                        ios: {
+                          paddingVertical: 75,
+                        },
+                        android: {
+                          paddingVertical: 30,
+                        },
+                      }),
                     }}>
-                    <View style={{ padding: 15, alignSelf: 'center' }}>
-                      <View style={{ flexDirection: 'row' }}>
-                        <Image
-                          source={icons.warning}
-                          style={{ width: 20, height: 20, marginRight: 10 }}
-                        />
-                        <Text style={[styles.textAlert]}>
-                          การยืนยันตัวตนไม่สำเร็จ อาจะส่งผลต่อ
-                        </Text>
-                      </View>
-                      <Text style={[styles.textAlert, { marginLeft: 30 }]}>
-                        การจ้างงานโดรนเกษตร กรุณาติดต่อ
-                      </Text>
-                      <Text style={[styles.textAlert, { marginLeft: 30 }]}>
-                        เจ้าหน้าที่ เพื่อยืนยันสถานะ
-                      </Text>
-                    </View>
-                    <View style={{ paddingHorizontal: 10 }}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setShowModalCall(true);
-                        }}
-                        style={{
-                          ...Platform.select({
-                            ios: {
-                              height: 60,
-                              paddingVertical: 8,
-                              paddingHorizontal: 16,
-                              backgroundColor: colors.white,
-                              justifyContent: 'center',
-                              alignItems: 'flex-start',
-                              width: '100%',
-                              borderRadius: 12,
-                              marginBottom: 8,
-                              borderWidth: 1,
-                              borderColor: colors.blueBorder,
-                            },
-                            android: {
-                              height: 60,
-                              paddingVertical: 8,
-                              paddingHorizontal: 16,
-                              backgroundColor: colors.white,
-                              justifyContent: 'center',
-                              alignItems: 'flex-start',
-                              width: '100%',
-                              borderRadius: 12,
-                              marginBottom: 8,
-                              borderWidth: 1,
-                              borderColor: colors.blueBorder,
-                              bottom: 15,
-                            },
-                          }),
-                        }}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            alignSelf: 'center',
-                          }}>
+                    <View
+                      style={{
+                        paddingHorizontal: 20,
+                        height: 176,
+                        width: normalize(340),
+                        alignSelf: 'center',
+                        backgroundColor: '#FFF9F2',
+                        borderWidth: 1,
+                        borderColor: '#FEDBB4',
+                        borderRadius: 10,
+                      }}>
+                      <View style={{ padding: 15, alignSelf: 'center' }}>
+                        <View style={{ flexDirection: 'row' }}>
                           <Image
-                            style={{
-                              width: 24,
-                              height: 24,
-                              marginRight: 16,
-                            }}
-                            source={icons.calling}
+                            source={icons.warning}
+                            style={{ width: 20, height: 20, marginRight: 10 }}
                           />
-                          <Text
-                            style={{
-                              fontFamily: font.AnuphanMedium,
-                              color: colors.blueBorder,
-                              fontSize: 20,
-                            }}>
-                            โทรหาเจ้าหน้าที่
+                          <Text style={[styles.textAlert]}>
+                            การยืนยันตัวตนไม่สำเร็จ อาจะส่งผลต่อ
                           </Text>
                         </View>
-                      </TouchableOpacity>
+                        <Text style={[styles.textAlert, { marginLeft: 30 }]}>
+                          การจ้างงานโดรนเกษตร กรุณาติดต่อ
+                        </Text>
+                        <Text style={[styles.textAlert, { marginLeft: 30 }]}>
+                          เจ้าหน้าที่ เพื่อยืนยันสถานะ
+                        </Text>
+                      </View>
+                      <View style={{ paddingHorizontal: 10 }}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            setShowModalCall(true);
+                          }}
+                          style={{
+                            ...Platform.select({
+                              ios: {
+                                height: 60,
+                                paddingVertical: 8,
+                                paddingHorizontal: 16,
+                                backgroundColor: colors.white,
+                                justifyContent: 'center',
+                                alignItems: 'flex-start',
+                                width: '100%',
+                                borderRadius: 12,
+                                marginBottom: 8,
+                                borderWidth: 1,
+                                borderColor: colors.blueBorder,
+                              },
+                              android: {
+                                height: 60,
+                                paddingVertical: 8,
+                                paddingHorizontal: 16,
+                                backgroundColor: colors.white,
+                                justifyContent: 'center',
+                                alignItems: 'flex-start',
+                                width: '100%',
+                                borderRadius: 12,
+                                marginBottom: 8,
+                                borderWidth: 1,
+                                borderColor: colors.blueBorder,
+                                bottom: 15,
+                              },
+                            }),
+                          }}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              alignSelf: 'center',
+                            }}>
+                            <Image
+                              style={{
+                                width: 24,
+                                height: 24,
+                                marginRight: 16,
+                              }}
+                              source={icons.calling}
+                            />
+                            <Text
+                              style={{
+                                fontFamily: font.AnuphanMedium,
+                                color: colors.blueBorder,
+                                fontSize: 20,
+                              }}>
+                              โทรหาเจ้าหน้าที่
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        paddingVertical: '5%',
+                      }}>
+                      <Image
+                        source={image.empryState}
+                        style={{
+                          width: normalize(126),
+                          height: normalize(120),
+                          marginBottom: normalize(32),
+                        }}
+                      />
+                      <Text
+                        style={{
+                          fontFamily: font.SarabunBold,
+                          fontSize: normalize(16),
+                          fontWeight: '300',
+                          color: colors.gray,
+                          bottom: 15,
+                        }}>
+                        ติดตามบริการส่วนอื่นได้เร็วๆนี้
+                      </Text>
                     </View>
                   </View>
-                ) : null}
+                ) : (
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      paddingVertical: '25%',
+                    }}>
+                    <Image
+                      source={image.empryState}
+                      style={{
+                        width: normalize(126),
+                        height: normalize(120),
+                        marginBottom: normalize(32),
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: font.SarabunBold,
+                        fontSize: normalize(16),
+                        fontWeight: '300',
+                        color: colors.gray,
+                        bottom: 15,
+                      }}>
+                      ติดตามบริการส่วนอื่นได้เร็วๆนี้
+                    </Text>
+                  </View>
+                )}
                 {/* <View
                   style={{
                     flexDirection: 'row',
@@ -501,8 +562,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       </Text>
                     </TouchableOpacity>
                   ) : null}
-                </View>
-                {taskSugUsed.length != 0 ? (
+                </View> */}
+                {/* {taskSugUsed.length != 0 ? (
                   <View style={{ height: '110%' }}>
                     <ScrollView
                       horizontal={true}
@@ -533,35 +594,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         ))}
                     </ScrollView>
                   </View>
-                ) : (
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      width: '100%',
-                      height: '100%',
-                    }}>
-                    <Image
-                      source={image.empryState}
-                      style={{
-                        width: normalize(126),
-                        height: normalize(120),
-                        top: 120,
-                        marginBottom: normalize(32),
-                      }}
-                    />
-                    <Text
-                      style={{
-                        top: 120,
-                        fontFamily: font.SarabunBold,
-                        fontSize: normalize(16),
-                        fontWeight: '300',
-                        color: colors.gray,
-                      }}>
-                      ติดตามบริการส่วนอื่นได้เร็วๆนี้
-                    </Text>
-                  </View>
-                )} */}
+                ) : ( */}
+                {/* )} */}
               </View>
+
               {/* <View style={[styles.empty]}>
                 <Text
                   style={[
@@ -646,7 +682,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       color: '#007AFF',
                       fontSize: 20,
                     }}>
-                    {`โทร +66 2-223-9000`}
+                    {`โทร +66 2-233-9000`}
                   </Text>
                 </View>
               </TouchableOpacity>
