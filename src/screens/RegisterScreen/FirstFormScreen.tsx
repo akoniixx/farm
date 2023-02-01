@@ -48,7 +48,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                 style={{width: normalize(122), height: normalize(120)}}
               />
             </View>
-            <Text style={styles.h2}>2. ใบอนุญาตนักบิน</Text>
+            {/* <Text style={styles.h2}>2. ใบอนุญาตนักบิน</Text>
             <View style={{marginTop: normalize(16), alignItems: 'center'}}>
               <Image
                 source={image.pirotcer}
@@ -63,7 +63,7 @@ const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
                 source={image.dronecer}
                 style={{width: normalize(136), height: normalize(192)}}
               />
-            </View>
+            </View> */}
           </ScrollView>
         </View>
 
