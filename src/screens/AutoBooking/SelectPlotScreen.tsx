@@ -34,24 +34,24 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [plotList, setPlotList] = useState<any>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<number | null>(null);
+  const [selectedCard, setSelectedCard] = useState<string | null>(null);
 
   const isHaveWaitingApprove = useMemo(() => {
-    if (plotList?.data && plotList.data.length > 0) {
-      return (plotList.data || []).some((el: any) => el.status !== 'ACTIVE');
+    if (plotList && plotList.length > 0) {
+      return (plotList || []).some((el: any) => el.status !== 'ACTIVE');
     }
     return false;
-  }, [plotList?.data]);
+  }, [plotList]);
 
-  const handleCardPress = (index: number) => {
-    setSelectedCard(index);
+  const handleCardPress = (id: string) => {
+    setSelectedCard(id);
   };
   const onSubmit = () => {
     if (selectedCard === null) return;
 
     setTaskData(prev => ({
       ...prev,
-      farmerPlotId: plotList.data[selectedCard].id,
+      farmerPlotId: selectedCard,
     }));
     navigation.navigate('SelectTarget');
   };
@@ -90,17 +90,16 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
       });
 
       setPlotList(matchData);
-      const currentSelected = matchData.find(
-        (el: any) => el.id === selectedCard,
-      );
+
+      const currentSelected = matchData.find((el: any) => {
+        return el.id === selectedCard;
+      });
       if (currentSelected && currentSelected.isHaveDroner === false) {
         setSelectedCard(null);
       }
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plotDisable]);
-
+  }, [plotDisable, selectedCard]);
   return (
     <>
       <StepIndicatorHead
@@ -167,23 +166,21 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                       style={{
                         flexDirection: 'row',
                       }}>
-                      <View
+                      <Image
+                        source={icons.warningIcon}
                         style={{
-                          width: 30,
-                        }}>
-                        <Image
-                          source={icons.warningIcon}
-                          style={{
-                            width: 24,
-                            height: 24,
-                          }}
-                        />
-                      </View>
+                          marginTop: 8,
+                          width: 18,
+                          height: 18,
+                          marginRight: 8,
+                        }}
+                      />
                       <Text
                         style={{
                           fontFamily: font.SarabunLight,
                           fontSize: 18,
                           paddingRight: 16,
+                          alignSelf: 'flex-start',
                         }}>
                         หากแปลงของคุณมีสถานะ “รอการตรวจ สอบ”
                         จะส่งผลต่อขั้นตอนจ้างนักบินโดรน กรุณาติดต่อเจ้าหน้าที่
@@ -245,34 +242,40 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                     locationName={item.locationName}
                     raiAmount={item.raiAmount}
                     onPress={async () => {
-                      mixpanel.track('Tab select plot from select plot screen');
-                      handleCardPress(item.id);
-                      setTaskData(prev => ({
-                        ...prev,
-                        cropName: item.plantName,
-                        plantName: item.plantName,
-                        plotName: item.plotName,
-                        farmerId: item.farmerId,
-                        plotArea: item.plotArea,
+                      try {
+                        await getLocationPrice({
+                          provinceId: item.plotArea.provinceId,
+                          cropName: item.plantName,
+                        });
+                        await searchDroner({
+                          farmerId: item.farmerId,
+                          farmerPlotId: item.id,
+                        });
+                        mixpanel.track(
+                          'Tab select plot from select plot screen',
+                        );
+                        handleCardPress(item.id);
+                        setTaskData(prev => ({
+                          ...prev,
+                          cropName: item.plantName,
+                          plantName: item.plantName,
+                          plotName: item.plotName,
+                          farmerId: item.farmerId,
+                          plotArea: item.plotArea,
 
-                        province: item.province,
-                        locationName: item.locationName,
-                        farmAreaAmount: item.raiAmount,
-                        purposeSpray: {
-                          id: '',
-                          name: '',
-                        },
-                        targetSpray: [],
-                        preparationBy: '',
-                      }));
-                      await getLocationPrice({
-                        provinceId: item.plotArea.provinceId,
-                        cropName: item.plantName,
-                      });
-                      await searchDroner({
-                        farmerId: item.farmerId,
-                        farmerPlotId: item.id,
-                      });
+                          province: item.province,
+                          locationName: item.locationName,
+                          farmAreaAmount: item.raiAmount,
+                          purposeSpray: {
+                            id: '',
+                            name: '',
+                          },
+                          targetSpray: [],
+                          preparationBy: '',
+                        }));
+                      } catch (e) {
+                        console.log(e);
+                      }
                     }}
                     selected={item.id === selectedCard}
                   />

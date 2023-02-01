@@ -38,7 +38,7 @@ const CustomHeader: React.FC<Prop> = ({
             <TouchableOpacity
               style={{ paddingVertical: 14, paddingHorizontal: 24 }}
               onPress={onPressBack}>
-              <Icon name="left" size={30} color="black" />
+              <Icon name="left" size={24} color="black" />
             </TouchableOpacity>
           )}
           {headerLeft?.()}

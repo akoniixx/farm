@@ -58,6 +58,7 @@ export default function SelectInjectionSheet(props: SheetProps) {
             style={{
               fontSize: 22,
               fontFamily: fonts.AnuphanMedium,
+              color: colors.fontBlack,
             }}>
             ช่วงเวลาการพ่น
           </Text>

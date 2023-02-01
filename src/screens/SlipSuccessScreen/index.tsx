@@ -79,8 +79,9 @@ export default function SlipSuccessScreen({
                 marginTop: 32,
               }}>
               <Lottie
-                autoPlay
                 speed={0.4}
+                autoPlay
+                loop={false}
                 source={image.successfullottie}
                 resizeMode="contain"
               />

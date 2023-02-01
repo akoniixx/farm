@@ -76,6 +76,14 @@ interface Context {
       farmerId: string;
       farmerPlotId: string;
     }) => Promise<void>;
+    setPlotDisable: React.Dispatch<
+      React.SetStateAction<
+        {
+          plotId: string;
+          isHaveDroner: boolean;
+        }[]
+      >
+    >;
     getCalculatePrice: (payload: PayloadCal) => Promise<void>;
   };
   state: State;
@@ -141,6 +149,7 @@ export const initialState: {
 const AutoBookingContext = React.createContext<Context>({
   autoBookingContext: {
     setTaskData: () => {},
+    setPlotDisable: () => {},
     searchDroner: () => Promise.resolve(),
     getLocationPrice() {
       return Promise.resolve();
@@ -226,7 +235,6 @@ export const AutoBookingProvider = ({
             const isAlreadyInDisable = plotDisable.findIndex((el: any) => {
               return el.plotId === farmerPlotId;
             });
-
             if (newArray.length <= 0 && isAlreadyInDisable === -1) {
               setPlotDisable(prev => [
                 ...prev,
@@ -274,6 +282,7 @@ export const AutoBookingProvider = ({
           getLocationPrice,
           searchDroner,
           getCalculatePrice,
+          setPlotDisable,
         },
         state: {
           taskData,
