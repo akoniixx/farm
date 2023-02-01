@@ -36,6 +36,8 @@ import DronerUsed from '../../components/Carousel/DronerUsed';
 import { mixpanel } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import DronerSugg from '../../components/Carousel/DronerCarousel';
+import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -214,7 +216,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     };
     getTaskByTaskId();
   }, [taskId, navigation]);
-
   return (
     <View
       style={{
@@ -224,7 +225,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       <ScrollView>
         <View style={[stylesCentral.container]}>
           <View style={{ backgroundColor: colors.white }}>
-            <View style={{ height: screenHeight}}>
+            <View style={{ height: screenHeight }}>
               <ImageBackground
                 source={image.bgHead}
                 style={{
@@ -374,7 +375,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               />
             </View>  */}
               <View style={[styles.empty]}>
-                {profilestate.status === 'REJECTED' ? (
+                {profilestate.status === 'REJECTED' && (
                   <View
                     style={{
                       ...Platform.select({
@@ -501,50 +502,23 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       </Text>
                     </View>
                   </View>
-                ) : (
+                )}
+                <View style={{ paddingVertical: normalize(60) }}>
                   <View
                     style={{
-                      alignItems: 'center',
-                      paddingVertical: '25%',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
                     }}>
-                    <Image
-                      source={image.empryState}
-                      style={{
-                        width: normalize(126),
-                        height: normalize(120),
-                        marginBottom: normalize(32),
-                      }}
-                    />
                     <Text
                       style={{
-                        fontFamily: font.SarabunBold,
-                        fontSize: normalize(16),
-                        fontWeight: '300',
-                        color: colors.gray,
-                        bottom: 15,
+                        fontFamily: font.AnuphanBold,
+                        fontSize: normalize(20),
+                        color: colors.fontGrey,
+                        paddingHorizontal: 20,
+                        paddingVertical: 10,
                       }}>
-                      ติดตามบริการส่วนอื่นได้เร็วๆนี้
+                      จ้างนักบินโดรนที่เคยจ้าง
                     </Text>
-                  </View>
-                )}
-                {/* <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                    {taskSugUsed.length != 0 && (
-                  <Text
-                    style={{
-                      fontFamily: font.AnuphanBold,
-                      fontSize: normalize(20),
-                      color: colors.fontGrey,
-                      paddingHorizontal: 20,
-                      paddingVertical: 10,
-                    }}>
-                    จ้างนักบินที่เคยจ้าง
-                  </Text>
-                    )}
-                  {taskSugUsed.length != 0 ? (
                     <TouchableOpacity
                       onPress={() => {
                         navigation.navigate('SeeAllDronerUsed');
@@ -561,78 +535,90 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         ดูทั้งหมด
                       </Text>
                     </TouchableOpacity>
-                  ) : null}
-                </View> */}
-                {/* {taskSugUsed.length != 0 ? (
-                  <View style={{ height: '110%' }}>
-                    <ScrollView
-                      horizontal={true}
-                      showsHorizontalScrollIndicator={false}>
-                      {taskSugUsed.length != undefined &&
-                        taskSugUsed.map((item: any, index: any) => (
-                          <TouchableOpacity
-                            key={index}
-                            onPress={async () => {
-                              await AsyncStorage.setItem(
-                                'droner_id',
-                                `${item.droner_id}`,
-                              );
-                              navigation.push('DronerDetail');
-                            }}>
-                            <DronerUsed
-                              key={index}
-                              index={index}
-                              profile={item.image_droner}
-                              background={''}
-                              name={item.firstname + ' ' + item.lastname}
-                              rate={item.rating_avg}
-                              total_task={item.total_task}
-                              province={item.province_name}
-                              distance={item.street_distance}
-                            />
-                          </TouchableOpacity>
-                        ))}
-                    </ScrollView>
                   </View>
-                ) : ( */}
-                {/* )} */}
-              </View>
-
-              {/* <View style={[styles.empty]}>
-                <Text
-                  style={[
-                    styles.text,
-                    { alignSelf: 'flex-start', top: '15%' },
-                  ]}>
-                  นักบินโดรนที่แนะนำ
-                </Text>
-                <View style={{ top: '20%', height: '110%' }}>
-                  <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}>
-                    {taskSug.length != undefined &&
-                      taskSug.map((item: any, index: any) => (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={() => {
-                            // deTailPlot.current.show();
-                          }}>
-                          <DronerSugg
-                            index={index}
-                            key={index}
-                            profile={item.image_droner}
-                            background={''}
-                            name={item.firstname + ' ' + item.lastname}
-                            rate={item.rating_avg}
-                            total_task={item.total_task}
-                            province={item.province_name}
-                            distance={item.street_distance}
-                          />
-                        </TouchableOpacity>
-                      ))}
-                  </ScrollView>
+                  {taskSugUsed.length != 0 ? (
+                    <View style={{ height: '110%' }}>
+                      <ScrollView
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}>
+                        {taskSugUsed.length != undefined &&
+                          taskSugUsed.map((item: any, index: any) => (
+                            <TouchableOpacity
+                              key={index}
+                              onPress={async () => {
+                                await AsyncStorage.setItem(
+                                  'droner_id',
+                                  `${item.droner_id}`,
+                                );
+                                navigation.push('DronerDetail');
+                              }}>
+                              <DronerUsed
+                                key={index}
+                                index={index}
+                                profile={item.image_droner}
+                                background={''}
+                                name={item.firstname + ' ' + item.lastname}
+                                rate={item.rating_avg}
+                                total_task={item.total_task}
+                                province={item.province_name}
+                                distance={item.street_distance}
+                              />
+                            </TouchableOpacity>
+                          ))}
+                      </ScrollView>
+                    </View>
+                  ) : (
+                    <></>
+                  )}
                 </View>
-              </View> */}
+              </View>
+              <View style={[styles.empty]}>
+                <View style={{ paddingVertical: '28%' }}>
+                  {taskSug.length != 0 ? (
+                    <View style={{ height: screenWidth }}>
+                      <Text
+                        style={{
+                          fontFamily: font.AnuphanBold,
+                          fontSize: normalize(20),
+                          color: colors.fontGrey,
+                          paddingHorizontal: 20,
+                        }}>
+                        นักบินโดรนที่แนะนำ
+                      </Text>
+                      <ScrollView
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}>
+                        {taskSug.length != undefined &&
+                          taskSug.map((item: any, index: any) => (
+                            <TouchableOpacity
+                              key={index}
+                              onPress={async () => {
+                                await AsyncStorage.setItem(
+                                  'droner_id',
+                                  `${item.droner_id}`,
+                                );
+                                navigation.push('DronerDetail');
+                              }}>
+                              <DronerSugg
+                                key={index}
+                                index={index}
+                                profile={item.image_droner}
+                                background={''}
+                                name={item.firstname + ' ' + item.lastname}
+                                rate={item.rating_avg}
+                                total_task={item.total_task}
+                                province={item.province_name}
+                                distance={item.street_distance}
+                              />
+                            </TouchableOpacity>
+                          ))}
+                      </ScrollView>
+                    </View>
+                  ) : (
+                    <></>
+                  )}
+                </View>
+              </View>
             </View>
           </View>
           <Modal

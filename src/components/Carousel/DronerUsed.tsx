@@ -14,6 +14,8 @@ import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { Avatar } from '@rneui/base';
 import { color } from 'react-native-reanimated';
+import AsyncStorage  from '@react-native-async-storage/async-storage';
+import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 
 interface dronerUsedData {
   index: any;
@@ -38,6 +40,25 @@ const DronerUsed: React.FC<dronerUsedData> = ({
 }) => {
   const [checked, setChecked] = useState<boolean>(false);
 
+  const addUnAddDroners = async() => {
+    const value = await AsyncStorage.getItem('token');
+    if (value) {
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      const droner_id = await AsyncStorage.getItem('droner_id');
+      
+      console.log(1,farmer_id)
+      console.log(2,droner_id)
+
+     await FavoriteDroner.addUnaddFav(
+        farmer_id !== null ? farmer_id : '',
+        droner_id !== null ? droner_id : '',
+      )
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => console.log(err));
+    }
+  };
   return (
     <View style={{ paddingHorizontal: 5 }}>
       <View style={[styles.cards]}>
@@ -61,7 +82,12 @@ const DronerUsed: React.FC<dronerUsedData> = ({
                 alignSelf: 'flex-end',
                 margin: 10,
               }}>
-              <TouchableOpacity onPress={() => setChecked(!checked)}>
+              <TouchableOpacity onPress={() => {
+                addUnAddDroners();
+                setChecked(!checked)
+              }
+
+                }>
                 <Image
                   source={checked ? icons.heart_active : icons.heart}
                   style={{ alignSelf: 'center', width: 20, height: 20, top: 4 }}
