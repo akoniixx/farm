@@ -22,7 +22,10 @@ export interface TaskDataTypeSlip {
   comment: string;
   price: string;
   totalPrice: string;
-  droner? : any
+  firstname? : string;
+  lastname? : string;
+  telNo? : string;
+  img? : string
 }
 interface Props extends TaskDataTypeSlip {}
 

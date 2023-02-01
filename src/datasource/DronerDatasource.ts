@@ -9,7 +9,7 @@ export class DronerDatasource{
             .catch(err => console.log(err))
     }
     static getDronerProfileImage(path : string){
-        return httpClient.get(BASE_URL + `file/${path}`)
+        return httpClient.get(BASE_URL + `/file/geturl?path=${path}`)
         .then(
             res => res.data.url
         )
