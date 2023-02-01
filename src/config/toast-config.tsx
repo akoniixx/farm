@@ -1,7 +1,6 @@
 import React from 'react';
 import { font } from '../assets';
-import { View, Text, Image } from 'react-native';
-import icons from '../assets/icons/icons';
+import { View, Text } from 'react-native';
 import { normalize } from '../functions/Normalize';
 
 const toastStyle = {

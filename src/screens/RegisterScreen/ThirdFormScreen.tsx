@@ -74,8 +74,8 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   const [position, setPosition] = useState({
     latitude: route.params.latitude,
     longitude: route.params.longitude,
-    latitudeDelta: 0,
-    longitudeDelta: 0,
+    latitudeDelta: 0.004757,
+    longitudeDelta: 0.006866,
   });
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const telNo = route.params;
@@ -193,10 +193,9 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
       Geolocation.getCurrentPosition(
         pos => {
           setPosition({
+            ...position,
             latitude: pos.coords.latitude,
             longitude: pos.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
           });
         },
         error => {
@@ -223,8 +222,8 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
       plantName: plantName,
       status: 'PENDING',
       landmark: landmark,
-      lat: lat,
-      long: long,
+      lat: position.latitude,
+      long: position.longitude,
       plotAreaId: selectPlot.subdistrictId,
     };
     const newPlotUI = {
@@ -299,10 +298,9 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
         setlat(lat);
         setlong(lng);
         setPosition({
+          ...position,
           latitude: lat,
           longitude: lng,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
         });
         setShowPredictions(false);
         setSearch({ term: description, fetchPredictions: false });
@@ -700,20 +698,24 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                       minZoomLevel={14}
                       maxZoomLevel={18}
                       style={styles.map}
-                      onPress={e => {
+                      onPress={async e => {
                         setPosition({
                           ...position,
                           latitude: e.nativeEvent.coordinate.latitude,
                           longitude: e.nativeEvent.coordinate.longitude,
                         });
+                        const res =
+                          await QueryLocation.getLocationNameByLatLong({
+                            lat: e.nativeEvent.coordinate.latitude,
+                            long: e.nativeEvent.coordinate.longitude,
+                          });
+                        setSearch({
+                          term: res.results[0].formatted_address,
+                          fetchPredictions: true,
+                        });
                       }}
                       provider={PROVIDER_GOOGLE}
-                      region={{
-                        latitude: position.latitude,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.042,
-                        longitude: position.longitude,
-                      }}
+                      region={position}
                       showsUserLocation={true}
                       showsMyLocationButton={true}>
                       <Marker
@@ -938,11 +940,11 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                         id={v}
                         onPress={() => {
                           selectPlotArea(v);
-                          setPosition(prev => ({
-                            ...prev,
-                            latitude: parseFloat(v.lat),
-                            longitude: parseFloat(v.long),
-                          }));
+                          // setPosition(prev => ({
+                          //   ...prev,
+                          //   latitude: parseFloat(v.lat),
+                          //   longitude: parseFloat(v.long),
+                          // }));
                         }}
                       />
                     </TouchableOpacity>
@@ -1073,7 +1075,7 @@ const styles = StyleSheet.create({
     fontFamily: font.AnuphanBold,
     fontSize: normalize(20),
     color: colors.fontGrey,
-    top: 5
+    top: 5,
   },
   first: {
     flex: 1,

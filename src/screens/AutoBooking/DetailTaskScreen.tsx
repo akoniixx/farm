@@ -34,7 +34,10 @@ import {
   initialState,
   useAutoBookingContext,
 } from '../../contexts/AutoBookingContext';
-import { checkCouponOffline, usedCoupon } from '../../datasource/PromotionDatasource';
+import {
+  checkCouponOffline,
+  usedCoupon,
+} from '../../datasource/PromotionDatasource';
 import {
   PayloadCreateTask,
   TaskDatasource,
@@ -72,6 +75,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         }));
         Keyboard.dismiss();
         setDisableEdit(true);
+        return couponCode;
       }
     } catch (error) {
       console.log(error);
@@ -103,18 +107,18 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       const res = await TaskDatasource.createTask(payload);
 
       if (res && res.success) {
-        usedCoupon(couponCode).then(
-         async result => {
-           mixpanel.track('Tab submit booking');
-           setLoading(false);
+        usedCoupon(couponCode)
+          .then(async result => {
+            mixpanel.track('Tab submit booking');
+            setLoading(false);
 
-           await AsyncStorage.setItem('taskId', res.responseData.id);
-           navigation.navigate('SlipWaitingScreen', {
-             taskId: res.responseData.id,
-           });
-           setTaskData(initialState.taskData);
-          }
-        ).catch(err => console.log(err))
+            await AsyncStorage.setItem('taskId', res.responseData.id);
+            navigation.navigate('SlipWaitingScreen', {
+              taskId: res.responseData.id,
+            });
+            setTaskData(initialState.taskData);
+          })
+          .catch(err => console.log(err));
       }
     } catch (e) {
       console.log(e);
@@ -141,10 +145,11 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
     getProfileAuth();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskData.couponCode]);
+  }, []);
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+      contentContainerStyle={{ flex: 1 }}
       style={[{ flex: 1 }]}>
       <CustomHeader
         title="รายละเอียดการจอง"
@@ -171,8 +176,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               <Image
                 source={icons.callCenter}
                 style={{
-                  width: 24,
-                  height: 24,
+                  width: 28,
+                  height: 28,
                 }}
               />
             </TouchableOpacity>
@@ -220,6 +225,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           style={{
             backgroundColor: 'white',
             paddingVertical: normalize(10),
+            paddingHorizontal: normalize(16),
           }}>
           <View
             style={{
@@ -232,6 +238,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               style={{
                 fontSize: 20,
                 fontFamily: fonts.AnuphanMedium,
+                color: colors.fontBlack,
               }}>
               วันและเวลา
             </Text>
@@ -286,6 +293,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               style={{
                 fontSize: 20,
                 fontFamily: fonts.AnuphanMedium,
+                color: colors.fontBlack,
               }}>
               แปลงเกษตร
             </Text>
@@ -348,6 +356,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             <Text
               style={{
                 fontSize: 20,
+                color: colors.fontBlack,
+
                 fontFamily: fonts.AnuphanMedium,
               }}>
               เป้าหมายการพ่น
@@ -504,6 +514,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               style={{
                 fontSize: 20,
                 fontFamily: fonts.AnuphanMedium,
+                color: colors.fontBlack,
               }}>
               วิธีการชำระเงิน
             </Text>
@@ -553,6 +564,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             <Text
               style={{
                 fontSize: 18,
+                color: colors.fontBlack,
+
                 fontFamily: fonts.SarabunMedium,
               }}>
               คูปองส่วนลด
@@ -565,16 +578,25 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             }}>
             {!disableEdit ? (
               <InputWithSuffix
+                keyboardType="numeric"
+                maxLength={7}
                 onChangeText={text => {
                   setCouponCode(text);
                   setCouponCodeError('');
                 }}
                 onSubmitEditing={async () => {
                   if (couponCode.length > 0) {
-                    await checkCoupon();
+                    const newCoupon = await checkCoupon();
+                    await getCalculatePrice({
+                      farmerPlotId: taskData.farmerPlotId,
+                      couponCode: newCoupon || '',
+                      cropName: taskData.cropName || '',
+                      raiAmount: taskData.farmAreaAmount
+                        ? +taskData.farmAreaAmount
+                        : 0,
+                    });
                   }
                 }}
-                returnKeyType="done"
                 style={{
                   color: !disableEdit ? colors.fontBlack : colors.grey40,
                 }}
@@ -594,12 +616,20 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                       }
                       if (couponCode.length > 0) {
                         mixpanel.track('Tab submit coupon');
-                        await checkCoupon();
+                        const newCoupon = await checkCoupon();
+                        await getCalculatePrice({
+                          farmerPlotId: taskData.farmerPlotId,
+                          couponCode: newCoupon || '',
+                          cropName: taskData.cropName || '',
+                          raiAmount: taskData.farmAreaAmount
+                            ? +taskData.farmAreaAmount
+                            : 0,
+                        });
                       }
                     }}
                     style={{
-                      backgroundColor: '#56D88C',
-                      width: 60,
+                      backgroundColor: colors.orange,
+                      minWidth: 80,
                       height: 35,
                       borderRadius: 8,
                       justifyContent: 'center',
@@ -612,7 +642,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                         fontSize: 18,
                         fontFamily: fonts.AnuphanMedium,
                       }}>
-                      {disableEdit ? 'แก้ไข' : 'ยืนยัน'}
+                      {disableEdit ? 'แก้ไข' : 'ใช้คูปอง'}
                     </Text>
                   </TouchableOpacity>
                 }
@@ -642,6 +672,18 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 <TouchableOpacity
                   onPress={async () => {
                     if (disableEdit) {
+                      await getCalculatePrice({
+                        farmerPlotId: taskData.farmerPlotId,
+                        couponCode: '',
+                        cropName: taskData.cropName || '',
+                        raiAmount: taskData.farmAreaAmount
+                          ? +taskData.farmAreaAmount
+                          : 0,
+                      });
+                      setTaskData(prev => ({
+                        ...prev,
+                        couponCode: '',
+                      }));
                       return setDisableEdit(false);
                     }
                     if (couponCode.length > 0) {
@@ -649,7 +691,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                     }
                   }}
                   style={{
-                    backgroundColor: '#56D88C',
+                    backgroundColor: colors.orange,
                     width: 60,
                     height: 35,
                     borderRadius: 8,
@@ -663,13 +705,13 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                       fontSize: 18,
                       fontFamily: fonts.AnuphanMedium,
                     }}>
-                    {disableEdit ? 'แก้ไข' : 'ยืนยัน'}
+                    แก้ไข
                   </Text>
                 </TouchableOpacity>
               </View>
             )}
 
-            {couponCodeError?.length > 0 && (
+            {couponCodeError && couponCodeError?.length > 0 && (
               <Text
                 style={{
                   color: colors.error,
@@ -684,7 +726,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         </View>
         <View
           style={{
-            height: 50,
+            height: 40,
           }}
         />
       </ScrollView>
@@ -805,6 +847,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           <Text
             style={{
               fontSize: 18,
+              color: colors.fontBlack,
+
               fontFamily: fonts.AnuphanMedium,
             }}>
             รวมค่าบริการ
@@ -982,7 +1026,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               setShowModalCall(false);
             }}
             style={{
-              height: 60,
+              height: 50,
               paddingVertical: 8,
               paddingHorizontal: 16,
               backgroundColor: colors.white,

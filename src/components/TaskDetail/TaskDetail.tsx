@@ -75,7 +75,6 @@ export const DateTimeDetail: React.FC<DateTimeProp> = ({
                     .format('DD MMMM YYYY')}
                 </Text>
                 <Text style={styles.h1}>
-                  {' '}
                   {moment(time).locale('th').format('hh.mm')} น
                 </Text>
               </View>
@@ -130,7 +129,7 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
     location: {
       icon: icons.location,
       label: 'ตำแหน่ง',
-      value: location,
+      value: `${location.length > 15 ? location.slice(0, 14) : location}...`,
     },
   };
 
@@ -203,11 +202,10 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
               </View>
               <View>
                 <Text
-                  numberOfLines={1}
                   style={[
                     styles.h1,
                     {
-                      width: Dimensions.get('screen').width * 0.5,
+                      width: Dimensions.get('screen').width * 0.4,
                       textAlign: 'right',
                     },
                   ]}>
@@ -277,11 +275,13 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunMedium,
     fontSize: normalize(18),
     lineHeight: normalize(30),
+    color: colors.fontBlack,
   },
   h2: {
     fontFamily: font.SarabunLight,
     fontSize: normalize(18),
     lineHeight: normalize(30),
+    color: colors.fontBlack,
   },
   label: {
     fontFamily: font.SarabunMedium,

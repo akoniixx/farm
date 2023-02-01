@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import AppAuthNavigator from './AppAuthNavigator';
 import LoadingNavigator from './LoadingNavigator';
 import { createStackNavigator } from '@react-navigation/stack';
-import DronerDetail from '../screens/DronerProfile/DronerDetail';
-import SeeAllDronerUsed from '../screens/DronerProfile/SeeAllDronerUsed';
 import MainNavigator from './MainNavigator';
 
 const Stack = createStackNavigator();

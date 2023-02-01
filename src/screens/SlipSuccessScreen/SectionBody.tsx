@@ -6,11 +6,12 @@ import {
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import fonts from '../../assets/fonts';
 import { colors, image } from '../../assets';
 import SlipCard, { TaskDataTypeSlip } from '../../components/SlipCard/SlipCard';
 import icons from '../../assets/icons/icons';
+import { DronerDatasource } from '../../datasource/DronerDatasource';
 
 export default function SectionBody(props: TaskDataTypeSlip) {
   return (
@@ -43,7 +44,7 @@ export default function SectionBody(props: TaskDataTypeSlip) {
                 alignItems: 'center',
               }}>
               <Image
-                source={image.bg_droner}
+                source={!(props.img)?image.bg_droner:{uri : props.img}}
                 style={{
                   width: 48,
                   height: 48,
@@ -60,9 +61,9 @@ export default function SectionBody(props: TaskDataTypeSlip) {
                     fontFamily: fonts.SarabunMedium,
                     fontSize: 18,
                   }}>
-                  นายโดรน เกษตร
+                  {props.firstname + " " + props.lastname}
                 </Text>
-                <View
+                {/* <View
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -81,12 +82,12 @@ export default function SectionBody(props: TaskDataTypeSlip) {
                     }}>
                     5.0 คะแนน (10)
                   </Text>
-                </View>
+                </View> */}
               </View>
             </View>
             <TouchableOpacity
               onPress={() => {
-                Linking.openURL('tel:0812345678');
+                Linking.openURL(`tel:${props.telNo}`);
               }}
               style={{
                 backgroundColor: '#E8F6FF',

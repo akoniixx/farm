@@ -14,12 +14,10 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { mixpanel } from '../../../mixpanel';
 import { colors, font, icons } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
 import DatePickerCustom from '../../components/Calendar/Calendar';
-import CustomHeader from '../../components/CustomHeader';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
 import TimePicker from '../../components/TimePicker/TimePicker';
 import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
@@ -30,7 +28,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
   const windowWidth = Dimensions.get('window').width;
   const {
     state: { taskData },
-    autoBookingContext: { setTaskData },
+    autoBookingContext: { setTaskData, setPlotDisable },
   } = useAutoBookingContext();
   const [openCalendar, setOpenCalendar] = useState(false);
   const [date, setDate] = useState(
@@ -48,6 +46,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
       setHour(dateAppointment.getHours());
       setMinute(dateAppointment.getMinutes());
     }
+    setPlotDisable([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const onSubmit = () => {
@@ -106,6 +105,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                     {
                       alignItems: 'center',
                       flexDirection: 'row',
+                      justifyContent: 'space-between',
                     },
                   ]}>
                   <TextInput
@@ -114,9 +114,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                     placeholder={'ระบุวัน เดือน ปี'}
                     placeholderTextColor={colors.disable}
                     style={{
-                      width: windowWidth * 0.78,
                       color: colors.fontBlack,
-                      paddingHorizontal: 16,
 
                       fontSize: normalize(20),
                       fontFamily: font.SarabunLight,
@@ -128,8 +126,8 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                   <Image
                     source={icons.calendar}
                     style={{
-                      width: normalize(25),
-                      height: normalize(30),
+                      width: normalize(24),
+                      height: normalize(24),
                     }}
                   />
                 </View>
@@ -146,6 +144,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                     {
                       alignItems: 'center',
                       flexDirection: 'row',
+                      justifyContent: 'space-between',
                     },
                   ]}>
                   <TextInput
@@ -156,10 +155,8 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                     placeholder={'ระบุวัน เดือน ปี'}
                     placeholderTextColor={colors.disable}
                     style={{
-                      width: windowWidth * 0.78,
                       color: colors.fontBlack,
                       fontSize: normalize(20),
-                      paddingHorizontal: 16,
                       fontFamily: font.SarabunLight,
 
                       justifyContent: 'center',
@@ -169,13 +166,36 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                   <Image
                     source={icons.time}
                     style={{
-                      width: normalize(25),
-                      height: normalize(30),
+                      width: normalize(24),
+                      height: normalize(24),
                     }}
                   />
                 </View>
               </TouchableOpacity>
-              <Text style={styles.label}>หมายเหตุ (ไม่มีก็ได้)</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: 16,
+                }}>
+                <Text
+                  style={[
+                    styles.label,
+                    {
+                      marginTop: 0,
+                      marginRight: 8,
+                    },
+                  ]}>
+                  หมายเหตุ
+                </Text>
+                <Text
+                  style={{
+                    color: colors.grey30,
+                    fontFamily: font.AnuphanMedium,
+                    fontSize: normalize(20),
+                  }}>
+                  (ไม่จำเป็นต้องระบุ)
+                </Text>
+              </View>
               <TextInput
                 scrollEnabled={false}
                 numberOfLines={6}
@@ -193,7 +213,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                   Keyboard.dismiss();
                 }}
                 placeholder={'ระบุข้อมูลแจ้งนักบิน'}
-                placeholderTextColor={colors.disable}
+                placeholderTextColor={colors.grey30}
                 style={{
                   width: '100%',
                   color: colors.fontBlack,
@@ -201,7 +221,6 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                   fontFamily: font.SarabunLight,
                   alignItems: 'center',
                   flexDirection: 'row',
-                  marginVertical: 12,
                   borderColor: colors.disable,
                   borderWidth: 1,
                   paddingHorizontal: 16,
@@ -216,21 +235,21 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
             <View
               style={{
                 flexDirection: 'row',
-                justifyContent: 'space-around',
+                justifyContent: 'space-between',
               }}>
               <MainButton
                 label="ยกเลิก"
                 fontColor={colors.fontBlack}
                 borderColor={colors.fontGrey}
                 color={colors.white}
-                width={Dimensions.get('window').width * 0.45 - 16}
+                width={Dimensions.get('window').width * 0.47 - 16}
                 onPress={() => navigation.goBack()}
               />
               <MainButton
                 label="บันทึก"
                 fontColor={colors.white}
                 color={colors.greenLight}
-                width={Dimensions.get('window').width * 0.45 - 16}
+                width={Dimensions.get('window').width * 0.47 - 16}
                 onPress={() => onSubmit()}
               />
             </View>
@@ -260,7 +279,6 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 styles.h1,
                 {
                   textAlign: 'center',
-                  bottom: '5%',
                   color: colors.fontBlack,
                 },
               ]}>
@@ -271,7 +289,10 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 textAlign: 'center',
                 color: colors.greenLight,
                 fontFamily: font.SarabunLight,
-                fontSize: normalize(16),
+                fontSize: normalize(18),
+                marginTop: normalize(4),
+
+                lineHeight: normalize(30),
               }}>
               เลื่อนขึ้นลงเพื่อเลือกวันฉีดพ่น
             </Text>
@@ -297,7 +318,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 fontColor={colors.fontBlack}
                 borderColor={colors.fontGrey}
                 color={colors.white}
-                width={150}
+                width={Dimensions.get('window').width * 0.45 - 32}
                 onPress={() => {
                   mixpanel.track('Tab cancel calendar');
                   setOpenCalendar(false);
@@ -307,7 +328,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 label="บันทึก"
                 fontColor={colors.white}
                 color={colors.greenLight}
-                width={150}
+                width={Dimensions.get('window').width * 0.45 - 32}
                 onPress={() => {
                   mixpanel.track('Tab submit calendar');
                   setOpenCalendar(false);
@@ -339,20 +360,21 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 styles.h1,
                 {
                   textAlign: 'center',
-                  bottom: '5%',
                   color: colors.fontBlack,
                 },
               ]}>
-              วันที่ฉีดพ่น
+              เวลาที่ฉีดพ่น
             </Text>
             <Text
               style={{
                 textAlign: 'center',
                 color: colors.greenLight,
                 fontFamily: font.SarabunLight,
-                fontSize: normalize(16),
+                fontSize: normalize(18),
+                marginTop: normalize(4),
+                lineHeight: normalize(30),
               }}>
-              เลื่อนขึ้นลงเพื่อเลือกวันฉีดพ่น
+              เลื่อนขึ้นลงเพื่อเลือกเวลาฉีดพ่น
             </Text>
             <View
               style={{
@@ -374,14 +396,14 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
             <View
               style={{
                 flexDirection: 'row',
-                justifyContent: 'space-around',
+                justifyContent: 'space-between',
               }}>
               <MainButton
                 label="ยกเลิก"
                 fontColor={colors.fontBlack}
                 borderColor={colors.fontGrey}
                 color={colors.white}
-                width={150}
+                width={Dimensions.get('window').width * 0.45 - 32}
                 onPress={() => {
                   mixpanel.track('Tab cancel time picker');
                   setopenTimePicker(false);
@@ -391,7 +413,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                 label="บันทึก"
                 fontColor={colors.white}
                 color={colors.greenLight}
-                width={150}
+                width={Dimensions.get('window').width * 0.45 - 32}
                 onPress={() => {
                   mixpanel.track('Tab submit time picker');
                   setopenTimePicker(false);
@@ -411,12 +433,14 @@ const styles = StyleSheet.create({
     fontFamily: font.AnuphanMedium,
     fontSize: normalize(20),
     color: colors.fontBlack,
+    marginBottom: 4,
+    marginTop: 16,
   },
   input: {
     fontFamily: font.SarabunLight,
     height: normalize(56),
-    padding: Platform.OS === 'ios' ? 5 : 0,
-    borderColor: colors.disable,
+    paddingHorizontal: 16,
+    borderColor: colors.grey20,
     borderWidth: 1,
     borderRadius: normalize(10),
     color: colors.fontBlack,

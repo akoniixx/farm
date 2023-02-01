@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import {
   Image,
   ScrollView,
@@ -12,6 +18,8 @@ import {
   Platform,
   Linking,
 } from 'react-native';
+import Lottie from 'lottie-react-native';
+
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -136,6 +144,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     getTaskId();
     getData();
     getProfile();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
 
   useEffect(() => {
@@ -191,6 +201,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         }
         const res = await TaskDatasource.getTaskByTaskId(taskId || '');
         if (res && res.data) {
+          const limitTime = moment(res.data.updatedAt).add(90, 'minutes');
+          if (moment().isAfter(limitTime)) {
+            await AsyncStorage.removeItem('taskId');
+            return setShowFinding(false);
+          }
           const endTime = moment(res.data.updatedAt)
             .add(30, 'minutes')
             .toISOString();
@@ -333,6 +348,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </TouchableOpacity>
                 </View>
               </ImageBackground>
+
               {/* <View
               style={{
                 flexDirection: 'row',
@@ -711,6 +727,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           />
         </View>
       </ScrollView>
+
       {showFinding && (
         <TouchableOpacity
           style={styles.footer}

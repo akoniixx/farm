@@ -38,14 +38,14 @@ export default function SlipWaitingScreen({
   navigation,
   route,
 }: StackScreenProps<MainStackParamList, 'SlipWaitingScreen'>) {
-  const { taskId } = route.params;
+  const { taskId, countResend } = route.params;
   const [loading, setLoading] = useState(true);
   const [isFocus, setIsFocus] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
   const [reason, setReason] = useState('');
   const [showModalExtend, setShowModalExtend] = useState(false);
   const [showModalExtendTwo, setModalExtendTwo] = useState(false);
-  const [showModalExtendThree, setModalExtendThree] = useState(false);
+  const [showModalExtendThree, setModalExtendThree] = useState((countResend === 3));
   const refInput = React.useRef<any>(null);
   const [taskData, setTaskData] = useState<TaskDataTypeSlip>({
     id: '',
@@ -94,7 +94,7 @@ export default function SlipWaitingScreen({
     }
   };
   useEffect(() => {
-    NotiFication()
+    NotiFication();
     const getTaskByTaskId = async (taskId: string) => {
       try {
         const res = await TaskDatasource.getTaskByTaskId(taskId);
@@ -130,18 +130,17 @@ export default function SlipWaitingScreen({
     }
   }, [taskId, navigation]);
 
-  const NotiFication = ()=>{
+  const NotiFication = () => {
     messaging().onMessage(async message => {
       const type = message.data?.type;
-      if(type === "RECEIVE_TASK_SUCCESS"){
-        navigation.navigate('SlipSuccessScreen', 
-          {
-            taskId: message.data?.taskId!
-          }
-        );
+      if (type === 'RECEIVE_TASK_SUCCESS') {
+        await AsyncStorage.removeItem('taskId');
+        navigation.navigate('SlipSuccessScreen', {
+          taskId: message.data?.taskId!,
+        });
       }
-    })
-  }
+    });
+  };
 
   return (
     <View

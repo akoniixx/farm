@@ -80,4 +80,5 @@ export default {
   newnotification: require('./notificationnew.png'),
   wrong: require('./wrong.png'),
   inactive: require('./inactive.png'),
+  callingDarkblue: require('./callingDarkblue.png'),
 };

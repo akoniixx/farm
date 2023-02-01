@@ -9,11 +9,9 @@ import {
 import React, { useEffect, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
-import Container from '../../components/Container/Container';
-import Header from '../../components/Header/Header';
+
 import Content from '../../components/Content/Content';
 import SectionBody from './SectionBody';
-import { MainButton } from '../../components/Button/MainButton';
 import colors from '../../assets/colors/colors';
 import image from '../../assets/images/image';
 import LinearGradient from 'react-native-linear-gradient';
@@ -21,6 +19,8 @@ import { normalize } from '@rneui/themed';
 import { TaskDataTypeSlip } from '../../components/SlipCard/SlipCard';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
 import Lottie from 'lottie-react-native';
+import * as RootNavigation from '../../navigations/RootNavigation';
+import { DronerDatasource } from '../../datasource/DronerDatasource';
 
 export default function SlipSuccessScreen({
   navigation,
@@ -43,19 +43,49 @@ export default function SlipSuccessScreen({
     targetSpray: [],
     totalPrice: '',
     countResend: null,
+    firstname : '',
+    lastname : '',
+    telNo : '',
+    img : ''
   });
 
   useEffect(() => {
     TaskDatasource.getTaskByTaskId(taskId)
-      .then(res =>
-        setTaskData({
-          ...res.data,
-          cropName: res.data.purposeSpray.crop.cropName || '',
-          purposeSprayName: res.data.purposeSpray.purposeSprayName || '',
-        }),
+      .then(res =>{
+        DronerDatasource.getDronerData(res.data.droner.id).then(
+          resDroner => {
+            resDroner.file.map((item : any) => {
+              if(item.category === "PROFILE_IMAGE"){
+                console.log(item.path)
+                DronerDatasource.getDronerProfileImage(item.path).then(
+                  resImg =>{
+                    console.log(resImg)
+                    console.log({
+                      cropName: res.data.purposeSpray.crop.cropName || '',
+                      purposeSprayName: res.data.purposeSpray.purposeSprayName || '',
+                      firstname : res.data.droner.firstname,
+                      lastname: res.data.droner.lastname,
+                      telNo : res.data.droner.telephoneNo,
+                      img : resImg
+                    })
+                    setTaskData({
+                      ...res.data,
+                      cropName: res.data.purposeSpray.crop.cropName || '',
+                      purposeSprayName: res.data.purposeSpray.purposeSprayName || '',
+                      firstname : res.data.droner.firstname,
+                      lastname: res.data.droner.lastname,
+                      telNo : res.data.droner.telephoneNo,
+                      img : resImg
+                    })
+                  }
+                )
+              }
+            })
+          })
+        }
       )
       .catch(err => console.log(err));
-  }, [taskId]);
+  }, []);
   return (
     <View
       style={{
@@ -81,8 +111,9 @@ export default function SlipSuccessScreen({
                 marginTop: 32,
               }}>
               <Lottie
-                autoPlay
                 speed={0.4}
+                autoPlay
+                loop={false}
                 source={image.successfullottie}
                 resizeMode="contain"
               />
@@ -99,7 +130,12 @@ export default function SlipSuccessScreen({
               paddingBottom: normalize(40),
             }}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('MainScreen')}
+              onPress={() => RootNavigation.navigate('Main', {
+                screen: 'MyTaskDetailScreenNoti',
+                params: {
+                  task: taskData,
+                },
+              })}
               style={{
                 height: 52,
                 justifyContent: 'center',
