@@ -42,7 +42,6 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
       .getInitialNotification()
       .then(message => {
         if (message) {
-          console.log(message)
           const type = message.data?.type;
           switch (type) {
             case 'RECEIVE_TASK_SUCCESS':
@@ -93,7 +92,6 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
       });
     messaging().onNotificationOpenedApp(async message => {
       const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
-      console.log(message)
       const type = message.data?.type;
       switch (type) {
         case 'RECEIVE_TASK_SUCCESS':
@@ -143,17 +141,8 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
     });
 
     messaging().onMessage(async message => {
-      console.log(message)
       const type = message.notification?.body;
       switch (type) {
-        case 'dfbe1d9d-f164-4d22-b0eb-0d5692c058c6' :
-          RootNavigation.navigate('Main', {
-            screen: 'SlipSuccessScreen',
-            params: {
-              taskId: type,
-            },
-          });
-          break;
         case 'RECEIVE_TASK_SUCCESS':
           await AsyncStorage.removeItem('taskId')
           RootNavigation.navigate('Main', {
