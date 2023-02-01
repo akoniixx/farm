@@ -106,6 +106,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     term: '',
     fetchPredictions: false,
   });
+  const [loading, setLoading] = useState(false);
   const [showPredictions, setShowPredictions] = useState(false);
   const [predictions, setPredictions] = useState<PredictionType[]>([]);
   const GOOGLE_PACES_API_BASE_URL =
@@ -221,8 +222,8 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
       plantName: plantName,
       status: 'PENDING',
       landmark: landmark,
-      lat: lat,
-      long: long,
+      lat: position.latitude,
+      long: position.longitude,
       plotAreaId: selectPlot.subdistrictId,
     };
     const newPlotUI = {
@@ -448,9 +449,11 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
               label="ถัดไป"
               color={colors.greenLight}
               onPress={() => {
+                setLoading(true);
                 mixpanel.track('Tab next third form register');
                 Register.uploadFarmerPlot(plotData)
                   .then(res => {
+                    setLoading(false);
                     navigation.navigate('FourthFormScreen', {
                       tele: telNo.tele,
                     });
@@ -460,6 +463,11 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
             />
           </View>
         </View>
+        <Spinner
+          visible={loading}
+          textContent={'Loading...'}
+          textStyle={{ color: '#FFF' }}
+        />
       </SafeAreaView>
       <ActionSheet ref={actionSheet}>
         <View
@@ -551,7 +559,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     <Text
                       style={{
                         fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(16),
+                        fontSize: normalize(20),
                         color: colors.gray,
                       }}>
                       {!plantName ? (
@@ -611,7 +619,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     <Text
                       style={{
                         fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(16),
+                        fontSize: normalize(20),
                         color: colors.gray,
                       }}>
                       {!selectPlot ? (
@@ -659,7 +667,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                       numberOfLines={1}
                       style={{
                         fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(16),
+                        fontSize: normalize(20),
                         color: colors.gray,
                       }}>
                       {!search.term ? (
@@ -740,7 +748,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                         height: normalize(10),
                       },
                       android: {
-                        height: normalize(100),
+                        height: normalize(10),
                       },
                     }),
                   }}></View>
@@ -871,7 +879,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   color: colors.gray,
                 }}>
                 {`กรุณาพิมพ์ค้นหาพื้นที่แปลงเกษตรของคุณ
-                  ด้วยชื่อ ตำบล / อำเภอ / จังหวัด`}
+ด้วยชื่อ ตำบล / อำเภอ / จังหวัด`}
               </Text>
             </View>
             <View style={styles.container}>
@@ -1065,8 +1073,9 @@ const styles = StyleSheet.create({
   },
   head: {
     fontFamily: font.AnuphanBold,
-    fontSize: normalize(18),
+    fontSize: normalize(20),
     color: colors.fontGrey,
+    top: 5,
   },
   first: {
     flex: 1,
@@ -1180,6 +1189,6 @@ const styles = StyleSheet.create({
     borderRadius: normalize(10),
     color: colors.fontBlack,
     fontFamily: font.SarabunLight,
-    fontSize: normalize(16),
+    fontSize: normalize(20),
   },
 });

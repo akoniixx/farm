@@ -354,6 +354,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
               value={initProfile.address2}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
+              placeholder={'หมู่ ถนน'}
               placeholderTextColor={colors.disable}
             />
             <Text style={styles.head}>จังหวัด</Text>

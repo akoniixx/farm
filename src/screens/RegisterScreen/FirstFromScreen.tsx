@@ -157,7 +157,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   value={formState.name}
                   style={styles.input}
                   editable={true}
-                  placeholder={'ระบุชื่อ'}
+                  placeholder={' ระบุชื่อ'}
                   placeholderTextColor={colors.gray}
                 />
                 <Text style={styles.head}>นามสกุล*</Text>
@@ -172,7 +172,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   value={formState.surname}
                   style={styles.input}
                   editable={true}
-                  placeholder={'นามสกุล'}
+                  placeholder={' นามสกุล'}
                   placeholderTextColor={colors.gray}
                 />
 
@@ -193,12 +193,12 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                           : ''
                       }
                       editable={false}
-                      placeholder={'ระบุวัน เดือน ปี'}
+                      placeholder={' ระบุวัน เดือน ปี'}
                       placeholderTextColor={colors.gray}
                       style={{
                         width: windowWidth * 0.78,
                         color: colors.fontBlack,
-                        fontSize: normalize(16),
+                        fontSize: normalize(20),
                         fontFamily: font.SarabunLight,
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -215,9 +215,9 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                 </TouchableOpacity>
                 <Text style={styles.head}>เบอร์โทรศัพท์</Text>
                 <TextInput
-                  style={[styles.input, { backgroundColor: colors.disable }]}
+                  style={[styles.input, { backgroundColor: '#F2F3F4' }]}
                   editable={false}
-                  value={tele}
+                  value={` ${tele}`}
                   placeholderTextColor={colors.disable}
                 />
               </ScrollView>
@@ -225,7 +225,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                 <MainButton
                   label="ถัดไป"
                   disable={
-                    !formState.name || !formState.surname || !date
+                    !formState.name || !formState.surname || !date || !date
                       ? true
                       : false
                   }
@@ -345,14 +345,11 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                     </Text>
                     <View>
                       <DatePickerCustom
+                        value={date ? date : moment()}
                         startYear={
                           moment().subtract(76, 'years').get('year') + 543
                         }
-                        value={
-                          date
-                            ? date
-                            : moment().set({ date: 1 }).subtract(76, 'years')
-                        }
+                        endYear={moment().add(0, 'year').get('year') + 543}
                         onHandleChange={(d: string) => {
                           setDate(d);
                         }}
@@ -385,6 +382,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                           }}
                         />
                       </View>
+                      {}
                     </View>
                   </View>
                 </View>
@@ -427,11 +425,11 @@ const styles = StyleSheet.create({
   digit: {
     fontSize: 20,
   },
-
   head: {
     fontFamily: font.AnuphanBold,
-    fontSize: normalize(16),
+    fontSize: normalize(20),
     color: colors.fontBlack,
+    top: 5
   },
   h1: {
     fontFamily: font.AnuphanBold,
@@ -461,7 +459,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: normalize(10),
     color: colors.fontBlack,
-    fontSize: normalize(16),
+    fontSize: normalize(20),
   },
   datePickerStyle: {
     width: 200,

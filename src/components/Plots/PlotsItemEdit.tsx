@@ -97,6 +97,7 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
+                  paddingRight: 30
                 }}>
                 <Text style={styles.title}>{plotName}</Text>
                 <Image
@@ -223,6 +224,7 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
+                  paddingRight: 30
                 }}>
                 <View>
                   <Text

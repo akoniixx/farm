@@ -91,7 +91,7 @@ const FourthFormScreen: React.FC<any> = ({ route, navigation }) => {
               <Text
                 style={{
                   fontFamily: font.AnuphanMedium,
-                  fontSize: normalize(16),
+                  fontSize: normalize(20),
                   alignSelf: 'center',
                   textAlign: 'center',
                 }}>

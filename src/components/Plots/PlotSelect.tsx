@@ -86,9 +86,8 @@ const PlotSelect: React.FC<Prop> = ({
       }}>
       <View
         style={[
-          styles({ disable: isPending }).card,
-          selected && styles({ disable: isPending }).selected,
-          { justifyContent: 'center' },
+          styles({ disable: isPending, selected }).card,
+          // selected && styles({ disable: isPending, selected }).selected,
         ]}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text
@@ -389,7 +388,13 @@ const PlotSelect: React.FC<Prop> = ({
 
 export default PlotSelect;
 
-const styles = ({ disable = false }: { disable?: boolean }) =>
+const styles = ({
+  disable = false,
+  selected = false,
+}: {
+  disable?: boolean;
+  selected: boolean;
+}) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -398,10 +403,14 @@ const styles = ({ disable = false }: { disable?: boolean }) =>
     },
     card: {
       width: Dimensions.get('window').width - normalize(20),
-      minHeight: normalize(130),
-      backgroundColor: disable ? colors.greyDivider : 'white',
-      borderWidth: 1,
-      borderColor: '#C0C5CA',
+      height: 'auto',
+      backgroundColor: disable
+        ? colors.greyDivider
+        : selected
+        ? 'rgba(46, 196, 109, 0.05)'
+        : 'white',
+      borderWidth: selected ? 2 : 1,
+      borderColor: selected ? '#2EC46D' : '#C0C5CA',
       margin: normalize(10),
       borderRadius: normalize(10),
       padding: normalize(10),
@@ -409,7 +418,6 @@ const styles = ({ disable = false }: { disable?: boolean }) =>
     selected: {
       borderColor: '#2EC46D',
       backgroundColor: 'rgba(46, 196, 109, 0.05)',
-      borderWidth: 2,
     },
     title: {
       fontWeight: 'bold',

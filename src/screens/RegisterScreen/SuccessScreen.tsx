@@ -73,7 +73,7 @@ const SuccessRegister: React.FC<any> = ({ navigation }) => {
           Register.changeToPending()
             .then(async res => {
               const fcmtoken = await AsyncStorage.getItem('fcmtoken');
-              FCMtokenDatasource.saveFCMtoken(fcmtoken!)
+              FCMtokenDatasource.saveFCMtoken(token_register!)
                 .then(res => {
                   RootNavigation.navigate('Main', {
                     screen: 'MainScreen',
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: font.SarabunLight,
-    fontSize: normalize(16),
+    fontSize: normalize(18),
     color: colors.fontBlack,
   },
 });
