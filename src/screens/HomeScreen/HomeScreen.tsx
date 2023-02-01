@@ -1,0 +1,171 @@
+import { Switch } from '@rneui/themed';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import {
+  Button,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  ImageBackground,
+  Platform,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors, font } from '../../assets';
+import { stylesCentral } from '../../styles/StylesCentral';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Avatar } from '@rneui/base';
+import icons from '../../assets/icons/icons';
+import { SheetManager } from 'react-native-actions-sheet';
+import { useFocusEffect } from '@react-navigation/native';
+import { normalize, width } from '../../functions/Normalize';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import image from '../../assets/images/image';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import MainScreen from '../MainScreen/MainScreen';
+import fonts from '../../assets/fonts';
+import PromotionScreen from '../PromotionScreen/PromotionScreen';
+import ProfileScreen from '../ProfileScreen/ProfileScreen';
+import AuthMainScreen from '../AuthMainScreen/AuthMainScreen';
+import AuthProfileScreen from '../AuthProfileScreen/AuthProfileScreen';
+import AuthPromotionScreen from '../AuthPromotionScreen.tsx/AuthPromotionScreen';
+
+const Tab = createBottomTabNavigator();
+const HomeScreen: React.FC<any> = ({ navigation, route }) => {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: { height: normalize(80), borderBottomColor: colors.white },
+      }}>
+      <Tab.Screen
+        name="หน้าแรก"
+        component={AuthMainScreen}
+        options={{
+          tabBarStyle: {
+            minHeight: Platform.OS === 'ios' ? 95 : 80,
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          tabBarLabelStyle: {
+            fontFamily: font.AnuphanMedium,
+          },
+          lazy: true,
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                fontFamily: fonts.AnuphanMedium,
+                fontSize: normalize(16),
+                color: focused ? colors.greenLight : '#8D96A0',
+                bottom: normalize(6),
+              }}>
+              หน้าแรก
+            </Text>
+          ),
+          tabBarIcon: i =>
+            i.focused ? (
+              <Image
+                source={icons.home_active}
+                style={{ width: 20, height: 21 }}
+              />
+            ) : (
+              <Image source={icons.home} style={{ width: 20, height: 21 }} />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="โปรโมชั่น"
+        component={AuthPromotionScreen}
+        options={{
+          tabBarStyle: {
+            minHeight: Platform.OS === 'ios' ? 95 : 80,
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          tabBarLabelStyle: {
+            fontFamily: font.AnuphanMedium,
+          },
+          lazy: true,
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                fontFamily: fonts.AnuphanMedium,
+                fontSize: normalize(16),
+                color: focused ? colors.greenLight : '#8D96A0',
+                bottom: normalize(6),
+              }}>
+              โปรโมชั่น
+            </Text>
+          ),
+          tabBarIcon: i =>
+            i.focused ? (
+              <Image
+                source={icons.discount_active}
+                style={{ width: 20, height: 20 }}
+              />
+            ) : (
+              <Image
+                source={icons.discount}
+                style={{ width: 20, height: 20 }}
+              />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="บัญชีของฉัน"
+        component={AuthProfileScreen}
+        options={{
+          tabBarStyle: {
+            minHeight: Platform.OS === 'ios' ? 95 : 80,
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          tabBarLabelStyle: {
+            fontFamily: font.AnuphanMedium,
+          },
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                fontFamily: fonts.AnuphanMedium,
+                fontSize: normalize(16),
+                color: focused ? colors.greenLight : '#8D96A0',
+                bottom: normalize(6),
+              }}>
+              บัญชีของฉัน
+            </Text>
+          ),
+          tabBarIcon: i =>
+            i.focused ? (
+              <Image
+                source={icons.profile_active}
+                style={{ width: 16, height: 20 }}
+              />
+            ) : (
+              <Image source={icons.profile} style={{ width: 14, height: 18 }} />
+            ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+export default HomeScreen;
+
+const styles = StyleSheet.create({
+  btnContainer: {
+    width: normalize(33),
+    marginVertical: normalize(10),
+  },
+  inner: {
+    paddingHorizontal: normalize(17),
+    flex: 1,
+    justifyContent: 'space-around',
+  },
+});
