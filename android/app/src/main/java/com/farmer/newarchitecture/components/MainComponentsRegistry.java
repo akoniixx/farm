@@ -1,4 +1,4 @@
-package com.iconkaset.farmer.newarchitecture.components;
+package com.farmer.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;
