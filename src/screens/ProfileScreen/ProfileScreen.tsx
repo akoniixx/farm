@@ -15,7 +15,7 @@ import { colors, font, icons, image } from '../../assets';
 import { height, normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
-import { Avatar } from '@rneui/themed';
+import { Avatar, Icon } from '@rneui/themed';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { ScrollView } from 'react-native';
 import PlotsItem, { StatusObject } from '../../components/Plots/Plots';
@@ -34,9 +34,12 @@ import PlotInProfile from '../../components/Plots/PlotsInProfile';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { useIsFocused } from '@react-navigation/native';
 
-const ProfileScreen: React.FC<any> = ({ navigation }) => {
+const ProfileScreen: React.FC<any> = ({ navigation,route }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
+  const [reload, setReload] = useState(false);
+  const noti= route.params?.noti??false
+
   const isFocused = useIsFocused();
   const numColumn =
     profilestate?.plotItem.length > 0
@@ -124,11 +127,19 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
   };
   return (
     <SafeAreaView style={{ backgroundColor: '#F7FFF0' }}>
-      <View
+      {
+        noti?
+        <CustomHeader
+          title="บัญชีของฉัน"
+          showBackBtn
+          onPressBack={() => navigation.goBack()}
+        />:
+        <View
         style={{
           maxHeight: '100%',
           backgroundColor: '#F7FFF0',
           justifyContent: 'center',
+          position : 'relative',
           padding: 25,
         }}>
         <Text
@@ -141,6 +152,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
           บัญชีของฉัน
         </Text>
       </View>
+      }
       <ScrollView>
         <View style={styles.section1}>
           <Avatar

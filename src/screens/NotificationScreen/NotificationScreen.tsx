@@ -80,6 +80,16 @@ function generateDataNotification(data: any) {
           dateString: generateNotiTime(item.createdAt),
           notiId: item.id,
         };
+      default :
+      return {
+        notificationType: NotificationType.UNKNOWN,
+        expand: true,
+        title: 'ยืนยันแปลงไม่สำเร็จ',
+        isRead: item.isRead,
+        subtitle: item.detail,
+        dateString: generateNotiTime(item.createdAt),
+        notiId: item.id,
+      };
     }
   });
 }
@@ -110,6 +120,7 @@ const NotificationScreen: React.FC<any> = ({ navigation, route }) => {
         <FlatList
           data={generateDataNotification(data)}
           renderItem={({ item }: any) => (
+            (item.notificationType != NotificationType.UNKNOWN )?
             <NotificationCard
               expand={item?.expand}
               title={item?.title}
@@ -120,7 +131,8 @@ const NotificationScreen: React.FC<any> = ({ navigation, route }) => {
               onClick={() => {
                 readIt(item?.notiId);
               }}
-            />
+            />:
+            <></>
           )}
         />
       ) : (

@@ -43,45 +43,44 @@ export default function SlipSuccessScreen({
     targetSpray: [],
     totalPrice: '',
     countResend: null,
-    firstname: '',
-    lastname: '',
-    telNo: '',
-    img: '',
+    firstname : '',
+    lastname : '',
+    telNo : '',
+    img : '',
+    rating : '',
+    totalTaskReview : ''
   });
 
   useEffect(() => {
     TaskDatasource.getTaskByTaskId(taskId)
-      .then(res => {
-        DronerDatasource.getDronerData(res.data.droner.id).then(resDroner => {
-          resDroner.file.map((item: any) => {
-            if (item.category === 'PROFILE_IMAGE') {
-              console.log(item.path);
-              DronerDatasource.getDronerProfileImage(item.path).then(resImg => {
-                console.log(resImg);
-                console.log({
-                  cropName: res.data.purposeSpray.crop.cropName || '',
-                  purposeSprayName:
-                    res.data.purposeSpray.purposeSprayName || '',
-                  firstname: res.data.droner.firstname,
-                  lastname: res.data.droner.lastname,
-                  telNo: res.data.droner.telephoneNo,
-                  img: resImg,
-                });
-                setTaskData({
-                  ...res.data,
-                  cropName: res.data.purposeSpray.crop.cropName || '',
-                  purposeSprayName:
-                    res.data.purposeSpray.purposeSprayName || '',
-                  firstname: res.data.droner.firstname,
-                  lastname: res.data.droner.lastname,
-                  telNo: res.data.droner.telephoneNo,
-                  img: resImg,
-                });
-              });
-            }
-          });
-        });
-      })
+      .then(res =>{
+        DronerDatasource.getDronerData(res.data.droner.id).then(
+          resDroner => {
+            resDroner.file.map((item : any) => {
+              if(item.category === "PROFILE_IMAGE"){
+                console.log(item.path)
+                DronerDatasource.getDronerProfileImage(item.path).then(
+                  resImg =>{
+                    DronerDatasource.getDronerRating(res.data.droner.id).then(
+                      resRating => setTaskData({
+                        ...res.data,
+                        cropName: res.data.purposeSpray.crop.cropName || '',
+                        purposeSprayName: res.data.purposeSpray.purposeSprayName || '',
+                        firstname : res.data.droner.firstname,
+                        lastname: res.data.droner.lastname,
+                        telNo : res.data.droner.telephoneNo,
+                        img : resImg,
+                        rating : (parseFloat(resRating.ratingAvg).toFixed(1)).toString(),
+                        totalTaskReview : resRating.totalTaskReview
+                      })
+                    )
+                  }
+                )
+              }
+            })
+          })
+        }
+      )
       .catch(err => console.log(err));
   }, []);
   return (
