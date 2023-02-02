@@ -8,8 +8,9 @@ import {
   Dimensions,
   TouchableOpacity,
   Platform,
+  ScrollView,
+  SafeAreaView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { mixpanel } from '../../../mixpanel';
 import { colors, font } from '../../assets';
 import icons from '../../assets/icons/icons';
@@ -21,13 +22,14 @@ import { Register } from '../../datasource/AuthDatasource';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
+import Container from '../../components/Container/Container';
 const width = Dimensions.get('window').width;
 const FourthFormScreen: React.FC<any> = ({ route, navigation }) => {
   const telNo = route.params.tele;
   const Profile = route.params.profile ?? false;
 
   return (
-    <SafeAreaView style={stylesCentral.container}>
+    <SafeAreaView style={{ backgroundColor: colors.white, flex: 1 }}>
       <CustomHeader
         title="ลงทะเบียนเกษตรกร"
         showBackBtn
@@ -36,84 +38,85 @@ const FourthFormScreen: React.FC<any> = ({ route, navigation }) => {
           navigation.goBack();
         }}
       />
-      <View style={styles.inner}>
-        <View style={styles.container}>
-          <View style={{ marginBottom: normalize(10) }}>
-            <ProgressBar index={4} />
-          </View>
-          <Text style={styles.h3}>ขั้นตอนที่ 4 จาก 4</Text>
-          <Text style={styles.h1}>ยืนยันเอกสาร</Text>
-          <Text style={styles.h2}>{`ยืนยันตัวตน ด้วยรูปถ่ายคู่ผู้สมัคร 
+      <View style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={{ flex: 1, justifyContent: 'space-between' }}>
+            <View style={{ flex: 1 }}>
+              <View style={styles.inner}>
+                <View style={styles.container}>
+                  <View style={{ marginBottom: normalize(10) }}>
+                    <ProgressBar index={4} />
+                  </View>
+                  <Text style={styles.h3}>ขั้นตอนที่ 4 จาก 4</Text>
+                  <Text style={styles.h1}>ยืนยันเอกสาร</Text>
+                </View>
+              </View>
+              <Text style={styles.h2}>{`ยืนยันตัวตน ด้วยรูปถ่ายคู่ผู้สมัคร 
 พร้อมบัตรประชาชน`}</Text>
-          <View style={{ alignItems: 'center', top: '8%' }}>
-            <Image
-              source={image.examidcard}
-              style={{ width: normalize(350), height: normalize(200) }}
-            />
-            <View style={styles.border}>
-              <View style={styles.allText}>
-                <Text style={styles.h4}>
-                  <Image source={icons.dangercircle} />
-                  <Text> </Text>
-                  ลักษณะภาพถ่าย
-                </Text>
-                <Text style={styles.text}>กรุณาถ่ายหน้าตรง พร้อมถือ</Text>
-                <Text style={styles.text}>
-                  บัตรประชาชนของคุณโดยให้เห็นใบหน้า
-                </Text>
-                <Text style={styles.text}>และบัตรประชาชนอย่างชัดเจน</Text>
+              <View style={{ alignItems: 'center', top: '8%' }}>
+                <Image
+                  source={image.examidcard}
+                  style={{ width: normalize(350), height: normalize(200) }}
+                />
+                <View style={[styles.border]}>
+                  <View style={styles.allText}>
+                    <Text style={styles.h4}>
+                      <Image source={icons.dangercircle} />
+                      <Text> </Text>
+                      ลักษณะภาพถ่าย
+                    </Text>
+                    <Text style={styles.text}>กรุณาถ่ายหน้าตรง พร้อมถือ</Text>
+                    <Text style={styles.text}>
+                      บัตรประชาชนของคุณโดยให้เห็นใบหน้า
+                    </Text>
+                    <Text style={styles.text}>และบัตรประชาชนอย่างชัดเจน</Text>
+                  </View>
+                </View>
               </View>
             </View>
-          </View>
-        </View>
-
-        <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
-          <MainButton
-            label="ถัดไป"
-            color={colors.greenLight}
-            onPress={() => {
-              mixpanel.track('Tab next to add id card form register');
-              navigation.navigate('AddIDCardScreen', {
-                tele: telNo,
-                profile: Profile,
-              });
-            }}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              mixpanel.track('Tab skip to add id card form register');
-              Register.registerSkip4()
-                .then(async res => navigation.navigate('SuccessRegister'))
-                .catch(err => console.log(err));
-            }}>
-            <View
-              style={{ height: normalize(50), paddingVertical: normalize(10) }}>
-              <Text
-                style={{
-                  fontFamily: font.AnuphanMedium,
-                  fontSize: normalize(20),
-                  alignSelf: 'center',
-                  textAlign: 'center',
+            <View style={{ paddingHorizontal: 10, marginVertical: 8 }}>
+              <MainButton
+                label="ถัดไป"
+                color={colors.greenLight}
+                onPress={() => {
+                  mixpanel.track('Tab next to add id card form register');
+                  navigation.navigate('AddIDCardScreen', {
+                    tele: telNo,
+                    profile: Profile,
+                  });
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  mixpanel.track('Tab skip to add id card form register');
+                  Register.registerSkip4()
+                    .then(async res => navigation.navigate('SuccessRegister'))
+                    .catch(err => console.log(err));
                 }}>
-                ข้ามขั้นตอน
-              </Text>
+                <View style={{ paddingVertical: 10 }}>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanMedium,
+                      fontSize: normalize(20),
+                      alignSelf: 'center',
+                      textAlign: 'center',
+                    }}>
+                    ข้ามขั้นตอน
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
-        </View>
+          </View>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
 };
 export default FourthFormScreen;
 const styles = StyleSheet.create({
-  first: {
-    flex: 1,
-    justifyContent: 'space-around',
-  },
   inner: {
     paddingHorizontal: normalize(17),
-    flex: 1,
-    justifyContent: 'space-around',
+    // flex: 1,
   },
   h1: {
     fontFamily: font.AnuphanBold,
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
     marginLeft: normalize(20),
   },
   container: {
-    flex: 1,
+    // flex: 1,
   },
   textaddplot: {
     fontFamily: font.AnuphanBold,
@@ -193,29 +196,6 @@ const styles = StyleSheet.create({
         width: normalize(350),
       },
     }),
-  },
-  rectangleFixed: {
-    left: '0%',
-    position: 'absolute',
-    top: '25%',
-  },
-  rectangle: {
-    height: normalize(160),
-    width: normalize(350),
-    bottom: '15%',
-  },
-  input: {
-    display: 'flex',
-    paddingHorizontal: normalize(10),
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-    height: normalize(56),
-    marginVertical: 12,
-    borderColor: colors.gray,
-    borderWidth: 1,
-    borderRadius: normalize(10),
-    color: colors.fontBlack,
   },
   font1: {
     fontFamily: font.AnuphanBold,

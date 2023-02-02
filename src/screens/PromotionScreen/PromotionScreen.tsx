@@ -32,15 +32,15 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
   return (
     <>
       <SafeAreaView
-        style={[stylesCentral.container, { backgroundColor: '#F5FCF8' }]}>
+        style={[stylesCentral.container, { backgroundColor: colors.white }]}>
         <CustomHeader
           title="โปรโมชั่น"
           showBackBtn
           onPressBack={() => navigation.goBack()}
         />
-         <View style={styles.inner}>
-        <View style={styles.container}>
-          </View></View>
+        <View style={styles.inner}>
+          <View style={styles.container}></View>
+        </View>
         <View style={styles.empty}>
           <Image
             source={image.empty_coupon}
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   container: {
-flex:1
+    flex: 1,
   },
   empty: {
     alignItems: 'center',
@@ -83,6 +83,6 @@ flex:1
     fontSize: normalize(18),
     paddingVertical: 2,
     color: colors.gray,
-    alignItems: 'center'
+    alignItems: 'center',
   },
 });

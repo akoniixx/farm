@@ -129,32 +129,36 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             />
           </View>
         </View>
-        <View
-          style={{
-            padding: normalize(16),
-            backgroundColor: 'white',
-            marginTop: normalize(10),
-          }}>
-          <Text style={styles.label}>นักบินโดรน</Text>
-          <DronerCard
-            name={task.droner.firstname + ' ' + task.droner.lastname}
-            profile={task.droner.image_profile}
-            telnumber={task.droner.telephone_no}
-          />
+        {task.status === 'CANCELED' ? <></> :
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderWidth: 1,
-              borderColor: colors.disable,
-              padding: normalize(10),
-              borderRadius: 16,
+              padding: normalize(16),
+              backgroundColor: 'white',
+              marginTop: normalize(10),
             }}>
-            <Text style={styles.plot}>อัตราค่าจ้าง</Text>
-            <Text style={styles.unitPrice}>{task.unit_price} บาท/ไร่</Text>
+            <Text style={styles.label}>นักบินโดรน</Text>
+            <DronerCard
+              name={task.droner.firstname + ' ' + task.droner.lastname}
+              profile={task.droner.image_profile}
+              telnumber={task.droner.telephone_no}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderWidth: 1,
+                borderColor: colors.disable,
+                padding: normalize(10),
+                borderRadius: 16,
+              }}>
+              <Text style={styles.plot}>อัตราค่าจ้าง</Text>
+              <Text style={styles.unitPrice}>{task.unit_price} บาท/ไร่</Text>
+            </View>
           </View>
-        </View>
+        }
+
+
         <View
           style={{
             padding: normalize(16),

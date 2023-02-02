@@ -305,14 +305,6 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
               <View style={{ height: 40 }}></View>
             </ScrollView>
           </View>
-          <View style={{ backgroundColor: colors.white }}>
-            <MainButton
-              disable={!profilestate.plotItem}
-              label="บันทึก"
-              color={colors.greenLight}
-              onPress={() => navigation.navigate('MainScreen')}
-            />
-          </View>
         </View>
         <Modal animationType="fade" transparent={true} visible={showModalCall}>
           <View

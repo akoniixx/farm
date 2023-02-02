@@ -35,7 +35,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
   const [messageNoti, setMessageNoti] = useState<string>('');
   const [initialRouteName, setInitialRouteName] = useState('หน้าแรก');
   useEffect(() => {
-    if(!firebase.apps.length){
+    if (!firebase.apps.length) {
       firebaseInitialize();
     }
     messaging()
@@ -47,7 +47,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             case 'RECEIVE_TASK_SUCCESS':
               TaskDatasource.getTaskByTaskId(message.data?.taskId!)
                 .then(async res => {
-                  await AsyncStorage.removeItem('taskId')
+                  await AsyncStorage.removeItem('taskId');
                   RootNavigation.navigate('Main', {
                     screen: 'MyTaskDetailScreenNoti',
                     params: {
@@ -62,7 +62,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
                 screen: 'SlipWaitingScreen',
                 params: {
                   taskId: message.data?.taskId,
-                  countResend : message.data?.countResend
+                  countResend: message.data?.countResend,
                 },
               });
               break;
@@ -97,7 +97,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
         case 'RECEIVE_TASK_SUCCESS':
           TaskDatasource.getTaskByTaskId(message.data?.taskId!)
             .then(async res => {
-              await AsyncStorage.removeItem('taskId')
+              await AsyncStorage.removeItem('taskId');
               RootNavigation.navigate('Main', {
                 screen: 'MyTaskDetailScreenNoti',
                 params: {
@@ -112,7 +112,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             screen: 'SlipWaitingScreen',
             params: {
               taskId: message.data?.taskId,
-              countResend : message.data?.countResend
+              countResend: message.data?.countResend,
             },
           });
           break;
@@ -121,7 +121,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             screen: 'SlipWaitingScreen',
             params: {
               taskId: message.data?.taskId,
-              countResend : message.data?.countResend
+              countResend: message.data?.countResend,
             },
           });
           break;
@@ -144,7 +144,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
       const type = message.notification?.body;
       switch (type) {
         case 'RECEIVE_TASK_SUCCESS':
-          await AsyncStorage.removeItem('taskId')
+          await AsyncStorage.removeItem('taskId');
           RootNavigation.navigate('Main', {
             screen: 'SlipSuccessScreen',
             params: {
@@ -157,7 +157,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             screen: 'SlipWaitingScreen',
             params: {
               taskId: message.data?.taskId,
-              countResend : message.data?.countResend
+              countResend: message.data?.countResend,
             },
           });
           break;
@@ -166,7 +166,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             screen: 'SlipWaitingScreen',
             params: {
               taskId: message.data?.taskId,
-              countResend : message.data?.countResend
+              countResend: message.data?.countResend,
             },
           });
           break;

@@ -196,12 +196,14 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       placeholder={' ระบุวัน เดือน ปี'}
                       placeholderTextColor={colors.gray}
                       style={{
-                        width: windowWidth * 0.78,
-                        color: colors.fontBlack,
-                        fontSize: normalize(20),
-                        fontFamily: font.SarabunLight,
+                        height: 60,
                         justifyContent: 'center',
-                        alignItems: 'center',
+                        lineHeight: 19,
+                        fontSize: 20,
+                        flex: 1,
+                        width: '100%',
+                        color: colors.fontBlack,
+                        fontFamily: font.SarabunLight,
                       }}
                     />
                     <Image
@@ -345,7 +347,16 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                     </Text>
                     <View>
                       <DatePickerCustom
-                        value={date ? date : moment()}
+                        value={
+                          date
+                            ? date
+                            : moment()
+                                .set({
+                                  day: 0,
+                                  month: 0,
+                                })
+                                .subtract(35, 'years')
+                        }
                         startYear={
                           moment().subtract(76, 'years').get('year') + 543
                         }
@@ -429,7 +440,7 @@ const styles = StyleSheet.create({
     fontFamily: font.AnuphanBold,
     fontSize: normalize(20),
     color: colors.fontBlack,
-    top: 5
+    top: 5,
   },
   h1: {
     fontFamily: font.AnuphanBold,

@@ -617,6 +617,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                       }}
                     />
                     <Text
+                      numberOfLines={1}
                       style={{
                         fontFamily: fonts.AnuphanMedium,
                         fontSize: normalize(20),

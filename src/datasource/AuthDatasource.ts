@@ -6,6 +6,7 @@ import {
   registerClient,
   uploadFileClient,
 } from '../config/develop-config';
+import { StackActions, NavigationActions } from 'react-navigation';
 
 export class Authentication {
   static generateOtp(telNumber: String): Promise<any> {
@@ -69,13 +70,14 @@ export class Authentication {
         throw err;
       });
   }
-  static async logout() {
-    await AsyncStorage.removeItem('token');
-    await AsyncStorage.removeItem('token_register');
-    await AsyncStorage.removeItem('farmer_id');
-    // await AsyncStorage.removeItem('token');
-    // await AsyncStorage.removeItem('farmer_id');
+  static async logout(navigation: any) {
     await AsyncStorage.multiRemove(['token', 'farmer_id', 'task_id']);
+    const resetActionNavigate = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'Auth' })],
+    });
+    navigation.popToTop();
+    navigation.dispatch(resetActionNavigate);
   }
   static generateOtpDelete(telNumber: String): Promise<any> {
     return axios

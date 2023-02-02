@@ -44,7 +44,7 @@ export default function SectionBody(props: TaskDataTypeSlip) {
                 alignItems: 'center',
               }}>
               <Image
-                source={!(props.img)?image.bg_droner:{uri : props.img}}
+                source={!props.img ? image.bg_droner : { uri: props.img }}
                 style={{
                   width: 48,
                   height: 48,
@@ -61,7 +61,7 @@ export default function SectionBody(props: TaskDataTypeSlip) {
                     fontFamily: fonts.SarabunMedium,
                     fontSize: 18,
                   }}>
-                  {props.firstname + " " + props.lastname}
+                  {props.firstname + ' ' + props.lastname}
                 </Text>
                 {/* <View
                   style={{
