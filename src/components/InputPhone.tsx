@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     height: 60,
     justifyContent: 'center',
-    lineHeight: 19,
+    lineHeight: 24,
     fontSize: 19,
     flex: 1,
     width: '100%',

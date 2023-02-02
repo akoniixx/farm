@@ -1,4 +1,4 @@
-import React, { useReducer, useRef, useState } from 'react';
+import React, { useMemo, useReducer, useRef, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -32,18 +32,40 @@ import ConditionScreen from '../RegisterScreen/ConditionScreen';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import PlotInProfile from '../../components/Plots/PlotsInProfile';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import { useIsFocused } from '@react-navigation/native';
 
 const ProfileScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
-  const [reload, setReload] = useState(false);
-
+  const isFocused = useIsFocused();
+  const numColumn =
+    profilestate?.plotItem.length > 0
+      ? Math.ceil(profilestate.plotItem.length / 2)
+      : 0;
+  console.log(numColumn);
   const onLogout = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     socket.removeAllListeners(`send-task-${farmer_id!}`);
     socket.close();
     await Authentication.logout();
   };
+
+  const newPlotList = useMemo(() => {
+    const convertToArrayNested = profilestate.plotItem.reduce(
+      (acc: any, cur: any, index: number) => {
+        const isOdd = index % 2 === 0;
+        if (isOdd) {
+          acc.push([cur]);
+        }
+        if (!isOdd) {
+          acc[acc.length - 1].push(cur);
+        }
+        return acc;
+      },
+      [],
+    );
+    return convertToArrayNested;
+  }, [profilestate.plotItem]);
   useEffect(() => {
     const getProfile = async () => {
       setLoading(true);
@@ -65,7 +87,6 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
               plotItem: res.farmerPlot,
               status: res.status,
             });
-            setReload(!reload);
           } else {
             ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
               .then(resImg => {
@@ -78,7 +99,6 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                   plotItem: res.farmerPlot,
                   status: res.status,
                 });
-                setReload(!reload);
               })
 
               .catch(err => console.log(err))
@@ -89,7 +109,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
         .finally(() => setLoading(false));
     };
     getProfile();
-  }, [reload]);
+  }, [isFocused]);
 
   const openGooglePlay = () => {
     if (Platform.OS === 'ios') {
@@ -142,9 +162,9 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
               marginLeft: normalize(15),
               top: normalize(5),
             }}>
-            <View style={{ flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <Text style={[styles.text]}>{profilestate.name} </Text>
-              <View style={{ alignSelf: 'center', paddingHorizontal: 20, }}>
+              <View style={{ alignSelf: 'center', paddingHorizontal: 20 }}>
                 <TouchableOpacity
                   onPress={() => navigation.navigate('EditProfileScreen')}>
                   <Image
@@ -293,6 +313,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
+              paddingHorizontal: 15,
             }}>
             <Text style={[styles.head]}>
               แปลงของคุณ ({profilestate.plotItem.length})
@@ -336,7 +357,6 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
           ) : (
             <View
               style={{
-                // top: 5
                 flex: 1,
                 justifyContent: 'space-between',
                 backgroundColor: 'white',
@@ -346,7 +366,9 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 horizontal
                 showsHorizontalScrollIndicator={false}>
                 <FlatList
-                  horizontal={false}
+                  keyExtractor={item => '#' + item.id}
+                  key={'#'}
+                  horizontal={true}
                   scrollEnabled={false}
                   contentContainerStyle={{
                     alignSelf: 'flex-start',
@@ -354,31 +376,55 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                   ItemSeparatorComponent={({ highlighted }) => (
                     <View style={[highlighted && { marginLeft: 0 }]} />
                   )}
-                  numColumns={Math.ceil(profilestate.plotItem.length / 2)}
                   showsVerticalScrollIndicator={true}
                   showsHorizontalScrollIndicator={false}
-                  data={profilestate.plotItem}
+                  data={newPlotList}
                   renderItem={({ item, index }) => (
-                    <View style={{ flexDirection: 'row' }}>
-                      <View>
-                        <PlotInProfile
-                          key={index}
-                          plotName={
-                            !item.plotName
-                              ? 'แปลงที่' +
-                                ' ' +
-                                `${index + 1}` +
-                                ' ' +
-                                item.plantName
-                              : item.plotName
-                          }
-                          raiAmount={item.raiAmount}
-                          locationName={item.locationName}
-                          plantName={item.plantName}
-                          status={item.status}
-                          index={index}
-                        />
+                    <View>
+                      <View style={{ flexDirection: 'row' }}>
+                        <View>
+                          <PlotInProfile
+                            key={index}
+                            plotName={
+                              !item[0].plotName
+                                ? 'แปลงที่' +
+                                  ' ' +
+                                  `${index + 1}` +
+                                  ' ' +
+                                  item[0].plantName
+                                : item[0].plotName
+                            }
+                            raiAmount={item[0].raiAmount}
+                            locationName={item[0].locationName}
+                            plantName={item[0].plantName}
+                            status={item[0].status}
+                            index={index}
+                          />
+                        </View>
                       </View>
+                      {item?.[1] && (
+                        <View style={{ flexDirection: 'row' }}>
+                          <View>
+                            <PlotInProfile
+                              key={index}
+                              plotName={
+                                !item[1].plotName
+                                  ? 'แปลงที่' +
+                                    ' ' +
+                                    `${index + 1}` +
+                                    ' ' +
+                                    item[1].plantName
+                                  : item[1].plotName
+                              }
+                              raiAmount={item[1].raiAmount}
+                              locationName={item[1].locationName}
+                              plantName={item[1].plantName}
+                              status={item[1].status}
+                              index={index}
+                            />
+                          </View>
+                        </View>
+                      )}
                     </View>
                   )}
                 />
@@ -635,8 +681,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   section2: {
-    padding: 15,
-    backgroundColor: colors.white,
+    ...Platform.select({
+      ios: {
+        padding: 15,
+        paddingVertical: 15,
+        backgroundColor: colors.white,
+      },
+      android: {
+        paddingVertical: 15,
+        backgroundColor: colors.white,
+      },
+    }),
   },
   section3: {
     backgroundColor: colors.white,

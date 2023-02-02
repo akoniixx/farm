@@ -148,7 +148,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
 
   useEffect(() => {
     const dronerSug = async () => {
-      setLoading(true);
+      // setLoading(true);
       const value = await AsyncStorage.getItem('token');
       if (value) {
         const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -160,8 +160,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           .then(res => {
             setTaskSug(res);
           })
-          .catch(err => console.log(err))
-          .finally(() => setLoading(false));
+          .catch(err => console.log(err));
+        // .finally(() => setLoading(false));
       }
     };
     const dronerSugUsed = async () => {
@@ -239,114 +239,116 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       <ScrollView>
         <View style={[stylesCentral.container]}>
           <View style={{ backgroundColor: colors.white }}>
-            <View style={{ height: screenHeight }}>
-              <ImageBackground
+            <View style={{ height: 'auto' }}>
+              <Image
                 source={image.bgHead}
                 style={{
                   width: (width * 380) / 375,
                   height: (height * 250) / 812,
-                }}>
-                <SafeAreaView edges={['top']} style={styles.headCard}>
-                  <View>
-                    <Text
-                      style={{
-                        fontFamily: font.AnuphanMedium,
-                        fontSize: normalize(18),
-                        color: colors.fontBlack,
-                      }}>
-                      ยินดีต้อนรับ
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: font.AnuphanBold,
-                        fontSize: normalize(26),
-                        color: colors.fontBlack,
-                      }}>
-                      {profilestate.name}
-                    </Text>
-                  </View>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('NotificationScreen', {
-                        data: notiData?.data,
-                      })
-                    }>
-                    {showBell ? (
-                      <Image
-                        source={
-                          notiData.count != 0
-                            ? icons.newnotification
-                            : icons.notification
-                        }
-                        style={{
-                          width: normalize(28),
-                          height: normalize(28),
-                        }}
-                      />
-                    ) : (
-                      <></>
-                    )}
-                  </TouchableOpacity>
-                </SafeAreaView>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    paddingVertical: 130,
-                    alignSelf: 'center',
-                  }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (disableBooking) {
-                        setShowModalCantBooking(true);
-                      } else {
-                        mixpanel.track('Tab booking with login');
-                        navigation.navigate('SelectDateScreen');
-                      }
+                  position: 'absolute',
+                }}
+              />
+              <SafeAreaView edges={['top']} style={styles.headCard}>
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanMedium,
+                      fontSize: normalize(18),
+                      color: colors.fontBlack,
                     }}>
-                    <LinearGradient
-                      colors={['#61E097', '#3B996E']}
-                      style={{
-                        paddingVertical: normalize(10),
-                        width: normalize(166),
-                        height: normalize(137),
-                        borderRadius: 24,
-                        alignItems: 'center',
-                        borderWidth: 1,
-                        borderColor: colors.greenLight,
-                      }}>
-                      <Image
-                        source={icons.drone}
-                        style={{ height: normalize(76), width: normalize(105) }}
-                      />
-                      <Text style={styles.font}>จ้างโดรนเกษตร</Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
-                  <View style={{ width: normalize(10) }}></View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      mixpanel.track('Tab your plot with login');
-                      navigation.navigate('AllPlotScreen');
+                    ยินดีต้อนรับ
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanBold,
+                      fontSize: normalize(26),
+                      color: colors.fontBlack,
                     }}>
-                    <LinearGradient
-                      colors={['#FFFFFF', '#ECFBF2']}
-                      style={{
-                        paddingVertical: normalize(10),
-                        width: normalize(166),
-                        height: normalize(137),
-                        borderRadius: 24,
-                        alignItems: 'center',
-                        borderWidth: 1,
-                        borderColor: colors.greenLight,
-                      }}>
-                      <Image
-                        source={icons.plots}
-                        style={{ height: normalize(76), width: normalize(105) }}
-                      />
-                      <Text style={styles.font1}>แปลงของคุณ</Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
+                    {profilestate.name}
+                  </Text>
                 </View>
-              </ImageBackground>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('NotificationScreen', {
+                      data: notiData?.data,
+                    })
+                  }>
+                  {showBell ? (
+                    <Image
+                      source={
+                        notiData.count != 0
+                          ? icons.newnotification
+                          : icons.notification
+                      }
+                      style={{
+                        width: normalize(28),
+                        height: normalize(28),
+                      }}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                </TouchableOpacity>
+              </SafeAreaView>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  paddingTop: 130,
+                  paddingBottom: profilestate.status === 'REJECTED' ? 32 : 0,
+                  alignSelf: 'center',
+                }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (disableBooking) {
+                      setShowModalCantBooking(true);
+                    } else {
+                      mixpanel.track('Tab booking with login');
+                      navigation.navigate('SelectDateScreen');
+                    }
+                  }}>
+                  <LinearGradient
+                    colors={['#61E097', '#3B996E']}
+                    style={{
+                      paddingVertical: normalize(10),
+                      width: normalize(166),
+                      height: normalize(137),
+                      borderRadius: 24,
+                      alignItems: 'center',
+                      borderWidth: 1,
+                      borderColor: colors.greenLight,
+                    }}>
+                    <Image
+                      source={icons.drone}
+                      style={{ height: normalize(76), width: normalize(105) }}
+                    />
+                    <Text style={styles.font}>จ้างโดรนเกษตร</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+                <View style={{ width: normalize(10) }}></View>
+                <TouchableOpacity
+                  onPress={() => {
+                    mixpanel.track('Tab your plot with login');
+                    navigation.navigate('AllPlotScreen');
+                  }}>
+                  <LinearGradient
+                    colors={['#FFFFFF', '#ECFBF2']}
+                    style={{
+                      paddingVertical: normalize(10),
+                      width: normalize(166),
+                      height: normalize(137),
+                      borderRadius: 24,
+                      alignItems: 'center',
+                      borderWidth: 1,
+                      borderColor: colors.greenLight,
+                    }}>
+                    <Image
+                      source={icons.plots}
+                      style={{ height: normalize(76), width: normalize(105) }}
+                    />
+                    <Text style={styles.font1}>แปลงของคุณ</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
 
               {/* <View
               style={{
@@ -389,19 +391,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 }}
               />
             </View>  */}
-              <View style={[styles.empty]}>
+              <View>
                 {profilestate.status === 'REJECTED' ? (
-                  <View
-                    style={{
-                      ...Platform.select({
-                        ios: {
-                          paddingVertical: 75,
-                        },
-                        android: {
-                          paddingVertical: 30,
-                        },
-                      }),
-                    }}>
+                  <View>
                     <View
                       style={{
                         paddingHorizontal: 20,
