@@ -38,14 +38,14 @@ export default function SlipWaitingScreen({
   navigation,
   route,
 }: StackScreenProps<MainStackParamList, 'SlipWaitingScreen'>) {
-  const { taskId } = route.params;
+  const { taskId, countResend } = route.params;
   const [loading, setLoading] = useState(true);
   const [isFocus, setIsFocus] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
   const [reason, setReason] = useState('');
   const [showModalExtend, setShowModalExtend] = useState(false);
   const [showModalExtendTwo, setModalExtendTwo] = useState(false);
-  const [showModalExtendThree, setModalExtendThree] = useState(false);
+  const [showModalExtendThree, setModalExtendThree] = useState((countResend === 3));
   const refInput = React.useRef<any>(null);
   const [taskData, setTaskData] = useState<TaskDataTypeSlip>({
     id: '',
