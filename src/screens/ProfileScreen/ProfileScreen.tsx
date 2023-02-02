@@ -33,10 +33,11 @@ import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import PlotInProfile from '../../components/Plots/PlotsInProfile';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 
-const ProfileScreen: React.FC<any> = ({ navigation }) => {
+const ProfileScreen: React.FC<any> = ({ navigation,route }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
+  const noti= route.params?.noti??false
 
   const onLogout = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -109,8 +110,19 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
           maxHeight: '100%',
           backgroundColor: '#F7FFF0',
           justifyContent: 'center',
+          position : 'relative',
           padding: 25,
         }}>
+       {
+        noti ?
+        <View style={{
+          position : 'absolute',
+          left : normalize(20)
+        }}>
+          <Avatar onPress={()=> navigation.goBack()} source={icons.arrowLeft} size={normalize(25)}/>
+        </View>:
+        <></>
+       }
         <Text
           style={{
             fontFamily: font.AnuphanBold,

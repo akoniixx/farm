@@ -46,7 +46,9 @@ export default function SlipSuccessScreen({
     firstname : '',
     lastname : '',
     telNo : '',
-    img : ''
+    img : '',
+    rating : '',
+    totalTaskReview : ''
   });
 
   useEffect(() => {
@@ -59,24 +61,19 @@ export default function SlipSuccessScreen({
                 console.log(item.path)
                 DronerDatasource.getDronerProfileImage(item.path).then(
                   resImg =>{
-                    console.log(resImg)
-                    console.log({
-                      cropName: res.data.purposeSpray.crop.cropName || '',
-                      purposeSprayName: res.data.purposeSpray.purposeSprayName || '',
-                      firstname : res.data.droner.firstname,
-                      lastname: res.data.droner.lastname,
-                      telNo : res.data.droner.telephoneNo,
-                      img : resImg
-                    })
-                    setTaskData({
-                      ...res.data,
-                      cropName: res.data.purposeSpray.crop.cropName || '',
-                      purposeSprayName: res.data.purposeSpray.purposeSprayName || '',
-                      firstname : res.data.droner.firstname,
-                      lastname: res.data.droner.lastname,
-                      telNo : res.data.droner.telephoneNo,
-                      img : resImg
-                    })
+                    DronerDatasource.getDronerRating(res.data.droner.id).then(
+                      resRating => setTaskData({
+                        ...res.data,
+                        cropName: res.data.purposeSpray.crop.cropName || '',
+                        purposeSprayName: res.data.purposeSpray.purposeSprayName || '',
+                        firstname : res.data.droner.firstname,
+                        lastname: res.data.droner.lastname,
+                        telNo : res.data.droner.telephoneNo,
+                        img : resImg,
+                        rating : (parseFloat(resRating.ratingAvg).toFixed(1)).toString(),
+                        totalTaskReview : resRating.totalTaskReview
+                      })
+                    )
                   }
                 )
               }

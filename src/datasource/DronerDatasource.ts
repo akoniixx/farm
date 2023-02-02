@@ -15,4 +15,11 @@ export class DronerDatasource{
         )
         .catch(err => console.log(err))
     }
+    static getDronerRating(dronerId : string){
+        return httpClient.get(BASE_URL + `task/summary-review-droner/${dronerId}`)
+        .then(
+            res => res.data
+        )
+        .catch(err => console.log(err))
+    }
 }
