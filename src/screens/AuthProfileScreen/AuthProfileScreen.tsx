@@ -67,7 +67,7 @@ const AuthProfileScreen: React.FC<any> = ({ navigation }) => {
                 fontFamily: font.AnuphanBold,
                 color: colors.fontBlack,
                 fontWeight: '800',
-                lineHeight: 29
+                lineHeight: 29,
               }}>
               ยินดีต้อนรับสู่ IconKaset
             </Text>
@@ -102,8 +102,7 @@ const AuthProfileScreen: React.FC<any> = ({ navigation }) => {
           backgroundColor: colors.white,
           width: '100%',
           justifyContent: 'space-around',
-          paddingHorizontal: 10
-
+          paddingHorizontal: 10,
         }}>
         <TouchableOpacity
           onPress={openGooglePlay}

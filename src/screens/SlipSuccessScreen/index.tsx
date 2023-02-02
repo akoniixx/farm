@@ -127,12 +127,14 @@ export default function SlipSuccessScreen({
               paddingBottom: normalize(40),
             }}>
             <TouchableOpacity
-              onPress={() => RootNavigation.navigate('Main', {
-                screen: 'MyTaskDetailScreenNoti',
-                params: {
-                  task: taskData,
-                },
-              })}
+              onPress={() =>
+                RootNavigation.navigate('Main', {
+                  screen: 'MyTaskDetailScreenNoti',
+                  params: {
+                    task: taskData,
+                  },
+                })
+              }
               style={{
                 height: 52,
                 justifyContent: 'center',

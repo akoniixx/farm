@@ -88,7 +88,7 @@ const PlotsItem: React.FC<AddPlot> = ({
             marginBottom: normalize(10),
           },
           android: {
-            height: normalize(155),
+            height: 'auto',
             borderWidth: 0.5,
             borderColor: colors.greenLight,
             backgroundColor: '#ECFBF2',
