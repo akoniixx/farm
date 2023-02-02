@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
     fontFamily: font.AnuphanBold,
     fontSize: normalize(20),
     color: colors.fontBlack,
-    top: 5
+    top: 5,
   },
   h1: {
     fontFamily: font.AnuphanBold,
