@@ -42,7 +42,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     socket.removeAllListeners(`send-task-${farmer_id!}`);
     socket.close();
-    await Authentication.logout();
+    await Authentication.logout(navigation);
   };
   useEffect(() => {
     const getProfile = async () => {
@@ -142,9 +142,9 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
               marginLeft: normalize(15),
               top: normalize(5),
             }}>
-            <View style={{ flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <Text style={[styles.text]}>{profilestate.name} </Text>
-              <View style={{ alignSelf: 'center', paddingHorizontal: 20, }}>
+              <View style={{ alignSelf: 'center', paddingHorizontal: 20 }}>
                 <TouchableOpacity
                   onPress={() => navigation.navigate('EditProfileScreen')}>
                   <Image
