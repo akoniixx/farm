@@ -45,7 +45,9 @@ export default function SlipWaitingScreen({
   const [reason, setReason] = useState('');
   const [showModalExtend, setShowModalExtend] = useState(false);
   const [showModalExtendTwo, setModalExtendTwo] = useState(false);
-  const [showModalExtendThree, setModalExtendThree] = useState((countResend === 3));
+  const [showModalExtendThree, setModalExtendThree] = useState(
+    countResend === 3,
+  );
   const refInput = React.useRef<any>(null);
   const [taskData, setTaskData] = useState<TaskDataTypeSlip>({
     id: '',

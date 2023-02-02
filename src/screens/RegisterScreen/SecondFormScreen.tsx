@@ -324,8 +324,8 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                   <View
                     style={{
                       backgroundColor: !disTrict.label
-                      ? '#F2F3F4'
-                      : colors.white,
+                        ? '#F2F3F4'
+                        : colors.white,
                       borderColor: colors.disable,
                       borderWidth: 1,
                       padding: 10,

@@ -76,7 +76,7 @@ const PlotInProfile: React.FC<plotData> = ({
         paddingVertical: 5,
         alignSelf: 'center',
         paddingHorizontal: 10,
-        width: '100%'
+        width: '100%',
       }}>
       {StatusObject(status).status === 'ตรวจสอบแล้ว' ? (
         <View key={index} style={[styles.cards]}>
@@ -210,7 +210,7 @@ const PlotInProfile: React.FC<plotData> = ({
             </View>
             <View
               style={{
-                top: 10,
+                marginTop: 10,
                 width: normalize(109),
                 height: normalize(24),
                 borderRadius: normalize(12),
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
   },
   cards: {
-    height: '100%',
+    height: 'auto',
     width: normalize(340),
     borderWidth: 0.5,
     borderColor: colors.greenLight,

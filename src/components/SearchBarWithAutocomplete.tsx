@@ -206,8 +206,12 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
           style={[
             [inputBottomRadius, container],
             {
-              fontSize: 19,
+              height: 60,
+              justifyContent: 'center',
+              lineHeight: 19,
+              fontSize: 20,
               flex: 1,
+              width: '100%',
               color: colors.fontBlack,
               fontFamily: font.SarabunLight,
             },

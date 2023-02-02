@@ -74,7 +74,7 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
         <View
           key={index}
           style={{
-            height: normalize(134),
+            height: 'auto',
             borderWidth: 0.5,
             borderColor: colors.greenLight,
             backgroundColor: '#ECFBF2',
@@ -97,7 +97,7 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  paddingRight: 30
+                  paddingRight: 30,
                 }}>
                 <Text style={styles.title}>{plotName}</Text>
                 <Image
@@ -185,7 +185,7 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
           style={{
             ...Platform.select({
               ios: {
-                height: normalize(145),
+                height: 'auto',
                 borderWidth: 0.5,
                 borderColor: colors.greenLight,
                 backgroundColor: '#ECFBF2',
@@ -199,7 +199,7 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
                 marginBottom: normalize(10),
               },
               android: {
-                height: normalize(165),
+                height: 'auto',
                 borderWidth: 0.5,
                 borderColor: colors.greenLight,
                 backgroundColor: '#ECFBF2',
@@ -224,7 +224,7 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  paddingRight: 30
+                  paddingRight: 30,
                 }}>
                 <View>
                   <Text
@@ -311,7 +311,7 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
               </View>
               <View
                 style={{
-                  top: 10,
+                  marginTop: 10,
                   width: normalize(109),
                   height: normalize(24),
                   borderRadius: normalize(12),

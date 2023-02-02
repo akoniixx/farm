@@ -80,7 +80,8 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const DistriSheet = useRef<any>();
   const SubDistriSheet = useRef<any>();
   const [address, setAddress] = useState<any>([]);
-
+  const [addr, setAddr] = useState<any>([]);
+  const [images, setImages] = useState<any>([]);
   useEffect(() => {
     getProfile();
   }, []);
@@ -89,14 +90,13 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
       .then(res => {
-        console.log(res);
-        setValue(res);
-        setAddress(res.address);
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
           }
         });
+        setValue(res);
+        setAddress(res.address);
         if (imgPath.length === 0) {
           QueryLocation.QueryProfileSubDistrict(res.address.districtId).then(
             resSub => {
@@ -105,37 +105,10 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   return item;
                 }
               });
-              if (!res.birthDate) {
-                setInitProfile({
-                  firstname: res.firstname,
-                  lastname: res.lastname,
-                  birthDate: '',
-                  telephone: res.telephoneNo,
-                  image: '',
-                  address1: res.address.address1,
-                  address2: res.address.address2,
-                  province: address[0].provinceName,
-                  district: address[0].districtName,
-                  subdistrict: address[0].subdistrictName,
-                  postal: res.address.postcode,
-                });
-              } else {
-                setInitProfile({
-                  firstname: res.firstname,
-                  lastname: res.lastname,
-                  birthDate: res.birthDate,
-                  telephone: res.telephoneNo,
-                  image: '',
-                  address1: res.address.address1,
-                  address2: res.address.address2,
-                  province: address[0].provinceName,
-                  district: address[0].districtName,
-                  subdistrict: address[0].subdistrictName,
-                  postal: res.address.postcode,
-                });
-              }
+              setAddr(address[0]);
             },
           );
+          setImages('');
         } else {
           ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
             .then(resImg => {
@@ -147,40 +120,9 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                     return item;
                   }
                 });
-                if (!res.birthDate) {
-                  setInitProfile({
-                    firstname: res.firstname,
-                    lastname: res.lastname,
-                    birthDate: '',
-                    telephone: res.telephoneNo,
-                    image: resImg.url,
-                    address1: res.address.address1,
-                    address2: res.address.address2,
-                    province: address[0].provinceName,
-                    district: address[0].districtName,
-                    subdistrict: address[0].subdistrictName,
-                    postal: res.address.postcode,
-                  });
-                } else {
-                  const datetime = res.birthDate;
-                  const date = datetime.split('T')[0];
-                  setInitProfile({
-                    firstname: res.firstname,
-                    lastname: res.lastname,
-                    birthDate: `${date.split('-')[2]}/${date.split('-')[1]}/${
-                      parseInt(date.split('-')[0]) + 543
-                    }`,
-                    telephone: res.telephoneNo,
-                    image: resImg.url,
-                    address1: res.address.address1,
-                    address2: res.address.address2,
-                    province: address[0].provinceName,
-                    district: address[0].districtName,
-                    subdistrict: address[0].subdistrictName,
-                    postal: res.address.postcode,
-                  });
-                }
+                setAddr(address[0]);
               });
+              setImages(resImg);
             })
             .catch(err => console.log(err));
         }
@@ -249,9 +191,9 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 <Avatar
                   size={normalize(109)}
                   source={
-                    initProfile.image === ''
+                    images.url === undefined
                       ? icons.avatar
-                      : { uri: initProfile.image }
+                      : { uri: images.url }
                   }
                   avatarStyle={{
                     borderRadius: normalize(60),
@@ -285,7 +227,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </View>
             <Text style={styles.head}>ชื่อ*</Text>
             <TextInput
-              value={initProfile.firstname}
+              value={value.firstname}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'ระบุชื่อ'}
@@ -293,7 +235,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             />
             <Text style={styles.head}>นามสกุล*</Text>
             <TextInput
-              value={initProfile.lastname}
+              value={value.lastname}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'นามสกุล'}
@@ -338,55 +280,55 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             <TextInput
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
-              value={initProfile.telephone}
+              value={value.telephoneNo}
             />
             <Text style={styles.headAdd}>ที่อยู่ของคุณ</Text>
             <Text style={styles.head}>บ้านเลขที่</Text>
             <TextInput
-              value={initProfile.address1}
+              value={address.address1}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
-              placeholder={'บ้านเลขที่'}
-              placeholderTextColor={colors.disable}
+              placeholder={'-'}
+              placeholderTextColor={colors.gray}
             />
             <Text style={styles.head}>รายละเอียดที่อยู่</Text>
             <TextInput
-              value={initProfile.address2}
+              value={address.address2}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
-              placeholder={'หมู่ ถนน'}
-              placeholderTextColor={colors.disable}
+              placeholder={'-'}
+              placeholderTextColor={colors.gray}
             />
             <Text style={styles.head}>จังหวัด</Text>
             <TextInput
-              value={initProfile.province}
+              value={addr.provinceName}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
-              placeholder={'ระบุชื่อ'}
-              placeholderTextColor={colors.disable}
+              placeholder={'-'}
+              placeholderTextColor={colors.gray}
             />
             <Text style={styles.head}>อำเภอ</Text>
             <TextInput
-              value={initProfile.district}
+              value={addr.districtName}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
-              placeholder={'ระบุชื่อ'}
-              placeholderTextColor={colors.disable}
+              placeholder={'-'}
+              placeholderTextColor={colors.gray}
             />
             <Text style={styles.head}>ตำบล</Text>
             <TextInput
-              value={initProfile.subdistrict}
+              value={addr.subdistrictName}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
-              placeholder={'ระบุชื่อ'}
-              placeholderTextColor={colors.disable}
+              placeholder={'-'}
+              placeholderTextColor={colors.gray}
             />
             <Text style={styles.head}>รหัสไปรษณีย์</Text>
             <TextInput
-              value={initProfile.postal}
+              value={address.postcode}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
-              placeholder={'รหัสไปรษณีย์'}
+              placeholder={'-'}
               placeholderTextColor={colors.gray}
             />
           </ScrollView>
