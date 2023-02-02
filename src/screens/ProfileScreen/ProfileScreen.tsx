@@ -578,7 +578,6 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
   );
 };
 export default ProfileScreen;
-
 const styles = StyleSheet.create({
   btAdd: {
     top: normalize(100),
