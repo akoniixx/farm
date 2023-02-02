@@ -47,7 +47,7 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     socket.removeAllListeners(`send-task-${farmer_id!}`);
     socket.close();
-    await Authentication.logout();
+    await Authentication.logout(navigation);
   };
 
   const newPlotList = useMemo(() => {

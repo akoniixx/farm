@@ -283,8 +283,8 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                mixpanel.track('Tab ให้นักบินโดรนเตรียมให้');
-                setSelectedCheckbox('ให้นักบินโดรนเตรียมให้');
+                mixpanel.track('Tab นักบินโดรนเตรียมให้');
+                setSelectedCheckbox('นักบินโดรนเตรียมให้');
               }}>
               <View
                 style={{
@@ -294,7 +294,7 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
                 }}>
                 <Image
                   source={
-                    selectedCheckbox === 'ให้นักบินโดรนเตรียมให้'
+                    selectedCheckbox === 'นักบินโดรนเตรียมให้'
                       ? icons.checked
                       : icons.check
                   }
@@ -309,7 +309,7 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
                       marginLeft: normalize(10),
                     },
                   ]}>
-                  ให้นักบินโดรนเตรียมให้
+                  นักบินโดรนเตรียมให้
                 </Text>
               </View>
             </TouchableOpacity>

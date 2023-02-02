@@ -169,7 +169,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                       <Image
                         source={icons.warningIcon}
                         style={{
-                          marginTop: 8,
+                          marginTop: 4,
                           width: 18,
                           height: 18,
                           marginRight: 8,
@@ -182,7 +182,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation }) => {
                           paddingRight: 16,
                           alignSelf: 'flex-start',
                         }}>
-                        หากแปลงของคุณมีสถานะ “รอการตรวจ สอบ”
+                        หากแปลงของคุณมีสถานะ “รอการตรวจสอบ”
                         จะส่งผลต่อขั้นตอนจ้างนักบินโดรน กรุณาติดต่อเจ้าหน้าที่
                         เพื่อยืนยันสถานะ
                       </Text>
