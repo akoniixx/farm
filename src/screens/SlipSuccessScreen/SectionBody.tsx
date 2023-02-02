@@ -63,7 +63,7 @@ export default function SectionBody(props: TaskDataTypeSlip) {
                   }}>
                   {props.firstname + ' ' + props.lastname}
                 </Text>
-                {/* <View
+                <View
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -80,9 +80,9 @@ export default function SectionBody(props: TaskDataTypeSlip) {
                       marginLeft: 4,
                       color: colors.gray,
                     }}>
-                    5.0 คะแนน (10)
+                    {`${props.rating} คะแนน (${props.totalTaskReview})`}
                   </Text>
-                </View> */}
+                </View>
               </View>
             </View>
             <TouchableOpacity
