@@ -39,22 +39,21 @@ const DronerUsed: React.FC<dronerUsedData> = ({
   distance,
 }) => {
   const [checked, setChecked] = useState<boolean>(false);
+  const [data, setData] = useState<any>();
+  
 
   const addUnAddDroners = async() => {
     const value = await AsyncStorage.getItem('token');
     if (value) {
       const farmer_id = await AsyncStorage.getItem('farmer_id');
       const droner_id = await AsyncStorage.getItem('droner_id');
-      
-      console.log(1,farmer_id)
-      console.log(2,droner_id)
-
+      console.log(droner_id)
      await FavoriteDroner.addUnaddFav(
         farmer_id !== null ? farmer_id : '',
         droner_id !== null ? droner_id : '',
       )
         .then(res => {
-          console.log(res);
+          setData(res);
         })
         .catch(err => console.log(err));
     }
@@ -82,8 +81,10 @@ const DronerUsed: React.FC<dronerUsedData> = ({
                 alignSelf: 'flex-end',
                 margin: 10,
               }}>
-              <TouchableOpacity onPress={() => {
-                addUnAddDroners();
+              <TouchableOpacity onPress={ async() => {
+              const droner_id = await AsyncStorage.getItem('droner_id');
+              console.log(droner_id)
+                // addUnAddDroners();
                 setChecked(!checked)
               }
 

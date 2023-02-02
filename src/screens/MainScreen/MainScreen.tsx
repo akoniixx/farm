@@ -170,7 +170,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       const value = await AsyncStorage.getItem('token');
       if (value) {
         const farmer_id = await AsyncStorage.getItem('farmer_id');
-        const limit = 8;
+        const limit = 0;
         const offset = 0;
         TaskSuggestion.DronerUsed(
           farmer_id !== null ? farmer_id : '',
@@ -181,6 +181,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         )
           .then(res => {
             setTaskSugUsed(res);
+
           })
           .catch(err => console.log(err));
       }
