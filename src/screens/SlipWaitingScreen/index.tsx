@@ -139,6 +139,12 @@ export default function SlipWaitingScreen({
           taskId: message.data?.taskId!,
         });
       }
+      else if(type === 'DRONER_ALL_REJECT'){
+        navigation.navigate('SlipWaitingScreen', {
+          taskId: message.data?.taskId!,
+          countResend : parseInt(message.data?.countResend!)
+        });
+     }
     });
   };
 
