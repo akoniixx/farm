@@ -71,6 +71,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
                 screen: 'SlipWaitingScreen',
                 params: {
                   taskId: message.data?.taskId,
+                  countResend : message.data?.countResend
                 },
               });
               break;
@@ -141,7 +142,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
     });
 
     messaging().onMessage(async message => {
-      const type = message.notification?.body;
+      const type = message.data?.type;
       switch (type) {
         case 'RECEIVE_TASK_SUCCESS':
           await AsyncStorage.removeItem('taskId');

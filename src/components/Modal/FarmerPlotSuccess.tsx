@@ -36,7 +36,7 @@ const FarmerPlotSuccess: React.FC<ModalEntity> = ({
             ]}>
             {text}
           </Text>
-          <Image source={image.plotFailed} style={ModalStyle.image} />
+          <Image source={image.plotSuccess} style={ModalStyle.image} />
           <MainButton
             label="ตกลง"
             color={colors.greenLight}

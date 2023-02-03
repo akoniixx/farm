@@ -26,6 +26,8 @@ export interface TaskDataTypeSlip {
   lastname?: string;
   telNo?: string;
   img?: string;
+  rating? : string;
+  totalTaskReview? : string;
 }
 interface Props extends TaskDataTypeSlip {}
 
