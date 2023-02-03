@@ -203,9 +203,10 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
           }}
           onMainClick={() => {
             setFarmerRegisterSuccess(false);
-            // setInitialRouteName("หน้าแรก")
-            const jumpAction = TabActions.jumpTo('หน้าแรก');
-            navigation.dispatch(jumpAction);
+            RootNavigation.navigate('Main', {
+              screen: 'ProfileScreen',
+              params: { noti: true },
+            })
           }}
         />
         <FarmerRegisterFailed
@@ -216,8 +217,10 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
           }}
           onMainClick={() => {
             setFarmerRegisterFailed(false);
-            const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
-            navigation.dispatch(jumpAction);
+            RootNavigation.navigate('Main', {
+              screen: 'ProfileScreen',
+              params: { noti: true },
+            })
           }}
         />
         <FarmerPlotSuccess
@@ -228,8 +231,10 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
           }}
           onMainClick={() => {
             setFarmerPlotSuccess(false);
-            const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
-            navigation.dispatch(jumpAction);
+            RootNavigation.navigate('Main', {
+              screen: 'ProfileScreen',
+              params: { noti: true },
+            })
           }}
         />
         <FarmerPlotFailed
@@ -240,8 +245,10 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
           }}
           onMainClick={() => {
             setFarmerPlotFailed(false);
-            const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
-            navigation.dispatch(jumpAction);
+            RootNavigation.navigate('Main', {
+              screen: 'ProfileScreen',
+              params: { noti: true },
+            })
           }}
         />
         <Tab.Navigator
