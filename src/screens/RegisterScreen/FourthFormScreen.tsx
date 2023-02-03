@@ -93,13 +93,14 @@ const FourthFormScreen: React.FC<any> = ({ route, navigation }) => {
                     .then(async res => navigation.navigate('SuccessRegister'))
                     .catch(err => console.log(err));
                 }}>
-                <View style={{ paddingVertical: 10 }}>
+                <View style={{ paddingVertical: 30 }}>
                   <Text
                     style={{
                       fontFamily: font.AnuphanMedium,
                       fontSize: normalize(20),
                       alignSelf: 'center',
                       textAlign: 'center',
+                      color: colors.fontGrey,
                     }}>
                     ข้ามขั้นตอน
                   </Text>

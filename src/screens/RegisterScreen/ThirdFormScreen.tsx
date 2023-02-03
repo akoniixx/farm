@@ -363,15 +363,23 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
         />
         <View style={styles.inner}>
           <View style={styles.container}>
-            <View style={{ marginBottom: normalize(10) }}>
+            <View
+              style={{
+                marginBottom: normalize(10),
+                paddingHorizontal: normalize(15),
+              }}>
               <ProgressBar index={3} />
             </View>
-            <Text style={styles.h3}>ขั้นตอนที่ 3 จาก 4</Text>
-            <Text style={styles.h1}>สร้างแปลงเกษตร</Text>
+            <Text style={[styles.h3, { paddingHorizontal: normalize(15) }]}>
+              ขั้นตอนที่ 3 จาก 4
+            </Text>
+            <Text style={[styles.h1, { paddingHorizontal: normalize(15) }]}>
+              สร้างแปลงเกษตร
+            </Text>
             <ScrollView>
               {plotDataUI.length === 0 && plotData.length === 0 ? (
                 <>
-                  <View style={styles.rectangleFixed}>
+                  <View style={[styles.rectangleFixed]}>
                     <Image style={styles.rectangle} source={image.rectangle} />
                     <Text style={styles.h2}>กดเพื่อเพิ่มแปลงเกษตรของคุณ</Text>
                   </View>
@@ -383,6 +391,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                     marginTop: normalize(10),
                     display: 'flex',
                     justifyContent: 'center',
+                    paddingHorizontal: normalize(15),
                   }}>
                   <Text
                     style={[
@@ -424,26 +433,32 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   ))}
                 </View>
               )}
-              <View style={[styles.buttonAdd, { top: '0%' }]}>
-                <Text
-                  style={styles.textaddplot}
-                  onPress={() => {
-                    mixpanel.track('Tab add plot form register');
-                    setPlantName(null);
-                    setraiAmount(null);
-                    setlandmark(null);
-                    setSearch({ search: null });
-                    setSelectPlot(null);
-                    setSearchValue('');
-                    setPlotAreas([]);
-                    actionSheet.current.show();
-                  }}>
-                  + เพิ่มแปลงเกษตร
-                </Text>
+              <View style={{ paddingHorizontal: normalize(15) }}>
+                <View style={[styles.buttonAdd, { top: '0%' }]}>
+                  <Text
+                    style={styles.textaddplot}
+                    onPress={() => {
+                      mixpanel.track('Tab add plot form register');
+                      setPlantName(null);
+                      setraiAmount(null);
+                      setlandmark(null);
+                      setSearch({ search: null });
+                      setSelectPlot(null);
+                      setSearchValue('');
+                      setPlotAreas([]);
+                      actionSheet.current.show();
+                    }}>
+                    + เพิ่มแปลงเกษตร
+                  </Text>
+                </View>
               </View>
             </ScrollView>
           </View>
-          <View style={{ backgroundColor: colors.white }}>
+          <View
+            style={{
+              backgroundColor: colors.white,
+              paddingHorizontal: normalize(15),
+            }}>
             <MainButton
               disable={plotDataUI.length === 0 ? true : false}
               label="ถัดไป"
@@ -617,7 +632,6 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                       }}
                     />
                     <Text
-                      numberOfLines={1}
                       style={{
                         fontFamily: fonts.AnuphanMedium,
                         fontSize: normalize(20),
@@ -1086,7 +1100,6 @@ const styles = StyleSheet.create({
     width: normalize(160),
   },
   inner: {
-    paddingHorizontal: normalize(15),
     flex: 1,
     justifyContent: 'space-around',
   },
@@ -1139,11 +1152,11 @@ const styles = StyleSheet.create({
   },
   buttonAdd: {
     top: normalize(100),
-    borderColor: '#1F8449',
+    borderColor: colors.greenLight,
     borderWidth: 1,
     borderRadius: 10,
     height: normalize(80),
-    width: normalize(330),
+    width: '100%',
     borderStyle: 'dashed',
     position: 'relative',
     alignSelf: 'center',
@@ -1151,13 +1164,14 @@ const styles = StyleSheet.create({
   textaddplot: {
     fontFamily: fonts.AnuphanBold,
     fontSize: normalize(20),
-    color: colors.greenLight,
+    color: '#1F8449',
     textAlign: 'center',
     top: '30%',
+    width: '100%',
   },
   rectangle: {
     height: normalize(170),
-    width: normalize(375),
+    width: '100%',
     bottom: '15%',
     alignSelf: 'center',
   },

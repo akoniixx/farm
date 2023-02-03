@@ -5,7 +5,7 @@ import {
   Image,
   useWindowDimensions,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import fonts from '../../../assets/fonts';
 import colors from '../../../assets/colors/colors';
 import image from '../../../assets/images/image';
@@ -17,13 +17,17 @@ import * as RootNavigation from '../../../navigations/RootNavigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { socket } from '../../../functions/utility';
 import { Authentication } from '../../../datasource/AuthDatasource';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const DeleteSuccess: React.FC<any> = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
   const onLogout = async () => {
+    setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     socket.removeAllListeners(`send-task-${farmer_id!}`);
     socket.close();
-    await Authentication.logout();
+    await Authentication.logout(navigation);
+    setLoading(false);
   };
 
   return (
@@ -65,6 +69,11 @@ const DeleteSuccess: React.FC<any> = ({ navigation }) => {
           />
         </View>
       </View>
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </SafeAreaView>
   );
 };

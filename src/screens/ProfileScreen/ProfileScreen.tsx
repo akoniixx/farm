@@ -15,7 +15,7 @@ import { colors, font, icons, image } from '../../assets';
 import { height, normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
-import { Avatar } from '@rneui/themed';
+import { Avatar, Icon } from '@rneui/themed';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { ScrollView } from 'react-native';
 import PlotsItem, { StatusObject } from '../../components/Plots/Plots';
@@ -34,9 +34,12 @@ import PlotInProfile from '../../components/Plots/PlotsInProfile';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { useIsFocused } from '@react-navigation/native';
 
-const ProfileScreen: React.FC<any> = ({ navigation }) => {
+const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
+  const [reload, setReload] = useState(false);
+  const noti = route.params?.noti ?? false;
+
   const isFocused = useIsFocused();
   const numColumn =
     profilestate?.plotItem.length > 0
@@ -124,23 +127,32 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
   };
   return (
     <SafeAreaView style={{ backgroundColor: '#F7FFF0' }}>
-      <View
-        style={{
-          maxHeight: '100%',
-          backgroundColor: '#F7FFF0',
-          justifyContent: 'center',
-          padding: 25,
-        }}>
-        <Text
+      {noti ? (
+        <CustomHeader
+          title="บัญชีของฉัน"
+          showBackBtn
+          onPressBack={() => navigation.goBack()}
+        />
+      ) : (
+        <View
           style={{
-            fontFamily: font.AnuphanBold,
-            fontSize: normalize(20),
-            color: colors.fontBlack,
-            textAlign: 'center',
+            maxHeight: '100%',
+            backgroundColor: '#F7FFF0',
+            justifyContent: 'center',
+            position: 'relative',
+            padding: 25,
           }}>
-          บัญชีของฉัน
-        </Text>
-      </View>
+          <Text
+            style={{
+              fontFamily: font.AnuphanBold,
+              fontSize: normalize(20),
+              color: colors.fontBlack,
+              textAlign: 'center',
+            }}>
+            บัญชีของฉัน
+          </Text>
+        </View>
+      )}
       <ScrollView>
         <View style={styles.section1}>
           <Avatar
@@ -349,8 +361,10 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 onPress={() => {
                   navigation.navigate('AddPlotScreen');
                 }}>
-                <View style={[styles.buttonAdd]}>
-                  <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
+                <View style={{ paddingHorizontal: normalize(15) }}>
+                  <View style={[styles.buttonAdd]}>
+                    <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
+                  </View>
                 </View>
               </TouchableOpacity>
             </View>
@@ -360,75 +374,70 @@ const ProfileScreen: React.FC<any> = ({ navigation }) => {
                 flex: 1,
                 justifyContent: 'space-between',
                 backgroundColor: 'white',
+                alignSelf: 'center',
               }}>
-              <ScrollView
-                style={{ paddingVertical: 10 }}
-                horizontal
-                showsHorizontalScrollIndicator={false}>
-                <FlatList
-                  keyExtractor={item => '#' + item.id}
-                  key={'#'}
-                  horizontal={true}
-                  scrollEnabled={false}
-                  contentContainerStyle={{
-                    alignSelf: 'flex-start',
-                  }}
-                  ItemSeparatorComponent={({ highlighted }) => (
-                    <View style={[highlighted && { marginLeft: 0 }]} />
-                  )}
-                  showsVerticalScrollIndicator={true}
-                  showsHorizontalScrollIndicator={false}
-                  data={newPlotList}
-                  renderItem={({ item, index }) => (
-                    <View>
+              <FlatList
+                keyExtractor={item => item.id}
+                horizontal={true}
+                scrollEnabled={true}
+                contentContainerStyle={{
+                  justifyContent: 'center',
+                }}
+                ItemSeparatorComponent={({ highlighted }) => (
+                  <View style={[highlighted && { marginLeft: 0 }]} />
+                )}
+                showsVerticalScrollIndicator={true}
+                showsHorizontalScrollIndicator={false}
+                data={newPlotList}
+                renderItem={({ item, index }) => (
+                  <View style={{ minHeight: 300 }}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <View>
+                        <PlotInProfile
+                          key={index}
+                          plotName={
+                            !item[0].plotName
+                              ? 'แปลงที่' +
+                                ' ' +
+                                `${index + 1}` +
+                                ' ' +
+                                item[0].plantName
+                              : item[0].plotName
+                          }
+                          raiAmount={item[0].raiAmount}
+                          locationName={item[0].locationName}
+                          plantName={item[0].plantName}
+                          status={item[0].status}
+                          index={index}
+                        />
+                      </View>
+                    </View>
+                    {item?.[1] && (
                       <View style={{ flexDirection: 'row' }}>
                         <View>
                           <PlotInProfile
                             key={index}
                             plotName={
-                              !item[0].plotName
+                              !item[1].plotName
                                 ? 'แปลงที่' +
                                   ' ' +
                                   `${index + 1}` +
                                   ' ' +
-                                  item[0].plantName
-                                : item[0].plotName
+                                  item[1].plantName
+                                : item[1].plotName
                             }
-                            raiAmount={item[0].raiAmount}
-                            locationName={item[0].locationName}
-                            plantName={item[0].plantName}
-                            status={item[0].status}
+                            raiAmount={item[1].raiAmount}
+                            locationName={item[1].locationName}
+                            plantName={item[1].plantName}
+                            status={item[1].status}
                             index={index}
                           />
                         </View>
                       </View>
-                      {item?.[1] && (
-                        <View style={{ flexDirection: 'row' }}>
-                          <View>
-                            <PlotInProfile
-                              key={index}
-                              plotName={
-                                !item[1].plotName
-                                  ? 'แปลงที่' +
-                                    ' ' +
-                                    `${index + 1}` +
-                                    ' ' +
-                                    item[1].plantName
-                                  : item[1].plotName
-                              }
-                              raiAmount={item[1].raiAmount}
-                              locationName={item[1].locationName}
-                              plantName={item[1].plantName}
-                              status={item[1].status}
-                              index={index}
-                            />
-                          </View>
-                        </View>
-                      )}
-                    </View>
-                  )}
-                />
-              </ScrollView>
+                    )}
+                  </View>
+                )}
+              />
             </View>
           )}
         </View>
@@ -599,7 +608,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     height: normalize(80),
-    width: normalize(350),
+    width: '100%',
     borderStyle: 'dashed',
     position: 'relative',
     alignSelf: 'center',

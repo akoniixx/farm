@@ -169,7 +169,7 @@ const PlotsItem: React.FC<AddPlot> = ({
           </View>
           <View
             style={{
-              top: 10,
+              marginTop: 10,
               width: normalize(109),
               height: normalize(24),
               borderRadius: normalize(12),

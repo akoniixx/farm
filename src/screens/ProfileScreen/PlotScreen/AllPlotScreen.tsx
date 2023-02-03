@@ -253,11 +253,11 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                         }}>
                         <View
                           style={{
-                            borderColor: '#1F8449',
+                            borderColor: colors.greenLight,
                             borderWidth: 1,
                             borderRadius: 10,
                             height: normalize(80),
-                            width: normalize(330),
+                            width: '100%',
                             borderStyle: 'dashed',
                             position: 'relative',
                             alignSelf: 'center',
@@ -527,7 +527,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   buttonAdd: {
-    top: normalize(40),
+    marginTop: normalize(40),
     borderColor: '#1F8449',
     borderWidth: 1,
     borderRadius: 10,
@@ -540,7 +540,7 @@ const styles = StyleSheet.create({
   textaddplot: {
     fontFamily: font.AnuphanBold,
     fontSize: normalize(20),
-    color: colors.greenLight,
+    color: '#1F8449',
     textAlign: 'center',
     top: '30%',
   },
