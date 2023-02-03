@@ -195,55 +195,6 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
   } else {
     return (
       <>
-        <FarmerRegisterSuccess
-          text={messageNoti}
-          show={farmerRegisterSuccess}
-          onClose={() => {
-            setFarmerRegisterSuccess(false);
-          }}
-          onMainClick={() => {
-            setFarmerRegisterSuccess(false);
-            // setInitialRouteName("หน้าแรก")
-            const jumpAction = TabActions.jumpTo('หน้าแรก');
-            navigation.dispatch(jumpAction);
-          }}
-        />
-        <FarmerRegisterFailed
-          text={messageNoti}
-          show={farmerRegisterFailed}
-          onClose={() => {
-            setFarmerRegisterFailed(false);
-          }}
-          onMainClick={() => {
-            setFarmerRegisterFailed(false);
-            const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
-            navigation.dispatch(jumpAction);
-          }}
-        />
-        <FarmerPlotSuccess
-          text={messageNoti}
-          show={farmerPlotSuccess}
-          onClose={() => {
-            setFarmerPlotSuccess(false);
-          }}
-          onMainClick={() => {
-            setFarmerPlotSuccess(false);
-            const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
-            navigation.dispatch(jumpAction);
-          }}
-        />
-        <FarmerPlotFailed
-          text={messageNoti}
-          show={farmerPlotFailed}
-          onClose={() => {
-            setFarmerPlotFailed(false);
-          }}
-          onMainClick={() => {
-            setFarmerPlotFailed(false);
-            const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
-            navigation.dispatch(jumpAction);
-          }}
-        />
         <Tab.Navigator
           initialRouteName={initialRouteName}
           screenOptions={{
@@ -378,6 +329,54 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             }}
           />
         </Tab.Navigator>
+        <FarmerRegisterSuccess
+          text={messageNoti}
+          show={farmerRegisterSuccess}
+          onClose={() => {
+            setFarmerRegisterSuccess(false);
+          }}
+          onMainClick={() => {
+            setFarmerRegisterSuccess(false);
+            const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
+            navigation.dispatch(jumpAction);
+          }}
+        />
+        <FarmerRegisterFailed
+          text={messageNoti}
+          show={farmerRegisterFailed}
+          onClose={() => {
+            setFarmerRegisterFailed(false);
+          }}
+          onMainClick={() => {
+            setFarmerRegisterFailed(false);
+            const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
+            navigation.dispatch(jumpAction);
+          }}
+        />
+        <FarmerPlotSuccess
+          text={messageNoti}
+          show={farmerPlotSuccess}
+          onClose={() => {
+            setFarmerPlotSuccess(false);
+          }}
+          onMainClick={() => {
+            setFarmerPlotSuccess(false);
+            const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
+            navigation.dispatch(jumpAction);
+          }}
+        />
+        <FarmerPlotFailed
+          text={messageNoti}
+          show={farmerPlotFailed}
+          onClose={() => {
+            setFarmerPlotFailed(false);
+          }}
+          onMainClick={() => {
+            setFarmerPlotFailed(false);
+            const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
+            navigation.dispatch(jumpAction);
+          }}
+        />
       </>
     );
   }

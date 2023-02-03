@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* farmerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* farmerTests.m */; };
 		0BBE516B5CAB43D68B98C339 /* Anuphan-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 65D81DE2054F4B3899F3DAED /* Anuphan-Medium.otf */; };
+		0F42EAE2298D019600933759 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 60889B9329475538006DD600 /* GoogleService-Info.plist */; };
 		10279EFD61A64239982BF31F /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B8F08C6ABB4465FB8F65BD3 /* FontAwesome5_Solid.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -320,6 +321,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F42EAE2298D019600933759 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
