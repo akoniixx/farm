@@ -5,7 +5,6 @@ import MainScreen from '../screens/MainScreen/MainScreen';
 import AllPlotScreen from '../screens/ProfileScreen/PlotScreen/AllPlotScreen';
 import SelectDateScreen from '../screens/AutoBooking/SelectDateScreen';
 import DronerDetail from '../screens/DronerProfile/DronerDetail';
-import SeeAllDronerUsed from '../screens/DronerProfile/SeeAllDronerUsed';
 import SelectPlotScreen from '../screens/AutoBooking/SelectPlotScreen';
 import MainTapNavigator from './Bottom/MainTapNavigator';
 import SelectTarget from '../screens/AutoBooking/SelectTarget';
@@ -26,6 +25,7 @@ import DeleteProfile from '../screens/ProfileScreen/DeleteProfile/DeleteProfile'
 import AddPlotScreen from '../screens/ProfileScreen/PlotScreen/AddPlotScreen';
 import EditPlotScreen from '../screens/ProfileScreen/PlotScreen/EditPlotScreen';
 import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
+import DronerUsedScreen from '../screens/MainScreen/DronerUsedScreen';
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -35,7 +35,7 @@ export type MainStackParamList = {
   MyTaskDetailScreenNoti: undefined;
   SelectTarget: undefined;
   DronerDetail: undefined;
-  SeeAllDronerUsed: undefined;
+  DronerUsedScreen: undefined;
   PrivacyScreen: undefined;
   EditProfileScreen: undefined;
   DetailTaskScreen: undefined;
@@ -81,7 +81,7 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="SelectPlotScreen" component={SelectPlotScreen} />
       <Stack.Screen name="SelectTarget" component={SelectTarget} />
       <Stack.Screen name="DronerDetail" component={DronerDetail} />
-      <Stack.Screen name="SeeAllDronerUsed" component={SeeAllDronerUsed} />
+      <Stack.Screen name="DronerUsedScreen" component={DronerUsedScreen} />
       <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
       <Stack.Screen name="DetailTaskScreen" component={DetailTaskScreen} />

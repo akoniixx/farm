@@ -40,10 +40,11 @@ import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { useAuth } from '../../contexts/AuthContext';
 import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import DronerUsed from '../../components/Carousel/DronerUsed';
+import DronerUsed from '../../components/Carousel/DronerUsedList';
 import { mixpanel } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import DronerSugg from '../../components/Carousel/DronerCarousel';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -160,8 +161,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           .then(res => {
             setTaskSug(res);
           })
-          .catch(err => console.log(err));
-        // .finally(() => setLoading(false));
+          .catch(err => console.log(err))
+        .finally(() => setLoading(false));
       }
     };
     const dronerSugUsed = async () => {
@@ -349,50 +350,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </LinearGradient>
                 </TouchableOpacity>
               </View>
-
-              {/* <View
-              style={{
-                flexDirection: 'row',
-                padding: '5%',
-                justifyContent: 'space-between',
-                top: '3%',
-              }}>
-              <Text
-                style={{
-                  fontFamily: font.AnuphanBold,
-                  fontSize: normalize(20),
-                  color: colors.fontGrey,
-                }}>
-                กูรูเกษตร
-              </Text>
-              <Text
-                style={{
-                  fontFamily: font.SarabunLight,
-                  fontSize: normalize(16),
-                  color: colors.fontGrey,
-                }}>
-                ดูทั้งหมด
-              </Text>
-            </View> */}
-              {/* <View
-              style={{
-                width: '100%',
-                height: normalize(60),
-                alignItems: 'center',
-                top: '2%',
-              }}>
-              <Image
-                source={image.academy}
-                style={{
-                  width: 360,
-                  height: 120,
-                  top: -15,
-                  borderRadius: 10,
-                }}
-              />
-            </View>  */}
               <View>
-                {profilestate.status === 'REJECTED' ? (
+                {profilestate.status === 'REJECTED' && (
                   <View>
                     <View
                       style={{
@@ -484,95 +443,90 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         </TouchableOpacity>
                       </View>
                     </View>
-                    <View
-                      style={{
-                        alignItems: 'center',
-                        paddingVertical: '5%',
-                      }}>
-                      <Image
-                        source={image.empryState}
-                        style={{
-                          width: normalize(126),
-                          height: normalize(120),
-                          marginBottom: normalize(32),
-                        }}
-                      />
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunBold,
-                          fontSize: normalize(16),
-                          fontWeight: '300',
-                          color: colors.gray,
-                          bottom: 15,
-                        }}>
-                        ติดตามบริการส่วนอื่นได้เร็วๆนี้
-                      </Text>
-                    </View>
-                  </View>
-                ) : (
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      paddingVertical: '25%',
-                    }}>
-                    <Image
-                      source={image.empryState}
-                      style={{
-                        width: normalize(126),
-                        height: normalize(120),
-                        marginBottom: normalize(32),
-                      }}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: font.SarabunBold,
-                        fontSize: normalize(16),
-                        fontWeight: '300',
-                        color: colors.gray,
-                        bottom: 15,
-                      }}>
-                      ติดตามบริการส่วนอื่นได้เร็วๆนี้
-                    </Text>
                   </View>
                 )}
-                {/* <View
+                <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
+                    marginTop: 16,
+                    paddingVertical: 10,
                   }}>
-                    {taskSugUsed.length != 0 && (
                   <Text
                     style={{
                       fontFamily: font.AnuphanBold,
                       fontSize: normalize(20),
                       color: colors.fontGrey,
                       paddingHorizontal: 20,
-                      paddingVertical: 10,
+                    }}>
+                    กูรูเกษตร
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // navigation.navigate('SeeAllDronerUsed');
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: font.SarabunLight,
+                        fontSize: normalize(16),
+                        color: colors.fontGrey,
+                        height: 30,
+                        lineHeight: 32,
+                        paddingHorizontal: 10,
+                      }}>
+                      ดูทั้งหมด
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                  }}>
+                  <Image
+                    source={image.academy}
+                    style={{
+                      width: 360,
+                      height: 120,
+                      borderRadius: 10,
+                    }}
+                  />
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginTop: 16,
+                    paddingVertical: 10,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanBold,
+                      fontSize: normalize(20),
+                      color: colors.fontGrey,
+                      paddingHorizontal: 20,
                     }}>
                     จ้างนักบินที่เคยจ้าง
                   </Text>
-                    )}
-                  {taskSugUsed.length != 0 ? (
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate('SeeAllDronerUsed');
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('DronerUsedScreen');
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: font.SarabunLight,
+                        fontSize: normalize(16),
+                        color: colors.fontGrey,
+                        height: 30,
+                        lineHeight: 32,
+                        paddingHorizontal: 10,
                       }}>
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          fontSize: normalize(16),
-                          color: colors.fontGrey,
-                          height: 55,
-                          paddingHorizontal: 10,
-                          paddingVertical: 10,
-                        }}>
-                        ดูทั้งหมด
-                      </Text>
-                    </TouchableOpacity>
-                  ) : null}
-                </View> */}
-                {/* {taskSugUsed.length != 0 ? (
-                  <View style={{ height: '110%' }}>
+                      ดูทั้งหมด
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {taskSugUsed.length != 0 ? (
+                  <View style={{ height: 'auto' }}>
                     <ScrollView
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}>
@@ -602,45 +556,101 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         ))}
                     </ScrollView>
                   </View>
-                ) : ( */}
-                {/* )} */}
-              </View>
-
-              {/* <View style={[styles.empty]}>
-                <Text
-                  style={[
-                    styles.text,
-                    { alignSelf: 'flex-start', top: '15%' },
-                  ]}>
-                  นักบินโดรนที่แนะนำ
-                </Text>
-                <View style={{ top: '20%', height: '110%' }}>
-                  <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}>
-                    {taskSug.length != undefined &&
-                      taskSug.map((item: any, index: any) => (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={() => {
-                            // deTailPlot.current.show();
-                          }}>
-                          <DronerSugg
-                            index={index}
-                            key={index}
-                            profile={item.image_droner}
-                            background={''}
-                            name={item.firstname + ' ' + item.lastname}
-                            rate={item.rating_avg}
-                            total_task={item.total_task}
-                            province={item.province_name}
-                            distance={item.street_distance}
-                          />
-                        </TouchableOpacity>
-                      ))}
-                  </ScrollView>
+                ) : (
+                  <View style={{ alignItems: 'center' }}>
+                    <Image
+                      source={image.empty_droner}
+                      style={{
+                        width: normalize(136),
+                        height: normalize(130),
+                        top: '16%',
+                        marginBottom: normalize(32),
+                      }}
+                    />
+                    <Text
+                      style={{
+                        top: '10%',
+                        fontFamily: font.SarabunBold,
+                        fontSize: normalize(16),
+                        fontWeight: '300',
+                        color: colors.gray,
+                      }}>
+                      ไม่มีนักบินโดรนที่เคยจ้าง
+                    </Text>
+                  </View>
+                )}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginTop: 16,
+                    paddingVertical: 10,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanBold,
+                      fontSize: normalize(20),
+                      color: colors.fontGrey,
+                      paddingHorizontal: 20,
+                    }}>
+                    นักบินโดรนที่แนะนำ
+                  </Text>
                 </View>
-              </View> */}
+                {taskSug.length != 0 ? (
+                  <View style={{ height: 'auto' }}>
+                    <ScrollView
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}>
+                      {taskSug.length != undefined &&
+                        taskSug.map((item: any, index: any) => (
+                          <TouchableOpacity
+                            key={index}
+                            onPress={async () => {
+                              await AsyncStorage.setItem(
+                                'droner_id',
+                                `${item.droner_id}`,
+                              );
+                              navigation.push('DronerDetail');
+                            }}>
+                            <DronerSugg
+                              key={index}
+                              index={index}
+                              profile={item.image_droner}
+                              background={''}
+                              name={item.firstname + ' ' + item.lastname}
+                              rate={item.rating_avg}
+                              total_task={item.total_task}
+                              province={item.province_name}
+                              distance={item.street_distance}
+                            />
+                          </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                  </View>
+                ) : (
+                  <View style={{ alignItems: 'center' }}>
+                    <Image
+                      source={image.empty_droner}
+                      style={{
+                        width: normalize(136),
+                        height: normalize(130),
+                        top: '16%',
+                        marginBottom: normalize(32),
+                      }}
+                    />
+                    <Text
+                      style={{
+                        top: '10%',
+                        fontFamily: font.SarabunBold,
+                        fontSize: normalize(16),
+                        fontWeight: '300',
+                        color: colors.gray,
+                      }}>
+                      ไม่มีนักบินโดรนที่เคยจ้าง
+                    </Text>
+                  </View>
+                )}
+              </View>
             </View>
           </View>
           <Modal

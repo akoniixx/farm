@@ -39,7 +39,7 @@ import { initProfileState, profileReducer } from '../../hook/profilefield';
 import DronerCarousel from '../../components/Carousel/DronerCarousel';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
 import DronerSugg from '../../components/Carousel/DronerCarousel';
-import DronerUsed from '../../components/Carousel/DronerUsed';
+import DronerUsed from '../../components/Carousel/DronerUsedList';
 import * as RootNavigation from '../../navigations/RootNavigation';
 
 const AuthMainScreen: React.FC<any> = ({ navigation }) => {

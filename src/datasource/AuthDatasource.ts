@@ -6,7 +6,8 @@ import {
   registerClient,
   uploadFileClient,
 } from '../config/develop-config';
-import { StackActions, NavigationActions } from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
+import { CommonActions } from '@react-navigation/native';
 
 export class Authentication {
   static generateOtp(telNumber: String): Promise<any> {
@@ -72,9 +73,9 @@ export class Authentication {
   }
   static async logout(navigation: any) {
     await AsyncStorage.multiRemove(['token', 'farmer_id', 'task_id']);
-    const resetActionNavigate = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Auth' })],
+    const resetActionNavigate = CommonActions.reset({
+      index: 1,
+      routes: [{name: 'Auth'}]
     });
     navigation.popToTop();
     navigation.dispatch(resetActionNavigate);

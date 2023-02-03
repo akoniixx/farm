@@ -6,6 +6,7 @@ import {
   Text,
   SafeAreaView,
   Image,
+  ScrollView,
 } from 'react-native';
 import { colors, font, image } from '../../assets';
 import { normalize } from '../../functions/Normalize';
@@ -15,12 +16,15 @@ import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { useIsFocused } from '@react-navigation/native';
 import AllDroner from '../../components/Carousel/AllDronerUsed';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
+import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 
 const AllDronerUsed: React.FC<any> = ({ navigation }) => {
   const date = new Date();
   const isFocused = useIsFocused();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getProfile();
@@ -44,6 +48,7 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
   };
   useEffect(() => {
     const dronerSugUsed = async () => {
+      setLoading(true);
       const value = await AsyncStorage.getItem('token');
       if (value) {
         const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -57,40 +62,54 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
           offset,
         )
           .then(res => {
-            console.log(res[0])
             setTaskSugUsed(res);
           })
-          .catch(err => console.log(err));
+          .catch(err => console.log(err))
+          .finally(() => setLoading(false));
       }
     };
     dronerSugUsed();
   }, [profilestate.plotItem]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
-      <View>
-        {taskSugUsed !== undefined ? (
-          taskSugUsed.map((item, index) => (
-            <AllDroner
-              index={index}
-              img={item.image_droner}
-              name={item.firstname + ' ' + item.lastname}
-              rate={item.rating_avg}
-              total_task={item.total_task}    
-              province={item.province_name}
-              distance={item.distance}      />
-          ))
-         
-        ) : (
-          <View style={[styles.layout]}>
-            <Image
-              source={image.empty_droner_his}
-              style={{ width: normalize(135), height: normalize(120) }}
-            />
-            <Text style={[styles.text]}>ไม่มีนักบินโดรนที่เคยจ้าง</Text>
-          </View>
-        )}
-      </View>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: '#F8F9FA',
+        width: '100%',
+        alignItems: 'center'
+      }}>
+      <ScrollView>
+        <View style={{paddingVertical:10}}>
+          {taskSugUsed !== undefined ? (
+            taskSugUsed.map((item, index) => (
+              <AllDroner
+                index={index}
+                img={item.image_droner}
+                name={item.firstname + ' ' + item.lastname}
+                rate={item.rating_avg}
+                total_task={item.total_task}
+                province={item.province_name}
+                distance={item.distance}
+              />
+            ))
+          ) : (
+            <View style={[styles.layout]}>
+              <Image
+                source={image.empty_droner_his}
+                style={{ width: normalize(135), height: normalize(120) }}
+              />
+              <Text style={[styles.text]}>ไม่มีนักบินโดรนที่เคยจ้าง</Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
+
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </SafeAreaView>
   );
 };

@@ -29,12 +29,14 @@ import { CardDetailDroner } from '../../components/Carousel/CardTaskDetailDroner
 import { SliderHeader } from 'react-native-image-slider-banner/src/sliderHeader';
 import Animated from 'react-native-reanimated';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 
 const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const [visible, setIsVisible] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [statusFav, setStatusFav] = useState<any | null>([]);
   const [detailState, dispatch] = useReducer(
     detailDronerReducer,
     initDetailDronerState,
@@ -43,6 +45,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
 
   useEffect(() => {
     dronerDetails();
+    favDroner();
   }, []);
 
   const dronerDetails = async () => {
@@ -80,6 +83,13 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
   };
+  const favDroner = async () => {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    const plot_id = await AsyncStorage.getItem('plot_id');
+    FavoriteDroner.findAllFav(farmer_id!, plot_id!).then(res => 
+      setStatusFav(res[0].status_favorite)
+    )
+  };
   const baseDate = new Date();
   const weekDays: string[] = [];
   for (let i = 0; i < 7; i++) {
@@ -107,7 +117,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       date: el,
     };
   });
-
+console.log(statusFav)
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -115,7 +125,14 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
         showBackBtn
         onPressBack={() => navigation.goBack()}
         image={() => (
-          <Image source={icons.heart} style={{ width: 25, height: 25 }} />
+          <Image
+            source={
+              statusFav === 'ACTIVE'
+                ? icons.heart_active
+                : icons.heart
+            }
+            style={{ width: 25, height: 25 }}
+          />
         )}
       />
       <ScrollView>

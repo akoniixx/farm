@@ -55,6 +55,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const telNo = route.params.tele;
+
   const [items, setItems] = useState<any>([]);
   const [itemsDistrict, setItemDistrict] = useState([]);
   const [itemsSubDistrict, setItemSubDistrict] = useState([]);
@@ -63,11 +64,18 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
   const [subDistrict, setSubDistrict] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [bottompadding, setBottomPadding] = useState(0);
+  const [getPermiss, setGetPermiss] = useState(false);
   const provinceSheet = useRef<any>();
   const DistriSheet = useRef<any>();
   const SubDistriSheet = useRef<any>();
 
   useEffect(() => {
+    const getPermission = async () => {
+      const currentPermiss =  await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+      setGetPermiss(currentPermiss)
+      }
+      getPermission();
+
     QueryLocation.QueryProvince().then(res => {
       const Province = res.map((item: any) => {
         return { label: item.provinceName, value: item.provinceId };
@@ -411,13 +419,21 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                     formState.postal,
                   )
                     .then(async res => {
-                      if (Platform.OS === 'ios') {
+                      console.log(Platform.OS)
+                      if (Platform.OS === 'ios' && getPermiss === false)  {
                         await Geolocation.requestAuthorization('always');
-                      } else if (Platform.OS === 'android') {
+                      } else if (Platform.OS === 'android' && getPermiss === false) {
+                        console.log(Platform.OS)
                         await PermissionsAndroid.request(
                           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
                         );
                       }
+                      setLoading(false);
+                      navigation.navigate('ThirdFormScreen', {
+                        tele: formState.tel,
+                        latitude: 0,
+                        longitude: 0,
+                      });
                       Geolocation.getCurrentPosition(
                         position => {
                           setLoading(false);
@@ -431,7 +447,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                           console.log(error.code, error.message);
                         },
                         {
-                          enableHighAccuracy: true,
+                          enableHighAccuracy: false,
                           timeout: 15000,
                           maximumAge: 10000,
                         },

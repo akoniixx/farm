@@ -12,7 +12,7 @@ import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { Avatar } from '@rneui/base';
-import  AsyncStorage  from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
 
@@ -50,7 +50,7 @@ export function StatusObject(status: string) {
       };
   }
 }
-const AllDronerUsed: React.FC<data> = ({
+const FavDronerUsedList: React.FC<data> = ({
   index,
   img,
   name,
@@ -59,42 +59,20 @@ const AllDronerUsed: React.FC<data> = ({
   distance,
   total_task,
 }) => {
-  const [checked, setChecked] = useState<boolean>(false);
-  const date = new Date();
-  const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
   const [statusFav, setStatusFav] = useState<any>();
 
-
   useEffect(() => {
-    dronerSugUsed();
     favDroner();
-
-  },[])
-  const dronerSugUsed = async () => {
-    const value = await AsyncStorage.getItem('token');
-    if (value) {
-      const farmer_id = await AsyncStorage.getItem('farmer_id');
-      const plot_id = await AsyncStorage.getItem('plot_id');
-      TaskSuggestion.DronerUsed(
-        farmer_id!,
-        plot_id!,
-        date.toDateString(),
-      )
-        .then(res => {
-          setTaskSugUsed(res);
-        })
-        .catch(err => console.log(err))
-    }
-  };
+  }, []);
   const favDroner = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const plot_id = await AsyncStorage.getItem('plot_id');
     FavoriteDroner.findAllFav(farmer_id!, plot_id!).then(res =>
-      setStatusFav(res)
+      setStatusFav(res),
     );
   };
   console.log(1,statusFav)
-  
+
   return (
     <View
       style={{
@@ -128,26 +106,19 @@ const AllDronerUsed: React.FC<data> = ({
                 <Text style={styles.title}>{name}</Text>
                 <View
                   style={{
-                    backgroundColor: colors.white,
-                    borderColor: colors.bg,
-                    borderWidth: 1,
                     width: 30,
                     height: 30,
                     borderRadius: 15,
                   }}>
-                  <TouchableOpacity>
-                    {/* <Image
-                      source={
-                        statusFav[0].status_favorite === 'ACTIVE' ? icons.heart_active : icons.heart
-                      }
-                      style={{
-                        alignSelf: 'center',
-                        width: 20,
-                        height: 20,
-                        top: 4,
-                      }}
-                    /> */}
-                  </TouchableOpacity>
+                  <Image
+                    source={icons.heart_active}
+                    style={{
+                      alignSelf: 'center',
+                      width: 20,
+                      height: 20,
+                      top: 4,
+                    }}
+                  />
                 </View>
               </View>
               <View
@@ -295,4 +266,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AllDronerUsed;
+export default FavDronerUsedList;

@@ -8,14 +8,16 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { Avatar } from '@rneui/base';
 import { color } from 'react-native-reanimated';
-import AsyncStorage  from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
+import { TaskSuggestion } from '../../datasource/TaskSuggestion';
+import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 
 interface dronerUsedData {
   index: any;
@@ -28,7 +30,7 @@ interface dronerUsedData {
   distance: any;
 }
 
-const DronerUsed: React.FC<dronerUsedData> = ({
+const DronerUsedList: React.FC<dronerUsedData> = ({
   index,
   profile,
   background,
@@ -39,24 +41,56 @@ const DronerUsed: React.FC<dronerUsedData> = ({
   distance,
 }) => {
   const [checked, setChecked] = useState<boolean>(false);
+  const date = new Date();
+  const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
   const [data, setData] = useState<any>();
-  
 
-  const addUnAddDroners = async() => {
+  useEffect(() => {
+    getProfile();
+    dronerSugUsed();
+  }, []);
+  const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
     if (value) {
       const farmer_id = await AsyncStorage.getItem('farmer_id');
-      const droner_id = await AsyncStorage.getItem('droner_id');
-      console.log(droner_id)
-     await FavoriteDroner.addUnaddFav(
-        farmer_id !== null ? farmer_id : '',
-        droner_id !== null ? droner_id : '',
-      )
-        .then(res => {
-          setData(res);
+      ProfileDatasource.getProfile(farmer_id!)
+        .then(async res => {
+          await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
         })
         .catch(err => console.log(err));
     }
+  };
+  const dronerSugUsed = async () => {
+    const value = await AsyncStorage.getItem('token');
+    if (value) {
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      const plot_id = await AsyncStorage.getItem('plot_id');
+      const limit = 8;
+      const offset = 0;
+      TaskSuggestion.DronerUsed(
+        farmer_id!,
+        plot_id!,
+        date.toDateString(),
+        limit,
+        offset,
+      )
+        .then(res => {
+          setTaskSugUsed(res);
+        })
+        .catch(err => console.log(err));
+    }
+  };
+  const addUnAddDroners = async () => {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    const droner_id = taskSugUsed.map(x => x.droner_id);
+    await FavoriteDroner.addUnaddFav(
+      farmer_id !== null ? farmer_id : '',
+      droner_id[index],
+    )
+      .then(res => {
+        setData(res);
+      })
+      .catch(err => console.log(err));
   };
   return (
     <View style={{ paddingHorizontal: 5 }}>
@@ -81,14 +115,11 @@ const DronerUsed: React.FC<dronerUsedData> = ({
                 alignSelf: 'flex-end',
                 margin: 10,
               }}>
-              <TouchableOpacity onPress={ async() => {
-              const droner_id = await AsyncStorage.getItem('droner_id');
-              console.log(droner_id)
-                // addUnAddDroners();
-                setChecked(!checked)
-              }
-
-                }>
+              <TouchableOpacity
+                onPress={() => {
+                  addUnAddDroners();
+                  setChecked(!checked);
+                }}>
                 <Image
                   source={checked ? icons.heart_active : icons.heart}
                   style={{ alignSelf: 'center', width: 20, height: 20, top: 4 }}
@@ -213,4 +244,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DronerUsed;
+export default DronerUsedList;

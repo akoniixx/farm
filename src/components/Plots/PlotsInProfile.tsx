@@ -130,7 +130,7 @@ const PlotInProfile: React.FC<plotData> = ({
                 }}
               />
               <Text
-                numberOfLines={1}
+                // numberOfLines={1}
                 style={{
                   fontFamily: fonts.SarabunMedium,
                   fontSize: normalize(16),
@@ -138,8 +138,10 @@ const PlotInProfile: React.FC<plotData> = ({
                   marginRight: '10%',
                   width: normalize(280),
                   bottom: 2,
+                  lineHeight: 30
                 }}>
-                {locationName}
+                {locationName.length > 30 ? locationName.slice(0,30)+'...' : locationName 
+}
               </Text>
             </View>
           </View>
@@ -259,13 +261,12 @@ const styles = StyleSheet.create({
     borderColor: colors.greenLight,
     backgroundColor: '#ECFBF2',
     borderRadius: normalize(12),
-    paddingVertical: normalize(10),
-    paddingHorizontal: normalize(20),
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: normalize(10),
+    marginBottom: 10,
   },
   mainButton: {
     justifyContent: 'center',
