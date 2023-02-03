@@ -110,6 +110,7 @@ export default function SelectInjectionSheet(props: SheetProps) {
                   <Text
                     style={{
                       fontSize: 20,
+                      color : colors.fontBlack
                     }}>
                     {item.label}
                   </Text>
