@@ -16,7 +16,7 @@ export class DronerDatasource{
         .catch(err => console.log(err))
     }
     static getDronerRating(dronerId : string){
-        return httpClient.get(BASE_URL + `task/summary-review-droner/${dronerId}`)
+        return httpClient.get(BASE_URL + `/tasks/task/summary-review-droner/${dronerId}`)
         .then(
             res => res.data
         )

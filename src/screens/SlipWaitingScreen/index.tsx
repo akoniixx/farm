@@ -46,7 +46,7 @@ export default function SlipWaitingScreen({
   const [showModalExtend, setShowModalExtend] = useState(false);
   const [showModalExtendTwo, setModalExtendTwo] = useState(false);
   const [showModalExtendThree, setModalExtendThree] = useState(
-    countResend === 3,
+    countResend === "3",
   );
   const refInput = React.useRef<any>(null);
   const [taskData, setTaskData] = useState<TaskDataTypeSlip>({
@@ -142,10 +142,10 @@ export default function SlipWaitingScreen({
         });
       }
       else if(type === 'DRONER_ALL_REJECT'){
-        navigation.navigate('SlipWaitingScreen', {
-          taskId: message.data?.taskId!,
-          countResend : parseInt(message.data?.countResend!)
-        });
+        if(message.data?.countResend === "3"){
+          await AsyncStorage.removeItem('taskId')
+          setModalExtendThree(true)
+        }
      }
     });
   };
