@@ -127,13 +127,15 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
           <View style={[stylesCentral.container]}>
             <View style={{ flex: 1 }}>
               <View>
-                <ImageBackground
-                  source={image.bgHead}
-                  style={{
-                    width: (width * 380) / 375,
-                    height: (height * 250) / 812,
-                  }}>
-                  <View style={styles.headCard}>
+              <Image
+                source={image.bgHead}
+                style={{
+                  width: (width * 380) / 375,
+                  height: (height * 250) / 812,
+                  position: 'absolute',
+                }}
+              />
+                <View style={styles.headCard}>
                     <View>
                       <Text
                         style={{
@@ -193,8 +195,8 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                       </LinearGradient>
                     </TouchableOpacity>
                     <View style={{ width: normalize(10) }}></View>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate('MyPlotScreen')}>
+                    <TouchableOpacity 
+                     onPress={() => navigation.navigate('MyPlotScreen')}>
                       <LinearGradient
                         colors={['#FFFFFF', '#ECFBF2']}
                         style={{
@@ -219,7 +221,6 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                       </LinearGradient>
                     </TouchableOpacity>
                   </View>
-                </ImageBackground>
               </View>
               {/* <View
                   style={{
