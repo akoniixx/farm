@@ -40,11 +40,11 @@ import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { useAuth } from '../../contexts/AuthContext';
 import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import DronerUsed from '../../components/Carousel/DronerUsedList';
 import { mixpanel } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DronerSugg from '../../components/Carousel/DronerCarousel';
+import DronerUsedList from '../../components/Carousel/DronerUsedList';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -541,7 +541,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                               );
                               navigation.push('DronerDetail');
                             }}>
-                            <DronerUsed
+                            <DronerUsedList
                               key={index}
                               index={index}
                               profile={item.image_droner}

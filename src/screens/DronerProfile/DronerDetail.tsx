@@ -117,7 +117,6 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       date: el,
     };
   });
-console.log(statusFav)
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -281,7 +280,13 @@ console.log(statusFav)
                   QDroner.map((item: any, index: any) => (
                     <TouchableOpacity
                       key={index}
-                      onPress={() => navigation.navigate('SelectDateScreen')}>
+                      onPress={async () => {
+                        await AsyncStorage.setItem(
+                          'dateQDroner',
+                          `${item.date}`,
+                        );
+                        navigation.push('SelectDateScreen');
+                      }}>
                       <CardDetailDroner
                         key={index}
                         index={index}
@@ -308,7 +313,13 @@ console.log(statusFav)
                 {weekDays.map((item: any, index: any) => (
                   <TouchableOpacity
                     key={index}
-                    onPress={() => navigation.navigate('SelectDateScreen')}>
+                    onPress={async () => {
+                      await AsyncStorage.setItem(
+                        'dateQDroner',
+                        `${item}`,
+                      );
+                      navigation.push('SelectDateScreen');
+                    }}>
                     <CardDetailDroner
                       key={index}
                       index={index}

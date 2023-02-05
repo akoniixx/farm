@@ -12,7 +12,7 @@ import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { Avatar } from '@rneui/base';
-import  AsyncStorage  from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
 
@@ -24,32 +24,9 @@ interface data {
   province: any;
   distance: any;
   total_task: any;
+  status: any;
 }
-export function StatusObject(status: string) {
-  switch (status) {
-    case 'ACTIVE':
-      return {
-        status: 'รอการตรวจสอบ',
-        colorBg: '#FFF2E3',
-        fontColor: '#E27904',
-        borderColor: colors.darkOrange,
-      };
-    case 'INACTIVE':
-      return {
-        status: 'ตรวจสอบแล้ว',
-        colorBg: colors.white,
-        fontColor: colors.greenLight,
-        borderColor: colors.greenLight,
-      };
-    default:
-      return {
-        status: 'รอการตรวจสอบ',
-        colorBg: '#FFF2E3',
-        fontColor: '#E27904',
-        borderColor: colors.darkOrange,
-      };
-  }
-}
+
 const AllDronerUsed: React.FC<data> = ({
   index,
   img,
@@ -58,43 +35,36 @@ const AllDronerUsed: React.FC<data> = ({
   province,
   distance,
   total_task,
+  status,
 }) => {
-  const [checked, setChecked] = useState<boolean>(false);
-  const date = new Date();
-  const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
-  const [statusFav, setStatusFav] = useState<any>();
+    const [checked, setChecked] = useState<boolean>(false);
+    const date = new Date();
+    const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
+    const [statusFav, setStatusFav] = useState<any>([]);
 
-
-  useEffect(() => {
-    dronerSugUsed();
-    favDroner();
-
-  },[])
-  const dronerSugUsed = async () => {
-    const value = await AsyncStorage.getItem('token');
-    if (value) {
+    useEffect(() => {
+      dronerSugUsed();
+      favDroner();
+    }, []);
+    const dronerSugUsed = async () => {
+      const value = await AsyncStorage.getItem('token');
+      if (value) {
+        const farmer_id = await AsyncStorage.getItem('farmer_id');
+        const plot_id = await AsyncStorage.getItem('plot_id');
+        TaskSuggestion.DronerUsed(farmer_id!, plot_id!, date.toDateString())
+          .then(res => {
+            setTaskSugUsed(res);
+          })
+          .catch(err => console.log(err));
+      }
+    };
+    const favDroner = async () => {
       const farmer_id = await AsyncStorage.getItem('farmer_id');
       const plot_id = await AsyncStorage.getItem('plot_id');
-      TaskSuggestion.DronerUsed(
-        farmer_id!,
-        plot_id!,
-        date.toDateString(),
-      )
-        .then(res => {
-          setTaskSugUsed(res);
-        })
-        .catch(err => console.log(err))
-    }
-  };
-  const favDroner = async () => {
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    const plot_id = await AsyncStorage.getItem('plot_id');
-    FavoriteDroner.findAllFav(farmer_id!, plot_id!).then(res =>
-      setStatusFav(res)
-    );
-  };
-  console.log(1,statusFav)
-  
+      FavoriteDroner.findAllFav(farmer_id!, plot_id!).then(res =>
+        setStatusFav(res),
+      );
+    };
   return (
     <View
       style={{
@@ -136,17 +106,15 @@ const AllDronerUsed: React.FC<data> = ({
                     borderRadius: 15,
                   }}>
                   <TouchableOpacity>
-                    {/* <Image
-                      source={
-                        statusFav[0].status_favorite === 'ACTIVE' ? icons.heart_active : icons.heart
-                      }
+                    <Image
+                      source={icons.heart_active}
                       style={{
                         alignSelf: 'center',
                         width: 20,
                         height: 20,
                         top: 4,
                       }}
-                    /> */}
+                    />
                   </TouchableOpacity>
                 </View>
               </View>

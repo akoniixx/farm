@@ -78,14 +78,14 @@ const FavDronerUsed: React.FC<any> = ({ navigation }) => {
       }}>
       <ScrollView>
         <View style={{paddingVertical:10}}>
-          {statusFav !== undefined ? (
+          {statusFav.length !== 0 ? (
             statusFav.map((item:any, index:any) => (
               <FavDronerUsedList
                 index={index}
                 img={item.image_droner}
                 name={item.firstname + ' ' + item.lastname}
                 rate={item.rating_avg}
-                total_task={item.total_task}
+                total_task={item.count_rating}
                 province={item.province_name}
                 distance={item.distance}
               />
@@ -115,14 +115,16 @@ const styles = StyleSheet.create({
   layout: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: '50%',
+    marginTop: 150
   },
   text: {
-    top: 15,
+    marginTop: 15,
     fontFamily: font.SarabunMedium,
     fontSize: normalize(18),
     color: colors.gray,
     fontWeight: '300',
+    lineHeight: 30,
+    paddingHorizontal: 10,
   },
 });
 export default FavDronerUsed;

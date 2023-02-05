@@ -70,7 +70,6 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
     };
     dronerSugUsed();
   }, [profilestate.plotItem]);
-
   return (
     <SafeAreaView
       style={{
@@ -81,7 +80,7 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
       }}>
       <ScrollView>
         <View style={{paddingVertical:10}}>
-          {taskSugUsed !== undefined ? (
+          {taskSugUsed.length !== 0 ? (
             taskSugUsed.map((item, index) => (
               <AllDroner
                 index={index}
@@ -118,7 +117,7 @@ const styles = StyleSheet.create({
   layout: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: '50%',
+    marginTop: 150
   },
   text: {
     top: 15,
@@ -126,6 +125,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
     color: colors.gray,
     fontWeight: '300',
+    
   },
 });
 export default AllDronerUsed;

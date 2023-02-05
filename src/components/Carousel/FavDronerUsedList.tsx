@@ -71,7 +71,6 @@ const FavDronerUsedList: React.FC<data> = ({
       setStatusFav(res),
     );
   };
-  console.log(1,statusFav)
 
   return (
     <View

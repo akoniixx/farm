@@ -45,7 +45,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
     profilestate?.plotItem.length > 0
       ? Math.ceil(profilestate.plotItem.length / 2)
       : 0;
-  console.log(numColumn);
   const onLogout = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     socket.removeAllListeners(`send-task-${farmer_id!}`);

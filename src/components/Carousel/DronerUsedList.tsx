@@ -43,7 +43,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
   const [checked, setChecked] = useState<boolean>(false);
   const date = new Date();
   const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<any>([]);
 
   useEffect(() => {
     getProfile();
@@ -88,7 +88,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
       droner_id[index],
     )
       .then(res => {
-        setData(res);
+        setData(res.responseData);
       })
       .catch(err => console.log(err));
   };
@@ -126,7 +126,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                 />
               </TouchableOpacity>
             </View>
-            <View style={{ alignSelf: 'center', bottom: 10 }}>
+            <View style={{ alignSelf: 'center', bottom: 15 }}>
               <Avatar
                 size={normalize(56)}
                 source={profile === null ? image.empty_plot : { uri: profile }}
@@ -137,11 +137,21 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                 }}
               />
             </View>
-            <View style={{ paddingLeft: 5, bottom: 10 }}>
-              <Text numberOfLines={1} style={[styles.h1, { width: 150 }]}>
+            <View style={{ paddingLeft: 5, bottom: 15 }}>
+              <Text
+                numberOfLines={1}
+                style={[
+                  styles.h1,
+                  { width: 150, lineHeight: 40, marginLeft: 6 },
+                ]}>
                 {name}
               </Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginLeft: 6,
+                }}>
                 <Image
                   source={icons.star}
                   style={{ width: 20, height: 20, marginRight: 10 }}
@@ -155,7 +165,12 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                   {total_task !== null ? `(${total_task})` : `  (0)`}{' '}
                 </Text>
               </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginLeft: 6,
+                }}>
                 <Image
                   source={icons.location}
                   style={{ width: 20, height: 20, marginRight: 10 }}
@@ -169,6 +184,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                   flexDirection: 'row',
                   alignItems: 'center',
                   paddingBottom: 3,
+                  marginLeft: 6,
                 }}>
                 <Image
                   source={icons.distance}
@@ -188,6 +204,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                   backgroundColor: '#fff',
                   height: 26,
                   width: 60,
+                  marginLeft: 6,
                 }}>
                 <Text
                   style={{
