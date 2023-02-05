@@ -92,11 +92,13 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunMedium,
     fontSize: normalize(18),
     lineHeight: normalize(30),
+    color: colors.fontBlack
   },
   h2: {
     fontFamily: font.SarabunLight,
     fontSize: normalize(18),
     lineHeight: normalize(30),
+    color: colors.fontBlack
   },
   label: {
     fontFamily: font.SarabunMedium,

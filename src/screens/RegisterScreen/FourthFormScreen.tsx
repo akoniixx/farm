@@ -100,7 +100,7 @@ const FourthFormScreen: React.FC<any> = ({ route, navigation }) => {
                       fontSize: normalize(20),
                       alignSelf: 'center',
                       textAlign: 'center',
-                      color: colors.fontGrey
+                      color: colors.fontGrey,
                     }}>
                     ข้ามขั้นตอน
                   </Text>

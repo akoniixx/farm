@@ -38,6 +38,7 @@ export const LocationSelect: React.FC<LocationSelectProps> = ({
             fontFamily: font.SarabunLight,
             fontSize: normalize(16),
             marginTop: normalize(15),
+            color: colors.fontBlack
           }}>
           {label}
         </Text>
@@ -71,6 +72,7 @@ export const LocationInPostcodeSelect: React.FC<
             fontFamily: font.SarabunLight,
             fontSize: normalize(16),
             marginTop: normalize(15),
+            color: colors.fontBlack
           }}>
           {label}
         </Text>

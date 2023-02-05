@@ -71,10 +71,12 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
 
   useEffect(() => {
     const getPermission = async () => {
-      const currentPermiss =  await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-      setGetPermiss(currentPermiss)
-      }
-      getPermission();
+      const currentPermiss = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      setGetPermiss(currentPermiss);
+    };
+    getPermission();
 
     QueryLocation.QueryProvince().then(res => {
       const Province = res.map((item: any) => {
@@ -419,11 +421,12 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                     formState.postal,
                   )
                     .then(async res => {
-                      console.log(Platform.OS)
-                      if (Platform.OS === 'ios' && getPermiss === false)  {
+                      if (Platform.OS === 'ios' && getPermiss === false) {
                         await Geolocation.requestAuthorization('always');
-                      } else if (Platform.OS === 'android' && getPermiss === false) {
-                        console.log(Platform.OS)
+                      } else if (
+                        Platform.OS === 'android' &&
+                        getPermiss === false
+                      ) {
                         await PermissionsAndroid.request(
                           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
                         );

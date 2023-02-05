@@ -130,7 +130,6 @@ const PlotInProfile: React.FC<plotData> = ({
                 }}
               />
               <Text
-                // numberOfLines={1}
                 style={{
                   fontFamily: fonts.SarabunMedium,
                   fontSize: normalize(16),
@@ -138,10 +137,11 @@ const PlotInProfile: React.FC<plotData> = ({
                   marginRight: '10%',
                   width: normalize(280),
                   bottom: 2,
-                  lineHeight: 30
+                  lineHeight: 30,
                 }}>
-                {locationName.length > 30 ? locationName.slice(0,30)+'...' : locationName 
-}
+                {locationName.length > 30
+                  ? locationName.slice(0, 30) + '...'
+                  : locationName}
               </Text>
             </View>
           </View>
@@ -198,7 +198,6 @@ const PlotInProfile: React.FC<plotData> = ({
                 }}
               />
               <Text
-                numberOfLines={1}
                 style={{
                   fontFamily: fonts.SarabunMedium,
                   fontSize: normalize(16),
@@ -207,7 +206,9 @@ const PlotInProfile: React.FC<plotData> = ({
                   width: normalize(280),
                   bottom: 2,
                 }}>
-                {locationName}
+                {locationName.length > 30
+                  ? locationName.slice(0, 30) + '...'
+                  : locationName}
               </Text>
             </View>
             <View

@@ -39,7 +39,7 @@ export type MainStackParamList = {
   PrivacyScreen: undefined;
   EditProfileScreen: undefined;
   DetailTaskScreen: undefined;
-  SlipWaitingScreen: { taskId: string; modal?: boolean; countResend?: number };
+  SlipWaitingScreen: { taskId: string; modal?: boolean; countResend?: string };
   SlipSuccessScreen: { taskId: string };
   NotificationScreen: undefined;
   ViewMapScreen: {
