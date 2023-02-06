@@ -7,7 +7,7 @@ import { dialCall } from '../../functions/utility';
 
 interface props {
   name: string;
-  profile: string;
+  profile: string | null;
   telnumber: string;
 }
 
