@@ -169,7 +169,8 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                 <View
                   style={{
                     flexDirection: 'row',
-                    paddingTop: 100,
+                    paddingTop: 90,
+                    paddingBottom: 10,
                     alignSelf: 'center',
                   }}>
                   <TouchableOpacity
@@ -344,7 +345,6 @@ const styles = StyleSheet.create({
     top: '5%',
   },
   headCard: {
-    top: '15%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: normalize(23),

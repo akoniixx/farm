@@ -44,7 +44,7 @@ const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
       <CustomHeader
         title="รายละเอียดงาน"
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => navigation.navigate('MainScreen')}
       />
       <ScrollView
         showsHorizontalScrollIndicator={false}

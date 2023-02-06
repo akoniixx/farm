@@ -22,7 +22,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
-
+import messaging, { firebase } from '@react-native-firebase/messaging';
 import { ActivityIndicator } from 'react-native-paper';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
 import { useIsFocused } from '@react-navigation/native';
@@ -72,7 +72,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     count: 0,
     data: [],
   });
-  const noti = route.params?.noti ?? false;
   const [reload, setReload] = useState(false);
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
