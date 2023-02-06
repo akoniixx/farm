@@ -7,9 +7,7 @@ import { normalize } from '@rneui/themed';
 import { Image, Platform, StyleSheet, View } from 'react-native';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import PromotionScreen from '../../screens/PromotionScreen/PromotionScreen';
-import { responsiveHeigth, responsiveWidth } from '../../functions/responsive';
 import TaskScreen from '../../screens/MyTaskScreen/MyTaskScreen';
-import MainNavigator from '../MainNavigator';
 import messaging, { firebase } from '@react-native-firebase/messaging';
 import * as RootNavigation from '../RootNavigation';
 import FarmerPlotSuccess from '../../components/Modal/FarmerPlotSuccess';
@@ -20,7 +18,6 @@ import { TaskDatasource } from '../../datasource/TaskDatasource';
 import { TabActions } from '@react-navigation/native';
 import MainScreen from '../../screens/MainScreen/MainScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { firebaseInitialize } from '../../firebase/notification';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,9 +32,6 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
   const [messageNoti, setMessageNoti] = useState<string>('');
   const [initialRouteName, setInitialRouteName] = useState('หน้าแรก');
   useEffect(() => {
-    if (!firebase.apps.length) {
-      firebaseInitialize();
-    }
     messaging()
       .getInitialNotification()
       .then(message => {
@@ -62,7 +56,6 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
                 screen: 'SlipWaitingScreen',
                 params: {
                   taskId: message.data?.taskId,
-                  countResend: message.data?.countResend,
                 },
               });
               break;
@@ -71,7 +64,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
                 screen: 'SlipWaitingScreen',
                 params: {
                   taskId: message.data?.taskId,
-                  countResend : message.data?.countResend
+                  cntResend: message.data?.countResend,
                 },
               });
               break;
@@ -113,7 +106,6 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             screen: 'SlipWaitingScreen',
             params: {
               taskId: message.data?.taskId,
-              countResend: message.data?.countResend,
             },
           });
           break;
@@ -122,7 +114,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             screen: 'SlipWaitingScreen',
             params: {
               taskId: message.data?.taskId,
-              countResend: message.data?.countResend,
+              cntResend: message.data?.countResend,
             },
           });
           break;
@@ -158,16 +150,16 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             screen: 'SlipWaitingScreen',
             params: {
               taskId: message.data?.taskId,
-              countResend: message.data?.countResend,
             },
           });
           break;
         case 'DRONER_ALL_REJECT':
+          await AsyncStorage.removeItem('taskId');
           RootNavigation.navigate('Main', {
             screen: 'SlipWaitingScreen',
             params: {
               taskId: message.data?.taskId,
-              countResend: message.data?.countResend,
+              cntResend: message.data?.countResend,
             },
           });
           break;

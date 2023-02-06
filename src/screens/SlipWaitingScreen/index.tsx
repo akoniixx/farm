@@ -19,6 +19,7 @@ import colors from '../../assets/colors/colors';
 import fonts from '../../assets/fonts';
 import { image } from '../../assets';
 import SectionBody from './SectionBody';
+import * as RootNavigation from '../../navigations/RootNavigation';
 import { MainButton } from '../../components/Button/MainButton';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
@@ -38,7 +39,7 @@ export default function SlipWaitingScreen({
   navigation,
   route,
 }: StackScreenProps<MainStackParamList, 'SlipWaitingScreen'>) {
-  const { taskId, countResend } = route.params;
+  const { taskId,cntResend } = route.params;
   const [loading, setLoading] = useState(true);
   const [isFocus, setIsFocus] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
@@ -46,7 +47,7 @@ export default function SlipWaitingScreen({
   const [showModalExtend, setShowModalExtend] = useState(false);
   const [showModalExtendTwo, setModalExtendTwo] = useState(false);
   const [showModalExtendThree, setModalExtendThree] = useState(
-    countResend === "3",
+    cntResend === "3"
   );
   const refInput = React.useRef<any>(null);
   const [taskData, setTaskData] = useState<TaskDataTypeSlip>({
@@ -146,7 +147,7 @@ export default function SlipWaitingScreen({
           await AsyncStorage.removeItem('taskId')
           setModalExtendThree(true)
         }
-     }
+      }
     });
   };
 
@@ -230,7 +231,9 @@ export default function SlipWaitingScreen({
               onPress={() => {
                 mixpanel.track('Tab back to main screen from waiting screen');
 
-                navigation.navigate('MainScreen');
+                RootNavigation.navigate('Main', {
+                  screen: 'MainScreen',
+                });
               }}
               color={colors.orangeLight}
               style={{
@@ -689,8 +692,7 @@ export default function SlipWaitingScreen({
                 marginVertical: 16,
                 color : colors.fontBlack,
               }}>
-              ท่านสามารถกด ค้นหานักบินโดรนอีกครั้ง เพื่อค้นหาต่อไป หรือ
-              กดติดต่อเจ้าหน้าที่ เพื่อให้ช่วยในการค้นหานักบินโดรน
+              ท่านสามารถกดติดต่อเจ้าหน้าที่ เพื่อให้ช่วยในการค้นหานักบินโดรนหรือกดยกเลิกการจอง
             </Text>
             <View
               style={{
