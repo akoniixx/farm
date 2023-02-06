@@ -130,20 +130,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         .catch(err => console.log(err));
     }
   };
-  useEffect(() => {
-    const getTaskId = async () => {
-      const value = await AsyncStorage.getItem('taskId');
-      if (value) {
-        setTaskId(value);
-      }
-    };
-
-    getTaskId();
-    getData();
-    getProfile();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused]);
 
   useEffect(() => {
     const dronerSug = async () => {

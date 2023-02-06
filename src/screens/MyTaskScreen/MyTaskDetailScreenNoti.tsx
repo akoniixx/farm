@@ -249,7 +249,7 @@ const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
               /*  disabled={statusDelay === 'WAIT_APPROVE'} */
               onPress={() =>
                 SheetManager.show('CallingSheet', {
-                  payload: { tel: task.droner.telephone_no },
+                  payload: { tel: task.droner.telephoneNo },
                 })
               }>
               <Image
