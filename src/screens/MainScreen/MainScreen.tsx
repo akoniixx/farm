@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -12,13 +6,11 @@ import {
   Text,
   View,
   Dimensions,
-  ImageBackground,
   Modal,
   TouchableOpacity,
   Platform,
   Linking,
 } from 'react-native';
-import Lottie from 'lottie-react-native';
 
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
