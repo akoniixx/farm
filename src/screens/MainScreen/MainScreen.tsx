@@ -548,7 +548,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                               background={''}
                               name={item.firstname + ' ' + item.lastname}
                               rate={item.rating_avg}
-                              total_task={item.total_task}
+                              total_task={item.count_rating}
                               province={item.province_name}
                               distance={item.street_distance}
                             />
@@ -619,7 +619,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                               background={''}
                               name={item.firstname + ' ' + item.lastname}
                               rate={item.rating_avg}
-                              total_task={item.total_task}
+                              total_task={item.count_rating}
                               province={item.province_name}
                               distance={item.street_distance}
                             />

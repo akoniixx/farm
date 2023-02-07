@@ -37,7 +37,6 @@ const AllDronerUsed: React.FC<data> = ({
   total_task,
   status,
 }) => {
-    const [checked, setChecked] = useState<boolean>(false);
     const date = new Date();
     const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
     const [statusFav, setStatusFav] = useState<any>([]);
@@ -105,17 +104,26 @@ const AllDronerUsed: React.FC<data> = ({
                     height: 30,
                     borderRadius: 15,
                   }}>
-                  <TouchableOpacity>
-                    <Image
-                      source={icons.heart_active}
-                      style={{
-                        alignSelf: 'center',
-                        width: 20,
-                        height: 20,
-                        top: 4,
-                      }}
-                    />
-                  </TouchableOpacity>
+                    {status === 'ACTIVE' ? 
+                     <Image
+                     source={icons.heart_active}
+                     style={{
+                       alignSelf: 'center',
+                       width: 20,
+                       height: 20,
+                       top: 4,
+                     }}
+                   />: 
+                   <Image
+                   source={icons.heart}
+                   style={{
+                     alignSelf: 'center',
+                     width: 20,
+                     height: 20,
+                     top: 4,
+                   }}
+                 />}
+                   
                 </View>
               </View>
               <View

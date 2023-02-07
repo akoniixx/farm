@@ -25,31 +25,6 @@ interface data {
   distance: any;
   total_task: any;
 }
-export function StatusObject(status: string) {
-  switch (status) {
-    case 'ACTIVE':
-      return {
-        status: 'รอการตรวจสอบ',
-        colorBg: '#FFF2E3',
-        fontColor: '#E27904',
-        borderColor: colors.darkOrange,
-      };
-    case 'INACTIVE':
-      return {
-        status: 'ตรวจสอบแล้ว',
-        colorBg: colors.white,
-        fontColor: colors.greenLight,
-        borderColor: colors.greenLight,
-      };
-    default:
-      return {
-        status: 'รอการตรวจสอบ',
-        colorBg: '#FFF2E3',
-        fontColor: '#E27904',
-        borderColor: colors.darkOrange,
-      };
-  }
-}
 const FavDronerUsedList: React.FC<data> = ({
   index,
   img,
@@ -105,6 +80,9 @@ const FavDronerUsedList: React.FC<data> = ({
                 <Text style={styles.title}>{name}</Text>
                 <View
                   style={{
+                    backgroundColor: colors.white,
+                    borderColor: colors.bg,
+                    borderWidth: 1,
                     width: 30,
                     height: 30,
                     borderRadius: 15,
