@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -20,12 +20,12 @@ import {
   PlotDetail,
   TargetSpray,
 } from '../../components/TaskDetail/TaskDetail';
+import { DronerDatasource } from '../../datasource/DronerDatasource';
 import { normalize } from '../../functions/Normalize';
 import { getStatusToText } from '../../functions/utility';
 
 const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
   const task = route.params.task;
-
   const getLabelBotton = (status: string) => {
     switch (status) {
       case 'IN_PROGRESS':
@@ -38,13 +38,32 @@ const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
         return 'กลับหน้าหลัก';
     }
   };
+  const [dronerImg,setDronerImg] = useState<string | null>(null)
+  useEffect(()=>{
+    DronerDatasource.getDronerData(task.droner.id).then(
+      res => {
+        res.file.map(
+          (item : any) => {
+            if(item.category === "PROFILE_IMAGE"){
+              DronerDatasource.getDronerProfileImage(item.path).then(
+                resImg =>{
+                  console.log(resImg)
+                  setDronerImg(resImg)
+                }
+              )
+            }
+          }
+        )
+      }
+    )
+  },[])
 
   return (
     <View style={{ flex: 1 }}>
       <CustomHeader
         title="รายละเอียดงาน"
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => navigation.navigate('MainScreen')}
       />
       <ScrollView
         showsHorizontalScrollIndicator={false}
@@ -137,7 +156,7 @@ const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
           <Text style={styles.label}>นักบินโดรน</Text>
           <DronerCard
             name={task.droner.firstname + ' ' + task.droner.lastname}
-            profile={task.droner.imageProfile}
+            profile={dronerImg}
             telnumber={task.droner.telephoneNo}
           />
           <View
@@ -249,7 +268,7 @@ const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
               /*  disabled={statusDelay === 'WAIT_APPROVE'} */
               onPress={() =>
                 SheetManager.show('CallingSheet', {
-                  payload: { tel: task.droner.telephone_no },
+                  payload: { tel: task.droner.telephoneNo },
                 })
               }>
               <Image
@@ -301,6 +320,7 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: fonts.SarabunMedium,
     fontSize: normalize(19),
+    color : colors.fontBlack
   },
   unitPrice: {
     fontFamily: fonts.SarabunLight,

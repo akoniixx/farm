@@ -56,7 +56,6 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* farmerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = farmerTests.m; sourceTree = "<group>"; };
 		0C1D988025A77D758AF25144 /* libPods-farmer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-farmer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		0F3358D329812A910042798A /* farmerDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = farmerDebug.entitlements; path = farmer/farmerDebug.entitlements; sourceTree = "<group>"; };
 		0FCAE1F32977ECDD0011C878 /* farmer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = farmer.entitlements; path = farmer/farmer.entitlements; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* farmer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = farmer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = farmer/AppDelegate.h; sourceTree = "<group>"; };
@@ -137,7 +136,6 @@
 		13B07FAE1A68108700A75B9A /* farmer */ = {
 			isa = PBXGroup;
 			children = (
-				0F3358D329812A910042798A /* farmerDebug.entitlements */,
 				0FCAE1F32977ECDD0011C878 /* farmer.entitlements */,
 				60889B9329475538006DD600 /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,

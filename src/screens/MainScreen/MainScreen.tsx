@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -12,13 +6,11 @@ import {
   Text,
   View,
   Dimensions,
-  ImageBackground,
   Modal,
   TouchableOpacity,
   Platform,
   Linking,
 } from 'react-native';
-import Lottie from 'lottie-react-native';
 
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
@@ -30,7 +22,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
-
+import messaging, { firebase } from '@react-native-firebase/messaging';
 import { ActivityIndicator } from 'react-native-paper';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
 import { useIsFocused } from '@react-navigation/native';
@@ -81,7 +73,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     count: 0,
     data: [],
   });
-  const noti = route.params?.noti ?? false;
   const [reload, setReload] = useState(false);
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -132,20 +123,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         .catch(err => console.log(err));
     }
   };
-  useEffect(() => {
-    const getTaskId = async () => {
-      const value = await AsyncStorage.getItem('taskId');
-      if (value) {
-        setTaskId(value);
-      }
-    };
-
-    getTaskId();
-    getData();
-    getProfile();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused]);
 
   useEffect(() => {
     const dronerSug = async () => {
