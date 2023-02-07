@@ -37,6 +37,7 @@ import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DronerSugg from '../../components/Carousel/DronerCarousel';
 import DronerUsedList from '../../components/Carousel/DronerUsedList';
+import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -74,6 +75,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     data: [],
   });
   const [reload, setReload] = useState(false);
+  const [statusFav, setStatusFav] = useState<any[]>([]);
+
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
     const farmerId = await AsyncStorage.getItem('farmer_id');
@@ -123,7 +126,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         .catch(err => console.log(err));
     }
   };
-
   useEffect(() => {
     const dronerSug = async () => {
       // setLoading(true);
@@ -139,7 +141,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
             setTaskSug(res);
           })
           .catch(err => console.log(err))
-        .finally(() => setLoading(false));
+          .finally(() => setLoading(false));
       }
     };
     const dronerSugUsed = async () => {
@@ -207,6 +209,48 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     };
     getTaskByTaskId();
   }, [taskId, navigation]);
+  useEffect(() => {
+    const getFavDroner = async () => {
+      setLoading(true);
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      const plot_id = await AsyncStorage.getItem('plot_id');
+      FavoriteDroner.findAllFav(farmer_id!, plot_id!)
+        .then(res => {
+          setStatusFav(res);
+        })
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
+    };
+    getFavDroner();
+  }, []);
+
+  const mergeDroner = taskSugUsed.map(el => {
+    const getDroner = el.droner_id;
+    const find = statusFav.find(item => {
+      const d = item.droner_id;
+      return d === getDroner;
+    });
+    if (find) {
+      return {
+        img: find.image_droner,
+        name: find.firstname + ' ' + find.lastname,
+        rate: find.rating_avg,
+        province: find.province_name,
+        distance: find.street_distance,
+        total_task: find.count_rating,
+        status_favorite: 'ACTIVE',
+      };
+    }
+    return {
+      img: el.image_droner,
+      name: el.firstname + ' ' + el.lastname,
+      rate: el.rating_avg,
+      province: el.province_name,
+      distance: el.street_distance,
+      total_task: el.count_rating,
+      status_favorite: 'INACTIVE',
+    };
+  });
 
   return (
     <View
@@ -508,7 +552,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}>
                       {taskSugUsed.length != undefined &&
-                        taskSugUsed.map((item: any, index: any) => (
+                        mergeDroner.map((item: any, index: any) => (
                           <TouchableOpacity
                             key={index}
                             onPress={async () => {
@@ -521,13 +565,13 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                             <DronerUsedList
                               key={index}
                               index={index}
-                              profile={item.image_droner}
+                              profile={item.img}
                               background={''}
-                              name={item.firstname + ' ' + item.lastname}
-                              rate={item.rating_avg}
-                              total_task={item.count_rating}
-                              province={item.province_name}
-                              distance={item.street_distance}
+                              name={item.name}
+                              rate={item.rate}
+                              total_task={item.total_task}
+                              province={item.province}
+                              distance={item.distance}
                             />
                           </TouchableOpacity>
                         ))}
@@ -596,7 +640,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                               background={''}
                               name={item.firstname + ' ' + item.lastname}
                               rate={item.rating_avg}
-                              total_task={item.count_rating}
+                              total_task={item.total_task}
                               province={item.province_name}
                               distance={item.street_distance}
                             />

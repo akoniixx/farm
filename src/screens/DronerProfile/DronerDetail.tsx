@@ -117,6 +117,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       date: el,
     };
   });
+
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -393,7 +394,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                     fontSize: normalize(18),
                     color: colors.fontBlack,
                   }}>
-                  {`  ${detailState.droneBand}`}
+                  {!detailState.droneBand  ? ' -' : ` ${detailState.droneBand}`}
                 </Text>
               </Text>
               {/* <View style={{flexDirection: 'row', marginTop: 10}}>

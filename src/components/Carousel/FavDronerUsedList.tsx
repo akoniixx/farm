@@ -75,41 +75,40 @@ const FavDronerUsedList: React.FC<data> = ({
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
                 }}>
                 <Text style={styles.title}>{name}</Text>
-                <View
-                  style={{
-                    backgroundColor: colors.white,
-                    borderColor: colors.bg,
-                    borderWidth: 1,
-                    width: 30,
-                    height: 30,
-                    borderRadius: 15,
-                  }}>
-                  <Image
-                    source={icons.heart_active}
+                <View style={{ marginLeft: 45 }}>
+                  <View
                     style={{
-                      alignSelf: 'center',
-                      width: 20,
-                      height: 20,
-                      top: 4,
-                    }}
-                  />
+                      backgroundColor: colors.white,
+                      borderColor: colors.bg,
+                      borderWidth: 1,
+                      width: 30,
+                      height: 30,
+                      borderRadius: 15,
+                    }}>
+                    <Image
+                      source={icons.heart_active}
+                      style={{
+                        alignSelf: 'center',
+                        width: 20,
+                        height: 20,
+                        top: 4,
+                      }}
+                    />
+                  </View>
                 </View>
               </View>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
                 }}>
                 <Image
                   source={icons.star}
                   style={{
                     width: normalize(18),
                     height: normalize(20),
-                    marginHorizontal: -50,
                     marginLeft: 10,
                   }}
                 />
@@ -119,6 +118,8 @@ const FavDronerUsedList: React.FC<data> = ({
                     fontSize: normalize(16),
                     color: colors.fontGrey,
                     bottom: 2,
+                    marginLeft: 5,
+                    width: 130,
                   }}>
                   {rate !== null
                     ? `${parseFloat(rate).toFixed(1)} คะแนน  `
@@ -133,24 +134,26 @@ const FavDronerUsedList: React.FC<data> = ({
                     {total_task !== null ? `(${total_task})` : `  (0)`}
                   </Text>
                 </Text>
-                <View
-                  style={{
-                    borderWidth: 1,
-                    borderRadius: 15,
-                    borderColor: colors.greenLight,
-                    backgroundColor: '#fff',
-                    height: 26,
-                    width: 60,
-                  }}>
-                  <Text
+                <View style={{ marginLeft: 70 }}>
+                  <View
                     style={{
-                      fontFamily: font.AnuphanMedium,
-                      fontSize: normalize(14),
-                      color: colors.greenDark,
-                      alignSelf: 'center',
+                      borderWidth: 1,
+                      borderRadius: 15,
+                      borderColor: colors.greenLight,
+                      backgroundColor: '#fff',
+                      height: 26,
+                      width: 60,
                     }}>
-                    เคยจ้าง
-                  </Text>
+                    <Text
+                      style={{
+                        fontFamily: font.AnuphanMedium,
+                        fontSize: normalize(14),
+                        color: colors.greenDark,
+                        alignSelf: 'center',
+                      }}>
+                      เคยจ้าง
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
@@ -228,6 +231,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginLeft: 10,
     lineHeight: 40,
+    width: 200,
   },
   cards: {
     height: 'auto',

@@ -27,8 +27,6 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
   const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [statusFav, setStatusFav] = useState<any[]>([]);
-  const [dataFav, setDataFav] = useState<any[]>([]);
-  const [dataUsed, setDataUsed] = useState<any[]>([]);
 
   useEffect(() => {
     getProfile();
@@ -89,39 +87,31 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
     getFavDroner();
   }, []);
 
-  const dronerAll = [...new Set([...taskSugUsed, ...statusFav])];
-  const baseStatus = taskSugUsed.map(x => x.droner_id);
-  const dronerQ =
-    statusFav !== null ? statusFav.map(x => x.droner_id) : baseStatus;
-  const arr1 = baseStatus;
-  const arr2 = dronerQ;
-  
-  const QDroner = arr1.map(el => {
-    const getDroner = el;
-    const find = arr2.find(item => {
-      const data = statusFav.map((x)=>x.droner_id === item) && statusFav;
-      console.log(data.length)
-      const d = item;
+  const mergeDroner = taskSugUsed.map(el => {
+    const getDroner = el.droner_id;
+    const find = statusFav.find(item => {
+      const d = item.droner_id;
       return d === getDroner;
     });
+
     if (find) {
       return {
-        img: find,
-        name: '',
-        rate: '',
-        province: '',
-        distance: '',
-        total_task: '',
+        img: find.image_droner,
+        name: find.firstname + ' ' + find.lastname,
+        rate: find.rating_avg,
+        province: find.province_name,
+        distance: find.street_distance,
+        total_task: find.count_rating,
         status_favorite: 'ACTIVE',
       };
     }
     return {
-      img: el,
-      name: '',
-      rate: '',
-      province: '',
-      distance: '',
-      total_task: '',
+      img: el.image_droner,
+      name: el.firstname + ' ' + el.lastname,
+      rate: el.rating_avg,
+      province: el.province_name,
+      distance: el.street_distance,
+      total_task: el.count_rating,
       status_favorite: 'INACTIVE',
     };
   });
@@ -135,67 +125,57 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
       }}>
       <ScrollView>
         <View style={{ paddingVertical: 10 }}>
-          {statusFav.length !== 0 ? (
-            <ScrollView>
-              {statusFav.length !== 0 &&
-                QDroner.map((item: any, index: any) => (
-                  <AllDroner
-                    key={index}
-                    index={index}
-                    img={item.img}
-                    name={item.img}
-                    rate={item.rate}
-                    total_task={item.total_task}
-                    province={item.province}
-                    distance={item.distance}
-                    status={item.status_favorite}
-                  />
-                ))}
-            </ScrollView>
+          {taskSugUsed.length !== 0 ? (
+            <View>
+              {statusFav.length !== 0 ? (
+                <ScrollView>
+                  {statusFav.length !== 0 &&
+                    mergeDroner.map((item: any, index: any) => (
+                      <AllDroner
+                        key={index}
+                        index={index}
+                        img={item.img}
+                        name={item.name}
+                        rate={item.rate}
+                        total_task={item.total_task}
+                        province={item.province}
+                        distance={item.distance}
+                        status={item.status_favorite}
+                      />
+                    ))}
+                </ScrollView>
+              ) : (
+                <View style={{ height: '110%' }}>
+                  <ScrollView>
+                    {taskSugUsed.map((item: any, index: any) => (
+                      <AllDroner
+                        key={index}
+                        index={index}
+                        img={item.image_droner}
+                        name={item.firstname + ' ' + item.lastname}
+                        rate={item.rating_avg}
+                        total_task={item.count_rating}
+                        province={item.province_name}
+                        distance={item.distance}
+                        status={item.status_favorite}
+                      />
+                    ))}
+                  </ScrollView>
+                </View>
+              )}
+            </View>
           ) : (
-            <View style={{ height: '110%' }}>
-              <ScrollView>
-                {taskSugUsed.map((item: any, index: any) => (
-                  <AllDroner
-                    key={index}
-                    index={index}
-                    img={item.image_droner}
-                    name={item.firstname + ' ' + item.lastname}
-                    rate={item.rating_avg}
-                    total_task={item.count_rating}
-                    province={item.province_name}
-                    distance={item.distance}
-                    status={item.status_favorite}
-                  />
-                ))}
-              </ScrollView>
+            <View>
+              <View style={[styles.layout]}>
+                <Image
+                  source={image.empty_droner_his}
+                  style={{ width: normalize(135), height: normalize(120) }}
+                />
+                <Text style={[styles.text]}>ไม่มีนักบินโดรนที่เคยจ้าง</Text>
+              </View>
             </View>
           )}
         </View>
-        {/* <View style={{ paddingVertical: 10 }}>
-          {taskSugUsed.length !== 0 ? (
-            dronerAll.map((item, index) => (
-              <AllDroner
-                index={index}
-                img={item.image_droner}
-                name={item.firstname + ' ' + item.lastname}
-                rate={item.rating_avg}
-                total_task={item.count_rating}
-                province={item.province_name}
-                distance={item.distance}
-                status={item.status_favorite}
-              />
-            ))
-          ) : (
-             <View style={[styles.layout]}>
-              <Image
-                source={image.empty_droner_his}
-                style={{ width: normalize(135), height: normalize(120) }}
-              />
-              <Text style={[styles.text]}>ไม่มีนักบินโดรนที่เคยจ้าง</Text>
-            </View>
-          )} 
-        </View> */}
       </ScrollView>
 
       <Spinner

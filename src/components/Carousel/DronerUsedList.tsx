@@ -18,6 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 interface dronerUsedData {
   index: any;
@@ -28,6 +29,7 @@ interface dronerUsedData {
   total_task: any;
   province: any;
   distance: any;
+  // status: any;
 }
 
 const DronerUsedList: React.FC<dronerUsedData> = ({
@@ -39,11 +41,12 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
   total_task,
   province,
   distance,
+  // status,
 }) => {
-  const [checked, setChecked] = useState<boolean>(false);
   const date = new Date();
   const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
   const [data, setData] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getProfile();
@@ -81,6 +84,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
     }
   };
   const addUnAddDroners = async () => {
+    setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const droner_id = taskSugUsed.map(x => x.droner_id);
     await FavoriteDroner.addUnaddFav(
@@ -88,10 +92,13 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
       droner_id[index],
     )
       .then(res => {
+        setLoading(true);
         setData(res.responseData);
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   };
+  console.log(data);
   return (
     <View style={{ paddingHorizontal: 5 }}>
       <View style={[styles.cards]}>
@@ -117,13 +124,30 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
               }}>
               <TouchableOpacity
                 onPress={() => {
+                  setLoading(true);
                   addUnAddDroners();
-                  setChecked(!checked);
                 }}>
-                <Image
-                  source={checked ? icons.heart_active : icons.heart}
-                  style={{ alignSelf: 'center', width: 20, height: 20, top: 4 }}
-                />
+                {data.status === 'ACTIVE' ? (
+                  <Image
+                    source={icons.heart_active}
+                    style={{
+                      alignSelf: 'center',
+                      width: 20,
+                      height: 20,
+                      top: 4,
+                    }}
+                  />
+                ) : (
+                  <Image
+                    source={icons.heart}
+                    style={{
+                      alignSelf: 'center',
+                      width: 20,
+                      height: 20,
+                      top: 4,
+                    }}
+                  />
+                )}
               </TouchableOpacity>
             </View>
             <View style={{ alignSelf: 'center', bottom: 15 }}>
@@ -219,6 +243,11 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
             </View>
           </View>
         </ImageBackground>
+        <Spinner
+          visible={loading}
+          textContent={'Loading...'}
+          textStyle={{ color: '#FFF' }}
+        />
       </View>
     </View>
   );
