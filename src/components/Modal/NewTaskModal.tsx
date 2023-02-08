@@ -14,7 +14,7 @@ import {normalize} from '@rneui/themed';
 import {MainButton} from '../Button/MainButton';
 import {colors, font, icons} from '../../assets';
 import fonts from '../../assets/fonts';
-import {numberWithCommas, openGps, socket} from '../../function/utility';
+import {calTotalPrice, numberWithCommas, openGps, socket} from '../../function/utility';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import ActionSheet, {
   SheetManager,
@@ -169,7 +169,7 @@ export const NewTaskModal = (
                 color: '#2EC66E',
                 fontSize: normalize(17),
               }}>
-              ฿ {data?.totalPrice ? numberWithCommas(data?.totalPrice) : null}
+              ฿ {data?.totalPrice ? numberWithCommas(calTotalPrice(data?.totalPrice,data?.discount)) : null}
             </Text>
           </View>
           <View

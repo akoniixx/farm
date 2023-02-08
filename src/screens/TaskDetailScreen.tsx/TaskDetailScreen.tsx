@@ -18,6 +18,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import fonts from '../../assets/fonts';
 import {
+  calTotalPrice,
   dialCall,
   getStatusToText,
   numberWithCommas,
@@ -168,6 +169,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     TaskDatasource.getTaskDetail(taskId, droner_Id)
       .then(res => {
         if (res.success) {
+          console.log(res.responseData.data)
           setData(res.responseData.data);
           let date = new Date(res.responseData.data.dateAppointment);
           setDateAppointment(date);
@@ -573,10 +575,10 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                     stylesCentral.flexRowBetwen,
                     {marginVertical: normalize(5)},
                   ]}>
-                  <Text style={[styles.fontGray, {color: colors.green}]}>
+                  <Text style={[styles.fontGray]}>
                     ส่วนลดค่าธรรมเนียม
                   </Text>
-                  <Text style={[styles.fontGray, {color: colors.green}]}>
+                  <Text style={[styles.fontGray]}>
                     {data.discountFee !== '0' ? '- ' : null}{' '}
                     {numberWithCommas(data.discountFee)} ฿
                   </Text>
@@ -592,9 +594,13 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   รายได้ (หลังจ่ายค่าธรรมเนียม)
                 </Text>
                 <Text style={[styles.fontGray, {color: 'black'}]}>
-                  {numberWithCommas(data.totalPrice)} ฿
+                {numberWithCommas(calTotalPrice(data?.totalPrice,data?.discount))} ฿
                 </Text>
               </View>
+
+              
+
+
               {data.status == 'CANCELED' ? (
                 <View
                   style={{

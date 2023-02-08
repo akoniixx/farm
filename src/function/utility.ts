@@ -62,3 +62,10 @@ export const decimalConvert = (string: string) =>
 export const socket = io(BASE_URL, {
   path: '/tasks/task/socket',
 });
+
+
+export const calTotalPrice = (totalprice:string,discount:string) => {
+  let totalPrice =  parseInt(totalprice) + parseInt(discount)
+  let text = totalPrice.toString()
+  return  text
+}
