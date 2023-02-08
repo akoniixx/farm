@@ -348,7 +348,7 @@ export const NewTaskModal = (
               flexDirection: 'row',
             }}
             onPress={() => {
-              mixpanel.track('Accept new task');
+              mixpanel.track('Accept new task from modal');
               receiveTask();
             }}>
             <View
@@ -408,6 +408,7 @@ export const NewTaskModal = (
               marginTop: normalize(10),
             }}
             onPress={() => {
+              mixpanel.track('Reject new task from modal');
               rejectTask();
             }}>
             <Text
