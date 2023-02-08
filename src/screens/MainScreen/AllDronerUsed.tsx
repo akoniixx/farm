@@ -24,6 +24,7 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
   const date = new Date();
   const isFocused = useIsFocused();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  const [taskSug, setTaskSug] = useState<any[]>([]);
   const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [statusFav, setStatusFav] = useState<any[]>([]);
@@ -49,6 +50,22 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
     }
   };
   useEffect(() => {
+    const dronerSug = async () => {
+      const value = await AsyncStorage.getItem('token');
+      if (value) {
+        const farmer_id = await AsyncStorage.getItem('farmer_id');
+        TaskSuggestion.searchDroner(
+          farmer_id !== null ? farmer_id : '',
+          profilestate.plotItem[0].id,
+          date.toDateString(),
+        )
+          .then(res => {
+            setTaskSug(res);
+          })
+          .catch(err => console.log(err))
+          .finally(() => setLoading(false));
+      }
+    };
     const dronerSugUsed = async () => {
       setLoading(true);
       const value = await AsyncStorage.getItem('token');
@@ -70,8 +87,10 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
           .finally(() => setLoading(false));
       }
     };
+    dronerSug();
     dronerSugUsed();
   }, [profilestate.plotItem]);
+
   useEffect(() => {
     const getFavDroner = async () => {
       setLoading(true);

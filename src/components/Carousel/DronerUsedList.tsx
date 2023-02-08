@@ -29,7 +29,7 @@ interface dronerUsedData {
   total_task: any;
   province: any;
   distance: any;
-  // status: any;
+  status:any;
 }
 
 const DronerUsedList: React.FC<dronerUsedData> = ({
@@ -41,12 +41,15 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
   total_task,
   province,
   distance,
-  // status,
+  status
 }) => {
   const date = new Date();
+  // const [checked, setChecked] = useState<boolean>(false);
   const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState(false);
+  const [checked, setChecked] = useState(false);
+
 
   useEffect(() => {
     getProfile();
@@ -84,7 +87,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
     }
   };
   const addUnAddDroners = async () => {
-    setLoading(true);
+    setChecked(!checked)
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const droner_id = taskSugUsed.map(x => x.droner_id);
     await FavoriteDroner.addUnaddFav(
@@ -92,13 +95,12 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
       droner_id[index],
     )
       .then(res => {
-        setLoading(true);
         setData(res.responseData);
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
   };
-  console.log(data);
+
   return (
     <View style={{ paddingHorizontal: 5 }}>
       <View style={[styles.cards]}>
@@ -123,11 +125,8 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                 margin: 10,
               }}>
               <TouchableOpacity
-                onPress={() => {
-                  setLoading(true);
-                  addUnAddDroners();
-                }}>
-                {data.status === 'ACTIVE' ? (
+              onPress={addUnAddDroners}>
+                {checked ? (
                   <Image
                     source={icons.heart_active}
                     style={{
@@ -243,11 +242,6 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
             </View>
           </View>
         </ImageBackground>
-        <Spinner
-          visible={loading}
-          textContent={'Loading...'}
-          textStyle={{ color: '#FFF' }}
-        />
       </View>
     </View>
   );

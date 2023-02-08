@@ -72,7 +72,6 @@ const AllDronerUsed: React.FC<data> = ({
                     style={{
                       backgroundColor: colors.white,
                       borderColor: colors.bg,
-                      borderWidth: 1,
                       width: 30,
                       height: 30,
                       borderRadius: 15,
@@ -191,6 +190,7 @@ const AllDronerUsed: React.FC<data> = ({
                 bottom: 2,
                 height: 'auto',
                 lineHeight: 30,
+                width: 140
               }}>
               {'จ.' + province}
             </Text>

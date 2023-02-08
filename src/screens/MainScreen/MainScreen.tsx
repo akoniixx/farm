@@ -224,7 +224,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     getFavDroner();
   }, []);
 
-  const mergeDroner = taskSugUsed.map(el => {
+  const mergeDronerUsed = taskSugUsed.map(el => {
     const getDroner = el.droner_id;
     const find = statusFav.find(item => {
       const d = item.droner_id;
@@ -239,6 +239,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         distance: find.street_distance,
         total_task: find.count_rating,
         status_favorite: 'ACTIVE',
+        droner: find.droner_id,
       };
     }
     return {
@@ -249,6 +250,37 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       distance: el.street_distance,
       total_task: el.count_rating,
       status_favorite: 'INACTIVE',
+      droner: el.droner_id,
+    };
+  });
+
+  const mergeDronerSugg = taskSug.map(el => {
+    const getDroner = el.droner_id;
+    const find = statusFav.find(item => {
+      const d = item.droner_id;
+      return d === getDroner;
+    });
+    if (find) {
+      return {
+        img: find.image_droner,
+        name: find.firstname + ' ' + find.lastname,
+        rate: find.rating_avg,
+        province: find.province_name,
+        distance: find.street_distance,
+        total_task: find.count_rating,
+        status_favorite: 'ACTIVE',
+        droner: find.droner_id,
+      };
+    }
+    return {
+      img: el.image_droner,
+      name: el.firstname + ' ' + el.lastname,
+      rate: el.rating_avg,
+      province: el.province_name,
+      distance: el.street_distance,
+      total_task: el.count_rating,
+      status_favorite: 'INACTIVE',
+      droner: el.droner_id,
     };
   });
 
@@ -552,13 +584,13 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}>
                       {taskSugUsed.length != undefined &&
-                        mergeDroner.map((item: any, index: any) => (
+                        mergeDronerUsed.map((item: any, index: any) => (
                           <TouchableOpacity
                             key={index}
                             onPress={async () => {
                               await AsyncStorage.setItem(
                                 'droner_id',
-                                `${item.droner_id}`,
+                                `${item.droner}`,
                               );
                               navigation.push('DronerDetail');
                             }}>
@@ -572,6 +604,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                               total_task={item.total_task}
                               province={item.province}
                               distance={item.distance}
+                              status={item.status_favorite}
                             />
                           </TouchableOpacity>
                         ))}
@@ -617,60 +650,38 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     นักบินโดรนที่แนะนำ
                   </Text>
                 </View>
-                {taskSug.length != 0 ? (
                   <View style={{ height: 'auto' }}>
                     <ScrollView
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}>
                       {taskSug.length != undefined &&
-                        taskSug.map((item: any, index: any) => (
+                        mergeDronerSugg.map((item: any, index: any) => (
                           <TouchableOpacity
                             key={index}
                             onPress={async () => {
                               await AsyncStorage.setItem(
                                 'droner_id',
-                                `${item.droner_id}`,
+                                `${item.droner}`,
                               );
                               navigation.push('DronerDetail');
                             }}>
                             <DronerSugg
                               key={index}
                               index={index}
-                              profile={item.image_droner}
+                              profile={item.img}
                               background={''}
-                              name={item.firstname + ' ' + item.lastname}
-                              rate={item.rating_avg}
+                              name={item.name}
+                              rate={item.rate}
                               total_task={item.total_task}
-                              province={item.province_name}
-                              distance={item.street_distance}
+                              province={item.province}
+                              distance={item.distance}
+                              status={item.status_favorite}
                             />
                           </TouchableOpacity>
                         ))}
                     </ScrollView>
                   </View>
-                ) : (
-                  <View style={{ alignItems: 'center' }}>
-                    <Image
-                      source={image.empty_droner}
-                      style={{
-                        width: normalize(136),
-                        height: normalize(130),
-                        top: '16%',
-                        marginBottom: normalize(32),
-                      }}
-                    />
-                    <Text
-                      style={{
-                        top: '10%',
-                        fontFamily: font.SarabunBold,
-                        fontSize: normalize(16),
-                        fontWeight: '300',
-                        color: colors.gray,
-                      }}>
-                      ไม่มีนักบินโดรนที่เคยจ้าง
-                    </Text>
-                  </View>
-                )}
+               
               </View>
             </View>
           </View>

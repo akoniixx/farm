@@ -144,7 +144,7 @@ const VerifyOTP: React.FC<any> = ({ navigation, route }) => {
               const fcmtoken = await AsyncStorage.getItem('fcmtoken');
               FCMtokenDatasource.deleteFCMtoken(fcmtoken!)
                 .then(async res => {
-                  console.log(res)
+                  console.log(res);
                   navigation.navigate('DeleteSuccess');
                 })
                 .catch(err => console.log(err));

@@ -62,6 +62,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     fontSize: normalize(18),
     lineHeight: 56,
-    height: 56
+    height: 56,
   },
 });

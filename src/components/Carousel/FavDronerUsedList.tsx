@@ -24,6 +24,7 @@ interface data {
   province: any;
   distance: any;
   total_task: any;
+  status_used: any;
 }
 const FavDronerUsedList: React.FC<data> = ({
   index,
@@ -33,8 +34,9 @@ const FavDronerUsedList: React.FC<data> = ({
   province,
   distance,
   total_task,
+  status_used,
 }) => {
-  const [statusFav, setStatusFav] = useState<any>();
+  const [statusFav, setStatusFav] = useState<any[]>([]);
 
   useEffect(() => {
     favDroner();
@@ -46,6 +48,13 @@ const FavDronerUsedList: React.FC<data> = ({
       setStatusFav(res),
     );
   };
+  console.log(
+    JSON.stringify(
+      statusFav.map(x => x).filter(x => x.status_ever_used),
+      null,
+      2,
+    ),
+  );
 
   return (
     <View
@@ -56,7 +65,12 @@ const FavDronerUsedList: React.FC<data> = ({
         paddingHorizontal: 10,
         width: '100%',
       }}>
-      <View key={index} style={[styles.cards]}>
+      <View
+        key={index}
+        style={[
+          styles.cards,
+          { backgroundColor: !status_used ? colors.white : '#F7FFF0' },
+        ]}>
         <View>
           <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
             <Avatar
@@ -82,7 +96,6 @@ const FavDronerUsedList: React.FC<data> = ({
                     style={{
                       backgroundColor: colors.white,
                       borderColor: colors.bg,
-                      borderWidth: 1,
                       width: 30,
                       height: 30,
                       borderRadius: 15,
@@ -134,27 +147,29 @@ const FavDronerUsedList: React.FC<data> = ({
                     {total_task !== null ? `(${total_task})` : `  (0)`}
                   </Text>
                 </Text>
-                <View style={{ marginLeft: 70 }}>
-                  <View
-                    style={{
-                      borderWidth: 1,
-                      borderRadius: 15,
-                      borderColor: colors.greenLight,
-                      backgroundColor: '#fff',
-                      height: 26,
-                      width: 60,
-                    }}>
-                    <Text
+                {status_used === true ? (
+                  <View style={{ marginLeft: 70 }}>
+                    <View
                       style={{
-                        fontFamily: font.AnuphanMedium,
-                        fontSize: normalize(14),
-                        color: colors.greenDark,
-                        alignSelf: 'center',
+                        borderWidth: 1,
+                        borderRadius: 15,
+                        borderColor: colors.greenLight,
+                        backgroundColor: '#fff',
+                        height: 26,
+                        width: 60,
                       }}>
-                      เคยจ้าง
-                    </Text>
+                      <Text
+                        style={{
+                          fontFamily: font.AnuphanMedium,
+                          fontSize: normalize(14),
+                          color: colors.greenDark,
+                          alignSelf: 'center',
+                        }}>
+                        เคยจ้าง
+                      </Text>
+                    </View>
                   </View>
-                </View>
+                ) : null}
               </View>
             </View>
           </View>
@@ -190,8 +205,9 @@ const FavDronerUsedList: React.FC<data> = ({
                 bottom: 2,
                 height: 'auto',
                 lineHeight: 30,
+                width: 140,
               }}>
-              {'จ.' + province}
+              {province !== null ? 'จ.' + province : 'จ. -'}
             </Text>
             <Image
               source={icons.distance}
@@ -238,7 +254,19 @@ const styles = StyleSheet.create({
     width: normalize(355),
     borderWidth: 0.5,
     borderColor: '#D9DCDF',
-    backgroundColor: '#F7FFF0',
+    // backgroundColor: '#F7FFF0',
+    borderRadius: normalize(12),
+    paddingVertical: normalize(10),
+    paddingHorizontal: normalize(20),
+    flexDirection: 'row',
+    marginBottom: normalize(5),
+  },
+  cardsSugg: {
+    height: 'auto',
+    width: normalize(355),
+    borderWidth: 0.5,
+    borderColor: '#D9DCDF',
+    backgroundColor: colors.white,
     borderRadius: normalize(12),
     paddingVertical: normalize(10),
     paddingHorizontal: normalize(20),

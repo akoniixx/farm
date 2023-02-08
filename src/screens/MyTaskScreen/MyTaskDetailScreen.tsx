@@ -129,7 +129,9 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             />
           </View>
         </View>
-        {task.status === 'CANCELED' ? <></> :
+        {task.status === 'CANCELED' ? (
+          <></>
+        ) : (
           <View
             style={{
               padding: normalize(16),
@@ -156,8 +158,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               <Text style={styles.unitPrice}>{task.unit_price} บาท/ไร่</Text>
             </View>
           </View>
-        }
-
+        )}
 
         <View
           style={{

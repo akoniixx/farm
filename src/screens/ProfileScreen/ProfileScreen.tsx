@@ -376,6 +376,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 alignSelf: 'center',
               }}>
               <FlatList
+                pagingEnabled={true}
                 keyExtractor={item => item.id}
                 horizontal={true}
                 scrollEnabled={true}

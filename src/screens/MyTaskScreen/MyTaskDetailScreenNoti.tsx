@@ -38,25 +38,19 @@ const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
         return 'กลับหน้าหลัก';
     }
   };
-  const [dronerImg,setDronerImg] = useState<string | null>(null)
-  useEffect(()=>{
-    DronerDatasource.getDronerData(task.droner.id).then(
-      res => {
-        res.file.map(
-          (item : any) => {
-            if(item.category === "PROFILE_IMAGE"){
-              DronerDatasource.getDronerProfileImage(item.path).then(
-                resImg =>{
-                  console.log(resImg)
-                  setDronerImg(resImg)
-                }
-              )
-            }
-          }
-        )
-      }
-    )
-  },[])
+  const [dronerImg, setDronerImg] = useState<string | null>(null);
+  useEffect(() => {
+    DronerDatasource.getDronerData(task.droner.id).then(res => {
+      res.file.map((item: any) => {
+        if (item.category === 'PROFILE_IMAGE') {
+          DronerDatasource.getDronerProfileImage(item.path).then(resImg => {
+            console.log(resImg);
+            setDronerImg(resImg);
+          });
+        }
+      });
+    });
+  }, []);
 
   return (
     <View style={{ flex: 1 }}>
@@ -320,7 +314,7 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: fonts.SarabunMedium,
     fontSize: normalize(19),
-    color : colors.fontBlack
+    color: colors.fontBlack,
   },
   unitPrice: {
     fontFamily: fonts.SarabunLight,

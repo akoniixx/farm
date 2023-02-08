@@ -74,17 +74,15 @@ export class Authentication {
   }
   static async logout(navigation: any) {
     await AsyncStorage.multiRemove(['token', 'farmer_id', 'task_id']);
-    const fcmtoken = await AsyncStorage.getItem('fcmtoken')
-    FCMtokenDatasource.deleteFCMtoken(fcmtoken!).then(
-      res => {
-        const resetActionNavigate = CommonActions.reset({
-          index: 1,
-          routes: [{ name: 'Auth' }],
-        });
-        navigation.popToTop();
-        navigation.dispatch(resetActionNavigate);
-      }
-    )
+    const fcmtoken = await AsyncStorage.getItem('fcmtoken');
+    FCMtokenDatasource.deleteFCMtoken(fcmtoken!).then(res => {
+      const resetActionNavigate = CommonActions.reset({
+        index: 1,
+        routes: [{ name: 'Auth' }],
+      });
+      navigation.popToTop();
+      navigation.dispatch(resetActionNavigate);
+    });
   }
   static generateOtpDelete(telNumber: String): Promise<any> {
     return axios

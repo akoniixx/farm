@@ -8,8 +8,11 @@ const DronerUsedScreen: React.FC<any> = ({ navigation }) => {
   return (
     <>
       <View style={stylesCentral.container}>
-        <CustomHeader title="ประวัติการจ้างนักบิน"  showBackBtn
-          onPressBack={() => navigation.goBack()}/>
+        <CustomHeader
+          title="ประวัติการจ้างนักบิน"
+          showBackBtn
+          onPressBack={() => navigation.goBack()}
+        />
         <HistoryDronerUsed />
       </View>
     </>

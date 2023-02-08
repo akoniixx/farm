@@ -26,6 +26,7 @@ import AddPlotScreen from '../screens/ProfileScreen/PlotScreen/AddPlotScreen';
 import EditPlotScreen from '../screens/ProfileScreen/PlotScreen/EditPlotScreen';
 import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 import DronerUsedScreen from '../screens/MainScreen/DronerUsedScreen';
+import FullScreenTaskImg from '../screens/DronerProfile/FullScreenTaskImg';
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -58,6 +59,8 @@ export type MainStackParamList = {
   AddPlotScreen: undefined;
   EditPlotScreen: undefined;
   DeleteSuccess: undefined;
+  FullScreenTaskImg: undefined;
+
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
@@ -81,6 +84,7 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="SelectPlotScreen" component={SelectPlotScreen} />
       <Stack.Screen name="SelectTarget" component={SelectTarget} />
       <Stack.Screen name="DronerDetail" component={DronerDetail} />
+      <Stack.Screen name="FullScreenTaskImg" component={FullScreenTaskImg} />
       <Stack.Screen name="DronerUsedScreen" component={DronerUsedScreen} />
       <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />

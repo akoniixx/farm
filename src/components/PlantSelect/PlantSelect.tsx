@@ -39,7 +39,7 @@ export const PlantSelect: React.FC<PrantSelectProps> = ({
             fontSize: normalize(16),
             marginTop: normalize(15),
             height: '100%',
-            color: colors.fontBlack
+            color: colors.fontBlack,
           }}>
           {label}
         </Text>

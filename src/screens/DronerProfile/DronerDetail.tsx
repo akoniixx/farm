@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableHighlightBase,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -32,11 +33,14 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 
 const DronerDetail: React.FC<any> = ({ navigation, route }) => {
-  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+  const { width } = Dimensions.get('window');
+  const height = width * 0.6;
   const [visible, setIsVisible] = useState(false);
   const [data, setData] = useState<any[]>([]);
+  const [idDroner, setIdDroner] = useState<any[]>([]);
+  const [imageTask, setImageTask] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [statusFav, setStatusFav] = useState<any | null>([]);
+  const [statusFav, setStatusFav] = useState<any[] | null>([]);
   const [detailState, dispatch] = useReducer(
     detailDronerReducer,
     initDetailDronerState,
@@ -64,6 +68,8 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       offset,
     )
       .then(res => {
+        setImageTask(res[0].image_task);
+        setIdDroner(res[0].droner_id);
         setData(res[0].droner_queue);
         dispatch({
           type: 'InitDroner',
@@ -86,9 +92,9 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   const favDroner = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const plot_id = await AsyncStorage.getItem('plot_id');
-    FavoriteDroner.findAllFav(farmer_id!, plot_id!).then(res => 
-      setStatusFav(res[0].status_favorite)
-    )
+    FavoriteDroner.findAllFav(farmer_id!, plot_id!).then(res =>
+      setStatusFav(res),
+    );
   };
   const baseDate = new Date();
   const weekDays: string[] = [];
@@ -127,7 +133,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
         image={() => (
           <Image
             source={
-              statusFav === 'ACTIVE'
+              statusFav?.find(x => x.droner_id === idDroner)
                 ? icons.heart_active
                 : icons.heart
             }
@@ -136,9 +142,9 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
         )}
       />
       <ScrollView>
-        <View style={[styles.section]}>
+        <View>
           {detailState.imageTask != null ? (
-            <Text style={[styles.text]}>
+            <Text style={[styles.text, { paddingHorizontal: 15 }]}>
               ภาพผลงานนักบิน
               <Text
                 style={{
@@ -146,39 +152,43 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                 }}>{` (${detailState.imageTask.length})`}</Text>
             </Text>
           ) : (
-            ''
+            0
           )}
-          {detailState.imageTask !== null ? (
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}>
-              {detailState.imageTask != undefined &&
-                detailState.imageTask.map((item: any, _index: any) => (
-                  <ImageSlider
-                    preview={true}
-                    previewImageStyle={{}}
-                    data={[
-                      {
-                        img: item,
-                      },
-                    ]}
-                    previewImageContainerStyle={{
-                      width: '100%',
-                      height: '100%',
-                      backgroundColor: '#020804',
-                    }}
-                    autoPlay={true}
-                    closeIconColor="#fff"
-                    onItemChanged={() => setIsVisible(false)}
-                  />
+          {detailState.imageTask !== undefined ? (
+            <View style={{ marginTop: 20, width, height }}>
+              <ScrollView
+                pagingEnabled
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ width, height }}>
+                {detailState.imageTask.map((item:any, index:any) => (
+                  <TouchableOpacity  key={index}
+                  onPress={async() => {
+                    await AsyncStorage.setItem(
+                      'imgTask',
+                      `${item}`,
+                    );
+                    navigation.push('FullScreenTaskImg');
+                  }}>
+                    <Image
+                      key={index}
+                      source={{ uri: item }}
+                      style={{
+                        width,
+                        height,
+                        resizeMode: 'cover',
+                      }}
+                    />
+                  </TouchableOpacity>
                 ))}
-            </ScrollView>
+              </ScrollView>
+            </View>
           ) : (
             <Image
               source={image.bg_droner}
               style={{
                 height: normalize(200),
-                width: screenWidth,
+                width: width,
                 alignSelf: 'center',
               }}
             />
@@ -315,10 +325,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                   <TouchableOpacity
                     key={index}
                     onPress={async () => {
-                      await AsyncStorage.setItem(
-                        'dateQDroner',
-                        `${item}`,
-                      );
+                      await AsyncStorage.setItem('dateQDroner', `${item}`);
                       navigation.push('SelectDateScreen');
                     }}>
                     <CardDetailDroner
@@ -394,7 +401,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                     fontSize: normalize(18),
                     color: colors.fontBlack,
                   }}>
-                  {!detailState.droneBand  ? ' -' : ` ${detailState.droneBand}`}
+                  {!detailState.droneBand ? ' -' : ` ${detailState.droneBand}`}
                 </Text>
               </Text>
               {/* <View style={{flexDirection: 'row', marginTop: 10}}>

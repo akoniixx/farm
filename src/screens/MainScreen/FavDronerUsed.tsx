@@ -27,67 +27,185 @@ const FavDronerUsed: React.FC<any> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [statusFav, setStatusFav] = useState<any[]>([]);
 
-  const dronerSugUsed = async () => {
+  const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  const [taskSug, setTaskSug] = useState<any[]>([]);
+
+  useEffect(() => {
+    getProfile();
+  }, [isFocused]);
+  const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
     if (value) {
       const farmer_id = await AsyncStorage.getItem('farmer_id');
-      const plot_id = await AsyncStorage.getItem('plot_id');
-      const limit = 8;
-      const offset = 0;
-      TaskSuggestion.DronerUsed(
-        farmer_id!,
-        plot_id!,
-        date.toDateString(),
-        limit,
-        offset,
-      )
-        .then(res => {
-          setTaskSugUsed(res);
+      ProfileDatasource.getProfile(farmer_id!)
+        .then(async res => {
+          await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
+          dispatch({
+            type: 'InitProfile',
+            name: `${res.firstname}`,
+            plotItem: res.farmerPlot,
+            status: res.status,
+          });
         })
         .catch(err => console.log(err));
     }
   };
-  
+  useEffect(() => {
+    const dronerSug = async () => {
+      const value = await AsyncStorage.getItem('token');
+      if (value) {
+        const farmer_id = await AsyncStorage.getItem('farmer_id');
+        TaskSuggestion.searchDroner(
+          farmer_id !== null ? farmer_id : '',
+          profilestate.plotItem[0].id,
+          date.toDateString(),
+        )
+          .then(res => {
+            setTaskSug(res);
+          })
+          .catch(err => console.log(err))
+          .finally(() => setLoading(false));
+      }
+    };
+    const dronerSugUsed = async () => {
+      setLoading(true);
+      const value = await AsyncStorage.getItem('token');
+      if (value) {
+        const farmer_id = await AsyncStorage.getItem('farmer_id');
+        const limit = 0;
+        const offset = 0;
+        TaskSuggestion.DronerUsed(
+          farmer_id !== null ? farmer_id : '',
+          profilestate.plotItem[0].id,
+          date.toDateString(),
+          limit,
+          offset,
+        )
+          .then(res => {
+            setTaskSugUsed(res);
+          })
+          .catch(err => console.log(err))
+          .finally(() => setLoading(false));
+      }
+    };
+    dronerSug();
+    dronerSugUsed();
+  }, [profilestate.plotItem]);
   useEffect(() => {
     const getFavDroner = async () => {
       setLoading(true);
       const farmer_id = await AsyncStorage.getItem('farmer_id');
       const plot_id = await AsyncStorage.getItem('plot_id');
-      FavoriteDroner.findAllFav(
-          farmer_id!,
-          plot_id!,
-        )
-          .then(res => {
-            setStatusFav(res);
-          })
-          .catch(err => console.log(err))
-          .finally(() => setLoading(false));
-      
+      FavoriteDroner.findAllFav(farmer_id!, plot_id!)
+        .then(res => {
+          setStatusFav(res);
+        })
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
     };
     getFavDroner();
   }, []);
 
- 
+  const splitCard = statusFav.map(el => {
+    const getDroner = el.droner_id;
+    const find = statusFav.find(item => {
+      const d = item.droner_id;
+      return d === getDroner;
+    });
+
+    if (find) {
+      return {
+        img: find.image_droner,
+        name: find.firstname + ' ' + find.lastname,
+        rate: find.rating_avg,
+        province: find.province_name,
+        distance: find.street_distance,
+        total_task: find.count_rating,
+        status_used: find.status_ever_used,
+      };
+    }
+    return {
+      img: el.image_droner,
+      name: el.firstname + ' ' + el.lastname,
+      rate: el.rating_avg,
+      province: el.province_name,
+      distance: el.street_distance,
+      total_task: el.count_rating,
+      status_used: el.status_ever_used,
+    };
+  });
+
   return (
     <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: '#F8F9FA',
         width: '100%',
-        alignItems: 'center'
+        alignItems: 'center',
       }}>
       <ScrollView>
-        <View style={{paddingVertical:10}}>
+        <View style={{ paddingVertical: 10 }}>
           {statusFav.length !== 0 ? (
-            statusFav.map((item:any, index:any) => (
+            <View>
+              {statusFav.length !== 0 ? (
+                <ScrollView>
+                  {statusFav.length !== 0 &&
+                    splitCard.map((item: any, index: any) => (
+                      <FavDronerUsedList
+                        key={index}
+                        index={index}
+                        img={item.img}
+                        name={item.name}
+                        rate={item.rate}
+                        total_task={item.total_task}
+                        province={item.province}
+                        distance={item.distance}
+                        status_used={item.status_used}
+                      />
+                    ))}
+                </ScrollView>
+              ) : (
+                <View style={{ height: '110%' }}>
+                  <ScrollView>
+                    {statusFav.map((item: any, index: any) => (
+                      <FavDronerUsedList
+                        key={index}
+                        index={index}
+                        img={item.image_droner}
+                        name={item.firstname + ' ' + item.lastname}
+                        rate={item.rating_avg}
+                        total_task={item.count_rating}
+                        province={item.province_name}
+                        distance={item.distance}
+                        status_used={item.status_used}
+                      />
+                    ))}
+                  </ScrollView>
+                </View>
+              )}
+            </View>
+          ) : (
+            <View>
+              <View style={[styles.layout]}>
+                <Image
+                  source={image.empty_droner_his}
+                  style={{ width: normalize(135), height: normalize(120) }}
+                />
+                <Text style={[styles.text]}>ไม่มีนักบินโดรนที่ถูกใจ</Text>
+              </View>
+            </View>
+          )}
+          {/* {statusFav.length !== 0 ? (
+            splitCard.map((item:any, index:any) => (
               <FavDronerUsedList
-                index={index}
-                img={item.image_droner}
-                name={item.firstname + ' ' + item.lastname}
-                rate={item.rating_avg}
-                total_task={item.count_rating}
-                province={item.province_name}
-                distance={item.distance}
+              key={index}
+              index={index}
+              img={item.img}
+              name={item.name}
+              rate={item.rate}
+              total_task={item.total_task}
+              province={item.province}
+              distance={item.distance}
               />
             ))
           ) : (
@@ -98,7 +216,7 @@ const FavDronerUsed: React.FC<any> = ({ navigation }) => {
               />
               <Text style={[styles.text]}>ไม่มีนักบินโดรนที่ถูกใจ</Text>
             </View>
-          )}
+          )} */}
         </View>
       </ScrollView>
 
@@ -115,7 +233,7 @@ const styles = StyleSheet.create({
   layout: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 150
+    marginTop: 150,
   },
   text: {
     marginTop: 15,
