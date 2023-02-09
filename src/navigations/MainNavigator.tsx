@@ -27,6 +27,7 @@ import EditPlotScreen from '../screens/ProfileScreen/PlotScreen/EditPlotScreen';
 import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 import DronerUsedScreen from '../screens/MainScreen/DronerUsedScreen';
 import FullScreenTaskImg from '../screens/DronerProfile/FullScreenTaskImg';
+import AllReviewDroner from '../screens/DronerProfile/AllReviewDroner';
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -60,6 +61,7 @@ export type MainStackParamList = {
   EditPlotScreen: undefined;
   DeleteSuccess: undefined;
   FullScreenTaskImg: undefined;
+  AllReviewDroner:undefined;
 
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
@@ -108,6 +110,8 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
       <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
       <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
+      <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
+
     </Stack.Navigator>
   );
 };

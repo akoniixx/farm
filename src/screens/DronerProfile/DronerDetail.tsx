@@ -31,11 +31,13 @@ import Animated from 'react-native-reanimated';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import { momentExtend } from '../../utils/moment-buddha-year';
+import CardReview from '../../components/Carousel/CardReview';
 
 const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const [visible, setIsVisible] = useState(false);
   const [data, setData] = useState<any[]>([]);
+  const [review, setReview] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [statusFav, setStatusFav] = useState<any | null>([]);
   const [detailState, dispatch] = useReducer(
@@ -67,6 +69,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       offset,
     )
       .then(res => {
+        setReview(res[0].review);
         setData(res[0].droner_queue);
         dispatch({
           type: 'InitDroner',
@@ -81,6 +84,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           droneBand: res[0].drone_brand,
           price: `${res[0].price_per_rai}`,
           dronerQueue: res[0].droner_queue,
+          review: `${res[0].review}`,
         });
       })
       .catch(err => console.log(err))
@@ -94,8 +98,6 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       setStatusFav(res[0].status_favorite),
     );
   };
-
-
   const baseDate = new Date();
   const nextDay = new Date(baseDate);
   nextDay.setDate(baseDate.getDate() + 1);
@@ -125,6 +127,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       date: el,
     };
   });
+  console.log(JSON.stringify(review, null, 2));
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -204,20 +207,56 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
               source={icons.chat}
               style={{ width: normalize(20), height: normalize(20) }}
             />
-            รีวิวจากเกษตรกร (7)
+             <Text style={[styles.text, { paddingHorizontal: normalize(15) }]}>
+              {` รีวิวจากเกษตรกร`}</Text>
+              {review != null ? (
+            <Text style={[styles.text, { paddingHorizontal: normalize(15) }]}>
+              <Text
+                style={{
+                  color: colors.gray,
+                }}>{` (${review.length})`}</Text>
+            </Text>
+          ) : (
+            ` (0)`
+            )}
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+           onPress={() => {
+            navigation.navigate('AllReviewDroner');
+          }}>
             <Text
               style={{
                 fontFamily: font.SarabunLight,
                 fontSize: normalize(16),
                 color: colors.fontGrey,
-                height: 25,
+                height: 30,
               }}>
               ดูทั้งหมด
             </Text>
           </TouchableOpacity>
         </View>
+        {review !== null ? (
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              {review != undefined &&
+                review.map((item: any, index: any) => (
+                  <CardReview
+                  key={index}
+                  index={index}
+                  img={item.image_profile}
+                  name={item.farmer_fname + ' '+ item.farmer_lname}
+                  rate={item.rating}
+                  date={item.date_appointment}
+                  comment={item.comment_review.comment}
+                />
+                ))}
+            </ScrollView>
+          ) : (
+            <View style={{alignSelf: 'center', paddingVertical:30}}>
+              <Text style={[styles.text,{color: colors.gray}]}>ไม่มีรีวิว</Text>
+            </View>
+          )}
         <View style={{ height: 10, backgroundColor: '#F8F9FA' }}></View>
         <View style={[styles.section]}>
           <Text style={[styles.text, { marginBottom: '3%' }]}>
@@ -300,7 +339,6 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                 ไม่สะดวก
               </Text>
             </View>
-
             <View>
               <Text style={[styles.label]}>
                 วันนี้{' '}
@@ -316,40 +354,40 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
         <View style={{ height: normalize(155) }}>
           {detailState.dronerQueue != null ? (
             <View style={{ height: '100%' }}>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 {detailState.dronerQueue.length != undefined &&
                   QDroner.map((item: any, index: any) => (
-                      <CardDetailDroner
-                        key={index}
-                        index={index}
-                        date={new Date(item.date).toLocaleDateString('th-TH', {
-                          day: 'numeric',
-                        })}
-                        month={new Date(item.date).toLocaleDateString('th-TH', {
-                          month: 'short',
-                        })}
-                        year={momentExtend.toBuddhistYear(date, 'YY')}
-                        convenient={item.status}
-                      />
+                    <CardDetailDroner
+                      key={index}
+                      index={index}
+                      date={new Date(item.date).toLocaleDateString('th-TH', {
+                        day: 'numeric',
+                      })}
+                      month={new Date(item.date).toLocaleDateString('th-TH', {
+                        month: 'short',
+                      })}
+                      year={momentExtend.toBuddhistYear(date, 'YY')}
+                      convenient={item.status}
+                    />
                   ))}
               </View>
             </View>
           ) : (
             <View style={{ height: '110%' }}>
-             <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 {weekDays.map((item: any, index: any) => (
-                    <CardDetailDroner
-                      key={index}
-                      index={index}
-                      date={new Date(item).toLocaleDateString('th-TH', {
-                        day: 'numeric',
-                      })}
-                      month={new Date(item).toLocaleDateString('th-TH', {
-                        month: 'short',
-                      })}
-                      year={momentExtend.toBuddhistYear(date, 'YY')}
-                      convenient={'สะดวก'}
-                    />
+                  <CardDetailDroner
+                    key={index}
+                    index={index}
+                    date={new Date(item).toLocaleDateString('th-TH', {
+                      day: 'numeric',
+                    })}
+                    month={new Date(item).toLocaleDateString('th-TH', {
+                      month: 'short',
+                    })}
+                    year={momentExtend.toBuddhistYear(date, 'YY')}
+                    convenient={'สะดวก'}
+                  />
                 ))}
               </View>
             </View>
