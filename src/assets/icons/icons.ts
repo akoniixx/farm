@@ -83,5 +83,7 @@ export default {
   callingDarkblue: require('./callingDarkblue.png'),
   closeImg: require('./closeImg.png'),
   arrowL: require('./arrowL.png'),
-  arrowR: require('./arrowR.png')
+  arrowR: require('./arrowR.png'),
+  dotRed: require('./dotRed.png'),
+  dotGreen: require('./dotGreen.png')
 };

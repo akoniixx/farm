@@ -232,7 +232,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     });
     if (find) {
       return {
-        img: find.image_droner,
+        img: `${find.image_droner}`,
         name: find.firstname + ' ' + find.lastname,
         rate: find.rating_avg,
         province: find.province_name,
@@ -243,7 +243,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       };
     }
     return {
-      img: el.image_droner,
+      img:`${el.image_droner}`,
       name: el.firstname + ' ' + el.lastname,
       rate: el.rating_avg,
       province: el.province_name,
@@ -262,7 +262,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     });
     if (find) {
       return {
-        img: find.image_droner,
+        img: `${find.image_droner}`,
         name: find.firstname + ' ' + find.lastname,
         rate: find.rating_avg,
         province: find.province_name,
@@ -273,7 +273,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       };
     }
     return {
-      img: el.image_droner,
+      img: `${el.image_droner}`,
       name: el.firstname + ' ' + el.lastname,
       rate: el.rating_avg,
       province: el.province_name,
