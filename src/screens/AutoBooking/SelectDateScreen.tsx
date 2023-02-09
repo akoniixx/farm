@@ -39,14 +39,8 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
   const [note, setNote] = useState('');
   const [hour, setHour] = useState(6);
   const [minute, setMinute] = useState(0);
-  const [QDroner, setQDroner] = useState<any>();
 
   useEffect(() => {
-    const dateQDroner = async () => {
-      const dateQ = await AsyncStorage.getItem('dateQDroner');
-      setQDroner(dateQ);
-    };
-    dateQDroner();
     if (taskData.dateAppointment) {
       const dateAppointment = new Date(taskData.dateAppointment);
       setDate(dateAppointment);
@@ -115,11 +109,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
                     },
                   ]}>
                   <TextInput
-                    value={
-                      !QDroner
-                        ? momentExtend.toBuddhistYear(date, 'DD MMMM YYYY')
-                        : momentExtend.toBuddhistYear(QDroner, 'DD MMMM YYYY')
-                    }
+                    value={momentExtend.toBuddhistYear(date, 'DD MMMM YYYY')}
                     editable={false}
                     placeholder={'ระบุวัน เดือน ปี'}
                     placeholderTextColor={colors.disable}
