@@ -31,26 +31,19 @@ import { stylesCentral } from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
 import CardReview from '../../components/Carousel/CardReview';
 import icons from '../../assets/icons/icons';
-import ActionSheet from 'react-native-actions-sheet';
-import { LocationSelect } from '../../components/Location/Location';
-import { Filter } from '../../components/Mytask/Filter';
-import { BackgroundImage } from '@rneui/base';
 import { FilterReview } from '../../components/FilterReview';
 
 const AllReviewDroner: React.FC<any> = ({ navigation }) => {
   const [data, setData] = useState<any[]>([]);
   const [review, setReview] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState<any>([]);
 
   const [detailState, dispatch] = useReducer(
     detailDronerReducer,
     initDetailDronerState,
   );
-  const filterSheet = useRef<any>();
 
   const { width } = Dimensions.get('window');
-  const height = width * 0.6;
   const date = new Date();
   const [selectedField, setSelectedField] = useState({
     name: 'วันล่าสุด',
@@ -65,7 +58,6 @@ const AllReviewDroner: React.FC<any> = ({ navigation }) => {
     const limit = 0;
     const offset = 0;
     const sortField = selectedField.value;
-    console.log(sortField)
     const sortDirection = selectedField.direction;
     TaskSuggestion.DronerDetail(
       farmer_id!,
@@ -142,16 +134,19 @@ const AllReviewDroner: React.FC<any> = ({ navigation }) => {
                 </ScrollView>
               </View>
             ) : (
-              <View style={{ alignItems: 'center', paddingVertical: '50%' }}>
+              <View style={{ alignItems: 'center', paddingVertical: '45%' }}>
+                <Image source={image.empty_review} style={{width:129, height:120}}/>
                 <Text
                   style={{
-                    top: '10%',
-                    fontFamily: font.AnuphanMedium,
+                    marginTop: '2%',
+                    paddingHorizontal:10,
+                    fontFamily: font.SarabunBold,
                     fontSize: normalize(16),
                     fontWeight: '300',
+                    alignItems: 'center',
                     color: colors.gray,
                   }}>
-                  ไม่มีรีวิว
+                  ไม่มีรีวิวเกษตรกร
                 </Text>
               </View>
             )}

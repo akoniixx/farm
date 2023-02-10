@@ -206,23 +206,24 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
               source={icons.chat}
               style={{ width: normalize(20), height: normalize(20) }}
             />
-             <Text style={[styles.text, { paddingHorizontal: normalize(15) }]}>
-              {` รีวิวจากเกษตรกร`}</Text>
-              {review != null ? (
             <Text style={[styles.text, { paddingHorizontal: normalize(15) }]}>
-              <Text
-                style={{
-                  color: colors.gray,
-                }}>{` (${review.length})`}</Text>
+              {` รีวิวจากเกษตรกร`}
             </Text>
-          ) : (
-            ` (0)`
+            {review != null ? (
+              <Text style={[styles.text, { paddingHorizontal: normalize(15) }]}>
+                <Text
+                  style={{
+                    color: colors.gray,
+                  }}>{` (${review.length})`}</Text>
+              </Text>
+            ) : (
+              ` (0)`
             )}
           </Text>
           <TouchableOpacity
-           onPress={() => {
-            navigation.navigate('AllReviewDroner');
-          }}>
+            onPress={() => {
+              navigation.navigate('AllReviewDroner');
+            }}>
             <Text
               style={{
                 fontFamily: font.SarabunLight,
@@ -235,27 +236,40 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
         {review !== null ? (
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}>
-              {review != undefined &&
-                review.map((item: any, index: any) => (
-                  <CardReview
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {review != undefined &&
+              review.map((item: any, index: any) => (
+                <CardReview
                   key={index}
                   index={index}
                   img={item.image_profile}
-                  name={item.farmer_fname + ' '+ item.farmer_lname}
+                  name={item.farmer_fname + ' ' + item.farmer_lname}
                   rate={item.rating}
                   date={item.date_appointment}
                   comment={item.comment_review.comment}
                 />
-                ))}
-            </ScrollView>
-          ) : (
-            <View style={{alignSelf: 'center', paddingVertical:30}}>
-              <Text style={[styles.text,{color: colors.gray}]}>ไม่มีรีวิว</Text>
-            </View>
-          )}
+              ))}
+          </ScrollView>
+        ) : (
+          <View style={{ alignItems: 'center', paddingVertical: '5%' }}>
+            <Image
+              source={image.empty_review}
+              style={{ width: 69, height: 60 }}
+            />
+            <Text
+              style={{
+                marginTop: '2%',
+                paddingHorizontal: 10,
+                fontFamily: font.SarabunBold,
+                fontSize: normalize(16),
+                fontWeight: '300',
+                alignItems: 'center',
+                color: colors.gray,
+              }}>
+              ไม่มีรีวิวเกษตรกร
+            </Text>
+          </View>
+        )}
         <View style={{ height: 10, backgroundColor: '#F8F9FA' }}></View>
         <View style={[styles.section]}>
           <Text style={[styles.text, { marginBottom: '3%' }]}>
