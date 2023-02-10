@@ -39,7 +39,7 @@ export default function SlipWaitingScreen({
   navigation,
   route,
 }: StackScreenProps<MainStackParamList, 'SlipWaitingScreen'>) {
-  const { taskId,cntResend } = route.params;
+  const { taskId, cntResend } = route.params;
   const [loading, setLoading] = useState(true);
   const [isFocus, setIsFocus] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
@@ -47,7 +47,7 @@ export default function SlipWaitingScreen({
   const [showModalExtend, setShowModalExtend] = useState(false);
   const [showModalExtendTwo, setModalExtendTwo] = useState(false);
   const [showModalExtendThree, setModalExtendThree] = useState(
-    cntResend === "3"
+    cntResend === '3',
   );
   const refInput = React.useRef<any>(null);
   const [taskData, setTaskData] = useState<TaskDataTypeSlip>({
@@ -141,11 +141,10 @@ export default function SlipWaitingScreen({
         navigation.navigate('SlipSuccessScreen', {
           taskId: message.data?.taskId!,
         });
-      }
-      else if(type === 'DRONER_ALL_REJECT'){
-        if(message.data?.countResend === "3"){
-          await AsyncStorage.removeItem('taskId')
-          setModalExtendThree(true)
+      } else if (type === 'DRONER_ALL_REJECT') {
+        if (message.data?.countResend === '3') {
+          await AsyncStorage.removeItem('taskId');
+          setModalExtendThree(true);
         }
       }
     });
@@ -271,7 +270,7 @@ export default function SlipWaitingScreen({
                 style={{
                   fontFamily: fonts.AnuphanBold,
                   fontSize: 22,
-                  color : colors.fontBlack,
+                  color: colors.fontBlack,
                 }}>
                 ขอยกเลิกการจอง
               </Text>
@@ -316,7 +315,7 @@ export default function SlipWaitingScreen({
                       ? colors.greenLight
                       : colors.greyDivider,
                     textAlignVertical: 'top',
-                    color : colors.fontBlack,
+                    color: colors.fontBlack,
                     minHeight: Platform.OS === 'ios' ? 6 * 20 : 6 * 20,
                   }}
                 />
@@ -437,7 +436,7 @@ export default function SlipWaitingScreen({
               style={{
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: 22,
-                color : colors.fontBlack,
+                color: colors.fontBlack,
               }}>
               ขออภัย !
             </Text>
@@ -445,7 +444,7 @@ export default function SlipWaitingScreen({
               style={{
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: 22,
-                color : colors.fontBlack,
+                color: colors.fontBlack,
               }}>
               ขณะนี้มีผู้ใช้งานจำนวนมาก
             </Text>
@@ -453,7 +452,7 @@ export default function SlipWaitingScreen({
               style={{
                 fontFamily: fonts.SarabunLight,
                 fontSize: 18,
-                color : colors.fontBlack,
+                color: colors.fontBlack,
                 marginVertical: 16,
               }}>
               ท่านสามารถกด ค้นหานักบินโดรนอีกครั้ง เพื่อค้นหาต่อไป หรือ
@@ -539,7 +538,7 @@ export default function SlipWaitingScreen({
               style={{
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: 22,
-                color : colors.fontBlack,
+                color: colors.fontBlack,
               }}>
               ขออภัย !
             </Text>
@@ -547,7 +546,7 @@ export default function SlipWaitingScreen({
               style={{
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: 22,
-                color : colors.fontBlack,
+                color: colors.fontBlack,
               }}>
               ขณะนี้มีผู้ใช้งานจำนวนมาก
             </Text>
@@ -557,7 +556,7 @@ export default function SlipWaitingScreen({
                 fontSize: 18,
                 textAlign: 'center',
                 marginVertical: 16,
-                color : colors.fontBlack,
+                color: colors.fontBlack,
               }}>
               ท่านสามารถกด ค้นหานักบินโดรนอีกครั้ง เพื่อค้นหาต่อไป หรือ
               กดติดต่อเจ้าหน้าที่ เพื่อให้ช่วยในการค้นหานักบินโดรน
@@ -672,7 +671,7 @@ export default function SlipWaitingScreen({
               style={{
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: 22,
-                color : colors.fontBlack,
+                color: colors.fontBlack,
               }}>
               ขออภัย !
             </Text>
@@ -680,7 +679,7 @@ export default function SlipWaitingScreen({
               style={{
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: 22,
-                color : colors.fontBlack,
+                color: colors.fontBlack,
               }}>
               ขณะนี้มีผู้ใช้งานจำนวนมาก
             </Text>
@@ -690,9 +689,10 @@ export default function SlipWaitingScreen({
                 fontSize: 18,
                 textAlign: 'center',
                 marginVertical: 16,
-                color : colors.fontBlack,
+                color: colors.fontBlack,
               }}>
-              ท่านสามารถกดติดต่อเจ้าหน้าที่ เพื่อให้ช่วยในการค้นหานักบินโดรนหรือกดยกเลิกการจอง
+              ท่านสามารถกดติดต่อเจ้าหน้าที่
+              เพื่อให้ช่วยในการค้นหานักบินโดรนหรือกดยกเลิกการจอง
             </Text>
             <View
               style={{

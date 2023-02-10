@@ -38,9 +38,6 @@ import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 import DronerCarousel from '../../components/Carousel/DronerCarousel';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
-import DronerSugg from '../../components/Carousel/DronerCarousel';
-import DronerUsed from '../../components/Carousel/DronerUsed';
-import * as RootNavigation from '../../navigations/RootNavigation';
 
 const AuthMainScreen: React.FC<any> = ({ navigation }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');

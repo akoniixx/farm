@@ -63,7 +63,7 @@ export default function Radio({
                 fontSize: 20,
                 fontFamily: fonts.SarabunLight,
                 lineHeight: 36,
-                color : colors.fontBlack,
+                color: colors.fontBlack,
               }}>
               {item.title}
             </Text>

@@ -32,10 +32,12 @@ import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { useAuth } from '../../contexts/AuthContext';
 import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import DronerUsed from '../../components/Carousel/DronerUsed';
 import { mixpanel } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import DronerSugg from '../../components/Carousel/DronerCarousel';
+import DronerUsedList from '../../components/Carousel/DronerUsedList';
+import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -73,6 +75,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     data: [],
   });
   const [reload, setReload] = useState(false);
+  const [statusFav, setStatusFav] = useState<any[]>([]);
+
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
     const farmerId = await AsyncStorage.getItem('farmer_id');
@@ -122,7 +126,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         .catch(err => console.log(err));
     }
   };
-
   useEffect(() => {
     const dronerSug = async () => {
       // setLoading(true);
@@ -137,8 +140,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           .then(res => {
             setTaskSug(res);
           })
-          .catch(err => console.log(err));
-        // .finally(() => setLoading(false));
+          .catch(err => console.log(err))
+          .finally(() => setLoading(false));
       }
     };
     const dronerSugUsed = async () => {
@@ -206,6 +209,80 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     };
     getTaskByTaskId();
   }, [taskId, navigation]);
+  useEffect(() => {
+    const getFavDroner = async () => {
+      setLoading(true);
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      const plot_id = await AsyncStorage.getItem('plot_id');
+      FavoriteDroner.findAllFav(farmer_id!, plot_id!)
+        .then(res => {
+          setStatusFav(res);
+        })
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
+    };
+    getFavDroner();
+  }, []);
+
+  const mergeDronerUsed = taskSugUsed.map(el => {
+    const getDroner = el.droner_id;
+    const find = statusFav.find(item => {
+      const d = item.droner_id;
+      return d === getDroner;
+    });
+    if (find) {
+      return {
+        img: `${find.image_droner}`,
+        name: find.firstname + ' ' + find.lastname,
+        rate: find.rating_avg,
+        province: find.province_name,
+        distance: find.street_distance,
+        total_task: find.count_rating,
+        status_favorite: 'ACTIVE',
+        droner: find.droner_id,
+      };
+    }
+    return {
+      img:`${el.image_droner}`,
+      name: el.firstname + ' ' + el.lastname,
+      rate: el.rating_avg,
+      province: el.province_name,
+      distance: el.street_distance,
+      total_task: el.count_rating,
+      status_favorite: 'INACTIVE',
+      droner: el.droner_id,
+    };
+  });
+
+  const mergeDronerSugg = taskSug.map(el => {
+    const getDroner = el.droner_id;
+    const find = statusFav.find(item => {
+      const d = item.droner_id;
+      return d === getDroner;
+    });
+    if (find) {
+      return {
+        img: `${find.image_droner}`,
+        name: find.firstname + ' ' + find.lastname,
+        rate: find.rating_avg,
+        province: find.province_name,
+        distance: find.street_distance,
+        total_task: find.count_rating,
+        status_favorite: 'ACTIVE',
+        droner: find.droner_id,
+      };
+    }
+    return {
+      img: `${el.image_droner}`,
+      name: el.firstname + ' ' + el.lastname,
+      rate: el.rating_avg,
+      province: el.province_name,
+      distance: el.street_distance,
+      total_task: el.count_rating,
+      status_favorite: 'INACTIVE',
+      droner: el.droner_id,
+    };
+  });
 
   return (
     <View
@@ -326,50 +403,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </LinearGradient>
                 </TouchableOpacity>
               </View>
-
-              {/* <View
-              style={{
-                flexDirection: 'row',
-                padding: '5%',
-                justifyContent: 'space-between',
-                top: '3%',
-              }}>
-              <Text
-                style={{
-                  fontFamily: font.AnuphanBold,
-                  fontSize: normalize(20),
-                  color: colors.fontGrey,
-                }}>
-                กูรูเกษตร
-              </Text>
-              <Text
-                style={{
-                  fontFamily: font.SarabunLight,
-                  fontSize: normalize(16),
-                  color: colors.fontGrey,
-                }}>
-                ดูทั้งหมด
-              </Text>
-            </View> */}
-              {/* <View
-              style={{
-                width: '100%',
-                height: normalize(60),
-                alignItems: 'center',
-                top: '2%',
-              }}>
-              <Image
-                source={image.academy}
-                style={{
-                  width: 360,
-                  height: 120,
-                  top: -15,
-                  borderRadius: 10,
-                }}
-              />
-            </View>  */}
               <View>
-                {profilestate.status === 'REJECTED' ? (
+                {profilestate.status === 'REJECTED' && (
                   <View>
                     <View
                       style={{
@@ -461,163 +496,193 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         </TouchableOpacity>
                       </View>
                     </View>
-                    <View
-                      style={{
-                        alignItems: 'center',
-                        paddingVertical: '5%',
-                      }}>
-                      <Image
-                        source={image.empryState}
-                        style={{
-                          width: normalize(126),
-                          height: normalize(120),
-                          marginBottom: normalize(32),
-                        }}
-                      />
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunBold,
-                          fontSize: normalize(16),
-                          fontWeight: '300',
-                          color: colors.gray,
-                          bottom: 15,
-                        }}>
-                        ติดตามบริการส่วนอื่นได้เร็วๆนี้
-                      </Text>
-                    </View>
-                  </View>
-                ) : (
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      paddingVertical: '25%',
-                    }}>
-                    <Image
-                      source={image.empryState}
-                      style={{
-                        width: normalize(126),
-                        height: normalize(120),
-                        marginBottom: normalize(32),
-                      }}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: font.SarabunBold,
-                        fontSize: normalize(16),
-                        fontWeight: '300',
-                        color: colors.gray,
-                        bottom: 15,
-                      }}>
-                      ติดตามบริการส่วนอื่นได้เร็วๆนี้
-                    </Text>
                   </View>
                 )}
-                {/* <View
+                <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
+                    marginTop: 16,
+                    paddingVertical: 10,
                   }}>
-                    {taskSugUsed.length != 0 && (
                   <Text
                     style={{
                       fontFamily: font.AnuphanBold,
                       fontSize: normalize(20),
                       color: colors.fontGrey,
                       paddingHorizontal: 20,
-                      paddingVertical: 10,
+                    }}>
+                    กูรูเกษตร
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // navigation.navigate('SeeAllDronerUsed');
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: font.SarabunLight,
+                        fontSize: normalize(16),
+                        color: colors.fontGrey,
+                        height: 30,
+                        lineHeight: 32,
+                        paddingHorizontal: 10,
+                      }}>
+                      ดูทั้งหมด
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                  }}>
+                  <Image
+                    source={image.academy}
+                    style={{
+                      width: 360,
+                      height: 120,
+                      borderRadius: 10,
+                    }}
+                  />
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginTop: 16,
+                    paddingVertical: 10,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanBold,
+                      fontSize: normalize(20),
+                      color: colors.fontGrey,
+                      paddingHorizontal: 20,
                     }}>
                     จ้างนักบินที่เคยจ้าง
                   </Text>
-                    )}
-                  {taskSugUsed.length != 0 ? (
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate('SeeAllDronerUsed');
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('DronerUsedScreen');
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: font.SarabunLight,
+                        fontSize: normalize(16),
+                        color: colors.fontGrey,
+                        height: 30,
+                        lineHeight: 32,
+                        paddingHorizontal: 10,
                       }}>
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          fontSize: normalize(16),
-                          color: colors.fontGrey,
-                          height: 55,
-                          paddingHorizontal: 10,
-                          paddingVertical: 10,
-                        }}>
-                        ดูทั้งหมด
-                      </Text>
-                    </TouchableOpacity>
-                  ) : null}
-                </View> */}
-                {/* {taskSugUsed.length != 0 ? (
-                  <View style={{ height: '110%' }}>
+                      ดูทั้งหมด
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {taskSugUsed.length != 0 ? (
+                  <View style={{ height: 'auto' }}>
                     <ScrollView
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}>
                       {taskSugUsed.length != undefined &&
-                        taskSugUsed.map((item: any, index: any) => (
+                        mergeDronerUsed.map((item: any, index: any) => (
                           <TouchableOpacity
                             key={index}
                             onPress={async () => {
                               await AsyncStorage.setItem(
                                 'droner_id',
-                                `${item.droner_id}`,
+                                `${item.droner}`,
                               );
                               navigation.push('DronerDetail');
                             }}>
-                            <DronerUsed
+                            <DronerUsedList
                               key={index}
                               index={index}
-                              profile={item.image_droner}
+                              profile={item.img}
                               background={''}
-                              name={item.firstname + ' ' + item.lastname}
-                              rate={item.rating_avg}
+                              name={item.name}
+                              rate={item.rate}
                               total_task={item.total_task}
-                              province={item.province_name}
-                              distance={item.street_distance}
+                              province={item.province}
+                              distance={item.distance}
+                              status={item.status_favorite}
                             />
                           </TouchableOpacity>
                         ))}
                     </ScrollView>
                   </View>
-                ) : ( */}
-                {/* )} */}
-              </View>
-
-              {/* <View style={[styles.empty]}>
-                <Text
-                  style={[
-                    styles.text,
-                    { alignSelf: 'flex-start', top: '15%' },
-                  ]}>
-                  นักบินโดรนที่แนะนำ
-                </Text>
-                <View style={{ top: '20%', height: '110%' }}>
-                  <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}>
-                    {taskSug.length != undefined &&
-                      taskSug.map((item: any, index: any) => (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={() => {
-                            // deTailPlot.current.show();
-                          }}>
-                          <DronerSugg
-                            index={index}
-                            key={index}
-                            profile={item.image_droner}
-                            background={''}
-                            name={item.firstname + ' ' + item.lastname}
-                            rate={item.rating_avg}
-                            total_task={item.total_task}
-                            province={item.province_name}
-                            distance={item.street_distance}
-                          />
-                        </TouchableOpacity>
-                      ))}
-                  </ScrollView>
+                ) : (
+                  <View style={{ alignItems: 'center' }}>
+                    <Image
+                      source={image.empty_droner}
+                      style={{
+                        width: normalize(136),
+                        height: normalize(130),
+                        top: '16%',
+                        marginBottom: normalize(32),
+                      }}
+                    />
+                    <Text
+                      style={{
+                        top: '10%',
+                        fontFamily: font.SarabunBold,
+                        fontSize: normalize(16),
+                        fontWeight: '300',
+                        color: colors.gray,
+                      }}>
+                      ไม่มีนักบินโดรนที่เคยจ้าง
+                    </Text>
+                  </View>
+                )}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginTop: 16,
+                    paddingVertical: 10,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanBold,
+                      fontSize: normalize(20),
+                      color: colors.fontGrey,
+                      paddingHorizontal: 20,
+                    }}>
+                    นักบินโดรนที่แนะนำ
+                  </Text>
                 </View>
-              </View> */}
+                  <View style={{ height: 'auto' }}>
+                    <ScrollView
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}>
+                      {taskSug.length != undefined &&
+                        mergeDronerSugg.map((item: any, index: any) => (
+                          <TouchableOpacity
+                            key={index}
+                            onPress={async () => {
+                              await AsyncStorage.setItem(
+                                'droner_id',
+                                `${item.droner}`,
+                              );
+                              navigation.push('DronerDetail');
+                            }}>
+                            <DronerSugg
+                              key={index}
+                              index={index}
+                              profile={item.img}
+                              background={''}
+                              name={item.name}
+                              rate={item.rate}
+                              total_task={item.total_task}
+                              province={item.province}
+                              distance={item.distance}
+                              status={item.status_favorite}
+                            />
+                          </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                  </View>
+               
+              </View>
             </View>
           </View>
           <Modal

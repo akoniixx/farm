@@ -27,7 +27,7 @@ export default function SlipSuccessScreen({
   route,
 }: StackScreenProps<MainStackParamList, 'SlipSuccessScreen'>) {
   const { taskId } = route.params;
-  const [loading,setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true);
   const [taskData, setTaskData] = useState<TaskDataTypeSlip>({
     id: '',
     comment: '',
@@ -44,52 +44,50 @@ export default function SlipSuccessScreen({
     targetSpray: [],
     totalPrice: '',
     countResend: null,
-    firstname : '',
-    lastname : '',
-    telNo : '',
-    img : '',
-    rating : '',
-    totalTaskReview : ''
+    firstname: '',
+    lastname: '',
+    telNo: '',
+    img: '',
+    rating: '',
+    totalTaskReview: '',
   });
 
   useEffect(() => {
     TaskDatasource.getTaskByTaskId(taskId)
-      .then(res =>{
-        DronerDatasource.getDronerData(res.data.droner.id).then(
-          resDroner => {
-            resDroner.file.map((item : any) => {
-              if(item.category === "PROFILE_IMAGE"){
-                DronerDatasource.getDronerProfileImage(item.path).then(
-                  resImg =>{
-                    DronerDatasource.getDronerRating(res.data.droner.id).then(
-                      resRating => {
-                        setTaskData({
-                          ...res.data,
-                          cropName: res.data.purposeSpray.crop.cropName || '',
-                          purposeSprayName: res.data.purposeSpray.purposeSprayName || '',
-                          firstname : res.data.droner.firstname,
-                          lastname: res.data.droner.lastname,
-                          telNo : res.data.droner.telephoneNo,
-                          img : resImg,
-                          rating : (parseFloat(resRating.ratingAvg).toFixed(1)).toString(),
-                          totalTaskReview : resRating.totalTaskReview
-                        })
-                        setLoading(false)
-                      }
-                    )
-                  }
-                )
-              }
-            })
-          })
-        }
-      )
+      .then(res => {
+        DronerDatasource.getDronerData(res.data.droner.id).then(resDroner => {
+          resDroner.file.map((item: any) => {
+            if (item.category === 'PROFILE_IMAGE') {
+              DronerDatasource.getDronerProfileImage(item.path).then(resImg => {
+                DronerDatasource.getDronerRating(res.data.droner.id).then(
+                  resRating => {
+                    setTaskData({
+                      ...res.data,
+                      cropName: res.data.purposeSpray.crop.cropName || '',
+                      purposeSprayName:
+                        res.data.purposeSpray.purposeSprayName || '',
+                      firstname: res.data.droner.firstname,
+                      lastname: res.data.droner.lastname,
+                      telNo: res.data.droner.telephoneNo,
+                      img: resImg,
+                      rating: parseFloat(resRating.ratingAvg)
+                        .toFixed(1)
+                        .toString(),
+                      totalTaskReview: resRating.totalTaskReview,
+                    });
+                    setLoading(false);
+                  },
+                );
+              });
+            }
+          });
+        });
+      })
       .catch(err => console.log(err));
   }, []);
-  if(loading){
-    return <></>
-  }
-  else{
+  if (loading) {
+    return <></>;
+  } else {
     return (
       <View
         style={{
@@ -111,7 +109,7 @@ export default function SlipSuccessScreen({
                 style={{
                   width: '100%',
                   height: Platform.OS === 'ios' ? 200 : 170,
-  
+
                   marginTop: 32,
                 }}>
                 <Lottie

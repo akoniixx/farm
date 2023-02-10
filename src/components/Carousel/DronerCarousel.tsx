@@ -5,12 +5,18 @@ import {
   View,
   TextInput,
   ImageBackground,
+  Platform,
+  TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { Avatar } from '@rneui/base';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ProfileDatasource } from '../../datasource/ProfileDatasource';
+import { TaskSuggestion } from '../../datasource/TaskSuggestion';
+import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 
 interface dronerData {
   index: any;
@@ -21,6 +27,7 @@ interface dronerData {
   total_task: any;
   province: any;
   distance: any;
+  status: any;
 }
 
 const DronerSugg: React.FC<dronerData> = ({
@@ -32,9 +39,59 @@ const DronerSugg: React.FC<dronerData> = ({
   total_task,
   province,
   distance,
+  status,
 }) => {
+  const date = new Date();
+  const [checked, setChecked] = useState(false);
+  const [taskSug, setTaskSug] = useState<any[]>([]);
+  const [data, setData] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getProfile();
+    dronerSug();
+  }, []);
+  const getProfile = async () => {
+    const value = await AsyncStorage.getItem('token');
+    if (value) {
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      ProfileDatasource.getProfile(farmer_id!)
+        .then(async res => {
+          await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
+        })
+        .catch(err => console.log(err));
+    }
+  };
+  const dronerSug = async () => {
+    const value = await AsyncStorage.getItem('token');
+    if (value) {
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      const plot_id = await AsyncStorage.getItem('plot_id');
+      const limit = 8;
+      const offset = 0;
+      TaskSuggestion.searchDroner(farmer_id!, plot_id!, date.toDateString())
+        .then(res => {
+          setTaskSug(res);
+        })
+        .catch(err => console.log(err));
+    }
+  };
+  const addUnAddDroners = async () => {
+    setChecked(!checked)
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    const droner_id = taskSug.map(x => x.droner_id);
+    await FavoriteDroner.addUnaddFav(
+      farmer_id !== null ? farmer_id : '',
+      droner_id[index],
+    )
+      .then(res => {
+        setData(res.responseData);
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
+  };
   return (
-    <View style={{ flex: 1, top: '10%', paddingHorizontal: 8, left: '10%' }}>
+    <View style={{ paddingHorizontal: 5 }}>
       <View style={[styles.cards]}>
         <ImageBackground
           borderTopLeftRadius={10}
@@ -56,10 +113,33 @@ const DronerSugg: React.FC<dronerData> = ({
                 alignSelf: 'flex-end',
                 margin: 10,
               }}>
-              <Image
-                source={icons.heart}
-                style={{ alignSelf: 'center', width: 20, height: 20, top: 4 }}
-              />
+              <TouchableOpacity
+                onPress={() => {
+                  setChecked(!checked);
+                  addUnAddDroners();
+                }}>
+                {checked ? (
+                  <Image
+                    source={icons.heart_active}
+                    style={{
+                      alignSelf: 'center',
+                      width: 20,
+                      height: 20,
+                      top: 4,
+                    }}
+                  />
+                ) : (
+                  <Image
+                    source={icons.heart}
+                    style={{
+                      alignSelf: 'center',
+                      width: 20,
+                      height: 20,
+                      top: 4,
+                    }}
+                  />
+                )}
+              </TouchableOpacity>
             </View>
             <View style={{ alignSelf: 'center' }}>
               <Avatar
@@ -81,7 +161,7 @@ const DronerSugg: React.FC<dronerData> = ({
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                   source={icons.star}
-                  style={{ width: 20, height: 20, marginRight: 10 }}
+                  style={{ width: 20, height: 20, marginRight: 5 }}
                 />
                 <Text style={styles.label}>
                   {' '}
@@ -135,11 +215,27 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
   },
   cards: {
-    backgroundColor: colors.white,
-    height: normalize(205),
-    width: normalize(160),
-    borderRadius: 10,
-    borderWidth: 0.3,
+    ...Platform.select({
+      ios: {
+        backgroundColor: colors.white,
+        height: normalize(205),
+        width: normalize(160),
+        borderRadius: 10,
+        borderWidth: 1,
+        left: '10%',
+        borderColor: colors.bg,
+      },
+      android: {
+        backgroundColor: colors.white,
+        height: normalize(240),
+        width: normalize(160),
+        borderRadius: 10,
+        borderWidth: 1,
+        left: '10%',
+        borderColor: colors.bg,
+        marginBottom: 10,
+      },
+    }),
   },
   mainButton: {
     justifyContent: 'center',

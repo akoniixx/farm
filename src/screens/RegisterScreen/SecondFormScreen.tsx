@@ -421,14 +421,12 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                     formState.postal,
                   )
                     .then(async res => {
-                      console.log(Platform.OS);
                       if (Platform.OS === 'ios' && getPermiss === false) {
                         await Geolocation.requestAuthorization('always');
                       } else if (
                         Platform.OS === 'android' &&
                         getPermiss === false
                       ) {
-                        console.log(Platform.OS);
                         await PermissionsAndroid.request(
                           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
                         );

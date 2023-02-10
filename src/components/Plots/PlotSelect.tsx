@@ -211,7 +211,7 @@ const PlotSelect: React.FC<Prop> = ({
                 fontFamily: fonts.SarabunMedium,
                 fontSize: 18,
                 lineHeight: 28,
-                color: colors.fontBlack
+                color: colors.fontBlack,
               }}>
               พื้นที่แปลงเกษตรไม่อยู่ในระยะทาง
             </Text>
@@ -220,7 +220,7 @@ const PlotSelect: React.FC<Prop> = ({
                 fontFamily: fonts.SarabunMedium,
                 fontSize: 18,
                 lineHeight: 26,
-                color: colors.fontBlack
+                color: colors.fontBlack,
               }}>
               การให้บริการของนักบินโดรน
             </Text>
@@ -336,7 +336,7 @@ const PlotSelect: React.FC<Prop> = ({
                 radioLists={radioList}
                 horizontal
                 value={checkValue}
-                style={{ marginVertical: 8 ,}}
+                style={{ marginVertical: 8 }}
                 onChange={(value: string) => {
                   if (value === 'all') {
                     setTaskData(prev => ({
@@ -349,7 +349,7 @@ const PlotSelect: React.FC<Prop> = ({
               />
               <InputWithSuffix
                 style={{
-                  color : colors.fontBlack
+                  color: colors.fontBlack,
                 }}
                 value={taskData.farmAreaAmount}
                 onChangeText={text => {
