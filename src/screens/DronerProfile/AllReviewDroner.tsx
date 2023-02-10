@@ -33,6 +33,9 @@ import CardReview from '../../components/Carousel/CardReview';
 import icons from '../../assets/icons/icons';
 import ActionSheet from 'react-native-actions-sheet';
 import { LocationSelect } from '../../components/Location/Location';
+import { Filter } from '../../components/Mytask/Filter';
+import { BackgroundImage } from '@rneui/base';
+import { FilterReview } from '../../components/FilterReview';
 
 const AllReviewDroner: React.FC<any> = ({ navigation }) => {
   const [data, setData] = useState<any[]>([]);
@@ -49,11 +52,11 @@ const AllReviewDroner: React.FC<any> = ({ navigation }) => {
   const { width } = Dimensions.get('window');
   const height = width * 0.6;
   const date = new Date();
-
-  useEffect(() => {
-    dronerDetails();
-  }, []);
-
+  const [selectedField, setSelectedField] = useState({
+    name: 'วันล่าสุด',
+    value: 'date_appointment',
+    direction: '',
+  });
   const dronerDetails = async () => {
     setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -61,6 +64,9 @@ const AllReviewDroner: React.FC<any> = ({ navigation }) => {
     const plot_id = await AsyncStorage.getItem('plot_id');
     const limit = 0;
     const offset = 0;
+    const sortField = selectedField.value;
+    console.log(sortField)
+    const sortDirection = selectedField.direction;
     TaskSuggestion.DronerDetail(
       farmer_id!,
       plot_id!,
@@ -68,6 +74,8 @@ const AllReviewDroner: React.FC<any> = ({ navigation }) => {
       date.toLocaleDateString(),
       limit,
       offset,
+      sortField,
+      sortDirection
     )
       .then(res => {
         setReview(res[0].review);
@@ -91,15 +99,9 @@ const AllReviewDroner: React.FC<any> = ({ navigation }) => {
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
   };
-  const item = [
-    { label: 'วันล่าสุด', value: 'NEW_DATE' },
-    { label: 'คะแนนสูงสุด', value: 'HIGHT_RATE' },
-    { label: 'คะแนนต่ำสุด', value: 'LOW_RATE' },
-  ];
-  const selectFilter = (value: any) => {
-    setFilters(value);
-    filterSheet.current.hide();
-  };
+  useEffect(() => {
+    dronerDetails();
+  }, [selectedField]);
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -108,79 +110,22 @@ const AllReviewDroner: React.FC<any> = ({ navigation }) => {
         onPressBack={() => navigation.goBack()}
       />
       <View style={{ backgroundColor: colors.grayBg, flex: 1 }}>
+      <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginVertical: normalize(20),
+            paddingHorizontal: 15,
+          }}>
+          <FilterReview
+            selectedField={selectedField}
+            setSelectedField={setSelectedField}
+          />
+        </View>
         <ScrollView>
           <View style={{ paddingVertical: 10}}>
             {review !== null ? (
               <View style={{ height: 'auto',alignSelf: 'center'  }}>
-                <View style={{ paddingHorizontal: 15 }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginVertical: normalize(10),
-                    }}>
-                    <View>
-                      <TouchableOpacity
-                        onPress={() => {
-                          filterSheet.current.show();
-                        }}>
-                        <View
-                          style={{
-                            borderWidth: 0.3,
-                            padding: 10,
-                            borderRadius: 10,
-                            marginVertical: 10,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            height: 'auto',
-                            justifyContent: 'space-between',
-                            width: 170,
-                          }}>
-                          <Text
-                            style={{
-                              fontFamily: font.AnuphanMedium,
-                              fontSize: normalize(18),
-                              color: colors.gray,
-                              lineHeight: 30,
-                            }}>
-                            <Text
-                              style={{
-                                fontFamily: font.SarabunLight,
-                                color: colors.disable,
-                              }}>
-                              {!filters.label ? (
-                                <Text
-                                  style={{
-                                    fontFamily: font.SarabunLight,
-                                    color: colors.gray,
-                                  }}>
-                                  วันที่ล่าสุด
-                                </Text>
-                              ) : (
-                                <TextInput
-                                  style={{
-                                    fontFamily: font.SarabunLight,
-                                    color: colors.gray,
-                                  }}>
-                                  {filters.label}
-                                </TextInput>
-                              )}
-                            </Text>
-                          </Text>
-                          <Image
-                            source={icons.chevron}
-                            style={{
-                              width: normalize(15),
-                              height: normalize(8),
-                              marginRight: 10,
-                              tintColor: colors.gray,
-                            }}
-                          />
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
                 <ScrollView showsHorizontalScrollIndicator={false}>
                   {review != undefined &&
                     review.map((item: any, index: any) => (
@@ -213,65 +158,6 @@ const AllReviewDroner: React.FC<any> = ({ navigation }) => {
           </View>
         </ScrollView>
       </View>
-
-      <ActionSheet ref={filterSheet}>
-        <View
-          style={{
-            backgroundColor: 'white',
-            paddingVertical: normalize(30),
-            paddingHorizontal: normalize(20),
-            borderRadius: normalize(20),
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Text style={{ fontFamily: font.AnuphanMedium, fontSize: 20 }}>
-              เรียงลำดับรีวิว
-            </Text>
-            <Text
-              style={{
-                color: colors.greenLight,
-                fontFamily: font.SarabunMedium,
-                fontSize: normalize(16),
-              }}
-              onPress={() => {
-                filterSheet.current.hide();
-              }}>
-              ยกเลิก
-            </Text>
-          </View>
-          <View>
-            <ScrollView>
-              {item.map((item, index) => (
-                <View
-                  style={{
-                    paddingVertical: 20,
-                    borderBottomWidth: 0.2,
-                    borderColor: colors.disable,
-                  }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      filterSheet.current.hide();
-                      selectFilter(item.value);
-                    }}>
-                    <Text
-                      key={index}
-                      style={{
-                        fontFamily: font.SarabunLight,
-                        fontSize: 18,
-                        marginTop: 10,
-                      }}>
-                      {item.label}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
-        </View>
-      </ActionSheet>
       <Spinner
         visible={loading}
         textContent={'Loading...'}

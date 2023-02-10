@@ -127,7 +127,6 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       date: el,
     };
   });
-  console.log(JSON.stringify(review, null, 2));
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader

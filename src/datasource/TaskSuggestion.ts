@@ -44,6 +44,8 @@ export class TaskSuggestion {
     dateAppointment: string,
     limit?: number,
     offset?: number,
+    sortField?: string,
+    sortDirection?: string
   ): Promise<any> {
     return axios
       .post(BASE_URL + `/tasks/task-suggestion/droner-details-review`, {
@@ -53,6 +55,8 @@ export class TaskSuggestion {
         dateAppointment: dateAppointment,
         limit: limit,
         offset: offset,
+        sortField:sortField,
+        sortDirection:sortDirection
       })
       .then(res => {
         return res.data;
