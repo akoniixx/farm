@@ -28,7 +28,7 @@ export const CardDetailDroner: React.FC<DetailData> = ({
   convenient,
 }) => {
   return (
-    <View style={{ flex: 1, paddingHorizontal: 10}}>
+    <View style={{ flex: 1, paddingHorizontal: 10 }}>
       {convenient == 'สะดวก' ? (
         <View>
           <View key={index} style={[styles.cardYes]}>
@@ -47,9 +47,11 @@ export const CardDetailDroner: React.FC<DetailData> = ({
         <View>
           <View key={index} style={[styles.cardNo]}>
             <View>
-              <Text style={[styles.label,{color:colors.gray}]}>{date}</Text>
-              <Text style={[styles.label,{color:colors.gray}]}>{month}</Text>
-              <Text style={[styles.label,{color:colors.gray}]}>{year}</Text>
+              <Text style={[styles.label, { color: colors.gray }]}>{date}</Text>
+              <Text style={[styles.label, { color: colors.gray }]}>
+                {month}
+              </Text>
+              <Text style={[styles.label, { color: colors.gray }]}>{year}</Text>
               <Image
                 source={icons.dotRed}
                 style={{ width: 10, height: 10, alignSelf: 'center' }}

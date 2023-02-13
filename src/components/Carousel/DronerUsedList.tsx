@@ -29,7 +29,7 @@ interface dronerUsedData {
   total_task: any;
   province: any;
   distance: any;
-  status:any;
+  status: any;
 }
 
 const DronerUsedList: React.FC<dronerUsedData> = ({
@@ -41,7 +41,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
   total_task,
   province,
   distance,
-  status
+  status,
 }) => {
   const date = new Date();
   // const [checked, setChecked] = useState<boolean>(false);
@@ -49,7 +49,6 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(false);
-
 
   useEffect(() => {
     getProfile();
@@ -87,7 +86,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
     }
   };
   const addUnAddDroners = async () => {
-    setChecked(!checked)
+    setChecked(!checked);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const droner_id = taskSugUsed.map(x => x.droner_id);
     await FavoriteDroner.addUnaddFav(
@@ -124,8 +123,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                 alignSelf: 'flex-end',
                 margin: 10,
               }}>
-              <TouchableOpacity
-              onPress={addUnAddDroners}>
+              <TouchableOpacity onPress={addUnAddDroners}>
                 {checked ? (
                   <Image
                     source={icons.heart_active}

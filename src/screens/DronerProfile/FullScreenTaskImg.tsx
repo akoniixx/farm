@@ -66,8 +66,8 @@ const FullScreenTaskImg: React.FC<any> = ({ navigation, route }) => {
   };
   const mathImg = async () => {
     const taskImg = await AsyncStorage.getItem('imgTask');
-    const words = imageTask.map((x)=>x);
-        setGetImg(taskImg);
+    const words = imageTask.map(x => x);
+    setGetImg(taskImg);
   };
   return (
     <SafeAreaView
@@ -82,9 +82,11 @@ const FullScreenTaskImg: React.FC<any> = ({ navigation, route }) => {
             horizontal
             showsHorizontalScrollIndicator={false}
             style={{ width, height }}>
-          {imageTask.map((item, index) => (
-             <ImageBackground key={index} source={{ uri: item }} style={{ width, height }}>
-           </ImageBackground>
+            {imageTask.map((item, index) => (
+              <ImageBackground
+                key={index}
+                source={{ uri: item }}
+                style={{ width, height }}></ImageBackground>
             ))}
           </ScrollView>
         </View>

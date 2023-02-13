@@ -190,7 +190,7 @@ const AllDronerUsed: React.FC<data> = ({
                 bottom: 2,
                 height: 'auto',
                 lineHeight: 30,
-                width: 140
+                width: 140,
               }}>
               {'จ.' + province}
             </Text>

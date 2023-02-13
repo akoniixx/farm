@@ -34,5 +34,5 @@ export default {
   emptyNoti: require('./emptyNoti.png'),
   empryState: require('./empty_state.png'),
   empty_coupon: require('./empty_coupon.png'),
-  empty_review: require('./empty_review.png')
+  empty_review: require('./empty_review.png'),
 };

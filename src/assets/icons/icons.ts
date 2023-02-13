@@ -85,5 +85,5 @@ export default {
   arrowL: require('./arrowL.png'),
   arrowR: require('./arrowR.png'),
   dotRed: require('./dotRed.png'),
-  dotGreen: require('./dotGreen.png')
+  dotGreen: require('./dotGreen.png'),
 };
