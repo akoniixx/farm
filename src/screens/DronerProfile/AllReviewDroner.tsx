@@ -67,7 +67,7 @@ const AllReviewDroner: React.FC<any> = ({ navigation }) => {
       limit,
       offset,
       sortField,
-      sortDirection
+      sortDirection,
     )
       .then(res => {
         setReview(res[0].review);
@@ -102,7 +102,7 @@ const AllReviewDroner: React.FC<any> = ({ navigation }) => {
         onPressBack={() => navigation.goBack()}
       />
       <View style={{ backgroundColor: colors.grayBg, flex: 1 }}>
-      <View
+        <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -115,9 +115,9 @@ const AllReviewDroner: React.FC<any> = ({ navigation }) => {
           />
         </View>
         <ScrollView>
-          <View style={{ paddingVertical: 10}}>
+          <View style={{ paddingVertical: 10 }}>
             {review !== null ? (
-              <View style={{ height: 'auto',alignSelf: 'center'  }}>
+              <View style={{ height: 'auto', alignSelf: 'center' }}>
                 <ScrollView showsHorizontalScrollIndicator={false}>
                   {review != undefined &&
                     review.map((item: any, index: any) => (
@@ -135,11 +135,14 @@ const AllReviewDroner: React.FC<any> = ({ navigation }) => {
               </View>
             ) : (
               <View style={{ alignItems: 'center', paddingVertical: '45%' }}>
-                <Image source={image.empty_review} style={{width:129, height:120}}/>
+                <Image
+                  source={image.empty_review}
+                  style={{ width: 129, height: 120 }}
+                />
                 <Text
                   style={{
                     marginTop: '2%',
-                    paddingHorizontal:10,
+                    paddingHorizontal: 10,
                     fontFamily: font.SarabunBold,
                     fontSize: normalize(16),
                     fontWeight: '300',

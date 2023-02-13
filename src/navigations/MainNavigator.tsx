@@ -61,8 +61,7 @@ export type MainStackParamList = {
   EditPlotScreen: undefined;
   DeleteSuccess: undefined;
   FullScreenTaskImg: undefined;
-  AllReviewDroner:undefined;
-
+  AllReviewDroner: undefined;
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
@@ -111,7 +110,6 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
       <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
       <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
-
     </Stack.Navigator>
   );
 };

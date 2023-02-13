@@ -243,7 +243,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       };
     }
     return {
-      img:`${el.image_droner}`,
+      img: `${el.image_droner}`,
       name: el.firstname + ' ' + el.lastname,
       rate: el.rating_avg,
       province: el.province_name,
@@ -650,38 +650,37 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     นักบินโดรนที่แนะนำ
                   </Text>
                 </View>
-                  <View style={{ height: 'auto' }}>
-                    <ScrollView
-                      horizontal={true}
-                      showsHorizontalScrollIndicator={false}>
-                      {taskSug.length != undefined &&
-                        mergeDronerSugg.map((item: any, index: any) => (
-                          <TouchableOpacity
+                <View style={{ height: 'auto' }}>
+                  <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}>
+                    {taskSug.length != undefined &&
+                      mergeDronerSugg.map((item: any, index: any) => (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={async () => {
+                            await AsyncStorage.setItem(
+                              'droner_id',
+                              `${item.droner}`,
+                            );
+                            navigation.push('DronerDetail');
+                          }}>
+                          <DronerSugg
                             key={index}
-                            onPress={async () => {
-                              await AsyncStorage.setItem(
-                                'droner_id',
-                                `${item.droner}`,
-                              );
-                              navigation.push('DronerDetail');
-                            }}>
-                            <DronerSugg
-                              key={index}
-                              index={index}
-                              profile={item.img}
-                              background={''}
-                              name={item.name}
-                              rate={item.rate}
-                              total_task={item.total_task}
-                              province={item.province}
-                              distance={item.distance}
-                              status={item.status_favorite}
-                            />
-                          </TouchableOpacity>
-                        ))}
-                    </ScrollView>
-                  </View>
-               
+                            index={index}
+                            profile={item.img}
+                            background={''}
+                            name={item.name}
+                            rate={item.rate}
+                            total_task={item.total_task}
+                            province={item.province}
+                            distance={item.distance}
+                            status={item.status_favorite}
+                          />
+                        </TouchableOpacity>
+                      ))}
+                  </ScrollView>
+                </View>
               </View>
             </View>
           </View>

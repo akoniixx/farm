@@ -77,7 +77,7 @@ const DronerSugg: React.FC<dronerData> = ({
     }
   };
   const addUnAddDroners = async () => {
-    setChecked(!checked)
+    setChecked(!checked);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const droner_id = taskSug.map(x => x.droner_id);
     await FavoriteDroner.addUnaddFav(
