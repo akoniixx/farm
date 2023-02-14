@@ -1,7 +1,7 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import {normalize} from '../../function/Normalize';
-import {colors, font} from '../../assets';
+import { normalize } from '../../function/Normalize';
+import { colors, font } from '../../assets';
 
 interface DroneBranding {
   dronebrand: string;
@@ -30,6 +30,13 @@ export function StatusObject(status: string) {
         colorBg: 'rgba(46, 198, 110, 0.15)',
         fontColor: '#014D40',
       };
+    case 'INACTIVE':
+      return {
+        status: 'ปิดการใช้งาน',
+        colorBg: '#EBEEF0',
+        fontColor: '#6B7580',
+      };
+
     default:
       return {
         status: 'รอการตรวจสอบ',
@@ -85,13 +92,13 @@ const DroneBrandingItem: React.FC<DroneBranding> = ({
             alignItems: 'center',
             backgroundColor: StatusObject(status).colorBg,
           }}>
-          <Text style={[styles.label, {color: StatusObject(status).fontColor}]}>
+          <Text style={[styles.label, { color: StatusObject(status).fontColor }]}>
             {StatusObject(status).status}
           </Text>
         </View>
       </View>
       <Image
-        source={{uri: image}}
+        source={{ uri: image }}
         style={{
           width: normalize(60),
           height: normalize(60),

@@ -14,7 +14,7 @@ import {normalize} from '../../function/Normalize';
 import colors from '../../assets/colors/colors';
 import dayjs from 'dayjs';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
-import {numberWithCommas} from '../../function/utility';
+import {calTotalPrice, numberWithCommas} from '../../function/utility';
 import Divider from '../../components/Divider';
 import image from '../../assets/images/image';
 import {stylesCentral} from '../../styles/StylesCentral';
@@ -163,7 +163,7 @@ export default function ContentList({
                       } ไร่)`}
                     </Text>
                     <Text style={styles({}).textMoney}>
-                      ฿{numberWithCommas(item.totalPrice, true)}
+                    ฿{numberWithCommas(calTotalPrice(item?.totalPrice, item?.discount),true)}
                     </Text>
                   </View>
                   <Text

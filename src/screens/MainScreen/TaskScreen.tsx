@@ -17,6 +17,7 @@ import {stylesCentral} from '../../styles/StylesCentral';
 import * as ImagePicker from 'react-native-image-picker';
 import {dataUpdateStatusEntity} from '../../entities/TaskScreenEntities';
 import * as RootNavigation from '../../navigations/RootNavigation';
+import { callcenterNumber } from '../../definitions/callCenterNumber';
 
 interface Prop {
   dronerStatus: string;
@@ -341,7 +342,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                       fontSize: normalize(18),
                       color: 'black',
                     }}>
-                    โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. 021136159
+                    โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. {callcenterNumber}
                   </Text>
                 </View>
               </View>

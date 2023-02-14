@@ -13,6 +13,7 @@ import ContentList from './ContentList';
 
 export interface DataType {
   taskNo: string;
+  discount: string;
   farmAreaAmount: string;
   dateAppointment: string;
   targetSpray: string[];

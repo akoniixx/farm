@@ -599,7 +599,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   flex: 1,
                   justifyContent: 'space-between',
                 }}>
-                <ScrollView>
+                <ScrollView contentContainerStyle={{flexGrow: 1}}>
                   <View
                     style={{
                       padding: 8,

@@ -31,6 +31,7 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {socket} from '../../function/utility';
 import {ActionContext} from '../../../App';
 import { mixpanel } from '../../../mixpanel';
+import { callcenterNumber } from '../../definitions/callCenterNumber';
 
 interface Prop {
   isOpenReceiveTask: boolean;
@@ -302,7 +303,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                     fontSize: normalize(18),
                     color: 'black',
                   }}>
-                  โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. 021136159
+                  โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. {callcenterNumber}
                 </Text>
               </View>
             </View>

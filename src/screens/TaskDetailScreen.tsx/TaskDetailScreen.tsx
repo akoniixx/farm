@@ -8,14 +8,14 @@ import {
   Dimensions,
   TextInput,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
-import {stylesCentral} from '../../styles/StylesCentral';
-import {colors, font, icons, image} from '../../assets';
-import {normalize} from '../../function/Normalize';
+import React, { useCallback, useEffect, useState } from 'react';
+import { stylesCentral } from '../../styles/StylesCentral';
+import { colors, font, icons, image } from '../../assets';
+import { normalize } from '../../function/Normalize';
 import CustomHeader from '../../components/CustomHeader';
-import {MainButton} from '../../components/Button/MainButton';
-import {ScrollView} from 'react-native-gesture-handler';
-import {TaskDatasource} from '../../datasource/TaskDatasource';
+import { MainButton } from '../../components/Button/MainButton';
+import { ScrollView } from 'react-native-gesture-handler';
+import { TaskDatasource } from '../../datasource/TaskDatasource';
 import fonts from '../../assets/fonts';
 import {
   calTotalPrice,
@@ -25,24 +25,24 @@ import {
   openGps,
 } from '../../function/utility';
 import Icon from 'react-native-vector-icons/AntDesign';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {WaitStartFooter} from '../../components/Footer/WaitStartFooter';
-import {InprogressFooter} from '../../components/Footer/InprogressFooter';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { WaitStartFooter } from '../../components/Footer/WaitStartFooter';
+import { InprogressFooter } from '../../components/Footer/InprogressFooter';
 import Toast from 'react-native-toast-message';
-import {SheetManager} from 'react-native-actions-sheet';
-import {WaitReceiveFooter} from '../../components/Footer/WaitReceiveFooter';
+import { SheetManager } from 'react-native-actions-sheet';
+import { WaitReceiveFooter } from '../../components/Footer/WaitReceiveFooter';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CModal from 'react-native-modal';
 import * as ImagePicker from 'react-native-image-picker';
-import {CanceledFooter} from '../../components/Footer/CanceledFooter';
-import {callcenterNumber} from '../../definitions/callCenterNumber';
+import { CanceledFooter } from '../../components/Footer/CanceledFooter';
+import { callcenterNumber } from '../../definitions/callCenterNumber';
 import Spinner from 'react-native-loading-spinner-overlay';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import ExtendModal from '../../components/Modal/ExtendModal';
 import StatusExtend from './StatusExtend';
-import {mixpanel} from '../../../mixpanel';
+import { mixpanel } from '../../../mixpanel';
 
-const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
+const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
   const taskId = route.params.taskId;
   const [data, setData] = useState<any>();
   const [dateAppointment, setDateAppointment] = useState<any>();
@@ -200,21 +200,16 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           Toast.show({
             type: 'receiveTaskSuccess',
             text1: `งาน #${data.taskNo}`,
-            text2: `วันที่ ${
-              data.dateAppointment.split('T')[0].split('-')[2]
-            }/${data.dateAppointment.split('T')[0].split('-')[1]}/${
-              parseInt(data.dateAppointment.split('T')[0].split('-')[0]) + 543
-            } เวลา ${
-              parseInt(data.dateAppointment.split('T')[1].split(':')[0]) + 7 > 9
-                ? `${
-                    parseInt(data.dateAppointment.split('T')[1].split(':')[0]) +
-                    7
-                  }`
-                : `0${
-                    parseInt(data.dateAppointment.split('T')[1].split(':')[0]) +
-                    7
-                  }`
-            }:${data.dateAppointment.split('T')[1].split(':')[1]}`,
+            text2: `วันที่ ${data.dateAppointment.split('T')[0].split('-')[2]
+              }/${data.dateAppointment.split('T')[0].split('-')[1]}/${parseInt(data.dateAppointment.split('T')[0].split('-')[0]) + 543
+              } เวลา ${parseInt(data.dateAppointment.split('T')[1].split(':')[0]) + 7 > 9
+                ? `${parseInt(data.dateAppointment.split('T')[1].split(':')[0]) +
+                7
+                }`
+                : `0${parseInt(data.dateAppointment.split('T')[1].split(':')[0]) +
+                7
+                }`
+              }:${data.dateAppointment.split('T')[1].split(':')[1]}`,
             onPress: () => {
               Toast.hide();
             },
@@ -255,7 +250,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <CustomHeader
         title="รายละเอียดงาน"
         showBackBtn
@@ -268,7 +263,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
             showsVerticalScrollIndicator={false}
             persistentScrollbar={false}>
             {data.status == 'WAIT_REVIEW' || data.status == 'DONE' ? (
-              <View style={{flex: 1, backgroundColor: '#2EC66E'}}>
+              <View style={{ flex: 1, backgroundColor: '#2EC66E' }}>
                 <View
                   style={{
                     padding: normalize(18),
@@ -296,7 +291,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   </View>
                   <Image
                     source={icons.ssbaner}
-                    style={{width: normalize(54), height: normalize(54)}}
+                    style={{ width: normalize(54), height: normalize(54) }}
                   />
                 </View>
               </View>
@@ -346,7 +341,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                     color: '#2EC66E',
                     fontSize: normalize(17)
                   }}>
-                  ฿ {data.totalPrice ? numberWithCommas(data.totalPrice) : null}
+                  ฿  {numberWithCommas(calTotalPrice(data?.totalPrice, data?.discount))}
                 </Text>
               </View>
               <View
@@ -369,13 +364,11 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                     paddingLeft: normalize(8),
                     fontSize: normalize(14),
                     color: colors.fontBlack,
-                  }}>{`${convertDate(data.dateAppointment).getDate()}/${
-                  convertDate(data.dateAppointment).getMonth() + 1
-                }/${
-                  convertDate(data.dateAppointment).getFullYear() + 543
-                },${convertDate(data.dateAppointment).getHours()}:${convertDate(
-                  data.dateAppointment,
-                ).getMinutes()} น.`}</Text>
+                  }}>{`${convertDate(data.dateAppointment).getDate()}/${convertDate(data.dateAppointment).getMonth() + 1
+                    }/${convertDate(data.dateAppointment).getFullYear() + 543
+                    },${convertDate(data.dateAppointment).getHours()}:${convertDate(
+                      data.dateAppointment,
+                    ).getMinutes()} น.`}</Text>
               </View>
               {data?.statusDelay !== null && (
                 <StatusExtend
@@ -410,13 +403,13 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               </View>
             </View>
             <View
-              style={{backgroundColor: colors.white, padding: normalize(15)}}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              style={{ backgroundColor: colors.white, padding: normalize(15) }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Icon
                   name="edit"
                   size={13}
                   color="black"
-                  style={{marginRight: 20}}
+                  style={{ marginRight: 20 }}
                 />
                 <Text style={styles.fontGray}>
                   {data.comment ? data.comment : '-'}
@@ -433,9 +426,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                 }}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image
-                    source={profileImg ? {uri: profileImg} : icons.account}
+                    source={profileImg ? { uri: profileImg } : icons.account}
                     style={{
                       width: normalize(24),
                       height: normalize(24),
@@ -460,17 +453,17 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                     style={styles.callFarmer}>
                     <Image
                       source={icons.calling}
-                      style={{height: 20, width: 20}}
+                      style={{ height: 20, width: 20 }}
                     />
                   </TouchableOpacity>
                 ) : null}
               </View>
-              <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
+              <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
                 <Image
                   source={icons.jobDistance}
-                  style={{width: normalize(24), height: normalize(24)}}
+                  style={{ width: normalize(24), height: normalize(24) }}
                 />
-                <View style={{marginLeft: normalize(5)}}>
+                <View style={{ marginLeft: normalize(5) }}>
                   <Text
                     style={{
                       fontFamily: font.medium,
@@ -490,19 +483,19 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                     ระยะทาง{' '}
                     {data.status == 'WAIT_RECEIVE'
                       ? data.taskDronerTemp.find(
-                          (x: any) => x.dronerId == dronerId,
-                        ).distance
+                        (x: any) => x.dronerId == dronerId,
+                      ).distance
                       : data.distance}{' '}
                     กม.
                   </Text>
                 </View>
               </View>
-              <View style={{marginTop: normalize(10)}}>
-                <Text style={[styles.font16, {color: 'black'}]}>
+              <View style={{ marginTop: normalize(10) }}>
+                <Text style={[styles.font16, { color: 'black' }]}>
                   จุดสังเกตุ
                 </Text>
                 <View
-                  style={{marginLeft: normalize(10), marginTop: normalize(5)}}>
+                  style={{ marginLeft: normalize(10), marginTop: normalize(5) }}>
                   <Text style={styles.fontGray}>
                     {data.farmerPlot.landmark}
                   </Text>
@@ -531,7 +524,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 }>
                 <Image
                   source={icons.direction}
-                  style={{width: normalize(24), height: normalize(24)}}
+                  style={{ width: normalize(24), height: normalize(24) }}
                 />
                 <Text
                   style={{
@@ -544,12 +537,12 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               </TouchableOpacity>
             </View>
             <View style={styles.taskMenu}>
-              <Text style={[styles.font16, {color: 'black'}]}>รายได้</Text>
+              <Text style={[styles.font16, { color: 'black' }]}>รายได้</Text>
 
               <View
                 style={[
                   stylesCentral.flexRowBetwen,
-                  {marginVertical: normalize(5)},
+                  { marginVertical: normalize(5) },
                 ]}>
                 <Text style={styles.fontGray}>ค่าจ้าง</Text>
                 <Text style={styles.fontGray}>
@@ -559,7 +552,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               <View
                 style={[
                   stylesCentral.flexRowBetwen,
-                  {marginVertical: normalize(5)},
+                  { marginVertical: normalize(5) },
                 ]}>
                 <Text style={styles.fontGray}>
                   ค่าธรรมเนียม (5% ของราคารวม)
@@ -573,7 +566,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 <View
                   style={[
                     stylesCentral.flexRowBetwen,
-                    {marginVertical: normalize(5)},
+                    { marginVertical: normalize(5) },
                   ]}>
                   <Text style={[styles.fontGray]}>
                     ส่วนลดค่าธรรมเนียม
@@ -588,17 +581,52 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               <View
                 style={[
                   stylesCentral.flexRowBetwen,
-                  {marginVertical: normalize(5)},
+                  { marginVertical: normalize(5) },
                 ]}>
-                <Text style={[styles.fontGray, {color: 'black'}]}>
+                <Text style={[styles.fontGray, { color: 'black' }]}>
                   รายได้ (หลังจ่ายค่าธรรมเนียม)
                 </Text>
-                <Text style={[styles.fontGray, {color: 'black'}]}>
-                {numberWithCommas(calTotalPrice(data?.totalPrice,data?.discount))} ฿
+                <Text style={[styles.fontGray, { color: 'black' }]}>
+                  {numberWithCommas(calTotalPrice(data?.totalPrice, data?.discount))} ฿
                 </Text>
               </View>
 
-              
+              <View style={{ padding: normalize(10), backgroundColor: '#FAFAFB', marginTop: normalize(17) }}>
+                <Text style={styles.fontIncomeDetail}>รายละเอียดเพิ่มเติม</Text>
+                <View style={{ borderWidth: StyleSheet.hairlineWidth, marginTop: normalize(8), borderColor: 'grey' }} />
+                <View style={{ marginTop: normalize(17) }}>
+
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Text>จากเกตรกร</Text>
+                    <Text>{data.totalPrice === '0' ? '-' : numberWithCommas(data.totalPrice) + '฿'} </Text>
+                  </View>
+
+                  {data.totalPrice === '0' ? <Text>รายการนี้ไม่มีเก็บเงินสดจากเกษตรกร</Text> :
+                    <View style={{ borderColor: colors.orange }}>
+                      <Text>เงินสด</Text>
+                    </View>}
+
+                  <View>
+
+                  </View>
+                </View>
+                <View style={{ marginTop: normalize(17) }}>
+
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Text>จากบริษัท</Text>
+                    <Text>{numberWithCommas(data.discount)} ฿</Text>
+                  </View>
+                  <View style={{width:'70%'}}> 
+                  <Text>หลังจากงานเสร็จสิ้น ท่านจะได้รับเงิน
+                    ภายใน 1-2 วันทำการ</Text>
+                  <View>
+                  </View>
+                
+                  </View>
+                </View>
+              </View>
+
+
 
 
               {data.status == 'CANCELED' ? (
@@ -612,7 +640,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                     name="exclamationcircleo"
                     size={24}
                     color={colors.gray}
-                    style={{marginRight: 20}}
+                    style={{ marginRight: 20 }}
                   />
                   <Text
                     style={{
@@ -650,7 +678,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   }}>
                   <Image
                     source={icons.warningGrey}
-                    style={{marginRight: 20, width: 32, height: 32}}
+                    style={{ marginRight: 20, width: 32, height: 32 }}
                   />
                   <Text
                     style={{
@@ -673,7 +701,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 setOpenConfirmModal(true);
               }}
               togleModal={
-                () => {}
+                () => { }
                 //  SheetManager.show('CallingSheet', {
                 //    payload: {tel: data.farmer.telephoneNo},
                 //  })
@@ -694,7 +722,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               mainFunc={() => setShowModalStartTask(true)}
               togleModal={() =>
                 SheetManager.show('CallingSheet', {
-                  payload: {tel: data.farmer.telephoneNo},
+                  payload: { tel: data.farmer.telephoneNo },
                 })
               }
             />
@@ -710,7 +738,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               mainFunc={() => setTogleModalUpload(true)}
               togleModal={() =>
                 SheetManager.show('CallingSheet', {
-                  payload: {tel: data.farmer.telephoneNo},
+                  payload: { tel: data.farmer.telephoneNo },
                 })
               }
             />
@@ -740,7 +768,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               borderRadius: normalize(8),
             }}>
             <View>
-              <Text style={[styles.h2, {textAlign: 'center'}]}>
+              <Text style={[styles.h2, { textAlign: 'center' }]}>
                 ยืนยันการรับงาน?
               </Text>
               <TouchableOpacity
@@ -763,7 +791,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               <Text
                 style={[
                   styles.label,
-                  {textAlign: 'center', marginVertical: 5},
+                  { textAlign: 'center', marginVertical: 5 },
                 ]}>
                 กรุณากดยืนยันหากคุณต้องการรับงานนี้
               </Text>
@@ -817,7 +845,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   fontFamily: fonts.medium,
                   fontWeight: '600',
                   fontSize: normalize(19),
-                  color : colors.fontBlack
+                  color: colors.fontBlack
                 }}>
                 ไม่รับงาน
               </Text>
@@ -833,7 +861,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
             padding: normalize(15),
             borderRadius: 12,
           }}>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <Text
               style={{
                 fontFamily: font.bold,
@@ -851,7 +879,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
             {imgUploaded && finishImg !== null ? (
               <View style={[styles.uploadFrame]}>
                 <Image
-                  source={{uri: finishImg.assets[0].uri}}
+                  source={{ uri: finishImg.assets[0].uri }}
                   style={{
                     width: normalize(316),
                     height: normalize(136),
@@ -923,7 +951,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
               marginTop: normalize(20),
             }}>
             <TouchableOpacity
-              style={[styles.modalBtn, {borderColor: colors.gray}]}
+              style={[styles.modalBtn, { borderColor: colors.gray }]}
               onPress={closeFinishModal}>
               <Text
                 style={{
@@ -966,7 +994,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
             padding: normalize(15),
             borderRadius: 12,
           }}>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <Text
               style={{
                 fontFamily: font.bold,
@@ -1029,7 +1057,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
             padding: normalize(15),
             borderRadius: 12,
           }}>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <Text
               style={{
                 fontFamily: font.bold,
@@ -1041,7 +1069,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
             </Text>
             <Image
               source={image.reviewSuccess}
-              style={{width: normalize(170), height: normalize(168)}}
+              style={{ width: normalize(170), height: normalize(168) }}
             />
           </View>
           <MainButton
@@ -1059,7 +1087,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
             padding: normalize(15),
             borderRadius: 12,
           }}>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <Text
               style={{
                 fontFamily: font.bold,
@@ -1098,7 +1126,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
       <Spinner
         visible={loading}
         textContent={'Loading...'}
-        textStyle={{color: '#FFF'}}
+        textStyle={{ color: '#FFF' }}
       />
     </View>
   );
@@ -1207,4 +1235,9 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     marginHorizontal: 5,
   },
+  fontIncomeDetail: {
+    fontFamily: font.light,
+    fontSize: normalize(15),
+    color: 'black',
+  }
 });

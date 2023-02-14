@@ -5,6 +5,7 @@ import {normalize} from '../../../function/Normalize';
 import colors from '../../../assets/colors/colors';
 import image from '../../../assets/images/image';
 import {MainButton} from '../../../components/Button/MainButton';
+import { callCenterDash } from '../../../definitions/callCenterNumber';
 
 const DeleteSuccess: React.FC<any> = ({navigation}) => {
   const {width} = useWindowDimensions();
@@ -21,7 +22,7 @@ const DeleteSuccess: React.FC<any> = ({navigation}) => {
         <Text style={styles.fontBody}>
           มีคำถามเพิ่มเติมสามารถติดต่อเจ้าหน้าที่
         </Text>
-        <Text style={styles.fontBody}>โทร. 02-113-6159</Text>
+        <Text style={styles.fontBody}>โทร. {callCenterDash()}</Text>
         <Image
           source={image.deletePic}
           style={{

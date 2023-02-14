@@ -188,7 +188,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                           mixpanel.track('click to close recive task status')
                         }
                   }}
-                  disabled={profile.status === 'PENDING'}
+                  disabled={profile.status !== 'ACTIVE'}
                 />
                 <Text style={styles.activeFont}>เปิดรับงาน</Text>
               </View>

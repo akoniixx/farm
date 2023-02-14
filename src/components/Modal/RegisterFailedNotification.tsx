@@ -13,6 +13,7 @@ import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import {icons} from '../../assets';
 import fonts from '../../assets/fonts';
 import colors from '../../assets/colors/colors';
+import { callCenterDash } from '../../definitions/callCenterNumber';
 
 interface RegisterFailedModalNotiFication {
   onClick?: () => void;
@@ -47,7 +48,7 @@ const RegisterFailedNotification: React.FC<RegisterFailedModalNotiFication> = ({
                 }}>
                 <Text style={styles.info}>ท่านยืนยันตัวตนไม่สำเร็จ</Text>
                 <Text style={styles.info}>โปรดติดต่อเจ้าหน้าที่</Text>
-                <Text style={styles.info}>โทร 02-1136159</Text>
+                <Text style={styles.info}>โทร {callCenterDash()}</Text>
               </View>
             </View>
             <View
