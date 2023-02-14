@@ -225,17 +225,6 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                     alignItems: 'center',
                     marginTop: 32,
                   }}>
-                  {/* <Text
-                    style={[
-                      styles.text,
-                      {
-                        alignSelf: 'flex-start',
-                        top: '15%',
-                        paddingVertical: '5%',
-                      },
-                    ]}>
-                    นักบินโดรนที่แนะนำ
-                  </Text> */}
                   <Image
                     source={image.empty_droner}
                     style={{
@@ -273,47 +262,6 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                   </TouchableOpacity>
                 </View>
               </View>
-              {/* <View
-                  style={{
-                    flexDirection: 'row',
-                    padding: '5%',
-                    justifyContent: 'space-between',
-                    top: '10%',
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: font.AnuphanBold,
-                      fontSize: normalize(20),
-                      color: colors.fontGrey,
-                    }}>
-                    กูรูเกษตร
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: font.SarabunLight,
-                      fontSize: normalize(14),
-                      color: colors.gray,
-                    }}>
-                    ดูทั้งหมด
-                  </Text>
-                </View> */}
-              {/* <View
-                  style={{
-                    width: '100%',
-                    height: normalize(60),
-                    alignItems: 'center',
-                    top: '5%',
-                  }}>
-                  <Image
-                    source={image.academy}
-                    style={{
-                      width: 360,
-                      height: 120,
-                      top: -15,
-                      borderRadius: 10,
-                    }}
-                  />
-                </View> */}
             </View>
           </View>
         </View>

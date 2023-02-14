@@ -28,6 +28,7 @@ import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess'
 import DronerUsedScreen from '../screens/MainScreen/DronerUsedScreen';
 import FullScreenTaskImg from '../screens/DronerProfile/FullScreenTaskImg';
 import AllReviewDroner from '../screens/DronerProfile/AllReviewDroner';
+import MaintenanceScreen from '../screens/MaintenanceScreen/MaintenanceScreen';
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -62,6 +63,7 @@ export type MainStackParamList = {
   DeleteSuccess: undefined;
   FullScreenTaskImg: undefined;
   AllReviewDroner: undefined;
+  MaintenanceScreen: undefined;
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
@@ -110,6 +112,8 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
       <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
       <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
+      <Stack.Screen name="MaintenanceScreen" component={MaintenanceScreen} />
+
     </Stack.Navigator>
   );
 };

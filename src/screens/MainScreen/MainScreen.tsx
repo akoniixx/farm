@@ -262,7 +262,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     });
     if (find) {
       return {
-        img: `${find.image_droner}`,
+        img: find.image_droner,
         name: find.firstname + ' ' + find.lastname,
         rate: find.rating_avg,
         province: find.province_name,
@@ -273,7 +273,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       };
     }
     return {
-      img: `${el.image_droner}`,
+      img: el.image_droner,
       name: el.firstname + ' ' + el.lastname,
       rate: el.rating_avg,
       province: el.province_name,
@@ -404,6 +404,73 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 </TouchableOpacity>
               </View>
               <View>
+                <View style={{ marginTop: 10 }}>
+                  <View
+                    style={{
+                      paddingHorizontal: 20,
+                      height: 'auto',
+                      width: normalize(340),
+                      alignSelf: 'center',
+                      backgroundColor: '#ECFBF2',
+                      borderRadius: 10,
+                    }}>
+                    <View
+                      style={{
+                        paddingVertical: 20,
+                        justifyContent: 'space-between',
+                        flexDirection: 'row',
+                      }}>
+                      <View style={{ marginTop: 15 }}>
+                        <Image
+                          source={image.maintenance}
+                          style={{ width: 58, height: 60 }}
+                        />
+                      </View>
+                      <View style={{ paddingHorizontal: 30 }}>
+                        <Text
+                          style={{
+                            fontFamily: font.AnuphanMedium,
+                            fontSize: normalize(18),
+                            color: colors.fontBlack,
+                            fontWeight: '800',
+                          }}>
+                          {`วันที่ `}
+                          <Text
+                            style={{
+                              color: '#FB8705',
+                            }}>
+                            20 กุมภาพันธ์ 2565
+                          </Text>
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: font.AnuphanMedium,
+                            fontSize: normalize(18),
+                            color: colors.fontBlack,
+                            fontWeight: '800',
+                          }}>
+                          ช่วงเวลา 00:00 - 03:00 น.
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: font.SarabunLight,
+                            fontSize: normalize(16),
+                            color: colors.fontBlack,
+                          }}>
+                          ระบบจะปิดปรับปรุงชั่วคราว
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: font.SarabunLight,
+                            fontSize: normalize(16),
+                            color: colors.fontBlack,
+                          }}>
+                          เพื่อเพิ่มประสิทธิภาพระบบให้ดียิ่งขึ้น
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
                 {profilestate.status === 'REJECTED' && (
                   <View>
                     <View

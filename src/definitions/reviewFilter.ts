@@ -2,7 +2,7 @@ export const sortFieldReview = [
   {
     name: 'วันล่าสุด',
     value: 'date_appointment',
-    direction: '',
+    direction: 'DESC',
   },
   {
     name: 'คะแนนสูงสุด',
