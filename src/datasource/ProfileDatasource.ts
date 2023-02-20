@@ -84,7 +84,6 @@ export class ProfileDatasource {
     data.append('resourceId', drone_id);
     data.append('resource', 'DRONER_DRONE');
     data.append('category', 'DRONER_LICENSE');
-    console.log(data);
     return uploadFileProfile
       .post(BASE_URL + '/file/upload', data)
       .then(response => {

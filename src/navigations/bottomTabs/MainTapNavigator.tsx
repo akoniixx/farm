@@ -70,7 +70,6 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     messaging()
       .getInitialNotification()
       .then(message => {
-        console.log(message)
         if (message) {
           const type = message.data?.type;
           switch (type) {
@@ -140,7 +139,6 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
         setLoading(false);
       });
     messaging().onNotificationOpenedApp(async message => {
-      console.log(message)
       const type = message.data?.type;
       const jumpAction = TabActions.jumpTo('profile');
       switch (type) {
