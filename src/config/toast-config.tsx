@@ -333,12 +333,7 @@ export const toastConfig = {
             style={{
               paddingLeft: normalize(12),
             }}>
-            <Text style={styles.info}>ขออภัย งานหมายเลข</Text>
             <Text style={styles.info}>{text1}</Text>
-            <Text style={styles.info}>ถูกนักบินท่านอื่นรับไปแล้ว</Text>
-            <Text style={styles.infolight}>
-              รอแจ้งเตือนงานใหม่ครั้งถัดไปอีกครั้ง
-            </Text>
           </View>
         </View>
         <View style={styles.closePosition}>
