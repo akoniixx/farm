@@ -14,7 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ScrollView} from 'react-native-gesture-handler';
 import Modal from 'react-native-modal/dist/modal';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import {callcenterNumber} from '../../../definitions/callCenterNumber';
+import {callCenterDash, callcenterNumber} from '../../../definitions/callCenterNumber';
 import fonts from '../../../assets/fonts';
 import {normalize} from '../../../function/Normalize';
 import CustomHeader from '../../../components/CustomHeader';
@@ -156,7 +156,7 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
                   textAlign: 'center',
                 }}>
                 คุณสามารถติดต่อเจ้าหน้าที่ โทร.
-                {callcenterNumber}
+                {callCenterDash()}
               </Text>
             </View>
           </ScrollView>
@@ -236,7 +236,7 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
                   color: colors.inkLight,
                   textAlign: 'center',
                 }}>
-                โทร. 02-113-6159
+                โทร. {callCenterDash()}
               </Text>
             </View>
           </View>

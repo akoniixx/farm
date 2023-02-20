@@ -42,7 +42,7 @@ const NewTask: React.FC<any> = (props: any) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        mixpanel.track('View detail new task');
+        mixpanel.track('View detail task from new task list');
         navigation.navigate('TaskDetailScreen', {taskId})}
         
         }>
@@ -201,7 +201,7 @@ const NewTask: React.FC<any> = (props: any) => {
               alignItems: 'center',
             }}
             onPress={() => {
-              mixpanel.track('View detail new task');
+              mixpanel.track('View detail task from new task list');
               navigation.navigate('TaskDetailScreen', {taskId});
             }}>
             <Text
@@ -224,7 +224,7 @@ const NewTask: React.FC<any> = (props: any) => {
               flexDirection: 'row',
             }}
             onPress={() => {
-              mixpanel.track('Accept new task');
+              mixpanel.track('Accept task from new task list');
               onPressReceiveTask()
               }}>
             <View

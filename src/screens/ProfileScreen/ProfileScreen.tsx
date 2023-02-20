@@ -341,7 +341,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                     }}>
                     {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
                       ? 'ยืนยันตัวตนแล้ว'
-                      : 'รอการตรวจสอบ'}
+                      : StatusObject(profilestate.status).status}
                   </Text>
                 </View>
               </View>
@@ -571,9 +571,10 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                   flex: 1,
                   justifyContent: 'space-between',
                 }}>
-                <ScrollView>
+              
                   <View
                     style={{
+                     
                       padding: normalize(8),
                       display: 'flex',
                       flexDirection: 'row',
@@ -592,14 +593,19 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                         }}
                       />
                     </TouchableOpacity>
+
+                    
                     <Text style={styles.hSheet}>เพิ่มโดรน</Text>
                     <View />
                   </View>
                   <View
                     style={{
+                      flex:1,
                       paddingHorizontal: 8,
                       paddingVertical: 16,
+                      
                     }}>
+                      <ScrollView contentContainerStyle={{flexGrow: 1}}>
                     <View
                       style={{
                         display: 'flex',
@@ -643,6 +649,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                         }}
                         setValue={setValue}
                         dropDownDirection="BOTTOM"
+                        bottomOffset={200}
                         dropDownContainerStyle={{
                           borderColor: colors.disable,
                         }}
@@ -687,8 +694,9 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                         placeholder={'เลขตัวถังโดรน'}
                       />
                     </View>
+                    </ScrollView>
                   </View>
-                </ScrollView>
+              
                 <MainButton
                   disable={!brand || !brandtype || !droneno ? true : false}
                   label="ถัดไป"

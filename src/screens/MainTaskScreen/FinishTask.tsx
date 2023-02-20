@@ -57,7 +57,7 @@ const FinishTask: React.FC = () => {
                 id={item.item.taskNo}
                 status={item.item.status}
                 title={item.item.farmerPlot.plantName}
-                price={item.item.totalPrice}
+                price={parseInt(item.item.totalPrice)+parseInt(item.item.discount)}
                 date={item.item.dateAppointment}
                 address={item.item.farmerPlot.locationName}
                 distance={item.item.distance}

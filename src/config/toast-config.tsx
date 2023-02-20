@@ -9,6 +9,7 @@ import Toast from 'react-native-toast-message';
 import {TabActions} from '@react-navigation/native';
 import {responsiveHeigth, responsiveWidth} from '../function/responsive';
 import fonts from '../assets/fonts';
+import { callCenterDash, callcenterNumber } from '../definitions/callCenterNumber';
 
 const toastStyle = {
   backgroundColor: '#3EBD93',
@@ -127,7 +128,7 @@ export const toastConfig = {
             }}>
             <Text style={styles.info}>ท่านยืนยันตัวตนไม่สำเร็จ</Text>
             <Text style={styles.info}>โปรดติดต่อเจ้าหน้าที่</Text>
-            <Text style={styles.info}>โทร 02-1136159</Text>
+            <Text style={styles.info}>โทร {callCenterDash()}</Text>
           </View>
         </View>
         <View style={styles.closePosition}>
@@ -168,7 +169,7 @@ export const toastConfig = {
             }}>
             <Text style={styles.info}>โดรนของท่านไม่ผ่านการยืนยัน</Text>
             <Text style={styles.info}>โปรดติดต่อเจ้าหน้าที่</Text>
-            <Text style={styles.info}>โทร 02-1136159</Text>
+            <Text style={styles.info}>โทร {callCenterDash()}</Text>
           </View>
         </View>
         <View style={styles.closePosition}>
@@ -252,7 +253,7 @@ export const toastConfig = {
             <Text style={styles.infolight}>
               โปรดติดต่อเจ้าหน้าที่เพื่อดำเนินการ
             </Text>
-            <Text style={styles.infolight}>โทร 02-1136159</Text>
+            <Text style={styles.infolight}>โทร {callCenterDash()}</Text>
           </View>
         </View>
         <View style={styles.closePosition}>
@@ -458,7 +459,7 @@ export const toastConfig = {
             <Text style={styles.infolight}>
               มีคำถามเพิ่มสามารถติดต่อเจ้าหน้าที่
             </Text>
-            <Text style={styles.infolight}>โทร 02-1136159</Text>
+            <Text style={styles.infolight}>โทร {callCenterDash()}</Text>
           </View>
         </View>
         <View style={styles.closePosition}>
@@ -543,7 +544,7 @@ export const toastConfig = {
             <Text style={styles.infolight}>
               มีคำถามเพิ่มสามารถติดต่อเจ้าหน้าที่
             </Text>
-            <Text style={styles.infolight}>โทร 02-1136159</Text>
+            <Text style={styles.infolight}>โทร {callCenterDash()}</Text>
           </View>
         </View>
         <View style={styles.closePosition}>
@@ -631,7 +632,7 @@ export const toastConfig = {
             <Text style={[styles.infolight, {paddingBottom: normalize(5)}]}>
               หากมีปัญหากรุณาติดต่อเจ้าหน้าที่ค่ะ
             </Text>
-            <Text style={styles.infolight}>โทร.02-1136159</Text>
+            <Text style={styles.infolight}>โทร. {callCenterDash()}</Text>
           </View>
         </View>
         <View style={styles.closePosition}>

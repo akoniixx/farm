@@ -2,6 +2,7 @@ import {normalize} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { mixpanel } from '../../../mixpanel';
 import {colors, font, icons} from '../../assets';
 import fonts from '../../assets/fonts';
 
@@ -44,7 +45,10 @@ export const WaitReceiveFooter: React.FC<WaitReceiveProp> = ({
 
   return (
     <View style={[styles.footer, {paddingBottom: insets.bottom}]}>
-      <TouchableOpacity style={styles.receiveFooter} onPress={() => mainFunc()}>
+      <TouchableOpacity style={styles.receiveFooter} onPress={() => {
+        mixpanel.track('Accept task from detail task')
+        mainFunc()
+        }}>
         <View
           style={{
             width: '50%',

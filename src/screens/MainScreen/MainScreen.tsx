@@ -24,6 +24,7 @@ import messaging from '@react-native-firebase/messaging';
 import Toast from 'react-native-toast-message';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import fonts from '../../assets/fonts';
+import { mixpanel } from '../../../mixpanel';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -179,8 +180,15 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   trackColor={{false: '#767577', true: colors.green}}
                   thumbColor={profile.isOpenReceiveTask ? 'white' : '#f4f3f4'}
                   value={profile.isOpenReceiveTask}
-                  onValueChange={value => openReceiveTask(value)}
-                  disabled={profile.status === 'PENDING'}
+                  onValueChange={value => {
+                    openReceiveTask(value)
+                        if(value===true){
+                          mixpanel.track('click to open recive task status') 
+                        }else{
+                          mixpanel.track('click to close recive task status')
+                        }
+                  }}
+                  disabled={profile.status !== 'ACTIVE'}
                 />
                 <Text style={styles.activeFont}>เปิดรับงาน</Text>
               </View>

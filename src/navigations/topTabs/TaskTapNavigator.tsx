@@ -8,6 +8,7 @@ import fonts from '../../assets/fonts';
 import {colors} from '../../assets';
 import NewTaskScreen from '../../screens/MainScreen/NewTaskScreen';
 import TaskScreen from '../../screens/MainScreen/TaskScreen';
+import { mixpanel } from '../../../mixpanel';
 
 const renderTabBar = (props: any) => (
   <TabBar
@@ -43,8 +44,10 @@ const TaskTapNavigator: React.FC<Prop> = (props: Prop) => {
   const renderScene = ({route}: any) => {
     switch (route.key) {
       case 'task':
+        mixpanel.track('tab inprogress task')
         return <TaskScreen dronerStatus={props.dronerStatus} />;
       case 'newTask':
+        mixpanel.track('tab new task')
         return (
           <NewTaskScreen
             isOpenReceiveTask={props.isOpenReceiveTask}

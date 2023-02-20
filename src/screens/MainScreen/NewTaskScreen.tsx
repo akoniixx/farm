@@ -30,6 +30,8 @@ import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {socket} from '../../function/utility';
 import {ActionContext} from '../../../App';
+import { mixpanel } from '../../../mixpanel';
+import { callcenterNumber } from '../../definitions/callCenterNumber';
 
 interface Prop {
   isOpenReceiveTask: boolean;
@@ -301,7 +303,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                     fontSize: normalize(18),
                     color: 'black',
                   }}>
-                  โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. 021136159
+                  โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. {callcenterNumber}
                 </Text>
               </View>
             </View>
@@ -318,7 +320,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                   taskNo={item.item.taskNo}
                   status={item.item.status}
                   title={item.item.farmerPlot.plantName}
-                  price={item.item.totalPrice}
+                  price={parseInt(item.item.totalPrice)+parseInt(item.item.discount)}
                   date={item.item.dateAppointment}
                   address={item.item.farmerPlot.locationName}
                   distance={
@@ -403,6 +405,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                   alignItems: 'center',
                 }}
                 onPress={() => {
+                  mixpanel.track('accept task from new task list')
                   receiveTask().then(() => {
                     setOpenConfirmModal(false);
                   });
@@ -432,6 +435,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                 }}
                 onPress={() => {
                   rejectTask().then(() => {
+                    mixpanel.track('reject task from new task')
                     setOpenConfirmModal(false);
                   });
                 }}>
