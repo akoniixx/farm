@@ -267,7 +267,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           Toast.show({
             type: 'taskFailed',
             topOffset: 10,
-            text1: `${message.data?.taskNo}`,
+            text1: `${message.data?.title}`,
             position: 'top',
             onPress() {
               Toast.hide();
