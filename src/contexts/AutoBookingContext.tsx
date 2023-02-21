@@ -17,6 +17,7 @@ export interface TaskDataType {
     dronerId: string;
     status: string;
     dronerDetail: string[];
+    distance: number;
   }[];
   status?: string;
   statusRemark?: string;
@@ -224,6 +225,7 @@ export const AutoBookingProvider = ({
               newArray.push({
                 dronerId: newDronerFilter[i].droner_id,
                 status: 'WAIT_RECEIVE',
+                distance: newDronerFilter[i].distance,
                 dronerDetail: [
                   JSON.stringify({
                     ...newDronerFilter[i],
