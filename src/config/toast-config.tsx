@@ -332,7 +332,8 @@ export const toastConfig = {
           />
           <View
             style={{
-              paddingLeft: normalize(12),
+              paddingHorizontal : normalize(10),
+              width : '90%'
             }}>
             <Text style={styles.info}>{text1}</Text>
           </View>
