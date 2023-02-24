@@ -38,6 +38,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import DronerSugg from '../../components/Carousel/DronerCarousel';
 import DronerUsedList from '../../components/Carousel/DronerUsedList';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
+import { SystemMaintenance } from '../../datasource/SystemMaintenanceDatasource';
+import { momentExtend } from '../../utils/moment-buddha-year';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -76,6 +78,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   });
   const [reload, setReload] = useState(false);
   const [statusFav, setStatusFav] = useState<any[]>([]);
+  const [maintenance, setMaintenance] = useState<any>();
 
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -96,7 +99,12 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       )
       .catch(err => console.log(err));
   };
-
+  const getMaintenance = async () => {
+    SystemMaintenance.Maintenance()
+      .then(res => setMaintenance(res.responseData))
+      .catch(err => console.log(err));
+  };
+  console.log(JSON.stringify(maintenance, null, 2));
   useEffect(() => {
     const getTaskId = async () => {
       const value = await AsyncStorage.getItem('taskId');
@@ -106,6 +114,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     getData();
     getProfile();
     getNotificationData();
+    getMaintenance();
   }, [isFocused]);
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -404,73 +413,80 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 </TouchableOpacity>
               </View>
               <View>
-                <View style={{ marginTop: 10 }}>
-                  <View
-                    style={{
-                      paddingHorizontal: 20,
-                      height: 'auto',
-                      width: normalize(340),
-                      alignSelf: 'center',
-                      backgroundColor: '#ECFBF2',
-                      borderRadius: 10,
-                    }}>
+                {maintenance !== undefined && (
+                  <View style={{ marginTop: 10 }}>
                     <View
                       style={{
-                        paddingVertical: 20,
-                        justifyContent: 'space-between',
-                        flexDirection: 'row',
+                        paddingHorizontal: 20,
+                        height: 'auto',
+                        width: normalize(340),
+                        alignSelf: 'center',
+                        backgroundColor: '#ECFBF2',
+                        borderRadius: 10,
                       }}>
-                      <View style={{ marginTop: 15 }}>
-                        <Image
-                          source={image.maintenance}
-                          style={{ width: 58, height: 60 }}
-                        />
-                      </View>
-                      <View style={{ paddingHorizontal: 30 }}>
-                        <Text
-                          style={{
-                            fontFamily: font.AnuphanMedium,
-                            fontSize: normalize(18),
-                            color: colors.fontBlack,
-                            fontWeight: '800',
-                          }}>
-                          {`วันที่ `}
+                      <View
+                        style={{
+                          paddingVertical: 20,
+                          justifyContent: 'space-between',
+                          flexDirection: 'row',
+                        }}>
+                        <View style={{ marginTop: 15 }}>
+                          <Image
+                            source={image.maintenance}
+                            style={{ width: 58, height: 60 }}
+                          />
+                        </View>
+                        <View style={{ paddingHorizontal: 30 }}>
                           <Text
                             style={{
-                              color: '#FB8705',
+                              fontFamily: font.AnuphanMedium,
+                              fontSize: normalize(18),
+                              color: colors.fontBlack,
+                              fontWeight: '800',
                             }}>
-                            20 กุมภาพันธ์ 2565
+                            {`วันที่ `}
+                            <Text
+                              style={{
+                                color: '#FB8705',
+                              }}>
+                              {momentExtend.toBuddhistYear(
+                                maintenance.startDate,
+                                'DD MMMM YYYY',
+                              )}
+                            </Text>
                           </Text>
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: font.AnuphanMedium,
-                            fontSize: normalize(18),
-                            color: colors.fontBlack,
-                            fontWeight: '800',
-                          }}>
-                          ช่วงเวลา 00:00 - 03:00 น.
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: font.SarabunLight,
-                            fontSize: normalize(16),
-                            color: colors.fontBlack,
-                          }}>
-                          ระบบจะปิดปรับปรุงชั่วคราว
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: font.SarabunLight,
-                            fontSize: normalize(16),
-                            color: colors.fontBlack,
-                          }}>
-                          เพื่อเพิ่มประสิทธิภาพระบบให้ดียิ่งขึ้น
-                        </Text>
+                          <Text
+                            style={{
+                              fontFamily: font.AnuphanMedium,
+                              fontSize: normalize(18),
+                              color: colors.fontBlack,
+                              fontWeight: '800',
+                            }}>
+                            ช่วงเวลา{' '}
+                            {moment(maintenance.dateStart)
+                              .add(543, 'year')
+                              .locale('th')
+                              .format('hh.mm')}
+                            {' - '}
+                            {moment(maintenance.dateEnd)
+                              .add(543, 'year')
+                              .locale('th')
+                              .format('hh.mm')}
+                            {' น.'}
+                          </Text>
+                          <Text
+                            style={{
+                              fontFamily: font.SarabunLight,
+                              fontSize: normalize(16),
+                              color: colors.fontBlack,
+                            }}>
+                            {maintenance.text}
+                          </Text>
+                        </View>
                       </View>
                     </View>
                   </View>
-                </View>
+                )}
                 {profilestate.status === 'REJECTED' && (
                   <View>
                     <View
