@@ -7,8 +7,8 @@ import { MainButton } from '../../components/Button/MainButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Register } from '../../datasource/AuthDatasource';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
-import { getFCMToken } from '../../firebase/notification';
 import { mixpanel } from '../../../mixpanel';
+import messaging from '@react-native-firebase/messaging';
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
@@ -72,8 +72,8 @@ const SuccessRegister: React.FC<any> = ({ navigation }) => {
           await AsyncStorage.setItem('token', token_register!);
           Register.changeToPending()
             .then(async res => {
-              const fcmtoken = await AsyncStorage.getItem('fcmtoken');
-              FCMtokenDatasource.saveFCMtoken(token_register!)
+              const fcmToken = await AsyncStorage.getItem('fcmtoken')??await messaging().getToken();
+              FCMtokenDatasource.saveFCMtoken(fcmToken)
                 .then(res => {
                   RootNavigation.navigate('Main', {
                     screen: 'MainScreen',
