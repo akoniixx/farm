@@ -81,4 +81,9 @@ export default {
   wrong: require('./wrong.png'),
   inactive: require('./inactive.png'),
   callingDarkblue: require('./callingDarkblue.png'),
+  closeImg: require('./closeImg.png'),
+  arrowL: require('./arrowL.png'),
+  arrowR: require('./arrowR.png'),
+  dotRed: require('./dotRed.png'),
+  dotGreen: require('./dotGreen.png'),
 };

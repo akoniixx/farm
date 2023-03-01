@@ -8,12 +8,17 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { Avatar } from '@rneui/base';
 import { color } from 'react-native-reanimated';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FavoriteDroner } from '../../datasource/FavoriteDroner';
+import { TaskSuggestion } from '../../datasource/TaskSuggestion';
+import { ProfileDatasource } from '../../datasource/ProfileDatasource';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 interface dronerUsedData {
   index: any;
@@ -24,9 +29,10 @@ interface dronerUsedData {
   total_task: any;
   province: any;
   distance: any;
+  status: any;
 }
 
-const DronerUsed: React.FC<dronerUsedData> = ({
+const DronerUsedList: React.FC<dronerUsedData> = ({
   index,
   profile,
   background,
@@ -35,8 +41,64 @@ const DronerUsed: React.FC<dronerUsedData> = ({
   total_task,
   province,
   distance,
+  status,
 }) => {
-  const [checked, setChecked] = useState<boolean>(false);
+  const date = new Date();
+  // const [checked, setChecked] = useState<boolean>(false);
+  const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
+  const [data, setData] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    getProfile();
+    dronerSugUsed();
+  }, []);
+  const getProfile = async () => {
+    const value = await AsyncStorage.getItem('token');
+    if (value) {
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      ProfileDatasource.getProfile(farmer_id!)
+        .then(async res => {
+          await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
+        })
+        .catch(err => console.log(err));
+    }
+  };
+  const dronerSugUsed = async () => {
+    const value = await AsyncStorage.getItem('token');
+    if (value) {
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      const plot_id = await AsyncStorage.getItem('plot_id');
+      const limit = 8;
+      const offset = 0;
+      TaskSuggestion.DronerUsed(
+        farmer_id!,
+        plot_id!,
+        date.toDateString(),
+        limit,
+        offset,
+      )
+        .then(res => {
+          setTaskSugUsed(res);
+        })
+        .catch(err => console.log(err));
+    }
+  };
+  const addUnAddDroners = async () => {
+    setChecked(!checked);
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    const droner_id = taskSugUsed.map(x => x.droner_id);
+    await FavoriteDroner.addUnaddFav(
+      farmer_id !== null ? farmer_id : '',
+      droner_id[index],
+    )
+      .then(res => {
+        setData(res.responseData);
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
+  };
 
   return (
     <View style={{ paddingHorizontal: 5 }}>
@@ -61,14 +123,31 @@ const DronerUsed: React.FC<dronerUsedData> = ({
                 alignSelf: 'flex-end',
                 margin: 10,
               }}>
-              <TouchableOpacity onPress={() => setChecked(!checked)}>
-                <Image
-                  source={checked ? icons.heart_active : icons.heart}
-                  style={{ alignSelf: 'center', width: 20, height: 20, top: 4 }}
-                />
+              <TouchableOpacity onPress={addUnAddDroners}>
+                {checked ? (
+                  <Image
+                    source={icons.heart_active}
+                    style={{
+                      alignSelf: 'center',
+                      width: 20,
+                      height: 20,
+                      top: 4,
+                    }}
+                  />
+                ) : (
+                  <Image
+                    source={icons.heart}
+                    style={{
+                      alignSelf: 'center',
+                      width: 20,
+                      height: 20,
+                      top: 4,
+                    }}
+                  />
+                )}
               </TouchableOpacity>
             </View>
-            <View style={{ alignSelf: 'center', bottom: 10 }}>
+            <View style={{ alignSelf: 'center', bottom: 15 }}>
               <Avatar
                 size={normalize(56)}
                 source={profile === null ? image.empty_plot : { uri: profile }}
@@ -79,11 +158,21 @@ const DronerUsed: React.FC<dronerUsedData> = ({
                 }}
               />
             </View>
-            <View style={{ paddingLeft: 5, bottom: 10 }}>
-              <Text numberOfLines={1} style={[styles.h1, { width: 150 }]}>
+            <View style={{ paddingLeft: 5, bottom: 15 }}>
+              <Text
+                numberOfLines={1}
+                style={[
+                  styles.h1,
+                  { width: 150, lineHeight: 40, marginLeft: 6 },
+                ]}>
                 {name}
               </Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginLeft: 6,
+                }}>
                 <Image
                   source={icons.star}
                   style={{ width: 20, height: 20, marginRight: 10 }}
@@ -97,7 +186,12 @@ const DronerUsed: React.FC<dronerUsedData> = ({
                   {total_task !== null ? `(${total_task})` : `  (0)`}{' '}
                 </Text>
               </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginLeft: 6,
+                }}>
                 <Image
                   source={icons.location}
                   style={{ width: 20, height: 20, marginRight: 10 }}
@@ -111,6 +205,7 @@ const DronerUsed: React.FC<dronerUsedData> = ({
                   flexDirection: 'row',
                   alignItems: 'center',
                   paddingBottom: 3,
+                  marginLeft: 6,
                 }}>
                 <Image
                   source={icons.distance}
@@ -130,6 +225,7 @@ const DronerUsed: React.FC<dronerUsedData> = ({
                   backgroundColor: '#fff',
                   height: 26,
                   width: 60,
+                  marginLeft: 6,
                 }}>
                 <Text
                   style={{
@@ -186,4 +282,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DronerUsed;
+export default DronerUsedList;

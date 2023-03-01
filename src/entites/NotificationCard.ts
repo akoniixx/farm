@@ -3,7 +3,7 @@ export enum NotificationType {
   TASK = 'TASK',
   NEWS = 'NEWS',
   PROMOTIONS = 'PROMOTIONS',
-  UNKNOWN = 'UNKNOWN'
+  UNKNOWN = 'UNKNOWN',
 }
 export interface NotificationCardEntity {
   notificationType: NotificationType;

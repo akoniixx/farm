@@ -141,7 +141,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
               {result ? (
                 <View
                   style={{
-                    height: 176,
+                    height: 'auto',
                     width: normalize(340),
                     alignSelf: 'center',
                     backgroundColor: '#FFF9F2',

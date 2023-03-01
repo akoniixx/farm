@@ -45,7 +45,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
     profilestate?.plotItem.length > 0
       ? Math.ceil(profilestate.plotItem.length / 2)
       : 0;
-  console.log(numColumn);
   const onLogout = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     socket.removeAllListeners(`send-task-${farmer_id!}`);
@@ -377,6 +376,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 alignSelf: 'center',
               }}>
               <FlatList
+                pagingEnabled={false}
                 keyExtractor={item => item.id}
                 horizontal={true}
                 scrollEnabled={true}
@@ -455,74 +455,67 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
               justifyContent: 'space-around',
               paddingHorizontal: 10,
             }}>
-            <TouchableOpacity
-              onPress={openGooglePlay}
-              style={{
-                paddingHorizontal: normalize(20),
-                alignItems: 'center',
-                flexDirection: 'row',
-                height: normalize(62),
-                justifyContent: 'space-between',
-                borderBottomWidth: 1,
-                borderColor: colors.disable,
-              }}>
-              <Image
-                source={image.iconAppDrone}
-                style={[styles.icon, { marginRight: '-15%' }]}
-              />
-              <Text style={[styles.h2]}>มาเป็นนักบินโดรนร่วมกับเรา</Text>
-              <Image
-                source={icons.arrowRigth}
-                style={{ width: 24, height: 24 }}
-              />
+            <TouchableOpacity onPress={openGooglePlay}>
+              <View style={styles.listTile}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image source={image.iconAppDrone} style={[styles.icon]} />
+                  <Text style={[styles.h2, { paddingHorizontal: 20 }]}>
+                    มาเป็นนักบินโดรนร่วมกับเรา
+                  </Text>
+                </View>
+                <Image
+                  source={icons.arrowRigth}
+                  style={{ width: 24, height: 24 }}
+                />
+              </View>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('PrivacyScreen');
-              }}
-              style={{
-                paddingHorizontal: normalize(20),
-                alignItems: 'center',
-                flexDirection: 'row',
-                height: normalize(62),
-                justifyContent: 'space-between',
-                borderBottomWidth: 1,
-                borderColor: colors.disable,
               }}>
-              <Image
-                source={icons.lock}
-                style={[styles.icon, { marginRight: '-23%' }]}
-              />
-              <Text style={styles.h2}>นโยบายความเป็นส่วนตัว</Text>
-              <Image
-                source={icons.arrowRigth}
-                style={{ width: 24, height: 24 }}
-              />
+              <View style={styles.listTile}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image source={icons.lock} style={[styles.icon]} />
+                  <Text style={[styles.h2, { paddingHorizontal: 20 }]}>
+                    นโยบายความเป็นส่วนตัว
+                  </Text>
+                </View>
+                <Image
+                  source={icons.arrowRigth}
+                  style={{ width: 24, height: 24 }}
+                />
+              </View>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('DeleteProfileScreen', {
                   tele: profilestate.id,
                 });
-              }}
-              style={{
-                paddingHorizontal: normalize(20),
-                alignItems: 'center',
-                flexDirection: 'row',
-                height: normalize(62),
-                justifyContent: 'space-between',
-                borderBottomWidth: 1,
-                borderColor: colors.disable,
               }}>
-              <Image
-                source={icons.deleteUser}
-                style={[styles.icon, { marginRight: '-55%' }]}
-              />
-              <Text style={styles.h2}>ลบบัญชี</Text>
-              <Image
-                source={icons.arrowRigth}
-                style={{ width: 24, height: 24 }}
-              />
+              <View style={styles.listTile}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image source={icons.deleteUser} style={[styles.icon]} />
+                  <Text style={[styles.h2, { paddingHorizontal: 20 }]}>
+                    ลบบัญชี
+                  </Text>
+                </View>
+                <Image
+                  source={icons.arrowRigth}
+                  style={{ width: 24, height: 24 }}
+                />
+              </View>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={async () => {
@@ -530,25 +523,26 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 RootNavigation.navigate('Auth', {
                   screen: 'HomeScreen',
                 });
-              }}
-              style={{
-                paddingHorizontal: normalize(20),
-                alignItems: 'center',
-                flexDirection: 'row',
-                height: normalize(62),
-                justifyContent: 'space-between',
-                borderBottomWidth: 1,
-                borderColor: colors.disable,
               }}>
-              <Image
-                source={icons.logout}
-                style={[styles.icon, { marginRight: '-45%' }]}
-              />
-              <Text style={styles.h2}>ออกจากระบบ</Text>
-              <Image
-                source={icons.arrowRigth}
-                style={{ width: 25, height: 25 }}
-              />
+              <View style={styles.listTile}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={icons.logout}
+                    style={{ width: 24, height: 24 }}
+                  />
+                  <Text style={[styles.h2, { paddingHorizontal: 20 }]}>
+                    ออกจากระบบ
+                  </Text>
+                </View>
+                <Image
+                  source={icons.arrowRigth}
+                  style={{ width: 24, height: 24 }}
+                />
+              </View>
             </TouchableOpacity>
             {profilestate.plotItem.length > 1 ? (
               <View
@@ -588,13 +582,14 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
 };
 export default ProfileScreen;
 const styles = StyleSheet.create({
-  btAdd: {
-    top: normalize(100),
-    borderRadius: 10,
-    height: normalize(80),
-    width: normalize(340),
-    borderStyle: 'dashed',
-    position: 'relative',
+  listTile: {
+    paddingVertical: normalize(20),
+    paddingHorizontal: normalize(20),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: normalize(0.5),
+    borderBottomColor: colors.disable,
   },
   textaddplot: {
     fontFamily: font.AnuphanBold,
@@ -613,22 +608,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     alignSelf: 'center',
   },
-  buttomBlank: {
-    height: normalize(54),
-    width: normalize(343),
-    alignSelf: 'center',
-    marginTop: normalize(30),
-  },
-  textBlank: {
-    alignItems: 'center',
-    top: normalize(60),
-    display: 'flex',
-  },
-  profileBlank: {
-    alignItems: 'center',
-    top: normalize(30),
-    bottom: normalize(82),
-  },
+
   head: {
     fontFamily: font.AnuphanBold,
     fontSize: normalize(20),
@@ -645,26 +625,6 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
     alignItems: 'center',
   },
-  headerTitleWraper: {
-    backgroundColor: '#F7FFF0',
-    display: 'flex',
-    alignItems: 'flex-start',
-    position: 'relative',
-    width: normalize(375),
-    height: normalize(50),
-  },
-  headerTitle: {
-    fontFamily: font.AnuphanBold,
-    fontSize: normalize(20),
-    color: colors.fontBlack,
-    textAlign: 'center',
-    height: normalize(75),
-    top: normalize(20),
-    position: 'absolute',
-    width: 260,
-    left: 80,
-    display: 'flex',
-  },
   text: {
     fontFamily: font.AnuphanMedium,
     fontWeight: '800',
@@ -677,16 +637,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'flex-start',
     padding: 15,
-  },
-  appProve: {
-    borderWidth: 1,
-    borderRadius: 15,
-    borderColor: colors.greenLight,
-    padding: normalize(10),
-    width: normalize(135),
-    height: normalize(25),
-    backgroundColor: colors.white,
-    justifyContent: 'center',
   },
   section2: {
     ...Platform.select({
@@ -704,13 +654,6 @@ const styles = StyleSheet.create({
   section3: {
     backgroundColor: colors.white,
     justifyContent: 'space-around',
-  },
-  menu: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderColor: colors.disable,
-    paddingBottom: normalize(20),
-    justifyContent: 'space-between',
   },
   icon: {
     width: normalize(24),

@@ -7,47 +7,55 @@ import {
   Platform,
 } from 'react-native';
 import React from 'react';
-import { normalize } from '../../functions/Normalize';
+import { normalize, width } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { Avatar } from '@rneui/base';
 
 interface DetailData {
   index: number;
-  days: string;
-  dateTime: string;
+  date: string;
+  month: string;
+  year: string;
   convenient: string;
 }
 
 export const CardDetailDroner: React.FC<DetailData> = ({
   index,
-  days,
-  dateTime,
+  date,
+  month,
+  year,
   convenient,
 }) => {
   return (
-    <View style={{ flex: 1, paddingHorizontal: 5, left: '10%' }}>
+    <View style={{ flex: 1, paddingHorizontal: 10 }}>
       {convenient == 'สะดวก' ? (
-        <View style={[styles.cards]}>
+        <View>
           <View key={index} style={[styles.cardYes]}>
-            <View style={{ top: 20 }}>
-              <Text style={[styles.label]}>{days}</Text>
-              <Text style={[styles.label]}>{dateTime}</Text>
-              <Text style={[styles.label, { color: colors.white }]}>
-                {convenient}
-              </Text>
+            <View>
+              <Text style={[styles.label]}>{date}</Text>
+              <Text style={[styles.label]}>{month}</Text>
+              <Text style={[styles.label]}>{year}</Text>
+              <Image
+                source={icons.dotGreen}
+                style={{ width: 10, height: 10, alignSelf: 'center' }}
+              />
             </View>
           </View>
         </View>
       ) : (
-        <View style={[styles.cardsNo]}>
+        <View>
           <View key={index} style={[styles.cardNo]}>
-            <View style={{ top: 20 }}>
-              <Text style={[styles.label]}>{days}</Text>
-              <Text style={[styles.label]}>{dateTime}</Text>
-              <Text style={[styles.label, { color: colors.error }]}>
-                {convenient}
+            <View>
+              <Text style={[styles.label, { color: colors.gray }]}>{date}</Text>
+              <Text style={[styles.label, { color: colors.gray }]}>
+                {month}
               </Text>
+              <Text style={[styles.label, { color: colors.gray }]}>{year}</Text>
+              <Image
+                source={icons.dotRed}
+                style={{ width: 10, height: 10, alignSelf: 'center' }}
+              />
             </View>
           </View>
         </View>
@@ -58,64 +66,40 @@ export const CardDetailDroner: React.FC<DetailData> = ({
 
 const styles = StyleSheet.create({
   cardYes: {
-    backgroundColor: colors.white,
-    height: '65%',
-    width: normalize(136),
-    borderWidth: 1,
-    borderTopRightRadius: 15,
-    borderTopLeftRadius: 15,
-    borderColor: colors.greenLight,
+    backgroundColor: '#ECFBF2',
+    height: 'auto',
+    width: normalize(60),
+    borderRadius: 15,
+    paddingVertical: 10,
   },
   cardNo: {
-    backgroundColor: colors.white,
-    height: '65%',
-    width: normalize(136),
-    borderWidth: 0.3,
-    borderTopRightRadius: 15,
-    borderTopLeftRadius: 15,
-    borderColor: colors.gray,
+    backgroundColor: '#F8F9FA',
+    height: 'auto',
+    width: normalize(60),
+    borderRadius: 15,
+    paddingVertical: 10,
   },
 
   label: {
     ...Platform.select({
       ios: {
         fontFamily: font.SarabunMedium,
-        fontSize: normalize(16),
+        fontSize: normalize(18),
         color: colors.fontBlack,
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
-        paddingHorizontal: normalize(30),
-        paddingVertical: normalize(4),
+        paddingHorizontal: normalize(10),
+        paddingVertical: normalize(5),
       },
       android: {
         fontFamily: font.SarabunMedium,
-        fontSize: normalize(16),
+        fontSize: normalize(18),
         color: colors.fontBlack,
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
       },
     }),
-  },
-  h1: {
-    color: colors.primary,
-    fontFamily: font.SarabunBold,
-    fontSize: normalize(18),
-  },
-  cardsNo: {
-    backgroundColor: '#FFD9D9',
-    height: normalize(116),
-    width: normalize(136),
-    borderRadius: 15,
-    borderWidth: 0.3,
-    borderColor: colors.gray,
-  },
-  cards: {
-    backgroundColor: colors.greenLight,
-    height: normalize(116),
-    borderRadius: 15,
-    borderWidth: 1,
-    borderColor: colors.greenLight,
   },
 });

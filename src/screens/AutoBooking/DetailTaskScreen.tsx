@@ -505,7 +505,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             backgroundColor: 'white',
             marginTop: 10,
             paddingVertical: normalize(16),
-            paddingBottom: '15%'
+            paddingBottom: '15%',
           }}>
           <View
             style={{

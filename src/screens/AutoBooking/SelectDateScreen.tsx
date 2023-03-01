@@ -23,6 +23,7 @@ import TimePicker from '../../components/TimePicker/TimePicker';
 import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { normalize, width } from '../../functions/Normalize';
 import { momentExtend } from '../../utils/moment-buddha-year';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SelectDateScreen: React.FC<any> = ({ navigation }) => {
   const windowWidth = Dimensions.get('window').width;
@@ -61,7 +62,6 @@ const SelectDateScreen: React.FC<any> = ({ navigation }) => {
     }));
     navigation.navigate('SelectPlotScreen');
   };
-
   return (
     <>
       <StepIndicatorHead
