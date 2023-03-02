@@ -100,11 +100,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err));
   };
   const getMaintenance = async () => {
-    SystemMaintenance.Maintenance()
+  await  SystemMaintenance.Maintenance()
       .then(res => setMaintenance(res.responseData))
       .catch(err => console.log(err));
   };
-  console.log(JSON.stringify(maintenance, null, 2));
+  console.log(maintenance)
   useEffect(() => {
     const getTaskId = async () => {
       const value = await AsyncStorage.getItem('taskId');
@@ -413,80 +413,84 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 </TouchableOpacity>
               </View>
               <View>
-                {maintenance !== undefined && (
-                  <View style={{ marginTop: 10 }}>
-                    <View
-                      style={{
-                        paddingHorizontal: 20,
-                        height: 'auto',
-                        width: normalize(340),
-                        alignSelf: 'center',
-                        backgroundColor: '#ECFBF2',
-                        borderRadius: 10,
-                      }}>
+                <View>
+                  {maintenance !== undefined && (
+                    <View style={{ marginTop: 20, marginBottom: 20 }}>
                       <View
                         style={{
-                          paddingVertical: 20,
-                          justifyContent: 'space-between',
-                          flexDirection: 'row',
+                          paddingHorizontal: 20,
+                          height: 'auto',
+                          width: normalize(340),
+                          alignSelf: 'center',
+                          backgroundColor: '#ECFBF2',
+                          borderRadius: 10,
                         }}>
-                        <View style={{ marginTop: 15 }}>
-                          <Image
-                            source={image.maintenance}
-                            style={{ width: 58, height: 60 }}
-                          />
-                        </View>
-                        <View style={{ paddingHorizontal: 30 }}>
-                          <Text
-                            style={{
-                              fontFamily: font.AnuphanMedium,
-                              fontSize: normalize(18),
-                              color: colors.fontBlack,
-                              fontWeight: '800',
-                            }}>
-                            {`วันที่ `}
+                        <View
+                          style={{
+                            paddingVertical: 20,
+                            justifyContent: 'space-between',
+                            flexDirection: 'row',
+                          }}>
+                          <View style={{ marginTop: 15 }}>
+                            <Image
+                              source={image.maintenance}
+                              style={{ width: 58, height: 60 }}
+                            />
+                          </View>
+                          <View style={{ paddingHorizontal: 30 }}>
                             <Text
                               style={{
-                                color: '#FB8705',
+                                fontFamily: font.AnuphanMedium,
+                                fontSize: normalize(18),
+                                color: colors.fontBlack,
+                                fontWeight: '800',
                               }}>
-                              {momentExtend.toBuddhistYear(
-                                maintenance.startDate,
-                                'DD MMMM YYYY',
-                              )}
+                              {`วันที่ `}
+                              <Text
+                                style={{
+                                  color: '#FB8705',
+                                }}>
+                                {momentExtend.toBuddhistYear(
+                                  maintenance.startDate,
+                                  'DD MMMM YYYY',
+                                )}
+                              </Text>
                             </Text>
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: font.AnuphanMedium,
-                              fontSize: normalize(18),
-                              color: colors.fontBlack,
-                              fontWeight: '800',
-                            }}>
-                            ช่วงเวลา{' '}
-                            {moment(maintenance.dateStart)
-                              .add(543, 'year')
-                              .locale('th')
-                              .format('hh.mm')}
-                            {' - '}
-                            {moment(maintenance.dateEnd)
-                              .add(543, 'year')
-                              .locale('th')
-                              .format('hh.mm')}
-                            {' น.'}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: font.SarabunLight,
-                              fontSize: normalize(16),
-                              color: colors.fontBlack,
-                            }}>
-                            {maintenance.text}
-                          </Text>
+                            <Text
+                              style={{
+                                fontFamily: font.AnuphanMedium,
+                                fontSize: normalize(18),
+                                color: colors.fontBlack,
+                                fontWeight: '800',
+                              }}>
+                              ช่วงเวลา{' '}
+                              {moment(maintenance.dateStart)
+                                .add(543, 'year')
+                                .locale('th')
+                                .format('hh.mm')}
+                              {' - '}
+                              {moment(maintenance.dateEnd)
+                                .add(543, 'year')
+                                .locale('th')
+                                .format('hh.mm')}
+                              {' น.'}
+                            </Text>
+                            <Text
+                              style={{
+                                marginRight: 20,
+                                fontFamily: font.SarabunLight,
+                                fontSize: normalize(16),
+                                color: colors.fontBlack,
+                              }}>
+                              {maintenance.text}
+                            </Text>
+                          </View>
                         </View>
                       </View>
                     </View>
-                  </View>
-                )}
+                  )}
+                </View>
+
                 {profilestate.status === 'REJECTED' && (
                   <View>
                     <View
