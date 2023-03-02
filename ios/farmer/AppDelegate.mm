@@ -16,6 +16,10 @@
 #import <ReactCommon/RCTTurboModuleManager.h>
 
 #import <react/config/ReactNativeConfig.h>
+#import <UserNotifications/UserNotifications.h>
+#import <Firebase/Firebase.h>
+#import <FirebaseMessaging/FirebaseMessaging.h>
+
 
 static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
@@ -32,6 +36,13 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  [center requestAuthorizationWithOptions:(UNAuthorizationOptionSound | UNAuthorizationOptionAlert | UNAuthorizationOptionBadge) completionHandler:^(BOOL granted, NSError * _Nullable error) {
+      if (!error) {
+          [[UIApplication sharedApplication] registerForRemoteNotifications];
+      }
+  }];
+
     [GMSServices provideAPIKey:@"AIzaSyAymsbEe0NVhDL8iHd8oabbr5xG0TFn8Jc"];
   RCTAppSetupPrepareApp(application);
 
@@ -61,6 +72,35 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   [self.window makeKeyAndVisible];
   return YES;
 }
+
+
+// Receive displayed notifications for iOS 10 devices.
+// Handle incoming notification messages while app is in the foreground.
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
+  NSDictionary *userInfo = notification.request.content.userInfo;
+
+  // With swizzling disabled you must let Messaging know about the message, for Analytics
+  // [[FIRMessaging messaging] appDidReceiveMessage:userInfo];
+
+  // ...
+
+  // Print full message.
+  NSLog(@"%@", userInfo);
+
+  // Change this to your preferred presentation option
+  completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionAlert);
+}
+
+// Handle notification messages after display notification is tapped by the user.
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+didReceiveNotificationResponse:(UNNotificationResponse *)response
+         withCompletionHandler:(void(^)(void))completionHandler {
+  NSDictionary *userInfo = response.notification.request.content.userInfo;
+  completionHandler();
+}
+
 
 /// This method controls whether the `concurrentRoot`feature of React18 is turned on or off.
 ///
