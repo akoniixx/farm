@@ -12,11 +12,11 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import 'moment/locale/th';
 import {
   firebaseInitialize,
+  registerDeviceForRemoteMessages,
   requestUserPermission,
 } from './src/firebase/notification';
 
 import './src/components/SheetList';
-
 import { AutoBookingProvider } from './src/contexts/AutoBookingContext';
 import { AuthProvider } from './src/contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,6 +28,7 @@ const App = () => {
     SplashScreen.hide();
     if (Platform.OS === 'ios') {
       firebaseInitialize();
+      registerDeviceForRemoteMessages();
     }
     requestUserPermission();
     getToken();

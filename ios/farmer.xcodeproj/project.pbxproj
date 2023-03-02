@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* farmerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* farmerTests.m */; };
 		0BBE516B5CAB43D68B98C339 /* Anuphan-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 65D81DE2054F4B3899F3DAED /* Anuphan-Medium.otf */; };
-		0F42EAE2298D019600933759 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 60889B9329475538006DD600 /* GoogleService-Info.plist */; };
 		10279EFD61A64239982BF31F /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B8F08C6ABB4465FB8F65BD3 /* FontAwesome5_Solid.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -20,7 +19,6 @@
 		306A7BD0E8C74767B59CFA0D /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B61B979E6E7A4D8FBB33C734 /* FontAwesome5_Regular.ttf */; };
 		4E0E688E542C429A8E49A91D /* Sarabun-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3CB3D555E4984153AE4BA2D5 /* Sarabun-Medium.ttf */; };
 		5074541692BF49118BE96830 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E354E12A922F4E29915ECEC5 /* EvilIcons.ttf */; };
-		60889B9429475538006DD600 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 60889B9329475538006DD600 /* GoogleService-Info.plist */; };
 		60F1F01829266B65007549EB /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 60F1F01729266B63007549EB /* fonts */; };
 		64A332CA74844D35B3393CAF /* Sarabun-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2FE69C8B24DA43A3A19E6C72 /* Sarabun-Bold.ttf */; };
 		6D8D1046338E437AB06BD36F /* libPods-farmer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1D988025A77D758AF25144 /* libPods-farmer.a */; };
@@ -72,7 +70,6 @@
 		4F4087F42B2843228EE8D8D8 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = ../src/assets/fonts/Octicons.ttf; sourceTree = "<group>"; };
 		50A411CBB8631D30BDB91777 /* Pods-farmer-farmerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer-farmerTests.release.xcconfig"; path = "Target Support Files/Pods-farmer-farmerTests/Pods-farmer-farmerTests.release.xcconfig"; sourceTree = "<group>"; };
 		5536E3154E7B34B92E50187B /* Pods-farmer-farmerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer-farmerTests.debug.xcconfig"; path = "Target Support Files/Pods-farmer-farmerTests/Pods-farmer-farmerTests.debug.xcconfig"; sourceTree = "<group>"; };
-		60889B9329475538006DD600 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		60F1F01729266B63007549EB /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		6104EDE766E24424A0000B38 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = ../src/assets/fonts/Fontisto.ttf; sourceTree = "<group>"; };
 		65D81DE2054F4B3899F3DAED /* Anuphan-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Anuphan-Medium.otf"; path = "../src/assets/fonts/Anuphan-Medium.otf"; sourceTree = "<group>"; };
@@ -137,7 +134,6 @@
 			isa = PBXGroup;
 			children = (
 				0FCAE1F32977ECDD0011C878 /* farmer.entitlements */,
-				60889B9329475538006DD600 /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -319,7 +315,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0F42EAE2298D019600933759 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,7 +335,6 @@
 				99B205E0EB5E4BA18CFB9B69 /* FontAwesome5_Brands.ttf in Resources */,
 				60F1F01829266B65007549EB /* fonts in Resources */,
 				306A7BD0E8C74767B59CFA0D /* FontAwesome5_Regular.ttf in Resources */,
-				60889B9429475538006DD600 /* GoogleService-Info.plist in Resources */,
 				10279EFD61A64239982BF31F /* FontAwesome5_Solid.ttf in Resources */,
 				990F5E42EB1A4D3485349652 /* Fontisto.ttf in Resources */,
 				7249DA0B3AD847568EF7FF2F /* Foundation.ttf in Resources */,

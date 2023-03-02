@@ -18,7 +18,12 @@ export const firebaseInitialize = async () => {
   await firebase.initializeApp(credentials);
 };
 
+export async function registerDeviceForRemoteMessages(){
+  await messaging().registerDeviceForRemoteMessages();
+}
+
 export async function requestUserPermission() {
+  messaging().hasPermission
   const authStatus = await messaging().requestPermission();
   const enabled =
     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||

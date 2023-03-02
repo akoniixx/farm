@@ -28,6 +28,7 @@ import { Authentication } from '../../datasource/AuthDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import * as RootNavigation from '../../navigations/RootNavigation';
+import messaging from '@react-native-firebase/messaging';
 
 const CELL_COUNT = 6;
 
@@ -146,8 +147,8 @@ const OtpScreen: React.FC<any> = ({ navigation, route }) => {
               setErrOTP(false);
               await AsyncStorage.setItem('token', result.accessToken);
               await AsyncStorage.setItem('farmer_id', result.data.id);
-              const fcmToken = await AsyncStorage.getItem('fcmtoken');
-              FCMtokenDatasource.saveFCMtoken(fcmToken!)
+              const fcmToken = await AsyncStorage.getItem('fcmtoken')??await messaging().getToken();
+              FCMtokenDatasource.saveFCMtoken(fcmToken)
                 .then(async result => {
                   await RootNavigation.navigate('Main', {
                     screen: 'MainScreen',
