@@ -100,11 +100,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err));
   };
   const getMaintenance = async () => {
-  await  SystemMaintenance.Maintenance()
+  await  SystemMaintenance.Maintenance("FARMER")
       .then(res => setMaintenance(res.responseData))
       .catch(err => console.log(err));
   };
-  console.log(maintenance)
+  console.log(maintenance == null ? ' yes' : 'no')
   useEffect(() => {
     const getTaskId = async () => {
       const value = await AsyncStorage.getItem('taskId');
@@ -413,8 +413,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 </TouchableOpacity>
               </View>
               <View>
-                <View>
-                  {maintenance !== undefined && (
+                {/* <View>
+                  {maintenance == null && (
                     <View style={{ marginTop: 20, marginBottom: 20 }}>
                       <View
                         style={{
@@ -489,7 +489,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       </View>
                     </View>
                   )}
-                </View>
+                </View> */}
 
                 {profilestate.status === 'REJECTED' && (
                   <View>
