@@ -224,7 +224,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   />
                 ) : (
                   <Image
-                    source={icons.inactive}
                     style={{
                       width: 16,
                       height: 16,
@@ -282,17 +281,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                     source={icons.wrong}
                     style={{ width: 16, height: 16, right: 5 }}
                   />
-                ) : (
-                  <Image
-                    source={icons.inactive}
-                    style={{
-                      width: 16,
-                      height: 16,
-                      right: 5,
-                      tintColor: colors.bg,
-                    }}
-                  />
-                )}
+                ) : null}
 
                 <Text
                   style={{

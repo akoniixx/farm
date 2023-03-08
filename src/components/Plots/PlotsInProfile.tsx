@@ -39,14 +39,14 @@ export function StatusObject(status: string) {
     case 'INACTIVE':
       return {
         status: 'ปิดการใช้งาน',
-        colorBg: colors.white,
+        colorBg: '#FFF0F0',
         fontColor: colors.error,
         borderColor: colors.error,
       };
     case 'REJECTED':
       return {
         status: 'ไม่อนุมัติ',
-        colorBg: colors.white,
+        colorBg: '#FFF0F0',
         fontColor: colors.error,
         borderColor: colors.error,
       };
@@ -227,8 +227,16 @@ const PlotInProfile: React.FC<plotData> = ({
               <Text
                 style={[
                   styles.label,
-                  { color: StatusObject(status).fontColor },
+                  {
+                    color: StatusObject(status).fontColor,
+                    fontFamily: font.AnuphanMedium                  },
                 ]}>
+                {StatusObject(status).status === 'ไม่อนุมัติ' && (
+                  <Image
+                    source={icons.wrong}
+                    style={{ width: 16, height: 16}}
+                  />
+                )}
                 {StatusObject(status).status}
               </Text>
             </View>

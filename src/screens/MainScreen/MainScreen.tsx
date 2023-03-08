@@ -40,6 +40,8 @@ import DronerUsedList from '../../components/Carousel/DronerUsedList';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import { SystemMaintenance } from '../../datasource/SystemMaintenanceDatasource';
 import { momentExtend } from '../../utils/moment-buddha-year';
+import PopUpMaintenance from '../../components/Modal/MaintenanceApp/PopUpMaintenance';
+import { MaintenanceSystem, MaintenanceSystem_INIT } from '../../entites/MaintenanceApp';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -78,7 +80,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   });
   const [reload, setReload] = useState(false);
   const [statusFav, setStatusFav] = useState<any[]>([]);
-  const [maintenance, setMaintenance] = useState<any>();
+  const [maintenance, setMaintenance] = useState<MaintenanceSystem>(MaintenanceSystem_INIT);
+  const [popupMaintenance, setPopupMaintenance] = useState<boolean>(true);
+
 
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -100,11 +104,14 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err));
   };
   const getMaintenance = async () => {
-  await  SystemMaintenance.Maintenance("FARMER")
-      .then(res => setMaintenance(res.responseData))
+    await SystemMaintenance.Maintenance('FARMER')
+      .then(res => {
+        setPopupMaintenance(res.responseData.id ? true : false);
+        setMaintenance(res.responseData)
+      })
       .catch(err => console.log(err));
   };
-  console.log(maintenance == null ? ' yes' : 'no')
+console.log(JSON.stringify(maintenance,null,2))
   useEffect(() => {
     const getTaskId = async () => {
       const value = await AsyncStorage.getItem('taskId');
@@ -413,8 +420,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 </TouchableOpacity>
               </View>
               <View>
-                {/* <View>
-                  {maintenance == null && (
+                <View>
+                  {maintenance && (
                     <View style={{ marginTop: 20, marginBottom: 20 }}>
                       <View
                         style={{
@@ -451,7 +458,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                                   color: '#FB8705',
                                 }}>
                                 {momentExtend.toBuddhistYear(
-                                  maintenance.startDate,
+                                  maintenance.dateStart,
                                   'DD MMMM YYYY',
                                 )}
                               </Text>
@@ -489,7 +496,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       </View>
                     </View>
                   )}
-                </View> */}
+                </View>
 
                 {profilestate.status === 'REJECTED' && (
                   <View>
@@ -854,6 +861,13 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           </Modal>
+          {maintenance.id && (
+        <PopUpMaintenance 
+        show={popupMaintenance}
+        onClose={() => setPopupMaintenance(!popupMaintenance)}
+        data={maintenance}   
+        />
+      )} 
           <Spinner
             visible={loading}
             textContent={'Loading...'}
