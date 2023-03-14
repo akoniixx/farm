@@ -16,11 +16,13 @@ import {
   Dimensions,
   ImageBackground,
   TouchableOpacity,
-  SafeAreaView,
 } from 'react-native';
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Avatar } from '@rneui/base';
 import icons from '../../assets/icons/icons';
@@ -118,23 +120,17 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ width: '100%', height: '100%' }}>
-      <Image
-        source={image.bgHead}
-        style={{
-          width: (width * 380) / 375,
-          position: 'absolute',
-        }}
-      />
-      <ScrollView
-        style={{
-          backgroundColor: colors.white,
-        }}>
+    <View
+      style={{
+        backgroundColor: colors.white,
+        flex: 1,
+      }}>
+      <ScrollView>
         <View style={[stylesCentral.container]}>
           <View style={{ backgroundColor: colors.white }}>
             <View style={[stylesCentral.container]}>
               <View style={{ flex: 1 }}>
-                <View>
+                <View style={{ height: 'auto' }}>
                   <Image
                     source={image.bgHead}
                     style={{
@@ -143,34 +139,36 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                       position: 'absolute',
                     }}
                   />
-                  <View style={styles.headCard}>
-                    <View>
-                      <Text
-                        style={{
-                          fontFamily: font.AnuphanMedium,
-                          fontSize: normalize(18),
-                          color: colors.fontBlack,
-                        }}>
-                        ยินดีต้อนรับ
-                      </Text>
-                      <Text
-                        style={{
-                          fontFamily: font.AnuphanBold,
-                          fontSize: normalize(26),
-                          color: colors.orange,
-                        }}>
-                        ไอคอน
+                  <SafeAreaView edges={['top']} style={styles.headCard}>
+                    <View style={styles.headCard}>
+                      <View>
+                        <Text
+                          style={{
+                            fontFamily: font.AnuphanMedium,
+                            fontSize: normalize(18),
+                            color: colors.fontBlack,
+                          }}>
+                          ยินดีต้อนรับ
+                        </Text>
                         <Text
                           style={{
                             fontFamily: font.AnuphanBold,
                             fontSize: normalize(26),
-                            color: colors.greenLight,
+                            color: colors.orange,
                           }}>
-                          เกษตร
+                          ไอคอน
+                          <Text
+                            style={{
+                              fontFamily: font.AnuphanBold,
+                              fontSize: normalize(26),
+                              color: colors.greenLight,
+                            }}>
+                            เกษตร
+                          </Text>
                         </Text>
-                      </Text>
+                      </View>
                     </View>
-                  </View>
+                  </SafeAreaView>
                   <View
                     style={{
                       flexDirection: 'row',
@@ -277,7 +275,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 export default AuthMainScreen;
