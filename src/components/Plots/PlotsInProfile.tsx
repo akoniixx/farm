@@ -229,14 +229,9 @@ const PlotInProfile: React.FC<plotData> = ({
                   styles.label,
                   {
                     color: StatusObject(status).fontColor,
-                    fontFamily: font.AnuphanMedium                  },
+                    fontFamily: font.AnuphanMedium,
+                  },
                 ]}>
-                {StatusObject(status).status === 'ไม่อนุมัติ' && (
-                  <Image
-                    source={icons.wrong}
-                    style={{ width: 16, height: 16}}
-                  />
-                )}
                 {StatusObject(status).status}
               </Text>
             </View>

@@ -53,6 +53,7 @@
     "react-native-google-places-autocomplete": "^2.5.1",
     "react-native-image-picker": "^4.10.1",
     "react-native-image-slider-banner": "^1.0.3",
+    "react-native-kill-app": "^1.0.4",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-loading-spinner-overlay": "^3.0.1",
     "react-native-localize": "^2.2.4",

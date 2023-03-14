@@ -345,9 +345,9 @@ const styles = StyleSheet.create({
     color: '#0D381F',
   },
   label: {
-    fontFamily: font.AnuphanLight,
     fontSize: normalize(14),
     color: colors.fontGrey,
+    fontFamily: font.AnuphanMedium,
   },
 });
 

@@ -1,116 +1,59 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  useWindowDimensions,
-  SafeAreaView,
-} from 'react-native';
+import { View, Image, SafeAreaView, Platform, BackHandler } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { stylesCentral } from '../../styles/StylesCentral';
 import { MainButton } from '../../components/Button/MainButton';
 import { colors, font, image } from '../../assets';
-import fonts from '../../assets/fonts';
-import { normalize } from '../../functions/Normalize';
 import { SystemMaintenance } from '../../datasource/SystemMaintenanceDatasource';
-import moment from 'moment';
-import { momentExtend } from '../../utils/moment-buddha-year';
+import {
+  MaintenanceSystem,
+  MaintenanceSystem_INIT,
+} from '../../entites/MaintenanceApp';
+import DateTimeMaintenance from '../../components/dateTimeMaintenance';
+import RNExitApp from 'react-native-kill-app';
 
 const MaintenanceScreen: React.FC<any> = ({ navigation }) => {
-  const [maintenance, setMaintenance] = useState<any>();
+  const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
+    MaintenanceSystem_INIT,
+  );
   useEffect(() => {
     getMaintenance();
   }, []);
   const getMaintenance = async () => {
-    await SystemMaintenance.Maintenance()
+    await SystemMaintenance.Maintenance('FARMER')
       .then(res => setMaintenance(res.responseData))
       .catch(err => console.log(err));
   };
 
-  console.log(JSON.stringify(maintenance, null, 2));
   return (
     <SafeAreaView style={stylesCentral.container}>
       {maintenance !== undefined && (
         <View
           style={{
-            paddingHorizontal: 16,
-            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: 180,
           }}>
-          <View style={{ alignItems: 'center', marginTop: 180 }}>
-            <Image
-              source={image.maintenance}
-              style={{ width: 156, height: 160 }}
-            />
-            <View style={{ marginTop: 20 }}>
-              <Text style={styles.fontTitle}>{maintenance.header}</Text>
-            </View>
-            <View
-              style={{
-                paddingHorizontal: 30,
-                marginTop: 20,
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontFamily: font.AnuphanMedium,
-                  fontSize: normalize(24),
-                  color: colors.fontBlack,
-                  fontWeight: '800',
-                }}>
-                {`วันที่ `}
-                <Text
-                  style={{
-                    color: '#FB8705',
-                  }}>
-                  {momentExtend.toBuddhistYear(
-                    maintenance.startDate,
-                    'DD MMMM YYYY',
-                  )}
-                </Text>
-              </Text>
-              <Text
-                style={{
-                  fontFamily: font.AnuphanMedium,
-                  fontSize: normalize(24),
-                  color: colors.fontBlack,
-                  fontWeight: '800',
-                  marginBottom: 2,
-                }}>
-                {'ช่วงเวลา '}
-                {moment(maintenance.dateStart)
-                  .add(543, 'year')
-                  .locale('th')
-                  .format('hh.mm')}
-                {' - '}
-                {moment(maintenance.dateEnd)
-                  .add(543, 'year')
-                  .locale('th')
-                  .format('hh.mm')}
-                {' น.'}
-              </Text>
-              <View style={{ marginTop: 20 }}>
-                <Text
-                  style={{
-                    fontFamily: font.SarabunLight,
-                    fontSize: normalize(18),
-                    color: colors.fontBlack,
-                    marginBottom: 2,
-                    lineHeight: 30,
-                  }}>
-                  {maintenance.text}
-                </Text>
-              </View>
-            </View>
-          </View>
+          <Image
+            source={image.maintenance}
+            style={{ width: 156, height: 160 }}
+          />
+          <DateTimeMaintenance
+            header={maintenance.header}
+            dateStart={maintenance.dateStart}
+            dateEnd={maintenance.dateEnd}
+            text={maintenance.text}
+            footer={''}
+          />
           <View
             style={{
               marginTop: 30,
+              width: 385,
             }}>
             <MainButton
               label="ปิด"
               color={colors.greenLight}
               fontColor={'white'}
+              onPress={() => RNExitApp.exitApp()}
             />
           </View>
         </View>
@@ -120,16 +63,3 @@ const MaintenanceScreen: React.FC<any> = ({ navigation }) => {
 };
 
 export default MaintenanceScreen;
-const styles = StyleSheet.create({
-  fontTitle: {
-    fontFamily: fonts.AnuphanMedium,
-    fontSize: normalize(22),
-    color: colors.fontBlack,
-    fontWeight: '800',
-  },
-  fontBody: {
-    fontFamily: fonts.SarabunLight,
-    fontSize: normalize(18),
-    color: colors.fontBlack,
-  },
-});
