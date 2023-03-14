@@ -559,14 +559,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.3;
+				MARKETING_VERSION = 1.1.4;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.droner;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.dev.droner;
 				PRODUCT_NAME = Droner;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -599,14 +599,14 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = "";
-				"MARKETING_VERSION[sdk=iphoneos*]" = 1.1.3;
+				"MARKETING_VERSION[sdk=iphoneos*]" = 1.1.4;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.droner;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iconkaset.dev.droner;
 				PRODUCT_NAME = Droner;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

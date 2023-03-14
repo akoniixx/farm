@@ -698,7 +698,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                   </View>
               
                 <MainButton
-                  disable={!brand || !brandtype || !droneno ? true : false}
+                  disable={!brand || !brandtype  ? true : false}
                   label="ถัดไป"
                   color={colors.orange}
                   onPress={addDrone}
