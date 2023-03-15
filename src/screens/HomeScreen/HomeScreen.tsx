@@ -36,7 +36,7 @@ import PromotionScreen from '../PromotionScreen/PromotionScreen';
 import ProfileScreen from '../ProfileScreen/ProfileScreen';
 import AuthMainScreen from '../AuthMainScreen/AuthMainScreen';
 import AuthProfileScreen from '../AuthProfileScreen/AuthProfileScreen';
-import AuthPromotionScreen from '../AuthPromotionScreen.tsx/AuthPromotionScreen';
+import AuthPromotionScreen from '../AuthPromotionScreen/AuthPromotionScreen';
 
 const Tab = createBottomTabNavigator();
 const HomeScreen: React.FC<any> = ({ navigation, route }) => {

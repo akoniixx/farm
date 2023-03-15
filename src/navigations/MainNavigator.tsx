@@ -1,4 +1,4 @@
-import React, { createContext, useMemo } from 'react';
+import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import MainScreen from '../screens/MainScreen/MainScreen';
@@ -31,6 +31,14 @@ import AllReviewDroner from '../screens/DronerProfile/AllReviewDroner';
 import CouponDetailScreen from '../screens/PromotionScreen/CouponDetailScreen';
 import { CouponCardEntities } from '../entites/CouponCard';
 import MyCouponScreen from '../screens/PromotionScreen/MyCouponScreen';
+import {
+  MaintenanceSystem,
+  MaintenanceSystem_INIT,
+} from '../entites/MaintenanceApp';
+import { SystemMaintenance } from '../datasource/SystemMaintenanceDatasource';
+import moment from 'moment';
+import MaintenanceScreen from '../screens/MaintenanceScreen/MaintenanceScreen';
+import PopUpMaintenance from '../components/Modal/MaintenanceApp/PopUpMaintenance';
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -67,22 +75,63 @@ export type MainStackParamList = {
   AllReviewDroner: undefined;
   CouponDetail : {detail : CouponCardEntities};
   MyCouponScreen : undefined;
+  MaintenanceScreen: undefined;
+
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
 
 const Stack = createStackNavigator<MainStackParamList>();
 const MainNavigator: React.FC = () => {
+  const dateNow = moment(Date.now());
+
+  const [maintenanceApp, setMaintenanceApp] = useState<MaintenanceSystem>(
+    MaintenanceSystem_INIT,
+  );
+  const [popupMaintenance, setPopupMaintenance] = useState<boolean>(true);
+  const [checkTime, setCheckTime] = useState(false);
+  const Maintenance = async () => {
+    await SystemMaintenance.Maintenance('FARMER')
+      .then(res => {
+        setCheckTime(
+          checkTimeMaintenance(
+            moment(res.responseData.dateStart),
+            moment(res.responseData.dateEnd),
+          ),
+        );
+        setMaintenanceApp(res.responseData);
+      })
+      .catch(err => console.log(err));
+  };
+
+  const checkTimeMaintenance = (startDate: any, endDate: any) => {
+    return dateNow.isBetween(startDate, endDate, 'milliseconds');
+  };
+  useEffect(() => {
+    Maintenance();
+  }, []);
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen
-        name="MainScreen"
-        component={MainTapNavigator}
-        options={{
-          gestureEnabled: false,
-          headerLeft: () => null,
-        }}
-      />
+      {!checkTime ? (
+        <Stack.Screen
+          name="MainScreen"
+          component={MainTapNavigator}
+          options={{
+            gestureEnabled: false,
+            headerLeft: () => null,
+          }}
+        />
+      ) : (
+        <Stack.Screen
+          name="MaintenanceScreen"
+          component={MaintenanceScreen}
+          options={{
+            gestureEnabled: false,
+            headerLeft: () => null,
+          }}
+        />
+      )}
 
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="AllPlotScreen" component={AllPlotScreen} />

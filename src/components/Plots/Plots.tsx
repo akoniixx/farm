@@ -46,9 +46,9 @@ export function StatusObject(status: string) {
     case 'INACTIVE':
       return {
         status: 'ปิดการใช้งาน',
-        colorBg: colors.white,
-        fontColor: colors.bg,
-        borderColor: colors.bg,
+        colorBg:  '#FFF0F0',
+        fontColor: colors.error,
+        borderColor: colors.error,
       };
     default:
       return {

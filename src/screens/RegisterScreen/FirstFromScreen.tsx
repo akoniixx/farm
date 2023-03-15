@@ -172,7 +172,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   value={formState.surname}
                   style={styles.input}
                   editable={true}
-                  placeholder={' นามสกุล'}
+                  placeholder={' ระบุนามสกุล'}
                   placeholderTextColor={colors.gray}
                 />
 

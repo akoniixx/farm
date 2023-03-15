@@ -39,16 +39,16 @@ export function StatusObject(status: string) {
     case 'REJECTED':
       return {
         status: 'ไม่อนุมัติ',
-        colorBg: colors.white,
+        colorBg: '#FFF0F0',
         fontColor: colors.error,
         borderColor: colors.error,
       };
     case 'INACTIVE':
       return {
         status: 'ปิดการใช้งาน',
-        colorBg: colors.white,
-        fontColor: colors.fontGrey,
-        borderColor: colors.bg,
+        colorBg: '#FFF0F0',
+        fontColor: colors.error,
+        borderColor: colors.error,
       };
     default:
       return {
@@ -345,9 +345,9 @@ const styles = StyleSheet.create({
     color: '#0D381F',
   },
   label: {
-    fontFamily: font.AnuphanLight,
     fontSize: normalize(14),
     color: colors.fontGrey,
+    fontFamily: font.AnuphanMedium,
   },
 });
 

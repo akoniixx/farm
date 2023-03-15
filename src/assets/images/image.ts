@@ -40,4 +40,5 @@ export default {
   couponCardDisabled : require('./couponcarddisabled.png'),
   expired : require('./expired.png'),
   reviewSuccess: require('./reviewSuccess.png'),
+  maintenance: require('./maintenance.png')
 };

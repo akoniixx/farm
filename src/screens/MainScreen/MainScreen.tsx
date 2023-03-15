@@ -38,6 +38,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import DronerSugg from '../../components/Carousel/DronerCarousel';
 import DronerUsedList from '../../components/Carousel/DronerUsedList';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
+import { SystemMaintenance } from '../../datasource/SystemMaintenanceDatasource';
+import { momentExtend } from '../../utils/moment-buddha-year';
+import PopUpMaintenance from '../../components/Modal/MaintenanceApp/PopUpMaintenance';
+import {
+  MaintenanceSystem,
+  MaintenanceSystem_INIT,
+} from '../../entites/MaintenanceApp';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -76,7 +83,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   });
   const [reload, setReload] = useState(false);
   const [statusFav, setStatusFav] = useState<any[]>([]);
-
+  const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
+    MaintenanceSystem_INIT,
+  );
+  const [popupMaintenance, setPopupMaintenance] = useState<boolean>(true);
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
     const farmerId = await AsyncStorage.getItem('farmer_id');
@@ -85,7 +95,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     }
     setFcmToken(value!);
   };
-
   const getNotificationData = async () => {
     FCMtokenDatasource.getNotificationList()
       .then(res =>
@@ -96,6 +105,35 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       )
       .catch(err => console.log(err));
   };
+  const getMaintenance = async () => {
+    setLoading(true);
+    const value = await AsyncStorage.getItem('Maintenance');
+    if (value === 'read') {
+      await SystemMaintenance.Maintenance('FARMER')
+        .then(res => {
+          setMaintenance(res.responseData);
+        })
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
+    } else {
+      await SystemMaintenance.Maintenance('FARMER')
+        .then(res => {
+          setPopupMaintenance(res.responseData.id ? true : false);
+          setMaintenance(res.responseData);
+        })
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
+    }
+  };
+  const start = momentExtend.toBuddhistYear(
+    maintenance.dateStart,
+    'DD MMMM YYYY',
+  );
+  const end = momentExtend.toBuddhistYear(maintenance.dateEnd, 'DD MMMM YYYY');
+  const notiStart = Date.parse(maintenance.dateNotiStart);
+  const notiEnd = Date.parse(maintenance.dateNotiEnd);
+  const d = Date.now();
+  const checkDateNoti = d >= notiStart && d <= notiEnd;
 
   useEffect(() => {
     const getTaskId = async () => {
@@ -106,6 +144,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     getData();
     getProfile();
     getNotificationData();
+    getMaintenance();
   }, [isFocused]);
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -262,7 +301,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     });
     if (find) {
       return {
-        img: `${find.image_droner}`,
+        img: find.image_droner,
         name: find.firstname + ' ' + find.lastname,
         rate: find.rating_avg,
         province: find.province_name,
@@ -273,7 +312,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       };
     }
     return {
-      img: `${el.image_droner}`,
+      img: el.image_droner,
       name: el.firstname + ' ' + el.lastname,
       rate: el.rating_avg,
       province: el.province_name,
@@ -404,6 +443,154 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 </TouchableOpacity>
               </View>
               <View>
+                <View>
+                  {checkDateNoti === true && (
+                    <View style={{ marginTop: 20, marginBottom: 20 }}>
+                      <View
+                        style={{
+                          paddingHorizontal: 20,
+                          height: 'auto',
+                          width: normalize(340),
+                          alignSelf: 'center',
+                          backgroundColor: '#ECFBF2',
+                          borderRadius: 10,
+                        }}>
+                        <View
+                          style={{
+                            paddingVertical: 20,
+                            justifyContent: 'space-between',
+                            flexDirection: 'row',
+                          }}>
+                          <View style={{ marginTop: 15 }}>
+                            <Image
+                              source={image.maintenance}
+                              style={{ width: 58, height: 60 }}
+                            />
+                          </View>
+                          <View style={{ paddingHorizontal: 30 }}>
+                            {start === end ? (
+                              <View>
+                                <Text
+                                  style={{
+                                    fontFamily: font.AnuphanMedium,
+                                    fontSize: normalize(18),
+                                    color: colors.fontBlack,
+                                    fontWeight: '800',
+                                  }}>
+                                  {`วันที่ `}
+                                  <Text
+                                    style={{
+                                      color: '#FB8705',
+                                    }}>
+                                    {momentExtend.toBuddhistYear(
+                                      maintenance.dateStart,
+                                      'DD MMMM YYYY',
+                                    )}
+                                  </Text>
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontFamily: font.AnuphanMedium,
+                                    fontSize: normalize(18),
+                                    color: colors.fontBlack,
+                                    fontWeight: '800',
+                                  }}>
+                                  ช่วงเวลา{' '}
+                                  {moment(maintenance.dateStart)
+                                    .add(543, 'year')
+                                    .locale('th')
+                                    .format('HH.mm')}
+                                  {' - '}
+                                  {moment(maintenance.dateEnd)
+                                    .add(543, 'year')
+                                    .locale('th')
+                                    .format('HH.mm')}
+                                  {' น.'}
+                                </Text>
+                              </View>
+                            ) : (
+                              <View>
+                                <Text
+                                  style={{
+                                    fontFamily: font.AnuphanMedium,
+                                    fontSize: normalize(18),
+                                    color: colors.fontBlack,
+                                    fontWeight: '800',
+                                  }}>
+                                  {`วันที่ `}
+                                  <Text
+                                    style={{
+                                      color: '#FB8705',
+                                    }}>
+                                    {momentExtend.toBuddhistYear(
+                                      maintenance.dateStart,
+                                      'DD MMMM YYYY',
+                                    )}
+                                  </Text>
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontFamily: font.AnuphanMedium,
+                                    fontSize: normalize(18),
+                                    color: colors.fontBlack,
+                                    fontWeight: '800',
+                                  }}>
+                                  ช่วงเวลา{' '}
+                                  {moment(maintenance.dateStart)
+                                    .add(543, 'year')
+                                    .locale('th')
+                                    .format('HH.mm')}
+                                  {' - 23:59 น.'}
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontFamily: font.AnuphanMedium,
+                                    fontSize: normalize(18),
+                                    color: colors.fontBlack,
+                                    fontWeight: '800',
+                                  }}>
+                                  {`ถึงวันที่ `}
+                                  <Text
+                                    style={{
+                                      color: '#FB8705',
+                                    }}>
+                                    {momentExtend.toBuddhistYear(
+                                      maintenance.dateEnd,
+                                      'DD MMMM YYYY',
+                                    )}
+                                  </Text>
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontFamily: font.AnuphanMedium,
+                                    fontSize: normalize(18),
+                                    color: colors.fontBlack,
+                                    fontWeight: '800',
+                                  }}>
+                                  ช่วงเวลา
+                                  {` 00:00 - `}
+                                  {moment(maintenance.dateEnd)
+                                    .add(543, 'year')
+                                    .locale('th')
+                                    .format('HH.mm น.')}
+                                </Text>
+                              </View>
+                            )}
+                            <Text
+                              style={{
+                                marginRight: 20,
+                                fontFamily: font.SarabunLight,
+                                fontSize: normalize(16),
+                                color: colors.fontBlack,
+                              }}>
+                              {maintenance.text}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                  )}
+                </View>
                 {profilestate.status === 'REJECTED' && (
                   <View>
                     <View
@@ -767,6 +954,16 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           </Modal>
+          {checkDateNoti === true && (
+            <PopUpMaintenance
+              show={popupMaintenance}
+              onClose={async () => {
+                await AsyncStorage.setItem('Maintenance', 'read');
+                setPopupMaintenance(!popupMaintenance);
+              }}
+              data={maintenance}
+            />
+          )}
           <Spinner
             visible={loading}
             textContent={'Loading...'}
@@ -774,7 +971,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           />
         </View>
       </ScrollView>
-
       {showFinding && (
         <TouchableOpacity
           style={styles.footer}
