@@ -38,5 +38,6 @@ export default {
   promotionbg : require('./promotionbg.png'),
   couponCard : require('./couponcard.png'),
   couponCardDisabled : require('./couponcarddisabled.png'),
-  expired : require('./expired.png')
+  expired : require('./expired.png'),
+  reviewSuccess: require('./reviewSuccess.png'),
 };

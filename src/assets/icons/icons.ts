@@ -91,5 +91,7 @@ export default {
   couponlogo : require('./couponlogo.png'),
   drugicon : require('./drugicon.png'),
   injectionicon : require('./injectionicon.png'),
-  saleicon : require('./saleicon.png')
+  saleicon : require('./saleicon.png'),
+  starfill: require('./starfill.png'),
+  starCorner: require('./starCorner.png'),
 };
