@@ -86,4 +86,6 @@ export default {
   arrowR: require('./arrowR.png'),
   dotRed: require('./dotRed.png'),
   dotGreen: require('./dotGreen.png'),
+  starfill: require('./starfill.png'),
+  starCorner: require('./starCorner.png'),
 };

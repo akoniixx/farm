@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Image,
+  Keyboard,
+  Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, font, icons } from '../../assets';
+import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
@@ -25,8 +29,16 @@ import { normalize } from '../../functions/Normalize';
 import { getStatusToText } from '../../functions/utility';
 
 const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
-  const task = route.params.task;
 
+  const [openReview, setOpenReview] = useState<boolean>(false)
+  const [toggleModalSuccess, setToggleModalSuccess] = useState<boolean>(false)
+  const task = route.params.task;
+  const [maxRatting, setMaxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
+  const [pilotEtiquette, setPilotEtiquette] = useState<number>(3);
+  const [punctuality, setPunctuality] = useState<number>(3);
+  const [sprayExpertise, setSprayExpertise] = useState<number>(3);
+  const starImgFilled = icons.starfill;
+  const starImgCorner = icons.starCorner;
   const getLabelBotton = (status: string) => {
     switch (status) {
       case 'IN_PROGRESS':
@@ -34,11 +46,18 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
       case 'WAIT_START':
         return 'โทรหาเจ้าหน้าที่/นักบินโดรน';
       case 'WAIT_REVIEW':
-        return 'กลับหน้าหลัก';
+        return 'รีวิวงาน';
       case 'DONE':
         return 'กลับหน้าหลัก';
     }
   };
+   const submitReview = () => {
+    setOpenReview(false)
+    setTimeout(() => {
+      setToggleModalSuccess(true)
+    }, 500);
+   
+   }
 
   return (
     <View style={{ flex: 1 }}>
@@ -274,9 +293,206 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
         </SafeAreaView>
-      ) : (
-        <></>
-      )}
+      ) :
+        task.status === 'WAIT_REVIEW' ?
+
+
+          <SafeAreaView edges={['bottom']} style={{ backgroundColor: 'white' }}>
+            <View
+              style={{
+                backgroundColor: 'white',
+                paddingHorizontal: normalize(16),
+                paddingVertical: normalize(15),
+              }}>
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: '#2EC46D' }]}
+                /*  disabled={statusDelay === 'WAIT_APPROVE'} */
+                onPress={() =>
+                  setOpenReview(true)
+                }>
+
+                <Text
+                  style={{
+                    fontFamily: font.AnuphanMedium,
+                    fontSize: normalize(20),
+                    color: colors.white,
+                    marginLeft: 10,
+                  }}>
+                  {getLabelBotton(task.status)}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+          : <></>
+      }
+      <Modal transparent={true} visible={openReview}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'center',
+            paddingHorizontal: '5%'
+          }}>
+          <View style={{
+            padding: normalize(20),
+            backgroundColor: colors.white,
+            display: 'flex',
+            justifyContent: 'center',
+            borderRadius: normalize(8),
+          }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+              <Text style={{ fontFamily: font.AnuphanBold, fontSize: normalize(26), color: 'black' }}>รีวิวงาน</Text>
+              <Text style={{ fontFamily: font.SarabunBold, fontSize: normalize(18), color: '#5F6872' }}>ให้คะแนนนักบิน</Text>
+            </View>
+            <View style={{ marginTop: '5%' }}>
+              <Text style={{ fontFamily: font.AnuphanMedium, fontSize: normalize(20), color: '#1F8449' }}>1. มารยาทนักบิน</Text>
+              <View style={styles.reviewBar}>
+                {maxRatting.map((item, key) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.9}
+                      key={item}
+                      onPress={() => setPunctuality(item)}>
+                      <Image
+                        style={styles.star}
+                        source={item <= punctuality ? starImgFilled : starImgCorner}
+                      />
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+              <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+                <Text style={{ fontFamily: font.SarabunMedium, fontSize: normalize(18), color: '#8D96A0' }}>ไม่ดี</Text>
+                <Text style={{ fontFamily: font.SarabunMedium, fontSize: normalize(18), color: '#8D96A0' }}>ดี</Text>
+              </View>
+            </View>
+            <View style={{ marginTop: '5%' }}>
+              <Text style={{ fontFamily: font.AnuphanMedium, fontSize: normalize(20), color: '#1F8449' }}>2. ความตรงเวลา</Text>
+              <View style={styles.reviewBar}>
+                {maxRatting.map((item, key) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.9}
+                      key={item}
+                      onPress={() => setPilotEtiquette(item)}>
+                      <Image
+                        style={styles.star}
+                        source={item <= pilotEtiquette ? starImgFilled : starImgCorner}
+                      />
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+              <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+                <Text style={{ fontFamily: font.SarabunMedium, fontSize: normalize(18), color: '#8D96A0' }}>ไม่ตรงเวลา</Text>
+                <Text style={{ fontFamily: font.SarabunMedium, fontSize: normalize(18), color: '#8D96A0' }}>ตรงเวลา</Text>
+              </View>
+            </View>
+            <View style={{ marginTop: '5%' }}>
+              <Text style={{ fontFamily: font.AnuphanMedium, fontSize: normalize(20), color: '#1F8449' }}>3. ความเชี่ยวชาญในการพ่น</Text>
+              <View style={styles.reviewBar}>
+                {maxRatting.map((item, key) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.9}
+                      key={item}
+                      onPress={() => setSprayExpertise(item)}>
+                      <Image
+                        style={styles.star}
+                        source={item <= sprayExpertise ? starImgFilled : starImgCorner}
+                      />
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+              <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+                <Text style={{ fontFamily: font.SarabunMedium, fontSize: normalize(18), color: '#8D96A0' }}>ไม่เชี่ยวชาญ</Text>
+                <Text style={{ fontFamily: font.SarabunMedium, fontSize: normalize(18), color: '#8D96A0' }}>เชี่ยวชาญมาก</Text>
+              </View>
+            </View>
+            <View style={{ marginTop: '5%' }}>
+              <Text style={{ fontFamily: font.AnuphanMedium, fontSize: normalize(20), color: '#1F8449' }}>4. ความคิดเห็นเพิ่มเติม</Text>
+              <TextInput
+                scrollEnabled={false}
+                numberOfLines={6}
+                
+                returnKeyType="done"
+                multiline
+                blurOnSubmit={true}
+                onSubmitEditing={() => {
+                 
+                  Keyboard.dismiss();
+                }}
+                placeholder={'ระบุความคิดเห็นเพิ่มเติม'}
+                placeholderTextColor={colors.grey30}
+                style={{
+                  width: '100%',
+                  color: colors.fontBlack,
+                  fontSize: normalize(20),
+                  fontFamily: font.SarabunLight,
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  borderColor: '#2EC46D',
+                  borderWidth: 1,
+                  paddingHorizontal: 16,
+                  paddingVertical: 4,
+                  borderRadius: 8,
+                  textAlignVertical: 'top',
+                  writingDirection: 'ltr',
+                  height: Platform.OS === 'ios' ? 6 * 20 : 120,
+                  marginTop: '4%'
+                }}
+              />
+            </View>
+            <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:'10%'}}>
+              <TouchableOpacity style={{justifyContent:'center',alignItems:'center',borderColor:'black',borderWidth:0.5,width:'45%',borderRadius:8,height:normalize(54)}}
+              onPress={()=>setOpenReview(false)}
+              >
+                <Text style={{fontFamily:font.AnuphanMedium,fontSize:normalize(20)}}>ยกเลิก</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{justifyContent:'center',alignItems:'center',borderColor:'#2EC46D',borderWidth:0.5,width:'45%',borderRadius:8,height:normalize(54),backgroundColor:'#2EC46D'}}
+              onPress={submitReview}
+              >
+                <Text style={{fontFamily:font.AnuphanMedium,fontSize:normalize(20),color:'white'}}>ยืนยัน</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <Modal transparent={true} visible={toggleModalSuccess}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'center',
+            paddingHorizontal: '5%'
+          }}>
+          <View style={{backgroundColor:'white',padding:normalize(20),borderRadius: normalize(8)}}>
+            <View style={{justifyContent: 'center', alignItems: 'center',marginBottom:'5%'}}>
+            <Text
+              style={{
+                fontFamily: font.AnuphanBold,
+                fontSize: normalize(19),
+                color: 'black',
+                marginBottom: normalize(10),
+              }}>
+              รีวิวสำเร็จ
+            </Text>
+            <Image
+              source={image.reviewSuccess}
+              style={{width: normalize(170), height: normalize(168)}}
+            />
+            </View>
+            
+         
+          <MainButton
+            label="ตกลง"
+            color={colors.orange}
+            onPress={()=>setToggleModalSuccess(false)}
+          />
+           </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -325,5 +541,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 10,
     paddingVertical: normalize(10),
+  },
+  reviewBar: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    marginVertical: '3%'
+  },
+  star: {
+    width: normalize(40),
+    height: normalize(40),
+    resizeMode: 'cover',
+    marginHorizontal: 5,
   },
 });
