@@ -86,4 +86,10 @@ export default {
   arrowR: require('./arrowR.png'),
   dotRed: require('./dotRed.png'),
   dotGreen: require('./dotGreen.png'),
+  searchPromotion : require('./searchpromotion.png'),
+  qrPromotion : require('./qrpromotion.png'),
+  couponlogo : require('./couponlogo.png'),
+  drugicon : require('./drugicon.png'),
+  injectionicon : require('./injectionicon.png'),
+  saleicon : require('./saleicon.png')
 };

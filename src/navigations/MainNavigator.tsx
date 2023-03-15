@@ -28,6 +28,9 @@ import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess'
 import DronerUsedScreen from '../screens/MainScreen/DronerUsedScreen';
 import FullScreenTaskImg from '../screens/DronerProfile/FullScreenTaskImg';
 import AllReviewDroner from '../screens/DronerProfile/AllReviewDroner';
+import CouponDetailScreen from '../screens/PromotionScreen/CouponDetailScreen';
+import { CouponCardEntities } from '../entites/CouponCard';
+import MyCouponScreen from '../screens/PromotionScreen/MyCouponScreen';
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -62,6 +65,8 @@ export type MainStackParamList = {
   DeleteSuccess: undefined;
   FullScreenTaskImg: undefined;
   AllReviewDroner: undefined;
+  CouponDetail : {detail : CouponCardEntities};
+  MyCouponScreen : undefined;
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
@@ -110,6 +115,8 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
       <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
       <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
+      <Stack.Screen name="CouponDetail" component={CouponDetailScreen} />
+      <Stack.Screen name="MyCouponScreen" component={MyCouponScreen} />
     </Stack.Navigator>
   );
 };
