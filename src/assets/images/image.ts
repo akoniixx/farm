@@ -35,5 +35,9 @@ export default {
   empryState: require('./empty_state.png'),
   empty_coupon: require('./empty_coupon.png'),
   empty_review: require('./empty_review.png'),
+  promotionbg : require('./promotionbg.png'),
+  couponCard : require('./couponcard.png'),
+  couponCardDisabled : require('./couponcarddisabled.png'),
+  expired : require('./expired.png'),
   reviewSuccess: require('./reviewSuccess.png'),
 };
