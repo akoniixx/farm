@@ -33,4 +33,5 @@ export default {
   gray: '#6B7580',
   fontGrey: '#353A3F',
   bg: '#E5E5E5',
+  bgGreen : '#F6FCF8'
 };
