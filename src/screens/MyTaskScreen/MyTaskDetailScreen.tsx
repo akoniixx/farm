@@ -34,9 +34,9 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
   const [toggleModalSuccess, setToggleModalSuccess] = useState<boolean>(false)
   const task = route.params.task;
   const [maxRatting, setMaxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
-  const [pilotEtiquette, setPilotEtiquette] = useState<number>(3);
-  const [punctuality, setPunctuality] = useState<number>(3);
-  const [sprayExpertise, setSprayExpertise] = useState<number>(3);
+  const [pilotEtiquette, setPilotEtiquette] = useState<number>(0);
+  const [punctuality, setPunctuality] = useState<number>(0);
+  const [sprayExpertise, setSprayExpertise] = useState<number>(0);
   const starImgFilled = icons.starfill;
   const starImgCorner = icons.starCorner;
   const getLabelBotton = (status: string) => {
@@ -57,6 +57,11 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
       setToggleModalSuccess(true)
     }, 500);
    
+   }
+
+   const checkReview = () => {
+   
+    return  pilotEtiquette == 0 || punctuality==0 ||sprayExpertise==0
    }
 
   return (
@@ -450,7 +455,9 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               >
                 <Text style={{fontFamily:font.AnuphanMedium,fontSize:normalize(20)}}>ยกเลิก</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{justifyContent:'center',alignItems:'center',borderColor:'#2EC46D',borderWidth:0.5,width:'45%',borderRadius:8,height:normalize(54),backgroundColor:'#2EC46D'}}
+              <TouchableOpacity disabled={checkReview()} style={{justifyContent:'center',alignItems:'center',borderColor:checkReview()?'#D9DCDF':'#2EC46D'
+,borderWidth:0.5,width:'45%',borderRadius:8,height:normalize(54),backgroundColor:checkReview()?'#D9DCDF':'#2EC46D'
+}}
               onPress={submitReview}
               >
                 <Text style={{fontFamily:font.AnuphanMedium,fontSize:normalize(20),color:'white'}}>ยืนยัน</Text>
