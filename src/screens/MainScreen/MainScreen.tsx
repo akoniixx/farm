@@ -127,13 +127,14 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   };
   const start = momentExtend.toBuddhistYear(
     maintenance.dateStart,
-    'DD MMMM YYYY',
+    'DD MMMM YYYY , HH;mm',
   );
-  const end = momentExtend.toBuddhistYear(maintenance.dateEnd, 'DD MMMM YYYY');
+  const end = momentExtend.toBuddhistYear(maintenance.dateEnd, 'DD MMMM YYYY, HH:mm');
   const notiStart = Date.parse(maintenance.dateNotiStart);
   const notiEnd = Date.parse(maintenance.dateNotiEnd);
   const d = Date.now();
   const checkDateNoti = d >= notiStart && d <= notiEnd;
+  console.log(start, end)
 
   useEffect(() => {
     const getTaskId = async () => {
@@ -468,48 +469,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                             />
                           </View>
                           <View style={{ paddingHorizontal: 30 }}>
-                            {start === end ? (
-                              <View>
-                                <Text
-                                  style={{
-                                    fontFamily: font.AnuphanMedium,
-                                    fontSize: normalize(18),
-                                    color: colors.fontBlack,
-                                    fontWeight: '800',
-                                  }}>
-                                  {`วันที่ `}
-                                  <Text
-                                    style={{
-                                      color: '#FB8705',
-                                    }}>
-                                    {momentExtend.toBuddhistYear(
-                                      maintenance.dateStart,
-                                      'DD MMMM YYYY',
-                                    )}
-                                  </Text>
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontFamily: font.AnuphanMedium,
-                                    fontSize: normalize(18),
-                                    color: colors.fontBlack,
-                                    fontWeight: '800',
-                                  }}>
-                                  ช่วงเวลา{' '}
-                                  {moment(maintenance.dateStart)
-                                    .add(543, 'year')
-                                    .locale('th')
-                                    .format('HH.mm')}
-                                  {' - '}
-                                  {moment(maintenance.dateEnd)
-                                    .add(543, 'year')
-                                    .locale('th')
-                                    .format('HH.mm')}
-                                  {' น.'}
-                                </Text>
-                              </View>
-                            ) : (
-                              <View>
+                            {start != end ? (
+                                <View>
                                 <Text
                                   style={{
                                     fontFamily: font.AnuphanMedium,
@@ -573,6 +534,46 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                                     .add(543, 'year')
                                     .locale('th')
                                     .format('HH.mm น.')}
+                                </Text>
+                              </View>
+                            ) : (
+                              <View>
+                                <Text
+                                  style={{
+                                    fontFamily: font.AnuphanMedium,
+                                    fontSize: normalize(18),
+                                    color: colors.fontBlack,
+                                    fontWeight: '800',
+                                  }}>
+                                  {`วันที่ `}
+                                  <Text
+                                    style={{
+                                      color: '#FB8705',
+                                    }}>
+                                    {momentExtend.toBuddhistYear(
+                                      maintenance.dateStart,
+                                      'DD MMMM YYYY',
+                                    )}
+                                  </Text>
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontFamily: font.AnuphanMedium,
+                                    fontSize: normalize(18),
+                                    color: colors.fontBlack,
+                                    fontWeight: '800',
+                                  }}>
+                                  ช่วงเวลา{' '}
+                                  {moment(maintenance.dateStart)
+                                    .add(543, 'year')
+                                    .locale('th')
+                                    .format('HH.mm')}
+                                  {' - '}
+                                  {moment(maintenance.dateEnd)
+                                    .add(543, 'year')
+                                    .locale('th')
+                                    .format('HH.mm')}
+                                  {' น.'}
                                 </Text>
                               </View>
                             )}
