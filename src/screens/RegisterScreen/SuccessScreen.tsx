@@ -72,7 +72,9 @@ const SuccessRegister: React.FC<any> = ({ navigation }) => {
           await AsyncStorage.setItem('token', token_register!);
           Register.changeToPending()
             .then(async res => {
-              const fcmToken = await AsyncStorage.getItem('fcmtoken')??await messaging().getToken();
+              const fcmToken =
+                (await AsyncStorage.getItem('fcmtoken')) ??
+                (await messaging().getToken());
               FCMtokenDatasource.saveFCMtoken(fcmToken)
                 .then(res => {
                   RootNavigation.navigate('Main', {
