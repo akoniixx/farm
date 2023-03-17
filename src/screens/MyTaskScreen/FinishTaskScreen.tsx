@@ -30,6 +30,7 @@ const FinishScreen: React.FC<any> = ({}) => {
   });
   const [loading, setLoading] = useState<boolean>(false);
 
+
   const getTaskList = async () => {
     setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -52,11 +53,12 @@ const FinishScreen: React.FC<any> = ({}) => {
     getTaskList();
   }, [selectedField, selectedStatus]);
 
-  /* useFocusEffect(
+  useFocusEffect(
     React.useCallback(() => {
       getTaskList();
     }, []),
-  ); */
+  );
+  
 
   return (
     <>

@@ -147,7 +147,9 @@ const OtpScreen: React.FC<any> = ({ navigation, route }) => {
               setErrOTP(false);
               await AsyncStorage.setItem('token', result.accessToken);
               await AsyncStorage.setItem('farmer_id', result.data.id);
-              const fcmToken = await AsyncStorage.getItem('fcmtoken')??await messaging().getToken();
+              const fcmToken =
+                (await AsyncStorage.getItem('fcmtoken')) ??
+                (await messaging().getToken());
               FCMtokenDatasource.saveFCMtoken(fcmToken)
                 .then(async result => {
                   await RootNavigation.navigate('Main', {

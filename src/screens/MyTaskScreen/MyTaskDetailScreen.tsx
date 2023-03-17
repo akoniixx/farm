@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import {
   Image,
   Keyboard,
@@ -12,6 +12,7 @@ import {
   View,
 } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
@@ -25,18 +26,22 @@ import {
   PlotDetail,
   TargetSpray,
 } from '../../components/TaskDetail/TaskDetail';
+import { MyJobDatasource } from '../../datasource/MyJobDatasource';
 import { normalize } from '../../functions/Normalize';
 import { getStatusToText } from '../../functions/utility';
+import { initProfileState, profileReducer } from '../../hook/profilefield';
 
 const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
-
-  const [openReview, setOpenReview] = useState<boolean>(false)
-  const [toggleModalSuccess, setToggleModalSuccess] = useState<boolean>(false)
+  const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  const [openReview, setOpenReview] = useState<boolean>(false);
+  const [toggleModalSuccess, setToggleModalSuccess] = useState<boolean>(false);
   const task = route.params.task;
   const [maxRatting, setMaxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
   const [pilotEtiquette, setPilotEtiquette] = useState<number>(0);
   const [punctuality, setPunctuality] = useState<number>(0);
   const [sprayExpertise, setSprayExpertise] = useState<number>(0);
+  const [commentReview, setCommentReview] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
   const starImgFilled = icons.starfill;
   const starImgCorner = icons.starCorner;
   const getLabelBotton = (status: string) => {
@@ -51,18 +56,33 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
         return 'กลับหน้าหลัก';
     }
   };
-   const submitReview = () => {
-    setOpenReview(false)
-    setTimeout(() => {
-      setToggleModalSuccess(true)
-    }, 500);
-   
-   }
+  const submitReview = () => {
+    setLoading(true);
+      MyJobDatasource.submitReview(
+        task.task_id,
+        'Yes',
+        pilotEtiquette,
+        punctuality,
+        sprayExpertise,
+        commentReview,
+        task.farmer_fname+ ' ' +task.farmer_lname,
+      ).then(res=>{
+        setOpenReview(false);
+        setTimeout(() => {
+          setToggleModalSuccess(true);
+        }, 500);
+      })
+      .finally(() => setLoading(false));
+  };
 
-   const checkReview = () => {
-   
-    return  pilotEtiquette == 0 || punctuality==0 ||sprayExpertise==0
-   }
+  const submitReviewSuccess = () => {
+              setToggleModalSuccess(false)
+                navigation.goBack()
+  }
+
+  const checkReview = () => {
+    return pilotEtiquette == 0 || punctuality == 0 || sprayExpertise == 0;
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -298,59 +318,81 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
         </SafeAreaView>
-      ) :
-        task.status === 'WAIT_REVIEW' ?
-
-
-          <SafeAreaView edges={['bottom']} style={{ backgroundColor: 'white' }}>
-            <View
-              style={{
-                backgroundColor: 'white',
-                paddingHorizontal: normalize(16),
-                paddingVertical: normalize(15),
-              }}>
-              <TouchableOpacity
-                style={[styles.button, { backgroundColor: '#2EC46D' }]}
-                /*  disabled={statusDelay === 'WAIT_APPROVE'} */
-                onPress={() =>
-                  setOpenReview(true)
-                }>
-
-                <Text
-                  style={{
-                    fontFamily: font.AnuphanMedium,
-                    fontSize: normalize(20),
-                    color: colors.white,
-                    marginLeft: 10,
-                  }}>
-                  {getLabelBotton(task.status)}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </SafeAreaView>
-          : <></>
-      }
+      ) : task.status === 'WAIT_REVIEW' ? (
+        <SafeAreaView edges={['bottom']} style={{ backgroundColor: 'white' }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              paddingHorizontal: normalize(16),
+              paddingVertical: normalize(15),
+            }}>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: '#2EC46D' }]}
+              /*  disabled={statusDelay === 'WAIT_APPROVE'} */
+              onPress={() => setOpenReview(true)}>
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  fontSize: normalize(20),
+                  color: colors.white,
+                  marginLeft: 10,
+                }}>
+                {getLabelBotton(task.status)}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      ) : (
+        <></>
+      )}
       <Modal transparent={true} visible={openReview}>
         <View
           style={{
             flex: 1,
             backgroundColor: 'rgba(0,0,0,0.5)',
             justifyContent: 'center',
-            paddingHorizontal: '5%'
+            paddingHorizontal: '5%',
           }}>
-          <View style={{
-            padding: normalize(20),
-            backgroundColor: colors.white,
-            display: 'flex',
-            justifyContent: 'center',
-            borderRadius: normalize(8),
-          }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-              <Text style={{ fontFamily: font.AnuphanBold, fontSize: normalize(26), color: 'black' }}>รีวิวงาน</Text>
-              <Text style={{ fontFamily: font.SarabunBold, fontSize: normalize(18), color: '#5F6872' }}>ให้คะแนนนักบิน</Text>
+          <View
+            style={{
+              padding: normalize(20),
+              backgroundColor: colors.white,
+              display: 'flex',
+              justifyContent: 'center',
+              borderRadius: normalize(8),
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'flex-end',
+              }}>
+              <Text
+                style={{
+                  fontFamily: font.AnuphanBold,
+                  fontSize: normalize(26),
+                  color: 'black',
+                }}>
+                รีวิวงาน
+              </Text>
+              <Text
+                style={{
+                  fontFamily: font.SarabunBold,
+                  fontSize: normalize(18),
+                  color: '#5F6872',
+                }}>
+                ให้คะแนนนักบิน
+              </Text>
             </View>
             <View style={{ marginTop: '5%' }}>
-              <Text style={{ fontFamily: font.AnuphanMedium, fontSize: normalize(20), color: '#1F8449' }}>1. มารยาทนักบิน</Text>
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  fontSize: normalize(20),
+                  color: '#1F8449',
+                }}>
+                1. มารยาทนักบิน
+              </Text>
               <View style={styles.reviewBar}>
                 {maxRatting.map((item, key) => {
                   return (
@@ -360,19 +402,46 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                       onPress={() => setPunctuality(item)}>
                       <Image
                         style={styles.star}
-                        source={item <= punctuality ? starImgFilled : starImgCorner}
+                        source={
+                          item <= punctuality ? starImgFilled : starImgCorner
+                        }
                       />
                     </TouchableOpacity>
                   );
                 })}
               </View>
-              <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-                <Text style={{ fontFamily: font.SarabunMedium, fontSize: normalize(18), color: '#8D96A0' }}>ไม่ดี</Text>
-                <Text style={{ fontFamily: font.SarabunMedium, fontSize: normalize(18), color: '#8D96A0' }}>ดี</Text>
+              <View
+                style={{
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: font.SarabunMedium,
+                    fontSize: normalize(18),
+                    color: '#8D96A0',
+                  }}>
+                  ไม่ดี
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: font.SarabunMedium,
+                    fontSize: normalize(18),
+                    color: '#8D96A0',
+                  }}>
+                  ดี
+                </Text>
               </View>
             </View>
             <View style={{ marginTop: '5%' }}>
-              <Text style={{ fontFamily: font.AnuphanMedium, fontSize: normalize(20), color: '#1F8449' }}>2. ความตรงเวลา</Text>
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  fontSize: normalize(20),
+                  color: '#1F8449',
+                }}>
+                2. ความตรงเวลา
+              </Text>
               <View style={styles.reviewBar}>
                 {maxRatting.map((item, key) => {
                   return (
@@ -382,19 +451,46 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                       onPress={() => setPilotEtiquette(item)}>
                       <Image
                         style={styles.star}
-                        source={item <= pilotEtiquette ? starImgFilled : starImgCorner}
+                        source={
+                          item <= pilotEtiquette ? starImgFilled : starImgCorner
+                        }
                       />
                     </TouchableOpacity>
                   );
                 })}
               </View>
-              <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-                <Text style={{ fontFamily: font.SarabunMedium, fontSize: normalize(18), color: '#8D96A0' }}>ไม่ตรงเวลา</Text>
-                <Text style={{ fontFamily: font.SarabunMedium, fontSize: normalize(18), color: '#8D96A0' }}>ตรงเวลา</Text>
+              <View
+                style={{
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: font.SarabunMedium,
+                    fontSize: normalize(18),
+                    color: '#8D96A0',
+                  }}>
+                  ไม่ตรงเวลา
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: font.SarabunMedium,
+                    fontSize: normalize(18),
+                    color: '#8D96A0',
+                  }}>
+                  ตรงเวลา
+                </Text>
               </View>
             </View>
             <View style={{ marginTop: '5%' }}>
-              <Text style={{ fontFamily: font.AnuphanMedium, fontSize: normalize(20), color: '#1F8449' }}>3. ความเชี่ยวชาญในการพ่น</Text>
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  fontSize: normalize(20),
+                  color: '#1F8449',
+                }}>
+                3. ความเชี่ยวชาญในการพ่น
+              </Text>
               <View style={styles.reviewBar}>
                 {maxRatting.map((item, key) => {
                   return (
@@ -404,28 +500,55 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                       onPress={() => setSprayExpertise(item)}>
                       <Image
                         style={styles.star}
-                        source={item <= sprayExpertise ? starImgFilled : starImgCorner}
+                        source={
+                          item <= sprayExpertise ? starImgFilled : starImgCorner
+                        }
                       />
                     </TouchableOpacity>
                   );
                 })}
               </View>
-              <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-                <Text style={{ fontFamily: font.SarabunMedium, fontSize: normalize(18), color: '#8D96A0' }}>ไม่เชี่ยวชาญ</Text>
-                <Text style={{ fontFamily: font.SarabunMedium, fontSize: normalize(18), color: '#8D96A0' }}>เชี่ยวชาญมาก</Text>
+              <View
+                style={{
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: font.SarabunMedium,
+                    fontSize: normalize(18),
+                    color: '#8D96A0',
+                  }}>
+                  ไม่เชี่ยวชาญ
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: font.SarabunMedium,
+                    fontSize: normalize(18),
+                    color: '#8D96A0',
+                  }}>
+                  เชี่ยวชาญมาก
+                </Text>
               </View>
             </View>
             <View style={{ marginTop: '5%' }}>
-              <Text style={{ fontFamily: font.AnuphanMedium, fontSize: normalize(20), color: '#1F8449' }}>4. ความคิดเห็นเพิ่มเติม</Text>
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  fontSize: normalize(20),
+                  color: '#1F8449',
+                }}>
+                4. ความคิดเห็นเพิ่มเติม
+              </Text>
               <TextInput
+                value={commentReview}
+                onChangeText={setCommentReview}
                 scrollEnabled={false}
                 numberOfLines={6}
-                
                 returnKeyType="done"
                 multiline
                 blurOnSubmit={true}
                 onSubmitEditing={() => {
-                 
                   Keyboard.dismiss();
                 }}
                 placeholder={'ระบุความคิดเห็นเพิ่มเติม'}
@@ -445,22 +568,56 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                   textAlignVertical: 'top',
                   writingDirection: 'ltr',
                   height: Platform.OS === 'ios' ? 6 * 20 : 120,
-                  marginTop: '4%'
+                  marginTop: '4%',
                 }}
               />
             </View>
-            <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:'10%'}}>
-              <TouchableOpacity style={{justifyContent:'center',alignItems:'center',borderColor:'black',borderWidth:0.5,width:'45%',borderRadius:8,height:normalize(54)}}
-              onPress={()=>setOpenReview(false)}
-              >
-                <Text style={{fontFamily:font.AnuphanMedium,fontSize:normalize(20)}}>ยกเลิก</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: '10%',
+              }}>
+              <TouchableOpacity
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderColor: 'black',
+                  borderWidth: 0.5,
+                  width: '45%',
+                  borderRadius: 8,
+                  height: normalize(54),
+                }}
+                onPress={() => setOpenReview(false)}>
+                <Text
+                  style={{
+                    fontFamily: font.AnuphanMedium,
+                    fontSize: normalize(20),
+                  }}>
+                  ยกเลิก
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity disabled={checkReview()} style={{justifyContent:'center',alignItems:'center',borderColor:checkReview()?'#D9DCDF':'#2EC46D'
-,borderWidth:0.5,width:'45%',borderRadius:8,height:normalize(54),backgroundColor:checkReview()?'#D9DCDF':'#2EC46D'
-}}
-              onPress={submitReview}
-              >
-                <Text style={{fontFamily:font.AnuphanMedium,fontSize:normalize(20),color:'white'}}>ยืนยัน</Text>
+              <TouchableOpacity
+                disabled={checkReview()}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderColor: checkReview() ? '#D9DCDF' : '#2EC46D',
+                  borderWidth: 0.5,
+                  width: '45%',
+                  borderRadius: 8,
+                  height: normalize(54),
+                  backgroundColor: checkReview() ? '#D9DCDF' : '#2EC46D',
+                }}
+                onPress={submitReview}>
+                <Text
+                  style={{
+                    fontFamily: font.AnuphanMedium,
+                    fontSize: normalize(20),
+                    color: 'white',
+                  }}>
+                  ยืนยัน
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -472,35 +629,50 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             flex: 1,
             backgroundColor: 'rgba(0,0,0,0.5)',
             justifyContent: 'center',
-            paddingHorizontal: '5%'
+            paddingHorizontal: '5%',
           }}>
-          <View style={{backgroundColor:'white',padding:normalize(20),borderRadius: normalize(8)}}>
-            <View style={{justifyContent: 'center', alignItems: 'center',marginBottom:'5%'}}>
-            <Text
+          <View
+            style={{
+              backgroundColor: 'white',
+              padding: normalize(20),
+              borderRadius: normalize(8),
+            }}>
+            <View
               style={{
-                fontFamily: font.AnuphanBold,
-                fontSize: normalize(19),
-                color: 'black',
-                marginBottom: normalize(10),
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: '5%',
               }}>
-              รีวิวสำเร็จ
-            </Text>
-            <Image
-              source={image.reviewSuccess}
-              style={{width: normalize(170), height: normalize(168)}}
-            />
+              <Text
+                style={{
+                  fontFamily: font.AnuphanBold,
+                  fontSize: normalize(19),
+                  color: 'black',
+                  marginBottom: normalize(10),
+                }}>
+                รีวิวสำเร็จ
+              </Text>
+              <Image
+                source={image.reviewSuccess}
+                style={{ width: normalize(170), height: normalize(168) }}
+              />
             </View>
-            
-         
-          <MainButton
-            label="ตกลง"
-            color={colors.orange}
-            onPress={()=>setToggleModalSuccess(false)}
-          />
-           </View>
+
+            <MainButton
+              label="ตกลง"
+              color={colors.orange}
+              onPress={() => submitReviewSuccess()}
+            />
+          </View>
         </View>
       </Modal>
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </View>
+    
   );
 };
 
@@ -552,7 +724,7 @@ const styles = StyleSheet.create({
   reviewBar: {
     justifyContent: 'space-between',
     flexDirection: 'row',
-    marginVertical: '3%'
+    marginVertical: '3%',
   },
   star: {
     width: normalize(40),
