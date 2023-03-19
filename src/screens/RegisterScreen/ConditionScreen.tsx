@@ -52,12 +52,23 @@ const ConditionScreen: React.FC<any> = ({ navigation }) => {
             <Text style={[styles.h3, { marginVertical: normalize(20) }]}>
               โปรดอ่านข้อตกลงและเงื่อนไขโดยละเอียดก่อน ดำเนินการถัดไป
             </Text>
-            <Text style={[styles.h2]}>นโยบายการคุ้มครองข้อมูลส่วนบุคคล</Text>
-            <Text style={[styles.h3, { marginVertical: normalize(20) }]}>
-              หัวข้อนโยบาย
+            <Text style={[styles.h2, { marginVertical: normalize(10) }]}>
+              นโยบายการคุ้มครองข้อมูลส่วนบุคคล
             </Text>
-
-            <Text style={styles.label}>{condition}</Text>
+            <View style={styles.label}>
+              <Text
+                style={[styles.h3, { fontWeight: '700', marginVertical: 10 }]}>
+                หัวข้อนโยบาย
+              </Text>
+              <Text
+                style={{
+                  fontFamily: font.SarabunLight,
+                  fontSize: normalize(16),
+                  color: colors.gray,
+                }}>
+                {condition}
+              </Text>
+            </View>
           </ScrollView>
         </View>
         <View
@@ -155,9 +166,6 @@ const styles = StyleSheet.create({
     color: colors.fontGrey,
   },
   label: {
-    fontFamily: font.SarabunLight,
-    fontSize: normalize(16),
-    color: colors.gray,
     backgroundColor: '#2EC46D0D',
     padding: normalize(18),
   },

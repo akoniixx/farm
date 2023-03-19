@@ -87,6 +87,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     MaintenanceSystem_INIT,
   );
   const [popupMaintenance, setPopupMaintenance] = useState<boolean>(true);
+  const [end, setEnd] = useState<any>();
+  const [start, setStart] = useState<any>();
+  const [notiEnd, setNotiEnd] = useState<any>();
+  const [notiStart, setNotiStart] = useState<any>();
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
     const farmerId = await AsyncStorage.getItem('farmer_id');
@@ -108,33 +112,31 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const getMaintenance = async () => {
     setLoading(true);
     const value = await AsyncStorage.getItem('Maintenance');
-    if (value === 'read') {
-      await SystemMaintenance.Maintenance('FARMER')
-        .then(res => {
+    await SystemMaintenance.Maintenance('FARMER')
+      .then(res => {
+        if (value === 'read') {
           setMaintenance(res.responseData);
-        })
-        .catch(err => console.log(err))
-        .finally(() => setLoading(false));
-    } else {
-      await SystemMaintenance.Maintenance('FARMER')
-        .then(res => {
+        } else {
+          setMaintenance(res.responseData);
           setPopupMaintenance(res.responseData.id ? true : false);
-          setMaintenance(res.responseData);
-        })
-        .catch(err => console.log(err))
-        .finally(() => setLoading(false));
+        }
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
+
+    if (maintenance != null) {
+      setStart(
+        momentExtend.toBuddhistYear(maintenance.dateStart, 'DD MMMM YYYY'),
+      );
+      setEnd(
+        momentExtend.toBuddhistYear(maintenance.dateStart, 'DD MMMM YYYY'),
+      );
+      setNotiStart(Date.parse(maintenance.dateNotiStart));
+      setNotiEnd(Date.parse(maintenance.dateNotiStart));
     }
   };
-  const start = momentExtend.toBuddhistYear(
-    maintenance.dateStart,
-    'DD MMMM YYYY , HH;mm',
-  );
-  const end = momentExtend.toBuddhistYear(maintenance.dateEnd, 'DD MMMM YYYY, HH:mm');
-  const notiStart = Date.parse(maintenance.dateNotiStart);
-  const notiEnd = Date.parse(maintenance.dateNotiEnd);
   const d = Date.now();
   const checkDateNoti = d >= notiStart && d <= notiEnd;
-  console.log(start, end)
 
   useEffect(() => {
     const getTaskId = async () => {
@@ -470,7 +472,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                           </View>
                           <View style={{ paddingHorizontal: 30 }}>
                             {start != end ? (
-                                <View>
+                              <View>
                                 <Text
                                   style={{
                                     fontFamily: font.AnuphanMedium,

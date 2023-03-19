@@ -13,7 +13,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { height, normalize } from '../../functions/Normalize';
-import { stylesCentral } from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
 import { Avatar, Icon } from '@rneui/themed';
 import * as RootNavigation from '../../navigations/RootNavigation';
@@ -21,14 +20,9 @@ import { ScrollView } from 'react-native';
 import PlotsItem, { StatusObject } from '../../components/Plots/Plots';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Authentication } from '../../datasource/AuthDatasource';
-import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { socket } from '../../functions/utility';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
-import { useAuth } from '../../contexts/AuthContext';
 import { useEffect } from 'react';
-import LinearGradient from 'react-native-linear-gradient';
-import { MainButton } from '../../components/Button/MainButton';
-import ConditionScreen from '../RegisterScreen/ConditionScreen';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import PlotInProfile from '../../components/Plots/PlotsInProfile';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
@@ -179,7 +173,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 <View
                   style={{
                     marginTop: normalize(10),
-                    width: normalize(150),
                     height: normalize(28),
                     borderRadius: normalize(12),
                     display: 'flex',
@@ -290,7 +283,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 </View>
               )}
             </View>
-            <View style={{ alignSelf: 'flex-start', paddingHorizontal: 50 }}>
+            <View style={{ alignSelf: 'flex-start' }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('EditProfileScreen')}>
                 <Image
