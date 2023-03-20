@@ -111,7 +111,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       )
       .catch(err => console.log(err));
   };
-  useEffect(() => {
+ /*  useEffect(() => {
     const getMaintenance = async () => {
       setLoading(true);
       const value = await AsyncStorage.getItem('Maintenance');
@@ -156,7 +156,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         .finally(() => setLoading(false));
     };
     getMaintenance();
-  }, [reload]);
+  }, [reload]); */
 
   const d = momentExtend.toBuddhistYear(date, 'DD MMMM YYYY');
   const checkDateNoti = d >= notiStart && d <= notiEnd;
