@@ -2,6 +2,7 @@ import React, { useReducer, useState } from 'react';
 import {
   Image,
   Keyboard,
+  KeyboardAvoidingView,
   Modal,
   Platform,
   ScrollView,
@@ -9,6 +10,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
@@ -346,6 +348,10 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
         <></>
       )}
       <Modal transparent={true} visible={openReview}>
+      <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View
           style={{
             flex: 1,
@@ -622,6 +628,8 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             </View>
           </View>
         </View>
+        </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </Modal>
       <Modal transparent={true} visible={toggleModalSuccess}>
         <View
@@ -643,24 +651,34 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                 alignItems: 'center',
                 marginBottom: '5%',
               }}>
-              <Text
-                style={{
-                  fontFamily: font.AnuphanBold,
-                  fontSize: normalize(19),
-                  color: 'black',
-                  marginBottom: normalize(10),
-                }}>
-                รีวิวสำเร็จ
-              </Text>
+              
               <Image
                 source={image.reviewSuccess}
                 style={{ width: normalize(170), height: normalize(168) }}
               />
+              <Text
+                style={{
+                  fontFamily: font.AnuphanBold,
+                  fontSize: normalize(22),
+                  color: 'black',
+                  marginVertical: normalize(10),
+                }}>
+                รีวิวสำเร็จ
+              </Text>
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  fontSize: normalize(18),
+                  color: 'black',
+                  marginVertical: normalize(5),
+                }}>
+                ขอบคุณสำรับการรีวิวงานนักบินโดรน
+              </Text>
             </View>
 
             <MainButton
               label="ตกลง"
-              color={colors.orange}
+              color={'#2EC46D'}
               onPress={() => submitReviewSuccess()}
             />
           </View>
