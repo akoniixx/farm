@@ -60,7 +60,7 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
               <View style={{
                 flexDirection : 'row'
               }}>
-                <Image source={icons.searchPromotion} style={{
+               {/*  <Image source={icons.searchPromotion} style={{
                   width : normalize(23),
                   height : normalize(23),
                   marginRight : normalize(10)
@@ -68,7 +68,7 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
                 <Image source={icons.qrPromotion} style={{
                   width : normalize(23),
                   height : normalize(23)
-                }}/>
+                }}/> */}
               </View>
            </View>
         </View>
