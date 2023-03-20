@@ -21,7 +21,11 @@ const MaintenanceScreen: React.FC<any> = ({ navigation }) => {
   }, []);
   const getMaintenance = async () => {
     await SystemMaintenance.Maintenance('FARMER')
-      .then(res => setMaintenance(res.responseData))
+      .then(res => {
+        if (res.responseData) {
+          setMaintenance(res.responseData);
+        }
+      })
       .catch(err => console.log(err));
   };
 

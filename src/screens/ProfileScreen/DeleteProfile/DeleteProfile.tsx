@@ -107,94 +107,92 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
       />
       <View style={styles.inner}>
         <View style={styles.container}>
-          <ScrollView>
-            <View>
-              <Text
-                style={{
-                  fontFamily: fonts.SarabunBold,
-                  fontWeight: '600',
-                  fontSize: normalize(18),
-                  color: 'black',
-                  textAlign: 'center',
-                }}>
-                เงื่อนไขการลบบัญชี
-              </Text>
-            </View>
-            <View style={{ marginTop: normalize(10) }}>
-              <Text
-                style={{
-                  fontFamily: fonts.SarabunLight,
-                  fontSize: normalize(18),
-                  color: 'black',
-                  textAlign: 'center',
-                }}>
-                หากคุณมีการจ้างงานบินฉีดพ่นที่อยู่ระหว่าง
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fonts.SarabunLight,
-                  fontSize: normalize(18),
-                  color: 'black',
-                  textAlign: 'center',
-                }}>
-                กำลังดำเนินงานหรือรอเริ่มงาน
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fonts.SarabunLight,
-                  fontSize: normalize(18),
-                  color: 'black',
-                  textAlign: 'center',
-                }}>
-                คุณจะไม่สามารถลบบัญชีของคุณได้
-              </Text>
-            </View>
-            <View style={{ marginTop: normalize(30) }}>
-              <Text
-                style={{
-                  fontFamily: fonts.SarabunLight,
-                  fontSize: normalize(18),
-                  color: '#1F8449',
-                  textAlign: 'center',
-                }}>
-                หากคุณมีปัญหาในการใช้งาน
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fonts.SarabunLight,
-                  fontSize: normalize(18),
-                  color: '#1F8449',
-                  textAlign: 'center',
-                }}>
-                คุณสามารถติดต่อเจ้าหน้าที่
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fonts.SarabunLight,
-                  fontSize: normalize(18),
-                  color: '#1F8449',
-                  textAlign: 'center',
-                }}>
-                โทร. 02-233-9000
-              </Text>
-            </View>
-          </ScrollView>
-
-          <View
-            style={{
-              marginBottom: 16,
-            }}>
-            <MainButton
-              label="ลบบัญชี"
-              disable={task?.length > 0}
-              color={colors.error}
-              fontColor={'white'}
-              onPress={() => {
-                setToggleModal(!toggleModal);
-              }}
-            />
+          <View>
+            <Text
+              style={{
+                fontFamily: fonts.SarabunBold,
+                fontWeight: '600',
+                fontSize: normalize(18),
+                color: 'black',
+                textAlign: 'center',
+              }}>
+              เงื่อนไขการลบบัญชี
+            </Text>
+          </View>
+          <View style={{ marginTop: normalize(10) }}>
+            <Text
+              style={{
+                fontFamily: fonts.SarabunLight,
+                fontSize: normalize(18),
+                color: 'black',
+                textAlign: 'center',
+              }}>
+              หากคุณมีการจ้างงานบินฉีดพ่นที่อยู่ระหว่าง
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.SarabunLight,
+                fontSize: normalize(18),
+                color: 'black',
+                textAlign: 'center',
+              }}>
+              กำลังดำเนินงานหรือรอเริ่มงาน
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.SarabunLight,
+                fontSize: normalize(18),
+                color: 'black',
+                textAlign: 'center',
+              }}>
+              คุณจะไม่สามารถลบบัญชีของคุณได้
+            </Text>
+          </View>
+          <View style={{ marginTop: normalize(30) }}>
+            <Text
+              style={{
+                fontFamily: fonts.SarabunLight,
+                fontSize: normalize(18),
+                color: '#1F8449',
+                textAlign: 'center',
+              }}>
+              หากคุณมีปัญหาในการใช้งาน
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.SarabunLight,
+                fontSize: normalize(18),
+                color: '#1F8449',
+                textAlign: 'center',
+              }}>
+              คุณสามารถติดต่อเจ้าหน้าที่
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.SarabunLight,
+                fontSize: normalize(18),
+                color: '#1F8449',
+                textAlign: 'center',
+              }}>
+              โทร. 02-233-9000
+            </Text>
           </View>
         </View>
+      </View>
+      <View
+        style={{
+          marginBottom: 16,
+          paddingHorizontal: 20,
+        }}>
+        <MainButton
+          label="ลบบัญชี"
+          disable={task?.length > 0}
+          color={colors.error}
+          fontColor={'white'}
+          onPress={() => {
+            setToggleModal(!toggleModal);
+          }}
+        />
       </View>
       <Modal isVisible={toggleModal}>
         <View

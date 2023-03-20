@@ -73,50 +73,45 @@ export type MainStackParamList = {
   DeleteSuccess: undefined;
   FullScreenTaskImg: undefined;
   AllReviewDroner: undefined;
-  CouponDetail : {detail : CouponCardEntities};
-  MyCouponScreen : undefined;
+  CouponDetail: { detail: CouponCardEntities };
+  MyCouponScreen: undefined;
   MaintenanceScreen: undefined;
-
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
 
 const Stack = createStackNavigator<MainStackParamList>();
 const MainNavigator: React.FC = () => {
-  const dateNow = moment(Date.now());
-
+  const [reload, setReload] = useState(false);
+  const [end, setEnd] = useState<any>();
+  const [start, setStart] = useState<any>();
   const [maintenanceApp, setMaintenanceApp] = useState<MaintenanceSystem>(
     MaintenanceSystem_INIT,
   );
-  const [popupMaintenance, setPopupMaintenance] = useState<boolean>(true);
-  const [checkTime, setCheckTime] = useState(false);
   const Maintenance = async () => {
     await SystemMaintenance.Maintenance('FARMER')
       .then(res => {
-        setCheckTime(
-          checkTimeMaintenance(
-            moment(res.responseData.dateStart),
-            moment(res.responseData.dateEnd),
-          ),
-        );
         setMaintenanceApp(res.responseData);
+        setReload(!reload);
       })
       .catch(err => console.log(err));
+    if (maintenanceApp != null) {
+      setStart(Date.parse(maintenanceApp.dateStart));
+      setEnd(Date.parse(maintenanceApp.dateEnd));
+    }
   };
 
-  const checkTimeMaintenance = (startDate: any, endDate: any) => {
-    return dateNow.isBetween(startDate, endDate, 'milliseconds');
-  };
+  const d = Date.now();
+  const checkDateNoti = d >= start && d <= end;
   useEffect(() => {
     Maintenance();
-  }, []);
-
+  }, [reload]);
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {!checkTime ? (
+      {checkDateNoti === true ? (
         <Stack.Screen
-          name="MainScreen"
-          component={MainTapNavigator}
+          name="MaintenanceScreen"
+          component={MaintenanceScreen}
           options={{
             gestureEnabled: false,
             headerLeft: () => null,
@@ -124,8 +119,8 @@ const MainNavigator: React.FC = () => {
         />
       ) : (
         <Stack.Screen
-          name="MaintenanceScreen"
-          component={MaintenanceScreen}
+          name="MainScreen"
+          component={MainTapNavigator}
           options={{
             gestureEnabled: false,
             headerLeft: () => null,
