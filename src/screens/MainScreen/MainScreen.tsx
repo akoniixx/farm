@@ -109,33 +109,54 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       )
       .catch(err => console.log(err));
   };
-  const getMaintenance = async () => {
-    setLoading(true);
-    const value = await AsyncStorage.getItem('Maintenance');
-    await SystemMaintenance.Maintenance('FARMER')
-      .then(res => {
-        if (value === 'read') {
-          setMaintenance(res.responseData);
-        } else {
-          setMaintenance(res.responseData);
-          setPopupMaintenance(res.responseData.id ? true : false);
-        }
-      })
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false));
+  useEffect(() => {
+    const getMaintenance = async () => {
+      setLoading(true);
+      const value = await AsyncStorage.getItem('Maintenance');
+      await SystemMaintenance.Maintenance('FARMER')
+        .then(res => {
+          if(res.responseData != null){
+            if (value === 'read') {
+              setMaintenance(res.responseData);
+            } else {
+              setMaintenance(res.responseData);
+              setPopupMaintenance(res.responseData.id ? true : false);
+            }
+          }
+          if (maintenance != null) {
+            setStart(
+              momentExtend.toBuddhistYear(
+                maintenance.dateStart,
+                'DD MMMM YYYY',
+              ),
+            );
+            setEnd(
+              momentExtend.toBuddhistYear(
+                maintenance.dateStart,
+                'DD MMMM YYYY',
+              ),
+            );
+            setNotiStart(
+              momentExtend.toBuddhistYear(
+                maintenance.dateNotiStart,
+                'DD MMMM YYYY',
+              ),
+            );
+            setNotiEnd(
+              momentExtend.toBuddhistYear(
+                maintenance.dateNotiEnd,
+                'DD MMMM YYYY',
+              ),
+            );
+          }
+        })
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
+    };
+    getMaintenance();
+  }, [reload]);
 
-    if (maintenance != null) {
-      setStart(
-        momentExtend.toBuddhistYear(maintenance.dateStart, 'DD MMMM YYYY'),
-      );
-      setEnd(
-        momentExtend.toBuddhistYear(maintenance.dateStart, 'DD MMMM YYYY'),
-      );
-      setNotiStart(Date.parse(maintenance.dateNotiStart));
-      setNotiEnd(Date.parse(maintenance.dateNotiStart));
-    }
-  };
-  const d = Date.now();
+  const d = momentExtend.toBuddhistYear(date, 'DD MMMM YYYY');
   const checkDateNoti = d >= notiStart && d <= notiEnd;
 
   useEffect(() => {
@@ -147,7 +168,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     getData();
     getProfile();
     getNotificationData();
-    getMaintenance();
   }, [isFocused]);
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -552,10 +572,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                                     style={{
                                       color: '#FB8705',
                                     }}>
-                                    {momentExtend.toBuddhistYear(
-                                      maintenance.dateStart,
-                                      'DD MMMM YYYY',
-                                    )}
+                                    {maintenance != null &&
+                                      momentExtend.toBuddhistYear(
+                                        maintenance.dateStart,
+                                        'DD MMMM YYYY',
+                                      )}
                                   </Text>
                                 </Text>
                                 <Text
