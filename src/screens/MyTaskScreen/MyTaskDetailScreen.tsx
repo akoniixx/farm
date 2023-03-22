@@ -352,13 +352,14 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View
+        <SafeAreaView
           style={{
             flex: 1,
             backgroundColor: 'rgba(0,0,0,0.5)',
             justifyContent: 'center',
             paddingHorizontal: '5%',
           }}>
+            <ScrollView>
           <View
             style={{
               padding: normalize(20),
@@ -405,11 +406,11 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                     <TouchableOpacity
                       activeOpacity={0.9}
                       key={item}
-                      onPress={() => setPunctuality(item)}>
+                      onPress={() => setPilotEtiquette(item)}>
                       <Image
                         style={styles.star}
                         source={
-                          item <= punctuality ? starImgFilled : starImgCorner
+                          item <= pilotEtiquette ? starImgFilled : starImgCorner
                         }
                       />
                     </TouchableOpacity>
@@ -454,11 +455,11 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                     <TouchableOpacity
                       activeOpacity={0.9}
                       key={item}
-                      onPress={() => setPilotEtiquette(item)}>
+                      onPress={() => setPunctuality(item)}>
                       <Image
                         style={styles.star}
                         source={
-                          item <= pilotEtiquette ? starImgFilled : starImgCorner
+                          item <= punctuality ? starImgFilled : starImgCorner
                         }
                       />
                     </TouchableOpacity>
@@ -627,7 +628,8 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+          </ScrollView>
+        </SafeAreaView>
         </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
       </Modal>
