@@ -280,7 +280,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       const plot_id = await AsyncStorage.getItem('plot_id');
       FavoriteDroner.findAllFav(farmer_id!, plot_id!)
         .then(res => {
-          setStatusFav(res);
+          if(res.responseData != null){
+            setStatusFav(res);
+          }
         })
         .catch(err => console.log(err))
         .finally(() => setLoading(false));
