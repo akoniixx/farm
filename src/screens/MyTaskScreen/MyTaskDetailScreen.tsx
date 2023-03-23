@@ -357,9 +357,9 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             flex: 1,
             backgroundColor: 'rgba(0,0,0,0.5)',
             justifyContent: 'center',
-            paddingHorizontal: '5%',
+            paddingHorizontal: '5%', 
           }}>
-            <ScrollView>
+          
           <View
             style={{
               padding: normalize(20),
@@ -368,6 +368,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               justifyContent: 'center',
               borderRadius: normalize(8),
             }}>
+                <ScrollView contentContainerStyle={{flexGrow: 1}} horizontal={false} showsVerticalScrollIndicator={false}> 
             <View
               style={{
                 flexDirection: 'row',
@@ -627,8 +628,9 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                 </Text>
               </TouchableOpacity>
             </View>
+            </ScrollView>
           </View>
-          </ScrollView>
+          
         </SafeAreaView>
         </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
