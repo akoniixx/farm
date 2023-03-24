@@ -55,5 +55,7 @@ export default {
   checkbox_disable: require('./checkbox_disable.png'),
   warningGrey: require('./warningGrey.png'),
   deleteUser : require('./delete_user.png'),
-  wallet : require('./wallet.png')
+  wallet : require('./wallet.png'),
+  service : require('./service.png'),
+  servicearea : require('./servicearea.png')
 };

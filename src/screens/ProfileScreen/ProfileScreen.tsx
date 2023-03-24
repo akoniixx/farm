@@ -8,6 +8,8 @@ import {
   TextInput,
   Modal,
   TouchableOpacity,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {useEffect, useMemo, useReducer, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -35,6 +37,8 @@ import {useFocusEffect} from '@react-navigation/native';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
 import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
+import { QueryLocation } from '../../datasource/LocationDatasource';
+import Geolocation from 'react-native-geolocation-service';
 
 const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -500,6 +504,55 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                 )}
                 <Image source={icons.arrowRight} style={styles.listTileIcon} />
               </View>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={async() => {
+              if (Platform.OS === 'ios') {
+                await Geolocation.requestAuthorization('always');
+              } else if (Platform.OS === 'android') {
+                await PermissionsAndroid.request(
+                  PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                );
+              }
+              const dronerId = await AsyncStorage.getItem('droner_id')
+              ProfileDatasource.getProfile(dronerId!).then(
+                res => {
+                  if(!res.dronerArea.districtId){
+                    navigation.navigate('ServiceArea', {
+                      area : "",
+                      lat : res.dronerArea.lat,
+                      long : res.dronerArea.long
+                    });
+                  }
+                  else{
+                    QueryLocation.QueryProfileSubDistrict(res.dronerArea.districtId).then(
+                      result => {
+                        let item = result.filter((item : any) => item.subdistrictId === res.dronerArea.subdistrictId)
+                        navigation.navigate('ServiceArea', {
+                          area : `${item[0].subdistrictName}/${item[0].districtName}/${item[0].provinceName}`,
+                          lat : res.dronerArea.lat,
+                          long : res.dronerArea.long
+                        });
+                      }
+                    )
+                  }
+                }
+              )
+            }}>
+            <View style={styles.listTile}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={icons.service}
+                  style={styles.listTileIcon}
+                />
+                <Text style={styles.listTileTitle}>พื้นที่ให้บริการ</Text>
+              </View>
+              <Image source={icons.arrowRight} style={styles.listTileIcon} />
             </View>
           </TouchableOpacity>
           <TouchableOpacity

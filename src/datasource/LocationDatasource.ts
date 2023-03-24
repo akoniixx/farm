@@ -23,7 +23,7 @@ export class QueryLocation {
 
   static QuerySubDistrict(
     districtId: number,
-    districtName: string,
+    districtName?: string,
   ): Promise<any> {
     return registerClient
       .get(BASE_URL + `/location/sub-district?districtId=${districtId}`)
@@ -40,5 +40,21 @@ export class QueryLocation {
         return res.data;
       })
       .catch(err => console.log(err));
+  }
+
+  static getSubdistrictArea(
+    id?: number,
+    text?: string
+  ): Promise<any> {
+    let script = null;
+    script = id != 0 ? "?districtId=" + id : text == '' ? "?search=" + text : null;
+    return httpClient
+      .get(BASE_URL + "/location/sub-district/" + script)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 }
