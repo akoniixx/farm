@@ -24,7 +24,8 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
   const [checked2, setChecked2] = useState<boolean>(false);
   const [disabledCheckbox, setDisabledCheckbox] = useState<boolean>(true);
 
-  const isCloseToBottom = ({
+  //function check scroll down 
+  /* const isCloseToBottom = ({
     layoutMeasurement,
     contentOffset,
     contentSize,
@@ -34,7 +35,7 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
       layoutMeasurement.height + contentOffset.y >=
       contentSize.height - paddingToBottom
     );
-  };
+  }; */
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -45,11 +46,13 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
       <View style={styles.inner}>
         <View style={{flex: 5}}>
           <ScrollView
-            onScroll={({nativeEvent}) => {
+
+           //function check scroll down 
+            /* onScroll={({nativeEvent}) => {
               if (isCloseToBottom(nativeEvent)) {
                 setDisabledCheckbox(false);
               }
-            }}>
+            }} */>
             <Text style={styles.h2}>ข้อตกลงและเงื่อนไข</Text>
             <Text style={[styles.h3, {marginVertical: normalize(20)}]}>
               โปรดอ่านข้อตกลงและเงื่อนไขโดยละเอียดก่อน ดำเนินการถัดไป
@@ -70,19 +73,16 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
           }}>
           <TouchableOpacity
             onPress={() => setChecked1(!checked1)}
-            disabled={disabledCheckbox}>
+            >
             <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
-              {disabledCheckbox ? (
-                <Image
-                  source={icons.checkbox_disable}
-                  style={{width: normalize(20), height: normalize(20)}}
-                />
-              ) : (
+              
+               
+              
                 <Image
                   source={checked1 ? icons.checked : icons.check}
                   style={{width: normalize(20), height: normalize(20)}}
                 />
-              )}
+             
               <Text
                 style={[
                   styles.label,
@@ -94,19 +94,14 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setChecked2(!checked2)}
-            disabled={disabledCheckbox}>
+            >
             <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
-              {disabledCheckbox ? (
-                <Image
-                  source={icons.checkbox_disable}
-                  style={{width: normalize(20), height: normalize(20)}}
-                />
-              ) : (
+             
                 <Image
                   source={checked2 ? icons.checked : icons.check}
                   style={{width: normalize(20), height: normalize(20)}}
                 />
-              )}
+             
               <Text
                 style={[
                   styles.label,
