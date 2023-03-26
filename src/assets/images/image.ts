@@ -23,5 +23,7 @@ export default {
   troublejobnoti: require('./troublejobnoti.png'),
   troublemissnoti: require('./troublemissnoti.png'),
   emptyhistory : require('./emptyhistory.png'),
-  lottiedroner : require('./lottiedroner.json')
+  lottiedroner : require('./lottiedroner.json'),
+  emptyareaservice : require('./emptyareaservice.png'),
+  areaaround : require('./areaaround.png')
 };
