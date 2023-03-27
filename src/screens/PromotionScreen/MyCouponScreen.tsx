@@ -19,16 +19,6 @@ const MyCouponScreen: React.FC<any> = ({navigation,route}) => {
           onPressBack={() => navigation.goBack()}
         />
         <PromotionTabNavigator />
-        {/* <View style={{
-            padding : normalize(17),
-            backgroundColor : colors.white
-        }}>
-            <MainButton
-                label='จ้างนักบินโดรน' 
-                color={colors.greenLight}
-                onPress={()=>{}}
-            />
-        </View> */}
       </View>
     </>
   )

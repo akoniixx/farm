@@ -111,7 +111,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     if (value === 'read') {
       await SystemMaintenance.Maintenance('FARMER')
         .then(res => {
-          setMaintenance(res.responseData);
+          // setMaintenance(res.responseData);
         })
         .catch(err => console.log(err))
         .finally(() => setLoading(false));

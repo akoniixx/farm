@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet,Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet,Image, TouchableOpacity, Dimensions } from 'react-native'
 import React from 'react'
 import { normalize } from '@rneui/themed'
 import { colors, icons, image } from '../../assets'
@@ -82,7 +82,7 @@ const KeepCoupon = ()=>{
         })
     }}>
         <View style={styles.mainCard}>
-        <Image source={disabled?image.couponCardDisabled:image.couponCard} style={styles.cardImg} />
+        <Image source={disabled?image.couponCardDisabled:image.couponCard} style={styles.cardImg} resizeMode={'contain'}/>
         <View style={styles.content}>
             <View style={{
                 justifyContent : 'center',
@@ -100,11 +100,13 @@ const KeepCoupon = ()=>{
             </View>
             <View>
                 <Text style={{
+                    color : colors.fontBlack,
                     fontFamily : fonts.AnuphanMedium,
                     fontSize : normalize(20),
                     marginBottom : normalize(10)
                 }}>{couponName}</Text>
                 <Text style={{
+                    color : colors.fontBlack,
                     fontFamily : fonts.SarabunLight,
                     fontSize : normalize(18)
                 }}>{checkRai(couponConditionRaiMin,couponConditionRaiMax)}</Text>
@@ -161,7 +163,7 @@ const styles = StyleSheet.create({
         marginBottom : normalize(15)
     },
     cardImg : {
-        width : '100%',
+        width : Dimensions.get("window").width-normalize(35),
         height : normalize(132)
     },
     content : {

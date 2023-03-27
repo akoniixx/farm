@@ -39,6 +39,7 @@ import { SystemMaintenance } from '../datasource/SystemMaintenanceDatasource';
 import moment from 'moment';
 import MaintenanceScreen from '../screens/MaintenanceScreen/MaintenanceScreen';
 import PopUpMaintenance from '../components/Modal/MaintenanceApp/PopUpMaintenance';
+import SearchCouponScreen from '../screens/PromotionScreen/SearchCouponScreen';
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -76,6 +77,7 @@ export type MainStackParamList = {
   CouponDetail : {detail : CouponCardEntities};
   MyCouponScreen : undefined;
   MaintenanceScreen: undefined;
+  SearchCouponScreen : undefined;
 
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
@@ -166,6 +168,7 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
       <Stack.Screen name="CouponDetail" component={CouponDetailScreen} />
       <Stack.Screen name="MyCouponScreen" component={MyCouponScreen} />
+      <Stack.Screen name='SearchCouponScreen' component={SearchCouponScreen} />
     </Stack.Navigator>
   );
 };

@@ -60,15 +60,12 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
               <View style={{
                 flexDirection : 'row'
               }}>
-                <Image source={icons.searchPromotion} style={{
-                  width : normalize(23),
-                  height : normalize(23),
-                  marginRight : normalize(10)
-                }}/>
-                <Image source={icons.qrPromotion} style={{
-                  width : normalize(23),
-                  height : normalize(23)
-                }}/>
+                <TouchableOpacity onPress={()=>navigation.navigate('SearchCouponScreen')}>
+                  <Image source={icons.searchPromotion} style={{
+                    width : normalize(23),
+                    height : normalize(23),
+                  }}/>
+                </TouchableOpacity>
               </View>
            </View>
         </View>
@@ -98,6 +95,7 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
           }} />
           <Text style={{
             fontFamily : font.AnuphanMedium,
+            color : colors.fontBlack,
             fontSize : normalize(18),
             marginLeft : normalize(15),
             marginRight : normalize(5)
