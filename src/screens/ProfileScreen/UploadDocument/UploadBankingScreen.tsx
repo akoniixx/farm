@@ -13,13 +13,14 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { SimpleAccordion } from 'react-native-simple-accordion';
 const width = Dimensions.get('window').width;
 const UploadBankingScreen: React.FC<any> = ({ navigation, route }) => {
+    const previousBookbank = route.params.bookBank;
     const [nameAccount, setNameAccount] = useState<string>('');
     const [numAccount, setNumAccount] = useState<string>('');
     const [loading, setLoading] = useState(false);
     const [banks, setBanks] = useState([
         {
             "bankName": "",
-            "logoPath": ""
+            "logoPath": icons.x
           }
       ])
     const [openBankDropdown, setOpenBankDropdown] = useState(false);
@@ -59,7 +60,7 @@ const UploadBankingScreen: React.FC<any> = ({ navigation, route }) => {
         setLoading(true)
         Authentication.uploadBankImage(image)
         .then(res=>{
-            Authentication.updateBookbank(false,bankValue,'test','1234dasdsd556',true)
+            Authentication.updateBookbank(false,bankValue,nameAccount,numAccount,checked1)
             .then(res=>{
                setLoading(true)
                console.log(res)
@@ -98,6 +99,7 @@ const UploadBankingScreen: React.FC<any> = ({ navigation, route }) => {
 
     useEffect(()=>{
         fetchBank()
+        console.log(previousBookbank)
     },[])
     return (
         <SafeAreaView style={[stylesCentral.container]}>
@@ -186,7 +188,7 @@ const UploadBankingScreen: React.FC<any> = ({ navigation, route }) => {
                                     />
 
                                 </View>
-                                <Text>เพิ่มเอกสารรด้วย ไฟล์รูป หรือ PDF</Text>
+                                <Text>เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF</Text>
                             </View>
                         ) : (
 
@@ -204,18 +206,17 @@ const UploadBankingScreen: React.FC<any> = ({ navigation, route }) => {
                             }}>
                                 <View style={{ alignItems: 'center', flexDirection: 'row' }}>
                                     <Image
-                                        source={{ uri: image.assets[0].uri }}
+                                        source={{ uri:image?image.assets[0].uri:'' }}
                                         style={{
                                             width: normalize(36),
                                             height: normalize(36),
 
                                         }}
                                     />
-                                    <View style={{ width: '50%', marginLeft: 10 }}>
+                                    <View style={{ width: '70%', marginLeft: 10 }}>
                                         <Text ellipsizeMode="tail" numberOfLines={1}>{image.assets[0].fileName}</Text>
 
                                     </View>
-                                    <Text >{image.assets[0].type}</Text>
                                 </View>
                                 <Image source={icons.closeBlack} style={{ width: normalize(16), height: normalize(16) }} />
 

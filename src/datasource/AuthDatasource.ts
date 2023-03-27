@@ -130,7 +130,7 @@ export class Authentication {
     const droner_id = await AsyncStorage.getItem('droner_id');
     const params = {
       isBookBank:isBookBank,
-      bankName: 'zzzzzz',
+      bankName: bankName,
       bankAccountName:bankAccountName,
       accountNumber:accountNumber,
       isConsentBookBank:isConsentBookBank,

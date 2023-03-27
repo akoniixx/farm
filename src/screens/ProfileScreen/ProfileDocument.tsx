@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { normalize } from '@rneui/themed';
 import { font, icons } from '../../assets';
@@ -7,9 +7,47 @@ import { stylesCentral } from '../../styles/StylesCentral';
 import colors from '../../assets/colors/colors';
 import { MainButton } from '../../components/Button/MainButton';
 import { StatusObject } from '../../components/Drone/DroneBranding';
+import { ProfileDatasource } from '../../datasource/ProfileDatasource';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ImagePicker from 'react-native-image-picker';
+import { width } from '../../function/Normalize';
 
 const ProfileDocument: React.FC<any> = ({ navigation, route }) => {
   const profilestate = route.params.profile;
+  const [idCard, setIdCard] = useState();
+  const [dronerLicense, setDronerLicense] = useState();
+  const [bookBank, setBookBank] = useState();
+  const [image, setImage] = useState<any>(null);
+
+  const onAddImage = useCallback(async () => {
+    const result = await ImagePicker.launchImageLibrary({
+      mediaType: 'photo',
+    });
+    if (!result.didCancel) {
+      setImage(result);
+    }
+  }, [image]);
+
+  useEffect(() => {
+    getProfile()
+  }, [])
+
+  const getProfile = async () => {
+    const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
+    ProfileDatasource.getProfile(dronerId)
+      .then((res) => {
+        res?.file?.filter((item: any) => {
+          if (item.category === 'ID_CARD_IMAGE') {
+            setIdCard(item)
+          } else if (item.category === 'DRONER_LICENSE') {
+            setDronerLicense(item);
+          } else if (item.category === 'BOOK_BANK') {
+            setBookBank(item)
+          }
+        })
+
+      })
+  }
 
   return (
     <SafeAreaView style={[stylesCentral.container]}>
@@ -48,27 +86,89 @@ const ProfileDocument: React.FC<any> = ({ navigation, route }) => {
             </View>
           </View>
 
+          {profilestate.status !== 'ACTIVE' ? (
+            <>
+              <View style={{ borderBottomWidth: 1, borderColor: '#F3F3F5' }} />
+              <View style={{ marginTop: normalize(16) }}>
+
+                <Text style={{ fontFamily: font.medium, fontSize: normalize(16) }}>อัพโหลดรูปถ่ายผู้สมัครคู่บัตรประชาชน</Text>
+
+                <TouchableOpacity
+                  style={{
+                    marginVertical: 20,
+                  }}
+                  onPress={onAddImage}>
+                  {image == null ? (
+                    <View style={styles.addImage}>
+                      <View style={styles.camera}>
+                        <Image
+                          source={icons.camera}
+                          style={{
+                            width: 19,
+                            height: 16,
+                          }}
+                        />
+                      </View>
+                      <Text>เพิ่มเอกสารด้วย ไฟล์รูป </Text>
+                    </View>
+                  ) : (
+                    <View style={{
+                      width: width * 0.9,
+                      height: normalize(76),
+                      borderRadius: 8,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      backgroundColor: '#FFFBF6',
+                      borderColor: '#FF981E',
+                      borderWidth: 1,
+                      paddingHorizontal: normalize(10)
+                    }}>
+                      <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+                        <Image
+                          source={{ uri: image.assets[0].uri }}
+                          style={{
+                            width: normalize(36),
+                            height: normalize(36),
+                          }}
+                        />
+                        <View style={{ width: '50%', marginLeft: 10 }}>
+                          <Text ellipsizeMode="tail" numberOfLines={1}>{image.assets[0].fileName}</Text>
+                        </View>
+                        <Text >{image.assets[0].type}</Text>
+                      </View>
+                      <Image source={icons.closeBlack} style={{ width: normalize(16), height: normalize(16) }} />
+                    </View>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </>
+          ) : (<></>)}
 
         </View>
         <View style={styles.content}>
-          <TouchableOpacity  >
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('UploadDronerLicenseScreen');
+          }} >
 
-         
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={{fontFamily:font.medium,fontSize:normalize(16)}}>อัพโหลดใบอนุญาตนักบิน</Text>
-            <Image source={icons.arrowRight} style={{ width: normalize(15.5), height: normalize(8.5) }} />
-          </View>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ fontFamily: font.medium, fontSize: normalize(16) }}>อัพโหลดใบอนุญาตนักบิน </Text>
+              <Image source={icons.arrowRight} style={{ width: normalize(15.5), height: normalize(8.5) }} />
+            </View>
           </TouchableOpacity>
         </View>
         <View style={styles.content}>
           <TouchableOpacity onPress={() => {
-                navigation.navigate('UploadBankingScreen');
-              }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text style={{fontFamily:font.medium,fontSize:normalize(16)}}>อัพโหลดสมุดบัญชีธนาคาร</Text>
+            navigation.navigate('UploadBankingScreen', {
+              bookBank: bookBank
+            });
+          }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ fontFamily: font.medium, fontSize: normalize(16) }}>อัพโหลดสมุดบัญชีธนาคาร</Text>
 
-            <Image source={icons.arrowRight} style={{ width: normalize(15.5), height: normalize(8.5) }} />
-          </View>
+              <Image source={icons.arrowRight} style={{ width: normalize(15.5), height: normalize(8.5) }} />
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -126,5 +226,26 @@ const styles = StyleSheet.create({
     fontFamily: font.light,
     fontSize: normalize(14),
     color: colors.gray,
+  },
+  addImage: {
+    width: '100%',
+    height: normalize(162),
+    borderColor: '#FF981E',
+    borderStyle: 'dotted',
+    borderWidth: 0.5,
+    backgroundColor: '#FAFAFB',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+  },
+  camera: {
+    width: 50,
+    height: 50,
+    backgroundColor: '#fff',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 16,
   },
 });

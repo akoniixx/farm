@@ -56,5 +56,6 @@ export default {
   warningGrey: require('./warningGrey.png'),
   deleteUser : require('./delete_user.png'),
   wallet : require('./wallet.png'),
-  doc: require('./document.png')
+  doc: require('./document.png'),
+  x: require('./x.png')
 };
