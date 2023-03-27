@@ -125,6 +125,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
     }
   };
   useEffect(() => {
+    // console.log(taskData)
+    // console.log(locationPrice)
+    // console.log(calPrice)
     const getInitialData = async () => {
       try {
         await getCalculatePrice({
@@ -550,29 +553,46 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               marginTop: 16,
             }}
           />
-          <View
-            style={{
-              paddingHorizontal: normalize(16),
-              marginTop: 16,
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginBottom: 16,
-            }}>
-            <Image
-              source={icons.discountOrange}
-              style={{ width: 20, height: 20, marginRight: 8 }}
-            />
-            <Text
+          <TouchableOpacity onPress={()=>navigation.navigate("UseCouponScreen",{
+                  plantName : taskData.plantName,
+                  purposeSprayName : taskData.purposeSpray.name,
+                  farmAreaAmount : taskData.farmAreaAmount,
+                  province : taskData.plotArea?.provinceName,
+                  price : calPrice.netPrice
+                })}>
+            <View
               style={{
-                fontSize: 18,
-                color: colors.fontBlack,
-
-                fontFamily: fonts.SarabunMedium,
+                paddingHorizontal: normalize(16),
+                marginTop: 16,
+                flexDirection: 'row',
+                justifyContent : 'space-between',
+                alignItems: 'center',
+                marginBottom: 16,
               }}>
-              คูปองส่วนลด
-            </Text>
-          </View>
-          <View
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                  <Image
+                    source={icons.discountOrange}
+                    style={{ width: 20, height: 20, marginRight: 8 }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      color: colors.fontBlack,
+                      fontFamily: fonts.SarabunMedium,
+                    }}>
+                    เลือกคูปองส่วนลด
+                  </Text>
+                </View>
+                <Image source={icons.arrowRigth} style={{
+                  width : normalize(10),
+                  height : normalize(20)
+                }}/>
+            </View>
+          </TouchableOpacity>
+          {/* <View
             style={{
               paddingHorizontal: normalize(16),
               marginBottom: 16,
@@ -723,7 +743,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 {couponCodeError}
               </Text>
             )}
-          </View>
+          </View> */}
         </View>
         <View
           style={{
