@@ -10,6 +10,7 @@ import {
   Modal,
   Platform,
   ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -24,6 +25,7 @@ import image from '../../assets/images/image';
 import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
 import InputWithSuffix from '../../components/InputText/InputWithSuffix';
+import { DronerCard } from '../../components/Mytask/DronerCard';
 import {
   DateTimeDetail,
   PlotDetail,
@@ -46,6 +48,8 @@ import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { numberWithCommas } from '../../functions/utility';
 
 const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
+  const isSelectDroner = route.params.isSelectDroner
+  const profile = route.params.profile
   const {
     state: { taskData, locationPrice, calPrice },
     autoBookingContext: { getCalculatePrice, setTaskData },
@@ -101,7 +105,16 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         preparationBy: taskData.preparationBy,
         status: taskData.status || 'WAIT_RECEIVE',
         targetSpray: taskData.targetSpray,
-        taskDronerTemp: taskData.taskDronerTemp,
+        taskDronerTemp: isSelectDroner ? [
+          {
+            distance: profile.distance,
+            dronerDetail: [
+              JSON.stringify(profile)
+            ],
+            dronerId: profile.droner_id,
+            status: "WAIT_RECEIVE"
+          }
+        ] : taskData.taskDronerTemp,
         statusRemark: '',
       };
       const res = await TaskDatasource.createTask(payload);
@@ -411,7 +424,25 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             }}>
             นักบินโดรน
           </Text>
-          <View
+          <DronerCard
+              name={profile.firstname + ' ' + profile.lastname}
+              profile={profile.image_droner}
+              telnumber={profile.telephone_no}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderWidth: 1,
+                borderColor: colors.disable,
+                padding: normalize(10),
+                borderRadius: 16,
+              }}>
+              <Text style={styles.plot}>อัตราค่าจ้าง</Text>
+              <Text style={styles.unitPrice}>{locationPrice.price} บาท/ไร่</Text>
+            </View>
+          {/* <View
             style={{
               backgroundColor: colors.white,
               borderRadius: 10,
@@ -474,7 +505,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               }}>
               {`${numberWithCommas(locationPrice.price, true)} บาท/ ไร่`}
             </Text>
-          </View>
+          </View> */}
           {/* <View
             style={{
               flexDirection: 'row',
@@ -1084,3 +1115,36 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
 };
 
 export default DetailTaskScreen;
+
+
+const styles = StyleSheet.create({
+  statusNo: {
+    fontFamily: fonts.AnuphanMedium,
+    fontSize: normalize(14),
+    color: '#8D96A0',
+  },
+  price: {
+    fontFamily: fonts.AnuphanMedium,
+    fontSize: normalize(20),
+    color: '#2EC46D',
+  },
+  plant: {
+    fontFamily: fonts.AnuphanMedium,
+    fontSize: normalize(20),
+    color: colors.fontBlack,
+  },
+  plot: {
+    fontFamily: fonts.SarabunLight,
+    fontSize: normalize(18),
+    color: colors.fontBlack,
+  },
+  label: {
+    fontFamily: fonts.SarabunMedium,
+    fontSize: normalize(19),
+  },
+  unitPrice: {
+    fontFamily: fonts.SarabunLight,
+    fontSize: normalize(20),
+    color: '#2EC46D',
+  },
+})

@@ -423,7 +423,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       setShowModalCantBooking(true);
                     } else {
                       mixpanel.track('Tab booking with login');
-                      navigation.navigate('SelectDateScreen');
+                      navigation.navigate('SelectDateScreen',{
+                        isSelectDroner: false,
+                          profile:{}
+                      });
                     }
                   }}>
                   <LinearGradient
@@ -714,7 +717,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </View>
                 )}
 
-<View
+{/* <View
                   style={{
                    
                     marginTop: 16,
@@ -732,8 +735,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   <View style={{ paddingHorizontal: 20,}}>
                     <MainButton label={'จ้างนักบินที่เคยจ้าง'} color={'#2EC46D'} onPress={()=>setShowModalCall(true)}/>
                   </View>
-                  </View>
-               {/*  <View>
+                  </View> */}
+                <View>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -781,9 +784,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     }}
                   />
                 </View>
-                </View> */}
+                </View>
                
-              {/*   <View
+                <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -870,8 +873,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       ไม่มีนักบินโดรนที่เคยจ้าง
                     </Text>
                   </View>
-                )} */}
-               {/*  <View
+                )}
+                <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -918,7 +921,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         </TouchableOpacity>
                       ))}
                   </ScrollView>
-                </View> */}
+                </View>
               </View>
             </View>
           </View>
