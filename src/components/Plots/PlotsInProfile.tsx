@@ -67,15 +67,9 @@ const PlotInProfile: React.FC<plotData> = ({
   status,
   locationName,
 }) => {
-  const windowWidth = Dimensions.get('screen').width;
-
   return (
     <View
       style={{
-        flex: 1,
-        paddingVertical: 5,
-        alignSelf: 'center',
-        paddingHorizontal: 10,
         width: '100%',
       }}>
       {StatusObject(status).status === 'ตรวจสอบแล้ว' ? (
@@ -259,18 +253,14 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
   },
   cards: {
+    width: Dimensions.get('window').width - normalize(40),
     height: 'auto',
-    width: normalize(340),
+    backgroundColor: '#ECFBF2',
     borderWidth: 0.5,
     borderColor: colors.greenLight,
-    backgroundColor: '#ECFBF2',
-    borderRadius: normalize(12),
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
+    margin: normalize(10),
+    borderRadius: normalize(10),
+    padding: normalize(10)
   },
   mainButton: {
     justifyContent: 'center',

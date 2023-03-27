@@ -45,6 +45,8 @@ import {
   MaintenanceSystem,
   MaintenanceSystem_INIT,
 } from '../../entites/MaintenanceApp';
+import { MainButton } from '../../components/Button/MainButton';
+import { SheetManager } from 'react-native-actions-sheet';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -87,6 +89,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     MaintenanceSystem_INIT,
   );
   const [popupMaintenance, setPopupMaintenance] = useState<boolean>(true);
+  const [end, setEnd] = useState<any>();
+  const [start, setStart] = useState<any>();
+  const [notiEnd, setNotiEnd] = useState<any>();
+  const [notiStart, setNotiStart] = useState<any>();
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
     const farmerId = await AsyncStorage.getItem('farmer_id');
@@ -105,34 +111,54 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       )
       .catch(err => console.log(err));
   };
-  const getMaintenance = async () => {
-    setLoading(true);
-    const value = await AsyncStorage.getItem('Maintenance');
-    if (value === 'read') {
+ /*  useEffect(() => {
+    const getMaintenance = async () => {
+      setLoading(true);
+      const value = await AsyncStorage.getItem('Maintenance');
       await SystemMaintenance.Maintenance('FARMER')
         .then(res => {
-          // setMaintenance(res.responseData);
+          if(res.responseData != null){
+            if (value === 'read') {
+              setMaintenance(res.responseData);
+            } else {
+              setMaintenance(res.responseData);
+              setPopupMaintenance(res.responseData.id ? true : false);
+            }
+          }
+          if (maintenance != null) {
+            setStart(
+              momentExtend.toBuddhistYear(
+                maintenance.dateStart,
+                'DD MMMM YYYY',
+              ),
+            );
+            setEnd(
+              momentExtend.toBuddhistYear(
+                maintenance.dateStart,
+                'DD MMMM YYYY',
+              ),
+            );
+            setNotiStart(
+              momentExtend.toBuddhistYear(
+                maintenance.dateNotiStart,
+                'DD MMMM YYYY',
+              ),
+            );
+            setNotiEnd(
+              momentExtend.toBuddhistYear(
+                maintenance.dateNotiEnd,
+                'DD MMMM YYYY',
+              ),
+            );
+          }
         })
         .catch(err => console.log(err))
         .finally(() => setLoading(false));
-    } else {
-      await SystemMaintenance.Maintenance('FARMER')
-        .then(res => {
-          setPopupMaintenance(res.responseData.id ? true : false);
-          setMaintenance(res.responseData);
-        })
-        .catch(err => console.log(err))
-        .finally(() => setLoading(false));
-    }
-  };
-  const start = momentExtend.toBuddhistYear(
-    maintenance.dateStart,
-    'DD MMMM YYYY',
-  );
-  const end = momentExtend.toBuddhistYear(maintenance.dateEnd, 'DD MMMM YYYY');
-  const notiStart = Date.parse(maintenance.dateNotiStart);
-  const notiEnd = Date.parse(maintenance.dateNotiEnd);
-  const d = Date.now();
+    };
+    getMaintenance();
+  }, [reload]); */
+
+  const d = momentExtend.toBuddhistYear(date, 'DD MMMM YYYY');
   const checkDateNoti = d >= notiStart && d <= notiEnd;
 
   useEffect(() => {
@@ -144,7 +170,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     getData();
     getProfile();
     getNotificationData();
-    getMaintenance();
   }, [isFocused]);
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -255,7 +280,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       const plot_id = await AsyncStorage.getItem('plot_id');
       FavoriteDroner.findAllFav(farmer_id!, plot_id!)
         .then(res => {
-          setStatusFav(res);
+          if(res.responseData != null){
+            setStatusFav(res);
+          }
         })
         .catch(err => console.log(err))
         .finally(() => setLoading(false));
@@ -468,47 +495,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                             />
                           </View>
                           <View style={{ paddingHorizontal: 30 }}>
-                            {start === end ? (
-                              <View>
-                                <Text
-                                  style={{
-                                    fontFamily: font.AnuphanMedium,
-                                    fontSize: normalize(18),
-                                    color: colors.fontBlack,
-                                    fontWeight: '800',
-                                  }}>
-                                  {`วันที่ `}
-                                  <Text
-                                    style={{
-                                      color: '#FB8705',
-                                    }}>
-                                    {momentExtend.toBuddhistYear(
-                                      maintenance.dateStart,
-                                      'DD MMMM YYYY',
-                                    )}
-                                  </Text>
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontFamily: font.AnuphanMedium,
-                                    fontSize: normalize(18),
-                                    color: colors.fontBlack,
-                                    fontWeight: '800',
-                                  }}>
-                                  ช่วงเวลา{' '}
-                                  {moment(maintenance.dateStart)
-                                    .add(543, 'year')
-                                    .locale('th')
-                                    .format('HH.mm')}
-                                  {' - '}
-                                  {moment(maintenance.dateEnd)
-                                    .add(543, 'year')
-                                    .locale('th')
-                                    .format('HH.mm')}
-                                  {' น.'}
-                                </Text>
-                              </View>
-                            ) : (
+                            {start != end ? (
                               <View>
                                 <Text
                                   style={{
@@ -573,6 +560,47 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                                     .add(543, 'year')
                                     .locale('th')
                                     .format('HH.mm น.')}
+                                </Text>
+                              </View>
+                            ) : (
+                              <View>
+                                <Text
+                                  style={{
+                                    fontFamily: font.AnuphanMedium,
+                                    fontSize: normalize(18),
+                                    color: colors.fontBlack,
+                                    fontWeight: '800',
+                                  }}>
+                                  {`วันที่ `}
+                                  <Text
+                                    style={{
+                                      color: '#FB8705',
+                                    }}>
+                                    {maintenance != null &&
+                                      momentExtend.toBuddhistYear(
+                                        maintenance.dateStart,
+                                        'DD MMMM YYYY',
+                                      )}
+                                  </Text>
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontFamily: font.AnuphanMedium,
+                                    fontSize: normalize(18),
+                                    color: colors.fontBlack,
+                                    fontWeight: '800',
+                                  }}>
+                                  ช่วงเวลา{' '}
+                                  {moment(maintenance.dateStart)
+                                    .add(543, 'year')
+                                    .locale('th')
+                                    .format('HH.mm')}
+                                  {' - '}
+                                  {moment(maintenance.dateEnd)
+                                    .add(543, 'year')
+                                    .locale('th')
+                                    .format('HH.mm')}
+                                  {' น.'}
                                 </Text>
                               </View>
                             )}
@@ -685,6 +713,27 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     </View>
                   </View>
                 )}
+
+<View
+                  style={{
+                   
+                    marginTop: 16,
+                    paddingVertical: 10,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanBold,
+                      fontSize: normalize(20),
+                      color: colors.fontGrey,
+                      paddingHorizontal: 20,
+                    }}>
+                    จ้างนักบินที่เคยจ้าง
+                  </Text>
+                  <View style={{ paddingHorizontal: 20,}}>
+                    <MainButton label={'จ้างนักบินที่เคยจ้าง'} color={'#2EC46D'} onPress={()=>setShowModalCall(true)}/>
+                  </View>
+                  </View>
+               {/*  <View>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -732,7 +781,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     }}
                   />
                 </View>
-                <View
+                </View> */}
+               
+              {/*   <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -819,8 +870,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       ไม่มีนักบินโดรนที่เคยจ้าง
                     </Text>
                   </View>
-                )}
-                <View
+                )} */}
+               {/*  <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -867,7 +918,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         </TouchableOpacity>
                       ))}
                   </ScrollView>
-                </View>
+                </View> */}
               </View>
             </View>
           </View>

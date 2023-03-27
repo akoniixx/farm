@@ -2,6 +2,7 @@ import React, { useReducer, useState } from 'react';
 import {
   Image,
   Keyboard,
+  KeyboardAvoidingView,
   Modal,
   Platform,
   ScrollView,
@@ -9,6 +10,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
@@ -346,13 +348,18 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
         <></>
       )}
       <Modal transparent={true} visible={openReview}>
-        <View
+      <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView
           style={{
             flex: 1,
             backgroundColor: 'rgba(0,0,0,0.5)',
             justifyContent: 'center',
-            paddingHorizontal: '5%',
+            paddingHorizontal: '5%', 
           }}>
+          
           <View
             style={{
               padding: normalize(20),
@@ -361,6 +368,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               justifyContent: 'center',
               borderRadius: normalize(8),
             }}>
+                <ScrollView contentContainerStyle={{flexGrow: 1}} horizontal={false} showsVerticalScrollIndicator={false}> 
             <View
               style={{
                 flexDirection: 'row',
@@ -399,11 +407,11 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                     <TouchableOpacity
                       activeOpacity={0.9}
                       key={item}
-                      onPress={() => setPunctuality(item)}>
+                      onPress={() => setPilotEtiquette(item)}>
                       <Image
                         style={styles.star}
                         source={
-                          item <= punctuality ? starImgFilled : starImgCorner
+                          item <= pilotEtiquette ? starImgFilled : starImgCorner
                         }
                       />
                     </TouchableOpacity>
@@ -448,11 +456,11 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                     <TouchableOpacity
                       activeOpacity={0.9}
                       key={item}
-                      onPress={() => setPilotEtiquette(item)}>
+                      onPress={() => setPunctuality(item)}>
                       <Image
                         style={styles.star}
                         source={
-                          item <= pilotEtiquette ? starImgFilled : starImgCorner
+                          item <= punctuality ? starImgFilled : starImgCorner
                         }
                       />
                     </TouchableOpacity>
@@ -620,8 +628,12 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                 </Text>
               </TouchableOpacity>
             </View>
+            </ScrollView>
           </View>
-        </View>
+          
+        </SafeAreaView>
+        </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </Modal>
       <Modal transparent={true} visible={toggleModalSuccess}>
         <View
@@ -643,24 +655,34 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                 alignItems: 'center',
                 marginBottom: '5%',
               }}>
-              <Text
-                style={{
-                  fontFamily: font.AnuphanBold,
-                  fontSize: normalize(19),
-                  color: 'black',
-                  marginBottom: normalize(10),
-                }}>
-                รีวิวสำเร็จ
-              </Text>
+              
               <Image
                 source={image.reviewSuccess}
                 style={{ width: normalize(170), height: normalize(168) }}
               />
+              <Text
+                style={{
+                  fontFamily: font.AnuphanBold,
+                  fontSize: normalize(22),
+                  color: 'black',
+                  marginVertical: normalize(10),
+                }}>
+                รีวิวสำเร็จ
+              </Text>
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  fontSize: normalize(18),
+                  color: 'black',
+                  marginVertical: normalize(5),
+                }}>
+                ขอบคุณสำรับการรีวิวงานนักบินโดรน
+              </Text>
             </View>
 
             <MainButton
               label="ตกลง"
-              color={colors.orange}
+              color={'#2EC46D'}
               onPress={() => submitReviewSuccess()}
             />
           </View>
