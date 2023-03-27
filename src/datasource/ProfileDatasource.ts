@@ -206,4 +206,30 @@ export class ProfileDatasource {
       .then(res => res.data)
       .catch(err => console.log(err));
   }
+
+  static async editServiceArea(
+    area : string,
+    lat : number,
+    long : number,
+    provinceId : number,
+    districtId : number,
+    subdistrictId : number
+  ): Promise<any>{
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    return httpClient.patch(
+      BASE_URL + `/droner/${droner_id}`,{
+        dronerArea : {
+          dronerId : droner_id,
+          area : area,
+          lat : lat,
+          long : long,
+          provinceId : provinceId,
+          districtId : districtId,
+          subdistrictId : subdistrictId
+        }
+      }
+    )  
+    .then(res => res.data)
+    .catch(err => console.log(err));
+  }
 }

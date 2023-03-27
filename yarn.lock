@@ -6470,6 +6470,11 @@ react-native-image-picker@^4.8.5:
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-4.10.0.tgz#471ca942bd1189134eff63e25903147f54aeb8c2"
   integrity sha512-QNK4ZnFLD+BdiM1QL1jh9GUALhRXm3MV97crhnTCSMv50H6E4tq3ozgfyxF5uKz0cECbNkWswg4sjgqZKEJtww==
 
+react-native-kill-app@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-kill-app/-/react-native-kill-app-1.0.4.tgz#34c4408a0d09571dc646e5c78a69f3ce8394e371"
+  integrity sha512-+jLoKGsDxHBgUFgo9zb9quBHd81Y/npVxyHbPEzCBgJv+6fNKNnwehoEH8cZv1Z7wXiTYqRCDawZCV4zSVudSw==
+
 react-native-loading-spinner-overlay@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/react-native-loading-spinner-overlay/-/react-native-loading-spinner-overlay-3.0.1.tgz#092481b8cce157d3af5ef942f845ad981f96bd36"

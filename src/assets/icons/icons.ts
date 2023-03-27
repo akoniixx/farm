@@ -57,5 +57,7 @@ export default {
   deleteUser : require('./delete_user.png'),
   wallet : require('./wallet.png'),
   doc: require('./document.png'),
-  x: require('./x.png')
+  x: require('./x.png'),
+  service : require('./service.png'),
+  servicearea : require('./servicearea.png')
 };

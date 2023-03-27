@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "launch_screen.png",
+      "filename" : "Droner_App_Splash screen.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "launch_screen@2x.png",
+      "filename" : "Droner_App_Splash screen 1.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "launch_screen@3x.png",
+      "filename" : "Droner_App_Splash screen 2.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }
