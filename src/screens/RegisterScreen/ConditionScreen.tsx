@@ -78,19 +78,16 @@ const ConditionScreen: React.FC<any> = ({ navigation }) => {
           }}>
           <TouchableOpacity
             onPress={() => setChecked(!checked)}
-            disabled={disabledCheckbox}>
+            >
             <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
-              {disabledCheckbox ? (
-                <Image
-                  source={icons.checkdisable}
-                  style={{ width: normalize(18), height: normalize(18) }}
-                />
-              ) : (
+             
+             
+             
                 <Image
                   source={checked ? icons.checked : icons.check}
                   style={{ width: normalize(22), height: normalize(22) }}
                 />
-              )}
+              
               <Text
                 style={[
                   styles.condition,
@@ -102,19 +99,14 @@ const ConditionScreen: React.FC<any> = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setChecked1(!checked1)}
-            disabled={disabledCheckbox}>
+           >
             <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
-              {disabledCheckbox ? (
-                <Image
-                  source={icons.checkdisable}
-                  style={{ width: normalize(18), height: normalize(18) }}
-                />
-              ) : (
+            
                 <Image
                   source={checked1 ? icons.checked : icons.check}
                   style={{ width: normalize(22), height: normalize(22) }}
                 />
-              )}
+             
               <Text
                 style={[
                   styles.condition,

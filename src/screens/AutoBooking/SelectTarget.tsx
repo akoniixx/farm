@@ -14,7 +14,9 @@ import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { CropDatasource } from '../../datasource/CropDatasource';
 import { PURPOSE_SPRAY_CHECKBOX } from '../../definitions/timeSpray';
 
-const SelectTarget: React.FC<any> = ({ navigation }) => {
+const SelectTarget: React.FC<any> = ({ navigation,route }) => {
+  const isSelectDroner = route.params.isSelectDroner
+  const profile = route.params.profile
   const [checkBoxList, setCheckBoxList] = useState<
     { id: number; label: string }[]
   >(PURPOSE_SPRAY_CHECKBOX);
@@ -49,7 +51,10 @@ const SelectTarget: React.FC<any> = ({ navigation }) => {
         name: periodSprayValue.label,
       },
     }));
-    navigation.navigate('DetailTaskScreen');
+    navigation.navigate('DetailTaskScreen',{
+      isSelectDroner:isSelectDroner,
+      profile:profile
+    });
   };
 
   const fetchPurposeSpray = async () => {
