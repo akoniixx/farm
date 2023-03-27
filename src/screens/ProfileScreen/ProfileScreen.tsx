@@ -232,7 +232,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
             })
             .catch(err => console.log(err));
         } else {
-          ProfileDatasource.getImgePathProfile(droner_id!, imgPath[0].path)
+          ProfileDatasource.getImgePath(droner_id!, imgPath[0].path)
             .then(resImg => {
               ProfileDatasource.getTaskrevenuedroner()
                 .then(resRev => {

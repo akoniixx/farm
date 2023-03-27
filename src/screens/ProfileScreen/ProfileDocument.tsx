@@ -11,6 +11,7 @@ import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'react-native-image-picker';
 import { width } from '../../function/Normalize';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ProfileDocument: React.FC<any> = ({ navigation, route }) => {
   const profilestate = route.params.profile;
@@ -18,6 +19,7 @@ const ProfileDocument: React.FC<any> = ({ navigation, route }) => {
   const [dronerLicense, setDronerLicense] = useState();
   const [bookBank, setBookBank] = useState();
   const [image, setImage] = useState<any>(null);
+  const [profile,setProfile] = useState()
 
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
@@ -28,6 +30,12 @@ const ProfileDocument: React.FC<any> = ({ navigation, route }) => {
     }
   }, [image]);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      getProfile()
+    }, []),
+  );
+
   useEffect(() => {
     getProfile()
   }, [])
@@ -36,6 +44,7 @@ const ProfileDocument: React.FC<any> = ({ navigation, route }) => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     ProfileDatasource.getProfile(dronerId)
       .then((res) => {
+        setProfile(res)
         res?.file?.filter((item: any) => {
           if (item.category === 'ID_CARD_IMAGE') {
             setIdCard(item)
@@ -55,7 +64,7 @@ const ProfileDocument: React.FC<any> = ({ navigation, route }) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={icons.arrowLeft} style={styles.listTileIcon} />
         </TouchableOpacity>
-        <Text style={[styles.appBarHeader]}>โปรไฟล์ของฉัน </Text>
+        <Text style={[styles.appBarHeader]}>ส่งเอกสารเพิ่มเติม </Text>
         <View style={styles.listTileIcon} />
       </View>
       <View style={styles.body}>
@@ -148,7 +157,9 @@ const ProfileDocument: React.FC<any> = ({ navigation, route }) => {
         </View>
         <View style={styles.content}>
           <TouchableOpacity onPress={() => {
-            navigation.navigate('UploadDronerLicenseScreen');
+            navigation.navigate('UploadDronerLicenseScreen',{
+              dronerLicense:dronerLicense
+            });
           }} >
 
 
@@ -161,7 +172,8 @@ const ProfileDocument: React.FC<any> = ({ navigation, route }) => {
         <View style={styles.content}>
           <TouchableOpacity onPress={() => {
             navigation.navigate('UploadBankingScreen', {
-              bookBank: bookBank
+              bookBank: bookBank,
+              profile:profile
             });
           }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>

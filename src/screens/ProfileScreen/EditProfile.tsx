@@ -75,7 +75,7 @@ const EditProfile: React.FC<any> = ({navigation, route}) => {
     const droner_id = await AsyncStorage.getItem('droner_id');
     ProfileDatasource.getProfile(droner_id!)
       .then(res => {
-        ProfileDatasource.getImgePathProfile(droner_id!, res.file[0].path)
+        ProfileDatasource.getImgePath(droner_id!, res.file[0].path)
           .then(resImg => {
             setImagePreview(resImg.url);
             const datetime = res.birthDate;
