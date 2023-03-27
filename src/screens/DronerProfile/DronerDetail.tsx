@@ -40,6 +40,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   const [review, setReview] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [statusFav, setStatusFav] = useState<any | null>([]);
+  const [profile,setProfile] = useState();
   const [detailState, dispatch] = useReducer(
     detailDronerReducer,
     initDetailDronerState,
@@ -69,6 +70,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       offset,
     )
       .then(res => {
+        setProfile(res[0])
         setReview(res[0].review);
         setData(res[0].droner_queue);
         dispatch({
@@ -169,7 +171,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                     }}>
                     <Image
                       key={index}
-                      source={{ uri: item }}
+                      source={{ uri: item?item : icons.avatar }}
                       style={{
                         width,
                         height,
@@ -477,7 +479,10 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           label="จ้างงาน"
           color={colors.greenLight}
           style={styles.button}
-          onPress={() => navigation.navigate('SelectDateScreen')}
+          onPress={() => navigation.navigate('SelectDateScreen',{
+            isSelectDroner: true,
+            profile:profile
+          })}
         />
       </View>
     </SafeAreaView>
