@@ -236,7 +236,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
             })
             .catch(err => console.log(err));
         } else {
-          ProfileDatasource.getImgePathProfile(droner_id!, imgPath[0].path)
+          ProfileDatasource.getImgePath(droner_id!, imgPath[0].path)
             .then(resImg => {
               ProfileDatasource.getTaskrevenuedroner()
                 .then(resRev => {
@@ -423,11 +423,11 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
               profilestate.totalRevenue,
             )}`}</Text>
           </View>
-          {profilestate.status !== 'ACTIVE' ? (
+        
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('ProfileDocument', {
-                  tele: profilestate.id,
+                  profile: profilestate,
                 });
               }}>
               <View style={styles.listTile}>
@@ -436,25 +436,18 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                     flexDirection: 'row',
                     alignItems: 'center',
                   }}>
-                  <Image source={icons.task} style={styles.listTileIcon} />
+                  <Image source={icons.doc} style={styles.listTileIcon} />
                   <Text style={styles.listTileTitle}>ส่งเอกสารเพิ่มเติม</Text>
                 </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('ProfileDocument', {
-                      tele: profilestate.id,
-                    });
-                  }}>
+              
                   <Image
                     source={icons.arrowRight}
                     style={styles.listTileIcon}
                   />
-                </TouchableOpacity>
+                
               </View>
             </TouchableOpacity>
-          ) : (
-            <></>
-          )}
+        
           <TouchableOpacity
             onPress={async () => {
               // await onLogout();

@@ -6417,6 +6417,11 @@ react-native-codegen@^0.70.6:
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
 
+react-native-collapsible@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-collapsible/-/react-native-collapsible-1.6.0.tgz#ca261ffff16914f872059bb0972e3a78c4b37f9c"
+  integrity sha512-beZjdgbT9Y/Pg591Xy5XkKG20HffJiVad4n9bfcUF/f783A+tvOVXnqvbS58Lkaym93mi4jcDPMuW9Vc1t6rqg==
+
 react-native-confirmation-code-field@^7.3.0:
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/react-native-confirmation-code-field/-/react-native-confirmation-code-field-7.3.0.tgz#828527001be9f30fd63e12ac4be66845f5036b5e"
@@ -6551,6 +6556,13 @@ react-native-screens@^3.13.1:
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
+
+react-native-simple-accordion@^1.17.0:
+  version "1.17.0"
+  resolved "https://registry.yarnpkg.com/react-native-simple-accordion/-/react-native-simple-accordion-1.17.0.tgz#1b47dcf15e54c474a39c9ff8127a4b82bf45b96c"
+  integrity sha512-GhlBMkf7bPkxJaL6cb8tKu+PAq9zcv08anCrlVZWLFC9A+X/lrv6axZOrnwbyHWuEggSE96NHXZxiondHNEA7w==
+  dependencies:
+    react-native-collapsible "^1.6.0"
 
 react-native-size-matters@^0.4.0:
   version "0.4.0"
