@@ -28,7 +28,7 @@ export class ProfileDatasource {
       });
   }
 
-  static async getImgePathProfile(
+  static async getImgePath(
     dronerID: string,
     imagePath: string,
   ): Promise<any> {
@@ -74,15 +74,16 @@ export class ProfileDatasource {
       });
   }
 
-  static async uploadDronerLicense(drone_id: any, file: any): Promise<any> {
+  static async uploadDronerLicense( file: any): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id');
     const data = new FormData();
     data.append('file', {
       uri: file.assets[0].uri,
       name: file.assets[0].fileName,
       type: file.assets[0].type,
     });
-    data.append('resourceId', drone_id);
-    data.append('resource', 'DRONER_DRONE');
+    data.append('resourceId', droner_id);
+    data.append('resource', 'DRONER');
     data.append('category', 'DRONER_LICENSE');
     return uploadFileProfile
       .post(BASE_URL + '/file/upload', data)

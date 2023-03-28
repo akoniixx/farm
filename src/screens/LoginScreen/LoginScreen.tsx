@@ -57,7 +57,10 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
             text1: 'ระบบเครือขายมีปัญหา กรุณาลองใหม่อีกครั้งในภายหลัง',
           });
         }
-      });
+      })
+      .finally(()=>{
+        setLoading(false);
+      })
   };
   return (
     <KeyboardAvoidingView

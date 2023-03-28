@@ -95,6 +95,55 @@ export class Authentication {
     await AsyncStorage.removeItem('token');
     await AsyncStorage.removeItem('droner_id');
   }
+
+  static getBankList(): Promise<any> {
+    return httpClient
+      .get(BASE_URL + `/bank-data`)
+      .then(res => {
+        return res.data;
+      })
+      .catch(err => console.log(err));
+  }
+
+  static async uploadBankImage(file: any): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    const data = new FormData();
+    data.append('file', {
+      uri: file.assets[0].uri,
+      name: file.assets[0].fileName,
+      type: file.assets[0].type,
+    });
+    data.append('resourceId', droner_id);
+    data.append('resource', 'DRONER');
+    data.append('category', 'BOOK_BANK');
+    return uploadFileClient
+      .post(BASE_URL + '/file/upload', data)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  static async updateBookbank(isBookBank:boolean,bankName:string,bankAccountName:string,accountNumber:string,isConsentBookBank:boolean): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    const params = {
+      isBookBank:isBookBank,
+      bankName: bankName,
+      bankAccountName:bankAccountName,
+      accountNumber:accountNumber,
+      isConsentBookBank:isConsentBookBank,
+    }
+    return httpClient
+      .patch(BASE_URL + `/droner/${droner_id}`,params)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 }
 
 export class Register {
@@ -359,4 +408,6 @@ export class Register {
         console.log(error);
       });
   }
+
+  
 }

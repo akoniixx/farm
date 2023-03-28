@@ -86,7 +86,7 @@ const ViewProfile: React.FC<any> = ({navigation, route}) => {
             },
           );
         } else {
-          ProfileDatasource.getImgePathProfile(droner_id!, imgPath[0].path)
+          ProfileDatasource.getImgePath(droner_id!, imgPath[0].path)
             .then(resImg => {
               QueryLocation.QueryProfileSubDistrict(
                 res.address.districtId,
