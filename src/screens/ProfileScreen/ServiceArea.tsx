@@ -25,8 +25,8 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
   const [position, setPosition] = useState({
     latitude: parseFloat(route.params.lat),
     longitude: parseFloat(route.params.long),
-    latitudeDelta: 0.0,
-    longitudeDelta: 0.0,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
   });
   const [edit,setEdit] = useState<boolean>(false)
   const [searchActive,setSearchActive] = useState<string>("")
@@ -36,12 +36,12 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
   const [dataRender,setDataRender] = useState<AreaServiceEntity[]>([])
   const [searchResult,setSearchResult] = useState<string>(route.params.area)
   const [positionForm,setPositionForm] = useState<AreaServiceEntity>({
-    area : "",
-    latitude : 0,
-    longitude : 0,
-    provinceId : 0,
-    districtId : 0,
-    subdistrictId : 0
+    area : route.params.area,
+    latitude : route.params.lat,
+    longitude : route.params.long,
+    provinceId : route.params.provinceId,
+    districtId : route.params.districtId,
+    subdistrictId : route.params.subdistrictId
   })
 
   const onChangeText = (text : string) =>{
@@ -64,6 +64,16 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
         setData(all)
       }
     )
+  },[])
+
+  useEffect(()=>{
+    setTimeout(()=>{
+      setPosition({
+        ...position,
+        latitude : position.latitude,
+        longitude : position.longitude,
+      })
+    },500)
   },[])
 
   useEffect(()=>{
@@ -246,19 +256,22 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
             <View style={{position : 'relative'}}>
               <MapView.Animated
                 zoomEnabled={true}
-                minZoomLevel={11}
+                minZoomLevel={14}
                 style={styles.map}
                 provider={PROVIDER_GOOGLE}
-                initialRegion={position}
+                region={position}
                 showsUserLocation={true}
-                scrollEnabled={false}
-                onRegionChangeComplete={region => setPosition(region)}
+                onRegionChangeComplete={region => {
+                  setPosition(region)
+                  setPositionForm({
+                    ...positionForm,
+                    latitude : region.latitude,
+                    longitude : region.longitude
+                  })
+                }}
               />
               <View style={styles.markerFixed}>
                 <Image style={styles.marker} source={image.marker} />
-              </View>
-              <View style={styles.markerField}>
-              <Image style={styles.markerField} source={image.areaaround} />
               </View>
             </View>
           </View>
@@ -266,7 +279,9 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
             paddingHorizontal : normalize(17),
             flex : 1
           }}>
-            <MainButton onPress={()=>{
+            <MainButton 
+              disable={positionForm.provinceId === 0}
+              onPress={()=>{
               ProfileDatasource.editServiceArea(
                 positionForm.area,
                 positionForm.latitude,

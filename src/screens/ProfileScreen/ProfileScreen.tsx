@@ -522,7 +522,10 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                     navigation.navigate('ServiceArea', {
                       area : "",
                       lat : res.dronerArea.lat,
-                      long : res.dronerArea.long
+                      long : res.dronerArea.long,
+                      provinceId : 0,
+                      districtId : 0,
+                      subdistrictId : 0
                     });
                   }
                   else{
@@ -532,7 +535,10 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                         navigation.navigate('ServiceArea', {
                           area : `${item[0].subdistrictName}/${item[0].districtName}/${item[0].provinceName}`,
                           lat : res.dronerArea.lat,
-                          long : res.dronerArea.long
+                          long : res.dronerArea.long,
+                          provinceId : res.dronerArea.provinceId,
+                          districtId : res.dronerArea.districtId,
+                          subdistrictId : res.dronerArea.subdistrictId
                         });
                       }
                     )
