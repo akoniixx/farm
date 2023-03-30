@@ -15,47 +15,50 @@ import { Avatar } from '@rneui/base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 interface data {
-  index: any;
   img: any;
   name: any;
   rate: any;
   province: any;
   distance: any;
   total_task: any;
+  status: any;
   status_used: any;
+  callBack: () => void;
 }
 const FavDronerUsedList: React.FC<data> = ({
-  index,
   img,
   name,
   rate,
   province,
   distance,
   total_task,
+  status,
   status_used,
+  callBack,
 }) => {
-  const [statusFav, setStatusFav] = useState<any[]>([]);
+  const [favAll, setFavAll] = useState<any[]>([]);
+  const [taskSug, setTaskSug] = useState<any[]>([]);
+  const [checked, setChecked] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const date = new Date();
 
   useEffect(() => {
-    favDroner();
+    getFavDroner();
   }, []);
-  const favDroner = async () => {
+  const getFavDroner = async () => {
+    setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const plot_id = await AsyncStorage.getItem('plot_id');
-    FavoriteDroner.findAllFav(farmer_id!, plot_id!).then(res =>
-      setStatusFav(res),
-    );
+    FavoriteDroner.findAllFav(farmer_id!, plot_id!)
+      .then(res => {
+        setFavAll(res);
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   };
-  console.log(
-    JSON.stringify(
-      statusFav.map(x => x).filter(x => x.status_ever_used),
-      null,
-      2,
-    ),
-  );
-
   return (
     <View
       style={{
@@ -66,7 +69,6 @@ const FavDronerUsedList: React.FC<data> = ({
         width: '100%',
       }}>
       <View
-        key={index}
         style={[
           styles.cards,
           { backgroundColor: !status_used ? colors.white : '#F7FFF0' },
@@ -99,16 +101,21 @@ const FavDronerUsedList: React.FC<data> = ({
                       width: 30,
                       height: 30,
                       borderRadius: 15,
+                      borderWidth: 0.5,
                     }}>
-                    <Image
-                      source={icons.heart_active}
-                      style={{
-                        alignSelf: 'center',
-                        width: 20,
-                        height: 20,
-                        top: 4,
-                      }}
-                    />
+                    <TouchableOpacity onPress={callBack}>
+                      <Image
+                        source={
+                          status === 'ACTIVE' ? icons.heart_active : icons.heart
+                        }
+                        style={{
+                          alignSelf: 'center',
+                          width: 20,
+                          height: 20,
+                          top: 4,
+                        }}
+                      />
+                    </TouchableOpacity>
                   </View>
                 </View>
               </View>
@@ -234,6 +241,11 @@ const FavDronerUsedList: React.FC<data> = ({
           </View>
         </View>
       </View>
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </View>
   );
 };

@@ -48,8 +48,8 @@ import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { numberWithCommas } from '../../functions/utility';
 
 const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
-  const isSelectDroner = route.params.isSelectDroner
-  const profile = route.params.profile
+  const isSelectDroner = route.params.isSelectDroner;
+  const profile = route.params.profile;
   const {
     state: { taskData, locationPrice, calPrice },
     autoBookingContext: { getCalculatePrice, setTaskData },
@@ -105,16 +105,16 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         preparationBy: taskData.preparationBy,
         status: taskData.status || 'WAIT_RECEIVE',
         targetSpray: taskData.targetSpray,
-        taskDronerTemp: isSelectDroner ? [
-          {
-            distance: profile.distance,
-            dronerDetail: [
-              JSON.stringify(profile)
-            ],
-            dronerId: profile.droner_id,
-            status: "WAIT_RECEIVE"
-          }
-        ] : taskData.taskDronerTemp,
+        taskDronerTemp: isSelectDroner
+          ? [
+              {
+                distance: profile.distance,
+                dronerDetail: [JSON.stringify(profile)],
+                dronerId: profile.droner_id,
+                status: 'WAIT_RECEIVE',
+              },
+            ]
+          : taskData.taskDronerTemp,
         statusRemark: '',
       };
       const res = await TaskDatasource.createTask(payload);
@@ -1105,7 +1105,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
 
 export default DetailTaskScreen;
 
-
 const styles = StyleSheet.create({
   statusNo: {
     fontFamily: fonts.AnuphanMedium,
@@ -1136,4 +1135,4 @@ const styles = StyleSheet.create({
     fontSize: normalize(20),
     color: '#2EC46D',
   },
-})
+});

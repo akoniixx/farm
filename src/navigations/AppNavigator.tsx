@@ -20,10 +20,10 @@ const AppNavigator: React.FC = () => {
           headerLeft: () => null,
         }}
       />
-        <>
-          <Stack.Screen name="Auth" component={AppAuthNavigator} />
-          <Stack.Screen name="Main" component={MainNavigator} />
-        </>
+      <>
+        <Stack.Screen name="Auth" component={AppAuthNavigator} />
+        <Stack.Screen name="Main" component={MainNavigator} />
+      </>
     </Stack.Navigator>
   );
 };

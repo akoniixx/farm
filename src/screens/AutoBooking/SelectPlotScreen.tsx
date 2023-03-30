@@ -27,9 +27,9 @@ import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { normalize } from '../../functions/Normalize';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 
-const SelectPlotScreen: React.FC<any> = ({ navigation,route }) => {
-  const isSelectDroner = route.params.isSelectDroner
-  const profile = route.params.profile
+const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
+  const isSelectDroner = route.params.isSelectDroner;
+  const profile = route.params.profile;
   const {
     state: { plotDisable },
     autoBookingContext: { setTaskData, getLocationPrice, searchDroner },
@@ -56,9 +56,9 @@ const SelectPlotScreen: React.FC<any> = ({ navigation,route }) => {
       ...prev,
       farmerPlotId: selectedCard,
     }));
-    navigation.navigate('SelectTarget',{
-      isSelectDroner:isSelectDroner,
-      profile:profile
+    navigation.navigate('SelectTarget', {
+      isSelectDroner: isSelectDroner,
+      profile: profile,
     });
   };
 
