@@ -19,6 +19,7 @@ interface AreaServiceEntity{
   provinceId : number;
   districtId : number;
   subdistrictId : number;
+  locationName : string;
 }
 
 const ServiceArea : React.FC<any> = ({navigation,route}) => {
@@ -41,7 +42,8 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
     longitude : route.params.long,
     provinceId : route.params.provinceId,
     districtId : route.params.districtId,
-    subdistrictId : route.params.subdistrictId
+    subdistrictId : route.params.subdistrictId,
+    locationName : route.params.locationName
   })
 
   const onChangeText = (text : string) =>{
@@ -65,6 +67,10 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
       }
     )
   },[])
+
+  useEffect(()=>{
+    getNameFormLat()
+  },[position])
 
   useEffect(()=>{
     setTimeout(()=>{
@@ -98,6 +104,99 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
     let newarr = dataRender.concat(arr)
     setDataRender(newarr)
   },[page])
+
+  const getNameFormLat = () => {
+    let myApiKey = 'AIzaSyDg4BI3Opn-Bo2Pnr40Z7PKlC6MOv8T598';
+    let myLat = position.latitude;
+    let myLon = position.longitude;
+    fetch(
+      'https://maps.googleapis.com/maps/api/geocode/json?address=' +
+        myLat +
+        ',' +
+        myLon +
+        '&key=' +
+        myApiKey,
+    )
+      .then(response => response.json())
+      .then(responseJson => {
+        setPositionForm({
+          ...positionForm,
+          latitude : responseJson.results[0].geometry.location.lat,
+          longitude : responseJson.results[0].geometry.location.lng,
+          locationName : responseJson.results[0].address_components[0].long_name +
+          ' ' +
+          responseJson.results[0].address_components[2].long_name +
+          ' ' +
+          responseJson.results[0].address_components[3].long_name +
+          ' ' +
+          responseJson.results[0].address_components[4].long_name,
+        })
+        QueryLocation.QueryProvince()
+          .then(item => {
+            item.map((Province: any) => {
+              if (
+                Province.provinceName ==
+                `จังหวัด${responseJson.results[0].address_components[3].long_name}`
+              ) {
+                setPositionForm({
+                  ...positionForm,
+                  provinceId : Province.provinceId
+                })
+                QueryLocation.QueryDistrict(Province.provinceId)
+                  .then((itemDistrict: any) => {
+                    itemDistrict.map((District: any) => {
+                      if (
+                        District.districtName ===
+                        `${
+                          responseJson.results[0].address_components[2].long_name.split(
+                            ' ',
+                          )[0]
+                        }${
+                          responseJson.results[0].address_components[2].long_name.split(
+                            ' ',
+                          )[1]
+                        }`
+                      ) {
+                        setPositionForm({
+                          ...positionForm,
+                          districtId : District.districtId
+                        })
+                        QueryLocation.QuerySubDistrict(
+                          District.districtId,
+                          District.districtName,
+                        )
+                          .then(itemSubDistrict => {
+                            itemSubDistrict.map((SubDistrict: any) => {
+                              if (
+                                SubDistrict.districtName ===
+                                `${
+                                  responseJson.results[0].address_components[2].long_name.split(
+                                    ' ',
+                                  )[0]
+                                }${
+                                  responseJson.results[0].address_components[2].long_name.split(
+                                    ' ',
+                                  )[1]
+                                }`
+                              ) {
+                                setPositionForm({
+                                  ...positionForm,
+                                  subdistrictId : SubDistrict.subdistrictId
+                                })
+                              }
+                            });
+                          })
+                          .catch(err => console.log(err));
+                      }
+                    });
+                  })
+                  .catch(err => console.log(err));
+              }
+            });
+          })
+          .catch(err => console.log(err));
+      });
+  };
 
   return (
     <SafeAreaView style={[stylesCentral.container]}>
@@ -168,6 +267,7 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
                         longitude : item.longitude
                       })
                       setPositionForm({
+                        ...positionForm,
                         area : item.area,
                         latitude : item.latitude,
                         longitude : item.longitude,
@@ -255,6 +355,7 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
             <Text style={styles.inputvalue}>ระยะทางพื้นที่ให้บริการหลักระหว่าง 50-100 กม.</Text>
             <View style={{position : 'relative'}}>
               <MapView.Animated
+                mapType={'satellite'}
                 zoomEnabled={true}
                 minZoomLevel={14}
                 style={styles.map}
@@ -288,7 +389,8 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
                 positionForm.longitude,
                 positionForm.provinceId,
                 positionForm.districtId,
-                positionForm.subdistrictId
+                positionForm.subdistrictId,
+                positionForm.locationName
               ).then(res => navigation.goBack())
             }} label='บันทึก' color={colors.orange}/>
           </View>

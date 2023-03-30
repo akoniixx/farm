@@ -531,7 +531,8 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                           long : res.dronerArea.long,
                           provinceId : res.dronerArea.provinceId,
                           districtId : res.dronerArea.districtId,
-                          subdistrictId : res.dronerArea.subdistrictId
+                          subdistrictId : res.dronerArea.subdistrictId,
+                          locationName : res.dronerArea.locationName
                         });
                       }
                     )
