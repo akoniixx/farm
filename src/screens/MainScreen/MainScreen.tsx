@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Platform,
   Linking,
+  RefreshControl,
 } from 'react-native';
 
 import { colors, font } from '../../assets';
@@ -68,6 +69,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { height, width } = Dimensions.get('window');
   const [showFinding, setShowFinding] = useState(false);
   const [showModalCall, setShowModalCall] = useState(false);
+  const [refresh, setRefresh] = useState<boolean>(false);
   const [dataFinding, setDataFinding] = useState({
     id: '',
     taskNo: '',
@@ -111,7 +113,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       )
       .catch(err => console.log(err));
   };
- /*  useEffect(() => {
+  /*  useEffect(() => {
     const getMaintenance = async () => {
       setLoading(true);
       const value = await AsyncStorage.getItem('Maintenance');
@@ -170,6 +172,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     getData();
     getProfile();
     getNotificationData();
+    getFavDroner();
   }, [isFocused]);
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -192,7 +195,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   };
   useEffect(() => {
     const dronerSug = async () => {
-      // setLoading(true);
+      setLoading(true);
       const value = await AsyncStorage.getItem('token');
       if (value) {
         const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -209,6 +212,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       }
     };
     const dronerSugUsed = async () => {
+      setLoading(true);
       const value = await AsyncStorage.getItem('token');
       if (value) {
         const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -224,7 +228,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           .then(res => {
             setTaskSugUsed(res);
           })
-          .catch(err => console.log(err));
+          .catch(err => console.log(err))
+          .finally(() => setLoading(false));
       }
     };
     dronerSug();
@@ -234,7 +239,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profilestate.plotItem]);
+  }, [profilestate.plotItem, isFocused, refresh]);
   useEffect(() => {
     const getTaskByTaskId = async () => {
       try {
@@ -273,82 +278,20 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     };
     getTaskByTaskId();
   }, [taskId, navigation]);
-  useEffect(() => {
-    const getFavDroner = async () => {
-      setLoading(true);
-      const farmer_id = await AsyncStorage.getItem('farmer_id');
-      const plot_id = await AsyncStorage.getItem('plot_id');
-      FavoriteDroner.findAllFav(farmer_id!, plot_id!)
-        .then(res => {
-          if(res.responseData != null){
-            setStatusFav(res);
-          }
-        })
-        .catch(err => console.log(err))
-        .finally(() => setLoading(false));
-    };
-    getFavDroner();
-  }, []);
-
-  const mergeDronerUsed = taskSugUsed.map(el => {
-    const getDroner = el.droner_id;
-    const find = statusFav.find(item => {
-      const d = item.droner_id;
-      return d === getDroner;
-    });
-    if (find) {
-      return {
-        img: `${find.image_droner}`,
-        name: find.firstname + ' ' + find.lastname,
-        rate: find.rating_avg,
-        province: find.province_name,
-        distance: find.street_distance,
-        total_task: find.count_rating,
-        status_favorite: 'ACTIVE',
-        droner: find.droner_id,
-      };
-    }
-    return {
-      img: `${el.image_droner}`,
-      name: el.firstname + ' ' + el.lastname,
-      rate: el.rating_avg,
-      province: el.province_name,
-      distance: el.street_distance,
-      total_task: el.count_rating,
-      status_favorite: 'INACTIVE',
-      droner: el.droner_id,
-    };
-  });
-
-  const mergeDronerSugg = taskSug.map(el => {
-    const getDroner = el.droner_id;
-    const find = statusFav.find(item => {
-      const d = item.droner_id;
-      return d === getDroner;
-    });
-    if (find) {
-      return {
-        img: find.image_droner,
-        name: find.firstname + ' ' + find.lastname,
-        rate: find.rating_avg,
-        province: find.province_name,
-        distance: find.street_distance,
-        total_task: find.count_rating,
-        status_favorite: 'ACTIVE',
-        droner: find.droner_id,
-      };
-    }
-    return {
-      img: el.image_droner,
-      name: el.firstname + ' ' + el.lastname,
-      rate: el.rating_avg,
-      province: el.province_name,
-      distance: el.street_distance,
-      total_task: el.count_rating,
-      status_favorite: 'INACTIVE',
-      droner: el.droner_id,
-    };
-  });
+  const getFavDroner = async () => {
+    setLoading(true);
+    const farmer_id: any = await AsyncStorage.getItem('farmer_id');
+    const plot_id: any = await AsyncStorage.getItem('plot_id');
+    FavoriteDroner.findAllFav(farmer_id, plot_id)
+      .then(res => {
+        if (res != null) {
+          setStatusFav(res);
+        }
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
+  };
+  // console.log(JSON.stringify(taskSugUsed,null,2))
 
   return (
     <View
@@ -423,9 +366,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       setShowModalCantBooking(true);
                     } else {
                       mixpanel.track('Tab booking with login');
-                      navigation.navigate('SelectDateScreen',{
+                      navigation.navigate('SelectDateScreen', {
                         isSelectDroner: false,
-                          profile:{}
+                        profile: {},
                       });
                     }
                   }}>
@@ -717,7 +660,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </View>
                 )}
 
-{/* <View
+                {/* <View
                   style={{
                    
                     marginTop: 16,
@@ -737,55 +680,55 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </View>
                   </View> */}
                 <View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginTop: 16,
-                    paddingVertical: 10,
-                  }}>
-                  <Text
+                  <View
                     style={{
-                      fontFamily: font.AnuphanBold,
-                      fontSize: normalize(20),
-                      color: colors.fontGrey,
-                      paddingHorizontal: 20,
-                    }}>
-                    กูรูเกษตร
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      // navigation.navigate('SeeAllDronerUsed');
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginTop: 16,
+                      paddingVertical: 10,
                     }}>
                     <Text
                       style={{
-                        fontFamily: font.SarabunLight,
-                        fontSize: normalize(16),
+                        fontFamily: font.AnuphanBold,
+                        fontSize: normalize(20),
                         color: colors.fontGrey,
-                        height: 30,
-                        lineHeight: 32,
-                        paddingHorizontal: 10,
+                        paddingHorizontal: 20,
                       }}>
-                      ดูทั้งหมด
+                      กูรูเกษตร
                     </Text>
-                  </TouchableOpacity>
-                </View>
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-                  }}>
-                  <Image
-                    source={image.academy}
+                    <TouchableOpacity
+                      onPress={() => {
+                        // navigation.navigate('SeeAllDronerUsed');
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: font.SarabunLight,
+                          fontSize: normalize(16),
+                          color: colors.fontGrey,
+                          height: 30,
+                          lineHeight: 32,
+                          paddingHorizontal: 10,
+                        }}>
+                        ดูทั้งหมด
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View
                     style={{
-                      width: 360,
-                      height: 120,
-                      borderRadius: 10,
-                    }}
-                  />
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                    }}>
+                    <Image
+                      source={image.academy}
+                      style={{
+                        width: 360,
+                        height: 120,
+                        borderRadius: 10,
+                      }}
+                    />
+                  </View>
                 </View>
-                </View>
-               
+
                 <View
                   style={{
                     flexDirection: 'row',
@@ -825,27 +768,61 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}>
                       {taskSugUsed.length != undefined &&
-                        mergeDronerUsed.map((item: any, index: any) => (
+                        taskSugUsed.map((item: any, index: number) => (
                           <TouchableOpacity
                             key={index}
                             onPress={async () => {
                               await AsyncStorage.setItem(
                                 'droner_id',
-                                `${item.droner}`,
+                                `${item.droner_id}`,
                               );
                               navigation.push('DronerDetail');
                             }}>
                             <DronerUsedList
                               key={index}
                               index={index}
-                              profile={item.img}
+                              profile={item.image_droner}
                               background={''}
-                              name={item.name}
-                              rate={item.rate}
-                              total_task={item.total_task}
-                              province={item.province}
-                              distance={item.distance}
-                              status={item.status_favorite}
+                              name={item.firstname + ' ' + item.lastname}
+                              rate={item.rating_avg}
+                              total_task={item.count_rating}
+                              province={item.province_name}
+                              distance={item.street_distance}
+                              status={item.favorite_status}
+                              callBack={async () => {
+                                setLoading(true);
+                                const farmer_id = await AsyncStorage.getItem(
+                                  'farmer_id',
+                                );
+                                const droner_id = taskSugUsed.map(
+                                  x => x.droner_id,
+                                );
+                                await FavoriteDroner.addUnaddFav(
+                                  farmer_id !== null ? farmer_id : '',
+                                  droner_id[index],
+                                )
+                                  .then(res => {
+                                    setRefresh(!refresh);
+                                    let newTaskSugUsed = taskSugUsed.map(
+                                      (x, i) => {
+                                        let result = {};
+                                        if (x.droner_id === item.droner_id) {
+                                          let a =
+                                            x.favorite_status === 'ACTIVE'
+                                              ? 'INACTIVE'
+                                              : 'ACTIVE';
+                                          result = { ...x, favorite_status: a };
+                                        } else {
+                                          result = { ...x };
+                                        }
+                                        return result;
+                                      },
+                                    );
+                                    setTaskSugUsed(newTaskSugUsed);
+                                  })
+                                  .catch(err => console.log(err))
+                                  .finally(() => setLoading(false));
+                              }}
                             />
                           </TouchableOpacity>
                         ))}
@@ -896,7 +873,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}>
                     {taskSug.length != undefined &&
-                      mergeDronerSugg.map((item: any, index: any) => (
+                      taskSug.map((item: any, index: any) => (
                         <TouchableOpacity
                           key={index}
                           onPress={async () => {
@@ -909,14 +886,44 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                           <DronerSugg
                             key={index}
                             index={index}
-                            profile={item.img}
+                            profile={item.image_droner}
                             background={''}
-                            name={item.name}
-                            rate={item.rate}
-                            total_task={item.total_task}
-                            province={item.province}
-                            distance={item.distance}
-                            status={item.status_favorite}
+                            name={item.firstname + ' ' + item.lastname}
+                            rate={item.rating_avg}
+                            total_task={item.count_rating}
+                            province={item.province_name}
+                            distance={item.street_distance}
+                            status={item.favorite_status}
+                            callBack={async () => {
+                              setLoading(true);
+                              const farmer_id = await AsyncStorage.getItem(
+                                'farmer_id',
+                              );
+                              const droner_id = taskSug.map(x => x.droner_id);
+                              await FavoriteDroner.addUnaddFav(
+                                farmer_id !== null ? farmer_id : '',
+                                droner_id[index],
+                              )
+                                .then(res => {
+                                  setRefresh(!refresh);
+                                  let newTaskSug = taskSug.map((x, i) => {
+                                    let result = {};
+                                    if (x.droner_id === item.droner_id) {
+                                      let a =
+                                        x.favorite_status === 'ACTIVE'
+                                          ? 'INACTIVE'
+                                          : 'ACTIVE';
+                                      result = { ...x, favorite_status: a };
+                                    } else {
+                                      result = { ...x };
+                                    }
+                                    return result;
+                                  });
+                                  setTaskSug(newTaskSug);
+                                })
+                                .catch(err => console.log(err))
+                                .finally(() => setLoading(false));
+                            }}
                           />
                         </TouchableOpacity>
                       ))}

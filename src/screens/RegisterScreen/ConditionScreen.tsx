@@ -76,18 +76,13 @@ const ConditionScreen: React.FC<any> = ({ navigation }) => {
             paddingVertical: normalize(5),
             justifyContent: 'space-between',
           }}>
-          <TouchableOpacity
-            onPress={() => setChecked(!checked)}
-            >
+          <TouchableOpacity onPress={() => setChecked(!checked)}>
             <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
-             
-             
-             
-                <Image
-                  source={checked ? icons.checked : icons.check}
-                  style={{ width: normalize(22), height: normalize(22) }}
-                />
-              
+              <Image
+                source={checked ? icons.checked : icons.check}
+                style={{ width: normalize(22), height: normalize(22) }}
+              />
+
               <Text
                 style={[
                   styles.condition,
@@ -97,16 +92,13 @@ const ConditionScreen: React.FC<any> = ({ navigation }) => {
               </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setChecked1(!checked1)}
-           >
+          <TouchableOpacity onPress={() => setChecked1(!checked1)}>
             <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
-            
-                <Image
-                  source={checked1 ? icons.checked : icons.check}
-                  style={{ width: normalize(22), height: normalize(22) }}
-                />
-             
+              <Image
+                source={checked1 ? icons.checked : icons.check}
+                style={{ width: normalize(22), height: normalize(22) }}
+              />
+
               <Text
                 style={[
                   styles.condition,

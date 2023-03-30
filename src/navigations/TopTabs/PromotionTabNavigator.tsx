@@ -8,23 +8,28 @@ import MyCouponExpiredScreen from '../../screens/PromotionScreen/MyCouponExpired
 import MyCouponUsedScreen from '../../screens/PromotionScreen/MyCouponUsedScreen';
 import MyCouponUseScreen from '../../screens/PromotionScreen/MyCouponUseScreen';
 
-const renderTabBar:React.FC<any> = (props: any) => {
-  const tabRef = useRef<number>(0)
-  return <TabBar
-    {...props}
-    indicatorStyle={{ backgroundColor: checkColorNumber(tabRef.current) }}
-    style={{ backgroundColor: colors.white }}
-    renderLabel={({ route, focused, color }) => (
-      <Text
-        style={[styles.label, { color: focused ? checkColor(route.key) : colors.gray }]}>
-        {route.title}
-      </Text>
-    )}
-    renderIndicator={indicatorProps => {
-        tabRef.current = indicatorProps.navigationState.index
-        return <TabBarIndicator {...indicatorProps}/>
-    }}
-  />
+const renderTabBar: React.FC<any> = (props: any) => {
+  const tabRef = useRef<number>(0);
+  return (
+    <TabBar
+      {...props}
+      indicatorStyle={{ backgroundColor: checkColorNumber(tabRef.current) }}
+      style={{ backgroundColor: colors.white }}
+      renderLabel={({ route, focused, color }) => (
+        <Text
+          style={[
+            styles.label,
+            { color: focused ? checkColor(route.key) : colors.gray },
+          ]}>
+          {route.title}
+        </Text>
+      )}
+      renderIndicator={indicatorProps => {
+        tabRef.current = indicatorProps.navigationState.index;
+        return <TabBarIndicator {...indicatorProps} />;
+      }}
+    />
+  );
 };
 
 const PromotionTabNavigator: React.FC<any> = ({}) => {
@@ -33,7 +38,7 @@ const PromotionTabNavigator: React.FC<any> = ({}) => {
   const [routes] = useState([
     { key: 'use', title: 'ใช้ได้' },
     { key: 'used', title: 'ใช้แล้ว' },
-    { key: 'expired', title: 'หมดอายุ' }
+    { key: 'expired', title: 'หมดอายุ' },
   ]);
   const renderScene = ({ route }: any) => {
     switch (route.key) {
@@ -42,7 +47,7 @@ const PromotionTabNavigator: React.FC<any> = ({}) => {
       case 'used':
         return <MyCouponUsedScreen />;
       case 'expired':
-          return <MyCouponExpiredScreen />;
+        return <MyCouponExpiredScreen />;
       default:
         return null;
     }
@@ -61,33 +66,29 @@ const PromotionTabNavigator: React.FC<any> = ({}) => {
   );
 };
 
-const checkColorNumber = (key : number) : string=>{
-    let result = colors.greenLight;
-    if(key === 0){
-        result = colors.greenLight
-    }
-    else if(key === 1){
-        result = "#B05E03"
-    }
-    else if(key === 2){
-        result = "#AB091E"
-    }
-    return result
-}
+const checkColorNumber = (key: number): string => {
+  let result = colors.greenLight;
+  if (key === 0) {
+    result = colors.greenLight;
+  } else if (key === 1) {
+    result = '#B05E03';
+  } else if (key === 2) {
+    result = '#AB091E';
+  }
+  return result;
+};
 
-const checkColor = (key : string) : string=>{
-    let result = colors.greenLight;
-    if(key === 'use'){
-        result = colors.greenLight
-    }
-    else if(key === "used"){
-        result = "#B05E03"
-    }
-    else if(key === "expired"){
-        result = "#AB091E"
-    }
-    return result
-}
+const checkColor = (key: string): string => {
+  let result = colors.greenLight;
+  if (key === 'use') {
+    result = colors.greenLight;
+  } else if (key === 'used') {
+    result = '#B05E03';
+  } else if (key === 'expired') {
+    result = '#AB091E';
+  }
+  return result;
+};
 
 export default PromotionTabNavigator;
 

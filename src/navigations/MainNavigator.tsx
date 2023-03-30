@@ -77,8 +77,7 @@ export type MainStackParamList = {
   CouponDetail: { detail: CouponCardEntities };
   MyCouponScreen: undefined;
   MaintenanceScreen: undefined;
-  SearchCouponScreen : undefined;
-
+  SearchCouponScreen: undefined;
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
@@ -106,7 +105,7 @@ const MainNavigator: React.FC = () => {
 
   const d = Date.now();
   const checkDateNoti = d >= start && d <= end;
- /*  useEffect(() => {
+  /*  useEffect(() => {
     Maintenance();
   }, [reload]); */
   return (
@@ -164,7 +163,7 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
       <Stack.Screen name="CouponDetail" component={CouponDetailScreen} />
       <Stack.Screen name="MyCouponScreen" component={MyCouponScreen} />
-      <Stack.Screen name='SearchCouponScreen' component={SearchCouponScreen} />
+      <Stack.Screen name="SearchCouponScreen" component={SearchCouponScreen} />
     </Stack.Navigator>
   );
 };

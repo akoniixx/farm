@@ -25,9 +25,9 @@ import { normalize, width } from '../../functions/Normalize';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const SelectDateScreen: React.FC<any> = ({ navigation,route}) => {
-  const isSelectDroner = route.params.isSelectDroner
-  const profile = route.params.profile
+const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
+  const isSelectDroner = route.params.isSelectDroner;
+  const profile = route.params.profile;
   const windowWidth = Dimensions.get('window').width;
   const {
     state: { taskData },
@@ -62,13 +62,11 @@ const SelectDateScreen: React.FC<any> = ({ navigation,route}) => {
       dateAppointment: newFormatDate,
       comment: note,
     }));
-   
-      navigation.navigate('SelectPlotScreen',{
-        isSelectDroner:isSelectDroner,
-        profile:profile
-      });
-   
-   
+
+    navigation.navigate('SelectPlotScreen', {
+      isSelectDroner: isSelectDroner,
+      profile: profile,
+    });
   };
   return (
     <>

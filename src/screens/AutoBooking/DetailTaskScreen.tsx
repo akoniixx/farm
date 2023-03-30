@@ -48,8 +48,8 @@ import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { numberWithCommas } from '../../functions/utility';
 
 const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
-  const isSelectDroner = route.params.isSelectDroner
-  const profile = route.params.profile
+  const isSelectDroner = route.params.isSelectDroner;
+  const profile = route.params.profile;
   const {
     state: { taskData, locationPrice, calPrice },
     autoBookingContext: { getCalculatePrice, setTaskData },
@@ -105,16 +105,16 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         preparationBy: taskData.preparationBy,
         status: taskData.status || 'WAIT_RECEIVE',
         targetSpray: taskData.targetSpray,
-        taskDronerTemp: isSelectDroner ? [
-          {
-            distance: profile.distance,
-            dronerDetail: [
-              JSON.stringify(profile)
-            ],
-            dronerId: profile.droner_id,
-            status: "WAIT_RECEIVE"
-          }
-        ] : taskData.taskDronerTemp,
+        taskDronerTemp: isSelectDroner
+          ? [
+              {
+                distance: profile.distance,
+                dronerDetail: [JSON.stringify(profile)],
+                dronerId: profile.droner_id,
+                status: 'WAIT_RECEIVE',
+              },
+            ]
+          : taskData.taskDronerTemp,
         statusRemark: '',
       };
       const res = await TaskDatasource.createTask(payload);
@@ -422,23 +422,23 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             นักบินโดรน
           </Text>
           <DronerCard
-              name={profile.firstname + ' ' + profile.lastname}
-              profile={profile.image_droner}
-              telnumber={profile.telephone_no}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderWidth: 1,
-                borderColor: colors.disable,
-                padding: normalize(10),
-                borderRadius: 16,
-              }}>
-              <Text style={styles.plot}>อัตราค่าจ้าง</Text>
-              <Text style={styles.unitPrice}>{locationPrice.price} บาท/ไร่</Text>
-            </View>
+            name={profile.firstname + ' ' + profile.lastname}
+            profile={profile.image_droner}
+            telnumber={profile.telephone_no}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: colors.disable,
+              padding: normalize(10),
+              borderRadius: 16,
+            }}>
+            <Text style={styles.plot}>อัตราค่าจ้าง</Text>
+            <Text style={styles.unitPrice}>{locationPrice.price} บาท/ไร่</Text>
+          </View>
           {/* <View
             style={{
               backgroundColor: colors.white,
@@ -1096,7 +1096,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
 
 export default DetailTaskScreen;
 
-
 const styles = StyleSheet.create({
   statusNo: {
     fontFamily: fonts.AnuphanMedium,
@@ -1127,4 +1126,4 @@ const styles = StyleSheet.create({
     fontSize: normalize(20),
     color: '#2EC46D',
   },
-})
+});
