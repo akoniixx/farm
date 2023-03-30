@@ -18,6 +18,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { mixpanel } from '../../../mixpanel';
 import { colors, font, icons, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
+import HeadDronerCardForCreatTask from '../../components/HeadDronerCardForCreatTask';
 import PlotSelect from '../../components/Plots/PlotSelect';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
 import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
@@ -115,6 +116,8 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
         }}
         label={'เลือกแปลงของคุณ'}
       />
+       {isSelectDroner && <HeadDronerCardForCreatTask navigation={navigation}
+      image={profile.image_droner} name={profile.firstname+ ' ' + profile.lastname}  /> } 
 
       {plotList.length === 0 ? (
         <View style={{ backgroundColor: 'white' }}>

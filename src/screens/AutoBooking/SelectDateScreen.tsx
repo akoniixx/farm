@@ -24,6 +24,7 @@ import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { normalize, width } from '../../functions/Normalize';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import HeadDronerCardForCreatTask from '../../components/HeadDronerCardForCreatTask';
 
 const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner;
@@ -43,6 +44,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
   const [minute, setMinute] = useState(0);
 
   useEffect(() => {
+    console.log(profile)
     if (taskData.dateAppointment) {
       const dateAppointment = new Date(taskData.dateAppointment);
       setDate(dateAppointment);
@@ -78,6 +80,9 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
         }}
         label={'เลือกวันและเวลาฉีดพ่น'}
       />
+      {isSelectDroner && <HeadDronerCardForCreatTask navigation={navigation}
+      image={profile.image_droner} name={profile.firstname+ ' ' + profile.lastname}  /> } 
+    
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}

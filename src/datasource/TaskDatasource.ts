@@ -12,6 +12,7 @@ export interface PayloadCreateTask {
     dronerId: string;
     status: string;
     dronerDetail: string[];
+    distance:any
   }[];
   status: string;
   statusRemark?: string;
