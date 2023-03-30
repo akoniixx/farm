@@ -38,10 +38,9 @@ import { useIsFocused } from '@react-navigation/native';
 const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   const isFocused = useIsFocused();
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-  const [visible, setIsVisible] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [review, setReview] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [statusFav, setStatusFav] = useState<any>();
   const [profile, setProfile] = useState<any>();
   const [detailState, dispatch] = useReducer(
@@ -54,9 +53,9 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
 
   useEffect(() => {
     dronerDetails();
-  }, []);
+  }, [isFocused]);
+
   const dronerDetails = async () => {
-    setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const droner_id = await AsyncStorage.getItem('droner_id');
     const plot_id = await AsyncStorage.getItem('plot_id');
@@ -67,6 +66,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       date.toLocaleDateString(),
     )
       .then(res => {
+        console.log(1, JSON.stringify(res, null, 2));
         setStatusFav(res[0].favorite_status);
         setProfile(res[0]);
         setReview(res[0].review);
@@ -119,366 +119,378 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       date: el,
     };
   });
-  return (
-    <SafeAreaView style={stylesCentral.container}>
-      <CustomHeader
-        title={`${detailState.name}`}
-        showBackBtn
-        onPressBack={() => navigation.goBack()}
-        image={() => (
-          <Image
-            source={statusFav === 'ACTIVE' ? icons.heart_active : icons.heart}
-            style={{ width: 25, height: 25 }}
-          />
-        )}
+
+  if (loading) {
+    return (
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
       />
-      <ScrollView>
-        <View>
-          {detailState.imageTask != null ? (
-            <Text style={[styles.text, { paddingHorizontal: normalize(15) }]}>
-              ภาพผลงานนักบิน
-              <Text
-                style={{
-                  color: colors.gray,
-                }}>{` (${detailState.imageTask.length})`}</Text>
-            </Text>
-          ) : (
-            ''
-          )}
-          {detailState.imageTask !== null ? (
-            <ScrollView
-              style={{ marginTop: 20, width, height }}
-              pagingEnabled
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}>
-              {detailState.imageTask != undefined &&
-                detailState.imageTask.map((item: any, index: any) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={async () => {
-                      await AsyncStorage.setItem('imgTask', `${item}`);
-                      navigation.push('FullScreenTaskImg');
-                    }}>
-                    <Image
-                      key={index}
-                      source={{ uri: item ? item : icons.avatar }}
-                      style={{
-                        width,
-                        height,
-                        resizeMode: 'cover',
-                      }}
-                    />
-                  </TouchableOpacity>
-                ))}
-            </ScrollView>
-          ) : (
+    );
+  } else {
+    return (
+      <SafeAreaView style={stylesCentral.container}>
+        <CustomHeader
+          title={`${detailState.name}`}
+          showBackBtn
+          onPressBack={() => navigation.goBack()}
+          image={() => (
             <Image
-              source={image.bg_droner}
-              style={{
-                height: normalize(200),
-                width: screenWidth,
-                alignSelf: 'center',
-              }}
+              source={statusFav === 'ACTIVE' ? icons.heart_active : icons.heart}
+              style={{ width: 25, height: 25 }}
             />
           )}
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            padding: normalize(15),
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-          <Text
-            style={[
-              styles.text,
-              { alignItems: 'center', paddingHorizontal: 10 },
-            ]}>
-            <Image
-              source={icons.chat}
-              style={{ width: normalize(20), height: normalize(20) }}
-            />
-            <Text style={[styles.text, { paddingHorizontal: normalize(15) }]}>
-              {` รีวิวจากเกษตรกร`}
-            </Text>
-            {review != null ? (
+        />
+        <ScrollView>
+          <View>
+            {detailState.imageTask != null ? (
               <Text style={[styles.text, { paddingHorizontal: normalize(15) }]}>
+                ภาพผลงานนักบิน
                 <Text
                   style={{
                     color: colors.gray,
-                  }}>{` (${review.length})`}</Text>
+                  }}>{` (${detailState.imageTask.length})`}</Text>
               </Text>
             ) : (
-              ` (0)`
+              ''
             )}
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('AllReviewDroner');
-            }}>
-            <Text
-              style={{
-                fontFamily: font.SarabunLight,
-                fontSize: normalize(16),
-                color: colors.fontGrey,
-                height: 30,
-              }}>
-              ดูทั้งหมด
-            </Text>
-          </TouchableOpacity>
-        </View>
-        {review !== null ? (
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {review != undefined &&
-              review.map((item: any, index: any) => (
-                <CardReview
-                  key={index}
-                  index={index}
-                  img={item.image_profile}
-                  name={item.farmer_fname + ' ' + item.farmer_lname}
-                  rate={item.rating}
-                  date={item.date_appointment}
-                  comment={item.comment_review.comment}
-                />
-              ))}
-          </ScrollView>
-        ) : (
-          <View style={{ alignItems: 'center', paddingVertical: '5%' }}>
-            <Image
-              source={image.empty_review}
-              style={{ width: 69, height: 60 }}
-            />
-            <Text
-              style={{
-                marginTop: '2%',
-                paddingHorizontal: 10,
-                fontFamily: font.SarabunBold,
-                fontSize: normalize(16),
-                fontWeight: '300',
-                alignItems: 'center',
-                color: colors.gray,
-              }}>
-              ไม่มีรีวิวเกษตรกร
-            </Text>
-          </View>
-        )}
-        <View style={{ height: 10, backgroundColor: '#F8F9FA' }}></View>
-        <View style={[styles.section]}>
-          <Text style={[styles.text, { marginBottom: '3%' }]}>
-            {`ราคา ${detailState.price} บาท/ไร`}่
-          </Text>
-          <View
-            style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginBottom: '3%',
-              }}>
+            {detailState.imageTask !== null ? (
+              <ScrollView
+                style={{ marginTop: 20, width, height }}
+                pagingEnabled
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {detailState.imageTask != undefined &&
+                  detailState.imageTask.map((item: any, index: any) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={async () => {
+                        await AsyncStorage.setItem('imgTask', `${item}`);
+                        navigation.push('FullScreenTaskImg');
+                      }}>
+                      <Image
+                        key={index}
+                        source={{ uri: item ? item : icons.avatar }}
+                        style={{
+                          width,
+                          height,
+                          resizeMode: 'cover',
+                        }}
+                      />
+                    </TouchableOpacity>
+                  ))}
+              </ScrollView>
+            ) : (
               <Image
-                source={icons.star}
-                style={{ width: 24, height: 24, right: 3 }}
+                source={image.bg_droner}
+                style={{
+                  height: normalize(200),
+                  width: screenWidth,
+                  alignSelf: 'center',
+                }}
               />
-              <Text style={[styles.label]}>
-                {detailState.rate !== null
-                  ? `${parseFloat(detailState.rate).toFixed(1)}`
-                  : `0`}
-              </Text>
-              <Text style={[styles.label, { color: colors.gray }]}>
-                {detailState.total_task !== null
-                  ? ` (${detailState.total_task})`
-                  : ` (0)`}
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Image
-                source={icons.distance}
-                style={{ width: 24, height: 24, right: 3 }}
-              />
-              <Text style={[styles.label]}>
-                ห่างคุณ{' '}
-                {detailState.distance !== null
-                  ? `${parseFloat(detailState.distance).toFixed(0)}`
-                  : 0}{' '}
-                กม.
-              </Text>
-            </View>
+            )}
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image
-              source={icons.location}
-              style={{ width: 24, height: 24, right: 3 }}
-            />
-            <Text
-              style={[
-                styles.label,
-              ]}>{`${detailState.district} , จ. ${detailState.province}`}</Text>
-          </View>
-        </View>
-        <View style={{ height: 10, backgroundColor: '#F8F9FA' }}></View>
-        <View style={[styles.section]}>
-          <Text style={[styles.text]}>คิวงานของนักบินโดรน</Text>
           <View
             style={{
               flexDirection: 'row',
+              padding: normalize(15),
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
+            <Text
+              style={[
+                styles.text,
+                { alignItems: 'center', paddingHorizontal: 10 },
+              ]}>
+              <Image
+                source={icons.chat}
+                style={{ width: normalize(20), height: normalize(20) }}
+              />
+              <Text style={[styles.text, { paddingHorizontal: normalize(15) }]}>
+                {` รีวิวจากเกษตรกร`}
+              </Text>
+              {review != null ? (
+                <Text
+                  style={[styles.text, { paddingHorizontal: normalize(15) }]}>
+                  <Text
+                    style={{
+                      color: colors.gray,
+                    }}>{` (${review.length})`}</Text>
+                </Text>
+              ) : (
+                ` (0)`
+              )}
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('AllReviewDroner');
+              }}>
+              <Text
+                style={{
+                  fontFamily: font.SarabunLight,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                  height: 30,
+                }}>
+                ดูทั้งหมด
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {review !== null ? (
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              {review != undefined &&
+                review.map((item: any, index: any) => (
+                  <CardReview
+                    key={index}
+                    index={index}
+                    img={item.image_profile}
+                    name={item.farmer_fname + ' ' + item.farmer_lname}
+                    rate={item.rating}
+                    date={item.date_appointment}
+                    comment={item.comment_review.comment}
+                  />
+                ))}
+            </ScrollView>
+          ) : (
+            <View style={{ alignItems: 'center', paddingVertical: '5%' }}>
+              <Image
+                source={image.empty_review}
+                style={{ width: 69, height: 60 }}
+              />
+              <Text
+                style={{
+                  marginTop: '2%',
+                  paddingHorizontal: 10,
+                  fontFamily: font.SarabunBold,
+                  fontSize: normalize(16),
+                  fontWeight: '300',
+                  alignItems: 'center',
+                  color: colors.gray,
+                }}>
+                ไม่มีรีวิวเกษตรกร
+              </Text>
+            </View>
+          )}
+          <View style={{ height: 10, backgroundColor: '#F8F9FA' }}></View>
+          <View style={[styles.section]}>
+            <Text style={[styles.text, { marginBottom: '3%' }]}>
+              {`ราคา ${detailState.price} บาท/ไร`}่
+            </Text>
+            <View
+              style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: '3%',
+                }}>
+                <Image
+                  source={icons.star}
+                  style={{ width: 24, height: 24, right: 3 }}
+                />
+                <Text style={[styles.label]}>
+                  {detailState.rate !== null
+                    ? `${parseFloat(detailState.rate).toFixed(1)}`
+                    : `0`}
+                </Text>
+                <Text style={[styles.label, { color: colors.gray }]}>
+                  {detailState.total_task !== null
+                    ? ` (${detailState.total_task})`
+                    : ` (0)`}
+                </Text>
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Image
+                  source={icons.distance}
+                  style={{ width: 24, height: 24, right: 3 }}
+                />
+                <Text style={[styles.label]}>
+                  ห่างคุณ{' '}
+                  {detailState.distance !== null
+                    ? `${parseFloat(detailState.distance).toFixed(0)}`
+                    : 0}{' '}
+                  กม.
+                </Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image
+                source={icons.location}
+                style={{ width: 24, height: 24, right: 3 }}
+              />
+              <Text
+                style={[
+                  styles.label,
+                ]}>{`${detailState.district} , จ. ${detailState.province}`}</Text>
+            </View>
+          </View>
+          <View style={{ height: 10, backgroundColor: '#F8F9FA' }}></View>
+          <View style={[styles.section]}>
+            <Text style={[styles.text]}>คิวงานของนักบินโดรน</Text>
             <View
               style={{
                 flexDirection: 'row',
-                paddingVertical: 10,
                 alignItems: 'center',
+                justifyContent: 'space-between',
               }}>
-              <Image
-                source={icons.dotGreen}
-                style={{ width: 10, height: 10, marginRight: 5 }}
-              />
-              <Text style={[styles.label, { marginRight: 20 }]}>สะดวก</Text>
-              <Image
-                source={icons.dotRed}
-                style={{ width: 10, height: 10, marginRight: 5 }}
-              />
-              <Text
-                style={[styles.label, { marginRight: 5, color: colors.gray }]}>
-                ไม่สะดวก
-              </Text>
-            </View>
-            <View>
-              <Text style={[styles.label]}>
-                วันนี้{' '}
-                {new Date(date).toLocaleDateString('th-TH', {
-                  day: 'numeric',
-                  month: 'short',
-                  year: '2-digit',
-                })}
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View style={{ height: normalize(155) }}>
-          {detailState.dronerQueue != null ? (
-            <View style={{ height: '100%' }}>
-              <View style={{ flexDirection: 'row' }}>
-                {detailState.dronerQueue.length != undefined &&
-                  QDroner.map((item: any, index: any) => (
-                    <CardDetailDroner
-                      key={index}
-                      index={index}
-                      date={new Date(item.date).toLocaleDateString('th-TH', {
-                        day: 'numeric',
-                      })}
-                      month={new Date(item.date).toLocaleDateString('th-TH', {
-                        month: 'short',
-                      })}
-                      year={momentExtend.toBuddhistYear(date, 'YY')}
-                      convenient={item.status}
-                    />
-                  ))}
-              </View>
-            </View>
-          ) : (
-            <View style={{ height: '110%' }}>
-              <View style={{ flexDirection: 'row' }}>
-                {weekDays.map((item: any, index: any) => (
-                  <CardDetailDroner
-                    key={index}
-                    index={index}
-                    date={new Date(item).toLocaleDateString('th-TH', {
-                      day: 'numeric',
-                    })}
-                    month={new Date(item).toLocaleDateString('th-TH', {
-                      month: 'short',
-                    })}
-                    year={momentExtend.toBuddhistYear(date, 'YY')}
-                    convenient={'สะดวก'}
-                  />
-                ))}
-              </View>
-            </View>
-          )}
-        </View>
-        <View style={{ height: 10, backgroundColor: '#F8F9FA' }}></View>
-        <View style={[styles.section]}>
-          <Text style={[styles.text]}>ข้อมูลนักบิน</Text>
-          <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
-            <Avatar
-              size={normalize(56)}
-              source={
-                detailState.imagePro !== null
-                  ? { uri: detailState.imagePro }
-                  : image.empty_droner
-              }
-              avatarStyle={{
-                borderRadius: normalize(40),
-                borderColor: colors.bg,
-                borderWidth: 1,
-              }}
-            />
-            <View style={{ left: 20 }}>
-              <Text style={[styles.droner]}>{detailState.name}</Text>
-              <View style={{ flexDirection: 'row', marginTop: 10 }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  paddingVertical: 10,
+                  alignItems: 'center',
+                }}>
                 <Image
-                  source={icons.done_academy}
-                  style={{ width: 24, height: 24, right: 5 }}
+                  source={icons.dotGreen}
+                  style={{ width: 10, height: 10, marginRight: 5 }}
+                />
+                <Text style={[styles.label, { marginRight: 20 }]}>สะดวก</Text>
+                <Image
+                  source={icons.dotRed}
+                  style={{ width: 10, height: 10, marginRight: 5 }}
                 />
                 <Text
-                  style={{
-                    color: colors.gray,
-                    fontFamily: font.SarabunLight,
-                    fontSize: normalize(16),
-                  }}>
-                  ผ่านการยืนยันจาก ICP Academy
+                  style={[
+                    styles.label,
+                    { marginRight: 5, color: colors.gray },
+                  ]}>
+                  ไม่สะดวก
+                </Text>
+              </View>
+              <View>
+                <Text style={[styles.label]}>
+                  วันนี้{' '}
+                  {new Date(date).toLocaleDateString('th-TH', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: '2-digit',
+                  })}
                 </Text>
               </View>
             </View>
           </View>
-          <View>
-            <Text style={[styles.droner]}>
-              ยี่ห้อโดรน :
+          <View style={{ height: normalize(155) }}>
+            {detailState.dronerQueue != null ? (
+              <View style={{ height: '100%' }}>
+                <View style={{ flexDirection: 'row' }}>
+                  {detailState.dronerQueue.length != undefined &&
+                    QDroner.map((item: any, index: any) => (
+                      <CardDetailDroner
+                        key={index}
+                        index={index}
+                        date={new Date(item.date).toLocaleDateString('th-TH', {
+                          day: 'numeric',
+                        })}
+                        month={new Date(item.date).toLocaleDateString('th-TH', {
+                          month: 'short',
+                        })}
+                        year={momentExtend.toBuddhistYear(date, 'YY')}
+                        convenient={item.status}
+                      />
+                    ))}
+                </View>
+              </View>
+            ) : (
+              <View style={{ height: '110%' }}>
+                <View style={{ flexDirection: 'row' }}>
+                  {weekDays.map((item: any, index: any) => (
+                    <CardDetailDroner
+                      key={index}
+                      index={index}
+                      date={new Date(item).toLocaleDateString('th-TH', {
+                        day: 'numeric',
+                      })}
+                      month={new Date(item).toLocaleDateString('th-TH', {
+                        month: 'short',
+                      })}
+                      year={momentExtend.toBuddhistYear(date, 'YY')}
+                      convenient={'สะดวก'}
+                    />
+                  ))}
+                </View>
+              </View>
+            )}
+          </View>
+          <View style={{ height: 10, backgroundColor: '#F8F9FA' }}></View>
+          <View style={[styles.section]}>
+            <Text style={[styles.text]}>ข้อมูลนักบิน</Text>
+            <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
+              <Avatar
+                size={normalize(56)}
+                source={
+                  detailState.imagePro !== null
+                    ? { uri: detailState.imagePro }
+                    : image.empty_droner
+                }
+                avatarStyle={{
+                  borderRadius: normalize(40),
+                  borderColor: colors.bg,
+                  borderWidth: 1,
+                }}
+              />
+              <View style={{ left: 20 }}>
+                <Text style={[styles.droner]}>{detailState.name}</Text>
+                <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                  <Image
+                    source={icons.done_academy}
+                    style={{ width: 24, height: 24, right: 5 }}
+                  />
+                  <Text
+                    style={{
+                      color: colors.gray,
+                      fontFamily: font.SarabunLight,
+                      fontSize: normalize(16),
+                    }}>
+                    ผ่านการยืนยันจาก ICP Academy
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View>
+              <Text style={[styles.droner]}>
+                ยี่ห้อโดรน :
+                <Text
+                  style={{
+                    fontFamily: font.SarabunLight,
+                    fontSize: normalize(18),
+                    color: colors.fontBlack,
+                  }}>
+                  {detailState.droneBand !== null
+                    ? `  ${detailState.droneBand}`
+                    : ' -'}
+                </Text>
+              </Text>
               <Text
                 style={{
                   fontFamily: font.SarabunLight,
                   fontSize: normalize(18),
                   color: colors.fontBlack,
                 }}>
-                {detailState.droneBand !== null
-                  ? `  ${detailState.droneBand}`
-                  : ' -'}
+                ICP รับประกันคุณภาพการฉีดพ่นและยา 100%
               </Text>
-            </Text>
-            <Text
-              style={{
-                fontFamily: font.SarabunLight,
-                fontSize: normalize(18),
-                color: colors.fontBlack,
-              }}>
-              ICP รับประกันคุณภาพการฉีดพ่นและยา 100%
-            </Text>
+            </View>
           </View>
+          <View style={{ height: 20, backgroundColor: '#F8F9FA' }}></View>
+        </ScrollView>
+        <View>
+          <MainButton
+            label="จ้างงาน"
+            color={colors.greenLight}
+            style={styles.button}
+            onPress={() =>
+              navigation.navigate('SelectDateScreen', {
+                isSelectDroner: true,
+                profile: profile,
+              })
+            }
+          />
         </View>
-        <View style={{ height: 20, backgroundColor: '#F8F9FA' }}></View>
-        <Spinner
-          visible={loading}
-          textContent={'Loading...'}
-          textStyle={{ color: '#FFF' }}
-        />
-      </ScrollView>
-      <View>
-        <MainButton
-          label="จ้างงาน"
-          color={colors.greenLight}
-          style={styles.button}
-          onPress={() =>
-            navigation.navigate('SelectDateScreen', {
-              isSelectDroner: true,
-              profile: profile,
-            })
-          }
-        />
-      </View>
-    </SafeAreaView>
-  );
+      </SafeAreaView>
+    );
+  }
 };
 export default DronerDetail;
 const styles = StyleSheet.create({
