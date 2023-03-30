@@ -213,7 +213,8 @@ export class ProfileDatasource {
     long : number,
     provinceId : number,
     districtId : number,
-    subdistrictId : number
+    subdistrictId : number,
+    locationName : string
   ): Promise<any>{
     const droner_id = await AsyncStorage.getItem('droner_id');
     return httpClient.patch(
@@ -225,7 +226,8 @@ export class ProfileDatasource {
           long : long,
           provinceId : provinceId,
           districtId : districtId,
-          subdistrictId : subdistrictId
+          subdistrictId : subdistrictId,
+          locationName : locationName
         }
       }
     )  
