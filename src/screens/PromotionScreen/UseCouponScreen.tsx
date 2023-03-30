@@ -1,13 +1,122 @@
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CustomHeader from '../../components/CustomHeader'
-import { colors } from '../../assets'
+import { colors, icons } from '../../assets'
 import { normalize } from '@rneui/themed'
 import fonts from '../../assets/fonts'
+import { getMyCoupon } from '../../datasource/PromotionDatasource'
+import { MyCouponCardEntities } from '../../entites/CouponCard'
+import CouponCardUsed from '../../components/CouponCard/CouponCardUsed'
+import { Image } from '@rneui/base'
+import { useRecoilState } from 'recoil'
+import { couponState } from '../../recoil/CouponAtom'
 
 const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
-  const obj = route.params
-  console.log(obj)
+  const conditionCheck = route.params
+  const [coupon,setCoupon] = useRecoilState(couponState);
+  const [count,setCount] = useState<number>(0)
+  const [page,setPage] = useState<number>(1);
+  const [data,setData] = useState<MyCouponCardEntities[]>([])
+  const getData = (page : number,take : number,used? : boolean)=>{
+    getMyCoupon(page,take,used).then(
+        res => {
+            setCount(res.count)
+            let Data = res.data
+            Data.map((item : any,index : number)=>{
+                Data[index].passCondition = checkCouponCondition( 
+                    item.promotion.couponConditionRai,
+                    item.promotion.couponConditionRaiMax,
+                    item.promotion.couponConditionRaiMin,
+                    item.promotion.couponConditionService,
+                    item.promotion.couponConditionServiceMax,
+                    item.promotion.couponConditionServiceMin,
+                    item.promotion.couponConditionPlant,
+                    item.promotion.couponConditionPlantList,
+                    item.promotion.couponConditionProvince,
+                    item.promotion.couponConditionProvinceList
+                )
+            })
+            setData(Data.sort((a : any,b : any)=> a.passCondition-b.passCondition))
+        }
+    )
+  }
+  const checkCouponCondition = (
+    conditionRai : boolean,
+    conditionRaiMax : number,
+    conditionRaiMin : number,
+    conditionService : boolean,
+    conditionServiceMax : number,
+    conditionServiceMin : number,
+    conditionPlant : boolean,
+    conditionPlantList : any[],
+    conditionProvince : boolean,
+    conditionProvinceList : string[]
+  ) : boolean => {
+    let raiCheck = conditionRai;
+    let serviceCheck = conditionService;
+    let plantCheck = conditionPlant;
+    let provinceCheck = conditionProvince;
+    if(raiCheck){
+        if(conditionCheck.farmAreaAmount < conditionRaiMax){
+            if(conditionCheck.farmAreaAmount < conditionRaiMin){
+                raiCheck = true
+            }
+            else{
+                raiCheck = false
+            }
+        }
+    }
+    if(serviceCheck){
+        if(conditionCheck.price < conditionServiceMax){
+            if(conditionCheck.price < conditionServiceMin){
+                serviceCheck = true
+            }
+            else{
+                serviceCheck = false
+            }
+        }
+    }
+    if(plantCheck){
+        plantCheck = !conditionPlantList.some((item : any)=> (item.plantName === conditionCheck.plantName)&&(item.injectionTiming.includes(conditionCheck.purposeSprayName)))
+    }
+    if(provinceCheck){
+        provinceCheck = !conditionProvinceList.includes(conditionCheck.province)
+    }
+    let result = raiCheck||serviceCheck||plantCheck||provinceCheck;
+    console.log(raiCheck,serviceCheck,plantCheck,provinceCheck)
+    return result;
+  }
+
+  const onScrollEnd = ()=>{
+    let pageNow = page
+    if(data.length < count){
+       getMyCoupon(pageNow+1,5,false).then(res => {
+            let Data = res.data
+            Data.map((item : any,index : number)=>{
+                Data[index].passCondition = checkCouponCondition( 
+                    item.promotion.couponConditionRai,
+                    item.promotion.couponConditionRaiMax,
+                    item.promotion.couponConditionRaiMin,
+                    item.promotion.couponConditionService,
+                    item.promotion.couponConditionServiceMax,
+                    item.promotion.couponConditionServiceMin,
+                    item.promotion.couponConditionPlant,
+                    item.promotion.couponConditionPlantList,
+                    item.promotion.couponConditionProvince,
+                    item.promotion.couponConditionProvinceList
+                )
+            })
+            let newData = data.concat(Data)
+            setPage(pageNow+1);
+            setData(newData.sort((a : any,b : any)=> a.passCondition-b.passCondition))
+       }).catch(err => console.log(err))
+    }
+  }
+
+  useEffect(()=>{
+    getData(page,5,false)
+  },[])
+
   return (
     <>
         <CustomHeader 
@@ -34,8 +143,96 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
             backgroundColor : colors.bgGreen
         }}>
             <FlatList 
-                data={[]}
-                renderItem={()=><></>}
+                data={data}
+                onScrollEndDrag={onScrollEnd}
+                renderItem={({item})=> 
+                    item.passCondition!?
+                    <View style={{
+                        paddingBottom : normalize(10)
+                    }}>
+                        <CouponCardUsed 
+                            id={item.promotion.id}
+                            couponCode={item.promotion.couponCode}
+                            couponName={item.promotion.couponName}
+                            couponType={item.promotion.couponType}
+                            promotionStatus={item.promotion.promotionStatus}
+                            discountType={item.promotion.discountType}
+                            discount={item.promotion.discount}
+                            count={item.promotion.count}
+                            keep={item.promotion.keep}
+                            used={item.promotion.used}
+                            startDate={item.promotion.startDate}
+                            expiredDate={item.promotion.expiredDate}
+                            description={item.promotion.description}
+                            condition={item.promotion.condition}
+                            specialCondition={item.promotion.specialCondition}
+                            couponConditionRai={item.promotion.couponConditionRai}
+                            couponConditionRaiMin={item.promotion.couponConditionRaiMin}
+                            couponConditionRaiMax={item.promotion.couponConditionRaiMax}
+                            couponConditionService={item.promotion.couponConditionService}
+                            couponConditionServiceMin={item.promotion.couponConditionServiceMin}
+                            couponConditionServiceMax={item.promotion.couponConditionServiceMax}
+                            couponConditionPlant={item.promotion.couponConditionPlant}
+                            couponConditionPlantList={item.promotion.couponConditionPlantList}
+                            couponConditionProvince={item.promotion.couponConditionProvince}
+                            couponConditionProvinceList={item.promotion.couponConditionProvinceList}
+                            disabled={true}
+                         />
+                        <View style={{
+                            flexDirection : 'row',
+                            alignItems : 'center'
+                        }}>
+                            <Image source={icons.dangercirclered} style={{
+                                width : normalize(20),
+                                height : normalize(20),
+                                marginRight : normalize(8)
+                            }} />
+                        <Text style={{
+                            fontFamily : fonts.SarabunMedium,
+                            color : '#DE350B',
+                            fontSize : normalize(16)
+                        }}>ไม่ตรงตามเงื่อนไขที่สามารถใช้คูปองได้</Text>
+                        </View>
+                    </View>:
+                    <CouponCardUsed 
+                        id={item.promotion.id}
+                        couponCode={item.promotion.couponCode}
+                        couponName={item.promotion.couponName}
+                        couponType={item.promotion.couponType}
+                        promotionStatus={item.promotion.promotionStatus}
+                        discountType={item.promotion.discountType}
+                        discount={item.promotion.discount}
+                        count={item.promotion.count}
+                        keep={item.promotion.keep}
+                        used={item.promotion.used}
+                        startDate={item.promotion.startDate}
+                        expiredDate={item.promotion.expiredDate}
+                        description={item.promotion.description}
+                        condition={item.promotion.condition}
+                        specialCondition={item.promotion.specialCondition}
+                        couponConditionRai={item.promotion.couponConditionRai}
+                        couponConditionRaiMin={item.promotion.couponConditionRaiMin}
+                        couponConditionRaiMax={item.promotion.couponConditionRaiMax}
+                        couponConditionService={item.promotion.couponConditionService}
+                        couponConditionServiceMin={item.promotion.couponConditionServiceMin}
+                        couponConditionServiceMax={item.promotion.couponConditionServiceMax}
+                        couponConditionPlant={item.promotion.couponConditionPlant}
+                        couponConditionPlantList={item.promotion.couponConditionPlantList}
+                        couponConditionProvince={item.promotion.couponConditionProvince}
+                        couponConditionProvinceList={item.promotion.couponConditionProvinceList}
+                        disabled={false}
+                        callback={()=>{
+                            setCoupon({
+                                id : item.promotion.id,
+                                name : item.promotion.couponName,
+                                discountType : item.promotion.discountType,
+                                discount : item.promotion.discount??0
+                            })
+                            navigation.goBack()
+                        }}
+                     />
+                }
+                keyExtractor={item => item.id}
             />
         </View>
     </>

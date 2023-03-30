@@ -27,9 +27,11 @@ export interface CouponCardEntities{
     keepthis? : boolean;
     disabled? : boolean;
     expired? : boolean;
+    callback? : ()=> void;
 }
 
 export interface MyCouponCardEntities{
+    passCondition: any;
     id : string;
     farmerId : string;
     promotionId : string;

@@ -16,6 +16,7 @@ import {
   View,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import { useRecoilValue } from 'recoil';
 import { mixpanel } from '../../../mixpanel';
 import { font } from '../../assets';
 import colors from '../../assets/colors/colors';
@@ -46,6 +47,7 @@ import {
 } from '../../datasource/TaskDatasource';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { numberWithCommas } from '../../functions/utility';
+import { couponState } from '../../recoil/CouponAtom';
 
 const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner
@@ -58,6 +60,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
     authContext: { getProfileAuth },
     state: { user },
   } = useAuth();
+  const couponInfo = useRecoilValue(couponState);
   const [couponCode, setCouponCode] = useState('');
   const [couponCodeError, setCouponCodeError] = useState('');
   const [disableEdit, setDisableEdit] = useState(false);
@@ -614,7 +617,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                       color: colors.fontBlack,
                       fontFamily: fonts.SarabunMedium,
                     }}>
-                    เลือกคูปองส่วนลด
+                    {!couponInfo.name? "เลือกคูปองส่วนลด" : couponInfo.name}
                   </Text>
                 </View>
                 <Image source={icons.arrowRigth} style={{

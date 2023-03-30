@@ -9,6 +9,7 @@ export interface PayloadCreateTask {
   preparationBy: string;
   purposeSprayId: string;
   taskDronerTemp: {
+    distance? : any;
     dronerId: string;
     status: string;
     dronerDetail: string[];
