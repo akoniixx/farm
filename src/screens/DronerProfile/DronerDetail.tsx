@@ -311,7 +311,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                 <Text style={[styles.label]}>
                   ห่างคุณ{' '}
                   {detailState.distance !== null
-                    ? `${parseFloat(detailState.distance).toFixed(0)}`
+                    ? `${parseFloat(detailState.distance).toFixed(1)}`
                     : 0}{' '}
                   กม.
                 </Text>

@@ -879,7 +879,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                           onPress={async () => {
                             await AsyncStorage.setItem(
                               'droner_id',
-                              `${item.droner}`,
+                              `${item.droner_id}`,
                             );
                             navigation.push('DronerDetail');
                           }}>
