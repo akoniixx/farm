@@ -39,26 +39,6 @@ const FavDronerUsedList: React.FC<data> = ({
   status_used,
   callBack,
 }) => {
-  const [favAll, setFavAll] = useState<any[]>([]);
-  const [taskSug, setTaskSug] = useState<any[]>([]);
-  const [checked, setChecked] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const date = new Date();
-
-  useEffect(() => {
-    getFavDroner();
-  }, []);
-  const getFavDroner = async () => {
-    setLoading(true);
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    const plot_id = await AsyncStorage.getItem('plot_id');
-    FavoriteDroner.findAllFav(farmer_id!, plot_id!)
-      .then(res => {
-        setFavAll(res);
-      })
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false));
-  };
   return (
     <View
       style={{
@@ -66,7 +46,7 @@ const FavDronerUsedList: React.FC<data> = ({
         paddingVertical: 5,
         alignSelf: 'center',
         paddingHorizontal: 10,
-        width: '100%',
+        width: 'auto',
       }}>
       <View
         style={[
@@ -93,7 +73,7 @@ const FavDronerUsedList: React.FC<data> = ({
                   alignItems: 'center',
                 }}>
                 <Text style={styles.title}>{name}</Text>
-                <View style={{ marginLeft: 45 }}>
+                <View>
                   <View
                     style={{
                       backgroundColor: colors.white,
@@ -155,7 +135,7 @@ const FavDronerUsedList: React.FC<data> = ({
                   </Text>
                 </Text>
                 {status_used === true ? (
-                  <View style={{ marginLeft: 70 }}>
+                  <View style={{ marginHorizontal: '15%' }}>
                     <View
                       style={{
                         borderWidth: 1,
@@ -164,6 +144,7 @@ const FavDronerUsedList: React.FC<data> = ({
                         backgroundColor: '#fff',
                         height: 26,
                         width: 60,
+                        marginLeft: 10,
                       }}>
                       <Text
                         style={{
@@ -208,7 +189,6 @@ const FavDronerUsedList: React.FC<data> = ({
                 fontFamily: fonts.SarabunMedium,
                 fontSize: normalize(16),
                 color: colors.fontGrey,
-                marginRight: '10%',
                 bottom: 2,
                 height: 'auto',
                 lineHeight: 30,
@@ -229,23 +209,17 @@ const FavDronerUsedList: React.FC<data> = ({
                 fontFamily: fonts.SarabunMedium,
                 fontSize: normalize(16),
                 color: colors.fontGrey,
-                marginRight: '10%',
                 bottom: 2,
                 height: 'auto',
                 lineHeight: 30,
               }}>
               {distance !== null
-                ? `ห่างคุณ ${parseFloat(distance).toFixed(0)} กม.`
+                ? `ห่างคุณ ${parseFloat(distance).toFixed(1)} กม.`
                 : `0 กม.`}{' '}
             </Text>
           </View>
         </View>
       </View>
-      <Spinner
-        visible={loading}
-        textContent={'Loading...'}
-        textStyle={{ color: '#FFF' }}
-      />
     </View>
   );
 };
@@ -262,28 +236,13 @@ const styles = StyleSheet.create({
     width: 200,
   },
   cards: {
+    width: Dimensions.get('window').width - normalize(20),
     height: 'auto',
-    width: normalize(355),
     borderWidth: 0.5,
     borderColor: '#D9DCDF',
-    // backgroundColor: '#F7FFF0',
-    borderRadius: normalize(12),
-    paddingVertical: normalize(10),
-    paddingHorizontal: normalize(20),
-    flexDirection: 'row',
-    marginBottom: normalize(5),
-  },
-  cardsSugg: {
-    height: 'auto',
-    width: normalize(355),
-    borderWidth: 0.5,
-    borderColor: '#D9DCDF',
-    backgroundColor: colors.white,
-    borderRadius: normalize(12),
-    paddingVertical: normalize(10),
-    paddingHorizontal: normalize(20),
-    flexDirection: 'row',
-    marginBottom: normalize(5),
+    margin: normalize(5),
+    borderRadius: normalize(10),
+    padding: normalize(10),
   },
 });
 

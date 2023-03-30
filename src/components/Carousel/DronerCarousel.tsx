@@ -129,7 +129,7 @@ const DronerSugg: React.FC<dronerData> = ({
                 />
                 <Text style={styles.label}>
                   {distance !== null
-                    ? `ห่างคุณ ${parseFloat(distance).toFixed(0)} กม.`
+                    ? `ห่างคุณ ${parseFloat(distance).toFixed(1)} กม.`
                     : `0 กม.`}
                 </Text>
               </View>
