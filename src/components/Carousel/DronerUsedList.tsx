@@ -30,6 +30,7 @@ interface dronerUsedData {
   province: any;
   distance: any;
   status: any;
+  callBack: () => void;
 }
 
 const DronerUsedList: React.FC<dronerUsedData> = ({
@@ -42,64 +43,8 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
   province,
   distance,
   status,
+  callBack,
 }) => {
-  const date = new Date();
-  // const [checked, setChecked] = useState<boolean>(false);
-  const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
-  const [data, setData] = useState<any>([]);
-  const [loading, setLoading] = useState(false);
-  const [checked, setChecked] = useState(false);
-
-  useEffect(() => {
-    getProfile();
-    dronerSugUsed();
-  }, []);
-  const getProfile = async () => {
-    const value = await AsyncStorage.getItem('token');
-    if (value) {
-      const farmer_id = await AsyncStorage.getItem('farmer_id');
-      ProfileDatasource.getProfile(farmer_id!)
-        .then(async res => {
-          await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
-        })
-        .catch(err => console.log(err));
-    }
-  };
-  const dronerSugUsed = async () => {
-    const value = await AsyncStorage.getItem('token');
-    if (value) {
-      const farmer_id = await AsyncStorage.getItem('farmer_id');
-      const plot_id = await AsyncStorage.getItem('plot_id');
-      const limit = 8;
-      const offset = 0;
-      TaskSuggestion.DronerUsed(
-        farmer_id!,
-        plot_id!,
-        date.toDateString(),
-        limit,
-        offset,
-      )
-        .then(res => {
-          setTaskSugUsed(res);
-        })
-        .catch(err => console.log(err));
-    }
-  };
-  const addUnAddDroners = async () => {
-    setChecked(!checked);
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    const droner_id = taskSugUsed.map(x => x.droner_id);
-    await FavoriteDroner.addUnaddFav(
-      farmer_id !== null ? farmer_id : '',
-      droner_id[index],
-    )
-      .then(res => {
-        setData(res.responseData);
-      })
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false));
-  };
-
   return (
     <View style={{ paddingHorizontal: 5 }}>
       <View style={[styles.cards]}>
@@ -123,28 +68,18 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                 alignSelf: 'flex-end',
                 margin: 10,
               }}>
-              <TouchableOpacity onPress={addUnAddDroners}>
-                {checked ? (
-                  <Image
-                    source={icons.heart_active}
-                    style={{
-                      alignSelf: 'center',
-                      width: 20,
-                      height: 20,
-                      top: 4,
-                    }}
-                  />
-                ) : (
-                  <Image
-                    source={icons.heart}
-                    style={{
-                      alignSelf: 'center',
-                      width: 20,
-                      height: 20,
-                      top: 4,
-                    }}
-                  />
-                )}
+              <TouchableOpacity onPress={callBack}>
+                <Image
+                  source={
+                    status === 'ACTIVE' ? icons.heart_active : icons.heart
+                  }
+                  style={{
+                    alignSelf: 'center',
+                    width: 20,
+                    height: 20,
+                    top: 4,
+                  }}
+                />
               </TouchableOpacity>
             </View>
             <View style={{ alignSelf: 'center', bottom: 15 }}>

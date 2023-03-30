@@ -107,7 +107,7 @@ const MainNavigator: React.FC = () => {
 
   const d = Date.now();
   const checkDateNoti = d >= start && d <= end;
- /*  useEffect(() => {
+  /*  useEffect(() => {
     Maintenance();
   }, [reload]); */
   return (

@@ -1,4 +1,4 @@
-import { MaintenanceSystem } from "../../entites/MaintenanceApp";
+import { MaintenanceSystem } from '../../entites/MaintenanceApp';
 
 export interface ModalEntity {
   text?: string;

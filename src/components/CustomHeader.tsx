@@ -14,8 +14,8 @@ import { colors, font } from '../assets';
 interface Prop {
   title?: string;
   showBackBtn?: boolean;
-  backgroundColor? : string;
-  titleColor? : string;
+  backgroundColor?: string;
+  titleColor?: string;
   onPressBack?: () => void;
   headerRight?: () => React.ReactNode;
   headerLeft?: () => JSX.Element;
@@ -35,25 +35,29 @@ const CustomHeader: React.FC<Prop> = ({
   image,
 }) => {
   return (
-    <SafeAreaView style={[{backgroundColor: backgroundColor??colors.white,}, style]}>
+    <SafeAreaView
+      style={[{ backgroundColor: backgroundColor ?? colors.white }, style]}>
       <View style={styles.headerWraper}>
         <View style={styles.headerLeftWrapper}>
           {showBackBtn && (
             <TouchableOpacity
               style={{ paddingVertical: 14, paddingHorizontal: 24 }}
               onPress={onPressBack}>
-              <Icon name="left" size={24} color={titleColor??"black"} />
+              <Icon name="left" size={24} color={titleColor ?? 'black'} />
             </TouchableOpacity>
           )}
           {headerLeft?.()}
         </View>
         <View style={styles.headerTitleWraper}>
-          <Text style={{
-            fontFamily: font.AnuphanBold,
-            fontSize: normalize(20),
-            color: titleColor??colors.fontBlack,
-            textAlign: 'center',
-          }}>{title}</Text>
+          <Text
+            style={{
+              fontFamily: font.AnuphanBold,
+              fontSize: normalize(20),
+              color: titleColor ?? colors.fontBlack,
+              textAlign: 'center',
+            }}>
+            {title}
+          </Text>
         </View>
         <View style={styles.headerRightWrapper}>{headerRight?.()}</View>
         <View style={styles.fav}>{image?.()}</View>

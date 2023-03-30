@@ -18,6 +18,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { mixpanel } from '../../../mixpanel';
 import { colors, font, icons, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
+import HeadDronerCardForCreatTask from '../../components/HeadDronerCardForCreatTask';
 import PlotSelect from '../../components/Plots/PlotSelect';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
 import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
@@ -26,9 +27,9 @@ import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { normalize } from '../../functions/Normalize';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 
-const SelectPlotScreen: React.FC<any> = ({ navigation,route }) => {
-  const isSelectDroner = route.params.isSelectDroner
-  const profile = route.params.profile
+const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
+  const isSelectDroner = route.params.isSelectDroner;
+  const profile = route.params.profile;
   const {
     state: { plotDisable },
     autoBookingContext: { setTaskData, getLocationPrice, searchDroner },
@@ -55,9 +56,9 @@ const SelectPlotScreen: React.FC<any> = ({ navigation,route }) => {
       ...prev,
       farmerPlotId: selectedCard,
     }));
-    navigation.navigate('SelectTarget',{
-      isSelectDroner:isSelectDroner,
-      profile:profile
+    navigation.navigate('SelectTarget', {
+      isSelectDroner: isSelectDroner,
+      profile: profile,
     });
   };
 
@@ -115,6 +116,8 @@ const SelectPlotScreen: React.FC<any> = ({ navigation,route }) => {
         }}
         label={'เลือกแปลงของคุณ'}
       />
+       {isSelectDroner && <HeadDronerCardForCreatTask navigation={navigation}
+      image={profile.image_droner} name={profile.firstname+ ' ' + profile.lastname}  /> } 
 
       {plotList.length === 0 ? (
         <View style={{ backgroundColor: 'white' }}>

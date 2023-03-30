@@ -4,6 +4,7 @@ import {
   Dimensions,
   Image,
   Modal,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -32,15 +33,17 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import CardReview from '../../components/Carousel/CardReview';
+import { useIsFocused } from '@react-navigation/native';
 
 const DronerDetail: React.FC<any> = ({ navigation, route }) => {
+  const isFocused = useIsFocused();
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const [visible, setIsVisible] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [review, setReview] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [statusFav, setStatusFav] = useState<any | null>([]);
-  const [profile,setProfile] = useState();
+  const [statusFav, setStatusFav] = useState<any>();
+  const [profile, setProfile] = useState<any>();
   const [detailState, dispatch] = useReducer(
     detailDronerReducer,
     initDetailDronerState,
@@ -51,26 +54,21 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
 
   useEffect(() => {
     dronerDetails();
-    favDroner();
   }, []);
-
   const dronerDetails = async () => {
     setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const droner_id = await AsyncStorage.getItem('droner_id');
     const plot_id = await AsyncStorage.getItem('plot_id');
-    const limit = 0;
-    const offset = 0;
     TaskSuggestion.DronerDetail(
       farmer_id!,
       plot_id!,
       droner_id!,
       date.toLocaleDateString(),
-      limit,
-      offset,
     )
       .then(res => {
-        setProfile(res[0])
+        setStatusFav(res[0].favorite_status);
+        setProfile(res[0]);
         setReview(res[0].review);
         setData(res[0].droner_queue);
         dispatch({
@@ -91,14 +89,6 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
-  };
-  const favDroner = async () => {
-    setLoading(true);
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    const plot_id = await AsyncStorage.getItem('plot_id');
-    FavoriteDroner.findAllFav(farmer_id!, plot_id!).then(res =>
-      setStatusFav(res[0].status_favorite),
-    );
   };
   const baseDate = new Date();
   const nextDay = new Date(baseDate);
@@ -171,7 +161,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                     }}>
                     <Image
                       key={index}
-                      source={{ uri: item?item : icons.avatar }}
+                      source={{ uri: item ? item : icons.avatar }}
                       style={{
                         width,
                         height,
@@ -479,10 +469,12 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           label="จ้างงาน"
           color={colors.greenLight}
           style={styles.button}
-          onPress={() => navigation.navigate('SelectDateScreen',{
-            isSelectDroner: true,
-            profile:profile
-          })}
+          onPress={() =>
+            navigation.navigate('SelectDateScreen', {
+              isSelectDroner: true,
+              profile: profile,
+            })
+          }
         />
       </View>
     </SafeAreaView>

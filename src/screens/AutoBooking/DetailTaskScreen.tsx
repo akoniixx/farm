@@ -50,8 +50,8 @@ import { numberWithCommas } from '../../functions/utility';
 import { couponState } from '../../recoil/CouponAtom';
 
 const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
-  const isSelectDroner = route.params.isSelectDroner
-  const profile = route.params.profile
+  const isSelectDroner = route.params.isSelectDroner;
+  const profile = route.params.profile;
   const {
     state: { taskData, locationPrice, calPrice },
     autoBookingContext: { getCalculatePrice, setTaskData },
@@ -108,16 +108,16 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         preparationBy: taskData.preparationBy,
         status: taskData.status || 'WAIT_RECEIVE',
         targetSpray: taskData.targetSpray,
-        taskDronerTemp: isSelectDroner ? [
-          {
-            distance: profile.distance,
-            dronerDetail: [
-              JSON.stringify(profile)
-            ],
-            dronerId: profile.droner_id,
-            status: "WAIT_RECEIVE"
-          }
-        ] : taskData.taskDronerTemp,
+        taskDronerTemp: isSelectDroner
+          ? [
+              {
+                distance: profile.distance,
+                dronerDetail: [JSON.stringify(profile)],
+                dronerId: profile.droner_id,
+                status: 'WAIT_RECEIVE',
+              },
+            ]
+          : taskData.taskDronerTemp,
         statusRemark: '',
       };
       const res = await TaskDatasource.createTask(payload);
@@ -427,88 +427,97 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             }}>
             นักบินโดรน
           </Text>
-          <DronerCard
-              name={profile.firstname + ' ' + profile.lastname}
-              profile={profile.image_droner}
-              telnumber={profile.telephone_no}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderWidth: 1,
-                borderColor: colors.disable,
-                padding: normalize(10),
-                borderRadius: 16,
-              }}>
-              <Text style={styles.plot}>อัตราค่าจ้าง</Text>
-              <Text style={styles.unitPrice}>{locationPrice.price} บาท/ไร่</Text>
-            </View>
-          {/* <View
-            style={{
-              backgroundColor: colors.white,
-              borderRadius: 10,
-              marginTop: 8,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
+          {isSelectDroner ? (
+            <>
+              <DronerCard
+                name={profile.firstname + ' ' + profile.lastname}
+                profile={profile.image_droner}
+                telnumber={profile.telephone_no}
+              />
               <View
                 style={{
-                  backgroundColor: colors.greyDivider,
-                  borderRadius: 24,
-                  padding: 6,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderColor: colors.disable,
+                  padding: normalize(10),
+                  borderRadius: 16,
                 }}>
-                <Image
-                  source={image.drone}
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 24,
-                  }}
-                />
+                <Text style={styles.plot}>อัตราค่าจ้าง</Text>
+                <Text style={styles.unitPrice}>{locationPrice.price} บาท/ไร่</Text>
               </View>
+            </>
+          ) : (
+            <>
               <View
                 style={{
-                  marginLeft: 16,
+                  backgroundColor: colors.white,
+                  borderRadius: 10,
+                  marginTop: 8,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}>
-                <Text
-                  style={{
-                    color: colors.fontBlack,
-                    fontFamily: fonts.SarabunMedium,
-                    fontSize: 18,
-                  }}>
-                  ระบบค้นหาอัตโนมัติ
-                </Text>
                 <View
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
                   }}>
-                  <Text
+                  <View
                     style={{
-                      color: colors.grey40,
+                      backgroundColor: colors.greyDivider,
+                      borderRadius: 24,
+                      padding: 6,
                     }}>
-                    คัดสรรนักบินคุณภาพ
-                  </Text>
+                    <Image
+                      source={image.drone}
+                      style={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: 24,
+                      }}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 16,
+                    }}>
+                    <Text
+                      style={{
+                        color: colors.fontBlack,
+                        fontFamily: fonts.SarabunMedium,
+                        fontSize: 18,
+                      }}>
+                      ระบบค้นหาอัตโนมัติ
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
+                      <Text
+                        style={{
+                          color: colors.grey40,
+                        }}>
+                        คัดสรรนักบินคุณภาพ
+                      </Text>
+                    </View>
+                  </View>
                 </View>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontFamily: fonts.AnuphanMedium,
+                    color: colors.greenLight,
+                  }}>
+                  {`${numberWithCommas(locationPrice.price, true)} บาท/ ไร่`}
+                </Text>
               </View>
-            </View>
-            <Text
-              style={{
-                fontSize: 18,
-                fontFamily: fonts.AnuphanMedium,
-                color: colors.greenLight,
-              }}>
-              {`${numberWithCommas(locationPrice.price, true)} บาท/ ไร่`}
-            </Text>
-          </View> */}
+            </>
+          )}
+
+
           {/* <View
             style={{
               flexDirection: 'row',
@@ -1119,7 +1128,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
 
 export default DetailTaskScreen;
 
-
 const styles = StyleSheet.create({
   statusNo: {
     fontFamily: fonts.AnuphanMedium,
@@ -1150,4 +1158,4 @@ const styles = StyleSheet.create({
     fontSize: normalize(20),
     color: '#2EC46D',
   },
-})
+});

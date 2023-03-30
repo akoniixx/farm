@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     borderColor: colors.greenLight,
     margin: normalize(10),
     borderRadius: normalize(10),
-    padding: normalize(10)
+    padding: normalize(10),
   },
   mainButton: {
     justifyContent: 'center',
