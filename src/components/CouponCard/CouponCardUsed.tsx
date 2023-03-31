@@ -13,6 +13,7 @@ const CouponCardUsed : React.FC<CouponCardEntities> = ({
     couponName,
     couponType,
     promotionStatus,
+    promotionType,
     discountType,
     discount,
     count,

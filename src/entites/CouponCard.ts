@@ -4,6 +4,7 @@ export interface CouponCardEntities{
     couponName : string;
     couponType : string;
     promotionStatus : string;
+    promotionType : string;
     discountType : string;
     discount? : number;
     count : number;
@@ -35,6 +36,7 @@ export interface MyCouponCardEntities{
     id : string;
     farmerId : string;
     promotionId : string;
+    offlineCode? : string;
     used : boolean;
     createAt : string;
     updateAt : string;

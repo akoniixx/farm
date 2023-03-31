@@ -10,6 +10,7 @@ import CouponCardUsed from '../../components/CouponCard/CouponCardUsed'
 import { Image } from '@rneui/base'
 import { useRecoilState } from 'recoil'
 import { couponState } from '../../recoil/CouponAtom'
+import { PlotDatasource } from '../../datasource/PlotDatasource'
 
 const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
   const conditionCheck = route.params
@@ -83,7 +84,6 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
         provinceCheck = !conditionProvinceList.includes(conditionCheck.province)
     }
     let result = raiCheck||serviceCheck||plantCheck||provinceCheck;
-    console.log(raiCheck,serviceCheck,plantCheck,provinceCheck)
     return result;
   }
 
@@ -155,6 +155,7 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
                             couponCode={item.promotion.couponCode}
                             couponName={item.promotion.couponName}
                             couponType={item.promotion.couponType}
+                            promotionType={item.promotion.promotionType}
                             promotionStatus={item.promotion.promotionStatus}
                             discountType={item.promotion.discountType}
                             discount={item.promotion.discount}
@@ -199,6 +200,7 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
                         couponCode={item.promotion.couponCode}
                         couponName={item.promotion.couponName}
                         couponType={item.promotion.couponType}
+                        promotionType={item.promotion.promotionType}
                         promotionStatus={item.promotion.promotionStatus}
                         discountType={item.promotion.discountType}
                         discount={item.promotion.discount}
@@ -221,14 +223,28 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
                         couponConditionProvince={item.promotion.couponConditionProvince}
                         couponConditionProvinceList={item.promotion.couponConditionProvinceList}
                         disabled={false}
-                        callback={()=>{
-                            setCoupon({
-                                id : item.promotion.id,
-                                name : item.promotion.couponName,
-                                discountType : item.promotion.discountType,
-                                discount : item.promotion.discount??0
+                        callback={async()=>{
+                            PlotDatasource.getCalculatePrice({
+                                farmerPlotId: conditionCheck.farmerPlotId,
+                                couponCode: item.promotion.promotionType === "ONLINE" ? item.promotion.couponCode:item.offlineCode!,
+                                cropName: conditionCheck.cropName,
+                                raiAmount: conditionCheck.raiAmount
+                            }).then(res => {
+                                console.log(res)
+                                setCoupon({
+                                    id : item.id,
+                                    promotionId : item.promotionId,
+                                    couponCode : item.promotion.promotionType === "ONLINE" ? item.promotion.couponCode:item.offlineCode!,
+                                    promotionType : item.promotion.promotionType,
+                                    name : item.promotion.couponName,
+                                    discountType : item.promotion.discountType,
+                                    discount : res.responseData.priceCouponDiscount,
+                                    netPrice : res.responseData.netPrice,
+                                    err : ""
+                                })
+                                navigation.goBack()
                             })
-                            navigation.goBack()
+
                         }}
                      />
                 }

@@ -48,6 +48,7 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
             couponCode={detail.couponCode}
             couponName={detail.couponName}
             couponType={detail.couponType}
+            promotionType={detail.promotionType}
             promotionStatus={detail.promotionStatus}
             discountType={detail.discountType}
             discount={detail.discount}

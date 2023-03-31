@@ -1,15 +1,21 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL, httpClient } from '../config/develop-config';
 
+export const usedCouponOnline = async (id : string,promotionId : string) => {
+  return httpClient.post(
+    BASE_URL + `/promotion/farmer-promotions/used`,
+  );
+};
+
 export const usedCoupon = async (couponCode: string) => {
   return httpClient.get(
     BASE_URL + `/promotion/promotions/usedoffline/${couponCode}`,
   );
 };
 
-export const checkCouponOffline = async (couponCode: string) => {
+export const checkCouponByCode = async (couponCode: string) => {
   return httpClient
-    .get(BASE_URL + `/promotion/promotions/getoffline/${couponCode}`)
+    .get(BASE_URL + `/promotion/promotions/getbycode/${couponCode}`)
     .then(response => {
       return response.data;
     })
@@ -87,12 +93,13 @@ export const getMyCoupon = async (
     });
 };
 
-export const keepCoupon = async (promotionId: string) => {
+export const keepCoupon = async (promotionId: string,couponCode? : string) => {
   const farmerId = await AsyncStorage.getItem('farmer_id');
   return httpClient
     .post(BASE_URL + '/promotion/farmer-promotions/keep', {
       farmerId: farmerId,
       promotionId: promotionId,
+      couponCode : couponCode
     })
     .then(response => {
       return response.data;

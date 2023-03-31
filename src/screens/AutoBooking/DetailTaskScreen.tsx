@@ -9,6 +9,7 @@ import {
   Linking,
   Modal,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -16,7 +17,7 @@ import {
   View,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { mixpanel } from '../../../mixpanel';
 import { font } from '../../assets';
 import colors from '../../assets/colors/colors';
@@ -26,6 +27,7 @@ import image from '../../assets/images/image';
 import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
 import InputWithSuffix from '../../components/InputText/InputWithSuffix';
+import RemoveCoupon from '../../components/Modal/RemoveCoupon';
 import { DronerCard } from '../../components/Mytask/DronerCard';
 import {
   DateTimeDetail,
@@ -38,7 +40,7 @@ import {
   useAutoBookingContext,
 } from '../../contexts/AutoBookingContext';
 import {
-  checkCouponOffline,
+  checkCouponByCode,
   usedCoupon,
 } from '../../datasource/PromotionDatasource';
 import {
@@ -60,8 +62,10 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
     authContext: { getProfileAuth },
     state: { user },
   } = useAuth();
+  const [coupon,setCoupon] = useRecoilState(couponState);
   const couponInfo = useRecoilValue(couponState);
   const [couponCode, setCouponCode] = useState('');
+  const [modalCoupon,setModalCoupon] = useState<boolean>(false)
   const [couponCodeError, setCouponCodeError] = useState('');
   const [disableEdit, setDisableEdit] = useState(false);
   const [currentTel, setCurrentTel] = useState('');
@@ -69,7 +73,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const [loading, setLoading] = useState(true);
   const checkCoupon = async () => {
     try {
-      const res = await checkCouponOffline(couponCode);
+      const res = await checkCouponByCode(couponCode);
       if (res && !res.canUsed) {
         setCouponCodeError(res.userMessage || res.message);
       }
@@ -93,7 +97,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const onSubmit = async () => {
     try {
       setLoading(true);
-
       const dateAppointment = moment(taskData.dateAppointment).toISOString();
       const payload: PayloadCreateTask = {
         purposeSprayId: taskData.purposeSpray.id,
@@ -123,27 +126,41 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       const res = await TaskDatasource.createTask(payload);
 
       if (res && res.success) {
-        usedCoupon(couponCode)
-          .then(async result => {
-            mixpanel.track('Tab submit booking');
-            setLoading(false);
+        if(!couponInfo.name){
+          mixpanel.track('Tab submit booking');
+          setLoading(false);
+          await AsyncStorage.setItem('taskId', res.responseData.id);
+          navigation.navigate('SlipWaitingScreen', {
+            taskId: res.responseData.id,
+          });
+          setTaskData(initialState.taskData);
+        }
+        else{
+          if(couponInfo.promotionType === "ONLINE"){
 
-            await AsyncStorage.setItem('taskId', res.responseData.id);
-            navigation.navigate('SlipWaitingScreen', {
-              taskId: res.responseData.id,
-            });
-            setTaskData(initialState.taskData);
-          })
-          .catch(err => console.log(err));
+          }
+          else{
+
+          }
+        }
+        // usedCoupon(couponCode)
+        //   .then(async result => {
+        //     mixpanel.track('Tab submit booking');
+        //     setLoading(false);
+
+        //     await AsyncStorage.setItem('taskId', res.responseData.id);
+        //     navigation.navigate('SlipWaitingScreen', {
+        //       taskId: res.responseData.id,
+        //     });
+        //     setTaskData(initialState.taskData);
+        //   })
+        //   .catch(err => console.log(err));
       }
     } catch (e) {
       console.log(e);
     }
   };
   useEffect(() => {
-    // console.log(taskData)
-    // console.log(locationPrice)
-    // console.log(calPrice)
     const getInitialData = async () => {
       try {
         await getCalculatePrice({
@@ -170,6 +187,24 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       behavior={Platform.OS === 'ios' ? 'position' : 'height'}
       contentContainerStyle={{ flex: 1 }}
       style={[{ flex: 1 }]}>
+      <RemoveCoupon
+        show={modalCoupon}
+        onMainClick={()=>{
+          setCoupon({
+            id : "",
+            promotionId : "",
+            promotionType : "ONLINE",
+            couponCode : "",
+            name : "",
+            discountType : 'DISCOUNT',
+            discount : 0,
+            netPrice : 0,
+            err : ""
+          })
+          setModalCoupon(false)
+        }}
+        onClose={()=>setModalCoupon(false)}
+      />
       <CustomHeader
         title="รายละเอียดการจอง"
         showBackBtn
@@ -601,8 +636,14 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                   purposeSprayName : taskData.purposeSpray.name,
                   farmAreaAmount : taskData.farmAreaAmount,
                   province : taskData.plotArea?.provinceName,
-                  price : calPrice.netPrice
-                })}>
+                  price : calPrice.netPrice,
+                  farmerPlotId: taskData.farmerPlotId,
+                  cropName: taskData.cropName || '',
+                  raiAmount: taskData.farmAreaAmount
+                    ? +taskData.farmAreaAmount
+                    : 0,
+                })
+                }>
             <View
               style={{
                 paddingHorizontal: normalize(16),
@@ -628,6 +669,18 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                     }}>
                     {!couponInfo.name? "เลือกคูปองส่วนลด" : couponInfo.name}
                   </Text>
+                  {
+                    !couponInfo.name?
+                    <></>:
+                    <TouchableOpacity style={{
+                      marginLeft : normalize(10)
+                    }} onPress={()=>setModalCoupon(true)}>
+                      <Image source={image.removecoupon} style={{
+                        width : normalize(54),
+                        height : normalize(26)
+                      }}/>
+                    </TouchableOpacity>
+                  }
                 </View>
                 <Image source={icons.arrowRigth} style={{
                   width : normalize(10),
@@ -867,7 +920,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 {`${numberWithCommas(calPrice.netPrice.toString(), true)} บาท`}
               </Text>
             </View>
-            {calPrice && calPrice.priceCouponDiscount > 0 && (
+            {couponInfo.name != "" && (
               <View
                 style={{
                   flexDirection: 'row',
@@ -893,7 +946,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                     fontFamily: fonts.SarabunMedium,
                   }}>
                   {`-${numberWithCommas(
-                    calPrice.priceCouponDiscount.toString(),
+                    couponInfo.discount.toString(),
                     true,
                   )} บาท`}
                 </Text>
@@ -933,7 +986,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                   fontFamily: fonts.AnuphanMedium,
                   marginRight: 8,
                 }}>
-                {`${numberWithCommas(calPrice.netPrice.toString(), true)} บาท`}
+                {`${numberWithCommas((couponInfo.name != ""?couponInfo.netPrice:calPrice.netPrice).toString(), true)} บาท`}
               </Text>
               <Image
                 source={icons.arrowUpBold}

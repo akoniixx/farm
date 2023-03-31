@@ -42,4 +42,5 @@ export default {
   reviewSuccess: require('./reviewSuccess.png'),
   maintenance: require('./maintenance.png'),
   searchEmpty: require('./searchempty.png'),
+  removecoupon : require('./removecoupon.png')
 };
