@@ -1,4 +1,16 @@
-import { SafeAreaView, StyleSheet, Text, View ,Image, TextInput, Dimensions, ScrollView, Pressable} from 'react-native'
+import { 
+  SafeAreaView, 
+  StyleSheet, 
+  Text, 
+  View ,
+  Image, 
+  TextInput, 
+  Pressable, 
+  KeyboardAvoidingView, 
+  TouchableWithoutFeedback, 
+  Keyboard,
+  FlatList
+} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { stylesCentral } from '../../styles/StylesCentral'
 import CustomHeader from '../../components/CustomHeader'
@@ -7,7 +19,6 @@ import { normalize } from '@rneui/themed'
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import { MainButton } from '../../components/Button/MainButton'
 import fonts from '../../assets/fonts'
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { QueryLocation } from '../../datasource/LocationDatasource'
 import { ProfileDatasource } from '../../datasource/ProfileDatasource'
 import * as RootNavigation from '../../navigations/RootNavigation';
@@ -199,7 +210,13 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
   };
 
   return (
-    <SafeAreaView style={[stylesCentral.container]}>
+    <KeyboardAvoidingView
+      style={{flex : 1}}
+    >
+      <TouchableWithoutFeedback
+       onPress={Keyboard.dismiss}
+       >
+      <SafeAreaView style={[stylesCentral.container]}>
         <CustomHeader
             showBackBtn={true}
             onPressBack={()=> (edit)?setEdit(false):navigation.goBack()}
@@ -213,7 +230,6 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
           paddingTop : normalize(10)
         }}>
           <View style={{
-            flex : 2
           }}>
             <Text style={{
               fontFamily : fonts.medium,
@@ -244,7 +260,7 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
           {
             searchActive.length!= 0?
             <View style={{
-              flex : 7,
+              height : '70%'
             }}>
               {
                 dataRender.length != 0?
@@ -307,7 +323,7 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
               }
             </View>:
             <View style={{
-              flex : 7,
+              height : '60%',
               justifyContent : 'center',
               alignItems : 'center'
             }}>
@@ -321,11 +337,9 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
           }
         </View>:
         <View style={{
-          flex : 1
         }}>
           <View style={{
             padding : normalize(17),
-            flex : 10
           }}>
             <View style={{
               flexDirection : 'row',
@@ -341,7 +355,7 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
                 fontSize : normalize(16)
               }}>พื้นที่ให้บริการหลัก</Text>
             </View>
-            <TouchableOpacity onPress={()=>setEdit(true)}>
+            <Pressable onPress={()=>setEdit(true)}>
               <View style={[styles.input, {marginVertical: normalize(20)}]}>
                 <Text style={styles.label}>ตำบล/ อำเภอ/ จังหวัด</Text>
                 <TextInput
@@ -351,7 +365,7 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
                   placeholderTextColor={colors.disable}
                 />
               </View>
-            </TouchableOpacity>
+            </Pressable>
             <Text style={styles.inputvalue}>ระยะทางพื้นที่ให้บริการหลักระหว่าง 50-100 กม.</Text>
             <View style={{position : 'relative'}}>
               <MapView.Animated
@@ -378,7 +392,6 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
           </View>
           <View style={{
             paddingHorizontal : normalize(17),
-            flex : 1
           }}>
             <MainButton 
               disable={positionForm.provinceId === 0}
@@ -397,6 +410,8 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
         </View>
         }
     </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   )
 }
 
