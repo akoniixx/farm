@@ -47,6 +47,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
     couponConditionPlantList: [],
     couponConditionProvince: false,
     couponConditionProvinceList: [],
+    couponOfflineCode : [],
     keepthis: false,
   });
   const getCoupon = (code: string) => {
@@ -84,6 +85,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               couponConditionPlantList: res.couponConditionPlantList,
               couponConditionProvince: res.couponConditionProvince,
               couponConditionProvinceList: res.couponConditionProvinceList,
+              couponOfflineCode : res.couponOfflineCode,
               keepthis: false,
             });
           } else {
@@ -109,12 +111,13 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
             <TextInput
               style={{
                 flex: 5,
-                height: normalize(40),
+                height: normalize(50),
                 padding: normalize(10),
                 backgroundColor: colors.grayBg,
                 borderRadius: normalize(8),
                 fontFamily: fonts.SarabunMedium,
                 fontSize: normalize(16),
+                color : colors.fontBlack
               }}
               placeholder="ระบุรหัสคูปองส่วนลด"
               placeholderTextColor={colors.gray}
@@ -226,6 +229,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               couponConditionPlantList={data.couponConditionPlantList}
               couponConditionProvince={data.couponConditionProvince}
               couponConditionProvinceList={data.couponConditionProvinceList}
+              couponOfflineCode={data.couponOfflineCode}
               keepthis={true}
               disabled={false}
             />

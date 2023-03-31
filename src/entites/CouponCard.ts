@@ -25,6 +25,7 @@ export interface CouponCardEntities{
     couponConditionPlantList : any[];
     couponConditionProvince : boolean;
     couponConditionProvinceList : string[],
+    couponOfflineCode? : any[],
     keepthis? : boolean;
     disabled? : boolean;
     expired? : boolean;

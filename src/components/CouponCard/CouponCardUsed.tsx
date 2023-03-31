@@ -34,6 +34,7 @@ const CouponCardUsed : React.FC<CouponCardEntities> = ({
     couponConditionPlantList,
     couponConditionProvince,
     couponConditionProvinceList,
+    couponOfflineCode,
     disabled,
     callback
 }) => {

@@ -42,6 +42,7 @@ import {
 import {
   checkCouponByCode,
   usedCoupon,
+  usedCouponOnline,
 } from '../../datasource/PromotionDatasource';
 import {
   PayloadCreateTask,
@@ -137,24 +138,34 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         }
         else{
           if(couponInfo.promotionType === "ONLINE"){
-
+            usedCouponOnline(couponInfo.id,couponInfo.promotionId)
+            .then(async result => {
+              mixpanel.track('Tab submit booking');
+              setLoading(false);
+            
+              await AsyncStorage.setItem('taskId', res.responseData.id);
+              navigation.navigate('SlipWaitingScreen', {
+                taskId: res.responseData.id,
+              });
+              setTaskData(initialState.taskData);
+            })
+            .catch(err => console.log(err));
           }
           else{
-
+            usedCoupon(couponInfo.couponCode)
+            .then(async result => {
+              mixpanel.track('Tab submit booking');
+              setLoading(false);
+            
+              await AsyncStorage.setItem('taskId', res.responseData.id);
+              navigation.navigate('SlipWaitingScreen', {
+                taskId: res.responseData.id,
+              });
+              setTaskData(initialState.taskData);
+            })
+            .catch(err => console.log(err));
           }
         }
-        // usedCoupon(couponCode)
-        //   .then(async result => {
-        //     mixpanel.track('Tab submit booking');
-        //     setLoading(false);
-
-        //     await AsyncStorage.setItem('taskId', res.responseData.id);
-        //     navigation.navigate('SlipWaitingScreen', {
-        //       taskId: res.responseData.id,
-        //     });
-        //     setTaskData(initialState.taskData);
-        //   })
-        //   .catch(err => console.log(err));
       }
     } catch (e) {
       console.log(e);

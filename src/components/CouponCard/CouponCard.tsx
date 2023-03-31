@@ -43,16 +43,26 @@ const CouponCard: React.FC<CouponCardEntities> = ({
   couponConditionPlantList,
   couponConditionProvince,
   couponConditionProvinceList,
+  couponOfflineCode,
   keepthis,
   disabled,
   expired,
 }) => {
   const KeepCoupon = () => {
-    keepCoupon(id)
+    if(promotionType === "ONLINE"){
+      keepCoupon(id)
+        .then(res => {
+          RootNavigation.navigate('MyCouponScreen', {});
+        })
+        .catch(err => console.log(err));
+    }
+    else{
+      keepCoupon(id,couponOfflineCode![0].couponCode)
       .then(res => {
         RootNavigation.navigate('MyCouponScreen', {});
       })
       .catch(err => console.log(err));
+    }
   };
   return (
     <TouchableOpacity
@@ -120,7 +130,7 @@ const CouponCard: React.FC<CouponCardEntities> = ({
                 color: colors.fontBlack,
                 fontFamily: fonts.AnuphanMedium,
                 fontSize: normalize(20),
-                marginBottom: normalize(10),
+                marginBottom: normalize(5),
               }}>
               {couponName}
             </Text>

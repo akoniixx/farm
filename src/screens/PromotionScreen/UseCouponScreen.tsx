@@ -222,6 +222,7 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
                         couponConditionPlantList={item.promotion.couponConditionPlantList}
                         couponConditionProvince={item.promotion.couponConditionProvince}
                         couponConditionProvinceList={item.promotion.couponConditionProvinceList}
+                        couponOfflineCode={item.promotion.couponOfflineCode}
                         disabled={false}
                         callback={async()=>{
                             PlotDatasource.getCalculatePrice({
@@ -230,7 +231,6 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
                                 cropName: conditionCheck.cropName,
                                 raiAmount: conditionCheck.raiAmount
                             }).then(res => {
-                                console.log(res)
                                 setCoupon({
                                     id : item.id,
                                     promotionId : item.promotionId,
