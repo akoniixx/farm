@@ -44,7 +44,7 @@ const AllDronerUsed: React.FC<data> = ({
         paddingVertical: 5,
         alignSelf: 'center',
         paddingHorizontal: 10,
-        width: '100%',
+        width: 'auto',
       }}>
       <View key={index} style={[styles.cards]}>
         <View>
@@ -67,7 +67,7 @@ const AllDronerUsed: React.FC<data> = ({
                   alignItems: 'center',
                 }}>
                 <Text style={styles.title}>{name}</Text>
-                <View style={{ marginLeft: 45 }}>
+                <View>
                   <View
                     style={{
                       backgroundColor: colors.white,
@@ -134,7 +134,7 @@ const AllDronerUsed: React.FC<data> = ({
                     {total_task !== null ? `(${total_task})` : `  (0)`}
                   </Text>
                 </Text>
-                <View style={{ marginLeft: 80 }}>
+                <View style={{ marginHorizontal: '15%' }}>
                   <View
                     style={{
                       borderWidth: 1,
@@ -143,6 +143,7 @@ const AllDronerUsed: React.FC<data> = ({
                       backgroundColor: '#fff',
                       height: 26,
                       width: 60,
+                      marginLeft: 10,
                     }}>
                     <Text
                       style={{
@@ -186,7 +187,7 @@ const AllDronerUsed: React.FC<data> = ({
                 fontFamily: fonts.SarabunMedium,
                 fontSize: normalize(16),
                 color: colors.fontGrey,
-                marginRight: '10%',
+                marginRight: '2%',
                 bottom: 2,
                 height: 'auto',
                 lineHeight: 30,
@@ -207,13 +208,12 @@ const AllDronerUsed: React.FC<data> = ({
                 fontFamily: fonts.SarabunMedium,
                 fontSize: normalize(16),
                 color: colors.fontGrey,
-                marginRight: '10%',
                 bottom: 2,
                 height: 'auto',
                 lineHeight: 30,
               }}>
               {distance !== null
-                ? `ห่างคุณ ${parseFloat(distance).toFixed(0)} กม.`
+                ? `ห่างคุณ ${parseFloat(distance).toFixed(1)} กม.`
                 : `0 กม.`}{' '}
             </Text>
           </View>
@@ -235,16 +235,14 @@ const styles = StyleSheet.create({
     width: 200,
   },
   cards: {
+    backgroundColor: '#F7FFF0',
+    width: Dimensions.get('window').width - normalize(20),
     height: 'auto',
-    width: normalize(355),
     borderWidth: 0.5,
     borderColor: '#D9DCDF',
-    backgroundColor: '#F7FFF0',
-    borderRadius: normalize(12),
-    paddingVertical: normalize(10),
-    paddingHorizontal: normalize(20),
-    flexDirection: 'row',
-    marginBottom: normalize(5),
+    margin: normalize(5),
+    borderRadius: normalize(10),
+    padding: normalize(10),
   },
 });
 

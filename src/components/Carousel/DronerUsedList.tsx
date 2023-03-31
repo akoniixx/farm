@@ -148,7 +148,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                 />
                 <Text style={styles.label}>
                   {distance !== null
-                    ? `ห่างคุณ ${parseFloat(distance).toFixed(0)} กม.`
+                    ? `ห่างคุณ ${parseFloat(distance).toFixed(1)} กม.`
                     : `0 กม.`}
                 </Text>
               </View>
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         backgroundColor: '#F7FFF0',
-        height: normalize(220),
+        height: normalize(229),
         width: normalize(160),
         borderRadius: 10,
         borderWidth: 1,
