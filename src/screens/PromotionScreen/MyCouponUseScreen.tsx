@@ -57,6 +57,7 @@ const MyCouponUseScreen: React.FC<any> = () => {
                 couponCode={item.promotion.couponCode}
                 couponName={item.promotion.couponName}
                 couponType={item.promotion.couponType}
+                promotionType={item.promotion.promotionType}
                 promotionStatus={item.promotion.promotionStatus}
                 discountType={item.promotion.discountType}
                 discount={item.promotion.discount}

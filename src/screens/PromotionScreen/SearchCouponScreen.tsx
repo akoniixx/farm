@@ -12,7 +12,7 @@ import CustomHeader from '../../components/CustomHeader';
 import { colors, font, image } from '../../assets';
 import { normalize } from '@rneui/themed';
 import fonts from '../../assets/fonts';
-import { checkCouponOffline } from '../../datasource/PromotionDatasource';
+import { checkCouponByCode } from '../../datasource/PromotionDatasource';
 import CouponCard from '../../components/CouponCard/CouponCard';
 
 const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
@@ -26,6 +26,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
     couponName: '',
     couponType: '',
     promotionStatus: '',
+    promotionType : 'OFFLINE',
     discountType: '',
     discount: 0,
     count: 0,
@@ -46,10 +47,11 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
     couponConditionPlantList: [],
     couponConditionProvince: false,
     couponConditionProvinceList: [],
+    couponOfflineCode : [],
     keepthis: false,
   });
   const getCoupon = (code: string) => {
-    checkCouponOffline(code)
+    checkCouponByCode(code)
       .then(res => {
         if (res.canUsed === undefined) {
           setErrText('ไม่มีรหัสคูปอง โปรดตรวจสอบหมายเลขคูปองอีกครั้ง');
@@ -62,6 +64,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               couponName: res.couponName,
               couponType: res.couponType,
               promotionStatus: res.promotionStatus,
+              promotionType : res.promotionType,
               discountType: res.discountType,
               discount: res.discount,
               count: res.count,
@@ -82,6 +85,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               couponConditionPlantList: res.couponConditionPlantList,
               couponConditionProvince: res.couponConditionProvince,
               couponConditionProvinceList: res.couponConditionProvinceList,
+              couponOfflineCode : res.couponOfflineCode,
               keepthis: false,
             });
           } else {
@@ -107,12 +111,13 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
             <TextInput
               style={{
                 flex: 5,
-                height: normalize(40),
+                height: normalize(50),
                 padding: normalize(10),
                 backgroundColor: colors.grayBg,
                 borderRadius: normalize(8),
                 fontFamily: fonts.SarabunMedium,
                 fontSize: normalize(16),
+                color : colors.fontBlack
               }}
               placeholder="ระบุรหัสคูปองส่วนลด"
               placeholderTextColor={colors.gray}
@@ -203,6 +208,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               couponName={data.couponName}
               couponType={data.couponType}
               promotionStatus={data.promotionStatus}
+              promotionType={data.promotionType}
               discountType={data.discountType}
               discount={data.discount}
               count={data.count}
@@ -223,6 +229,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               couponConditionPlantList={data.couponConditionPlantList}
               couponConditionProvince={data.couponConditionProvince}
               couponConditionProvinceList={data.couponConditionProvinceList}
+              couponOfflineCode={data.couponOfflineCode}
               keepthis={true}
               disabled={false}
             />

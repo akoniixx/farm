@@ -14,6 +14,7 @@ export default {
   plots: require('./plots.png'),
   drone: require('./drone.png'),
   dangercircle: require('./dangercircle.png'),
+  dangercirclered: require('./dangercirclered.png'),
   checkdisable: require('./checkdisable.png'),
   close: require('./x.png'),
   register: require('./register.png'),
