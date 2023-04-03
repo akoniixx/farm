@@ -4,8 +4,6 @@ import { TabBar, TabView } from 'react-native-tab-view';
 import { colors } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
-import FinishTaskScreen from '../../screens/MyTaskScreen/FinishTaskScreen';
-import InprogressScreen from '../../screens/MyTaskScreen/InprogressScreen';
 import AllDronerUsed from '../../screens/MainScreen/AllDronerUsed';
 import FavDronerUsed from '../../screens/MainScreen/FavDronerUsed';
 

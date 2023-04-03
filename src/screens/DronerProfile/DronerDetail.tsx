@@ -47,6 +47,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
     detailDronerReducer,
     initDetailDronerState,
   );
+  const [refresh, setRefresh] = useState<boolean>(false);
   const { width } = Dimensions.get('window');
   const height = width * 0.6;
   const date = new Date();
@@ -66,7 +67,6 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       date.toLocaleDateString(),
     )
       .then(res => {
-        console.log(1, JSON.stringify(res, null, 2));
         setStatusFav(res[0].favorite_status);
         setProfile(res[0]);
         setReview(res[0].review);
@@ -119,7 +119,24 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       date: el,
     };
   });
-
+  const favorite = async () => {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    const droner_id = profile.droner_id;
+    await FavoriteDroner.addUnaddFav(
+      farmer_id !== null ? farmer_id : '',
+      droner_id !== null ? droner_id : '',
+    )
+      .then(res => {
+        setRefresh(!refresh);
+        if (statusFav === 'ACTIVE') {
+          setStatusFav('INACTIVE');
+        } else {
+          setStatusFav('ACTIVE');
+        }
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
+  };
   if (loading) {
     return (
       <Spinner
@@ -136,10 +153,14 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           showBackBtn
           onPressBack={() => navigation.goBack()}
           image={() => (
-            <Image
-              source={statusFav === 'ACTIVE' ? icons.heart_active : icons.heart}
-              style={{ width: 25, height: 25 }}
-            />
+            <TouchableOpacity onPress={favorite}>
+              <Image
+                source={
+                  statusFav === 'ACTIVE' ? icons.heart_active : icons.heart
+                }
+                style={{ width: 25, height: 25 }}
+              />
+            </TouchableOpacity>
           )}
         />
         <ScrollView>

@@ -45,6 +45,7 @@ export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
   AllPlotScreen: undefined;
+  FavDronerUsed: undefined;
   SelectDateScreen: undefined;
   SelectPlotScreen: undefined;
   MyTaskDetailScreenNoti: undefined;
@@ -167,6 +168,7 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="MyCouponScreen" component={MyCouponScreen} />
       <Stack.Screen name='SearchCouponScreen' component={SearchCouponScreen} />
       <Stack.Screen name='UseCouponScreen' component={UseCouponScreen} />
+      
     </Stack.Navigator>
   );
 };

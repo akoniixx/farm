@@ -72,7 +72,7 @@ const FavDronerUsedList: React.FC<data> = ({
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <Text style={styles.title}>{name}</Text>
+                <Text numberOfLines={1} style={styles.title}>{name}</Text>
                 <View>
                   <View
                     style={{
@@ -82,6 +82,7 @@ const FavDronerUsedList: React.FC<data> = ({
                       height: 30,
                       borderRadius: 15,
                       borderWidth: 0.5,
+                      marginLeft: Dimensions.get('window').width - 380,
                     }}>
                     <TouchableOpacity onPress={callBack}>
                       <Image
@@ -144,7 +145,7 @@ const FavDronerUsedList: React.FC<data> = ({
                         backgroundColor: '#fff',
                         height: 26,
                         width: 60,
-                        marginLeft: 10,
+                        marginLeft: Dimensions.get('window').width - 390,
                       }}>
                       <Text
                         style={{
@@ -167,7 +168,7 @@ const FavDronerUsedList: React.FC<data> = ({
               borderBottomWidth: 1,
               width: 20,
               marginTop: 8,
-              minWidth: 340,
+              minWidth: Dimensions.get('window').width - 50,
             }}></View>
           <View
             style={{

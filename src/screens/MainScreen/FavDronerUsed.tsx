@@ -19,6 +19,7 @@ import AllDroner from '../../components/Carousel/AllDronerUsed';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import FavDronerUsedList from '../../components/Carousel/FavDronerUsedList';
+import * as RootNavigation from '../../navigations/RootNavigation';
 
 const FavDronerUsed: React.FC<any> = ({ navigation }) => {
   const isFocused = useIsFocused();
@@ -40,7 +41,6 @@ const FavDronerUsed: React.FC<any> = ({ navigation }) => {
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
   };
-
   return (
     <SafeAreaView
       style={{
@@ -51,35 +51,50 @@ const FavDronerUsed: React.FC<any> = ({ navigation }) => {
       }}>
       <ScrollView>
         <View style={{ paddingVertical: 10 }}>
-          {statusFav.length > 0 ? (
+          {statusFav.length != 0 ? (
             <View>
               <ScrollView>
-                {statusFav.map((item: any, index: any) => (
-                  <FavDronerUsedList
-                    key={index}
-                    img={item.image_droner}
-                    name={item.firstname + ' ' + item.lastname}
-                    rate={item.rating_avg}
-                    total_task={item.count_rating}
-                    province={item.province_name}
-                    distance={item.distance}
-                    status_used={item.status_ever_used}
-                    status={item.status_favorite}
-                    callBack={async () => {
-                      const farmer_id = await AsyncStorage.getItem('farmer_id');
-                      const droner_id = statusFav.map(x => x.droner_id);
-                      await FavoriteDroner.addUnaddFav(
-                        farmer_id !== null ? farmer_id : '',
-                        droner_id[index],
-                      )
-                        .then(res => {
-                          setRefresh(!refresh);
-                        })
-                        .catch(err => console.log(err))
-                        .finally(() => setLoading(false));
-                    }}
-                  />
-                ))}
+                {statusFav.length != undefined &&
+                  statusFav.map((item: any, index: any) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={async () => {
+                        await AsyncStorage.setItem(
+                          'droner_id',
+                          `${item.droner_id}`,
+                        );
+                        RootNavigation.navigate('Main', {
+                          screen: 'DronerDetail',
+                        });
+                      }}>
+                      <FavDronerUsedList
+                        key={index}
+                        img={item.image_droner}
+                        name={item.firstname + ' ' + item.lastname}
+                        rate={item.rating_avg}
+                        total_task={item.count_rating}
+                        province={item.province_name}
+                        distance={item.distance}
+                        status_used={item.status_ever_used}
+                        status={item.status_favorite}
+                        callBack={async () => {
+                          const farmer_id = await AsyncStorage.getItem(
+                            'farmer_id',
+                          );
+                          const droner_id = statusFav.map(x => x.droner_id);
+                          await FavoriteDroner.addUnaddFav(
+                            farmer_id !== null ? farmer_id : '',
+                            droner_id[index],
+                          )
+                            .then(res => {
+                              setRefresh(!refresh);
+                            })
+                            .catch(err => console.log(err))
+                            .finally(() => setLoading(false));
+                        }}
+                      />
+                    </TouchableOpacity>
+                  ))}
               </ScrollView>
             </View>
           ) : (

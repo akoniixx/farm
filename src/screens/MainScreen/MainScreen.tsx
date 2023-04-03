@@ -162,7 +162,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
 
   const d = momentExtend.toBuddhistYear(date, 'DD MMMM YYYY');
   const checkDateNoti = d >= notiStart && d <= notiEnd;
-
   useEffect(() => {
     const getTaskId = async () => {
       const value = await AsyncStorage.getItem('taskId');
@@ -291,7 +290,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
   };
-  // console.log(JSON.stringify(taskSugUsed,null,2))
 
   return (
     <View

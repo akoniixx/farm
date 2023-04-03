@@ -19,6 +19,7 @@ import AllDroner from '../../components/Carousel/AllDronerUsed';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import FavDronerUsedList from '../../components/Carousel/FavDronerUsedList';
+import * as RootNavigation from '../../navigations/RootNavigation';
 
 const AllDronerUsed: React.FC<any> = ({ navigation }) => {
   const date = new Date();
@@ -28,6 +29,7 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
   const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [statusFav, setStatusFav] = useState<any[]>([]);
+  const [refresh, setRefresh] = useState<boolean>(false);
 
   useEffect(() => {
     getProfile();
@@ -106,34 +108,6 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
     getFavDroner();
   }, []);
 
-  const mergeDroner = taskSugUsed.map(el => {
-    const getDroner = el.droner_id;
-    const find = statusFav.find(item => {
-      const d = item.droner_id;
-      return d === getDroner;
-    });
-
-    if (find) {
-      return {
-        img: find.image_droner,
-        name: find.firstname + ' ' + find.lastname,
-        rate: find.rating_avg,
-        province: find.province_name,
-        distance: find.street_distance,
-        total_task: find.count_rating,
-        status_favorite: 'ACTIVE',
-      };
-    }
-    return {
-      img: el.image_droner,
-      name: el.firstname + ' ' + el.lastname,
-      rate: el.rating_avg,
-      province: el.province_name,
-      distance: el.street_distance,
-      total_task: el.count_rating,
-      status_favorite: 'INACTIVE',
-    };
-  });
   return (
     <SafeAreaView
       style={{
@@ -144,29 +118,23 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
       }}>
       <ScrollView>
         <View style={{ paddingVertical: 10 }}>
-          {taskSugUsed.length !== 0 ? (
+          {taskSugUsed.length > 0 ? (
             <View>
-              {statusFav.length !== 0 ? (
-                <ScrollView>
-                  {statusFav.length !== 0 &&
-                    mergeDroner.map((item: any, index: any) => (
-                      <AllDroner
-                        key={index}
-                        index={index}
-                        img={item.img}
-                        name={item.name}
-                        rate={item.rate}
-                        total_task={item.total_task}
-                        province={item.province}
-                        distance={item.distance}
-                        status={item.status_favorite}
-                      />
-                    ))}
-                </ScrollView>
-              ) : (
-                <View style={{ height: '110%' }}>
-                  <ScrollView>
-                    {taskSugUsed.map((item: any, index: any) => (
+              <ScrollView>
+                {taskSugUsed.length != undefined &&
+                  taskSugUsed.map((item: any, index: any) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={async () => {
+                        await AsyncStorage.setItem(
+                          'droner_id',
+                          `${item.droner_id}`,
+                        );
+                        RootNavigation.navigate('Main', {
+                          screen: 'DronerDetail'
+                        })
+                      }}
+                      >
                       <AllDroner
                         key={index}
                         index={index}
@@ -176,12 +144,41 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
                         total_task={item.count_rating}
                         province={item.province_name}
                         distance={item.distance}
-                        status={item.status_favorite}
+                        status={item.favorite_status}
+                        callBack={async () => {
+                          setLoading(true);
+                          const farmer_id = await AsyncStorage.getItem(
+                            'farmer_id',
+                          );
+                          const droner_id = taskSugUsed.map(x => x.droner_id);
+                          await FavoriteDroner.addUnaddFav(
+                            farmer_id !== null ? farmer_id : '',
+                            droner_id[index],
+                          )
+                            .then(res => {
+                              setRefresh(!refresh);
+                              let newTaskSugUsed = taskSugUsed.map((x, i) => {
+                                let result = {};
+                                if (x.droner_id === item.droner_id) {
+                                  let a =
+                                    x.favorite_status === 'ACTIVE'
+                                      ? 'INACTIVE'
+                                      : 'ACTIVE';
+                                  result = { ...x, favorite_status: a };
+                                } else {
+                                  result = { ...x };
+                                }
+                                return result;
+                              });
+                              setTaskSugUsed(newTaskSugUsed);
+                            })
+                            .catch(err => console.log(err))
+                            .finally(() => setLoading(false));
+                        }}
                       />
-                    ))}
-                  </ScrollView>
-                </View>
-              )}
+                    </TouchableOpacity>
+                  ))}
+              </ScrollView>
             </View>
           ) : (
             <View>
@@ -190,7 +187,7 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
                   source={image.empty_droner_his}
                   style={{ width: normalize(135), height: normalize(120) }}
                 />
-                <Text style={[styles.text]}>ไม่มีนักบินโดรนที่เคยจ้าง</Text>
+                <Text style={[styles.text]}>ไม่มีนักบินโดรนที่ถูกใจ</Text>
               </View>
             </View>
           )}

@@ -25,6 +25,7 @@ interface data {
   distance: any;
   total_task: any;
   status: any;
+  callBack: () => void;
 }
 
 const AllDronerUsed: React.FC<data> = ({
@@ -36,6 +37,7 @@ const AllDronerUsed: React.FC<data> = ({
   distance,
   total_task,
   status,
+  callBack,
 }) => {
   return (
     <View
@@ -75,10 +77,14 @@ const AllDronerUsed: React.FC<data> = ({
                       width: 30,
                       height: 30,
                       borderRadius: 15,
+                      borderWidth: 0.5,
+                      marginLeft: Dimensions.get('window').width - 380,
                     }}>
-                    {status === 'ACTIVE' ? (
+                    <TouchableOpacity onPress={callBack}>
                       <Image
-                        source={icons.heart_active}
+                        source={
+                          status === 'ACTIVE' ? icons.heart_active : icons.heart
+                        }
                         style={{
                           alignSelf: 'center',
                           width: 20,
@@ -86,17 +92,7 @@ const AllDronerUsed: React.FC<data> = ({
                           top: 4,
                         }}
                       />
-                    ) : (
-                      <Image
-                        source={icons.heart}
-                        style={{
-                          alignSelf: 'center',
-                          width: 20,
-                          height: 20,
-                          top: 4,
-                        }}
-                      />
-                    )}
+                    </TouchableOpacity>
                   </View>
                 </View>
               </View>
@@ -143,7 +139,7 @@ const AllDronerUsed: React.FC<data> = ({
                       backgroundColor: '#fff',
                       height: 26,
                       width: 60,
-                      marginLeft: 10,
+                      marginLeft: Dimensions.get('window').width - 390,
                     }}>
                     <Text
                       style={{
@@ -165,7 +161,7 @@ const AllDronerUsed: React.FC<data> = ({
               borderBottomWidth: 1,
               width: 20,
               marginTop: 8,
-              minWidth: 340,
+              minWidth: Dimensions.get('window').width - 50,
             }}></View>
           <View
             style={{
