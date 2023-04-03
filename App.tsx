@@ -21,6 +21,7 @@ import { AutoBookingProvider } from './src/contexts/AutoBookingContext';
 import { AuthProvider } from './src/contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from './mixpanel';
+import { RecoilRoot } from 'recoil';
 const App = () => {
   useEffect(() => {
     mixpanel.track('App open');
@@ -41,6 +42,7 @@ const App = () => {
   };
   return (
     <>
+      <RecoilRoot>
       <NavigationContainer ref={navigationRef}>
         <PaperProvider>
           <AuthProvider>
@@ -53,6 +55,7 @@ const App = () => {
         </PaperProvider>
         <Toast config={toastConfig} />
       </NavigationContainer>
+      </RecoilRoot>
     </>
   );
 };

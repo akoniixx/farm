@@ -40,7 +40,7 @@ import moment from 'moment';
 import MaintenanceScreen from '../screens/MaintenanceScreen/MaintenanceScreen';
 import PopUpMaintenance from '../components/Modal/MaintenanceApp/PopUpMaintenance';
 import SearchCouponScreen from '../screens/PromotionScreen/SearchCouponScreen';
-import FavDronerUsed from '../screens/MainScreen/FavDronerUsed';
+import UseCouponScreen from '../screens/PromotionScreen/UseCouponScreen';
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -79,8 +79,8 @@ export type MainStackParamList = {
   CouponDetail: { detail: CouponCardEntities };
   MyCouponScreen: undefined;
   MaintenanceScreen: undefined;
-  SearchCouponScreen: undefined;
-  AllDronerUsed: { dronerId: string };
+  SearchCouponScreen : undefined;
+  UseCouponScreen : undefined;
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
@@ -166,10 +166,9 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
       <Stack.Screen name="CouponDetail" component={CouponDetailScreen} />
       <Stack.Screen name="MyCouponScreen" component={MyCouponScreen} />
-      <Stack.Screen name="SearchCouponScreen" component={SearchCouponScreen} />
-      <Stack.Screen name="FavDronerUsed" component={FavDronerUsed} />
-
-
+      <Stack.Screen name='SearchCouponScreen' component={SearchCouponScreen} />
+      <Stack.Screen name='UseCouponScreen' component={UseCouponScreen} />
+      
     </Stack.Navigator>
   );
 };

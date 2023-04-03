@@ -184,6 +184,7 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
                 couponName={item.couponName}
                 couponType={item.couponType}
                 promotionStatus={item.promotionStatus}
+                promotionType={item.promotionType}
                 discountType={item.discountType}
                 discount={item.discount}
                 count={item.count}
