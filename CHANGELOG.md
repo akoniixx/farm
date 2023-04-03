@@ -1,3 +1,7 @@
+## Fix [v1.2.3] 2023-04-03
+- fixed bug fav in main screen
+- added flow favorite in detail droner screen
+- added navigate to detail droner screen
 ## Fix [v1.2.2] 2023-03-30
 - fixed favorite droner
 - fixed loading droner detail review
