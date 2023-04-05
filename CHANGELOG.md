@@ -1,3 +1,5 @@
+## Fix [v1.2.4] 2023-04-05
+- fixed time onboarding 
 ## Fix [v1.2.3] 2023-04-03
 - fixed bug fav in main screen
 - added flow favorite in detail droner screen
