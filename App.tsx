@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
+import firebase from '@react-native-firebase/app';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './src/navigations/AppNavigator';
 import { navigationRef } from './src/navigations/RootNavigation';
@@ -28,7 +29,12 @@ const App = () => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
     if (Platform.OS === 'ios') {
-      firebaseInitialize();
+      if(firebase.apps.length === 0){
+        firebaseInitialize();
+      }
+      else{
+        firebase.app()
+      }
       registerDeviceForRemoteMessages();
     }
     requestUserPermission();

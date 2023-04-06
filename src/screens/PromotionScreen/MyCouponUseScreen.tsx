@@ -14,30 +14,38 @@ import { getMyCoupon } from '../../datasource/PromotionDatasource';
 import { colors, font, image } from '../../assets';
 import CouponCard from '../../components/CouponCard/CouponCard';
 import { MainButton } from '../../components/Button/MainButton';
+import * as RootNavigation from '../../navigations/RootNavigation';
 
-const MyCouponUseScreen: React.FC<any> = () => {
+const MyCouponUseScreen: React.FC<any> = ({navigation, route}) => {
   const [count, setCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [data, setData] = useState<MyCouponCardEntities[]>([]);
   const isFocused = useIsFocused();
   const getData = (page: number, take: number, used?: boolean) => {
     getMyCoupon(page, take, used).then(res => {
-      if (data.length > 0) {
-        setData([...data, ...res.data]);
-      } else {
-        setCount(res.count);
-        setData(res.data);
-      }
+      setCount(res.count);
+      setData(res.data);
     });
   };
   useEffect(() => {
     getData(page, 5, false);
-  }, [page]);
+  }, []);
+  const onScrollEnd = ()=>{
+    let pageNow = page
+    if(data.length < count){
+      getMyCoupon(pageNow+1, 5, false).then(res => {
+        let newData = data.concat(res.data)
+        setPage(pageNow+1)
+        setData(newData)
+      })
+    }
+  }
   return (
     <View
       style={{
         position: 'relative',
         height: '100%',
+        backgroundColor : colors.bgGreen
       }}>
       {data.length != 0 ? (
         <View
@@ -45,11 +53,7 @@ const MyCouponUseScreen: React.FC<any> = () => {
             padding: normalize(17),
           }}>
           <FlatList
-            onScrollEndDrag={() => {
-              if (count > page * 5) {
-                setPage(page + 1);
-              }
-            }}
+            onScrollEndDrag={onScrollEnd}
             data={data}
             renderItem={({ item }) => (
               <CouponCard
@@ -103,7 +107,7 @@ const MyCouponUseScreen: React.FC<any> = () => {
           <View
             style={{
               alignItems: 'center',
-              alignContent: 'center',
+              justifyContent: 'center',
               paddingVertical: 10,
             }}>
             <Text style={styles.textEmpty}>ไม่มีคูปองเก็บสะสม</Text>
@@ -123,7 +127,10 @@ const MyCouponUseScreen: React.FC<any> = () => {
         <MainButton
           label="จ้างนักบินโดรน"
           color={colors.greenLight}
-          onPress={() => {}}
+          onPress={() => RootNavigation.navigate('SelectDateScreen', {
+            isSelectDroner: false,
+            profile: {},
+          })}
         />
       </View>
     </View>
@@ -137,11 +144,14 @@ const styles = StyleSheet.create({
     padding: normalize(17),
   },
   empty: {
+    width : '100%',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
     display: 'flex',
     paddingVertical: '50%',
+    backgroundColor : colors.bgGreen,
+    height : '100%'
   },
   textEmpty: {
     fontFamily: font.SarabunLight,

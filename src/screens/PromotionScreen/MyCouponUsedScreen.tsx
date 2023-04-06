@@ -14,30 +14,34 @@ const MyCouponUsedScreen: React.FC<any> = () => {
   const isFocused = useIsFocused();
   const getData = (page: number, take: number, used?: boolean) => {
     getMyCoupon(page, take, used).then(res => {
-      if (data.length > 0) {
-        setData([...data, ...res.data]);
-      } else {
-        setCount(res.count);
-        setData(res.data);
-      }
+      setCount(res.count);
+      setData(res.data);
     });
   };
   useEffect(() => {
     getData(page, 5, true);
-  }, [page]);
+  }, []);
+
+  const onScrollEnd = ()=>{
+    let pageNow = page
+    if(data.length < count){
+      getMyCoupon(pageNow+1, 5, true).then(res => {
+        let newData = data.concat(res.data)
+        setPage(pageNow+1)
+        setData(newData)
+      })
+    }
+  }
   return (
     <>
       {data.length != 0 ? (
         <View
           style={{
             padding: normalize(17),
+            backgroundColor : colors.bgGreen
           }}>
           <FlatList
-            onScrollEndDrag={() => {
-              if (count > page * 5) {
-                setPage(page + 1);
-              }
-            }}
+            onScrollEndDrag={onScrollEnd}
             data={data}
             renderItem={({ item }) => (
               <CouponCard
@@ -111,11 +115,14 @@ const styles = StyleSheet.create({
     padding: normalize(17),
   },
   empty: {
+    width : '100%',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
     display: 'flex',
     paddingVertical: '50%',
+    backgroundColor : colors.bgGreen,
+    height : '100%'
   },
   textEmpty: {
     fontFamily: font.SarabunLight,

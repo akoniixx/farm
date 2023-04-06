@@ -41,6 +41,7 @@ import MaintenanceScreen from '../screens/MaintenanceScreen/MaintenanceScreen';
 import PopUpMaintenance from '../components/Modal/MaintenanceApp/PopUpMaintenance';
 import SearchCouponScreen from '../screens/PromotionScreen/SearchCouponScreen';
 import UseCouponScreen from '../screens/PromotionScreen/UseCouponScreen';
+import AllCouponScreen from '../screens/PromotionScreen/AllCouponScreen';
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -81,6 +82,7 @@ export type MainStackParamList = {
   MaintenanceScreen: undefined;
   SearchCouponScreen : undefined;
   UseCouponScreen : undefined;
+  AllCouponScreen : undefined;
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
@@ -168,6 +170,7 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="MyCouponScreen" component={MyCouponScreen} />
       <Stack.Screen name='SearchCouponScreen' component={SearchCouponScreen} />
       <Stack.Screen name='UseCouponScreen' component={UseCouponScreen} />
+      <Stack.Screen name='AllCouponScreen' component={AllCouponScreen} />
       
     </Stack.Navigator>
   );

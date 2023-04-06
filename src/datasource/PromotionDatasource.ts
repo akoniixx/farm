@@ -123,3 +123,14 @@ export const keepCoupon = async (promotionId: string,couponCode? : string) => {
       console.log(err, 'err getCoupon');
     });
 };
+
+export const checkMyCoupon = async(couponCode : string) => {
+  return httpClient
+    .get(BASE_URL + `/promotion/farmer-promotions/check/${couponCode}`)
+    .then(response => {
+      return response.data;
+    })
+    .catch(err => {
+      console.log(err, 'err getCoupon');
+    });
+}

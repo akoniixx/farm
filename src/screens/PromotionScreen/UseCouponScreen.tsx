@@ -4,20 +4,23 @@ import CustomHeader from '../../components/CustomHeader'
 import { colors, icons } from '../../assets'
 import { normalize } from '@rneui/themed'
 import fonts from '../../assets/fonts'
-import { getMyCoupon } from '../../datasource/PromotionDatasource'
+import { checkCouponByCode, checkMyCoupon, getMyCoupon, keepCoupon } from '../../datasource/PromotionDatasource'
 import { MyCouponCardEntities } from '../../entites/CouponCard'
 import CouponCardUsed from '../../components/CouponCard/CouponCardUsed'
 import { Image } from '@rneui/base'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { couponState } from '../../recoil/CouponAtom'
 import { PlotDatasource } from '../../datasource/PlotDatasource'
 
 const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
   const conditionCheck = route.params
   const [coupon,setCoupon] = useRecoilState(couponState);
+  const couponInfo = useRecoilValue(couponState)
   const [count,setCount] = useState<number>(0)
   const [page,setPage] = useState<number>(1);
   const [data,setData] = useState<MyCouponCardEntities[]>([])
+  const [couponOffline,setCouponOffline] = useState<string>("");
+  const [disabled,setDisabled] = useState<boolean>(true);
   const getData = (page : number,take : number,used? : boolean)=>{
     getMyCoupon(page,take,used).then(
         res => {
@@ -113,6 +116,79 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
     }
   }
 
+  const checkOffline = ()=>{
+    checkCouponByCode(couponOffline).then(
+        res => {
+            if(res.canUsed === undefined){
+                setCoupon({
+                    ...coupon,
+                    err : 'ไม่มีรหัสคูปอง โปรดตรวจสอบหมายเลขคูปองอีกครั้ง'
+                })
+            }
+            else{
+                if(res.canUsed){
+                    checkMyCoupon(couponOffline).then(
+                        resCheck => {
+                            if(!resCheck.userMessage){
+                                PlotDatasource.getCalculatePrice({
+                                    farmerPlotId: conditionCheck.farmerPlotId,
+                                    couponCode: couponOffline,
+                                    cropName: conditionCheck.cropName,
+                                    raiAmount: conditionCheck.raiAmount
+                                }).then(resCal => {
+                                    setCoupon({
+                                        ...coupon,
+                                        err : "คูปองนี้ถูกเก็บไปแล้ว"
+                                    })
+                                })
+                            }
+                            else{
+                                if(res.promotionStatus === "INACTIVE"){
+                                    setCoupon({
+                                        ...coupon,
+                                        err : "คูปองนี้หมดอายุแล้ว"
+                                    })
+                                }
+                                else{
+                                    keepCoupon(res.id,couponOffline).then(
+                                        resKeep => {
+                                            let newData = [{
+                                                passCondition : checkCouponCondition( 
+                                                    res.couponConditionRai,
+                                                    res.couponConditionRaiMax,
+                                                    res.couponConditionRaiMin,
+                                                    res.couponConditionService,
+                                                    res.couponConditionServiceMax,
+                                                    res.couponConditionServiceMin,
+                                                    res.couponConditionPlant,
+                                                    res.couponConditionPlantList,
+                                                    res.couponConditionProvince,
+                                                    res.couponConditionProvinceList
+                                                ),
+                                                ...resKeep,
+                                                promotion : {
+                                                    ...res
+                                                }
+                                            },...data]
+                                            setData(newData)
+                                        }
+                                    ).catch(err => console.log(err))
+                                }
+                            }
+                        }
+                    ).catch(err => console.log(err))
+                }
+                else{
+                    setCoupon({
+                        ...coupon,
+                        err : "คูปองนี้ถูกใช้งานแล้ว"
+                    })
+                }
+            }
+        }
+    )
+  }
+
   useEffect(()=>{
     getData(page,5,false)
   },[])
@@ -125,17 +201,51 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
             title="คูปองส่วนลด"
         />
         <View style={styles.searchCode}>
-            <TextInput 
-                keyboardType="numeric" 
-                placeholder='ระบุรหัสคูปองส่วนลด'
-                placeholderTextColor={colors.gray}
-                style={styles.searchInput}
-            />
-            <TouchableOpacity>
-                <View style={styles.searchButton}>
-                    <Text style={styles.textButton}>ยืนยัน</Text>
+           <View style={{
+                flex : 1,
+                flexDirection : 'row'
+           }}>
+                <View style={{
+                    flex : 8,
+                    height : normalize(60)
+                }}>
+                    <TextInput 
+                        keyboardType="numeric" 
+                        placeholder='ระบุรหัสคูปองส่วนลด'
+                        placeholderTextColor={colors.gray}
+                        style={styles.searchInput}
+                        value={couponOffline}
+                        clearButtonMode='always'
+                        onChangeText={(value)=>{
+                            setCouponOffline(value)
+                            if(value.length != 0){
+                                setDisabled(false);
+                            }
+                            else{
+                                setDisabled(true)
+                            }
+                        }}
+                    />
                 </View>
-            </TouchableOpacity>
+                <TouchableOpacity 
+                    disabled={disabled}
+                    style={{
+                        flex : 2,
+                        marginLeft : normalize(10)
+                    }}
+                    onPress={checkOffline}
+                >
+                    <View style={[styles.searchButton,{backgroundColor : (disabled)? colors.disable : colors.greenLight}]}>
+                        <Text style={styles.textButton}>ยืนยัน</Text>
+                    </View>
+                </TouchableOpacity>
+           </View>
+        </View>
+        <View style={{
+            paddingHorizontal : normalize(17),
+            backgroundColor : colors.white
+        }}>
+            <Text style={styles.error}>{couponInfo.err}</Text>
         </View>
         <View style={{
             height : '100%',
@@ -264,26 +374,35 @@ const styles = StyleSheet.create({
         paddingVertical : normalize(10),
         flexDirection : 'row',
         justifyContent : 'space-between',
-        alignItems : 'center'
+        alignItems : 'center',
     },
     searchInput : {
-        paddingVertical : normalize(15),
-        paddingHorizontal : normalize(10),
-        fontFamily : fonts.SarabunMedium,
-        backgroundColor : colors.disable,
-        fontSize : normalize(16),
-        borderRadius : normalize(8),
-        width : '80%'
-    },
+        flex: 5,
+        height: normalize(50),
+        padding: normalize(10),
+        backgroundColor: colors.grayBg,
+        borderRadius: normalize(8),
+        fontFamily: fonts.SarabunMedium,
+        fontSize: normalize(16),
+        color : colors.fontBlack
+      },
     searchButton : {
-        paddingHorizontal : normalize(15),
-        backgroundColor : colors.disable,
-        borderRadius : normalize(8)
+        flex: 1,
+        marginLeft: normalize(10),
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: normalize(10),
+        borderRadius: normalize(6),
     },
     textButton : {
         fontFamily : fonts.SarabunMedium,
         fontSize : normalize(16),
-        paddingVertical : normalize(16),
         color : colors.white
+    },
+    error : {
+        fontFamily : fonts.SarabunMedium,
+        fontSize : normalize(16),
+        paddingBottom : normalize(10),
+        color : colors.error
     }
 })

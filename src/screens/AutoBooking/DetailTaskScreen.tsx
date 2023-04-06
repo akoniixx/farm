@@ -165,6 +165,17 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             })
             .catch(err => console.log(err));
           }
+          setCoupon({
+            id : "",
+            promotionId : "",
+            name : "",
+            couponCode : "",
+            promotionType : "ONLINE",
+            discountType : "DISCOUNT",
+            discount : 0,
+            netPrice : 0,
+            err : ""
+        })
         }
       }
     } catch (e) {

@@ -73,72 +73,95 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
               }}>
               โปรโมชั่น
             </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-              }}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('SearchCouponScreen')}>
-                <Image
-                  source={icons.searchPromotion}
-                  style={{
-                    width: normalize(23),
-                    height: normalize(23),
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
           </View>
         </View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('MyCouponScreen')}
+        <View
           style={{
             position: 'absolute',
             top: '82%',
             marginHorizontal: normalize(12.5),
             width: Dimensions.get('screen').width - normalize(25),
+            justifyContent : 'space-between',
+            alignItems : 'center',
+            flexDirection : 'row',
             height: normalize(56),
           }}>
-          <View
-            style={{
-              borderRadius: normalize(10),
-              borderWidth: normalize(1),
-              borderColor: colors.greenLight,
-              width: '100%',
-              height: '100%',
-              backgroundColor: '#F7FFF0',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-              shadowColor: '#0CDF65',
-              shadowRadius: normalize(30),
-            }}>
-            <Image
-              source={icons.couponlogo}
+          <TouchableOpacity style={{
+            width : '48%',
+            height: '100%',
+          }}
+          onPress={() => navigation.navigate('SearchCouponScreen')}
+          >
+            <View
               style={{
-                width: normalize(20),
-                height: normalize(16),
-              }}
-            />
-            <Text
-              style={{
-                fontFamily: font.AnuphanMedium,
-                color: colors.fontBlack,
-                fontSize: normalize(18),
-                marginLeft: normalize(15),
-                marginRight: normalize(5),
+                borderRadius: normalize(10),
+                borderWidth: normalize(1),
+                borderColor: '#FB8705',
+                height: '100%',
+                backgroundColor: colors.bgOrange,
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+                shadowColor: '#0CDF65',
+                shadowRadius: normalize(30),
               }}>
-              คูปองของฉัน
-            </Text>
-            <Image
-              source={icons.arrowRigth}
+              <Image
+                source={icons.tickerstar}
+                style={{
+                  width: normalize(20),
+                  height: normalize(16),
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  color: colors.fontBlack,
+                  fontSize: normalize(18),
+                  marginLeft: normalize(15),
+                  marginRight: normalize(5),
+                }}>
+                ใส่เลขคูปอง
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={{
+            width : '48%',
+            height: '100%',
+          }}
+          onPress={() => navigation.navigate('MyCouponScreen')}>
+            <View
               style={{
-                width: normalize(20),
-                height: normalize(20),
-              }}
-            />
-          </View>
-        </TouchableOpacity>
+                borderRadius: normalize(10),
+                borderWidth: normalize(1),
+                borderColor: colors.greenLight,
+                height: '100%',
+                backgroundColor: '#F7FFF0',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+                shadowColor: '#0CDF65',
+                shadowRadius: normalize(30),
+              }}>
+              <Image
+                source={icons.couponlogo}
+                style={{
+                  width: normalize(20),
+                  height: normalize(16),
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  color: colors.fontBlack,
+                  fontSize: normalize(18),
+                  marginLeft: normalize(15),
+                  marginRight: normalize(5),
+                }}>
+                คูปองของฉัน
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.inner}>
         <View
@@ -157,7 +180,7 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
             }}>
             สิทธิพิเศษ
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=> navigation.navigate('AllCouponScreen')}>
             <Text
               style={{
                 fontFamily: font.SarabunLight,
