@@ -96,5 +96,11 @@ export default {
   starfill: require('./starfill.png'),
   starCorner: require('./starCorner.png'),
   arrowRightGrey: require('./arrowRightGrey.png'),
-  tickerstar : require('./tickerstar.png')
+  tickerstar : require('./tickerstar.png'),
+  halfcircle1 : require('./halfcircle1.png'),
+  halfcircle2 : require('./halfcircle2.png'),
+  halfcirclegreen1 : require('./halfcirclegreen1.png'),
+  halfcirclegreen2 : require('./halfcirclegreen2.png'),
+  halfcircleorange1 : require('./halfcircleorange1.png'),
+  halfcircleorange2 : require('./halfcircleorange2.png')
 };

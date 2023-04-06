@@ -103,27 +103,27 @@ const CouponCard: React.FC<CouponCardEntities> = ({
         [
           styles.mainCard,
           {
-            backgroundColor : disabled ? colors.disable: (new Date(expiredDate).getTime()-new Date().getTime() > 604800000)?colors.white : colors.bgOrange,
-            borderColor : disabled ? colors.disable: (new Date(expiredDate).getTime()-new Date().getTime() > 604800000)?"#7BE0A6" : "#FDC382",
-            borderWidth : normalize(2)
+            backgroundColor : disabled ? colors.grey10: (new Date(expiredDate).getTime()-new Date().getTime() > 604800000)?colors.white : colors.bgOrange,
+            borderColor : disabled ? colors.grey5: (new Date(expiredDate).getTime()-new Date().getTime() > 604800000)?colors.grey20 : "#FDC382",
+            borderWidth : normalize(1)
           }
         ]}>
         <View style={{
           position : 'absolute',
-          top : normalize(-3.5),
+          top : normalize(-1.5),
           right : normalize(80),
         }}>
-          <Image source={image.substractbottom} style={{
+          <Image source={expired?icons.halfcircle1 :new Date(expiredDate).getTime()-new Date().getTime() > 604800000? icons.halfcircle1 : icons.halfcircleorange1} style={{
             width : normalize(20),
             height : normalize(10)
           }}/>
         </View>
         <View style={{
           position : 'absolute',
-          bottom : normalize(-3.5),
+          bottom : normalize(-1.5),
           right : normalize(80),
         }}>
-          <Image source={image.substracttop} style={{
+          <Image source={expired?icons.halfcircle2 : new Date(expiredDate).getTime()-new Date().getTime() > 604800000 ? icons.halfcircle2 : icons.halfcircleorange2} style={{
             width : normalize(20),
             height : normalize(10)
           }}/>
@@ -176,7 +176,7 @@ const CouponCard: React.FC<CouponCardEntities> = ({
                 fontSize: normalize(18),
                 color: new Date(expiredDate).getTime()-new Date().getTime() > 604800000 ? colors.gray : colors.error,
               }}>
-              {new Date(expiredDate).getTime()-new Date().getTime() > 604800000 ? `ใช้ได้ถึง ${generateTime(expiredDate)}` : `เหลือเวลาใช้อีก ${((new Date(expiredDate).getTime()-new Date().getTime())/86400000).toFixed(0)} วัน`}
+              {expired ?`ใช้ได้ถึง ${generateTime(expiredDate)}` : new Date(expiredDate).getTime()-new Date().getTime() > 604800000 ? `ใช้ได้ถึง ${generateTime(expiredDate)}` : `เหลือเวลาใช้อีก ${((new Date(expiredDate).getTime()-new Date().getTime())/86400000).toFixed(0)} วัน`}
             </Text>
           </View>
           {keepthis ? (
@@ -211,9 +211,6 @@ const CouponCard: React.FC<CouponCardEntities> = ({
             <Image
               source={image.expired}
               style={{
-                position: 'absolute',
-                bottom: normalize(40),
-                right: normalize(15),
                 width: normalize(60),
                 height: normalize(30),
               }}

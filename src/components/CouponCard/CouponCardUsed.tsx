@@ -77,28 +77,28 @@ const CouponCardUsed : React.FC<CouponCardEntities> = ({
             [
                 styles.mainCard,
                 {
-                  backgroundColor : disabled ? colors.white: (new Date(expiredDate).getTime()-new Date().getTime() > 604800000)?colors.white : colors.bgOrange,
-                  borderColor : (new Date(expiredDate).getTime()-new Date().getTime() > 604800000)?"#7BE0A6" : "#FDC382",
+                  backgroundColor : (new Date(expiredDate).getTime()-new Date().getTime() > 604800000)?colors.white : colors.bgOrange,
+                  borderColor : (new Date(expiredDate).getTime()-new Date().getTime() > 604800000)?colors.grey20 : "#FDC382",
                   borderWidth : normalize(2)
                 }
             ]
         }>
             <View style={{
               position : 'absolute',
-              top : normalize(-3.5),
+              top : normalize(-2.5),
               right : normalize(80),
             }}>
-              <Image source={image.substractbottom} style={{
+              <Image source={new Date(expiredDate).getTime()-new Date().getTime() > 604800000? icons.halfcircle1 : icons.halfcircleorange1} style={{
                 width : normalize(20),
                 height : normalize(10)
               }}/>
             </View>
             <View style={{
               position : 'absolute',
-              bottom : normalize(-3.5),
+              bottom : normalize(-2.5),
               right : normalize(80),
             }}>
-              <Image source={image.substracttop} style={{
+              <Image source={new Date(expiredDate).getTime()-new Date().getTime() > 604800000 ? icons.halfcircle2 : icons.halfcircleorange2} style={{
                 width : normalize(20),
                 height : normalize(10)
               }}/>
