@@ -1,3 +1,6 @@
+## Feature [v1.2.5] 2023-04-05
+- add promotion feature for droner service
+
 ## Fix [v1.2.4] 2023-04-05
 - fixed time onboarding 
 ## Fix [v1.2.3] 2023-04-03

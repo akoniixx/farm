@@ -64,7 +64,6 @@ const CouponCard: React.FC<CouponCardEntities> = ({
       .catch(err => console.log(err));
     }
   };
-  console.log(new Date(expiredDate).getTime(),new Date().getTime())
   return (
     <TouchableOpacity
       onPress={() => {
