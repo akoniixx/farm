@@ -4,7 +4,7 @@ import { carouselItems } from '../../assets/constant/constant';
 import { normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
 import Carousel from 'react-native-reanimated-carousel';
-import { font } from '../../assets';
+import { colors, font } from '../../assets';
 
 const HomeCarousel: React.FC<any> = () => {
   const screen = Dimensions.get('window');
@@ -34,7 +34,7 @@ const HomeCarousel: React.FC<any> = () => {
       pagingEnabled
       data={[1, 2, 3]}
       autoPlay
-      scrollAnimationDuration={9000}
+      autoPlayInterval={7000}
       renderItem={({ index }: any) => {
         return <RenderItem index={index} />;
       }}
@@ -45,6 +45,14 @@ const HomeCarousel: React.FC<any> = () => {
 export default HomeCarousel;
 
 const styles = StyleSheet.create({
+  dots: {
+    top: 20,
+    backgroundColor: colors.greenLight,
+    width: 12,
+    height: 12,
+    borderRadius: 10,
+    margin: 10,
+  },
   mainButton: {
     justifyContent: 'center',
     alignContent: 'center',
