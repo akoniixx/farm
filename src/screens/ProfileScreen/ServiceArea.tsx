@@ -279,14 +279,14 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
                       setSearchActive("")
                       setPosition({
                         ...position,
-                        latitude : item.latitude,
-                        longitude : item.longitude
+                        latitude : parseFloat((item.latitude).toString()),
+                        longitude : parseFloat((item.longitude).toString())
                       })
                       setPositionForm({
                         ...positionForm,
                         area : item.area,
-                        latitude : item.latitude,
-                        longitude : item.longitude,
+                        latitude : parseFloat((item.latitude).toString()),
+                        longitude : parseFloat((item.longitude).toString()),
                         provinceId : item.provinceId,
                         districtId : item.districtId,
                         subdistrictId : item.subdistrictId
@@ -380,8 +380,8 @@ const ServiceArea : React.FC<any> = ({navigation,route}) => {
                   setPosition(region)
                   setPositionForm({
                     ...positionForm,
-                    latitude : region.latitude,
-                    longitude : region.longitude
+                    latitude : parseFloat((region.latitude).toString()),
+                    longitude : parseFloat((region.longitude).toString())
                   })
                 }}
               />
