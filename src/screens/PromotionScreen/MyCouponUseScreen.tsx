@@ -15,11 +15,13 @@ import { colors, font, image } from '../../assets';
 import CouponCard from '../../components/CouponCard/CouponCard';
 import { MainButton } from '../../components/Button/MainButton';
 import * as RootNavigation from '../../navigations/RootNavigation';
+import SelectDronerCouponModal from '../../components/Modal/SelectDronerCoupon';
 
 const MyCouponUseScreen: React.FC<any> = ({navigation, route}) => {
   const [count, setCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [data, setData] = useState<MyCouponCardEntities[]>([]);
+  const [modal,setModal] = useState<boolean>(false)
   const isFocused = useIsFocused();
   const getData = (page: number, take: number, used?: boolean) => {
     getMyCoupon(page, take, used).then(res => {
@@ -47,6 +49,24 @@ const MyCouponUseScreen: React.FC<any> = ({navigation, route}) => {
         height: '100%',
         backgroundColor : colors.bgGreen
       }}>
+      <SelectDronerCouponModal
+         show={modal}
+         onClose={()=>setModal(false)}
+         onMainClick={()=>{
+          RootNavigation.navigate('SelectDateScreen', {
+            isSelectDroner: true,
+            profile: {},
+          })
+          setModal(false)
+         }}
+         onBottomClick={()=>{
+          RootNavigation.navigate('SelectDateScreen', {
+            isSelectDroner: false,
+            profile: {},
+           })
+           setModal(false)
+         }}
+      />
       {data.length != 0 ? (
         <View
           style={{
@@ -127,10 +147,7 @@ const MyCouponUseScreen: React.FC<any> = ({navigation, route}) => {
         <MainButton
           label="จ้างนักบินโดรน"
           color={colors.greenLight}
-          onPress={() => RootNavigation.navigate('SelectDateScreen', {
-            isSelectDroner: false,
-            profile: {},
-          })}
+          onPress={() => setModal(true)}
         />
       </View>
     </View>
