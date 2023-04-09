@@ -298,7 +298,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         flex: 1,
       }}>
       <ScrollView>
-        <View style={[stylesCentral.container]}>
+        <View style={[stylesCentral.container,{paddingBottom:normalize(30)}]}>
           <View style={{ backgroundColor: colors.white }}>
             <View style={{ height: 'auto' }}>
               <Image
@@ -677,7 +677,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     <MainButton label={'จ้างนักบินที่เคยจ้าง'} color={'#2EC46D'} onPress={()=>setShowModalCall(true)}/>
                   </View>
                   </View> */}
-                <View>
+                {/* <View>
                   <View
                     style={{
                       flexDirection: 'row',
@@ -725,7 +725,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       }}
                     />
                   </View>
-                </View>
+                </View> */}
 
                 <View
                   style={{
