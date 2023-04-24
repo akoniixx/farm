@@ -95,5 +95,6 @@ export default {
   saleicon: require('./saleicon.png'),
   starfill: require('./starfill.png'),
   starCorner: require('./starCorner.png'),
-  arrowRightGrey: require('./arrowRightGrey.png')
+  arrowRightGrey: require('./arrowRightGrey.png'),
+  filter: require('./filter.png')
 };

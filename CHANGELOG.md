@@ -1,3 +1,5 @@
+## Feature [v1.3.0] 2023-04-24
+- added guru kaset feature 
 ## Fix [v1.2.4] 2023-04-05
 - fixed time onboarding 
 ## Fix [v1.2.3] 2023-04-03
