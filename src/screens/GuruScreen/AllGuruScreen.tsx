@@ -20,7 +20,6 @@ import { GuruKaset } from '../../datasource/GuruDatasource';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import image from '../../assets/images/image';
 
 const AllGuruScreen: React.FC<any> = ({ navigation }) => {
   const isFocused = useIsFocused();
@@ -28,8 +27,7 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
   const filterNews = useRef<any>();
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  const [data, setData] = useState<any[]>([]);
-  const [refresh, setRefresh] = useState<boolean>(false);
+  const [data, setData] = useState<any>();
 
   useEffect(() => {
     findAllNews();
@@ -63,11 +61,11 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
       />
       <ScrollView style={{ backgroundColor: '#F8F9FA' }}>
         <View style={{ paddingVertical: 10 }}>
-          {data.length != 0 ? (
+          {data != undefined ? (
             <View>
               <ScrollView>
-                {data.length != undefined &&
-                  data.map((item: any, index: any) => (
+                {data != undefined &&
+                  data.data.map((item: any, index: any) => (
                     <TouchableOpacity
                       key={index}
                       onPress={async () => {

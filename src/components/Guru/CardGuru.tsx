@@ -22,7 +22,8 @@ export const CardGuru: React.FC<guruData> = ({
     <View
       key={index}
       style={{
-        padding: 10,
+        alignSelf: 'center',
+        paddingVertical: 5,
       }}>
       <View style={styles.card}>
         <Image
@@ -55,10 +56,10 @@ export const CardGuru: React.FC<guruData> = ({
 };
 const styles = StyleSheet.create({
   card: {
-    width: Dimensions.get('window').width - normalize(25),
+    width: Dimensions.get('window').width - normalize(35),
     height: 'auto',
     borderWidth: 1,
-    borderColor: '#D9DCDF',
+    borderColor: '#C0C5CA',
     margin: normalize(5),
     borderRadius: normalize(10),
   },

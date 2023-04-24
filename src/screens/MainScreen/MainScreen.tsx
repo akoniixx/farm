@@ -732,8 +732,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         autoplay={true}
                         autoplayInterval={7000}
                         autoplayDelay={5000}
+                        loop={true}
                         ref={isCarousel}
-                        data={guruKaset}
+                        data={guruKaset.data}
                         sliderWidth={screen.width}
                         itemWidth={screen.width}
                         onSnapToItem={index => setIndex(index)}
@@ -761,7 +762,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                           marginVertical: -10,
                         }}>
                         <Pagination
-                          dotsLength={guruKaset.length}
+                          dotsLength={guruKaset.data.length}
                           activeDotIndex={index}
                           carouselRef={isCarousel}
                           dotStyle={{
