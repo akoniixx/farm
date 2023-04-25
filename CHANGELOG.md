@@ -1,3 +1,6 @@
+## Fix [1.2.3] 2023-04-25
+- fix price display
+
 ## Fix [v1.2.2] 2023-03-28
 - Fix service area type lat long
 
