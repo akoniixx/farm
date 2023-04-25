@@ -297,7 +297,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   }, [isFocused]);
   const findAllNews = async () => {
     setLoading(true);
-    GuruKaset.findAllNews('ACTIVE', 'FARMER', '', '', 5, 0)
+    GuruKaset.findAllNews('ACTIVE', 'FARMER', 'created_at', 'DESC', 5, 0)
       .then(res => {
         setGuruKaset(res);
       })
