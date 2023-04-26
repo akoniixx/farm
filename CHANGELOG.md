@@ -1,4 +1,6 @@
-## Fix [v1.3.1] 2023-04-05
+## Fix [v1.3.2] 2023-04-26
+- comment review
+## Fix [v1.3.1] 2023-04-24
 - fixed fetching data guru kaset
 ## Feature [v1.3.0] 2023-04-24
 - added guru kaset feature 
