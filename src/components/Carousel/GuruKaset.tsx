@@ -30,7 +30,7 @@ export const CardGuruKaset: React.FC<guruData> = ({ background }) => {
 const styles = StyleSheet.create({
   card: {
     width: Dimensions.get('window').width - normalize(30),
-    borderWidth: 1,
+    borderWidth: 0.3,
     borderColor: '#D9DCDF',
     margin: normalize(5),
     borderRadius: normalize(10),
