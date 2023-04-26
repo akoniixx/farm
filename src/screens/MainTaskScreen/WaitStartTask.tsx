@@ -51,7 +51,7 @@ const WaitStartTask: React.FC = () => {
                 id={item.item.taskNo}
                 status={item.item.status}
                 title={item.item.farmerPlot.plantName}
-                price={parseInt(item.item.totalPrice)+parseInt(item.item.discount)}
+                price={item.item.price+item.item.revenuePromotion}
                 date={item.item.dateAppointment}
                 address={item.item.farmerPlot.locationName}
                 distance={item.item.distance}

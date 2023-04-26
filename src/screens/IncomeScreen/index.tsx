@@ -12,6 +12,8 @@ import {stylesCentral} from '../../styles/StylesCentral';
 import ContentList from './ContentList';
 
 export interface DataType {
+  price: any;
+  revenuePromotion: any;
   taskNo: string;
   discount: string;
   farmAreaAmount: string;
