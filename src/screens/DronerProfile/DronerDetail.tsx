@@ -213,7 +213,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
               />
             )}
           </View>
-          <View
+          {/* <View
             style={{
               flexDirection: 'row',
               padding: normalize(15),
@@ -258,8 +258,8 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                 ดูทั้งหมด
               </Text>
             </TouchableOpacity>
-          </View>
-          {review !== null ? (
+          </View> */}
+          {/* {review !== null ? (
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}>
@@ -295,7 +295,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                 ไม่มีรีวิวเกษตรกร
               </Text>
             </View>
-          )}
+          )} */}
           <View style={{ height: 10, backgroundColor: '#F8F9FA' }}></View>
           <View style={[styles.section]}>
             <Text style={[styles.text, { marginBottom: '3%' }]}>
