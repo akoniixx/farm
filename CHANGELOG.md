@@ -1,3 +1,6 @@
+## Fix [v1.3.3] 2023-04-27
+- fix price display
+- fix bug selet prepare check box in select target screen
 ## Fix [v1.3.2] 2023-04-26
 - comment review
 ## Fix [v1.3.1] 2023-04-24

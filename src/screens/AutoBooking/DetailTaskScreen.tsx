@@ -63,10 +63,10 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
     authContext: { getProfileAuth },
     state: { user },
   } = useAuth();
-  const [coupon,setCoupon] = useRecoilState(couponState);
+  const [coupon, setCoupon] = useRecoilState(couponState);
   const couponInfo = useRecoilValue(couponState);
   const [couponCode, setCouponCode] = useState('');
-  const [modalCoupon,setModalCoupon] = useState<boolean>(false)
+  const [modalCoupon, setModalCoupon] = useState<boolean>(false)
   const [couponCodeError, setCouponCodeError] = useState('');
   const [disableEdit, setDisableEdit] = useState(false);
   const [currentTel, setCurrentTel] = useState('');
@@ -114,20 +114,20 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         targetSpray: taskData.targetSpray,
         taskDronerTemp: isSelectDroner
           ? [
-              {
-                distance: profile.distance,
-                dronerDetail: [JSON.stringify(profile)],
-                dronerId: profile.droner_id,
-                status: 'WAIT_RECEIVE',
-              },
-            ]
+            {
+              distance: profile.distance,
+              dronerDetail: [JSON.stringify(profile)],
+              dronerId: profile.droner_id,
+              status: 'WAIT_RECEIVE',
+            },
+          ]
           : taskData.taskDronerTemp,
         statusRemark: '',
       };
       const res = await TaskDatasource.createTask(payload);
 
       if (res && res.success) {
-        if(!couponInfo.name){
+        if (!couponInfo.name) {
           mixpanel.track('Tab submit booking');
           setLoading(false);
           await AsyncStorage.setItem('taskId', res.responseData.id);
@@ -136,34 +136,34 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           });
           setTaskData(initialState.taskData);
         }
-        else{
-          if(couponInfo.promotionType === "ONLINE"){
-            usedCouponOnline(couponInfo.id,couponInfo.promotionId)
-            .then(async result => {
-              mixpanel.track('Tab submit booking');
-              setLoading(false);
-            
-              await AsyncStorage.setItem('taskId', res.responseData.id);
-              navigation.navigate('SlipWaitingScreen', {
-                taskId: res.responseData.id,
-              });
-              setTaskData(initialState.taskData);
-            })
-            .catch(err => console.log(err));
+        else {
+          if (couponInfo.promotionType === "ONLINE") {
+            usedCouponOnline(couponInfo.id, couponInfo.promotionId)
+              .then(async result => {
+                mixpanel.track('Tab submit booking');
+                setLoading(false);
+
+                await AsyncStorage.setItem('taskId', res.responseData.id);
+                navigation.navigate('SlipWaitingScreen', {
+                  taskId: res.responseData.id,
+                });
+                setTaskData(initialState.taskData);
+              })
+              .catch(err => console.log(err));
           }
-          else{
+          else {
             usedCoupon(couponInfo.couponCode)
-            .then(async result => {
-              mixpanel.track('Tab submit booking');
-              setLoading(false);
-            
-              await AsyncStorage.setItem('taskId', res.responseData.id);
-              navigation.navigate('SlipWaitingScreen', {
-                taskId: res.responseData.id,
-              });
-              setTaskData(initialState.taskData);
-            })
-            .catch(err => console.log(err));
+              .then(async result => {
+                mixpanel.track('Tab submit booking');
+                setLoading(false);
+
+                await AsyncStorage.setItem('taskId', res.responseData.id);
+                navigation.navigate('SlipWaitingScreen', {
+                  taskId: res.responseData.id,
+                });
+                setTaskData(initialState.taskData);
+              })
+              .catch(err => console.log(err));
           }
         }
       }
@@ -200,21 +200,21 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       style={[{ flex: 1 }]}>
       <RemoveCoupon
         show={modalCoupon}
-        onMainClick={()=>{
+        onMainClick={() => {
           setCoupon({
-            id : "",
-            promotionId : "",
-            promotionType : "ONLINE",
-            couponCode : "",
-            name : "",
-            discountType : 'DISCOUNT',
-            discount : 0,
-            netPrice : 0,
-            err : ""
+            id: "",
+            promotionId: "",
+            promotionType: "ONLINE",
+            couponCode: "",
+            name: "",
+            discountType: 'DISCOUNT',
+            discount: 0,
+            netPrice: 0,
+            err: ""
           })
           setModalCoupon(false)
         }}
-        onClose={()=>setModalCoupon(false)}
+        onClose={() => setModalCoupon(false)}
       />
       <CustomHeader
         title="รายละเอียดการจอง"
@@ -642,61 +642,61 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               marginTop: 16,
             }}
           />
-          <TouchableOpacity onPress={()=>navigation.navigate("UseCouponScreen",{
-                  plantName : taskData.plantName,
-                  purposeSprayName : taskData.purposeSpray.name,
-                  farmAreaAmount : taskData.farmAreaAmount,
-                  province : taskData.plotArea?.provinceName,
-                  price : calPrice.netPrice,
-                  farmerPlotId: taskData.farmerPlotId,
-                  cropName: taskData.cropName || '',
-                  raiAmount: taskData.farmAreaAmount
-                    ? +taskData.farmAreaAmount
-                    : 0,
-                })
-                }>
+          <TouchableOpacity onPress={() => navigation.navigate("UseCouponScreen", {
+            plantName: taskData.plantName,
+            purposeSprayName: taskData.purposeSpray.name,
+            farmAreaAmount: taskData.farmAreaAmount,
+            province: taskData.plotArea?.provinceName,
+            price: calPrice.netPrice,
+            farmerPlotId: taskData.farmerPlotId,
+            cropName: taskData.cropName || '',
+            raiAmount: taskData.farmAreaAmount
+              ? +taskData.farmAreaAmount
+              : 0,
+          })
+          }>
             <View
               style={{
                 paddingHorizontal: normalize(16),
                 marginTop: 16,
                 flexDirection: 'row',
-                justifyContent : 'space-between',
+                justifyContent: 'space-between',
                 alignItems: 'center',
                 marginBottom: 16,
               }}>
-                <View style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                  <Image
-                    source={icons.discountOrange}
-                    style={{ width: 20, height: 20, marginRight: 8 }}
-                  />
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      color: colors.fontBlack,
-                      fontFamily: fonts.SarabunMedium,
-                    }}>
-                    {!couponInfo.name? "เลือกคูปองส่วนลด" : couponInfo.name}
-                  </Text>
-                  {
-                    !couponInfo.name?
-                    <></>:
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+                <Image
+                  source={icons.discountOrange}
+                  style={{ width: 20, height: 20, marginRight: 8 }}
+                />
+                <Text
+                  style={{
+                    fontSize: 18,
+                    color: colors.fontBlack,
+                    fontFamily: fonts.SarabunMedium,
+                  }}>
+                  {!couponInfo.name ? "เลือกคูปองส่วนลด" : couponInfo.name}
+                </Text>
+                {
+                  !couponInfo.name ?
+                    <></> :
                     <TouchableOpacity style={{
-                      marginLeft : normalize(10)
-                    }} onPress={()=>setModalCoupon(true)}>
+                      marginLeft: normalize(10)
+                    }} onPress={() => setModalCoupon(true)}>
                       <Image source={image.removecoupon} style={{
-                        width : normalize(54),
-                        height : normalize(26)
-                      }}/>
+                        width: normalize(54),
+                        height: normalize(26)
+                      }} />
                     </TouchableOpacity>
-                  }
-                </View>
-                <Image source={icons.arrowRigth} style={{
-                  width : normalize(10),
-                  height : normalize(20)
-                }}/>
+                }
+              </View>
+              <Image source={icons.arrowRigth} style={{
+                width: normalize(10),
+                height: normalize(20)
+              }} />
             </View>
           </TouchableOpacity>
           {/* <View
@@ -910,9 +910,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 paddingBottom: 16,
-                borderBottomWidth: calPrice.priceCouponDiscount > 0 ? 0 : 1,
-                marginBottom: calPrice.priceCouponDiscount > 0 ? 0 : 16,
-                borderBottomColor: colors.greyDivider,
               }}>
               <Text
                 style={{
@@ -938,9 +935,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   paddingBottom: 16,
-                  borderBottomWidth: 1,
-                  marginBottom: 16,
-                  borderBottomColor: colors.greyDivider,
+
                 }}>
                 <Text
                   style={{
@@ -948,7 +943,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                     fontSize: 18,
                     fontFamily: fonts.SarabunMedium,
                   }}>
-                  ส่วนลด
+                  ส่วนลดคูปอง
                 </Text>
                 <Text
                   style={{
@@ -963,6 +958,37 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 </Text>
               </View>
             )}
+
+            {calPrice.discountPromotion !== 0 && <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingBottom: 16,
+
+              }}>
+              <Text
+                style={{
+                  color: colors.greenDark,
+                  fontSize: 18,
+                  fontFamily: fonts.SarabunMedium,
+                }}>
+                ส่วนลดโปรโมรชั่น
+              </Text>
+              <Text
+                style={{
+                  color: colors.greenDark,
+                  fontSize: 18,
+                  fontFamily: fonts.SarabunMedium,
+                }}>
+                {`-${numberWithCommas(
+                  calPrice.discountPromotion.toString(),
+                  true,
+                )} บาท`}
+              </Text>
+            </View>}
+
+
           </View>
         )}
 
@@ -971,9 +997,13 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             paddingHorizontal: 16,
+            paddingTop: normalize(16),
+
+
           }}>
           <Text
             style={{
+
               fontSize: 18,
               color: colors.fontBlack,
 
@@ -997,7 +1027,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                   fontFamily: fonts.AnuphanMedium,
                   marginRight: 8,
                 }}>
-                {`${numberWithCommas((couponInfo.name != ""?couponInfo.netPrice:calPrice.netPrice).toString(), true)} บาท`}
+                {`${numberWithCommas((couponInfo.name != "" ? couponInfo.netPrice : calPrice.netPrice).toString(), true)} บาท`}
               </Text>
               <Image
                 source={icons.arrowUpBold}

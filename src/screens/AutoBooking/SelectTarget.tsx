@@ -329,12 +329,13 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
               disable={
                 selectedOption.length < 1 ||
                 periodSprayValue?.value === '' ||
-                selectedCheckbox === null
+                selectedCheckbox === ''
               }
               color={colors.greenLight}
               onPress={() => {
                 mixpanel.track('Tab submit from select target screen');
                 onSubmit();
+               
               }}
               style={{}}
             />
