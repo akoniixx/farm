@@ -559,8 +559,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
-				"MARKETING_VERSION[sdk=iphoneos*]" = 1.2.1;
+				MARKETING_VERSION = 1.2.3;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -599,8 +598,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
-				"MARKETING_VERSION[sdk=iphoneos*]" = 1.2.1;
+				MARKETING_VERSION = 1.2.3;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",

@@ -69,3 +69,9 @@ export const calTotalPrice = (totalprice:string,discount:string) => {
   let text = totalPrice.toString()
   return  text
 }
+
+export const calTotalPromotion = (p1:string,p2:string,p3:string) => {
+  let totalPrice =  parseInt(p1) + parseInt(p2) + parseInt(p3)
+  let text = totalPrice.toString()
+  return  text
+}
