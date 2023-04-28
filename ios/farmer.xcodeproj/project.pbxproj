@@ -622,12 +622,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-<<<<<<< HEAD
 				MARKETING_VERSION = 1.2.5;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.2.5;
-=======
-				MARKETING_VERSION = 1.2.3;
->>>>>>> promotion6
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -662,12 +658,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-<<<<<<< HEAD
 				MARKETING_VERSION = 1.2.5;
 				"MARKETING_VERSION[sdk=iphoneos*]" = 1.2.5;
-=======
-				MARKETING_VERSION = 1.2.3;
->>>>>>> promotion6
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
