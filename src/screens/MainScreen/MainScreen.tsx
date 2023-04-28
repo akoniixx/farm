@@ -115,52 +115,52 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       )
       .catch(err => console.log(err));
   };
-  useEffect(() => {
-    const getMaintenance = async () => {
-      setLoading(true);
-      const value = await AsyncStorage.getItem('Maintenance');
-      await SystemMaintenance.Maintenance('FARMER')
-        .then(res => {
-          if (res.responseData != null) {
-            if (value === 'read') {
-              setMaintenance(res.responseData);
-            } else {
-              setMaintenance(res.responseData);
-              setPopupMaintenance(res.responseData.id ? true : false);
-            }
-          }
-          if (maintenance != null) {
-            setStart(
-              momentExtend.toBuddhistYear(
-                maintenance.dateStart,
-                'DD MMMM YYYY',
-              ),
-            );
-            setEnd(
-              momentExtend.toBuddhistYear(
-                maintenance.dateStart,
-                'DD MMMM YYYY',
-              ),
-            );
-            setNotiStart(
-              momentExtend.toBuddhistYear(
-                maintenance.dateNotiStart,
-                'DD MMMM YYYY',
-              ),
-            );
-            setNotiEnd(
-              momentExtend.toBuddhistYear(
-                maintenance.dateNotiEnd,
-                'DD MMMM YYYY',
-              ),
-            );
-          }
-        })
-        .catch(err => console.log(err))
-        .finally(() => setLoading(false));
-    };
-    getMaintenance();
-  }, [reload]);
+  // useEffect(() => {
+  //   const getMaintenance = async () => {
+  //     setLoading(true);
+  //     const value = await AsyncStorage.getItem('Maintenance');
+  //     await SystemMaintenance.Maintenance('FARMER')
+  //       .then(res => {
+  //         if (res.responseData != null) {
+  //           if (value === 'read') {
+  //             setMaintenance(res.responseData);
+  //           } else {
+  //             setMaintenance(res.responseData);
+  //             setPopupMaintenance(res.responseData.id ? true : false);
+  //           }
+  //         }
+  //         if (maintenance != null) {
+  //           setStart(
+  //             momentExtend.toBuddhistYear(
+  //               maintenance.dateStart,
+  //               'DD MMMM YYYY',
+  //             ),
+  //           );
+  //           setEnd(
+  //             momentExtend.toBuddhistYear(
+  //               maintenance.dateStart,
+  //               'DD MMMM YYYY',
+  //             ),
+  //           );
+  //           setNotiStart(
+  //             momentExtend.toBuddhistYear(
+  //               maintenance.dateNotiStart,
+  //               'DD MMMM YYYY',
+  //             ),
+  //           );
+  //           setNotiEnd(
+  //             momentExtend.toBuddhistYear(
+  //               maintenance.dateNotiEnd,
+  //               'DD MMMM YYYY',
+  //             ),
+  //           );
+  //         }
+  //       })
+  //       .catch(err => console.log(err))
+  //       .finally(() => setLoading(false));
+  //   };
+  //   getMaintenance();
+  // }, [reload]);
 
   const d = momentExtend.toBuddhistYear(date, 'DD MMMM YYYY');
   const checkDateNoti = d >= notiStart && d <= notiEnd;
@@ -292,18 +292,18 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
   };
-  useEffect(() => {
-    findAllNews();
-  }, [isFocused]);
-  const findAllNews = async () => {
-    setLoading(true);
-    GuruKaset.findAllNews('ACTIVE', 'FARMER', 'created_at', 'DESC', 5, 0)
-      .then(res => {
-        setGuruKaset(res);
-      })
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false));
-  };
+  // useEffect(() => {
+  //   findAllNews();
+  // }, [isFocused]);
+  // const findAllNews = async () => {
+  //   setLoading(true);
+  //   GuruKaset.findAllNews('ACTIVE', 'FARMER', 'created_at', 'DESC', 5, 0)
+  //     .then(res => {
+  //       setGuruKaset(res);
+  //     })
+  //     .catch(err => console.log(err))
+  //     .finally(() => setLoading(false));
+  // };
 
   return (
     <View
@@ -693,7 +693,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </View>
                   </View> */}
                 <View>
-                  <View
+                  {/* <View
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
@@ -725,7 +725,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         ดูทั้งหมด
                       </Text>
                     </TouchableOpacity>
-                  </View>
+                  </View> */}
                   {guruKaset != undefined ? (
                     <View>
                       <Carousel
@@ -784,6 +784,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
+                    marginTop: 16,
+                    paddingVertical: 10,
                   }}>
                   <Text
                     style={{

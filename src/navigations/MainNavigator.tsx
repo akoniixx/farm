@@ -114,9 +114,9 @@ const MainNavigator: React.FC = () => {
 
   const d = Date.now();
   const checkDateNoti = d >= start && d <= end;
-   useEffect(() => {
-    Maintenance();
-  }, [reload]); 
+  //  useEffect(() => {
+  //   Maintenance();
+  // }, [reload]); 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {checkDateNoti === true ? (
