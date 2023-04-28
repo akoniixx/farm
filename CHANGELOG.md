@@ -1,3 +1,6 @@
+## Fix [1.2.4] 2023-04-25
+- fix price display
+- fix upload documant
 ## Fix [1.2.3] 2023-04-25
 - fix price display
 

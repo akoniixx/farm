@@ -19,6 +19,7 @@ import { TaskDatasource } from '../../datasource/TaskDatasource';
 import fonts from '../../assets/fonts';
 import {
   calTotalPrice,
+  calTotalPromotion,
   dialCall,
   getStatusToText,
   numberWithCommas,
@@ -170,7 +171,6 @@ const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
       .then(res => {
         if (res.success) {
           setData(res.responseData.data);
-          console.log(res.responseData.data,'dsdsds')
           let date = new Date(res.responseData.data.dateAppointment);
           setDateAppointment(date);
           if (Object.keys(res.responseData.image_profile_url).length !== 0) {
@@ -341,7 +341,7 @@ const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                     color: '#2EC66E',
                     fontSize: normalize(17)
                   }}>
-                  ฿  {numberWithCommas(data.price+data.revenuePromotion)}
+                  ฿  {numberWithCommas(calTotalPrice(data.price,data.revenuePromotion))}
                 </Text>
               </View>
               <View
@@ -546,7 +546,7 @@ const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                 ]}>
                 <Text style={styles.fontGray}>ค่าจ้าง</Text>
                 <Text style={styles.fontGray}>
-                  {numberWithCommas(data.price+data.revenuePromotion)} ฿
+                {numberWithCommas(calTotalPrice(data.price,data.revenuePromotion))} ฿
                 </Text>
               </View>
               <View
@@ -587,7 +587,7 @@ const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                   ยอดรายได้รวม
                 </Text>
                 <Text style={[styles.fontGray, { color: 'black' }]}>
-                  {numberWithCommas(data.price+data.revenuePromotion)} ฿
+                {numberWithCommas(calTotalPrice(data.price,data.revenuePromotion))} ฿
                 </Text>
               </View>
 
@@ -614,7 +614,7 @@ const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
 
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text>จากบริษัท</Text>
-                    <Text>{numberWithCommas(data?.discountCoupon+ data?.discountPromotion+data?.revenuePromotion)} ฿</Text>
+                    <Text>{numberWithCommas(calTotalPromotion(data?.discountCoupon, data?.discountPromotion,data?.revenuePromotion))} ฿</Text>
                   </View>
                   <View style={{width:'70%'}}> 
                   <Text>หลังจากงานเสร็จสิ้น ท่านจะได้รับเงิน

@@ -198,7 +198,21 @@ const UploadBankingScreen: React.FC<any> = ({ navigation, route }) => {
                             marginVertical: 20,
                         }}
                         onPress={onAddImage}>
-                        {image == null||previousBookbank!== undefined?  (
+                        {image === null&&previousBookbank=== undefined?(
+                            <View style={styles.addImage}>
+                                <View style={styles.camera}>
+                                    <Image
+                                        source={icons.camera}
+                                        style={{
+                                            width: 19,
+                                            height: 16,
+                                        }}
+                                    />
+
+                                </View>
+                                <Text>เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF</Text>
+                            </View>
+                        ):  (
 
                             <View style={{
                                 width: width * 0.9,
@@ -230,22 +244,8 @@ const UploadBankingScreen: React.FC<any> = ({ navigation, route }) => {
 
                             </View>
 
-                        ):
-                        (
-                            <View style={styles.addImage}>
-                                <View style={styles.camera}>
-                                    <Image
-                                        source={icons.camera}
-                                        style={{
-                                            width: 19,
-                                            height: 16,
-                                        }}
-                                    />
-
-                                </View>
-                                <Text>เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF</Text>
-                            </View>
                         )
+                        
                         }
                     </TouchableOpacity>
                     <TouchableOpacity

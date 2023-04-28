@@ -169,7 +169,7 @@ export const NewTaskModal = (
                 color: '#2EC66E',
                 fontSize: normalize(17),
               }}>
-              ฿ {data?.totalPrice ? numberWithCommas(calTotalPrice(data?.totalPrice,data?.discount)) : null}
+              ฿ {data?.price ? numberWithCommas(calTotalPrice(data?.price,data?.revenuePromotion)) : null}
             </Text>
           </View>
           <View

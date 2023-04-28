@@ -72,7 +72,21 @@ const UploadDronerLicenseScreen: React.FC<any> = ({ navigation, route }) => {
                         marginVertical: 20,
                     }}
                     onPress={onAddImage}>
-                    {image == null||dronerLicense!== undefined?  (
+                    {image === null&&dronerLicense === undefined?(
+                        <View style={styles.addImage}>
+                            <View style={styles.camera}>
+                                <Image
+                                    source={icons.camera}
+                                    style={{
+                                        width: 19,
+                                        height: 16,
+                                    }}
+                                />
+
+                            </View>
+                            <Text>เพิ่มเอกสารด้วย ไฟล์รูป </Text>
+                        </View>
+                    ):(
 
                         <View style={{
                             width: width * 0.9,
@@ -105,20 +119,6 @@ const UploadDronerLicenseScreen: React.FC<any> = ({ navigation, route }) => {
 
                         </View>
 
-                    ):(
-                        <View style={styles.addImage}>
-                            <View style={styles.camera}>
-                                <Image
-                                    source={icons.camera}
-                                    style={{
-                                        width: 19,
-                                        height: 16,
-                                    }}
-                                />
-
-                            </View>
-                            <Text>เพิ่มเอกสารด้วย ไฟล์รูป </Text>
-                        </View>
                     ) }
                 </TouchableOpacity>
                 <MainButton label="บันทึก" color={"#FB8705"} disable={image === null} onPress={()=>setToggleModal(true)} />
