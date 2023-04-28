@@ -1,13 +1,13 @@
 export function checkRai(min: number | null, max: number | null): string {
   let result;
   if (!min && !max) {
-    result = 'ไม่จำกัดไร่';
+    result = '';
   } else if (!min && max) {
-    result = `เมื่อจ้างไม่เกิน ${max} ไร่`;
+    result = `ไม่เกิน ${max} ไร่`;
   } else if (min && !max) {
-    result = `เมื่อจ้างขั้นต่ำ ${min} ไร่`;
+    result = `ขั้นต่ำ ${min} ไร่`;
   } else {
-    result = `เมื่อจ้างไม่เกิน ${max} ไร่`;
+    result = `ขั้นต่ำ ${min} ไร่`;
   }
   return result;
 }

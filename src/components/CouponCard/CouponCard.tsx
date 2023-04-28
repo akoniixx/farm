@@ -15,6 +15,7 @@ import { generateTime } from '../../functions/DateTime';
 import { CouponCardEntities } from '../../entites/CouponCard';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { keepCoupon } from '../../datasource/PromotionDatasource';
+import { width } from '../../functions/Normalize';
 
 const CouponCard: React.FC<CouponCardEntities> = ({
   id,
@@ -32,7 +33,7 @@ const CouponCard: React.FC<CouponCardEntities> = ({
   expiredDate,
   description,
   condition,
-  specialCondition,
+  conditionSpecificFarmer,
   couponConditionRai,
   couponConditionRaiMin,
   couponConditionRaiMax,
@@ -84,7 +85,7 @@ const CouponCard: React.FC<CouponCardEntities> = ({
             expiredDate: expiredDate,
             description: description,
             condition: condition,
-            specialCondition: specialCondition,
+            conditionSpecificFarmer: conditionSpecificFarmer,
             couponConditionRai: couponConditionRai,
             couponConditionRaiMin: couponConditionRaiMin,
             couponConditionRaiMax: couponConditionRaiMax,
@@ -99,12 +100,35 @@ const CouponCard: React.FC<CouponCardEntities> = ({
           },
         });
       }}>
-      <View style={styles.mainCard}>
-        <Image
-          source={disabled ? image.couponCardDisabled : image.couponCard}
-          style={styles.cardImg}
-          resizeMode={'contain'}
-        />
+      <View style={
+        [
+          styles.mainCard,
+          {
+            backgroundColor : disabled ? colors.grey10: (new Date(expiredDate).getTime()-new Date().getTime() > 604800000)?colors.white : colors.bgOrange,
+            borderColor : disabled ? colors.grey5: (new Date(expiredDate).getTime()-new Date().getTime() > 604800000)?colors.grey20 : "#FDC382",
+            borderWidth : normalize(1)
+          }
+        ]}>
+        <View style={{
+          position : 'absolute',
+          top : -2,
+          right : normalize(80),
+        }}>
+          <Image source={expired?icons.halfcircle1 :new Date(expiredDate).getTime()-new Date().getTime() > 604800000? icons.halfcircle1 : icons.halfcircleorange1} style={{
+            width : normalize(20),
+            height : normalize(10)
+          }}/>
+        </View>
+        <View style={{
+          position : 'absolute',
+          bottom : -2,
+          right : normalize(80),
+        }}>
+          <Image source={expired?icons.halfcircle2 : new Date(expiredDate).getTime()-new Date().getTime() > 604800000 ? icons.halfcircle2 : icons.halfcircleorange2} style={{
+            width : normalize(20),
+            height : normalize(10)
+          }}/>
+        </View>
         <View style={styles.content}>
           <View
             style={{
@@ -124,8 +148,11 @@ const CouponCard: React.FC<CouponCardEntities> = ({
               }}
             />
           </View>
-          <View>
+          <View style={{
+            width : width*0.45
+          }}>
             <Text
+              numberOfLines={1}
               style={{
                 color: colors.fontBlack,
                 fontFamily: fonts.AnuphanMedium,
@@ -134,21 +161,39 @@ const CouponCard: React.FC<CouponCardEntities> = ({
               }}>
               {couponName}
             </Text>
-            <Text
+            {
+              (couponConditionProvince  && couponConditionProvinceList?.length === 1)?
+              <Text
               style={{
                 color: colors.fontBlack,
-                fontFamily: fonts.SarabunLight,
-                fontSize: normalize(18),
+                fontFamily: fonts.AnuphanMedium,
+                fontSize: normalize(20),
+                marginBottom: normalize(5),
               }}>
-              {checkRai(couponConditionRaiMin, couponConditionRaiMax)}
-            </Text>
+                {`(${couponConditionProvinceList[0]})`}
+              </Text>
+              :<></>
+            }
+            {
+               (couponConditionRai && checkRai(couponConditionRaiMin!, couponConditionRaiMax!) != "")?
+               <Text
+                style={{
+                  color: colors.fontBlack,
+                  fontFamily: fonts.SarabunLight,
+                  fontSize: normalize(18),
+                  marginBottom: normalize(5),
+                }}>
+                {checkRai(couponConditionRaiMin!, couponConditionRaiMax!)}
+              </Text>:
+              <></>
+            }
             <Text
               style={{
                 fontFamily: fonts.SarabunLight,
                 fontSize: normalize(18),
-                color: colors.gray,
+                color: new Date(expiredDate).getTime()-new Date().getTime() > 604800000 ? colors.gray : colors.error,
               }}>
-              หมดเขต {generateTime(expiredDate)}
+              {expired ?`ใช้ได้ถึง ${generateTime(expiredDate)}` : new Date(expiredDate).getTime()-new Date().getTime() > 604800000 ? `ใช้ได้ถึง ${generateTime(expiredDate)}` : `เหลือเวลาใช้อีก ${((new Date(expiredDate).getTime()-new Date().getTime())/86400000).toFixed(0)} วัน`}
             </Text>
           </View>
           {keepthis ? (
@@ -183,11 +228,10 @@ const CouponCard: React.FC<CouponCardEntities> = ({
             <Image
               source={image.expired}
               style={{
-                position: 'absolute',
-                bottom: normalize(40),
-                right: normalize(15),
                 width: normalize(60),
                 height: normalize(30),
+                position : 'absolute',
+                right : normalize(10),
               }}
             />
           ) : (
@@ -201,19 +245,21 @@ const CouponCard: React.FC<CouponCardEntities> = ({
 
 const styles = StyleSheet.create({
   mainCard: {
-    position: 'relative',
-    marginBottom: normalize(15),
+    paddingVertical : normalize(20),
+    paddingHorizontal : normalize(10),
+    minHeight : normalize(121),
+    borderRadius : normalize(12),
+    marginVertical : normalize(10),
+    position : 'relative',
+    justifyContent : 'center',
+    alignItems : 'center'
   },
   cardImg: {
     width: Dimensions.get('window').width - normalize(35),
     height: normalize(132),
   },
   content: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
     width: '100%',
-    height: normalize(132),
     flexDirection: 'row',
     paddingHorizontal: normalize(15),
     alignItems: 'center',

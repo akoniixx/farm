@@ -9,7 +9,7 @@ const DronerUsedScreen: React.FC<any> = ({ navigation }) => {
     <>
       <View style={stylesCentral.container}>
         <CustomHeader
-          title="ประวัติการจ้างนักบิน"
+          title="นักบินโดรนที่เคยจ้าง"
           showBackBtn
           onPressBack={() => navigation.goBack()}
         />

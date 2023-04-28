@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { StyleSheet, Text, useWindowDimensions } from 'react-native';
+import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { TabBar, TabBarIndicator, TabView } from 'react-native-tab-view';
 import { colors } from '../../assets';
 import fonts from '../../assets/fonts';
@@ -9,24 +9,21 @@ import MyCouponUsedScreen from '../../screens/PromotionScreen/MyCouponUsedScreen
 import MyCouponUseScreen from '../../screens/PromotionScreen/MyCouponUseScreen';
 
 const renderTabBar: React.FC<any> = (props: any) => {
-  const tabRef = useRef<number>(0);
   return (
     <TabBar
       {...props}
-      indicatorStyle={{ backgroundColor: checkColorNumber(tabRef.current) }}
+      indicatorStyle={{ backgroundColor: colors.greenLight }}
       style={{ backgroundColor: colors.white }}
-      renderLabel={({ route, focused, color }) => (
+      renderLabel={({ route, focused, color }) => {
+        return(
         <Text
           style={[
             styles.label,
-            { color: focused ? checkColor(route.key) : colors.gray },
+            { color: focused ? colors.greenLight : colors.gray },
           ]}>
           {route.title}
         </Text>
-      )}
-      renderIndicator={indicatorProps => {
-        tabRef.current = indicatorProps.navigationState.index;
-        return <TabBarIndicator {...indicatorProps} />;
+      )
       }}
     />
   );
@@ -35,7 +32,7 @@ const renderTabBar: React.FC<any> = (props: any) => {
 const PromotionTabNavigator: React.FC<any> = ({}) => {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
-  const [routes] = useState([
+  const [routes]  = useState([
     { key: 'use', title: 'ใช้ได้' },
     { key: 'used', title: 'ใช้แล้ว' },
     { key: 'expired', title: 'หมดอายุ' },
@@ -49,7 +46,7 @@ const PromotionTabNavigator: React.FC<any> = ({}) => {
       case 'expired':
         return <MyCouponExpiredScreen />;
       default:
-        return null;
+        return <View />;
     }
   };
 
@@ -66,29 +63,29 @@ const PromotionTabNavigator: React.FC<any> = ({}) => {
   );
 };
 
-const checkColorNumber = (key: number): string => {
-  let result = colors.greenLight;
-  if (key === 0) {
-    result = colors.greenLight;
-  } else if (key === 1) {
-    result = '#B05E03';
-  } else if (key === 2) {
-    result = '#AB091E';
-  }
-  return result;
-};
+// const checkColorNumber = (key: number): string => {
+//   let result = colors.greenLight;
+//   if (key === 0) {
+//     result = colors.greenLight;
+//   } else if (key === 1) {
+//     result = '#B05E03';
+//   } else if (key === 2) {
+//     result = '#AB091E';
+//   }
+//   return result;
+// };
 
-const checkColor = (key: string): string => {
-  let result = colors.greenLight;
-  if (key === 'use') {
-    result = colors.greenLight;
-  } else if (key === 'used') {
-    result = '#B05E03';
-  } else if (key === 'expired') {
-    result = '#AB091E';
-  }
-  return result;
-};
+// const checkColor = (key: string): string => {
+//   let result = colors.greenLight;
+//   if (key === 'use') {
+//     result = colors.greenLight;
+//   } else if (key === 'used') {
+//     result = '#B05E03';
+//   } else if (key === 'expired') {
+//     result = '#AB091E';
+//   }
+//   return result;
+// };
 
 export default PromotionTabNavigator;
 

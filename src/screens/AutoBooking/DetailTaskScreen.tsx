@@ -104,7 +104,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         cropName: taskData.cropName || '',
         farmAreaAmount: taskData.farmAreaAmount,
         comment: taskData.comment || '',
-        couponCode: taskData.couponCode || '',
+        couponCode: couponInfo.couponCode || '',
         farmerPlotId: taskData.farmerPlotId,
         dateAppointment,
         createBy: `${user?.firstname} ${user?.lastname}`,
@@ -165,6 +165,17 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               })
               .catch(err => console.log(err));
           }
+          setCoupon({
+            id : "",
+            promotionId : "",
+            name : "",
+            couponCode : "",
+            promotionType : "ONLINE",
+            discountType : "DISCOUNT",
+            discount : 0,
+            netPrice : 0,
+            err : ""
+        })
         }
       }
     } catch (e) {

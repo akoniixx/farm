@@ -110,7 +110,8 @@ export const getMyCoupon = async (
 
 export const keepCoupon = async (promotionId: string,couponCode? : string) => {
   const farmerId = await AsyncStorage.getItem('farmer_id');
-  return httpClient
+  if(!couponCode){
+    return httpClient
     .post(BASE_URL + '/promotion/farmer-promotions/keep', {
       farmerId: farmerId,
       promotionId: promotionId,
@@ -122,4 +123,31 @@ export const keepCoupon = async (promotionId: string,couponCode? : string) => {
     .catch(err => {
       console.log(err, 'err getCoupon');
     });
+  }
+  else{
+    return httpClient
+    .post(BASE_URL + '/promotion/farmer-promotions/keepoffline', {
+      farmerId: farmerId,
+      promotionId: promotionId,
+      offlineCode : couponCode
+    })
+    .then(response => {
+      return response.data;
+    })
+    .catch(err => {
+      console.log(err, 'err getCoupon');
+    });
+  }
 };
+
+export const checkMyCoupon = async(couponCode : string) => {
+  const farmer_id = await AsyncStorage.getItem('farmer_id')
+  return httpClient
+    .get(BASE_URL + `/promotion/farmer-promotions/check/${farmer_id}/${couponCode}`)
+    .then(response => {
+      return response.data;
+    })
+    .catch(err => {
+      console.log(err, 'err getCoupon');
+    });
+}

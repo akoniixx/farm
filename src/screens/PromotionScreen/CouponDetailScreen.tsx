@@ -6,10 +6,9 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
-import CouponCard from '../../components/CouponCard/CouponCard';
 import { normalize } from '@rneui/themed';
 import HTML from 'react-native-render-html';
 import { generateYearTime } from '../../functions/DateTime';
@@ -17,10 +16,25 @@ import LinearGradient from 'react-native-linear-gradient';
 import { MainButton } from '../../components/Button/MainButton';
 import { checkRaiFull } from '../../functions/CheckRai';
 import { checkService } from '../../functions/CheckServicePrice';
-import { keepCoupon } from '../../datasource/PromotionDatasource';
+import { checkMyCoupon, keepCoupon } from '../../datasource/PromotionDatasource';
+import CouponCardHeader from '../../components/CouponCard/CouponCardHeader';
+import { useFocusEffect } from '@react-navigation/native';
 
 const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
   const { detail } = route.params;
+  const [canKeep,setCanKeep] = useState(false)
+  const checkCoupon = ()=>{
+    checkMyCoupon(detail.couponCode).then(
+      res => {
+        if(!res.userMessage){
+          setCanKeep(false);
+        }
+        else{
+          setCanKeep(true)
+        }
+      }
+    )
+  }
 
   const KeepCoupon = () => {
     keepCoupon(detail.id)
@@ -30,8 +44,14 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err));
   };
   useEffect(() => {
-    console.log(detail);
+    checkCoupon()
   }, []);
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      checkCoupon();
+    }, []),
+  );
   return (
     <>
       <View style={styles.appBar}>
@@ -43,7 +63,7 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
           onPressBack={() => navigation.goBack()}
         />
         <View style={styles.appBarCard}>
-          <CouponCard
+          <CouponCardHeader
             id={detail.id}
             couponCode={detail.couponCode}
             couponName={detail.couponName}
@@ -59,7 +79,7 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
             expiredDate={detail.expiredDate}
             description={detail.description}
             condition={detail.condition}
-            specialCondition={detail.specialCondition}
+            conditionSpecificFarmer={detail.conditionSpecificFarmer}
             couponConditionRai={detail.couponConditionRai}
             couponConditionRaiMin={detail.couponConditionRaiMin}
             couponConditionRaiMax={detail.couponConditionRaiMax}
@@ -78,7 +98,7 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
         style={{
           backgroundColor: colors.white,
         }}>
-        {detail.keepthis ? (
+        {canKeep ? (
           <View
             style={{
               backgroundColor: '#F7FFF0',
@@ -177,7 +197,7 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
                 style={[
                   styles.description,
                 ]}>{`\u2022  พืชที่ใช้คูปอง ${detail.couponConditionPlantList?.map(
-                (item: any) => item.plantName + ' ',
+                (item: any) => item.plantName + ' ' + '('+ item.injectionTiming +') ',
               )}`}</Text>
             </View>
           ) : (
@@ -210,7 +230,7 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
           )}
         </View>
       </ScrollView>
-      {detail.keepthis ? (
+      {canKeep ? (
         <View
           style={{
             padding: normalize(17),

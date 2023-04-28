@@ -41,6 +41,7 @@ import MaintenanceScreen from '../screens/MaintenanceScreen/MaintenanceScreen';
 import PopUpMaintenance from '../components/Modal/MaintenanceApp/PopUpMaintenance';
 import SearchCouponScreen from '../screens/PromotionScreen/SearchCouponScreen';
 import UseCouponScreen from '../screens/PromotionScreen/UseCouponScreen';
+import AllCouponScreen from '../screens/PromotionScreen/AllCouponScreen';
 import AllGuruScreen from '../screens/GuruScreen/AllGuruScreen';
 import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
 export type MainStackParamList = {
@@ -83,6 +84,7 @@ export type MainStackParamList = {
   MaintenanceScreen: undefined;
   SearchCouponScreen : undefined;
   UseCouponScreen : undefined;
+  AllCouponScreen : undefined;
   AllGuruScreen: undefined;
   DetailGuruScreen: undefined;
 };
@@ -172,6 +174,8 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="MyCouponScreen" component={MyCouponScreen} />
       <Stack.Screen name='SearchCouponScreen' component={SearchCouponScreen} />
       <Stack.Screen name='UseCouponScreen' component={UseCouponScreen} />
+      <Stack.Screen name='AllCouponScreen' component={AllCouponScreen} />
+      
       <Stack.Screen name='AllGuruScreen' component={AllGuruScreen} />
       <Stack.Screen name='DetailGuruScreen' component={DetailGuruScreen} />
 

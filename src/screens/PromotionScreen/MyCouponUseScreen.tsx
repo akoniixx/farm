@@ -14,47 +14,74 @@ import { getMyCoupon } from '../../datasource/PromotionDatasource';
 import { colors, font, image } from '../../assets';
 import CouponCard from '../../components/CouponCard/CouponCard';
 import { MainButton } from '../../components/Button/MainButton';
+import * as RootNavigation from '../../navigations/RootNavigation';
+import SelectDronerCouponModal from '../../components/Modal/SelectDronerCoupon';
 
-const MyCouponUseScreen: React.FC<any> = () => {
+const MyCouponUseScreen: React.FC<any> = ({navigation, route}) => {
   const [count, setCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
-  const [data, setData] = useState<MyCouponCardEntities[]>([]);
-  const isFocused = useIsFocused();
+  const [data, setData] = useState<any[]>([]);
+  const [modal,setModal] = useState<boolean>(false)
   const getData = (page: number, take: number, used?: boolean) => {
     getMyCoupon(page, take, used).then(res => {
-      if (data.length > 0) {
-        setData([...data, ...res.data]);
-      } else {
-        setCount(res.count);
-        setData(res.data);
-      }
+      res.data.map((item : any) => {
+        console.log(item.couponOfflineCode)
+      })
+      setCount(res.count);
+      setData(res.data);
     });
   };
   useEffect(() => {
     getData(page, 5, false);
-  }, [page]);
+  }, []);
+  const onScrollEnd = ()=>{
+    let pageNow = page
+    if(data.length < count){
+      getMyCoupon(pageNow+1, 5, false).then(res => {
+        let newData = data.concat(res.data)
+        setPage(pageNow+1)
+        setData(newData)
+      })
+    }
+  }
   return (
     <View
       style={{
         position: 'relative',
         height: '100%',
+        backgroundColor : colors.bgGreen
       }}>
+      <SelectDronerCouponModal
+         show={modal}
+         onClose={()=>setModal(false)}
+         onMainClick={()=>{
+          RootNavigation.navigate('DronerUsedScreen', {
+            isSelectDroner: true,
+            profile: {},
+          })
+          setModal(false)
+         }}
+         onBottomClick={()=>{
+          RootNavigation.navigate('SelectDateScreen', {
+            isSelectDroner: false,
+            profile: {},
+           })
+           setModal(false)
+         }}
+      />
       {data.length != 0 ? (
         <View
           style={{
             padding: normalize(17),
           }}>
           <FlatList
-            onScrollEndDrag={() => {
-              if (count > page * 5) {
-                setPage(page + 1);
-              }
-            }}
+            onScrollEndDrag={onScrollEnd}
             data={data}
-            renderItem={({ item }) => (
+            ListFooterComponent={<View style={{ height: normalize(250) }} />}
+            renderItem={({ item }) => (         
               <CouponCard
                 id={item.promotion.id}
-                couponCode={item.promotion.couponCode}
+                couponCode={item.promotion.couponType === "ONLINE"?item.promotion.couponCode : item.offlineCode}
                 couponName={item.promotion.couponName}
                 couponType={item.promotion.couponType}
                 promotionType={item.promotion.promotionType}
@@ -68,7 +95,7 @@ const MyCouponUseScreen: React.FC<any> = () => {
                 expiredDate={item.promotion.expiredDate}
                 description={item.promotion.description}
                 condition={item.promotion.condition}
-                specialCondition={item.promotion.specialCondition}
+                conditionSpecificFarmer={item.promotion.conditionSpecificFarmer}
                 couponConditionRai={item.promotion.couponConditionRai}
                 couponConditionRaiMin={item.promotion.couponConditionRaiMin}
                 couponConditionRaiMax={item.promotion.couponConditionRaiMax}
@@ -103,7 +130,7 @@ const MyCouponUseScreen: React.FC<any> = () => {
           <View
             style={{
               alignItems: 'center',
-              alignContent: 'center',
+              justifyContent: 'center',
               paddingVertical: 10,
             }}>
             <Text style={styles.textEmpty}>ไม่มีคูปองเก็บสะสม</Text>
@@ -123,7 +150,7 @@ const MyCouponUseScreen: React.FC<any> = () => {
         <MainButton
           label="จ้างนักบินโดรน"
           color={colors.greenLight}
-          onPress={() => {}}
+          onPress={() => setModal(true)}
         />
       </View>
     </View>
@@ -137,11 +164,14 @@ const styles = StyleSheet.create({
     padding: normalize(17),
   },
   empty: {
+    width : '100%',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
     display: 'flex',
     paddingVertical: '50%',
+    backgroundColor : colors.bgGreen,
+    height : '100%'
   },
   textEmpty: {
     fontFamily: font.SarabunLight,

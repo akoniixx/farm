@@ -36,7 +36,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
     expiredDate: '',
     description: '',
     condition: '',
-    specialCondition: false,
+    conditionSpecificFarmer: false,
     couponConditionRai: false,
     couponConditionRaiMin: 0,
     couponConditionRaiMax: 0,
@@ -74,7 +74,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               expiredDate: res.expiredDate,
               description: res.description,
               condition: res.condition,
-              specialCondition: res.specialCondition,
+              conditionSpecificFarmer: res.conditionSpecificFarmer,
               couponConditionRai: res.couponConditionRai,
               couponConditionRaiMin: res.couponConditionRaiMin,
               couponConditionRaiMax: res.couponConditionRaiMax,
@@ -218,7 +218,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               expiredDate={data.expiredDate}
               description={data.description}
               condition={data.condition}
-              specialCondition={data.specialCondition}
+              conditionSpecificFarmer={data.conditionSpecificFarmer}
               couponConditionRai={data.couponConditionRai}
               couponConditionRaiMin={data.couponConditionRaiMin}
               couponConditionRaiMax={data.couponConditionRaiMax}
