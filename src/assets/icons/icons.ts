@@ -96,5 +96,6 @@ export default {
   starfill: require('./starfill.png'),
   starCorner: require('./starCorner.png'),
   arrowRightGrey: require('./arrowRightGrey.png'),
-  tickerstar : require('./tickerstar.png')
+  tickerstar : require('./tickerstar.png'),
+  filter: require('./filter.png')
 };

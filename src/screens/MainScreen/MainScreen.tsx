@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   Platform,
   Linking,
-  RefreshControl,
 } from 'react-native';
 
 import { colors, font } from '../../assets';
@@ -23,12 +22,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
-import messaging, { firebase } from '@react-native-firebase/messaging';
 import { ActivityIndicator } from 'react-native-paper';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
 import { useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
-import { TabActions } from '@react-navigation/native';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { useAuth } from '../../contexts/AuthContext';
 import fonts from '../../assets/fonts';
@@ -46,8 +43,9 @@ import {
   MaintenanceSystem,
   MaintenanceSystem_INIT,
 } from '../../entites/MaintenanceApp';
-import { MainButton } from '../../components/Button/MainButton';
-import { SheetManager } from 'react-native-actions-sheet';
+import { GuruKaset } from '../../datasource/GuruDatasource';
+import { CardGuruKaset } from '../../components/Carousel/GuruKaset';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -70,6 +68,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [showFinding, setShowFinding] = useState(false);
   const [showModalCall, setShowModalCall] = useState(false);
   const [refresh, setRefresh] = useState<boolean>(false);
+  const [guruKaset, setGuruKaset] = useState<any>();
+  const screen = Dimensions.get('window');
   const [dataFinding, setDataFinding] = useState({
     id: '',
     taskNo: '',
@@ -90,6 +90,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
     MaintenanceSystem_INIT,
   );
+  const [index, setIndex] = React.useState(0);
+  const isCarousel = React.useRef(null);
   const [popupMaintenance, setPopupMaintenance] = useState<boolean>(true);
   const [end, setEnd] = useState<any>();
   const [start, setStart] = useState<any>();
@@ -113,13 +115,13 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       )
       .catch(err => console.log(err));
   };
-  /*  useEffect(() => {
+  useEffect(() => {
     const getMaintenance = async () => {
       setLoading(true);
       const value = await AsyncStorage.getItem('Maintenance');
       await SystemMaintenance.Maintenance('FARMER')
         .then(res => {
-          if(res.responseData != null){
+          if (res.responseData != null) {
             if (value === 'read') {
               setMaintenance(res.responseData);
             } else {
@@ -158,7 +160,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         .finally(() => setLoading(false));
     };
     getMaintenance();
-  }, [reload]); */
+  }, [reload]);
 
   const d = momentExtend.toBuddhistYear(date, 'DD MMMM YYYY');
   const checkDateNoti = d >= notiStart && d <= notiEnd;
@@ -290,6 +292,18 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
   };
+  useEffect(() => {
+    findAllNews();
+  }, [isFocused]);
+  const findAllNews = async () => {
+    setLoading(true);
+    GuruKaset.findAllNews('ACTIVE', 'FARMER', 'created_at', 'DESC', 5, 0)
+      .then(res => {
+        setGuruKaset(res);
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
+  };
 
   return (
     <View
@@ -298,7 +312,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         flex: 1,
       }}>
       <ScrollView>
-        <View style={[stylesCentral.container]}>
+        <View
+          style={[stylesCentral.container, { paddingBottom: normalize(30) }]}>
           <View style={{ backgroundColor: colors.white }}>
             <View style={{ height: 'auto' }}>
               <Image
@@ -660,7 +675,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
 
                 {/* <View
                   style={{
-                   
+
                     marginTop: 16,
                     paddingVertical: 10,
                   }}>
@@ -696,7 +711,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     </Text>
                     <TouchableOpacity
                       onPress={() => {
-                        // navigation.navigate('SeeAllDronerUsed');
+                        navigation.navigate('AllGuruScreen');
                       }}>
                       <Text
                         style={{
@@ -711,28 +726,64 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       </Text>
                     </TouchableOpacity>
                   </View>
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignSelf: 'center',
-                    }}>
-                    <Image
-                      source={image.academy}
-                      style={{
-                        width: 360,
-                        height: 120,
-                        borderRadius: 10,
-                      }}
-                    />
-                  </View>
+                  {guruKaset != undefined ? (
+                    <View>
+                      <Carousel
+                        autoplay={true}
+                        autoplayInterval={7000}
+                        autoplayDelay={5000}
+                        loop={true}
+                        ref={isCarousel}
+                        data={guruKaset.data}
+                        sliderWidth={screen.width}
+                        itemWidth={screen.width}
+                        onSnapToItem={index => setIndex(index)}
+                        useScrollView={true}
+                        vertical={false}
+                        renderItem={({ item }: any) => {
+                          return (
+                            <TouchableOpacity
+                              onPress={async () => {
+                                await AsyncStorage.setItem(
+                                  'guruId',
+                                  `${item.id}`,
+                                );
+                                navigation.push('DetailGuruScreen');
+                              }}>
+                              <CardGuruKaset background={item.image_path} />
+                            </TouchableOpacity>
+                          );
+                        }}
+                      />
+                      <View
+                        style={{
+                          alignItems: 'center',
+                          top: -15,
+                          marginVertical: -10,
+                        }}>
+                        <Pagination
+                          dotsLength={guruKaset.data.length}
+                          activeDotIndex={index}
+                          carouselRef={isCarousel}
+                          dotStyle={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: 5,
+                            marginHorizontal: 0,
+                            backgroundColor: colors.fontGrey,
+                          }}
+                          inactiveDotOpacity={0.4}
+                          inactiveDotScale={0.9}
+                          tappableDots={true}
+                        />
+                      </View>
+                    </View>
+                  ) : null}
                 </View>
-
                 <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    marginTop: 16,
-                    paddingVertical: 10,
                   }}>
                   <Text
                     style={{
@@ -1231,5 +1282,11 @@ const styles = StyleSheet.create({
     borderTopRightRadius: normalize(30),
     borderTopLeftRadius: normalize(30),
     height: Platform.OS === 'ios' ? normalize(80) : normalize(90),
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'black',
   },
 });
