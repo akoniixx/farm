@@ -1,6 +1,6 @@
-## Feature [v1.2.5] 2023-04-05
-- add promotion feature for droner service
-
+## Fix [v1.3.4] 2023-04-27
+- fix app error
+- fix offline code
 ## Fix [v1.3.3] 2023-04-27
 - fix price display
 - fix bug selet prepare check box in select target screen
@@ -10,6 +10,9 @@
 - fixed fetching data guru kaset
 ## Feature [v1.3.0] 2023-04-24
 - added guru kaset feature 
+
+## Feature [v1.2.5] 2023-04-05
+- add promotion feature for droner service
 ## Fix [v1.2.4] 2023-04-05
 - fixed time onboarding 
 ## Fix [v1.2.3] 2023-04-03
