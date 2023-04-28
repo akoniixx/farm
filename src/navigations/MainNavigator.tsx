@@ -42,6 +42,8 @@ import PopUpMaintenance from '../components/Modal/MaintenanceApp/PopUpMaintenanc
 import SearchCouponScreen from '../screens/PromotionScreen/SearchCouponScreen';
 import UseCouponScreen from '../screens/PromotionScreen/UseCouponScreen';
 import AllCouponScreen from '../screens/PromotionScreen/AllCouponScreen';
+import AllGuruScreen from '../screens/GuruScreen/AllGuruScreen';
+import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -83,6 +85,8 @@ export type MainStackParamList = {
   SearchCouponScreen : undefined;
   UseCouponScreen : undefined;
   AllCouponScreen : undefined;
+  AllGuruScreen: undefined;
+  DetailGuruScreen: undefined;
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
@@ -110,9 +114,9 @@ const MainNavigator: React.FC = () => {
 
   const d = Date.now();
   const checkDateNoti = d >= start && d <= end;
-  /*  useEffect(() => {
+   useEffect(() => {
     Maintenance();
-  }, [reload]); */
+  }, [reload]); 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {checkDateNoti === true ? (
@@ -172,6 +176,9 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name='UseCouponScreen' component={UseCouponScreen} />
       <Stack.Screen name='AllCouponScreen' component={AllCouponScreen} />
       
+      <Stack.Screen name='AllGuruScreen' component={AllGuruScreen} />
+      <Stack.Screen name='DetailGuruScreen' component={DetailGuruScreen} />
+
     </Stack.Navigator>
   );
 };

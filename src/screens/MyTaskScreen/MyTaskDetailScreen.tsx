@@ -256,7 +256,59 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             }}>
             <Text style={styles.totalPrice}>ราคารวม</Text>
             <Text style={styles.totalPrice}>{task.total_price} บาท</Text>
+            
           </View>
+          {task.discount_coupon !== '0'&&<View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+              <Text
+              style={{
+                fontSize: normalize(18),
+                fontFamily: font.AnuphanBold,
+                color: '#2EC46D',
+              }}>
+              ส่วนลดคูปอง
+            </Text>
+            <Text
+              style={{
+                fontSize: normalize(18),
+                fontFamily: font.AnuphanBold,
+                color: '#2EC46D',
+              }}>
+             -{task.discount_coupon} บาท
+            </Text>
+          </View>}
+
+          {task.discount_promotion !=='0'&& <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+              <Text
+              style={{
+                fontSize: normalize(18),
+                fontFamily: font.AnuphanBold,
+                color: '#2EC46D',
+              }}>
+              ส่วนลดโปรโมรชั่น
+            </Text>
+            <Text
+              style={{
+                fontSize: normalize(18),
+                fontFamily: font.AnuphanBold,
+                color: '#2EC46D',
+              }}>
+              -{task.discount_promotion} บาท
+            </Text>
+          </View>}
+
+         
+          
+         
           <View
             style={{
               borderTopWidth: StyleSheet.hairlineWidth,

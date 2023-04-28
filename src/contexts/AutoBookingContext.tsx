@@ -56,6 +56,7 @@ export interface CalPriceType {
   discountFee: number;
   priceBefore: number;
   priceCouponDiscount: number;
+  discountPromotion:number
 }
 interface State {
   taskData: TaskDataType;
@@ -144,6 +145,7 @@ export const initialState: {
     discountFee: 0,
     priceBefore: 0,
     priceCouponDiscount: 0,
+    discountPromotion: 0,
   },
   plotDisable: [],
 };
