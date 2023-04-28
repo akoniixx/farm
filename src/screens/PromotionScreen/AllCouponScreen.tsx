@@ -6,6 +6,7 @@ import { colors } from '../../assets';
 import { normalize } from '@rneui/themed';
 import CouponCard from '../../components/CouponCard/CouponCard';
 import { CouponCardEntities } from '../../entites/CouponCard';
+import { useFocusEffect } from '@react-navigation/native';
 
 const AllCouponScreen : React.FC<any> = ({navigation,route}) => {
   const [count, setCount] = useState<number>(0);
@@ -14,7 +15,10 @@ const AllCouponScreen : React.FC<any> = ({navigation,route}) => {
 
   const getData = async (page : number) => {
     getCouponUser(page, 5)
-      .then(res => setData(res.data))
+      .then(res => {
+        setCount(res.count)
+        setData(res.data)
+      })
       .catch(err => console.log(err));
   };
 
@@ -33,6 +37,12 @@ const AllCouponScreen : React.FC<any> = ({navigation,route}) => {
   useEffect(() => {
     getData(page);
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getData(1)
+    }, []),
+  );
 
   return (
     <View>
@@ -67,7 +77,7 @@ const AllCouponScreen : React.FC<any> = ({navigation,route}) => {
                 expiredDate={item.expiredDate}
                 description={item.description}
                 condition={item.condition}
-                specialCondition={item.specialCondition}
+                conditionSpecificFarmer={item.conditionSpecificFarmer}
                 couponConditionRai={item.couponConditionRai}
                 couponConditionRaiMin={item.couponConditionRaiMin}
                 couponConditionRaiMax={item.couponConditionRaiMax}

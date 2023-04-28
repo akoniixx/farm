@@ -51,6 +51,7 @@ const SelectDronerCouponModal: React.FC<ModalEntity> = ({
             รูปแบบไหน?
           </Text>
           <MainButton
+            fontSize={normalize(16)}
             label="จ้างนักบินที่เคยจ้าง"
             color={colors.greenLight}
             fontColor={colors.white}
@@ -59,6 +60,7 @@ const SelectDronerCouponModal: React.FC<ModalEntity> = ({
             width={width * 0.7}
           />
           <MainButton
+            fontSize={normalize(16)}
             label="จ้างระบบค้นหานักบินอัตโนมัติ"
             borderColor={colors.fontBlack}
             color={colors.white}

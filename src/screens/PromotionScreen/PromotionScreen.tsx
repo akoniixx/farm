@@ -217,7 +217,7 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
                 expiredDate={item.expiredDate}
                 description={item.description}
                 condition={item.condition}
-                specialCondition={item.specialCondition}
+                conditionSpecificFarmer={item.conditionSpecificFarmer}
                 couponConditionRai={item.couponConditionRai}
                 couponConditionRaiMin={item.couponConditionRaiMin}
                 couponConditionRaiMax={item.couponConditionRaiMax}

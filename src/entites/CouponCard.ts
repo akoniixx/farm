@@ -14,17 +14,17 @@ export interface CouponCardEntities{
     expiredDate : string;
     description : string;
     condition : string;
-    specialCondition : boolean;
+    conditionSpecificFarmer? : boolean | null | undefined;
     couponConditionRai : boolean;
-    couponConditionRaiMin : number;
-    couponConditionRaiMax : number;
+    couponConditionRaiMin? : number| null | undefined;
+    couponConditionRaiMax? : number| null | undefined;
     couponConditionService : boolean;
-    couponConditionServiceMin : number;
-    couponConditionServiceMax : number;
+    couponConditionServiceMin? : number| null | undefined;
+    couponConditionServiceMax? : number| null | undefined;
     couponConditionPlant : boolean;
-    couponConditionPlantList : any[];
+    couponConditionPlantList? : any[]| null | undefined;
     couponConditionProvince : boolean;
-    couponConditionProvinceList : string[],
+    couponConditionProvinceList? : string[]| null | undefined,
     couponOfflineCode? : any[],
     keepthis? : boolean;
     disabled? : boolean;
@@ -33,11 +33,11 @@ export interface CouponCardEntities{
 }
 
 export interface MyCouponCardEntities{
-    passCondition: any;
+    passCondition?: any;
     id : string;
     farmerId : string;
     promotionId : string;
-    offlineCode? : string;
+    offlineCode? : string | null | undefined;
     used : boolean;
     createAt : string;
     updateAt : string;

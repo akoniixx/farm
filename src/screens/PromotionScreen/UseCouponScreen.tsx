@@ -61,22 +61,54 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
     let plantCheck = conditionPlant;
     let provinceCheck = conditionProvince;
     if(raiCheck){
-        if(conditionCheck.farmAreaAmount < conditionRaiMax){
-            if(conditionCheck.farmAreaAmount < conditionRaiMin){
-                raiCheck = true
+        if(conditionRaiMin && conditionRaiMax){
+            if(conditionCheck.farmAreaAmount <= conditionRaiMax && conditionCheck.farmAreaAmount >= conditionRaiMin){
+                raiCheck = false
             }
             else{
+                raiCheck = true
+            }
+        }
+        else if(!conditionRaiMin && conditionRaiMax){//max only
+            if(conditionCheck.farmAreaAmount <= conditionRaiMax){
                 raiCheck = false
+            }
+            else{
+                raiCheck = true
+            }
+        }
+        else if(conditionRaiMin && !conditionRaiMax){ // min only
+            if(conditionCheck.farmAreaAmount >= conditionRaiMin){
+                raiCheck = false
+            }
+            else{
+                raiCheck = true
             }
         }
     }
     if(serviceCheck){
-        if(conditionCheck.price < conditionServiceMax){
-            if(conditionCheck.price < conditionServiceMin){
-                serviceCheck = true
+        if(conditionServiceMin && conditionServiceMax){
+            if(conditionCheck.price <= conditionServiceMax && conditionCheck.price >= conditionServiceMin){
+                serviceCheck = false
             }
             else{
+                serviceCheck = true
+            }
+        }
+        else if(!conditionServiceMin && conditionServiceMax){//max only
+            if(conditionCheck.price <= conditionServiceMax){
                 serviceCheck = false
+            }
+            else{
+                serviceCheck = true
+            }
+        }
+        else if(conditionServiceMin && !conditionServiceMax){ // min only
+            if(conditionCheck.price >= conditionServiceMin){
+                serviceCheck = false
+            }
+            else{
+                serviceCheck = true
             }
         }
     }
@@ -230,7 +262,7 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
                 <TouchableOpacity 
                     disabled={disabled}
                     style={{
-                        flex : 2,
+                        flex : 3,
                         marginLeft : normalize(10)
                     }}
                     onPress={checkOffline}
@@ -254,6 +286,7 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
         }}>
             <FlatList 
                 data={data}
+                ListFooterComponent={<View style={{ height: normalize(250) }} />}
                 onScrollEndDrag={onScrollEnd}
                 renderItem={({item})=> 
                     item.passCondition!?
@@ -276,7 +309,7 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
                             expiredDate={item.promotion.expiredDate}
                             description={item.promotion.description}
                             condition={item.promotion.condition}
-                            specialCondition={item.promotion.specialCondition}
+                            conditionSpecificFarmer={item.promotion.conditionSpecificFarmer}
                             couponConditionRai={item.promotion.couponConditionRai}
                             couponConditionRaiMin={item.promotion.couponConditionRaiMin}
                             couponConditionRaiMax={item.promotion.couponConditionRaiMax}
@@ -321,7 +354,7 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
                         expiredDate={item.promotion.expiredDate}
                         description={item.promotion.description}
                         condition={item.promotion.condition}
-                        specialCondition={item.promotion.specialCondition}
+                        conditionSpecificFarmer={item.promotion.conditionSpecificFarmer}
                         couponConditionRai={item.promotion.couponConditionRai}
                         couponConditionRaiMin={item.promotion.couponConditionRaiMin}
                         couponConditionRaiMax={item.promotion.couponConditionRaiMax}

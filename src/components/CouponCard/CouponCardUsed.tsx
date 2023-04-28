@@ -7,6 +7,7 @@ import { checkRai } from '../../functions/CheckRai'
 import { generateTime } from '../../functions/DateTime'
 import { CouponCardEntities } from '../../entites/CouponCard'
 import * as RootNavigation from '../../navigations/RootNavigation';
+import { width } from '../../functions/Normalize'
 
 const CouponCardUsed : React.FC<CouponCardEntities> = ({
     id,
@@ -24,7 +25,7 @@ const CouponCardUsed : React.FC<CouponCardEntities> = ({
     expiredDate,
     description,
     condition,
-    specialCondition,
+    conditionSpecificFarmer,
     couponConditionRai,
     couponConditionRaiMin,
     couponConditionRaiMax,
@@ -59,7 +60,7 @@ const CouponCardUsed : React.FC<CouponCardEntities> = ({
           expiredDate: expiredDate,
           description: description,
           condition: condition,
-          specialCondition: specialCondition,
+          conditionSpecificFarmer: conditionSpecificFarmer,
           couponConditionRai: couponConditionRai,
           couponConditionRaiMin: couponConditionRaiMin,
           couponConditionRaiMax: couponConditionRaiMax,
@@ -85,7 +86,7 @@ const CouponCardUsed : React.FC<CouponCardEntities> = ({
         }>
             <View style={{
               position : 'absolute',
-              top : normalize(-2.5),
+              top : -2,
               right : normalize(80),
             }}>
               <Image source={new Date(expiredDate).getTime()-new Date().getTime() > 604800000? icons.halfcircle1 : icons.halfcircleorange1} style={{
@@ -95,7 +96,7 @@ const CouponCardUsed : React.FC<CouponCardEntities> = ({
             </View>
             <View style={{
               position : 'absolute',
-              bottom : normalize(-2.5),
+              bottom : -2,
               right : normalize(80),
             }}>
               <Image source={new Date(expiredDate).getTime()-new Date().getTime() > 604800000 ? icons.halfcircle2 : icons.halfcircleorange2} style={{
@@ -118,15 +119,33 @@ const CouponCardUsed : React.FC<CouponCardEntities> = ({
                     height: normalize(30),
                 }}/>
             </View>
-            <View>
-                <Text style={{
+            <View style={{
+              width : width*0.45
+            }}>
+                <Text 
+                numberOfLines={1}
+                style={{
                     color : colors.fontBlack,
                     fontFamily : fonts.AnuphanMedium,
                     fontSize : normalize(20),
                     marginBottom : normalize(5)
                 }}>{couponName}</Text>
                 {
-                   checkRai(couponConditionRaiMin, couponConditionRaiMax) != ""?
+                   couponConditionProvinceList&&
+                  couponConditionProvinceList!.length === 1?
+                  <Text
+                  style={{
+                    color: colors.fontBlack,
+                    fontFamily: fonts.AnuphanMedium,
+                    fontSize: normalize(20),
+                    marginBottom: normalize(5),
+                  }}>
+                    {`(${couponConditionProvinceList![0]})`}
+                  </Text>
+                  :<></>
+                }
+                {
+                   checkRai(couponConditionRaiMin!, couponConditionRaiMax!) != ""?
                    <Text
                     style={{
                       color: colors.fontBlack,
@@ -134,7 +153,7 @@ const CouponCardUsed : React.FC<CouponCardEntities> = ({
                       fontSize: normalize(18),
                       marginBottom: normalize(5),
                     }}>
-                    {checkRai(couponConditionRaiMin, couponConditionRaiMax)}
+                    {checkRai(couponConditionRaiMin!, couponConditionRaiMax!)}
                   </Text>:
                   <></>
                 }

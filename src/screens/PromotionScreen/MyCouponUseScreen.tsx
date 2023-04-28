@@ -20,11 +20,13 @@ import SelectDronerCouponModal from '../../components/Modal/SelectDronerCoupon';
 const MyCouponUseScreen: React.FC<any> = ({navigation, route}) => {
   const [count, setCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
-  const [data, setData] = useState<MyCouponCardEntities[]>([]);
+  const [data, setData] = useState<any[]>([]);
   const [modal,setModal] = useState<boolean>(false)
-  const isFocused = useIsFocused();
   const getData = (page: number, take: number, used?: boolean) => {
     getMyCoupon(page, take, used).then(res => {
+      res.data.map((item : any) => {
+        console.log(item.couponOfflineCode)
+      })
       setCount(res.count);
       setData(res.data);
     });
@@ -53,7 +55,7 @@ const MyCouponUseScreen: React.FC<any> = ({navigation, route}) => {
          show={modal}
          onClose={()=>setModal(false)}
          onMainClick={()=>{
-          RootNavigation.navigate('SelectDateScreen', {
+          RootNavigation.navigate('DronerUsedScreen', {
             isSelectDroner: true,
             profile: {},
           })
@@ -75,10 +77,11 @@ const MyCouponUseScreen: React.FC<any> = ({navigation, route}) => {
           <FlatList
             onScrollEndDrag={onScrollEnd}
             data={data}
-            renderItem={({ item }) => (
+            ListFooterComponent={<View style={{ height: normalize(250) }} />}
+            renderItem={({ item }) => (         
               <CouponCard
                 id={item.promotion.id}
-                couponCode={item.promotion.couponCode}
+                couponCode={item.promotion.couponType === "ONLINE"?item.promotion.couponCode : item.offlineCode}
                 couponName={item.promotion.couponName}
                 couponType={item.promotion.couponType}
                 promotionType={item.promotion.promotionType}
@@ -92,7 +95,7 @@ const MyCouponUseScreen: React.FC<any> = ({navigation, route}) => {
                 expiredDate={item.promotion.expiredDate}
                 description={item.promotion.description}
                 condition={item.promotion.condition}
-                specialCondition={item.promotion.specialCondition}
+                conditionSpecificFarmer={item.promotion.conditionSpecificFarmer}
                 couponConditionRai={item.promotion.couponConditionRai}
                 couponConditionRaiMin={item.promotion.couponConditionRaiMin}
                 couponConditionRaiMax={item.promotion.couponConditionRaiMax}

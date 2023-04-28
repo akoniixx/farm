@@ -1,4 +1,11 @@
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { normalize } from '@rneui/themed';
 import { useIsFocused } from '@react-navigation/native';
@@ -6,12 +13,15 @@ import { MyCouponCardEntities } from '../../entites/CouponCard';
 import { getMyCoupon } from '../../datasource/PromotionDatasource';
 import { colors, font, image } from '../../assets';
 import CouponCard from '../../components/CouponCard/CouponCard';
+import { MainButton } from '../../components/Button/MainButton';
+import * as RootNavigation from '../../navigations/RootNavigation';
+import SelectDronerCouponModal from '../../components/Modal/SelectDronerCoupon';
 
-const MyCouponUsedScreen: React.FC<any> = () => {
+const MyCouponUsedScreen: React.FC<any> = ({navigation, route}) => {
   const [count, setCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
-  const [data, setData] = useState<MyCouponCardEntities[]>([]);
-  const isFocused = useIsFocused();
+  const [data, setData] = useState<any[]>([]);
+  const [modal,setModal] = useState<boolean>(false)
   const getData = (page: number, take: number, used?: boolean) => {
     getMyCoupon(page, take, used).then(res => {
       setCount(res.count);
@@ -21,11 +31,10 @@ const MyCouponUsedScreen: React.FC<any> = () => {
   useEffect(() => {
     getData(page, 5, true);
   }, []);
-
   const onScrollEnd = ()=>{
     let pageNow = page
     if(data.length < count){
-      getMyCoupon(pageNow+1, 5, true).then(res => {
+      getMyCoupon(pageNow+1, 5, false).then(res => {
         let newData = data.concat(res.data)
         setPage(pageNow+1)
         setData(newData)
@@ -33,17 +42,40 @@ const MyCouponUsedScreen: React.FC<any> = () => {
     }
   }
   return (
-    <>
+    <View
+      style={{
+        position: 'relative',
+        height: '100%',
+        backgroundColor : colors.bgGreen
+      }}>
+      <SelectDronerCouponModal
+         show={modal}
+         onClose={()=>setModal(false)}
+         onMainClick={()=>{
+          RootNavigation.navigate('DronerUsedScreen', {
+            isSelectDroner: true,
+            profile: {},
+          })
+          setModal(false)
+         }}
+         onBottomClick={()=>{
+          RootNavigation.navigate('SelectDateScreen', {
+            isSelectDroner: false,
+            profile: {},
+           })
+           setModal(false)
+         }}
+      />
       {data.length != 0 ? (
         <View
           style={{
             padding: normalize(17),
-            backgroundColor : colors.bgGreen
           }}>
           <FlatList
             onScrollEndDrag={onScrollEnd}
             data={data}
-            renderItem={({ item }) => (
+            ListFooterComponent={<View style={{ height: normalize(250) }} />}
+            renderItem={({ item }) => (         
               <CouponCard
                 id={item.promotion.id}
                 couponCode={item.promotion.couponCode}
@@ -60,7 +92,7 @@ const MyCouponUsedScreen: React.FC<any> = () => {
                 expiredDate={item.promotion.expiredDate}
                 description={item.promotion.description}
                 condition={item.promotion.condition}
-                specialCondition={item.promotion.specialCondition}
+                conditionSpecificFarmer={item.promotion.conditionSpecificFarmer}
                 couponConditionRai={item.promotion.couponConditionRai}
                 couponConditionRaiMin={item.promotion.couponConditionRaiMin}
                 couponConditionRaiMax={item.promotion.couponConditionRaiMax}
@@ -80,7 +112,7 @@ const MyCouponUsedScreen: React.FC<any> = () => {
                   item.promotion.couponConditionProvinceList
                 }
                 keepthis={false}
-                disabled={true}
+                disabled={false}
               />
             )}
             keyExtractor={item => item.promotion.id}
@@ -95,16 +127,30 @@ const MyCouponUsedScreen: React.FC<any> = () => {
           <View
             style={{
               alignItems: 'center',
-              alignContent: 'center',
+              justifyContent: 'center',
               paddingVertical: 10,
             }}>
-            <Text style={styles.textEmpty}>ไม่มีคูปองที่ใช้แล้ว</Text>
-            <Text style={styles.textEmpty}>ติดตามคูปองและสิทธิพิเศษมากมาย</Text>
-            <Text style={styles.textEmpty}>ได้ที่หน้าโปรโมชั่น เร็วๆนี้ </Text>
+              <Text style={styles.textEmpty}>ไม่มีคูปองที่ใช้แล้ว</Text>
+              <Text style={styles.textEmpty}>ติดตามคูปองและสิทธิพิเศษมากมาย</Text>
+              <Text style={styles.textEmpty}>ได้ที่หน้าโปรโมชั่น เร็วๆนี้ </Text>
           </View>
         </View>
       )}
-    </>
+      <View
+        style={{
+          width: Dimensions.get('screen').width,
+          position: 'absolute',
+          bottom: 0,
+          padding: normalize(17),
+          backgroundColor: colors.white,
+        }}>
+        <MainButton
+          label="จ้างนักบินโดรน"
+          color={colors.greenLight}
+          onPress={() => setModal(true)}
+        />
+      </View>
+    </View>
   );
 };
 

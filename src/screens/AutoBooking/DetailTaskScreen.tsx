@@ -104,7 +104,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         cropName: taskData.cropName || '',
         farmAreaAmount: taskData.farmAreaAmount,
         comment: taskData.comment || '',
-        couponCode: taskData.couponCode || '',
+        couponCode: couponInfo.couponCode || '',
         farmerPlotId: taskData.farmerPlotId,
         dateAppointment,
         createBy: `${user?.firstname} ${user?.lastname}`,
