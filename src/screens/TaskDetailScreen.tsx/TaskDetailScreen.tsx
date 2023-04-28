@@ -171,7 +171,6 @@ const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
       .then(res => {
         if (res.success) {
           setData(res.responseData.data);
-          console.log(res.responseData.data,'dsdsds')
           let date = new Date(res.responseData.data.dateAppointment);
           setDateAppointment(date);
           if (Object.keys(res.responseData.image_profile_url).length !== 0) {
