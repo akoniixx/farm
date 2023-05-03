@@ -103,5 +103,6 @@ export default {
   halfcirclegreen2 : require('./halfcirclegreen2.png'),
   halfcircleorange1 : require('./halfcircleorange1.png'),
   halfcircleorange2 : require('./halfcircleorange2.png'),
-  filter: require('./filter.png')
+  filter: require('./filter.png'),
+  ickPoint: require('./ICKPoint.png')
 };
