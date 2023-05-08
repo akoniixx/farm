@@ -21,7 +21,7 @@ export const HistoryPoint: React.FC<guruData> = ({
       <View
         style={{
           backgroundColor: colors.Surface,
-          paddingVertical: 5,
+          paddingVertical: 3,
           padding: 15,
         }}>
         <View>

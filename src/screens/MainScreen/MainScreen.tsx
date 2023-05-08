@@ -320,7 +320,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 source={image.bgHead}
                 style={{
                   width: (width * 380) / 375,
-                  height: (height * 250) / 812,
+                  height: (height * 350) / 812,
                   position: 'absolute',
                 }}
               />
@@ -344,64 +344,62 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </Text>
                 </View>
                 <View
-                style={{
-                  flexDirection: 'row',
-                }}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('NotificationScreen', {
-                      data: notiData?.data,
-                    })
-                  }>
-                  {showBell ? (
-                    <Image
-                      source={
-                        notiData.count != 0
-                          ? icons.newnotification
-                          : icons.notification
-                      }
-                      style={{
-                        width: normalize(28),
-                        height: normalize(28),
-                      }}
-                    />
-                  ) : (
-                    <></>
-                  )}
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() =>  navigation.navigate('DetailPointScreen')}>
-                <View>
-                  <View
-                    style={{
-                      justifyContent: 'space-between',
-                      flexDirection: 'row',
-                      backgroundColor: colors.greenLight,
-                      borderRadius: 20,
-                      paddingHorizontal: 5,
-                      paddingVertical: 2,
-                      bottom: 5,
-                    }}>
-                    <Image
-                      source={icons.ickPoint}
-                      style={{ width: 35, height: 35 }}
-                    />
-                    <Text
-                      style={{
-                        alignSelf: 'center',
-                        textAlign: 'center',
-                        fontFamily: font.AnuphanBold,
-                        color: colors.white,
-                        fontSize: normalize(16),
-                      }}>
-                      123,450
-                    </Text>
-                  </View>
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('NotificationScreen', {
+                        data: notiData?.data,
+                      })
+                    }>
+                    {showBell ? (
+                      <Image
+                        source={
+                          notiData.count != 0
+                            ? icons.newnotification
+                            : icons.notification
+                        }
+                        style={{
+                          width: normalize(28),
+                          height: normalize(28),
+                        }}
+                      />
+                    ) : (
+                      <></>
+                    )}
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('DetailPointScreen')}>
+                      <LinearGradient
+                        colors={['#41D981', '#26A65C']}
+                        start={{ x: 0.85, y: 0.25 }}
+                        style={{
+                          left:10,
+                          padding: 2,
+                          flexDirection: 'row',
+                          borderRadius: 24,
+                          alignItems: 'center',
+                          borderColor: colors.greenLight,
+                        }}>
+                        <Image
+                          source={icons.ickPoint}
+                          style={{ width: 35, height: 35 }}
+                        />
+                        <Text
+                          style={{
+                            alignSelf: 'center',
+                            textAlign: 'center',
+                            fontFamily: font.AnuphanBold,
+                            color: colors.white,
+                            fontSize: normalize(16),
+                          }}>{`124,500 `}</Text>
+                      </LinearGradient>
+                  </TouchableOpacity>
                 </View>
-                </TouchableOpacity>
-              
-              </View>
               </SafeAreaView>
-            
+
               <View
                 style={{
                   flexDirection: 'row',
