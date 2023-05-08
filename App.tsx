@@ -23,7 +23,6 @@ import { AuthProvider } from './src/contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from './mixpanel';
 import { RecoilRoot } from 'recoil';
-import DetailPointScreen from './src/screens/PointScreen/DetailPointScreen';
 const App = () => {
   useEffect(() => {
     mixpanel.track('App open');
@@ -55,7 +54,6 @@ const App = () => {
           <AuthProvider>
             <AutoBookingProvider>
               <SheetProvider>
-                {/* <DetailPointScreen/> */}
                 <AppNavigator />
               </SheetProvider>
             </AutoBookingProvider>

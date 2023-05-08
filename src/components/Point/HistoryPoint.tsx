@@ -17,18 +17,32 @@ export const HistoryPoint: React.FC<guruData> = ({
   point,
 }) => {
   return (
-    <View key={index} 
-    style={{ padding: 15 }}>
+    <View key={index}>
+      <View
+        style={{
+          backgroundColor: colors.Surface,
+          paddingVertical: 5,
+          padding: 15,
+        }}>
+        <View>
+          <Text style={styles.textDate}>
+            {' '}
+            {momentExtend.toBuddhistYear(new Date(), 'DD MMM YY')}
+          </Text>
+        </View>
+      </View>
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
+          paddingHorizontal: 15,
+          paddingVertical: 10,
         }}>
         <View>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.textDate}>
             {' '}
-            {momentExtend.toBuddhistYear(new Date(), 'DD MMM YY')}
+            {momentExtend.toBuddhistYear(new Date(), 'HH:mm น.')}
           </Text>
         </View>
         {point > 0 ? (
@@ -68,6 +82,12 @@ const styles = StyleSheet.create({
     lineHeight: 30,
   },
   textDate: {
+    fontSize: normalize(14),
+    fontFamily: font.SarabunBold,
+    color: colors.gray,
+    lineHeight: 30,
+  },
+  textTime: {
     fontSize: normalize(14),
     fontFamily: font.SarabunLight,
     color: colors.gray,

@@ -343,6 +343,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     {profilestate.name}
                   </Text>
                 </View>
+                <View
+                style={{
+                  flexDirection: 'row',
+                }}>
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate('NotificationScreen', {
@@ -365,7 +369,39 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     <></>
                   )}
                 </TouchableOpacity>
+                <TouchableOpacity onPress={() =>  navigation.navigate('DetailPointScreen')}>
+                <View>
+                  <View
+                    style={{
+                      justifyContent: 'space-between',
+                      flexDirection: 'row',
+                      backgroundColor: colors.greenLight,
+                      borderRadius: 20,
+                      paddingHorizontal: 5,
+                      paddingVertical: 2,
+                      bottom: 5,
+                    }}>
+                    <Image
+                      source={icons.ickPoint}
+                      style={{ width: 35, height: 35 }}
+                    />
+                    <Text
+                      style={{
+                        alignSelf: 'center',
+                        textAlign: 'center',
+                        fontFamily: font.AnuphanBold,
+                        color: colors.white,
+                        fontSize: normalize(16),
+                      }}>
+                      123,450
+                    </Text>
+                  </View>
+                </View>
+                </TouchableOpacity>
+              
+              </View>
               </SafeAreaView>
+            
               <View
                 style={{
                   flexDirection: 'row',
