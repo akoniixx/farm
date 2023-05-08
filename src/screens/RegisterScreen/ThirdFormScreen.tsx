@@ -888,13 +888,19 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
             <View>
               <Text
                 style={{
+                    fontFamily: fonts.SarabunMedium,
+                    fontSize: normalize(16),
+                    color: colors.gray,
+                  }}>
+                  กรุณาพิมพ์ชื่อตำบลแปลงเกษตรของคุณ
+                </Text>
+                <Text style={{
+                  fontFamily : fonts.SarabunMedium,
                   marginBottom: normalize(10),
-                  fontFamily: fonts.SarabunLight,
-                  fontSize: normalize(16),
-                  color: colors.gray,
+                  fontSize : normalize(16),
+                  color : colors.darkOrange
                 }}>
-                {`กรุณาพิมพ์ค้นหาพื้นที่แปลงเกษตรของคุณ
-ด้วยชื่อ ตำบล / อำเภอ / จังหวัด`}
+                ไม่ต้องพิมพ์คำนำหน้าชื่อคำว่า ต. หรือ ตำบล
               </Text>
             </View>
             <View style={styles.container}>

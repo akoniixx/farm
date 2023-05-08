@@ -40,11 +40,11 @@ const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
   };
   const [dronerImg, setDronerImg] = useState<string | null>(null);
   useEffect(() => {
+    console.log(task.discountPromotion)
     DronerDatasource.getDronerData(task.droner.id).then(res => {
       res.file.map((item: any) => {
         if (item.category === 'PROFILE_IMAGE') {
           DronerDatasource.getDronerProfileImage(item.path).then(resImg => {
-            console.log(resImg);
             setDronerImg(resImg);
           });
         }
@@ -109,8 +109,8 @@ const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
             <Text style={styles.label}>วันและเวลา</Text>
           </View>
           <DateTimeDetail
-            date={task.date_appointment}
-            time={task.date_appointment}
+            date={task.dateAppointment}
+            time={task.dateAppointment}
             note={task.comment}
           />
         </View>
@@ -215,8 +215,42 @@ const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
               justifyContent: 'space-between',
             }}>
             <Text style={styles.totalPrice}>ราคารวม</Text>
-            <Text style={styles.totalPrice}>{task.totalPrice} บาท</Text>
+            <Text style={styles.totalPrice}>{task.price} บาท</Text>
           </View>
+          {
+            task.discountCoupon != 0 ?
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={[styles.totalPrice,{
+                color : '#1F8449'
+              }]}>ส่วนลด</Text>
+              <Text style={[styles.totalPrice,{
+                color : '#1F8449'
+              }]}>- {task.discountCoupon} บาท</Text>
+            </View>:
+            <></>
+          }
+          {
+            task.discountPromotion != 0 ?
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={[styles.totalPrice,{
+                color : '#1F8449'
+              }]}>ส่วนลดโปรโมชั่น</Text>
+              <Text style={[styles.totalPrice,{
+                color : '#1F8449'
+              }]}>- {task.discountPromotion} บาท</Text>
+            </View>:
+            <></>
+          }
           <View
             style={{
               borderTopWidth: StyleSheet.hairlineWidth,
@@ -322,7 +356,7 @@ const styles = StyleSheet.create({
     color: '#2EC46D',
   },
   totalPrice: {
-    fontFamily: font.AnuphanMedium,
+    fontFamily: font.SarabunMedium,
     color: colors.gray,
     fontSize: normalize(18),
   },
