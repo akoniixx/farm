@@ -112,7 +112,7 @@ const MyCouponUsedScreen: React.FC<any> = ({navigation, route}) => {
                   item.promotion.couponConditionProvinceList
                 }
                 keepthis={false}
-                disabled={false}
+                disabled={true}
               />
             )}
             keyExtractor={item => item.promotion.id}

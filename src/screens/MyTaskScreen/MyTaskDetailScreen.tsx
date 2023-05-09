@@ -294,7 +294,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                 fontFamily: font.AnuphanBold,
                 color: '#2EC46D',
               }}>
-              ส่วนลดโปรโมรชั่น
+              ส่วนลดโปรโมชั่น
             </Text>
             <Text
               style={{

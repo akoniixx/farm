@@ -112,7 +112,8 @@ const MyCouponExpiredScreen: React.FC<any> = ({navigation, route}) => {
                   item.promotion.couponConditionProvinceList
                 }
                 keepthis={false}
-                disabled={false}
+                disabled={true}
+                expired={true}
               />
             )}
             keyExtractor={item => item.promotion.id}
