@@ -1,6 +1,6 @@
 import {Switch} from '@rneui/themed';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Button, Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Button, Dimensions, Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
@@ -25,6 +25,8 @@ import Toast from 'react-native-toast-message';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import fonts from '../../assets/fonts';
 import { mixpanel } from '../../../mixpanel';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { CardGuruKaset } from '../../components/Carousel/CardGuruKaset';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -41,6 +43,12 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     status: '',
   });
   const [openNoti, setOpenNoti] = useState(false);
+  const [guruKaset, setGuruKaset] = useState<any>();
+  const isCarousel = React.useRef(null);
+  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+  const imageWidth = screenWidth / 2;
+  const screen = Dimensions.get('window');
+  const [index, setIndex] = React.useState(0);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -151,6 +159,132 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
       })
       .catch(err => console.log(err));
   };
+
+  const guru = () => (
+    <>
+    <View>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 16,
+        paddingVertical: 10,
+      }}>
+      <Text
+        style={{
+          fontFamily: font.bold,
+          fontSize: normalize(20),
+          color: colors.fontBlack,
+          paddingHorizontal: 20,
+        }}>
+        กูรูเกษตร
+      </Text>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('AllGuruScreen');
+        }}>
+        <Text
+          style={{
+            fontFamily: font.light,
+            fontSize: normalize(16),
+            color: colors.gray,
+            height: 30,
+            lineHeight: 32,
+            paddingHorizontal: 10,
+          }}>
+          ดูทั้งหมด
+        </Text>
+      </TouchableOpacity>
+    </View>
+    {guruKaset != undefined ? (
+      <View>
+        <Carousel
+          autoplay={true}
+          autoplayInterval={7000}
+          autoplayDelay={5000}
+          loop={true}
+          ref={isCarousel}
+          data={guruKaset.data}
+          sliderWidth={screen.width}
+          itemWidth={screen.width}
+          onSnapToItem={index => setIndex(index)}
+          useScrollView={true}
+          vertical={false}
+          renderItem={({ item }: any) => {
+            return (
+              <TouchableOpacity
+                onPress={async () => {
+                  await AsyncStorage.setItem(
+                    'guruId',
+                    `${item.id}`,
+                  );
+                  navigation.push('DetailGuruScreen');
+                }}>
+                <CardGuruKaset background={item.image_path} />
+              </TouchableOpacity>
+            );
+          }}
+        />
+        <View
+          style={{
+            alignItems: 'center',
+            top: -15,
+            marginVertical: -10,
+          }}>
+          <Pagination
+            dotsLength={guruKaset.data.length}
+            activeDotIndex={index}
+            carouselRef={isCarousel}
+            dotStyle={{
+              width: 8,
+              height: 8,
+              borderRadius: 5,
+              marginHorizontal: 0,
+              backgroundColor: colors.gray,
+            }}
+            inactiveDotOpacity={0.4}
+            inactiveDotScale={0.9}
+            tappableDots={true}
+          />
+        </View>
+      </View>
+    ) : null}
+  </View>
+  <View
+    style={{
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 16,
+      paddingVertical: 10,
+    }}>
+    <Text
+      style={{
+        fontFamily: font.bold,
+        fontSize: normalize(20),
+        color: colors.gray,
+        paddingHorizontal: 20,
+      }}>
+      จ้างนักบินที่เคยจ้าง
+    </Text>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('DronerUsedScreen');
+      }}>
+      <Text
+        style={{
+          fontFamily: font.light,
+          fontSize: normalize(16),
+          color: colors.gray,
+          height: 30,
+          lineHeight: 32,
+          paddingHorizontal: 10,
+        }}>
+        ดูทั้งหมด
+      </Text>
+    </TouchableOpacity>
+  </View>
+  </>
+  )
 
   return (
     <BottomSheetModalProvider>
