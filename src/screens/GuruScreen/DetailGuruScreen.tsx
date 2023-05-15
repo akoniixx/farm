@@ -99,43 +99,43 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
                   contentWidth={Dimensions.get('screen').width}
                   tagsStyles={{
                     strong: {
-                      color: colors.grayBg,
+                      color: colors.fontGrey,
                       fontSize: normalize(18),
                       fontWeight: '400',
                       lineHeight: 28,
                     },
                     em: {
-                      color: colors.grayBg,
+                      color: colors.fontGrey,
                       fontSize: normalize(18),
                       fontWeight: '200',
                       lineHeight: 28,
                     },
                     ul: {
-                      color: colors.grayBg,
+                      color: colors.fontGrey,
                       fontSize: normalize(18),
                       fontWeight: '200',
                       lineHeight: 28,
                     },
                     u: {
-                      color: colors.grayBg,
+                      color: colors.fontGrey,
                       fontSize: normalize(18),
                       fontWeight: '200',
                       lineHeight: 28,
                     },
                     p: {
-                      color: colors.grayBg,
+                      color: colors.fontGrey,
                       fontSize: normalize(18),
                       fontWeight: '200',
                       lineHeight: 28,
                     },
                     ol: {
-                      color: colors.grayBg,
+                      color: colors.fontGrey,
                       fontSize: normalize(18),
                       fontWeight: '200',
                       lineHeight: 28,
                     },
                     li: {
-                      color: colors.grayBg,
+                      color: colors.fontGrey,
                       fontSize: normalize(18),
                       fontWeight: '200',
                       lineHeight: 28,

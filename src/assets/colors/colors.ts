@@ -16,4 +16,5 @@ export default {
   darkBlue: '#036EAF',
   inkLight: '#4F5E71',
   inputText: '#2B2B2B',
+  fontGrey: '#4A5158',
 };

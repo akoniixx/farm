@@ -21,6 +21,7 @@ import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from './mixpanel';
 import { checkNotifications } from 'react-native-permissions';
+import 'moment/locale/th';
 
 type ActionContextType = {
   actiontaskId: string | null,

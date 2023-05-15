@@ -549,7 +549,7 @@
 				CODE_SIGN_ENTITLEMENTS = Droner/Droner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9ZXXDP8F5K;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Droner/Info.plist;
@@ -559,7 +559,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.4;
+				MARKETING_VERSION = 1.2.5;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -589,7 +589,7 @@
 				CODE_SIGN_ENTITLEMENTS = Droner/Droner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9ZXXDP8F5K;
 				INFOPLIST_FILE = Droner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "นักบินโดรน";
@@ -598,7 +598,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.4;
+				MARKETING_VERSION = 1.2.5;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
