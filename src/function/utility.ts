@@ -2,6 +2,7 @@ import {Linking, Platform} from 'react-native';
 import {io} from 'socket.io-client';
 import {BASE_URL} from '../config/develop-config';
 import {callcenterNumber} from '../definitions/callCenterNumber';
+import moment from 'moment';
 
 export const numberWithCommas = (number: string, withOutToFix = false) => {
   let nub = parseFloat(number).toFixed(withOutToFix ? 0 : 2);
@@ -75,3 +76,18 @@ export const calTotalPromotion = (p1:string,p2:string,p3:string) => {
   let text = totalPrice.toString()
   return  text
 }
+
+
+export const momentExtend = {
+  toBuddhistYear: (date: string | Date, format = 'DD MMMM YYYY') => {
+    const christianYear = moment(date).format('YYYY');
+    const buddhishYear = (parseInt(christianYear) + 543).toString();
+    return moment(date)
+      .format(
+        format
+          .replace('YYYY', buddhishYear)
+          .replace('YY', buddhishYear.substring(2, 4)),
+      )
+      .replace(christianYear, buddhishYear);
+  },
+};

@@ -11,7 +11,7 @@ export const CardGuruKaset: React.FC<guruData> = ({ background }) => {
   return (
     <View
       style={{
-        padding: 10,
+        padding: normalize(10),
       }}>
       <View style={styles.card}>
         <Image
@@ -19,7 +19,7 @@ export const CardGuruKaset: React.FC<guruData> = ({ background }) => {
           borderTopRightRadius={10}
           borderBottomLeftRadius={10}
           borderBottomRightRadius={10}
-          style={{ height: normalize(130) }}
+          style={{ height: normalize(120) }}
           source={ { uri: background }}
         />
       </View>

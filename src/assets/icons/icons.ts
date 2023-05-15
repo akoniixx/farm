@@ -59,5 +59,6 @@ export default {
   doc: require('./document.png'),
   x: require('./x.png'),
   service : require('./service.png'),
-  servicearea : require('./servicearea.png')
+  servicearea : require('./servicearea.png'),
+  filter: require('./filter.png')
 };
