@@ -40,6 +40,7 @@ const AllCouponScreen : React.FC<any> = ({navigation,route}) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      setPage(1)
       getData(1)
     }, []),
   );

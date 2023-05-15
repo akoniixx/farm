@@ -755,13 +755,19 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
             <View>
               <Text
                 style={{
-                  marginBottom: normalize(10),
-                  fontFamily: fonts.SarabunLight,
+                  fontFamily: fonts.SarabunMedium,
                   fontSize: normalize(16),
                   color: colors.gray,
                 }}>
-                {`กรุณาพิมพ์ค้นหาพื้นที่แปลงเกษตรของคุณ
-ด้วยชื่อ ตำบล / อำเภอ / จังหวัด`}
+                กรุณาพิมพ์ชื่อตำบลแปลงเกษตรของคุณ
+              </Text>
+              <Text style={{
+                fontFamily : fonts.SarabunMedium,
+                marginBottom: normalize(10),
+                fontSize : normalize(16),
+                color : colors.darkOrange
+              }}>
+                ไม่ต้องพิมพ์คำนำหน้าชื่อคำว่า ต. หรือ ตำบล
               </Text>
             </View>
             <View style={styles.container}>

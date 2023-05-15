@@ -14,8 +14,12 @@ import { normalize } from '@rneui/themed';
 import fonts from '../../assets/fonts';
 import { checkCouponByCode } from '../../datasource/PromotionDatasource';
 import CouponCard from '../../components/CouponCard/CouponCard';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { couponState } from '../../recoil/CouponAtom';
 
 const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
+  const [coupon,setCoupon] = useRecoilState(couponState);
+  const couponInfo = useRecoilValue(couponState)
   const [disable, setDisable] = useState<boolean>(true);
   const [couponCode, setCouponCode] = useState<string>('');
   const [errText, setErrText] = useState<string>('');
@@ -101,7 +105,13 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
         <CustomHeader
           title="ค้นหาคูปอง"
           showBackBtn
-          onPressBack={() => navigation.goBack()}
+          onPressBack={() => {
+            setCoupon({
+              ...coupon,
+              err : ''
+            })
+            navigation.goBack()
+          }}
         />
         <View
           style={{
@@ -127,6 +137,10 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
                 setErrText('');
                 setEmpty(true);
                 if (text.length < 1) {
+                  setCoupon({
+                    ...coupon,
+                    err : ''
+                  })
                   setDisable(true);
                 } else {
                   setDisable(false);
@@ -165,7 +179,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               fontSize: normalize(16),
               color: colors.errorText,
             }}>
-            {errText}
+            {errText}{couponInfo.err}
           </Text>
         </View>
         {empty ? (

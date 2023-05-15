@@ -295,7 +295,7 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
                     }}>
                         <CouponCardUsed 
                             id={item.promotion.id}
-                            couponCode={item.promotion.couponCode}
+                            couponCode={item.promotion.promotionType === "ONLINE" ? item.promotion.couponCode : item.offlineCode!}
                             couponName={item.promotion.couponName}
                             couponType={item.promotion.couponType}
                             promotionType={item.promotion.promotionType}
@@ -340,7 +340,7 @@ const UseCouponScreen : React.FC<any> = ({navigation,route}) => {
                     </View>:
                     <CouponCardUsed 
                         id={item.promotion.id}
-                        couponCode={item.promotion.couponCode}
+                        couponCode={item.promotion.promotionType === "ONLINE" ? item.promotion.couponCode : item.offlineCode!}
                         couponName={item.promotion.couponName}
                         couponType={item.promotion.couponType}
                         promotionType={item.promotion.promotionType}

@@ -16,6 +16,8 @@ import { CouponCardEntities } from '../../entites/CouponCard';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { keepCoupon } from '../../datasource/PromotionDatasource';
 import { width } from '../../functions/Normalize';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { couponState } from '../../recoil/CouponAtom';
 
 const CouponCard: React.FC<CouponCardEntities> = ({
   id,
@@ -49,6 +51,7 @@ const CouponCard: React.FC<CouponCardEntities> = ({
   disabled,
   expired,
 }) => {
+  const [coupon,setCoupon] = useRecoilState(couponState);
   const KeepCoupon = () => {
     if(promotionType === "ONLINE"){
       keepCoupon(id)
@@ -60,7 +63,15 @@ const CouponCard: React.FC<CouponCardEntities> = ({
     else{
       keepCoupon(id,couponOfflineCode![0].couponCode)
       .then(res => {
-        RootNavigation.navigate('MyCouponScreen', {});
+        if(!res.userMessage){
+          RootNavigation.navigate('MyCouponScreen', {});
+        }
+        else{
+          setCoupon({
+            ...coupon,
+            err : res.userMessage
+          })
+        }
       })
       .catch(err => console.log(err));
     }
@@ -104,8 +115,8 @@ const CouponCard: React.FC<CouponCardEntities> = ({
         [
           styles.mainCard,
           {
-            backgroundColor : disabled ? colors.grey10: (new Date(expiredDate).getTime()-new Date().getTime() > 604800000)?colors.white : colors.bgOrange,
-            borderColor : disabled ? colors.grey5: (new Date(expiredDate).getTime()-new Date().getTime() > 604800000)?colors.grey20 : "#FDC382",
+            backgroundColor : disabled ? colors.grey10: (new Date(expiredDate).getTime()-new Date().getTime() > 604800000 || disabled)?colors.white : colors.bgOrange,
+            borderColor : disabled ? colors.grey5: (new Date(expiredDate).getTime()-new Date().getTime() > 604800000 || disabled)?colors.grey20 : "#FDC382",
             borderWidth : normalize(1)
           }
         ]}>
@@ -114,7 +125,7 @@ const CouponCard: React.FC<CouponCardEntities> = ({
           top : -2,
           right : normalize(80),
         }}>
-          <Image source={expired?icons.halfcircle1 :new Date(expiredDate).getTime()-new Date().getTime() > 604800000? icons.halfcircle1 : icons.halfcircleorange1} style={{
+          <Image source={expired?icons.halfcircle1 :new Date(expiredDate).getTime()-new Date().getTime() > 604800000 || disabled? icons.halfcircle1 : icons.halfcircleorange1} style={{
             width : normalize(20),
             height : normalize(10)
           }}/>
@@ -124,7 +135,7 @@ const CouponCard: React.FC<CouponCardEntities> = ({
           bottom : -2,
           right : normalize(80),
         }}>
-          <Image source={expired?icons.halfcircle2 : new Date(expiredDate).getTime()-new Date().getTime() > 604800000 ? icons.halfcircle2 : icons.halfcircleorange2} style={{
+          <Image source={expired?icons.halfcircle2 : new Date(expiredDate).getTime()-new Date().getTime() > 604800000 || disabled ? icons.halfcircle2 : icons.halfcircleorange2} style={{
             width : normalize(20),
             height : normalize(10)
           }}/>
@@ -134,16 +145,16 @@ const CouponCard: React.FC<CouponCardEntities> = ({
             style={{
               justifyContent: 'center',
               alignItems: 'center',
-              height: normalize(48),
-              width: normalize(48),
-              borderRadius: normalize(24),
-              backgroundColor: colors.bgGreen,
+              height: normalize(60),
+              width: normalize(60),
+              borderRadius: normalize(30),
+              backgroundColor: couponType === "INJECTION" ? colors.bgGreen : colors.bgOrange,
               marginRight: normalize(20),
             }}>
             <Image
-              source={icons.injectionicon}
+              source={couponType === "INJECTION" ?icons.injectionicon : icons.drugicon}
               style={{
-                width: normalize(17),
+                width: couponType === "INJECTION" ? normalize(32) : normalize(38) ,
                 height: normalize(30),
               }}
             />
@@ -191,9 +202,9 @@ const CouponCard: React.FC<CouponCardEntities> = ({
               style={{
                 fontFamily: fonts.SarabunLight,
                 fontSize: normalize(18),
-                color: new Date(expiredDate).getTime()-new Date().getTime() > 604800000 ? colors.gray : colors.error,
+                color: new Date(expiredDate).getTime()-new Date().getTime() > 604800000 || disabled ? colors.gray : colors.error,
               }}>
-              {expired ?`ใช้ได้ถึง ${generateTime(expiredDate)}` : new Date(expiredDate).getTime()-new Date().getTime() > 604800000 ? `ใช้ได้ถึง ${generateTime(expiredDate)}` : `เหลือเวลาใช้อีก ${((new Date(expiredDate).getTime()-new Date().getTime())/86400000).toFixed(0)} วัน`}
+              {expired ?`ใช้ได้ถึง ${generateTime(expiredDate)}` : (new Date(expiredDate).getTime()-new Date().getTime() > 604800000 || disabled)? `ใช้ได้ถึง ${generateTime(expiredDate)}` : `เหลือเวลาใช้อีก ${((new Date(expiredDate).getTime()-new Date().getTime())/86400000).toFixed(0)} วัน`}
             </Text>
           </View>
           {keepthis ? (

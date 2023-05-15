@@ -984,7 +984,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                   fontSize: 18,
                   fontFamily: fonts.SarabunMedium,
                 }}>
-                ส่วนลดโปรโมรชั่น
+                ส่วนลดโปรโมชั่น
               </Text>
               <Text
                 style={{
