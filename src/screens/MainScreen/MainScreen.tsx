@@ -218,7 +218,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 <Text style={styles.activeFont}>เปิดรับงาน</Text>
               </View>
             </View>
-            <View>
+           {/*  <View>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('ProfileScreen', {
@@ -268,6 +268,14 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     />
                   </View>
                 </View>
+              </TouchableOpacity>
+            </View> */}
+            <View style={{marginTop:normalize(5)}}>
+              <TouchableOpacity onPress={()=>{  navigation.navigate('PointHistoryScreen');}}>
+              <View style={{backgroundColor:'#F9963B',paddingHorizontal:normalize(10),paddingVertical:normalize(5),borderRadius:30,flexDirection:'row',alignItems:'center'}}>
+                <Image source={icons.point} style={{width:normalize(21),height:normalize(21),marginRight:5}} />
+                <Text style={{color:'white',fontSize:14,fontFamily:font.bold}}>123,480</Text>
+              </View>
               </TouchableOpacity>
             </View>
           </View>

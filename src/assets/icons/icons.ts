@@ -60,5 +60,6 @@ export default {
   x: require('./x.png'),
   service : require('./service.png'),
   servicearea : require('./servicearea.png'),
-  filter: require('./filter.png')
+  filter: require('./filter.png'),
+  point: require('./point.png')
 };
