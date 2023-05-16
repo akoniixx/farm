@@ -292,18 +292,18 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
   };
-  // useEffect(() => {
-  //   findAllNews();
-  // }, [isFocused]);
-  // const findAllNews = async () => {
-  //   setLoading(true);
-  //   GuruKaset.findAllNews('ACTIVE', 'FARMER', 'created_at', 'DESC', 5, 0)
-  //     .then(res => {
-  //       setGuruKaset(res);
-  //     })
-  //     .catch(err => console.log(err))
-  //     .finally(() => setLoading(false));
-  // };
+  useEffect(() => {
+    findAllNews();
+  }, [isFocused]);
+  const findAllNews = async () => {
+    setLoading(true);
+    GuruKaset.findAllNews('ACTIVE', 'FARMER', 'created_at', 'DESC', 5, 0)
+      .then(res => {
+        setGuruKaset(res);
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
+  };
 
   return (
     <View
@@ -693,7 +693,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </View>
                   </View> */}
                 <View>
-                  {/* <View
+                  <View
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
@@ -725,7 +725,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         ดูทั้งหมด
                       </Text>
                     </TouchableOpacity>
-                  </View> */}
+                  </View>
                   {guruKaset != undefined ? (
                     <View>
                       <Carousel
