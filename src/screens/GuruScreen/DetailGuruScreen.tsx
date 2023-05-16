@@ -61,7 +61,7 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
             <View>
               <Image
                 style={{ height: normalize(150) }}
-                resizeMode='cover'
+                resizeMode='contain'
                 source={
                   !data.imagePath ? image.loading : { uri: data.imagePath }
                 }
