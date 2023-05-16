@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useState } from 'react';
 import { BASE_URL, httpClient } from '../config/develop-config';
 
 export interface PayloadDronerSearch {
@@ -17,6 +16,7 @@ export interface PayloadCal {
   cropName: string;
   raiAmount: number;
   couponCode: string;
+  usePoint: number;
 }
 
 export class PlotDatasource {

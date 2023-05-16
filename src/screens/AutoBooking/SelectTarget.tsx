@@ -335,7 +335,6 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
               onPress={() => {
                 mixpanel.track('Tab submit from select target screen');
                 onSubmit();
-               
               }}
               style={{}}
             />

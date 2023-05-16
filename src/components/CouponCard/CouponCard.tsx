@@ -51,29 +51,27 @@ const CouponCard: React.FC<CouponCardEntities> = ({
   disabled,
   expired,
 }) => {
-  const [coupon,setCoupon] = useRecoilState(couponState);
+  const [coupon, setCoupon] = useRecoilState(couponState);
   const KeepCoupon = () => {
-    if(promotionType === "ONLINE"){
+    if (promotionType === 'ONLINE') {
       keepCoupon(id)
         .then(res => {
           RootNavigation.navigate('MyCouponScreen', {});
         })
         .catch(err => console.log(err));
-    }
-    else{
-      keepCoupon(id,couponOfflineCode![0].couponCode)
-      .then(res => {
-        if(!res.userMessage){
-          RootNavigation.navigate('MyCouponScreen', {});
-        }
-        else{
-          setCoupon({
-            ...coupon,
-            err : res.userMessage
-          })
-        }
-      })
-      .catch(err => console.log(err));
+    } else {
+      keepCoupon(id, couponOfflineCode![0].couponCode)
+        .then(res => {
+          if (!res.userMessage) {
+            RootNavigation.navigate('MyCouponScreen', {});
+          } else {
+            setCoupon({
+              ...coupon,
+              err: res.userMessage,
+            });
+          }
+        })
+        .catch(err => console.log(err));
     }
   };
   return (
@@ -86,7 +84,7 @@ const CouponCard: React.FC<CouponCardEntities> = ({
             couponName: couponName,
             couponType: couponType,
             promotionStatus: promotionStatus,
-            promotionType : promotionType,
+            promotionType: promotionType,
             discountType: discountType,
             discount: discount,
             count: count,
@@ -111,34 +109,66 @@ const CouponCard: React.FC<CouponCardEntities> = ({
           },
         });
       }}>
-      <View style={
-        [
+      <View
+        style={[
           styles.mainCard,
           {
-            backgroundColor : disabled ? colors.grey10: (new Date(expiredDate).getTime()-new Date().getTime() > 604800000 || disabled)?colors.white : colors.bgOrange,
-            borderColor : disabled ? colors.grey5: (new Date(expiredDate).getTime()-new Date().getTime() > 604800000 || disabled)?colors.grey20 : "#FDC382",
-            borderWidth : normalize(1)
-          }
+            backgroundColor: disabled
+              ? colors.grey10
+              : new Date(expiredDate).getTime() - new Date().getTime() >
+                  604800000 || disabled
+              ? colors.white
+              : colors.bgOrange,
+            borderColor: disabled
+              ? colors.grey5
+              : new Date(expiredDate).getTime() - new Date().getTime() >
+                  604800000 || disabled
+              ? colors.grey20
+              : '#FDC382',
+            borderWidth: normalize(1),
+          },
         ]}>
-        <View style={{
-          position : 'absolute',
-          top : -2,
-          right : normalize(80),
-        }}>
-          <Image source={expired?icons.halfcircle1 :new Date(expiredDate).getTime()-new Date().getTime() > 604800000 || disabled? icons.halfcircle1 : icons.halfcircleorange1} style={{
-            width : normalize(20),
-            height : normalize(10)
-          }}/>
+        <View
+          style={{
+            position: 'absolute',
+            top: -2,
+            right: normalize(80),
+          }}>
+          <Image
+            source={
+              expired
+                ? icons.halfcircle1
+                : new Date(expiredDate).getTime() - new Date().getTime() >
+                    604800000 || disabled
+                ? icons.halfcircle1
+                : icons.halfcircleorange1
+            }
+            style={{
+              width: normalize(20),
+              height: normalize(10),
+            }}
+          />
         </View>
-        <View style={{
-          position : 'absolute',
-          bottom : -2,
-          right : normalize(80),
-        }}>
-          <Image source={expired?icons.halfcircle2 : new Date(expiredDate).getTime()-new Date().getTime() > 604800000 || disabled ? icons.halfcircle2 : icons.halfcircleorange2} style={{
-            width : normalize(20),
-            height : normalize(10)
-          }}/>
+        <View
+          style={{
+            position: 'absolute',
+            bottom: -2,
+            right: normalize(80),
+          }}>
+          <Image
+            source={
+              expired
+                ? icons.halfcircle2
+                : new Date(expiredDate).getTime() - new Date().getTime() >
+                    604800000 || disabled
+                ? icons.halfcircle2
+                : icons.halfcircleorange2
+            }
+            style={{
+              width: normalize(20),
+              height: normalize(10),
+            }}
+          />
         </View>
         <View style={styles.content}>
           <View
@@ -148,20 +178,27 @@ const CouponCard: React.FC<CouponCardEntities> = ({
               height: normalize(60),
               width: normalize(60),
               borderRadius: normalize(30),
-              backgroundColor: couponType === "INJECTION" ? colors.bgGreen : colors.bgOrange,
+              backgroundColor:
+                couponType === 'INJECTION' ? colors.bgGreen : colors.bgOrange,
               marginRight: normalize(20),
             }}>
             <Image
-              source={couponType === "INJECTION" ?icons.injectionicon : icons.drugicon}
+              source={
+                couponType === 'INJECTION'
+                  ? icons.injectionicon
+                  : icons.drugicon
+              }
               style={{
-                width: couponType === "INJECTION" ? normalize(32) : normalize(38) ,
+                width:
+                  couponType === 'INJECTION' ? normalize(32) : normalize(38),
                 height: normalize(30),
               }}
             />
           </View>
-          <View style={{
-            width : width*0.45
-          }}>
+          <View
+            style={{
+              width: width * 0.45,
+            }}>
             <Text
               numberOfLines={1}
               style={{
@@ -172,22 +209,23 @@ const CouponCard: React.FC<CouponCardEntities> = ({
               }}>
               {couponName}
             </Text>
-            {
-              (couponConditionProvince  && couponConditionProvinceList?.length === 1)?
+            {couponConditionProvince &&
+            couponConditionProvinceList?.length === 1 ? (
               <Text
-              style={{
-                color: colors.fontBlack,
-                fontFamily: fonts.AnuphanMedium,
-                fontSize: normalize(20),
-                marginBottom: normalize(5),
-              }}>
+                style={{
+                  color: colors.fontBlack,
+                  fontFamily: fonts.AnuphanMedium,
+                  fontSize: normalize(20),
+                  marginBottom: normalize(5),
+                }}>
                 {`(${couponConditionProvinceList[0]})`}
               </Text>
-              :<></>
-            }
-            {
-               (couponConditionRai && checkRai(couponConditionRaiMin!, couponConditionRaiMax!) != "")?
-               <Text
+            ) : (
+              <></>
+            )}
+            {couponConditionRai &&
+            checkRai(couponConditionRaiMin!, couponConditionRaiMax!) != '' ? (
+              <Text
                 style={{
                   color: colors.fontBlack,
                   fontFamily: fonts.SarabunLight,
@@ -195,16 +233,29 @@ const CouponCard: React.FC<CouponCardEntities> = ({
                   marginBottom: normalize(5),
                 }}>
                 {checkRai(couponConditionRaiMin!, couponConditionRaiMax!)}
-              </Text>:
+              </Text>
+            ) : (
               <></>
-            }
+            )}
             <Text
               style={{
                 fontFamily: fonts.SarabunLight,
                 fontSize: normalize(18),
-                color: new Date(expiredDate).getTime()-new Date().getTime() > 604800000 || disabled ? colors.gray : colors.error,
+                color:
+                  new Date(expiredDate).getTime() - new Date().getTime() >
+                    604800000 || disabled
+                    ? colors.gray
+                    : colors.error,
               }}>
-              {expired ?`ใช้ได้ถึง ${generateTime(expiredDate)}` : (new Date(expiredDate).getTime()-new Date().getTime() > 604800000 || disabled)? `ใช้ได้ถึง ${generateTime(expiredDate)}` : `เหลือเวลาใช้อีก ${((new Date(expiredDate).getTime()-new Date().getTime())/86400000).toFixed(0)} วัน`}
+              {expired
+                ? `ใช้ได้ถึง ${generateTime(expiredDate)}`
+                : new Date(expiredDate).getTime() - new Date().getTime() >
+                    604800000 || disabled
+                ? `ใช้ได้ถึง ${generateTime(expiredDate)}`
+                : `เหลือเวลาใช้อีก ${(
+                    (new Date(expiredDate).getTime() - new Date().getTime()) /
+                    86400000
+                  ).toFixed(0)} วัน`}
             </Text>
           </View>
           {keepthis ? (
@@ -241,8 +292,8 @@ const CouponCard: React.FC<CouponCardEntities> = ({
               style={{
                 width: normalize(60),
                 height: normalize(30),
-                position : 'absolute',
-                right : normalize(10),
+                position: 'absolute',
+                right: normalize(10),
               }}
             />
           ) : (
@@ -256,14 +307,14 @@ const CouponCard: React.FC<CouponCardEntities> = ({
 
 const styles = StyleSheet.create({
   mainCard: {
-    paddingVertical : normalize(20),
-    paddingHorizontal : normalize(10),
-    minHeight : normalize(121),
-    borderRadius : normalize(12),
-    marginVertical : normalize(10),
-    position : 'relative',
-    justifyContent : 'center',
-    alignItems : 'center'
+    paddingVertical: normalize(20),
+    paddingHorizontal: normalize(10),
+    minHeight: normalize(121),
+    borderRadius: normalize(12),
+    marginVertical: normalize(10),
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cardImg: {
     width: Dimensions.get('window').width - normalize(35),

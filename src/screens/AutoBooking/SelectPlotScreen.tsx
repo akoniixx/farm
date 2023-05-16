@@ -116,8 +116,13 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
         }}
         label={'เลือกแปลงของคุณ'}
       />
-       {isSelectDroner && <HeadDronerCardForCreatTask navigation={navigation}
-      image={profile.image_droner} name={profile.firstname+ ' ' + profile.lastname}  /> } 
+      {isSelectDroner && (
+        <HeadDronerCardForCreatTask
+          navigation={navigation}
+          image={profile.image_droner}
+          name={profile.firstname + ' ' + profile.lastname}
+        />
+      )}
 
       {plotList.length === 0 ? (
         <View style={{ backgroundColor: 'white' }}>

@@ -12,7 +12,7 @@ export interface PayloadCreateTask {
     dronerId: string;
     status: string;
     dronerDetail: string[];
-    distance:any
+    distance: any;
   }[];
   status: string;
   statusRemark?: string;
@@ -20,6 +20,7 @@ export interface PayloadCreateTask {
   cropName: string;
   comment: string;
   couponCode: string;
+  usePoint: number;
 }
 
 const createTask = async (payload: PayloadCreateTask) => {

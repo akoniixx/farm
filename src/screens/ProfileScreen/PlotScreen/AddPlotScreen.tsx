@@ -761,12 +761,13 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 }}>
                 กรุณาพิมพ์ชื่อตำบลแปลงเกษตรของคุณ
               </Text>
-              <Text style={{
-                fontFamily : fonts.SarabunMedium,
-                marginBottom: normalize(10),
-                fontSize : normalize(16),
-                color : colors.darkOrange
-              }}>
+              <Text
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  marginBottom: normalize(10),
+                  fontSize: normalize(16),
+                  color: colors.darkOrange,
+                }}>
                 ไม่ต้องพิมพ์คำนำหน้าชื่อคำว่า ต. หรือ ตำบล
               </Text>
             </View>

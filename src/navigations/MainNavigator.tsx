@@ -82,9 +82,9 @@ export type MainStackParamList = {
   CouponDetail: { detail: CouponCardEntities };
   MyCouponScreen: undefined;
   MaintenanceScreen: undefined;
-  SearchCouponScreen : undefined;
-  UseCouponScreen : undefined;
-  AllCouponScreen : undefined;
+  SearchCouponScreen: undefined;
+  UseCouponScreen: undefined;
+  AllCouponScreen: undefined;
   AllGuruScreen: undefined;
   DetailGuruScreen: undefined;
 };
@@ -116,7 +116,7 @@ const MainNavigator: React.FC = () => {
   const checkDateNoti = d >= start && d <= end;
   //  useEffect(() => {
   //   Maintenance();
-  // }, [reload]); 
+  // }, [reload]);
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {checkDateNoti === true ? (
@@ -172,13 +172,12 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
       <Stack.Screen name="CouponDetail" component={CouponDetailScreen} />
       <Stack.Screen name="MyCouponScreen" component={MyCouponScreen} />
-      <Stack.Screen name='SearchCouponScreen' component={SearchCouponScreen} />
-      <Stack.Screen name='UseCouponScreen' component={UseCouponScreen} />
-      <Stack.Screen name='AllCouponScreen' component={AllCouponScreen} />
-      
-      <Stack.Screen name='AllGuruScreen' component={AllGuruScreen} />
-      <Stack.Screen name='DetailGuruScreen' component={DetailGuruScreen} />
+      <Stack.Screen name="SearchCouponScreen" component={SearchCouponScreen} />
+      <Stack.Screen name="UseCouponScreen" component={UseCouponScreen} />
+      <Stack.Screen name="AllCouponScreen" component={AllCouponScreen} />
 
+      <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
+      <Stack.Screen name="DetailGuruScreen" component={DetailGuruScreen} />
     </Stack.Navigator>
   );
 };
