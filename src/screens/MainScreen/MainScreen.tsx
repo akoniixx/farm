@@ -46,6 +46,8 @@ import {
 import { GuruKaset } from '../../datasource/GuruDatasource';
 import { CardGuruKaset } from '../../components/Carousel/GuruKaset';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { historyPoint } from '../../datasource/HistoryPointDatasource';
+import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -97,6 +99,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [start, setStart] = useState<any>();
   const [notiEnd, setNotiEnd] = useState<any>();
   const [notiStart, setNotiStart] = useState<any>();
+  const [point, setPoint] = useState<any>();
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
     const farmerId = await AsyncStorage.getItem('farmer_id');
@@ -304,6 +307,20 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
   };
+  useEffect(() => {
+    const getPointFarmer = async () => {
+      setRefresh(!refresh);
+      const farmer_id: any = await AsyncStorage.getItem('farmer_id');
+      await historyPoint
+        .getPoint(farmer_id)
+        .then(res => {
+          setPoint(res.balance);
+        })
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
+    };
+    getPointFarmer();
+  }, [isFocused]);
 
   return (
     <View
@@ -346,7 +363,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 <View
                   style={{
                     flexDirection: 'row',
-                    alignItems: 'center'
+                    alignItems: 'center',
                   }}>
                   <TouchableOpacity
                     onPress={() =>
@@ -372,30 +389,33 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('DetailPointScreen')}>
-                      <LinearGradient
-                        colors={['#41D981', '#26A65C']}
-                        start={{ x: 0.85, y: 0.25 }}
+                    <LinearGradient
+                      colors={['#41D981', '#26A65C']}
+                      start={{ x: 0.85, y: 0.25 }}
+                      style={{
+                        left: 10,
+                        padding: 2,
+                        flexDirection: 'row',
+                        borderRadius: 24,
+                        alignItems: 'center',
+                        borderColor: colors.greenLight,
+                      }}>
+                      <Image
+                        source={icons.ickPoint}
+                        style={{ width: 35, height: 35 }}
+                      />
+                      <Text
                         style={{
-                          left:10,
-                          padding: 2,
-                          flexDirection: 'row',
-                          borderRadius: 24,
-                          alignItems: 'center',
-                          borderColor: colors.greenLight,
+                          alignSelf: 'center',
+                          textAlign: 'center',
+                          fontFamily: font.AnuphanBold,
+                          color: colors.white,
+                          fontSize: normalize(16),
+                          paddingHorizontal: 5,
                         }}>
-                        <Image
-                          source={icons.ickPoint}
-                          style={{ width: 35, height: 35 }}
-                        />
-                        <Text
-                          style={{
-                            alignSelf: 'center',
-                            textAlign: 'center',
-                            fontFamily: font.AnuphanBold,
-                            color: colors.white,
-                            fontSize: normalize(16),
-                          }}>{`124,500 `}</Text>
-                      </LinearGradient>
+                        {formatNumberWithComma(point)}
+                      </Text>
+                    </LinearGradient>
                   </TouchableOpacity>
                 </View>
               </SafeAreaView>

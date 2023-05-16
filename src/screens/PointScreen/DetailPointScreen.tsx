@@ -1,26 +1,83 @@
-import React from 'react';
-import { Image, StyleSheet, Text, View, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  RefreshControl,
+  TouchableOpacity,
+} from 'react-native';
 import { colors, font, icons } from '../../assets';
 import { normalize, width } from '../../functions/Normalize';
 import image from '../../assets/images/image';
 import CustomHeader from '../../components/CustomHeader';
 import { HistoryPoint } from '../../components/Point/HistoryPoint';
+import {
+  getAllHistoryPoint,
+  historyPoint,
+} from '../../datasource/HistoryPointDatasource';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
+import { momentExtend } from '../../utils/moment-buddha-year';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
-  const data = [
-    { title: 'จ้างโดรนเกษตร', point: 200, date: '' },
-    { title: 'แลกส่วนลดฉีดพ่น', point: -40, date: '' },
-    { title: 'แลกส่วนลดฉีดพ่น', point: -100, date: '' },
-    { title: 'จ้างโดรนเกษตร', point: 80, date: '' },
-    { title: 'จ้างโดรนเกษตร', point: 20, date: '' },
-    { title: 'จ้างโดรนเกษตร', point: 200, date: '' },
-    { title: 'จ้างโดรนเกษตร', point: 80, date: '' },
-    { title: 'จ้างโดรนเกษตร', point: 20, date: '' },
-    { title: 'จ้างโดรนเกษตร', point: 200, date: '' },
-    { title: 'จ้างโดรนเกษตร', point: 80, date: '' },
-    { title: 'จ้างโดรนเกษตร', point: 20, date: '' },
-    { title: 'จ้างโดรนเกษตร', point: 200, date: '' },
-  ];
+  const [dataPoint, setDataPoint] = useState<any>();
+  const [dataAllPoint, setDataAllPoint] = useState<any>();
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [row, setRow] = useState(10);
+  const [current, setCurrent] = useState(1);
+  useEffect(() => {
+    getPointFarmer();
+    getAllPoint();
+  }, [current, row]);
+  const getPointFarmer = async () => {
+    setLoading(true);
+    const farmer_id: any = await AsyncStorage.getItem('farmer_id');
+    await historyPoint
+      .getPoint(farmer_id)
+      .then(res => {
+        setDataPoint(res.balance);
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
+  };
+  const getAllPoint = async () => {
+    setLoading(true);
+    const farmer_id: any = await AsyncStorage.getItem('farmer_id');
+    await getAllHistoryPoint(farmer_id, 1, row)
+      .then(res => {
+        setDataAllPoint(res.history);
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getAllPoint();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }, []);
+  const loadMoreData = async () => {
+    setCurrent(current + 1);
+    setRow(row + 10);
+    const farmer_id: any = await AsyncStorage.getItem('farmer_id');
+    await getAllHistoryPoint(farmer_id, current, row)
+      .then(res => {
+        if (res.history != 0) {
+          setDataAllPoint((data: any) => {
+            return data.concat(dataAllPoint);
+          });
+        } else {
+          return setCurrent(current);
+        }
+      })
+      .catch(err => console.log(err));
+  };
+
   return (
     <View
       style={{
@@ -83,7 +140,7 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
                 marginLeft: normalize(15),
                 marginRight: normalize(5),
               }}>
-              123,450 คะแนน
+              {formatNumberWithComma(dataPoint)} คะแนน
             </Text>
           </View>
         </View>
@@ -107,20 +164,27 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
           </Text>
         </View>
       </View>
-      {data.length != 0 ? (
+      {dataAllPoint ? (
         <View
           style={{
             backgroundColor: colors.white,
           }}>
           <FlatList
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            onEndReached={loadMoreData}
+            keyExtractor={(item, index) => index.toString()}
             ListFooterComponent={<View style={{ height: normalize(450) }} />}
-            data={data}
+            data={dataAllPoint}
             renderItem={({ item, index }) => (
               <HistoryPoint
                 index={index}
-                date={item.date}
-                title={item.title}
-                point={item.point}
+                date={item.createAt}
+                point={item.amountValue}
+                action={item.action}
+                taskId={item.taskId}
+                taskNo={item.taskNo != null ? item.taskNo : ''}
               />
             )}
           />
@@ -142,6 +206,11 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
           </View>
         </View>
       )}
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
     </View>
   );
 };

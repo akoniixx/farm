@@ -4,64 +4,67 @@ import { font, image } from '../../assets';
 import colors from '../../assets/colors/colors';
 import { normalize } from '../../functions/Normalize';
 import { momentExtend } from '../../utils/moment-buddha-year';
+import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
 interface guruData {
   index: any;
   date: any;
-  title: any;
   point: number;
+  action: any;
+  taskId: any;
+  taskNo: any;
 }
 export const HistoryPoint: React.FC<guruData> = ({
   index,
   date,
-  title,
   point,
+  action,
+  taskId,
+  taskNo,
 }) => {
   return (
     <View key={index}>
       <View
         style={{
           backgroundColor: colors.Surface,
-          paddingVertical: 3,
-          padding: 15,
-        }}>
-        <View>
-          <Text style={styles.textDate}>
-            {' '}
-            {momentExtend.toBuddhistYear(new Date(), 'DD MMM YY')}
-          </Text>
-        </View>
-      </View>
+          paddingVertical: 0.5,
+          width: '95%',
+          alignSelf: 'center',
+        }}></View>
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
           paddingHorizontal: 15,
-          paddingVertical: 10,
+          paddingVertical: 15,
         }}>
         <View>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.textDate}>
-            {' '}
-            {momentExtend.toBuddhistYear(new Date(), 'HH:mm น.')}
+          <Text style={styles.title}>
+            {action === 'INCREASE' && taskId != null
+              ? 'จ้างโดรนเกษตร'
+              : 'ส่วนลดฉีดพ่น'}
           </Text>
+          <Text style={styles.textDate}>{taskNo}</Text>
         </View>
-        {point > 0 ? (
+        {action === 'INCREASE' ? (
           <View>
-            <Text style={styles.positive}>{`${point} คะแนน`}</Text>
+            <Text style={styles.positive}>{`${formatNumberWithComma(
+              point,
+            )} คะแนน`}</Text>
+            <Text style={styles.textDate}>
+              {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm น.`)}
+            </Text>
           </View>
         ) : (
           <View>
-            <Text style={styles.negative}>{`${point} คะแนน`}</Text>
+            <Text style={styles.negative}>{`- ${formatNumberWithComma(
+              point,
+            )} คะแนน`}</Text>
+            <Text style={styles.textDate}>
+              {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm น.`)}
+            </Text>
           </View>
         )}
       </View>
-      <View
-        style={{
-          backgroundColor: '#EBEEF0',
-          height: 1,
-          top: 15,
-        }}
-      />
     </View>
   );
 };
@@ -82,12 +85,6 @@ const styles = StyleSheet.create({
     lineHeight: 30,
   },
   textDate: {
-    fontSize: normalize(14),
-    fontFamily: font.SarabunBold,
-    color: colors.gray,
-    lineHeight: 30,
-  },
-  textTime: {
     fontSize: normalize(14),
     fontFamily: font.SarabunLight,
     color: colors.gray,
