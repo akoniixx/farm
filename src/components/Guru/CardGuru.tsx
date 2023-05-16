@@ -29,7 +29,8 @@ export const CardGuru: React.FC<guruData> = ({
         <Image
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
-          style={{ height: normalize(128) }}
+          style={{ height: 130 }}
+          resizeMode="cover"
           source={background === '' ? image.bg_droner : { uri: background }}
         />
         <View style={{ paddingHorizontal: 15, top: 15 }}>

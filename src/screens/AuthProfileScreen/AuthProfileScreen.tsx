@@ -98,54 +98,54 @@ const AuthProfileScreen: React.FC<any> = ({ navigation }) => {
       </LinearGradient>
       <View style={{ marginTop: 10 }}></View>
       <View style={[styles.section3]}>
-          <View
-            style={{
-              backgroundColor: colors.white,
-              width: '100%',
-              justifyContent: 'space-around',
-              paddingHorizontal: 10,
+        <View
+          style={{
+            backgroundColor: colors.white,
+            width: '100%',
+            justifyContent: 'space-around',
+            paddingHorizontal: 10,
+          }}>
+          <TouchableOpacity onPress={openGooglePlay}>
+            <View style={styles.listTile}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image source={image.iconAppDrone} style={[styles.icon]} />
+                <Text style={[styles.h2, { paddingHorizontal: 20 }]}>
+                  มาเป็นนักบินโดรนร่วมกับเรา
+                </Text>
+              </View>
+              <Image
+                source={icons.arrowRigth}
+                style={{ width: 24, height: 24 }}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('PrivacyScreen');
             }}>
-            <TouchableOpacity onPress={openGooglePlay}>
-              <View style={styles.listTile}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image source={image.iconAppDrone} style={[styles.icon]} />
-                  <Text style={[styles.h2, { paddingHorizontal: 20 }]}>
-                    มาเป็นนักบินโดรนร่วมกับเรา
-                  </Text>
-                </View>
-                <Image
-                  source={icons.arrowRigth}
-                  style={{ width: 24, height: 24 }}
-                />
+            <View style={styles.listTile}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image source={icons.lock} style={[styles.icon]} />
+                <Text style={[styles.h2, { paddingHorizontal: 20 }]}>
+                  นโยบายความเป็นส่วนตัว
+                </Text>
               </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('PrivacyScreen');
-              }}>
-              <View style={styles.listTile}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image source={icons.lock} style={[styles.icon]} />
-                  <Text style={[styles.h2, { paddingHorizontal: 20 }]}>
-                    นโยบายความเป็นส่วนตัว
-                  </Text>
-                </View>
-                <Image
-                  source={icons.arrowRigth}
-                  style={{ width: 24, height: 24 }}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
+              <Image
+                source={icons.arrowRigth}
+                style={{ width: 24, height: 24 }}
+              />
+            </View>
+          </TouchableOpacity>
         </View>
+      </View>
     </SafeAreaView>
   );
 };

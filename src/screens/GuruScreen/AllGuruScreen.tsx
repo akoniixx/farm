@@ -52,7 +52,7 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
         onPressBack={() => navigation.goBack()}
         image={() => (
           <TouchableOpacity
-            onPress={async() => {
+            onPress={async () => {
               filterNews.current.show();
             }}>
             <Image source={icons.filter} style={{ width: 28, height: 29 }} />

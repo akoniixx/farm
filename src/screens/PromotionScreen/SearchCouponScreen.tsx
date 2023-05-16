@@ -18,8 +18,8 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { couponState } from '../../recoil/CouponAtom';
 
 const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
-  const [coupon,setCoupon] = useRecoilState(couponState);
-  const couponInfo = useRecoilValue(couponState)
+  const [coupon, setCoupon] = useRecoilState(couponState);
+  const couponInfo = useRecoilValue(couponState);
   const [disable, setDisable] = useState<boolean>(true);
   const [couponCode, setCouponCode] = useState<string>('');
   const [errText, setErrText] = useState<string>('');
@@ -30,7 +30,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
     couponName: '',
     couponType: '',
     promotionStatus: '',
-    promotionType : 'OFFLINE',
+    promotionType: 'OFFLINE',
     discountType: '',
     discount: 0,
     count: 0,
@@ -51,7 +51,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
     couponConditionPlantList: [],
     couponConditionProvince: false,
     couponConditionProvinceList: [],
-    couponOfflineCode : [],
+    couponOfflineCode: [],
     keepthis: false,
   });
   const getCoupon = (code: string) => {
@@ -68,7 +68,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               couponName: res.couponName,
               couponType: res.couponType,
               promotionStatus: res.promotionStatus,
-              promotionType : res.promotionType,
+              promotionType: res.promotionType,
               discountType: res.discountType,
               discount: res.discount,
               count: res.count,
@@ -89,7 +89,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               couponConditionPlantList: res.couponConditionPlantList,
               couponConditionProvince: res.couponConditionProvince,
               couponConditionProvinceList: res.couponConditionProvinceList,
-              couponOfflineCode : res.couponOfflineCode,
+              couponOfflineCode: res.couponOfflineCode,
               keepthis: false,
             });
           } else {
@@ -108,9 +108,9 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
           onPressBack={() => {
             setCoupon({
               ...coupon,
-              err : ''
-            })
-            navigation.goBack()
+              err: '',
+            });
+            navigation.goBack();
           }}
         />
         <View
@@ -127,7 +127,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
                 borderRadius: normalize(8),
                 fontFamily: fonts.SarabunMedium,
                 fontSize: normalize(16),
-                color : colors.fontBlack
+                color: colors.fontBlack,
               }}
               placeholder="ระบุรหัสคูปองส่วนลด"
               placeholderTextColor={colors.gray}
@@ -139,8 +139,8 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
                 if (text.length < 1) {
                   setCoupon({
                     ...coupon,
-                    err : ''
-                  })
+                    err: '',
+                  });
                   setDisable(true);
                 } else {
                   setDisable(false);
@@ -179,7 +179,8 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               fontSize: normalize(16),
               color: colors.errorText,
             }}>
-            {errText}{couponInfo.err}
+            {errText}
+            {couponInfo.err}
           </Text>
         </View>
         {empty ? (
