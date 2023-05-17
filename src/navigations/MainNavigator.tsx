@@ -24,6 +24,9 @@ import UploadDronerLicenseScreen from '../screens/ProfileScreen/UploadDocument/U
 import ServiceArea from '../screens/ProfileScreen/ServiceArea';
 import AllGuruScreen from '../screens/GuruScreen/AllScreen';
 import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
+import IncomeScreen from '../screens/IncomeScreen';
+import HistoryRewardScreen from '../screens/HistoryRewardScreen';
+import MyRewardScreen from '../screens/MyRewardScreen';
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
 export type StackParamList = {
@@ -46,6 +49,9 @@ export type StackParamList = {
   ServiceArea: any;
   AllGuruScreen: any;
   DetailGuruScreen: any;
+  IncomeScreen: undefined;
+  HistoryRewardScreen: undefined;
+  MyRewardScreen: undefined;
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
   // };
@@ -86,6 +92,12 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="ServiceArea" component={ServiceArea} />
       <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
       <Stack.Screen name="DetailGuruScreen" component={DetailGuruScreen} />
+      <Stack.Screen name="IncomeScreen" component={IncomeScreen} />
+      <Stack.Screen
+        name="HistoryRewardScreen"
+        component={HistoryRewardScreen}
+      />
+      <Stack.Screen name="MyRewardScreen" component={MyRewardScreen} />
       {/* <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} /> */}
     </Stack.Navigator>
   );

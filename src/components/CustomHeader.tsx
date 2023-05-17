@@ -14,7 +14,7 @@ import {normalize} from '../function/Normalize';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 interface Prop {
-  title?: string;
+  title?: string | JSX.Element;
   showBackBtn?: boolean;
   onPressBack?: () => void;
   headerRight?: () => JSX.Element;
@@ -34,8 +34,8 @@ const CustomHeader: React.FC<Prop> = ({
 }) => {
   return (
     <SafeAreaView style={[styles.headerSafeArea, style]}>
-      <View style={styles.headerWraper}>
-        <View style={styles.headerLeftWrapper}>
+      <View style={styles.headerWrapper}>
+        <View style={headerLeft ? styles.headerLeftWrapper : styles.noLeftSide}>
           {showBackBtn && (
             <TouchableOpacity
               style={{paddingVertical: 14, paddingHorizontal: 24}}
@@ -48,7 +48,11 @@ const CustomHeader: React.FC<Prop> = ({
         <View style={styles.headerTitleWraper}>
           <Text style={styles.headerTitle}>{title}</Text>
         </View>
-        <View style={styles.headerRightWrapper}>{headerRight?.()}</View>
+
+        <View
+          style={headerRight ? styles.headerRightWrapper : styles.noRightSide}>
+          {headerRight?.()}
+        </View>
         <View style={styles.fav}>{image?.()}</View>
       </View>
     </SafeAreaView>
@@ -61,7 +65,15 @@ const styles = StyleSheet.create({
   headerSafeArea: {
     backgroundColor: colors.white,
   },
-  headerWraper: {
+  noRightSide: {
+    width: normalize(30),
+  },
+  noLeftSide: {
+    width: normalize(60),
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerWrapper: {
     flexDirection: 'row',
     justifyContent: 'center',
     height: normalize(75),

@@ -63,4 +63,5 @@ export default {
   filter: require('./filter.png'),
   gift: require('./gift.png'),
   giftActive: require('./giftActive.png'),
+  ICKDronerPoint: require('./ICKDronerPoint.png'),
 };

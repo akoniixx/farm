@@ -36,9 +36,11 @@ import {mixpanel} from '../../../mixpanel';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {CardGuruKaset} from '../../components/Carousel/CardGuruKaset';
 import {GuruKaset} from '../../datasource/GuruDatasource';
+import LinearGradient from 'react-native-linear-gradient';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
+  const currentPoint = 123000;
   const [profile, setProfile] = useState({
     name: '',
     lastname: '',
@@ -227,54 +229,47 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
             </View>
             <View>
               <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('ProfileScreen', {
-                    navbar: false,
-                  });
-                }}>
-                <View
+                style={{
+                  width: responsiveWidth(100),
+                }}
+                onPress={() => navigation.navigate('HistoryRewardScreen')}>
+                <LinearGradient
+                  colors={['#FA7052', '#F89132']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 0.8, y: 1}}
                   style={{
-                    width: normalize(50),
-                    height: normalize(65),
-                    position: 'relative',
+                    flexDirection: 'row',
+                    borderRadius: 20,
+                    alignItems: 'center',
+                    padding: 2,
                   }}>
-                  <Avatar
-                    size={normalize(50)}
-                    rounded
-                    source={
-                      profile.image != '' ? {uri: profile.image} : icons.account
-                    }
-                  />
                   <View
                     style={{
-                      width: normalize(50),
-                      height: normalize(16),
-                      borderRadius: normalize(8),
-                      position: 'absolute',
-                      left: normalize(0),
-                      top: normalize(43),
-                      backgroundColor: colors.fontBlack,
-                      display: 'flex',
                       flexDirection: 'row',
                       alignItems: 'center',
-                      justifyContent: 'center',
+                      justifyContent: 'space-between',
                     }}>
-                    <Text
-                      style={{
-                        fontFamily: font.medium,
-                        fontSize: normalize(12),
-                        color: colors.white,
-                        paddingRight: normalize(2),
-                      }}>{`${profile.ratingAvg}`}</Text>
                     <Image
-                      source={icons.review}
+                      source={icons.ICKDronerPoint}
                       style={{
-                        width: normalize(12),
-                        height: normalize(12),
+                        width: 32,
+                        height: 32,
+                        marginRight: 8,
                       }}
                     />
+                    <View>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontFamily: font.bold,
+                          color: colors.white,
+                          lineHeight: 30,
+                        }}>
+                        {numberWithCommas(currentPoint.toString(), true)}
+                      </Text>
+                    </View>
                   </View>
-                </View>
+                </LinearGradient>
               </TouchableOpacity>
             </View>
           </View>

@@ -410,7 +410,11 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
             color={'#FFEAD1'}
             onPress={showActionSheet}
           />
-          <View style={styles.listTile}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('IncomeScreen');
+            }}
+            style={styles.listTile}>
             <View
               style={{
                 flexDirection: 'row',
@@ -422,7 +426,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
             <Text style={styles.revenue}>{`฿${numberWithCommas(
               profilestate.totalRevenue,
             )}`}</Text>
-          </View>
+          </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => {
