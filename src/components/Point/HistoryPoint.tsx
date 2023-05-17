@@ -29,7 +29,7 @@ export const HistoryPoint: React.FC<guruData> = ({
           paddingVertical: 0.5,
           width: '95%',
           alignSelf: 'center',
-        }}></View>
+        }}/>
       <View
         style={{
           flexDirection: 'row',
@@ -39,7 +39,7 @@ export const HistoryPoint: React.FC<guruData> = ({
         }}>
         <View>
           <Text style={styles.title}>
-            {action === 'INCREASE' && taskId != null
+            {action === 'INCREASE' && taskId !== null
               ? 'จ้างโดรนเกษตร'
               : 'ส่วนลดฉีดพ่น'}
           </Text>
