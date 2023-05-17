@@ -198,7 +198,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
         }}
       />
       <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
-        <View style={{flex: 2}}>
+        <View>
           <View style={styles.headCard}>
             <View>
               <Text
@@ -453,7 +453,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
             </View>
           ) : null}
         </View>
-        <View style={{flex: 4}}>
+        <View style={{flex: 1}}>
           <TaskTapNavigator
             isOpenReceiveTask={profile.isOpenReceiveTask}
             dronerStatus={profile.status}
