@@ -46,6 +46,8 @@ import {
 import { GuruKaset } from '../../datasource/GuruDatasource';
 import { CardGuruKaset } from '../../components/Carousel/GuruKaset';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { historyPoint } from '../../datasource/HistoryPointDatasource';
+import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -97,6 +99,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [start, setStart] = useState<any>();
   const [notiEnd, setNotiEnd] = useState<any>();
   const [notiStart, setNotiStart] = useState<any>();
+  const [point, setPoint] = useState<any>();
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
     const farmerId = await AsyncStorage.getItem('farmer_id');
@@ -304,6 +307,20 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
   };
+  useEffect(() => {
+    const getPointFarmer = async () => {
+      setRefresh(!refresh);
+      const farmer_id: any = await AsyncStorage.getItem('farmer_id');
+      await historyPoint
+        .getPoint(farmer_id)
+        .then(res => {
+          setPoint(res.balance);
+        })
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
+    };
+    getPointFarmer();
+  }, [isFocused]);
 
   return (
     <View
@@ -320,7 +337,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 source={image.bgHead}
                 style={{
                   width: (width * 380) / 375,
-                  height: (height * 250) / 812,
+                  height: (height * 350) / 812,
                   position: 'absolute',
                 }}
               />
@@ -343,29 +360,66 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     {profilestate.name}
                   </Text>
                 </View>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('NotificationScreen', {
-                      data: notiData?.data,
-                    })
-                  }>
-                  {showBell ? (
-                    <Image
-                      source={
-                        notiData.count != 0
-                          ? icons.newnotification
-                          : icons.notification
-                      }
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('NotificationScreen', {
+                        data: notiData?.data,
+                      })
+                    }>
+                    {showBell ? (
+                      <Image
+                        source={
+                          notiData.count != 0
+                            ? icons.newnotification
+                            : icons.notification
+                        }
+                        style={{
+                          width: normalize(28),
+                          height: normalize(28),
+                        }}
+                      />
+                    ) : (
+                      <></>
+                    )}
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('DetailPointScreen')}>
+                    <LinearGradient
+                      colors={['#41D981', '#26A65C']}
+                      start={{ x: 0.85, y: 0.25 }}
                       style={{
-                        width: normalize(28),
-                        height: normalize(28),
-                      }}
-                    />
-                  ) : (
-                    <></>
-                  )}
-                </TouchableOpacity>
+                        left: 10,
+                        padding: 2,
+                        flexDirection: 'row',
+                        borderRadius: 24,
+                        alignItems: 'center',
+                        borderColor: colors.greenLight,
+                      }}>
+                      <Image
+                        source={icons.ICKPoint}
+                        style={{ width: 35, height: 35 }}
+                      />
+                      <Text
+                        style={{
+                          alignSelf: 'center',
+                          textAlign: 'center',
+                          fontFamily: font.AnuphanBold,
+                          color: colors.white,
+                          fontSize: normalize(16),
+                          paddingHorizontal: 5,
+                        }}>
+                        {formatNumberWithComma(point)}
+                      </Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </View>
               </SafeAreaView>
+
               <View
                 style={{
                   flexDirection: 'row',
@@ -769,7 +823,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                             width: 8,
                             height: 8,
                             borderRadius: 5,
-                            marginHorizontal: 0,
                             backgroundColor: colors.fontGrey,
                           }}
                           inactiveDotOpacity={0.4}
@@ -784,7 +837,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    marginTop: 16,
                     paddingVertical: 10,
                   }}>
                   <Text

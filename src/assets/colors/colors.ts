@@ -42,4 +42,5 @@ export default {
   bg: '#E5E5E5',
   bgGreen: '#F2F9F5',
   bgOrange: '#FFFDF6',
+  Surface: '#F6F7F9',
 };

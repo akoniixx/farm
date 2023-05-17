@@ -1,3 +1,5 @@
+## Feature [v1.4.0] 2023-05-16
+- add history point feature
 ## Fix [v1.3.4] 2023-04-27
 - fix app error
 - fix offline code
