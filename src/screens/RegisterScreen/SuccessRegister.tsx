@@ -7,8 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {Register} from '../../datasource/AuthDatasource';
 import {mixpanel} from '../../../mixpanel';
-import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
-import { getFCMToken } from '../../firebase/notification';
+import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
+import {getFCMToken} from '../../firebase/notification';
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -78,16 +78,18 @@ const SuccessRegister: React.FC<any> = ({navigation}) => {
         onPress={async () => {
           mixpanel.track('Account Create Success');
           const token_register = await AsyncStorage.getItem('token_register');
-          getFCMToken()
+          getFCMToken();
           const fcmtoken = await AsyncStorage.getItem('fcmtoken');
           await AsyncStorage.setItem('token', token_register!);
           Register.changeToPending()
             .then(res => {
-              FCMtokenDatasource.saveFCMtoken(fcmtoken!).then(
-                res => RootNavigation.navigate('Main', {
-                  screen: 'MainScreen',
-                })
-              ).catch(err => console.log(err))
+              FCMtokenDatasource.saveFCMtoken(fcmtoken!)
+                .then(res =>
+                  RootNavigation.navigate('Main', {
+                    screen: 'MainScreen',
+                  }),
+                )
+                .catch(err => console.log(err));
             })
             .catch(err => console.log(err));
         }}

@@ -24,7 +24,7 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
   const [checked2, setChecked2] = useState<boolean>(false);
   const [disabledCheckbox, setDisabledCheckbox] = useState<boolean>(true);
 
-  //function check scroll down 
+  //function check scroll down
   /* const isCloseToBottom = ({
     layoutMeasurement,
     contentOffset,
@@ -47,12 +47,13 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
         <View style={{flex: 5}}>
           <ScrollView
 
-           //function check scroll down 
-            /* onScroll={({nativeEvent}) => {
+          //function check scroll down
+          /* onScroll={({nativeEvent}) => {
               if (isCloseToBottom(nativeEvent)) {
                 setDisabledCheckbox(false);
               }
-            }} */>
+            }} */
+          >
             <Text style={styles.h2}>ข้อตกลงและเงื่อนไข</Text>
             <Text style={[styles.h3, {marginVertical: normalize(20)}]}>
               โปรดอ่านข้อตกลงและเงื่อนไขโดยละเอียดก่อน ดำเนินการถัดไป
@@ -71,18 +72,13 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
             paddingVertical: normalize(5),
             justifyContent: 'space-between',
           }}>
-          <TouchableOpacity
-            onPress={() => setChecked1(!checked1)}
-            >
+          <TouchableOpacity onPress={() => setChecked1(!checked1)}>
             <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
-              
-               
-              
-                <Image
-                  source={checked1 ? icons.checked : icons.check}
-                  style={{width: normalize(20), height: normalize(20)}}
-                />
-             
+              <Image
+                source={checked1 ? icons.checked : icons.check}
+                style={{width: normalize(20), height: normalize(20)}}
+              />
+
               <Text
                 style={[
                   styles.label,
@@ -92,16 +88,13 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
               </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setChecked2(!checked2)}
-            >
+          <TouchableOpacity onPress={() => setChecked2(!checked2)}>
             <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
-             
-                <Image
-                  source={checked2 ? icons.checked : icons.check}
-                  style={{width: normalize(20), height: normalize(20)}}
-                />
-             
+              <Image
+                source={checked2 ? icons.checked : icons.check}
+                style={{width: normalize(20), height: normalize(20)}}
+              />
+
               <Text
                 style={[
                   styles.label,

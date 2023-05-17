@@ -9,7 +9,7 @@ import {stylesCentral} from '../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import { calTotalPrice } from '../../function/utility';
+import {calTotalPrice} from '../../function/utility';
 const WaitStartTask: React.FC = () => {
   const [data, setData] = useState<any>([]);
   const [page, setPage] = useState(1);
@@ -52,7 +52,10 @@ const WaitStartTask: React.FC = () => {
                 id={item.item.taskNo}
                 status={item.item.status}
                 title={item.item.farmerPlot.plantName}
-                price={calTotalPrice(item.item.price,item.item.revenuePromotion)}
+                price={calTotalPrice(
+                  item.item.price,
+                  item.item.revenuePromotion,
+                )}
                 date={item.item.dateAppointment}
                 address={item.item.farmerPlot.locationName}
                 distance={item.item.distance}

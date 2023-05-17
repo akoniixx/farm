@@ -42,10 +42,10 @@ export type StackParamList = {
   AddIDCardScreen: any;
   NotificationList: any;
   UploadDronerLicenseScreen: any;
-  UploadBankingScreen:any;
-  ServiceArea : any;
-  AllGuruScreen:any;
-  DetailGuruScreen:any;
+  UploadBankingScreen: any;
+  ServiceArea: any;
+  AllGuruScreen: any;
+  DetailGuruScreen: any;
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
   // };
@@ -75,11 +75,17 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="DeleteProfileScreen" component={DeleteProfile} />
       <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
       <Stack.Screen name="NotificationList" component={NotificationList} />
-      <Stack.Screen name="UploadDronerLicenseScreen" component={UploadDronerLicenseScreen} />
-      <Stack.Screen name="UploadBankingScreen" component={UploadBankingScreen} />
+      <Stack.Screen
+        name="UploadDronerLicenseScreen"
+        component={UploadDronerLicenseScreen}
+      />
+      <Stack.Screen
+        name="UploadBankingScreen"
+        component={UploadBankingScreen}
+      />
       <Stack.Screen name="ServiceArea" component={ServiceArea} />
-      <Stack.Screen name='AllGuruScreen' component={AllGuruScreen} />
-      <Stack.Screen name='DetailGuruScreen' component={DetailGuruScreen} />
+      <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
+      <Stack.Screen name="DetailGuruScreen" component={DetailGuruScreen} />
       {/* <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} /> */}
     </Stack.Navigator>
   );

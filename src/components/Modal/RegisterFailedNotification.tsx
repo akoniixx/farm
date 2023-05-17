@@ -13,7 +13,7 @@ import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import {icons} from '../../assets';
 import fonts from '../../assets/fonts';
 import colors from '../../assets/colors/colors';
-import { callCenterDash } from '../../definitions/callCenterNumber';
+import {callCenterDash} from '../../definitions/callCenterNumber';
 
 interface RegisterFailedModalNotiFication {
   onClick?: () => void;

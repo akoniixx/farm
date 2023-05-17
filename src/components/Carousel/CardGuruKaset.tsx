@@ -1,13 +1,13 @@
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import { font, icons, image } from '../../assets';
+import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
+import {font, icons, image} from '../../assets';
 import colors from '../../assets/colors/colors';
-import { normalize } from '../../function/Normalize';
+import {normalize} from '../../function/Normalize';
 
 interface guruData {
   background: any;
 }
-export const CardGuruKaset: React.FC<guruData> = ({ background }) => {
+export const CardGuruKaset: React.FC<guruData> = ({background}) => {
   return (
     <View
       style={{
@@ -19,11 +19,10 @@ export const CardGuruKaset: React.FC<guruData> = ({ background }) => {
           borderTopRightRadius={10}
           borderBottomLeftRadius={10}
           borderBottomRightRadius={10}
-          style={{ height: normalize(120) }}
-          source={ { uri: background }}
+          style={{height: normalize(120)}}
+          source={{uri: background}}
         />
       </View>
-     
     </View>
   );
 };
@@ -48,4 +47,3 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
 });
-

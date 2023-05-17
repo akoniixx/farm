@@ -28,10 +28,7 @@ export class ProfileDatasource {
       });
   }
 
-  static async getImgePath(
-    dronerID: string,
-    imagePath: string,
-  ): Promise<any> {
+  static async getImgePath(dronerID: string, imagePath: string): Promise<any> {
     return httpClient
       .get(BASE_URL + `/file/geturl?path=${imagePath}`)
       .then(response => {
@@ -74,7 +71,7 @@ export class ProfileDatasource {
       });
   }
 
-  static async uploadDronerLicense( file: any): Promise<any> {
+  static async uploadDronerLicense(file: any): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     const data = new FormData();
     data.append('file', {
@@ -208,30 +205,29 @@ export class ProfileDatasource {
   }
 
   static async editServiceArea(
-    area : string,
-    lat : number,
-    long : number,
-    provinceId : number,
-    districtId : number,
-    subdistrictId : number,
-    locationName : string
-  ): Promise<any>{
+    area: string,
+    lat: number,
+    long: number,
+    provinceId: number,
+    districtId: number,
+    subdistrictId: number,
+    locationName: string,
+  ): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
-    return httpClient.patch(
-      BASE_URL + `/droner/${droner_id}`,{
-        dronerArea : {
-          dronerId : droner_id,
-          area : area,
-          lat : lat,
-          long : long,
-          provinceId : provinceId,
-          districtId : districtId,
-          subdistrictId : subdistrictId,
-          locationName : locationName
-        }
-      }
-    )  
-    .then(res => res.data)
-    .catch(err => console.log(err));
+    return httpClient
+      .patch(BASE_URL + `/droner/${droner_id}`, {
+        dronerArea: {
+          dronerId: droner_id,
+          area: area,
+          lat: lat,
+          long: long,
+          provinceId: provinceId,
+          districtId: districtId,
+          subdistrictId: subdistrictId,
+          locationName: locationName,
+        },
+      })
+      .then(res => res.data)
+      .catch(err => console.log(err));
   }
 }

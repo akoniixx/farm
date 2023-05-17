@@ -22,7 +22,7 @@ import Toast from 'react-native-toast-message';
 import {Authentication} from '../../datasource/AuthDatasource';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import { mixpanel } from '../../../mixpanel';
+import {mixpanel} from '../../../mixpanel';
 
 const LoginScreen: React.FC<any> = ({navigation}) => {
   const [value, setValue] = useState<string>('');
@@ -31,7 +31,7 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = React.useState<string>('');
   const login = () => {
-    mixpanel.track('Click Login')
+    mixpanel.track('Click Login');
     setLoading(true);
     Authentication.generateOtp(value)
       .then(result => {
@@ -58,9 +58,9 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
           });
         }
       })
-      .finally(()=>{
+      .finally(() => {
         setLoading(false);
-      })
+      });
   };
   return (
     <KeyboardAvoidingView

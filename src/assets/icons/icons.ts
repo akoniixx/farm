@@ -54,11 +54,13 @@ export default {
   deleteblack: require('./deleteblack.png'),
   checkbox_disable: require('./checkbox_disable.png'),
   warningGrey: require('./warningGrey.png'),
-  deleteUser : require('./delete_user.png'),
-  wallet : require('./wallet.png'),
+  deleteUser: require('./delete_user.png'),
+  wallet: require('./wallet.png'),
   doc: require('./document.png'),
   x: require('./x.png'),
-  service : require('./service.png'),
-  servicearea : require('./servicearea.png'),
-  filter: require('./filter.png')
+  service: require('./service.png'),
+  servicearea: require('./servicearea.png'),
+  filter: require('./filter.png'),
+  gift: require('./gift.png'),
+  giftActive: require('./giftActive.png'),
 };

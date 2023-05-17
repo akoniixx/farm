@@ -1,8 +1,8 @@
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import { font, image } from '../../assets';
+import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
+import {font, image} from '../../assets';
 import colors from '../../assets/colors/colors';
-import { normalize } from '../../function/Normalize';
+import {normalize} from '../../function/Normalize';
 
 interface guruData {
   index: any;
@@ -29,10 +29,10 @@ export const CardGuru: React.FC<guruData> = ({
         <Image
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
-          style={{ height: normalize(128) }}
-          source={background === '' ? image.loading : { uri: background }}
+          style={{height: normalize(128)}}
+          source={background === '' ? image.loading : {uri: background}}
         />
-        <View style={{ paddingHorizontal: 15, top: 15 }}>
+        <View style={{paddingHorizontal: 15, top: 15}}>
           <Text style={styles.text} numberOfLines={1}>
             {title}
           </Text>
@@ -46,7 +46,7 @@ export const CardGuru: React.FC<guruData> = ({
           <Text style={styles.textDate} numberOfLines={1}>
             {date}
           </Text>
-          <Text style={[styles.textDate, { left: 15 }]} numberOfLines={1}>
+          <Text style={[styles.textDate, {left: 15}]} numberOfLines={1}>
             {`อ่านแล้ว ` + read + ` ครั้ง`}
           </Text>
         </View>

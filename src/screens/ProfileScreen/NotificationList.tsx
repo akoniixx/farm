@@ -14,15 +14,22 @@ import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font, icons, image} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated, {
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
 import fonts from '../../assets/fonts';
 import {MainButton} from '../../components/Button/MainButton';
 import {useFocusEffect} from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import { PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from 'react-native-gesture-handler';
+import {SwipeListView} from 'react-native-swipe-list-view';
 
 interface NotificationListTileParams {
   type: string;
@@ -47,7 +54,6 @@ const monthArray = [
   'พ.ย.',
   'ธ.ค.',
 ];
-
 
 const generateNotiTime = (date: string, time: string) => {
   const datenow = new Date();
@@ -95,22 +101,20 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
   const currentTime = date.split('T')[1];
   const translateX = useSharedValue(0);
 
-  const rStyle = useAnimatedStyle(()=>({
-    transform : [
+  const rStyle = useAnimatedStyle(() => ({
+    transform: [
       {
-        translateX : translateX.value
-      }
-    ]
-  }))
+        translateX: translateX.value,
+      },
+    ],
+  }));
 
   const panGesture = useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
-    onActive : (event) =>{
-      translateX.value = event.translationX
+    onActive: event => {
+      translateX.value = event.translationX;
     },
-    onEnd : () => {
-      
-    }
-  })
+    onEnd: () => {},
+  });
 
   if (
     type === 'APPROVE_DRONER_SUCCESS' ||
@@ -121,9 +125,11 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
     type === 'APPROVE_ADDITION_DRONER_DRONE_FAIL'
   ) {
     return (
-      <Pressable onPress={()=>{
-        readIt(id)
-      }} style={{
+      <Pressable
+        onPress={() => {
+          readIt(id);
+        }}
+        style={{
           height: responsiveHeigth(78),
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -132,48 +138,61 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
           borderBottomColor: colors.disable,
           backgroundColor: colors.white,
         }}>
-      <Image
-        source={icons.notificationsetup}
-        style={{
-          width: normalize(50),
-          height: normalize(50),
-        }}
-      />
-      <View
-        style={{
-          width: '65%',
-        }}>
-            <Text numberOfLines={2} ellipsizeMode='tail'style={{
-              fontFamily : font.medium,
-              color : colors.fontBlack
-            }}>{description}</Text>
-          </View>
-          <View style={{
-        justifyContent : 'space-between',
-        alignItems : 'flex-end',
-        paddingRight : normalize(10)
-      }}>
-          {
-            isRead ?
-            <View style={{
-              width : normalize(8),
-              height : normalize(8),
-              marginBottom : normalize(10)
-            }} ></View>:
-            <Image source={icons.unread} style={{
-              width : normalize(8),
-              height : normalize(8),
-              marginBottom : normalize(10)
-            }} />
-          }
-          <Text style={{
-            fontFamily : font.light,
-            color : colors.gray
-          }}>{generateNotiTime(currentdate,currentTime)}</Text>
+        <Image
+          source={icons.notificationsetup}
+          style={{
+            width: normalize(50),
+            height: normalize(50),
+          }}
+        />
+        <View
+          style={{
+            width: '65%',
+          }}>
+          <Text
+            numberOfLines={2}
+            ellipsizeMode="tail"
+            style={{
+              fontFamily: font.medium,
+              color: colors.fontBlack,
+            }}>
+            {description}
+          </Text>
+        </View>
+        <View
+          style={{
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            paddingRight: normalize(10),
+          }}>
+          {isRead ? (
+            <View
+              style={{
+                width: normalize(8),
+                height: normalize(8),
+                marginBottom: normalize(10),
+              }}></View>
+          ) : (
+            <Image
+              source={icons.unread}
+              style={{
+                width: normalize(8),
+                height: normalize(8),
+                marginBottom: normalize(10),
+              }}
+            />
+          )}
+          <Text
+            style={{
+              fontFamily: font.light,
+              color: colors.gray,
+            }}>
+            {generateNotiTime(currentdate, currentTime)}
+          </Text>
         </View>
       </Pressable>
-        );
-      } else if (
+    );
+  } else if (
     type === 'FIRST_REMIND' ||
     type === 'SECOND_REMIND' ||
     type === 'THIRD_REMIND' ||
@@ -183,18 +202,20 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
     type === 'RECEIVE_TASK_SUCCESS'
   ) {
     return (
-      <Pressable onPress={()=>{
-        readItTask(id,data.id)
-      }} style={{
-        height: responsiveHeigth(78),
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexDirection: 'row',
-        borderBottomWidth: normalize(1),
-        borderBottomColor: colors.disable,
-        backgroundColor: colors.white,
-        zIndex : 1000
-      }}>
+      <Pressable
+        onPress={() => {
+          readItTask(id, data.id);
+        }}
+        style={{
+          height: responsiveHeigth(78),
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexDirection: 'row',
+          borderBottomWidth: normalize(1),
+          borderBottomColor: colors.disable,
+          backgroundColor: colors.white,
+          zIndex: 1000,
+        }}>
         <Image
           source={icons.notificationtask}
           style={{
@@ -257,14 +278,14 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
 
 const NotificationList: React.FC<any> = ({navigation, route}) => {
   const [data, setData] = useState([]);
-  const [reload,setReload] = useState(true);
-  const [loading,setLoading] = useState(true);
+  const [reload, setReload] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [deleteall, setDeleteall] = useState(false);
 
   const deleteItem = (id: string) => {
     FCMtokenDatasource.deleteNotiItem(id)
       .then(res => {
-        setReload(!reload)
+        setReload(!reload);
       })
       .catch(err => console.log(err));
   };
@@ -360,14 +381,13 @@ const NotificationList: React.FC<any> = ({navigation, route}) => {
         </View>
       </View>
       <View style={styles.body}>
-        {
-          (loading)?
+        {loading ? (
           <Spinner
             visible={true}
             textContent={'Loading...'}
             textStyle={{color: '#FFF'}}
-          />:
-          (data.length != 0)?
+          />
+        ) : data.length != 0 ? (
           <SwipeListView
             data={data}
             rightOpenValue={-75}
@@ -381,45 +401,53 @@ const NotificationList: React.FC<any> = ({navigation, route}) => {
                 data={item.data}
               />
             )}
-            renderHiddenItem={(item : any , rowMap : any)=> (
+            renderHiddenItem={(item: any, rowMap: any) => (
               <Pressable
-              onPress={() => {
-                deleteItem(item.item.id)
-              }}>
-              <View
-                style={{
-                  width: responsiveHeigth(78),
-                  height: responsiveHeigth(78),
-                  backgroundColor: '#E85737',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  position : 'absolute',
-                  right : 0
+                onPress={() => {
+                  deleteItem(item.item.id);
                 }}>
-                <Image source={icons.deletewhite} />
-              </View>
-            </Pressable>
+                <View
+                  style={{
+                    width: responsiveHeigth(78),
+                    height: responsiveHeigth(78),
+                    backgroundColor: '#E85737',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    position: 'absolute',
+                    right: 0,
+                  }}>
+                  <Image source={icons.deletewhite} />
+                </View>
+              </Pressable>
             )}
-          />:
-          <View style={{
-            paddingTop : '50%',
-            justifyContent : 'center',
-            alignItems : 'center'
-          }}>
-            <Image source={image.emptyhistory}/>
-            <Text style={{
-              fontFamily : font.medium,
-              color : colors.grayPlaceholder,
-              fontSize : normalize(15),
-              paddingTop : normalize(10)
-            }}>ยังไม่มีข้อความในขณะนี้</Text>
-            <Text style={{
-              fontFamily : font.medium,
-              color : colors.grayPlaceholder,
-              fontSize : normalize(15)
-            }}>เมื่อคุณได้รับข้อความใหม่ กลับมาดูได้ที่นี้</Text>
+          />
+        ) : (
+          <View
+            style={{
+              paddingTop: '50%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image source={image.emptyhistory} />
+            <Text
+              style={{
+                fontFamily: font.medium,
+                color: colors.grayPlaceholder,
+                fontSize: normalize(15),
+                paddingTop: normalize(10),
+              }}>
+              ยังไม่มีข้อความในขณะนี้
+            </Text>
+            <Text
+              style={{
+                fontFamily: font.medium,
+                color: colors.grayPlaceholder,
+                fontSize: normalize(15),
+              }}>
+              เมื่อคุณได้รับข้อความใหม่ กลับมาดูได้ที่นี้
+            </Text>
           </View>
-        }
+        )}
       </View>
     </SafeAreaView>
   );

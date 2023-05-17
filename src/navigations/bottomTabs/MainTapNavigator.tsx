@@ -21,11 +21,11 @@ import RegisterFailedNotification from '../../components/Modal/RegisterFailedNot
 import RegisterFailedModal from '../../components/Modal/RegisterFailedModalNotification';
 import Toast from 'react-native-toast-message';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
-import IncomeScreen from '../../screens/IncomeScreen';
 import * as RootNavigation from '../../navigations/RootNavigation';
-import { SheetManager } from 'react-native-actions-sheet';
-import { ActionContext } from '../../../App';
-import { dialCall } from '../../function/utility';
+import {SheetManager} from 'react-native-actions-sheet';
+import {ActionContext} from '../../../App';
+import {dialCall} from '../../function/utility';
+import RewardScreen from '../../screens/RewardScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -51,11 +51,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
       inactiveIcon: icons.task,
     },
     {
-      name: 'Income',
-      title: 'รายได้',
-      component: IncomeScreen,
-      activeIcon: icons.pocket_active,
-      inactiveIcon: icons.pocket,
+      name: 'reward',
+      title: 'รีวอร์ด',
+      component: RewardScreen,
+      activeIcon: icons.giftActive,
+      inactiveIcon: icons.gift,
     },
     {
       name: 'profile',
@@ -127,11 +127,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
               });
               break;
             case 'FORCE_SELECT_DRONER':
-                RootNavigation.navigate('Main', {
-                  screen: 'TaskDetailScreen',
-                  params: {taskId: message.data?.taskId},
-                });
-                break;
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: message.data?.taskId},
+              });
+              break;
             default:
               break;
           }
@@ -194,17 +194,17 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           });
           break;
         case 'FORCE_SELECT_DRONER':
-            RootNavigation.navigate('Main', {
-              screen: 'TaskDetailScreen',
-              params: {taskId: message.data?.taskId},
-            });
-            break;
+          RootNavigation.navigate('Main', {
+            screen: 'TaskDetailScreen',
+            params: {taskId: message.data?.taskId},
+          });
+          break;
         default:
           break;
       }
     });
 
-    messaging().onMessage(async message =>{
+    messaging().onMessage(async message => {
       const type = message.data?.type;
       switch (type) {
         case 'APPROVE_DRONER_SUCCESS':
@@ -222,20 +222,20 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
             },
           });
           break;
-        case "APPROVE_DRONER_DRONE_SUCCESS":
+        case 'APPROVE_DRONER_DRONE_SUCCESS':
           Toast.show({
-            type : 'droneSuccess',
-            topOffset : 10,
-            text1 : message.data?.serialNo,
-            position : 'top',
+            type: 'droneSuccess',
+            topOffset: 10,
+            text1: message.data?.serialNo,
+            position: 'top',
             onPress() {
               const jumpAction = TabActions.jumpTo('profile');
-              navigation.dispatch(jumpAction)
-              Toast.hide()
+              navigation.dispatch(jumpAction);
+              Toast.hide();
             },
           });
-            break;
-        case "APPROVE_DRONER_DRONE_FAIL":
+          break;
+        case 'APPROVE_DRONER_DRONE_FAIL':
           Toast.show({
             type: 'droneFailed',
             text1: message.data?.serialNo,
@@ -248,22 +248,48 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
             },
           });
           break;
-        case "RECEIVE_TASK_SUCCESS":
+        case 'RECEIVE_TASK_SUCCESS':
           Toast.show({
             type: 'receiveTaskSuccess',
             text1: `งาน #${message.data?.taskNo}`,
-            text2: `วันที่ ${message.data?.dateAppointment.split("T")[0].split("-")[2]}/${message.data?.dateAppointment.split("T")[0].split("-")[1]}/${parseInt(message.data?.dateAppointment.split("T")[0].split("-")[0]!)+543} เวลา ${(parseInt(message.data?.dateAppointment.split("T")[1].split(":")[0]!)+7 > 9)? `${parseInt(message.data?.dateAppointment.split("T")[1].split(":")[0]!)+7}`:`0${parseInt(message.data?.dateAppointment.split("T")[1].split(":")[0]!)+7}`}:${message.data?.dateAppointment.split("T")[1].split(":")[1]}`,
-            onPress : ()=>{
+            text2: `วันที่ ${
+              message.data?.dateAppointment.split('T')[0].split('-')[2]
+            }/${message.data?.dateAppointment.split('T')[0].split('-')[1]}/${
+              parseInt(
+                message.data?.dateAppointment.split('T')[0].split('-')[0]!,
+              ) + 543
+            } เวลา ${
+              parseInt(
+                message.data?.dateAppointment.split('T')[1].split(':')[0]!,
+              ) +
+                7 >
+              9
+                ? `${
+                    parseInt(
+                      message.data?.dateAppointment
+                        .split('T')[1]
+                        .split(':')[0]!,
+                    ) + 7
+                  }`
+                : `0${
+                    parseInt(
+                      message.data?.dateAppointment
+                        .split('T')[1]
+                        .split(':')[0]!,
+                    ) + 7
+                  }`
+            }:${message.data?.dateAppointment.split('T')[1].split(':')[1]}`,
+            onPress: () => {
               RootNavigation.navigate('Main', {
                 screen: 'TaskDetailScreen',
                 params: {taskId: message.data?.taskId},
-              })
+              });
               Toast.hide();
-            }
+            },
           });
           break;
-        case "RECEIVE_TASK_FAIL":
-          setActiontaskId(message.data?.taskId!)
+        case 'RECEIVE_TASK_FAIL':
+          setActiontaskId(message.data?.taskId!);
           Toast.show({
             type: 'taskFailed',
             topOffset: 10,
@@ -350,8 +376,8 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
               RootNavigation.navigate('Main', {
                 screen: 'TaskDetailScreen',
                 params: {taskId: message.data?.taskId},
-              })
-              Toast.hide()
+              });
+              Toast.hide();
             },
           });
         default:
@@ -365,24 +391,28 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   }
   return (
     <>
-    <RegisterNotification value={registerNoti} onClick={()=>{
-      setRegisterNoti(false);
-      setInitialRouteName("home")
-      const jumpAction = TabActions.jumpTo('profile');
-      navigation.dispatch(jumpAction)
-    }}
-    onClose={()=>{
-      setRegisterNoti(false);
-    }}
-    />
-    <RegisterFailedModal value={registerfailedModalNoti} 
-    onClick={()=>{
-      setRegisterFailedModalNoti(false)
-      dialCall()
-    }} 
-    onClose={()=>{
-      setRegisterFailedModalNoti(false)
-    }}/>
+      <RegisterNotification
+        value={registerNoti}
+        onClick={() => {
+          setRegisterNoti(false);
+          setInitialRouteName('home');
+          const jumpAction = TabActions.jumpTo('profile');
+          navigation.dispatch(jumpAction);
+        }}
+        onClose={() => {
+          setRegisterNoti(false);
+        }}
+      />
+      <RegisterFailedModal
+        value={registerfailedModalNoti}
+        onClick={() => {
+          setRegisterFailedModalNoti(false);
+          dialCall();
+        }}
+        onClose={() => {
+          setRegisterFailedModalNoti(false);
+        }}
+      />
       <Tab.Navigator
         screenOptions={{headerShown: false}}
         initialRouteName={initialRouteName}>

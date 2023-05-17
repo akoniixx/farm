@@ -37,7 +37,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
 import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
-import { QueryLocation } from '../../datasource/LocationDatasource';
+import {QueryLocation} from '../../datasource/LocationDatasource';
 import Geolocation from 'react-native-geolocation-service';
 
 const ProfileScreen: React.FC<any> = ({navigation, route}) => {
@@ -423,31 +423,27 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
               profilestate.totalRevenue,
             )}`}</Text>
           </View>
-        
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('ProfileDocument', {
-                  profile: profilestate,
-                });
-              }}>
-              <View style={styles.listTile}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image source={icons.doc} style={styles.listTileIcon} />
-                  <Text style={styles.listTileTitle}>ส่งเอกสารเพิ่มเติม</Text>
-                </View>
-              
-                  <Image
-                    source={icons.arrowRight}
-                    style={styles.listTileIcon}
-                  />
-                
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('ProfileDocument', {
+                profile: profilestate,
+              });
+            }}>
+            <View style={styles.listTile}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image source={icons.doc} style={styles.listTileIcon} />
+                <Text style={styles.listTileTitle}>ส่งเอกสารเพิ่มเติม</Text>
               </View>
-            </TouchableOpacity>
-        
+
+              <Image source={icons.arrowRight} style={styles.listTileIcon} />
+            </View>
+          </TouchableOpacity>
+
           <TouchableOpacity
             onPress={async () => {
               // await onLogout();
@@ -500,7 +496,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={async() => {
+            onPress={async () => {
               if (Platform.OS === 'ios') {
                 await Geolocation.requestAuthorization('always');
               } else if (Platform.OS === 'android') {
@@ -508,37 +504,37 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                   PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
                 );
               }
-              const dronerId = await AsyncStorage.getItem('droner_id')
-              ProfileDatasource.getProfile(dronerId!).then(
-                res => {
-                  if(!res.dronerArea.districtId){
+              const dronerId = await AsyncStorage.getItem('droner_id');
+              ProfileDatasource.getProfile(dronerId!).then(res => {
+                if (!res.dronerArea.districtId) {
+                  navigation.navigate('ServiceArea', {
+                    area: '',
+                    lat: res.dronerArea.lat,
+                    long: res.dronerArea.long,
+                    provinceId: 0,
+                    districtId: 0,
+                    subdistrictId: 0,
+                  });
+                } else {
+                  QueryLocation.QueryProfileSubDistrict(
+                    res.dronerArea.districtId,
+                  ).then(result => {
+                    let item = result.filter(
+                      (item: any) =>
+                        item.subdistrictId === res.dronerArea.subdistrictId,
+                    );
                     navigation.navigate('ServiceArea', {
-                      area : "",
-                      lat : res.dronerArea.lat,
-                      long : res.dronerArea.long,
-                      provinceId : 0,
-                      districtId : 0,
-                      subdistrictId : 0
+                      area: `${item[0].subdistrictName}/${item[0].districtName}/${item[0].provinceName}`,
+                      lat: res.dronerArea.lat,
+                      long: res.dronerArea.long,
+                      provinceId: res.dronerArea.provinceId,
+                      districtId: res.dronerArea.districtId,
+                      subdistrictId: res.dronerArea.subdistrictId,
+                      locationName: res.dronerArea.locationName,
                     });
-                  }
-                  else{
-                    QueryLocation.QueryProfileSubDistrict(res.dronerArea.districtId).then(
-                      result => {
-                        let item = result.filter((item : any) => item.subdistrictId === res.dronerArea.subdistrictId)
-                        navigation.navigate('ServiceArea', {
-                          area : `${item[0].subdistrictName}/${item[0].districtName}/${item[0].provinceName}`,
-                          lat : res.dronerArea.lat,
-                          long : res.dronerArea.long,
-                          provinceId : res.dronerArea.provinceId,
-                          districtId : res.dronerArea.districtId,
-                          subdistrictId : res.dronerArea.subdistrictId,
-                          locationName : res.dronerArea.locationName
-                        });
-                      }
-                    )
-                  }
+                  });
                 }
-              )
+              });
             }}>
             <View style={styles.listTile}>
               <View
@@ -546,10 +542,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <Image
-                  source={icons.service}
-                  style={styles.listTileIcon}
-                />
+                <Image source={icons.service} style={styles.listTileIcon} />
                 <Text style={styles.listTileTitle}>พื้นที่ให้บริการ</Text>
               </View>
               <Image source={icons.arrowRight} style={styles.listTileIcon} />
@@ -567,10 +560,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <Image
-                  source={icons.deleteUser}
-                  style={styles.listTileIcon}
-                />
+                <Image source={icons.deleteUser} style={styles.listTileIcon} />
                 <Text style={styles.listTileTitle}>ลบบัญชี</Text>
               </View>
 
@@ -624,41 +614,37 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                   flex: 1,
                   justifyContent: 'space-between',
                 }}>
-              
-                  <View
-                    style={{
-                     
-                      padding: normalize(8),
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
+                <View
+                  style={{
+                    padding: normalize(8),
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      actionSheet.current.hide();
                     }}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        actionSheet.current.hide();
-                      }}>
-                      <Image
-                        source={icons.close}
-                        style={{
-                          width: normalize(14),
-                          height: normalize(14),
-                        }}
-                      />
-                    </TouchableOpacity>
+                    <Image
+                      source={icons.close}
+                      style={{
+                        width: normalize(14),
+                        height: normalize(14),
+                      }}
+                    />
+                  </TouchableOpacity>
 
-                    
-                    <Text style={styles.hSheet}>เพิ่มโดรน</Text>
-                    <View />
-                  </View>
-                  <View
-                    style={{
-                      flex:1,
-                      paddingHorizontal: 8,
-                      paddingVertical: 16,
-                      
-                    }}>
-                      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+                  <Text style={styles.hSheet}>เพิ่มโดรน</Text>
+                  <View />
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    paddingHorizontal: 8,
+                    paddingVertical: 16,
+                  }}>
+                  <ScrollView contentContainerStyle={{flexGrow: 1}}>
                     <View
                       style={{
                         display: 'flex',
@@ -747,11 +733,11 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                         placeholder={'เลขตัวถังโดรน'}
                       />
                     </View>
-                    </ScrollView>
-                  </View>
-              
+                  </ScrollView>
+                </View>
+
                 <MainButton
-                  disable={!brand || !brandtype  ? true : false}
+                  disable={!brand || !brandtype ? true : false}
                   label="ถัดไป"
                   color={colors.orange}
                   onPress={addDrone}

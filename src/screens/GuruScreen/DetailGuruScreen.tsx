@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -11,19 +11,19 @@ import {
 import HTML from 'react-native-render-html';
 import colors from '../../assets/colors/colors';
 import CustomHeader from '../../components/CustomHeader';
-import { CardGuru } from '../../components/Guru/CardGuru';
+import {CardGuru} from '../../components/Guru/CardGuru';
 
-import { font } from '../../assets/index';
-import { useIsFocused } from '@react-navigation/native';
-import { GuruKaset } from '../../datasource/GuruDatasource';
+import {font} from '../../assets/index';
+import {useIsFocused} from '@react-navigation/native';
+import {GuruKaset} from '../../datasource/GuruDatasource';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import image from '../../assets/images/image';
-import { momentExtend } from '../../function/utility';
-import { normalize } from '../../function/Normalize';
+import {momentExtend} from '../../function/utility';
+import {normalize} from '../../function/Normalize';
 
-const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
+const DetailGuruScreen: React.FC<any> = ({navigation}) => {
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>();
@@ -53,19 +53,17 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
   }, []);
 
   return (
-    <SafeAreaView style={{ backgroundColor: colors.white, flex: 1 }}>
+    <SafeAreaView style={{backgroundColor: colors.white, flex: 1}}>
       <CustomHeader showBackBtn onPressBack={() => navigation.goBack()} />
       {data != undefined ? (
         <ScrollView>
           <View>
             <View>
               <Image
-                style={{ height: normalize(150) }}
-                source={
-                  !data.imagePath ? image.loading : { uri: data.imagePath }
-                }
+                style={{height: normalize(150)}}
+                source={!data.imagePath ? image.loading : {uri: data.imagePath}}
               />
-              <View style={{ paddingHorizontal: 15, top: 15 }}>
+              <View style={{paddingHorizontal: 15, top: 15}}>
                 <Text style={styles.text}>{data.title}</Text>
               </View>
               <View
@@ -77,7 +75,7 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
                 <Text style={styles.textDate} numberOfLines={1}>
                   {momentExtend.toBuddhistYear(data.createAt, 'DD MMM YY')}
                 </Text>
-                <Text style={[styles.textDate, { left: 15 }]} numberOfLines={1}>
+                <Text style={[styles.textDate, {left: 15}]} numberOfLines={1}>
                   {`อ่านแล้ว ` + data.read + ` ครั้ง`}
                 </Text>
               </View>
@@ -95,7 +93,7 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
                   paddingHorizontal: 15,
                 }}>
                 <HTML
-                  source={{ html: data.details }}
+                  source={{html: data.details}}
                   contentWidth={Dimensions.get('screen').width}
                   tagsStyles={{
                     strong: {
@@ -150,7 +148,7 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
       <Spinner
         visible={loading}
         textContent={'Loading...'}
-        textStyle={{ color: '#FFF' }}
+        textStyle={{color: '#FFF'}}
       />
     </SafeAreaView>
   );

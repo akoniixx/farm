@@ -14,7 +14,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ScrollView} from 'react-native-gesture-handler';
 import Modal from 'react-native-modal/dist/modal';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import {callCenterDash, callcenterNumber} from '../../../definitions/callCenterNumber';
+import {
+  callCenterDash,
+  callcenterNumber,
+} from '../../../definitions/callCenterNumber';
 import fonts from '../../../assets/fonts';
 import {normalize} from '../../../function/Normalize';
 import CustomHeader from '../../../components/CustomHeader';

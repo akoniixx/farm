@@ -126,17 +126,23 @@ export class Authentication {
       });
   }
 
-  static async updateBookbank(isBookBank:boolean,bankName:string,bankAccountName:string,accountNumber:string,isConsentBookBank:boolean): Promise<any> {
+  static async updateBookbank(
+    isBookBank: boolean,
+    bankName: string,
+    bankAccountName: string,
+    accountNumber: string,
+    isConsentBookBank: boolean,
+  ): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     const params = {
-      isBookBank:isBookBank,
+      isBookBank: isBookBank,
       bankName: bankName,
-      bankAccountName:bankAccountName,
-      accountNumber:accountNumber,
-      isConsentBookBank:isConsentBookBank,
-    }
+      bankAccountName: bankAccountName,
+      accountNumber: accountNumber,
+      isConsentBookBank: isConsentBookBank,
+    };
     return httpClient
-      .patch(BASE_URL + `/droner/${droner_id}`,params)
+      .patch(BASE_URL + `/droner/${droner_id}`, params)
       .then(response => {
         return response.data;
       })
@@ -408,6 +414,4 @@ export class Register {
         console.log(error);
       });
   }
-
-  
 }

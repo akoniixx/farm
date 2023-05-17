@@ -1,35 +1,43 @@
-import { Switch } from '@rneui/themed';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, font } from '../../assets';
-import { normalize } from '../../function/Normalize';
+import {Switch} from '@rneui/themed';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {
+  Button,
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {colors, font} from '../../assets';
+import {normalize} from '../../function/Normalize';
 import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
-import { stylesCentral } from '../../styles/StylesCentral';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {stylesCentral} from '../../styles/StylesCentral';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ProfileDatasource } from '../../datasource/ProfileDatasource';
-import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { Avatar } from '@rneui/base';
+import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {Avatar} from '@rneui/base';
 import icons from '../../assets/icons/icons';
 import io from 'socket.io-client';
-import { SheetManager } from 'react-native-actions-sheet';
-import { BASE_URL } from '../../config/develop-config';
-import { TaskDatasource } from '../../datasource/TaskDatasource';
-import { decimalConvert, numberWithCommas, socket } from '../../function/utility';
-import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import {SheetManager} from 'react-native-actions-sheet';
+import {BASE_URL} from '../../config/develop-config';
+import {TaskDatasource} from '../../datasource/TaskDatasource';
+import {decimalConvert, numberWithCommas, socket} from '../../function/utility';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
 import messaging from '@react-native-firebase/messaging';
 import Toast from 'react-native-toast-message';
-import { responsiveHeigth, responsiveWidth } from '../../function/responsive';
+import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import fonts from '../../assets/fonts';
-import { mixpanel } from '../../../mixpanel';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-import { CardGuruKaset } from '../../components/Carousel/CardGuruKaset';
-import { GuruKaset } from '../../datasource/GuruDatasource';
+import {mixpanel} from '../../../mixpanel';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
+import {CardGuruKaset} from '../../components/Carousel/CardGuruKaset';
+import {GuruKaset} from '../../datasource/GuruDatasource';
 
-const MainScreen: React.FC<any> = ({ navigation, route }) => {
+const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
   const [profile, setProfile] = useState({
     name: '',
@@ -46,13 +54,12 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [openNoti, setOpenNoti] = useState(false);
   const [guruKaset, setGuruKaset] = useState<any>();
   const isCarousel = React.useRef(null);
-  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+  const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
   const imageWidth = screenWidth / 2;
   const screen = Dimensions.get('window');
   const [index, setIndex] = React.useState(0);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
-
 
   useFocusEffect(
     React.useCallback(() => {
@@ -82,7 +89,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const openSocket = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     await socket.connect();
-    socket.on(`send-task-${dronerId!}`, ({ data, image_profile_url }) => {
+    socket.on(`send-task-${dronerId!}`, ({data, image_profile_url}) => {
       //Modal Task Screen
       SheetManager.show('NewTaskSheet', {
         payload: {
@@ -153,7 +160,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     TaskDatasource.openReceiveTask(dronerId!, isOpen)
       .then(res => {
-        setProfile({ ...profile, isOpenReceiveTask: res.isOpenReceiveTask });
+        setProfile({...profile, isOpenReceiveTask: res.isOpenReceiveTask});
         if (!isOpen) {
           TaskDatasource.getTaskById(
             dronerId!,
@@ -188,8 +195,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           });
         }}
       />
-      <View style={[stylesCentral.container, { paddingTop: insets.top }]}>
-        <View style={{ flex: 2 }}>
+      <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
+        <View style={{flex: 2}}>
           <View style={styles.headCard}>
             <View>
               <Text
@@ -202,15 +209,15 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               </Text>
               <View style={styles.activeContainer}>
                 <Switch
-                  trackColor={{ false: '#767577', true: colors.green }}
+                  trackColor={{false: '#767577', true: colors.green}}
                   thumbColor={profile.isOpenReceiveTask ? 'white' : '#f4f3f4'}
                   value={profile.isOpenReceiveTask}
                   onValueChange={value => {
-                    openReceiveTask(value)
+                    openReceiveTask(value);
                     if (value === true) {
-                      mixpanel.track('click to open recive task status')
+                      mixpanel.track('click to open recive task status');
                     } else {
-                      mixpanel.track('click to close recive task status')
+                      mixpanel.track('click to close recive task status');
                     }
                   }}
                   disabled={profile.status !== 'ACTIVE'}
@@ -235,7 +242,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     size={normalize(50)}
                     rounded
                     source={
-                      profile.image != '' ? { uri: profile.image } : icons.account
+                      profile.image != '' ? {uri: profile.image} : icons.account
                     }
                   />
                   <View
@@ -271,8 +278,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           </View>
-         
-            {/*  <View style={{height: normalize(95)}}>
+
+          {/*  <View style={{height: normalize(95)}}>
               <ScrollView
                 showsHorizontalScrollIndicator={false}
                 horizontal
@@ -370,93 +377,88 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 </View>
               </ScrollView>
             </View> */}
-            <View
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              
+                fontFamily: font.bold,
+                fontSize: normalize(14),
+                color: colors.fontBlack,
+                paddingHorizontal: 20,
+              }}>
+              กูรูเกษตร
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('AllGuruScreen');
               }}>
               <Text
                 style={{
                   fontFamily: font.bold,
                   fontSize: normalize(14),
                   color: colors.fontBlack,
-                  paddingHorizontal: 20,
+
+                  paddingHorizontal: 10,
                 }}>
-                กูรูเกษตร
+                ดูทั้งหมด
               </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('AllGuruScreen');
+            </TouchableOpacity>
+          </View>
+          {guruKaset != undefined ? (
+            <View>
+              <Carousel
+                autoplay={true}
+                autoplayInterval={7000}
+                autoplayDelay={5000}
+                loop={true}
+                ref={isCarousel}
+                data={guruKaset.data}
+                sliderWidth={screen.width}
+                itemWidth={screen.width}
+                onSnapToItem={index => setIndex(index)}
+                useScrollView={true}
+                vertical={false}
+                renderItem={({item}: any) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={async () => {
+                        await AsyncStorage.setItem('guruId', `${item.id}`);
+                        navigation.push('DetailGuruScreen');
+                      }}>
+                      <CardGuruKaset background={item.image_path} />
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+              <View
+                style={{
+                  alignItems: 'center',
+                  top: -70,
+                  position: 'relative',
                 }}>
-                <Text
-                  style={{
-                    fontFamily: font.bold,
-                    fontSize: normalize(14),
-                    color: colors.fontBlack,
-                   
-                    paddingHorizontal: 10,
-                  }}>
-                  ดูทั้งหมด
-                </Text>
-              </TouchableOpacity>
-            </View>
-            {guruKaset != undefined ? (
-              <View >
-                <Carousel
-                  autoplay={true}
-                  autoplayInterval={7000}
-                  autoplayDelay={5000}
-                  loop={true}
-                  ref={isCarousel}
-                  data={guruKaset.data}
-                  sliderWidth={screen.width}
-                  itemWidth={screen.width}
-                  onSnapToItem={index => setIndex(index)}
-                  useScrollView={true}
-                  vertical={false}
-                  renderItem={({ item }: any) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={async () => {
-                          await AsyncStorage.setItem(
-                            'guruId',
-                            `${item.id}`,
-                          );
-                          navigation.push('DetailGuruScreen');
-                        }}>
-                        <CardGuruKaset background={item.image_path} />
-                      </TouchableOpacity>
-                    );
+                <Pagination
+                  dotsLength={guruKaset.data.length}
+                  activeDotIndex={index}
+                  carouselRef={isCarousel}
+                  dotStyle={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: 5,
+                    marginHorizontal: 0,
+                    backgroundColor: colors.fontBlack,
                   }}
+                  inactiveDotOpacity={0.4}
+                  inactiveDotScale={0.9}
+                  tappableDots={true}
                 />
-                <View
-                  style={{
-                    alignItems: 'center',
-                    top: -70,
-                    position: 'relative',
-                  }}>
-                  <Pagination
-                    dotsLength={guruKaset.data.length}
-                    activeDotIndex={index}
-                    carouselRef={isCarousel}
-                    dotStyle={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: 5,
-                      marginHorizontal: 0,
-                      backgroundColor: colors.fontBlack,
-                    }}
-                    inactiveDotOpacity={0.4}
-                    inactiveDotScale={0.9}
-                    tappableDots={true}
-                  />
-                </View>
               </View>
-            ) : null}
-          
+            </View>
+          ) : null}
         </View>
-        <View style={{ flex: 4 }}>
+        <View style={{flex: 4}}>
           <TaskTapNavigator
             isOpenReceiveTask={profile.isOpenReceiveTask}
             dronerStatus={profile.status}

@@ -22,8 +22,8 @@ export default {
   registerfailednoti: require('./registerfailednoti.png'),
   troublejobnoti: require('./troublejobnoti.png'),
   troublemissnoti: require('./troublemissnoti.png'),
-  emptyhistory : require('./emptyhistory.png'),
-  lottiedroner : require('./lottiedroner.json'),
-  emptyareaservice : require('./emptyareaservice.png'),
-  areaaround : require('./areaaround.png')
+  emptyhistory: require('./emptyhistory.png'),
+  lottiedroner: require('./lottiedroner.json'),
+  emptyareaservice: require('./emptyareaservice.png'),
+  areaaround: require('./areaaround.png'),
 };

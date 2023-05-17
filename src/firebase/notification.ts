@@ -25,18 +25,18 @@ export async function requestUserPermission() {
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
   if (enabled) {
-    setTimeout(()=>{
-      getFCMToken()
-    },1000)
+    setTimeout(() => {
+      getFCMToken();
+    }, 1000);
   }
 }
 
 export const getFCMToken = async () => {
-  try{
+  try {
     const token = await messaging().getToken();
     await AsyncStorage.setItem('fcmtoken', token);
-  }catch(err){
-    console.log(err)
+  } catch (err) {
+    console.log(err);
   }
 };
 

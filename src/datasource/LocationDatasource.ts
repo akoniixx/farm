@@ -42,18 +42,16 @@ export class QueryLocation {
       .catch(err => console.log(err));
   }
 
-  static getSubdistrictArea(
-    id?: number,
-    text?: string
-  ): Promise<any> {
+  static getSubdistrictArea(id?: number, text?: string): Promise<any> {
     let script = null;
-    script = id != 0 ? "?districtId=" + id : text == '' ? "?search=" + text : null;
+    script =
+      id != 0 ? '?districtId=' + id : text == '' ? '?search=' + text : null;
     return httpClient
-      .get(BASE_URL + "/location/sub-district/" + script)
-      .then((response) => {
+      .get(BASE_URL + '/location/sub-district/' + script)
+      .then(response => {
         return response.data;
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   }

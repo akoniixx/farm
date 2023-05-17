@@ -17,7 +17,7 @@ import {stylesCentral} from '../../styles/StylesCentral';
 import * as ImagePicker from 'react-native-image-picker';
 import {dataUpdateStatusEntity} from '../../entities/TaskScreenEntities';
 import * as RootNavigation from '../../navigations/RootNavigation';
-import { callcenterNumber } from '../../definitions/callCenterNumber';
+import {callcenterNumber} from '../../definitions/callCenterNumber';
 
 interface Prop {
   dronerStatus: string;
@@ -189,7 +189,10 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                 id={item.item.taskNo}
                 status={item.item.status}
                 title={item.item.farmerPlot.plantName}
-                price={parseInt(item.item.price)+parseInt(item.item.revenuePromotion)}
+                price={
+                  parseInt(item.item.price) +
+                  parseInt(item.item.revenuePromotion)
+                }
                 date={item.item.dateAppointment}
                 address={item.item.farmerPlot.locationName}
                 distance={item.item.distance}
@@ -342,7 +345,8 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                       fontSize: normalize(18),
                       color: 'black',
                     }}>
-                    โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. {callcenterNumber}
+                    โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร.{' '}
+                    {callcenterNumber}
                   </Text>
                 </View>
               </View>

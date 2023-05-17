@@ -13,7 +13,10 @@ import {colors, icons} from '../../assets';
 import {MainButton} from '../Button/MainButton';
 import fonts from '../../assets/fonts';
 import image from '../../assets/images/image';
-import { callCenterDash, callcenterNumber } from '../../definitions/callCenterNumber';
+import {
+  callCenterDash,
+  callcenterNumber,
+} from '../../definitions/callCenterNumber';
 
 interface RegisterFailedModalNotiFication {
   onClick?: () => void;
