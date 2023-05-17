@@ -44,7 +44,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
   const [minute, setMinute] = useState(0);
 
   useEffect(() => {
-    console.log(profile)
+    console.log(profile);
     if (taskData.dateAppointment) {
       const dateAppointment = new Date(taskData.dateAppointment);
       setDate(dateAppointment);
@@ -80,9 +80,13 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
         }}
         label={'เลือกวันและเวลาฉีดพ่น'}
       />
-      {isSelectDroner && <HeadDronerCardForCreatTask navigation={navigation}
-      image={profile.image_droner} name={profile.firstname+ ' ' + profile.lastname}  /> } 
-    
+      {isSelectDroner && (
+        <HeadDronerCardForCreatTask
+          navigation={navigation}
+          image={profile.image_droner}
+          name={profile.firstname + ' ' + profile.lastname}
+        />
+      )}
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}

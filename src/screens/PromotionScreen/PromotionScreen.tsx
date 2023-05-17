@@ -81,17 +81,17 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
             top: '82%',
             marginHorizontal: normalize(12.5),
             width: Dimensions.get('screen').width - normalize(25),
-            justifyContent : 'space-between',
-            alignItems : 'center',
-            flexDirection : 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexDirection: 'row',
             height: normalize(56),
           }}>
-          <TouchableOpacity style={{
-            width : '48%',
-            height: '100%',
-          }}
-          onPress={() => navigation.navigate('SearchCouponScreen')}
-          >
+          <TouchableOpacity
+            style={{
+              width: '48%',
+              height: '100%',
+            }}
+            onPress={() => navigation.navigate('SearchCouponScreen')}>
             <View
               style={{
                 borderRadius: normalize(10),
@@ -124,11 +124,12 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
               </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={{
-            width : '48%',
-            height: '100%',
-          }}
-          onPress={() => navigation.navigate('MyCouponScreen')}>
+          <TouchableOpacity
+            style={{
+              width: '48%',
+              height: '100%',
+            }}
+            onPress={() => navigation.navigate('MyCouponScreen')}>
             <View
               style={{
                 borderRadius: normalize(10),
@@ -180,7 +181,8 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
             }}>
             สิทธิพิเศษ
           </Text>
-          <TouchableOpacity onPress={()=> navigation.navigate('AllCouponScreen')}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('AllCouponScreen')}>
             <Text
               style={{
                 fontFamily: font.SarabunLight,

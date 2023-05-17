@@ -23,7 +23,6 @@ export const CardGuruKaset: React.FC<guruData> = ({ background }) => {
           source={background === '' ? image.bg_droner : { uri: background }}
         />
       </View>
-     
     </View>
   );
 };
@@ -48,4 +47,3 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
 });
-

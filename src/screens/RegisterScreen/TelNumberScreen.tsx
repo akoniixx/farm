@@ -95,14 +95,17 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
                 </Text>
               ) : null}
             </View>
-            <View style={{  ...Platform.select({
-      ios: {
-        paddingVertical: 0
-      },
-      android: {
-        paddingVertical: 30
-      },
-    })}}>
+            <View
+              style={{
+                ...Platform.select({
+                  ios: {
+                    paddingVertical: 0,
+                  },
+                  android: {
+                    paddingVertical: 30,
+                  },
+                }),
+              }}>
               <MainButton
                 label="ถัดไป"
                 color={colors.greenLight}

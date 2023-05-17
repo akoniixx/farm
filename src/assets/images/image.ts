@@ -42,7 +42,7 @@ export default {
   reviewSuccess: require('./reviewSuccess.png'),
   maintenance: require('./maintenance.png'),
   searchEmpty: require('./searchempty.png'),
-  removecoupon : require('./removecoupon.png'),
-  substracttop : require('./substracttop.png'),
-  substractbottom : require('./subtractbottom.png')
+  removecoupon: require('./removecoupon.png'),
+  substracttop: require('./substracttop.png'),
+  substractbottom: require('./subtractbottom.png'),
 };

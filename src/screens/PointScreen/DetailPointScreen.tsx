@@ -126,7 +126,7 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
               shadowOpacity: 0.4,
             }}>
             <Image
-              source={icons.ickPoint}
+              source={icons.ICKPoint}
               style={{
                 width: normalize(35),
                 height: normalize(35),

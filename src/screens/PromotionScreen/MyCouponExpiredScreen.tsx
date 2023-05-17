@@ -17,11 +17,11 @@ import { MainButton } from '../../components/Button/MainButton';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import SelectDronerCouponModal from '../../components/Modal/SelectDronerCoupon';
 
-const MyCouponExpiredScreen: React.FC<any> = ({navigation, route}) => {
+const MyCouponExpiredScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [data, setData] = useState<any[]>([]);
-  const [modal,setModal] = useState<boolean>(false)
+  const [modal, setModal] = useState<boolean>(false);
   const getData = (page: number, take: number) => {
     getMyCoupon(page, take).then(res => {
       setCount(res.count);
@@ -31,40 +31,40 @@ const MyCouponExpiredScreen: React.FC<any> = ({navigation, route}) => {
   useEffect(() => {
     getData(page, 5);
   }, []);
-  const onScrollEnd = ()=>{
-    let pageNow = page
-    if(data.length < count){
-      getMyCoupon(pageNow+1, 5, false).then(res => {
-        let newData = data.concat(res.data)
-        setPage(pageNow+1)
-        setData(newData)
-      })
+  const onScrollEnd = () => {
+    let pageNow = page;
+    if (data.length < count) {
+      getMyCoupon(pageNow + 1, 5, false).then(res => {
+        let newData = data.concat(res.data);
+        setPage(pageNow + 1);
+        setData(newData);
+      });
     }
-  }
+  };
   return (
     <View
       style={{
         position: 'relative',
         height: '100%',
-        backgroundColor : colors.bgGreen
+        backgroundColor: colors.bgGreen,
       }}>
       <SelectDronerCouponModal
-         show={modal}
-         onClose={()=>setModal(false)}
-         onMainClick={()=>{
+        show={modal}
+        onClose={() => setModal(false)}
+        onMainClick={() => {
           RootNavigation.navigate('DronerUsedScreen', {
             isSelectDroner: true,
             profile: {},
-          })
-          setModal(false)
-         }}
-         onBottomClick={()=>{
+          });
+          setModal(false);
+        }}
+        onBottomClick={() => {
           RootNavigation.navigate('SelectDateScreen', {
             isSelectDroner: false,
             profile: {},
-           })
-           setModal(false)
-         }}
+          });
+          setModal(false);
+        }}
       />
       {data.length != 0 ? (
         <View
@@ -75,7 +75,7 @@ const MyCouponExpiredScreen: React.FC<any> = ({navigation, route}) => {
             onScrollEndDrag={onScrollEnd}
             data={data}
             ListFooterComponent={<View style={{ height: normalize(250) }} />}
-            renderItem={({ item }) => (         
+            renderItem={({ item }) => (
               <CouponCard
                 id={item.promotion.id}
                 couponCode={item.promotion.couponCode}
@@ -162,14 +162,14 @@ const styles = StyleSheet.create({
     padding: normalize(17),
   },
   empty: {
-    width : '100%',
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
     display: 'flex',
     paddingVertical: '50%',
-    backgroundColor : colors.bgGreen,
-    height : '100%'
+    backgroundColor: colors.bgGreen,
+    height: '100%',
   },
   textEmpty: {
     fontFamily: font.SarabunLight,

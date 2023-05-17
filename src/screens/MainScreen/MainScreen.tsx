@@ -401,7 +401,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         borderColor: colors.greenLight,
                       }}>
                       <Image
-                        source={icons.ickPoint}
+                        source={icons.ICKPoint}
                         style={{ width: 35, height: 35 }}
                       />
                       <Text

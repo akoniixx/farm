@@ -58,7 +58,8 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
           <View>
             <View>
               <Image
-                style={{ height: normalize(150) }}
+                style={{ height: 150 }}
+                resizeMode="contain"
                 source={
                   !data.imagePath ? image.bg_droner : { uri: data.imagePath }
                 }

@@ -1,15 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { normalize } from '@rneui/themed';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Image,
-  Keyboard,
   KeyboardAvoidingView,
   Linking,
   Modal,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -26,7 +24,6 @@ import icons from '../../assets/icons/icons';
 import image from '../../assets/images/image';
 import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
-import InputWithSuffix from '../../components/InputText/InputWithSuffix';
 import RemoveCoupon from '../../components/Modal/RemoveCoupon';
 import { DronerCard } from '../../components/Mytask/DronerCard';
 import {
@@ -40,7 +37,8 @@ import {
   useAutoBookingContext,
 } from '../../contexts/AutoBookingContext';
 import {
-  checkCouponByCode,
+  getDetailCampaign,
+  getPointByFarmerId,
   usedCoupon,
   usedCouponOnline,
 } from '../../datasource/PromotionDatasource';
@@ -51,8 +49,36 @@ import {
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { numberWithCommas } from '../../functions/utility';
 import { couponState } from '../../recoil/CouponAtom';
+import { Switch } from '@rneui/base';
+import Counter from '../../components/Counter/Counter';
+import { useDebounceValue } from '../../hook/useDebounceValue';
+interface CampaignDetail {
+  id: string;
+  point: number;
+  amounts: number;
+  minPoint: number;
+  pointType: string;
+  application?: string;
+  receiveType?: string;
+  status?: string;
+  createAt?: string;
+  updateAt?: string;
+}
 
 const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
+  const [isUsePoint, setIsUsePoint] = useState(false);
+  const [currentCount, setCurrentCount] = useState(0);
+  const [myPoint, setMyPoint] = useState(0);
+  const [campaignDetail, setCampaignDetail] = useState<CampaignDetail>({
+    id: '',
+    point: 0,
+    amounts: 0,
+    minPoint: 0,
+    pointType: '',
+  });
+
+  // Mock data
+
   const isSelectDroner = route.params.isSelectDroner;
   const profile = route.params.profile;
   const {
@@ -63,36 +89,18 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
     authContext: { getProfileAuth },
     state: { user },
   } = useAuth();
+
   const [coupon, setCoupon] = useRecoilState(couponState);
   const couponInfo = useRecoilValue(couponState);
-  const [couponCode, setCouponCode] = useState('');
-  const [modalCoupon, setModalCoupon] = useState<boolean>(false)
-  const [couponCodeError, setCouponCodeError] = useState('');
+
+  const [modalCoupon, setModalCoupon] = useState<boolean>(false);
+
   const [disableEdit, setDisableEdit] = useState(false);
-  const [currentTel, setCurrentTel] = useState('');
+  const [currentTel] = useState('');
   const [showModalCall, setShowModalCall] = useState(false);
   const [loading, setLoading] = useState(true);
-  const checkCoupon = async () => {
-    try {
-      const res = await checkCouponByCode(couponCode);
-      if (res && !res.canUsed) {
-        setCouponCodeError(res.userMessage || res.message);
-      }
-      if (res && res.canUsed) {
-        mixpanel.track('Tab submit coupon');
+  const debouncePoint = useDebounceValue(currentCount, 1000);
 
-        setTaskData(prev => ({
-          ...prev,
-          couponCode: couponCode,
-        }));
-        Keyboard.dismiss();
-        setDisableEdit(true);
-        return couponCode;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const [showListPrice, setShowListPrice] = useState(false);
 
   const onSubmit = async () => {
@@ -100,6 +108,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       setLoading(true);
       const dateAppointment = moment(taskData.dateAppointment).toISOString();
       const payload: PayloadCreateTask = {
+        usePoint: debouncePoint,
         purposeSprayId: taskData.purposeSpray.id,
         cropName: taskData.cropName || '',
         farmAreaAmount: taskData.farmAreaAmount,
@@ -114,18 +123,17 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         targetSpray: taskData.targetSpray,
         taskDronerTemp: isSelectDroner
           ? [
-            {
-              distance: profile.distance,
-              dronerDetail: [JSON.stringify(profile)],
-              dronerId: profile.droner_id,
-              status: 'WAIT_RECEIVE',
-            },
-          ]
+              {
+                distance: profile.distance,
+                dronerDetail: [JSON.stringify(profile)],
+                dronerId: profile.droner_id,
+                status: 'WAIT_RECEIVE',
+              },
+            ]
           : taskData.taskDronerTemp,
         statusRemark: '',
       };
       const res = await TaskDatasource.createTask(payload);
-
       if (res && res.success) {
         if (!couponInfo.name) {
           mixpanel.track('Tab submit booking');
@@ -135,9 +143,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             taskId: res.responseData.id,
           });
           setTaskData(initialState.taskData);
-        }
-        else {
-          if (couponInfo.promotionType === "ONLINE") {
+        } else {
+          if (couponInfo.promotionType === 'ONLINE') {
             usedCouponOnline(couponInfo.id, couponInfo.promotionId)
               .then(async result => {
                 mixpanel.track('Tab submit booking');
@@ -150,8 +157,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 setTaskData(initialState.taskData);
               })
               .catch(err => console.log(err));
-          }
-          else {
+          } else {
             usedCoupon(couponInfo.couponCode)
               .then(async result => {
                 mixpanel.track('Tab submit booking');
@@ -166,22 +172,75 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               .catch(err => console.log(err));
           }
           setCoupon({
-            id : "",
-            promotionId : "",
-            name : "",
-            couponCode : "",
-            promotionType : "ONLINE",
-            discountType : "DISCOUNT",
-            discount : 0,
-            netPrice : 0,
-            err : ""
-        })
+            id: '',
+            promotionId: '',
+            name: '',
+            couponCode: '',
+            promotionType: 'ONLINE',
+            discountType: 'DISCOUNT',
+            discount: 0,
+            netPrice: 0,
+            err: '',
+          });
         }
       }
     } catch (e) {
       console.log(e);
     }
   };
+
+  const getCalculatePoint = useCallback(async () => {
+    try {
+      setLoading(true);
+      await getCalculatePrice({
+        farmerPlotId: taskData.farmerPlotId,
+        couponCode: taskData.couponCode || '',
+        cropName: taskData.cropName || '',
+        raiAmount: taskData.farmAreaAmount ? +taskData.farmAreaAmount : 0,
+        usePoint: isUsePoint ? debouncePoint : 0,
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    taskData.farmerPlotId,
+    taskData.couponCode,
+    taskData.cropName,
+    taskData.farmAreaAmount,
+    debouncePoint,
+    getCalculatePrice,
+    isUsePoint,
+  ]);
+  const getCalculateByCloseSwitch = useCallback(async () => {
+    try {
+      setLoading(true);
+      await getCalculatePrice({
+        farmerPlotId: taskData.farmerPlotId,
+        couponCode: taskData.couponCode || '',
+        cropName: taskData.cropName || '',
+        raiAmount: taskData.farmAreaAmount ? +taskData.farmAreaAmount : 0,
+        usePoint: 0,
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    taskData.farmerPlotId,
+    taskData.couponCode,
+    taskData.cropName,
+    taskData.farmAreaAmount,
+    getCalculatePrice,
+  ]);
+
+  useEffect(() => {
+    if (debouncePoint > 0) {
+      getCalculatePoint();
+    }
+  }, [debouncePoint, getCalculatePoint, isUsePoint]);
   useEffect(() => {
     const getInitialData = async () => {
       try {
@@ -190,8 +249,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           couponCode: taskData.couponCode || '',
           cropName: taskData.cropName || '',
           raiAmount: taskData.farmAreaAmount ? +taskData.farmAreaAmount : 0,
+          usePoint: 0,
         });
-        setCouponCode(taskData.couponCode || '');
+
         setDisableEdit(!!taskData.couponCode);
       } catch (e) {
         console.log(e);
@@ -199,11 +259,50 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         setLoading(false);
       }
     };
+    const getPointById = async () => {
+      try {
+        const result = await getPointByFarmerId(user?.id || '');
+        const detail = await getDetailCampaign();
+        if (detail && detail.length > 0) {
+          const campaign = detail.find(
+            (el: { pointType: string; application: string }) =>
+              el.pointType === 'DISCOUNT_TASK' && el.application === 'FARMER',
+          );
+          setCampaignDetail(campaign);
+        }
+        if (result) {
+          setMyPoint(result.balance);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
     getInitialData();
     getProfileAuth();
+    getPointById();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const maximumPointCal = useMemo(() => {
+    const netPrice = calPrice.priceBefore - calPrice.discountPromotion;
+
+    const amounts = campaignDetail.amounts;
+    const point = campaignDetail.point;
+    const maxPoint =
+      (myPoint / point) * amounts < netPrice
+        ? myPoint
+        : (netPrice * point) / amounts;
+
+    return maxPoint;
+  }, [
+    myPoint,
+    campaignDetail.amounts,
+    campaignDetail.point,
+    calPrice.priceBefore,
+    calPrice.discountPromotion,
+  ]);
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'position' : 'height'}
@@ -213,17 +312,17 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         show={modalCoupon}
         onMainClick={() => {
           setCoupon({
-            id: "",
-            promotionId: "",
-            promotionType: "ONLINE",
-            couponCode: "",
-            name: "",
+            id: '',
+            promotionId: '',
+            promotionType: 'ONLINE',
+            couponCode: '',
+            name: '',
             discountType: 'DISCOUNT',
             discount: 0,
             netPrice: 0,
-            err: ""
-          })
-          setModalCoupon(false)
+            err: '',
+          });
+          setModalCoupon(false);
         }}
         onClose={() => setModalCoupon(false)}
       />
@@ -502,7 +601,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                   borderRadius: 16,
                 }}>
                 <Text style={styles.plot}>อัตราค่าจ้าง</Text>
-                <Text style={styles.unitPrice}>{locationPrice.price} บาท/ไร่</Text>
+                <Text style={styles.unitPrice}>
+                  {locationPrice.price} บาท/ไร่
+                </Text>
               </View>
             </>
           ) : (
@@ -573,7 +674,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               </View>
             </>
           )}
-
 
           {/* <View
             style={{
@@ -653,19 +753,21 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               marginTop: 16,
             }}
           />
-          <TouchableOpacity onPress={() => navigation.navigate("UseCouponScreen", {
-            plantName: taskData.plantName,
-            purposeSprayName: taskData.purposeSpray.name,
-            farmAreaAmount: taskData.farmAreaAmount,
-            province: taskData.plotArea?.provinceName,
-            price: calPrice.netPrice,
-            farmerPlotId: taskData.farmerPlotId,
-            cropName: taskData.cropName || '',
-            raiAmount: taskData.farmAreaAmount
-              ? +taskData.farmAreaAmount
-              : 0,
-          })
-          }>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('UseCouponScreen', {
+                plantName: taskData.plantName,
+                purposeSprayName: taskData.purposeSpray.name,
+                farmAreaAmount: taskData.farmAreaAmount,
+                province: taskData.plotArea?.provinceName,
+                price: calPrice.netPrice,
+                farmerPlotId: taskData.farmerPlotId,
+                cropName: taskData.cropName || '',
+                raiAmount: taskData.farmAreaAmount
+                  ? +taskData.farmAreaAmount
+                  : 0,
+              })
+            }>
             <View
               style={{
                 paddingHorizontal: normalize(16),
@@ -675,10 +777,11 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 alignItems: 'center',
                 marginBottom: 16,
               }}>
-              <View style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
                 <Image
                   source={icons.discountOrange}
                   style={{ width: 20, height: 20, marginRight: 8 }}
@@ -688,180 +791,215 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                     fontSize: 18,
                     color: colors.fontBlack,
                     fontFamily: fonts.SarabunMedium,
+                    lineHeight: 28,
                   }}>
-                  {!couponInfo.name ? "เลือกคูปองส่วนลด" : couponInfo.name}
+                  {!couponInfo.name ? 'เลือกคูปองส่วนลด' : couponInfo.name}
                 </Text>
-                {
-                  !couponInfo.name ?
-                    <></> :
-                    <TouchableOpacity style={{
-                      marginLeft: normalize(10)
-                    }} onPress={() => setModalCoupon(true)}>
-                      <Image source={image.removecoupon} style={{
+                {!couponInfo.name ? (
+                  <></>
+                ) : (
+                  <TouchableOpacity
+                    style={{
+                      marginLeft: normalize(10),
+                    }}
+                    onPress={() => setModalCoupon(true)}>
+                    <Image
+                      source={image.removecoupon}
+                      style={{
                         width: normalize(54),
-                        height: normalize(26)
-                      }} />
-                    </TouchableOpacity>
-                }
+                        height: normalize(26),
+                      }}
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
-              <Image source={icons.arrowRigth} style={{
-                width: normalize(10),
-                height: normalize(20)
-              }} />
+              <Image
+                source={icons.arrowRigth}
+                style={{
+                  width: normalize(10),
+                  height: normalize(20),
+                }}
+              />
             </View>
           </TouchableOpacity>
-          {/* <View
-            style={{
-              paddingHorizontal: normalize(16),
-              marginBottom: 16,
-            }}>
-            {!disableEdit ? (
-              <InputWithSuffix
-                keyboardType="numeric"
-                maxLength={7}
-                onChangeText={text => {
-                  setCouponCode(text);
-                  setCouponCodeError('');
-                }}
-                onSubmitEditing={async () => {
-                  if (couponCode.length > 0) {
-                    const newCoupon = await checkCoupon();
-                    await getCalculatePrice({
-                      farmerPlotId: taskData.farmerPlotId,
-                      couponCode: newCoupon || '',
-                      cropName: taskData.cropName || '',
-                      raiAmount: taskData.farmAreaAmount
-                        ? +taskData.farmAreaAmount
-                        : 0,
-                    });
-                  }
-                }}
-                style={{
-                  color: !disableEdit ? colors.fontBlack : colors.grey40,
-                }}
-                editable={!disableEdit}
-                allowClear={!disableEdit}
-                placeholder="ระบุรหัสคูปองที่นี่"
-                styleContainer={{
-                  backgroundColor: '#F2F3F4',
-                  borderWidth: 0,
-                }}
-                value={couponCode}
-                suffixComponent={
-                  <TouchableOpacity
-                    onPress={async () => {
-                      if (disableEdit) {
-                        return setDisableEdit(false);
-                      }
-                      if (couponCode.length > 0) {
-                        mixpanel.track('Tab submit coupon');
-                        const newCoupon = await checkCoupon();
-                        await getCalculatePrice({
-                          farmerPlotId: taskData.farmerPlotId,
-                          couponCode: newCoupon || '',
-                          cropName: taskData.cropName || '',
-                          raiAmount: taskData.farmAreaAmount
-                            ? +taskData.farmAreaAmount
-                            : 0,
-                        });
-                      }
-                    }}
-                    style={{
-                      backgroundColor: colors.orange,
-                      minWidth: 80,
-                      height: 35,
-                      borderRadius: 8,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      zIndex: 1,
-                    }}>
-                    <Text
-                      style={{
-                        color: colors.white,
-                        fontSize: 18,
-                        fontFamily: fonts.AnuphanMedium,
-                      }}>
-                      {disableEdit ? 'แก้ไข' : 'ใช้คูปอง'}
-                    </Text>
-                  </TouchableOpacity>
-                }
+          <View style={styles.containerPoint}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={icons.ICKPoint}
+                style={{ width: 24, height: 24 }}
               />
-            ) : (
-              <View
+              <Text
                 style={{
-                  borderColor: '#A7AEB5',
-                  backgroundColor: '#F2F3F4',
-                  borderRadius: 10,
-                  paddingHorizontal: 16,
-                  height: 54,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  width: '100%',
+                  fontSize: 18,
+                  marginLeft: 8,
+                  fontFamily: fonts.SarabunMedium,
                 }}>
-                <Text
+                ใช้คะแนนแลกส่วนลด
+              </Text>
+            </View>
+
+            <Switch
+              value={isUsePoint}
+              disabled={
+                myPoint < campaignDetail.minPoint ||
+                calPrice.priceBefore - calPrice.discountPromotion <= 0
+              }
+              color={colors.greenLight}
+              onChange={() => {
+                setIsUsePoint(prev => {
+                  if (!prev) {
+                    setCurrentCount(campaignDetail.minPoint);
+                  } else {
+                    getCalculateByCloseSwitch();
+                    setCurrentCount(0);
+                  }
+                  return !prev;
+                });
+              }}
+            />
+          </View>
+          {isUsePoint && (
+            <>
+              <View style={styles.containerCounter}>
+                <View
                   style={{
-                    fontSize: 20,
-                    fontFamily: fonts.SarabunMedium,
-                    height: Platform.OS === 'ios' ? 'auto' : 56,
-                    color: !disableEdit ? colors.fontBlack : colors.grey40,
-                  }}>
-                  {couponCode}
-                </Text>
-                <TouchableOpacity
-                  onPress={async () => {
-                    if (disableEdit) {
-                      await getCalculatePrice({
-                        farmerPlotId: taskData.farmerPlotId,
-                        couponCode: '',
-                        cropName: taskData.cropName || '',
-                        raiAmount: taskData.farmAreaAmount
-                          ? +taskData.farmAreaAmount
-                          : 0,
-                      });
-                      setTaskData(prev => ({
-                        ...prev,
-                        couponCode: '',
-                      }));
-                      return setDisableEdit(false);
-                    }
-                    if (couponCode.length > 0) {
-                      await checkCoupon();
-                    }
-                  }}
-                  style={{
-                    backgroundColor: colors.orange,
-                    width: 60,
-                    height: 35,
-                    borderRadius: 8,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    zIndex: 1,
+                    flex: 1,
                   }}>
                   <Text
                     style={{
-                      color: colors.white,
-                      fontSize: 18,
-                      fontFamily: fonts.AnuphanMedium,
+                      fontSize: 16,
+                      fontFamily: fonts.SarabunMedium,
                     }}>
-                    แก้ไข
+                    คะแนนที่ใช้แลก
                   </Text>
-                </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: colors.grey60,
+                    }}>{`${campaignDetail.point} คะแนน = ${campaignDetail.amounts} บาท`}</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                  }}>
+                  <Counter
+                    minimum={campaignDetail.minPoint}
+                    maximum={isNaN(maximumPointCal) ? 0 : maximumPointCal}
+                    currentCount={currentCount}
+                    setLoading={setLoading}
+                    setCurrentCount={setCurrentCount}
+                  />
+                </View>
               </View>
-            )}
 
-            {couponCodeError && couponCodeError?.length > 0 && (
+              <View
+                style={{
+                  alignItems: 'center',
+                  marginTop: 8,
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  source={icons.multiArrow}
+                  style={{
+                    width: 18,
+                    height: 18,
+                  }}
+                />
+              </View>
+              <View style={styles.containerPointDiscount}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: fonts.SarabunMedium,
+                  }}>
+                  ส่วนลดที่ได้รับ
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: fonts.SarabunMedium,
+                    color: colors.primary,
+                  }}>{`-${
+                  numberWithCommas(calPrice.discountPoint.toString(), true) || 0
+                } บาท`}</Text>
+              </View>
+            </>
+          )}
+
+          <View style={styles.containerCurrentPoint}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: fonts.SarabunLight,
+              }}>
+              คะแนนสะสมคงเหลือ
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: fonts.SarabunMedium,
+              }}>{`${
+              numberWithCommas(myPoint.toString(), true) || 0
+            } คะแนน`}</Text>
+          </View>
+          {myPoint < campaignDetail.minPoint && (
+            <View
+              style={{
+                marginTop: 8,
+                paddingHorizontal: 16,
+                flexDirection: 'row',
+              }}>
+              <Image
+                source={icons.dangercirclered}
+                style={{
+                  marginTop: 4,
+                  width: 18,
+                  height: 18,
+                  marginRight: 8,
+                }}
+              />
               <Text
                 style={{
                   color: colors.error,
-                  fontSize: 16,
-                  marginTop: 8,
-                  fontFamily: fonts.SarabunLight,
+                  alignSelf: 'flex-start',
+                  paddingRight: 16,
                 }}>
-                {couponCodeError}
+                คะแนนสะสมของท่านไม่ถึงขั้นต่ำ 100 คะแนน
+                ในการเปิดใช้คะแนนแลกส่วนลด
               </Text>
-            )}
-          </View> */}
+            </View>
+          )}
+          {calPrice?.priceBefore - calPrice.discountPromotion <= 0 && (
+            <View
+              style={{
+                marginTop: 8,
+                paddingHorizontal: 16,
+                flexDirection: 'row',
+              }}>
+              <Image
+                source={icons.dangercirclered}
+                style={{
+                  marginTop: 4,
+                  width: 18,
+                  height: 18,
+                  marginRight: 8,
+                }}
+              />
+              <Text
+                style={{
+                  color: colors.error,
+                  alignSelf: 'flex-start',
+                  paddingRight: 24,
+                }}>
+                ไม่สามารถเพิ่มจำนวนคะแนนที่ใช้ได้ เนื่องจาก
+                ค่าบริการรวมหลังหักส่วนลดอื่นๆ เหลือ 0 บาท
+              </Text>
+            </View>
+          )}
         </View>
         <View
           style={{
@@ -939,14 +1077,13 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 {`${numberWithCommas(calPrice.netPrice.toString(), true)} บาท`}
               </Text>
             </View>
-            {couponInfo.name != "" && (
+            {couponInfo.name != '' && (
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   paddingBottom: 16,
-
                 }}>
                 <Text
                   style={{
@@ -970,36 +1107,64 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               </View>
             )}
 
-            {calPrice.discountPromotion !== 0 && <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                paddingBottom: 16,
-
-              }}>
-              <Text
+            {calPrice.discountPromotion !== 0 && (
+              <View
                 style={{
-                  color: colors.greenDark,
-                  fontSize: 18,
-                  fontFamily: fonts.SarabunMedium,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingBottom: 16,
                 }}>
-                ส่วนลดโปรโมชั่น
-              </Text>
-              <Text
+                <Text
+                  style={{
+                    color: colors.greenDark,
+                    fontSize: 18,
+                    fontFamily: fonts.SarabunMedium,
+                  }}>
+                  ส่วนลดโปรโมชั่น
+                </Text>
+                <Text
+                  style={{
+                    color: colors.greenDark,
+                    fontSize: 18,
+                    fontFamily: fonts.SarabunMedium,
+                  }}>
+                  {`-${numberWithCommas(
+                    calPrice.discountPromotion.toString(),
+                    true,
+                  )} บาท`}
+                </Text>
+              </View>
+            )}
+            {isUsePoint && (
+              <View
                 style={{
-                  color: colors.greenDark,
-                  fontSize: 18,
-                  fontFamily: fonts.SarabunMedium,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingBottom: 16,
                 }}>
-                {`-${numberWithCommas(
-                  calPrice.discountPromotion.toString(),
-                  true,
-                )} บาท`}
-              </Text>
-            </View>}
-
-
+                <Text
+                  style={{
+                    color: colors.greenDark,
+                    fontSize: 18,
+                    fontFamily: fonts.SarabunMedium,
+                  }}>
+                  ส่วนลดคะแนน
+                </Text>
+                <Text
+                  style={{
+                    color: colors.greenDark,
+                    fontSize: 18,
+                    fontFamily: fonts.SarabunMedium,
+                  }}>
+                  {`-${numberWithCommas(
+                    calPrice.discountPoint.toString(),
+                    true,
+                  )} บาท`}
+                </Text>
+              </View>
+            )}
           </View>
         )}
 
@@ -1009,12 +1174,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             justifyContent: 'space-between',
             paddingHorizontal: 16,
             paddingTop: normalize(16),
-
-
           }}>
           <Text
             style={{
-
               fontSize: 18,
               color: colors.fontBlack,
 
@@ -1038,7 +1200,13 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                   fontFamily: fonts.AnuphanMedium,
                   marginRight: 8,
                 }}>
-                {`${numberWithCommas((couponInfo.name != "" ? couponInfo.netPrice : calPrice.netPrice).toString(), true)} บาท`}
+                {`${numberWithCommas(
+                  (couponInfo.name != ''
+                    ? couponInfo.netPrice
+                    : calPrice.netPrice
+                  ).toString(),
+                  true,
+                )} บาท`}
               </Text>
               <Image
                 source={icons.arrowUpBold}
@@ -1080,68 +1248,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           />
         </View>
       </View>
-      {/* tel footer */}
-      {/* <View
-        style={{
-          backgroundColor: colors.white,
-          paddingTop: 16,
-          height: 120,
 
-          paddingHorizontal: 16,
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: -4,
-          },
-          shadowOpacity: 0.06,
-          shadowRadius: 1.62,
-          elevation: 14,
-        }}>
-        <TouchableOpacity
-          onPress={async () => {
-            const tel = await SheetManager.show('sheet-select-calling');
-            // eslint-disable-next-line no-extra-boolean-cast
-            if (!!tel) {
-              setCurrentTel(tel as string);
-              setShowModalCall(true);
-            } else {
-              setShowModalCall(false);
-            }
-          }}
-          style={{
-            backgroundColor: colors.blueBorder,
-            borderRadius: 8,
-            borderWidth: 1,
-            borderColor: colors.blueBorder,
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: 50,
-            marginTop: 8,
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <Image
-              style={{
-                width: 20,
-                height: 20,
-                marginRight: 16,
-              }}
-              source={icons.callingWhite}
-            />
-            <Text
-              style={{
-                fontFamily: font.AnuphanMedium,
-                color: colors.white,
-                fontSize: 20,
-              }}>
-              โทรหาเจ้าหน้าที่/นักบินโดรน
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View> */}
       <Modal animationType="fade" transparent={true} visible={showModalCall}>
         <View
           style={{
@@ -1262,5 +1369,46 @@ const styles = StyleSheet.create({
     fontFamily: fonts.SarabunLight,
     fontSize: normalize(20),
     color: '#2EC46D',
+  },
+  containerPoint: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+  },
+  containerCounter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: 16,
+    borderWidth: 1,
+    borderColor: colors.yellowBorder,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    backgroundColor: colors.yellowBg,
+    minHeight: 80,
+    marginTop: 16,
+  },
+  containerPointDiscount: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: 16,
+    marginTop: 8,
+    backgroundColor: colors.primaryContainer,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: colors.primary40,
+    borderRadius: 8,
+  },
+  containerCurrentPoint: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: 16,
+    marginTop: 8,
+    backgroundColor: colors.surface,
+    padding: 8,
+    borderRadius: 8,
   },
 });

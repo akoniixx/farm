@@ -131,10 +131,9 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
                           `${item.droner_id}`,
                         );
                         RootNavigation.navigate('Main', {
-                          screen: 'DronerDetail'
-                        })
-                      }}
-                      >
+                          screen: 'DronerDetail',
+                        });
+                      }}>
                       <AllDroner
                         key={index}
                         index={index}

@@ -72,7 +72,9 @@ const FavDronerUsedList: React.FC<data> = ({
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <Text numberOfLines={1} style={styles.title}>{name}</Text>
+                <Text numberOfLines={1} style={styles.title}>
+                  {name}
+                </Text>
                 <View>
                   <View
                     style={{

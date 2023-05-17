@@ -15,15 +15,15 @@ const renderTabBar: React.FC<any> = (props: any) => {
       indicatorStyle={{ backgroundColor: colors.greenLight }}
       style={{ backgroundColor: colors.white }}
       renderLabel={({ route, focused, color }) => {
-        return(
-        <Text
-          style={[
-            styles.label,
-            { color: focused ? colors.greenLight : colors.gray },
-          ]}>
-          {route.title}
-        </Text>
-      )
+        return (
+          <Text
+            style={[
+              styles.label,
+              { color: focused ? colors.greenLight : colors.gray },
+            ]}>
+            {route.title}
+          </Text>
+        );
       }}
     />
   );
@@ -32,7 +32,7 @@ const renderTabBar: React.FC<any> = (props: any) => {
 const PromotionTabNavigator: React.FC<any> = ({}) => {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
-  const [routes]  = useState([
+  const [routes] = useState([
     { key: 'use', title: 'ใช้ได้' },
     { key: 'used', title: 'ใช้แล้ว' },
     { key: 'expired', title: 'หมดอายุ' },

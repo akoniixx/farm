@@ -30,23 +30,17 @@ const SelectDronerCouponModal: React.FC<ModalEntity> = ({
             </TouchableOpacity>
           </View>
           <Text
-            style={[
-              ModalStyle.modalHeader,
-              { paddingBottom: normalize(2) },
-            ]}>
+            style={[ModalStyle.modalHeader, { paddingBottom: normalize(2) }]}>
             ต้องการ
           </Text>
           <Text
-            style={[
-              ModalStyle.modalHeader,
-              { paddingVertical: normalize(2) },
-            ]}>
+            style={[ModalStyle.modalHeader, { paddingVertical: normalize(2) }]}>
             จ้างนักบินโดรนเกษตร
           </Text>
           <Text
             style={[
               ModalStyle.modalHeader,
-              { paddingTop: normalize(2), paddingBottom : normalize(20) },
+              { paddingTop: normalize(2), paddingBottom: normalize(20) },
             ]}>
             รูปแบบไหน?
           </Text>

@@ -29,11 +29,10 @@ const App = () => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
     if (Platform.OS === 'ios') {
-      if(firebase.apps.length === 0){
+      if (firebase.apps.length === 0) {
         firebaseInitialize();
-      }
-      else{
-        firebase.app()
+      } else {
+        firebase.app();
       }
       registerDeviceForRemoteMessages();
     }
@@ -49,18 +48,18 @@ const App = () => {
   return (
     <>
       <RecoilRoot>
-      <NavigationContainer ref={navigationRef}>
-        <PaperProvider>
-          <AuthProvider>
-            <AutoBookingProvider>
-              <SheetProvider>
-                <AppNavigator />
-              </SheetProvider>
-            </AutoBookingProvider>
-          </AuthProvider>
-        </PaperProvider>
-        <Toast config={toastConfig} />
-      </NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
+          <PaperProvider>
+            <AuthProvider>
+              <AutoBookingProvider>
+                <SheetProvider>
+                  <AppNavigator />
+                </SheetProvider>
+              </AutoBookingProvider>
+            </AuthProvider>
+          </PaperProvider>
+          <Toast config={toastConfig} />
+        </NavigationContainer>
       </RecoilRoot>
     </>
   );
