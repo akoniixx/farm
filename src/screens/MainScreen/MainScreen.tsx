@@ -40,7 +40,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
-  const currentPoint = 123000;
+  const currentPoint = 123450;
   const [profile, setProfile] = useState({
     name: '',
     lastname: '',
@@ -469,7 +469,7 @@ const styles = StyleSheet.create({
   headCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: normalize(23),
+    paddingHorizontal: 16,
     paddingTop: normalize(5),
   },
   activeContainer: {

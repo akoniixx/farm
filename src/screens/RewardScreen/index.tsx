@@ -94,7 +94,7 @@ export default function RewardScreen({navigation}: any) {
             }}>
             รีวอร์ดทั้งหมด
           </Text>
-          <ListReward />
+          <ListReward navigation={navigation} />
         </View>
       </View>
     </SafeAreaView>

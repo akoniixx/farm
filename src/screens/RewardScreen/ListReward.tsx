@@ -6,6 +6,7 @@ import {
   Image,
   ImageBackground,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useMemo} from 'react';
 import mockImage from '../../assets/mockImage';
@@ -21,7 +22,7 @@ interface RewardListType {
   point: number;
   endDate?: string;
 }
-export default function ListReward() {
+export default function ListReward({navigation}: {navigation: any}) {
   const mockData: RewardListType[] = [
     {
       id: '1',
@@ -55,7 +56,11 @@ export default function ListReward() {
   const renderItem = useMemo(() => {
     return ({item}: {item: RewardListType}) => {
       return (
-        <View style={[styles.card]}>
+        <TouchableOpacity
+          style={[styles.card]}
+          onPress={() => {
+            navigation.navigate('RewardDetailScreen', {id: item.id});
+          }}>
           <ImageBackground
             style={{
               width: '100%',
@@ -105,10 +110,10 @@ export default function ListReward() {
               </Text>
             )}
           </View>
-        </View>
+        </TouchableOpacity>
       );
     };
-  }, []);
+  }, [navigation]);
   return (
     <FlatList
       style={{marginTop: 16}}

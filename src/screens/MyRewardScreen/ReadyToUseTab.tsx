@@ -4,6 +4,8 @@ import moment from 'moment';
 import {colors} from '../../assets';
 import mockImage from '../../assets/mockImage';
 import fonts from '../../assets/fonts';
+import dayjs from 'dayjs';
+import {momentExtend} from '../../function/utility';
 
 export default function ReadyToUseTab() {
   const mockData = useMemo(() => {
@@ -64,10 +66,38 @@ export default function ReadyToUseTab() {
               <Text
                 style={{
                   fontSize: 14,
+                  marginTop: 4,
+
                   fontFamily: fonts.light,
                 }}>
-                {` ${moment(item.date).format('DD MMM')}`}
+                {`แลกเมื่อ ${momentExtend.toBuddhistYear(
+                  item.date,
+                  'DD MMM YYYY HH:mm',
+                )}`}
               </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <View
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: 3,
+                    marginRight: 4,
+                    backgroundColor: colors.orange,
+                  }}
+                />
+                <Text
+                  style={{
+                    marginTop: 4,
+                    fontSize: 14,
+                    fontFamily: fonts.light,
+                  }}>
+                  พร้อมใช้
+                </Text>
+              </View>
             </View>
           </View>
         );

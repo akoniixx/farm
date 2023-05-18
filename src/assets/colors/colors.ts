@@ -2,6 +2,7 @@ export default {
   orange: '#FB8705', // primary
   darkOrange: '#E85737', // secondary
   decreasePoint: '#EF4E4E',
+  lightOrange: '#FFF7F0',
   fontBlack: '#1F2933',
   gray: '#6B7580',
   grey2: '#9BA1A8',

@@ -27,6 +27,7 @@ import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
 import IncomeScreen from '../screens/IncomeScreen';
 import HistoryRewardScreen from '../screens/HistoryRewardScreen';
 import MyRewardScreen from '../screens/MyRewardScreen';
+import RewardDetailScreen from '../screens/RewardDetailScreen';
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
 export type StackParamList = {
@@ -52,6 +53,10 @@ export type StackParamList = {
   IncomeScreen: undefined;
   HistoryRewardScreen: undefined;
   MyRewardScreen: undefined;
+  RewardDetailScreen: {
+    navigation: StackNavigationHelpers;
+    id: string;
+  };
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
   // };
@@ -98,6 +103,7 @@ const MainNavigator: React.FC = () => {
         component={HistoryRewardScreen}
       />
       <Stack.Screen name="MyRewardScreen" component={MyRewardScreen} />
+      <Stack.Screen name="RewardDetailScreen" component={RewardDetailScreen} />
       {/* <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} /> */}
     </Stack.Navigator>
   );
