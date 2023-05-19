@@ -6,7 +6,6 @@ import {
   View,
   FlatList,
   RefreshControl,
-  TouchableOpacity,
 } from 'react-native';
 import { colors, font, icons } from '../../assets';
 import { normalize, width } from '../../functions/Normalize';
@@ -19,36 +18,35 @@ import {
 } from '../../datasource/HistoryPointDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
-import { momentExtend } from '../../utils/moment-buddha-year';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
   const [dataPoint, setDataPoint] = useState<any>();
-  const [dataAllPoint, setDataAllPoint] = useState<any>();
+  const [dataAllPoint, setDataAllPoint] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
-  const [row, setRow] = useState(10);
+  const [total, setTotal] = useState(0);
+  const row = 10;
   const [current, setCurrent] = useState(1);
   useEffect(() => {
     getPointFarmer();
     getAllPoint();
-  }, [current, row]);
+  }, []);
   const getPointFarmer = async () => {
-    setLoading(true);
     const farmer_id: any = await AsyncStorage.getItem('farmer_id');
     await historyPoint
       .getPoint(farmer_id)
       .then(res => {
         setDataPoint(res.balance);
       })
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false));
+      .catch(err => console.log(err));
   };
   const getAllPoint = async () => {
     setLoading(true);
     const farmer_id: any = await AsyncStorage.getItem('farmer_id');
     await getAllHistoryPoint(farmer_id, 1, row)
       .then(res => {
+        setTotal(res.count);
         setDataAllPoint(res.history);
       })
       .catch(err => console.log(err))
@@ -62,26 +60,31 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
     }, 1000);
   }, []);
   const loadMoreData = async () => {
-    setCurrent(current + 1);
-    setRow(row + 10);
-    const farmer_id: any = await AsyncStorage.getItem('farmer_id');
-    await getAllHistoryPoint(farmer_id, current, row)
-      .then(res => {
-        if (res.history != 0) {
-          setDataAllPoint((data: any) => {
-            return data.concat(dataAllPoint);
-          });
-        } else {
-          return setCurrent(current);
-        }
-      })
-      .catch(err => console.log(err));
+    if (dataAllPoint.length >= total) {
+      return;
+    }
+    try {
+      setLoading(true);
+      const farmer_id: any = await AsyncStorage.getItem('farmer_id');
+      await getAllHistoryPoint(farmer_id, current, row)
+        .then(res => {
+          setDataAllPoint([...dataAllPoint, ...res.history]);
+          setLoading(false);
+        })
+        .catch(err => console.log(err));
+      setCurrent(current + 1);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <View
       style={{
         backgroundColor: colors.white,
+        flex: 1,
       }}>
       <View
         style={{
@@ -95,7 +98,7 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
           }}>
           <View>
             <CustomHeader
-              title="คะแนนของฉัน"
+              title="แต้มของฉัน"
               titleColor="white"
               showBackBtn
               onPressBack={() => navigation.goBack()}
@@ -140,7 +143,7 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
                 marginLeft: normalize(15),
                 marginRight: normalize(5),
               }}>
-              {formatNumberWithComma(dataPoint)} คะแนน
+              {formatNumberWithComma(dataPoint || '0')} แต้ม
             </Text>
           </View>
         </View>
@@ -160,7 +163,7 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
               fontSize: normalize(20),
               color: colors.fontBlack,
             }}>
-            ประวัติการได้รับ/ใช้คะแนน
+            ประวัติการได้รับ/ใช้แต้ม
           </Text>
         </View>
       </View>
@@ -201,8 +204,8 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
             style={{ width: normalize(130), height: normalize(120) }}
           />
           <View style={{ top: normalize(20) }}>
-            <Text style={styles.textEmpty}>ไม่มีคะแนนที่ได้รับ</Text>
-            <Text style={styles.textEmpty}>และการที่ใช้คะแนน</Text>
+            <Text style={styles.textEmpty}>ไม่มีแต้มที่ได้รับ</Text>
+            <Text style={styles.textEmpty}>และการที่ใช้แต้ม</Text>
           </View>
         </View>
       )}

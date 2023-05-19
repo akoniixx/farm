@@ -420,7 +420,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             <TouchableOpacity
               onPress={() => {
                 mixpanel.track('Tab edit date time');
-                navigation.navigate('SelectDateScreen');
+                navigation.navigate('SelectDateScreen', {
+                  isSelectDroner,
+                });
               }}
               style={{
                 flexDirection: 'row',
@@ -475,7 +477,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             <TouchableOpacity
               onPress={() => {
                 mixpanel.track('Tab edit select plot');
-                navigation.navigate('SelectPlotScreen');
+                navigation.navigate('SelectPlotScreen', {
+                  isSelectDroner,
+                });
               }}
               style={{
                 flexDirection: 'row',
@@ -540,7 +544,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             <TouchableOpacity
               onPress={() => {
                 mixpanel.track('Tab edit select target');
-                navigation.navigate('SelectTarget');
+                navigation.navigate('SelectTarget', {
+                  isSelectDroner,
+                });
               }}
               style={{
                 flexDirection: 'row',
@@ -838,7 +844,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                   marginLeft: 8,
                   fontFamily: fonts.SarabunMedium,
                 }}>
-                ใช้คะแนนแลกส่วนลด
+                ใช้แต้มแลกส่วนลด
               </Text>
             </View>
 
@@ -874,13 +880,13 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                       fontSize: 16,
                       fontFamily: fonts.SarabunMedium,
                     }}>
-                    คะแนนที่ใช้แลก
+                    แต้มที่ใช้แลก
                   </Text>
                   <Text
                     style={{
                       fontSize: 16,
                       color: colors.grey60,
-                    }}>{`${campaignDetail.point} คะแนน = ${campaignDetail.amounts} บาท`}</Text>
+                    }}>{`${campaignDetail.point} แต้ม = ${campaignDetail.amounts} บาท`}</Text>
                 </View>
                 <View
                   style={{
@@ -936,7 +942,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 fontSize: 16,
                 fontFamily: fonts.SarabunLight,
               }}>
-              คะแนนสะสมคงเหลือ
+              แต้มสะสมคงเหลือ
             </Text>
             <Text
               style={{
@@ -944,7 +950,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 fontFamily: fonts.SarabunMedium,
               }}>{`${
               numberWithCommas(myPoint.toString(), true) || 0
-            } คะแนน`}</Text>
+            } แต้ม`}</Text>
           </View>
           {myPoint < campaignDetail.minPoint && (
             <View
@@ -968,8 +974,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                   alignSelf: 'flex-start',
                   paddingRight: 16,
                 }}>
-                คะแนนสะสมของท่านไม่ถึงขั้นต่ำ 100 คะแนน
-                ในการเปิดใช้คะแนนแลกส่วนลด
+                แต้มสะสมของท่านไม่ถึงขั้นต่ำ 100 แต้ม ในการเปิดใช้แต้มแลกส่วนลด
               </Text>
             </View>
           )}
@@ -995,7 +1000,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                   alignSelf: 'flex-start',
                   paddingRight: 24,
                 }}>
-                ไม่สามารถเพิ่มจำนวนคะแนนที่ใช้ได้ เนื่องจาก
+                ไม่สามารถเพิ่มจำนวนแต้มที่ใช้ได้ เนื่องจาก
                 ค่าบริการรวมหลังหักส่วนลดอื่นๆ เหลือ 0 บาท
               </Text>
             </View>
@@ -1150,7 +1155,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                     fontSize: 18,
                     fontFamily: fonts.SarabunMedium,
                   }}>
-                  ส่วนลดคะแนน
+                  ส่วนลดแต้ม
                 </Text>
                 <Text
                   style={{

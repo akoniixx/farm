@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React, { useMemo, useReducer, useState } from 'react';
 import {
   Image,
   Keyboard,
@@ -32,6 +32,7 @@ import { MyJobDatasource } from '../../datasource/MyJobDatasource';
 import { normalize } from '../../functions/Normalize';
 import { getStatusToText } from '../../functions/utility';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
+import Banner from '../../components/Banner/Banner';
 
 const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -46,6 +47,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const starImgFilled = icons.starfill;
   const starImgCorner = icons.starCorner;
+
   const getLabelBotton = (status: string) => {
     switch (status) {
       case 'IN_PROGRESS':
@@ -86,6 +88,13 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
   const checkReview = () => {
     return pilotEtiquette == 0 || punctuality == 0 || sprayExpertise == 0;
   };
+  const isShowGetPoint = useMemo(() => {
+    const isShow =
+      task.status === 'WAIT_START' ||
+      task.status === 'IN_PROGRESS' ||
+      task.status === 'WAIT_REVIEW';
+    return isShow;
+  }, [task.status]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -133,6 +142,11 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             </Text>
           </View>
         </View>
+        {isShowGetPoint && (
+          <>
+            <Banner />
+          </>
+        )}
         <View style={{ padding: normalize(16), backgroundColor: 'white' }}>
           <View
             style={{
@@ -267,7 +281,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               <Text
                 style={{
                   fontSize: normalize(18),
-                  fontFamily: font.AnuphanBold,
+                  fontFamily: font.AnuphanMedium,
                   color: '#2EC46D',
                 }}>
                 ส่วนลดคูปอง
@@ -275,7 +289,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               <Text
                 style={{
                   fontSize: normalize(18),
-                  fontFamily: font.AnuphanBold,
+                  fontFamily: font.AnuphanMedium,
                   color: '#2EC46D',
                 }}>
                 -{task.discount_coupon} บาท
@@ -293,7 +307,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               <Text
                 style={{
                   fontSize: normalize(18),
-                  fontFamily: font.AnuphanBold,
+                  fontFamily: font.AnuphanMedium,
                   color: '#2EC46D',
                 }}>
                 ส่วนลดโปรโมชั่น
@@ -301,10 +315,35 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               <Text
                 style={{
                   fontSize: normalize(18),
-                  fontFamily: font.AnuphanBold,
+                  fontFamily: font.AnuphanMedium,
                   color: '#2EC46D',
                 }}>
                 -{task.discount_promotion} บาท
+              </Text>
+            </View>
+          )}
+          {+task?.discount_campaign_point > 0 && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <Text
+                style={{
+                  fontSize: normalize(18),
+                  fontFamily: font.AnuphanMedium,
+                  color: '#2EC46D',
+                }}>
+                ส่วนลดคะแนน
+              </Text>
+              <Text
+                style={{
+                  fontSize: normalize(18),
+                  fontFamily: font.AnuphanMedium,
+                  color: '#2EC46D',
+                }}>
+                -{task.discount_campaign_point} บาท
               </Text>
             </View>
           )}
@@ -314,7 +353,8 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               borderTopWidth: StyleSheet.hairlineWidth,
               borderColor: colors.disable,
               marginVertical: normalize(20),
-            }}></View>
+            }}
+          />
 
           <View
             style={{
