@@ -29,7 +29,8 @@ export const HistoryPoint: React.FC<guruData> = ({
           paddingVertical: 0.5,
           width: '95%',
           alignSelf: 'center',
-        }}/>
+        }}
+      />
       <View
         style={{
           flexDirection: 'row',
@@ -46,21 +47,27 @@ export const HistoryPoint: React.FC<guruData> = ({
           <Text style={styles.textDate}>{taskNo}</Text>
         </View>
         {action === 'INCREASE' ? (
-          <View>
+          <View
+            style={{
+              alignItems: 'flex-end',
+            }}>
             <Text style={styles.positive}>{`${formatNumberWithComma(
               point,
             )} คะแนน`}</Text>
             <Text style={styles.textDate}>
-              {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm น.`)}
+              {momentExtend.toBuddhistYear(date, `DD MMM YYYY HH:mm น.`)}
             </Text>
           </View>
         ) : (
-          <View>
+          <View
+            style={{
+              alignItems: 'flex-end',
+            }}>
             <Text style={styles.negative}>{`- ${formatNumberWithComma(
               point,
-            )} คะแนน`}</Text>
+            )} แต้ม`}</Text>
             <Text style={styles.textDate}>
-              {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm น.`)}
+              {momentExtend.toBuddhistYear(date, `DD MMM YYYY HH:mm น.`)}
             </Text>
           </View>
         )}
@@ -94,6 +101,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
     fontFamily: font.SarabunBold,
     color: colors.greenLight,
+
     lineHeight: 30,
   },
   negative: {

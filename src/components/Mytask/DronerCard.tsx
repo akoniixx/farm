@@ -57,5 +57,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.SarabunMedium,
     fontSize: normalize(18),
     color: colors.fontBlack,
+    lineHeight: 30,
   },
 });

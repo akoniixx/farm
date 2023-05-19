@@ -4,7 +4,7 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import { colors, font, icons } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
-import { getStatusToText } from '../../functions/utility';
+import { getStatusToText, numberWithCommas } from '../../functions/utility';
 import { DronerCard } from './DronerCard';
 import { WaittingCard } from './WaitingCard';
 
@@ -80,7 +80,9 @@ export const CardTask: React.FC<taskListProps> = ({ task }) => {
           </Text>
         </View>
         <View>
-          <Text style={styles.price}>{task.total_price + ' ' + 'บาท'}</Text>
+          <Text style={styles.price}>
+            {numberWithCommas(task.total_price, true) + ' ' + 'บาท'}
+          </Text>
         </View>
       </View>
       <View

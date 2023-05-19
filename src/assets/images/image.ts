@@ -45,4 +45,5 @@ export default {
   removecoupon: require('./removecoupon.png'),
   substracttop: require('./substracttop.png'),
   substractbottom: require('./subtractbottom.png'),
+  bgGetPoint: require('./bgGetPoint.png'),
 };

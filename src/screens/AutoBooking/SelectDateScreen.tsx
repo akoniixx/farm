@@ -29,7 +29,6 @@ import HeadDronerCardForCreatTask from '../../components/HeadDronerCardForCreatT
 const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner;
   const profile = route.params.profile;
-  const windowWidth = Dimensions.get('window').width;
   const {
     state: { taskData },
     autoBookingContext: { setTaskData, setPlotDisable },
