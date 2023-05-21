@@ -24,6 +24,7 @@ import UploadDronerLicenseScreen from '../screens/ProfileScreen/UploadDocument/U
 import ServiceArea from '../screens/ProfileScreen/ServiceArea';
 import AllGuruScreen from '../screens/GuruScreen/AllScreen';
 import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
+import PointHistoryScreen from '../screens/PointScreen/PointHistoryScreen';
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
 export type StackParamList = {
@@ -46,6 +47,7 @@ export type StackParamList = {
   ServiceArea : any;
   AllGuruScreen:any;
   DetailGuruScreen:any;
+  PointHistoryScreen:any;
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
   // };
@@ -80,6 +82,7 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="ServiceArea" component={ServiceArea} />
       <Stack.Screen name='AllGuruScreen' component={AllGuruScreen} />
       <Stack.Screen name='DetailGuruScreen' component={DetailGuruScreen} />
+      <Stack.Screen name='PointHistoryScreen' component={PointHistoryScreen} />
       {/* <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} /> */}
     </Stack.Navigator>
   );
