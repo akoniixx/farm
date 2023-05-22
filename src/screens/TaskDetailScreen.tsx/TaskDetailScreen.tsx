@@ -297,11 +297,14 @@ const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                 </View>
               </View>
             ) : null}
-            
-            <Banner />
+            {
+              data.status !== 'DONE' ? <Banner /> :
+                null
+            }
 
-            <View style={[styles.taskMenu,{marginVertical:0}]}>
-              
+
+            <View style={[styles.taskMenu, { marginVertical: 0 }]}>
+
               <View style={styles.listTile}>
                 <Text
                   style={{
@@ -346,7 +349,7 @@ const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                     color: '#2EC66E',
                     fontSize: normalize(17)
                   }}>
-                  ฿  {numberWithCommas(calTotalPrice(data.price,data.revenuePromotion))}
+                  ฿  {numberWithCommas(calTotalPrice(data.price, data.revenuePromotion))}
                 </Text>
               </View>
               <View
@@ -551,7 +554,7 @@ const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                 ]}>
                 <Text style={styles.fontGray}>ค่าจ้าง</Text>
                 <Text style={styles.fontGray}>
-                {numberWithCommas(calTotalPrice(data.price,data.revenuePromotion))} ฿
+                  {numberWithCommas(calTotalPrice(data.price, data.revenuePromotion))} ฿
                 </Text>
               </View>
               <View
@@ -592,7 +595,7 @@ const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                   ยอดรายได้รวม
                 </Text>
                 <Text style={[styles.fontGray, { color: 'black' }]}>
-                {numberWithCommas(calTotalPrice(data.price,data.revenuePromotion))} ฿
+                  {numberWithCommas(calTotalPrice(data.price, data.revenuePromotion))} ฿
                 </Text>
               </View>
 
@@ -619,14 +622,14 @@ const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
 
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text>จากบริษัท</Text>
-                    <Text>{numberWithCommas(calTotalPromotion(data?.discountCoupon, data?.discountPromotion,data?.revenuePromotion))} ฿</Text>
+                    <Text>{numberWithCommas(calTotalPromotion(data?.discountCoupon, data?.discountPromotion, data?.revenuePromotion))} ฿</Text>
                   </View>
-                  <View style={{width:'70%'}}> 
-                  <Text>หลังจากงานเสร็จสิ้น ท่านจะได้รับเงิน
-                    ภายใน 1-2 วันทำการ</Text>
-                  <View>
-                  </View>
-                
+                  <View style={{ width: '70%' }}>
+                    <Text>หลังจากงานเสร็จสิ้น ท่านจะได้รับเงิน
+                      ภายใน 1-2 วันทำการ</Text>
+                    <View>
+                    </View>
+
                   </View>
                 </View>
               </View>
@@ -1084,7 +1087,7 @@ const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
           />
         </View>
       </CModal>
-      <CModal isVisible={showModalStartTask}  backdropOpacity={0.2}>
+      <CModal isVisible={showModalStartTask} backdropOpacity={0.2}>
         <View
           style={{
             backgroundColor: 'white',
