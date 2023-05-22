@@ -622,7 +622,7 @@ const TaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
 
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text>จากบริษัท</Text>
-                    <Text>{numberWithCommas(calTotalPromotion(data?.discountCoupon, data?.discountPromotion, data?.revenuePromotion))} ฿</Text>
+                    <Text>{numberWithCommas(calTotalPromotion(data?.discountCoupon, data?.discountPromotion, data?.revenuePromotion,data?.discountCampaignPoint))} ฿</Text>
                   </View>
                   <View style={{ width: '70%' }}>
                     <Text>หลังจากงานเสร็จสิ้น ท่านจะได้รับเงิน

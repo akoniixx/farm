@@ -23,7 +23,7 @@ const UsedPointScreen: React.FC<any> = ({ navigation, route }) => {
         const droner_id: any = await AsyncStorage.getItem('droner_id');
         await getAllHistoryPoint(droner_id, 1, row)
             .then(res => {
-                console.log(res)
+              
                 setDataAllPoint(res.history);
             })
             .catch(err => console.log(err))
@@ -67,7 +67,7 @@ const UsedPointScreen: React.FC<any> = ({ navigation, route }) => {
                         refreshControl={
                             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                         }
-                        onEndReached={loadMoreData}
+                       /*  onEndReached={loadMoreData} */
                         keyExtractor={(item, index) => index.toString()}
                         ListFooterComponent={<View style={{ height: normalize(450) }} />}
                         data={dataAllPoint}
@@ -77,6 +77,7 @@ const UsedPointScreen: React.FC<any> = ({ navigation, route }) => {
                                 date={item.createAt}
                                 point={item.amountValue}
                                 action={item.action}
+                                campaignName={item.campaignName}
                                 taskId={item.taskId}
                                 taskNo={item.taskNo != null ? item.taskNo : ''}
                             />

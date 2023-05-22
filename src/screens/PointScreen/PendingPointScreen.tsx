@@ -14,14 +14,16 @@ const PendingPointScreen: React.FC<any> = ({ navigation, route }) => {
     const [refreshing, setRefreshing] = useState(false);
     const [row, setRow] = useState(10);
     const [current, setCurrent] = useState(1);
+    const [total, setTotal] = useState(0);
     useEffect(() => {
         getPendingPoint()
-    }, [current, row]);
+    }, []);
    
 
 const getPendingPoint =async () => {
     setLoading(true)
     const droner_id: any = await AsyncStorage.getItem('droner_id');
+    console.log(droner_id)
     await getAllPendingPoint(droner_id)
     .then(res => {
       setDataAllPoint(res)
@@ -38,21 +40,25 @@ const getPendingPoint =async () => {
         }, 1000);
     }, []);
     const loadMoreData = async () => {
-        setCurrent(current + 1);
-        setRow(row + 10);
-        const droner_id: any = await AsyncStorage.getItem('droner_id');
-        await getAllHistoryPoint(droner_id, current, row)
-            .then(res => {
-                if (res.history != 0) {
-                    setDataAllPoint((data: any) => {
-                        return data.concat(dataAllPoint);
-                    });
-                } else {
-                    return setCurrent(current);
-                }
-            })
-            .catch(err => console.log(err));
-    };
+        if (dataAllPoint.length >= total) {
+            return;
+          }
+          try {
+            setLoading(true);
+            const droner_id: any = await AsyncStorage.getItem('droner_id');
+            await getAllHistoryPoint(droner_id, current, row)
+              .then(res => {
+                setDataAllPoint([...dataAllPoint, ...res.history]);
+                setLoading(false);
+              })
+              .catch(err => console.log(err));
+            setCurrent(current + 1);
+          } catch (error) {
+            console.log(error);
+          } finally {
+            setLoading(false);
+          }
+        }
     return (
         <View>
             <View style={{alignItems:'center',paddingVertical:normalize(10)}}>
