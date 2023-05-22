@@ -17,11 +17,13 @@ import {numberWithCommas, socket} from '../../function/utility';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
 import Toast from 'react-native-toast-message';
-import {responsiveWidth} from '../../function/responsive';
+import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
+import fonts from '../../assets/fonts';
 import {mixpanel} from '../../../mixpanel';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {CardGuruKaset} from '../../components/Carousel/CardGuruKaset';
 import {GuruKaset} from '../../datasource/GuruDatasource';
+import {historyPoint} from '../../datasource/HistoryPointDatasource';
 import LinearGradient from 'react-native-linear-gradient';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
@@ -48,6 +50,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const [index, setIndex] = React.useState(0);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
+  const [dataPoint, setDataPoint] = useState<any>();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -72,8 +75,20 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   useEffect(() => {
     getProfile();
     openSocket();
+    getPointDroner();
   }, []);
 
+  const getPointDroner = async () => {
+    setLoading(true);
+    const droner_id: any = await AsyncStorage.getItem('droner_id');
+    await historyPoint
+      .getPoint(droner_id)
+      .then(res => {
+        setDataPoint(res.balance);
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
+  };
   const openSocket = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     await socket.connect();
@@ -213,7 +228,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 <Text style={styles.activeFont}>เปิดรับงาน</Text>
               </View>
             </View>
-            <View>
+            {/*  <View>
               <TouchableOpacity
                 style={{
                   width: responsiveWidth(100),
@@ -255,6 +270,41 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                       </Text>
                     </View>
                   </View>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View> */}
+            <View style={{marginTop: normalize(5)}}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('PointHistoryScreen');
+                }}>
+                <LinearGradient
+                  colors={['#FA7052', '#F89132']}
+                  start={{x: 0, y: 0.5}}
+                  end={{x: 1, y: 0.5}}
+                  style={{
+                    paddingHorizontal: normalize(10),
+                    paddingVertical: normalize(5),
+                    borderRadius: 30,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={icons.point}
+                    style={{
+                      width: normalize(21),
+                      height: normalize(21),
+                      marginRight: 5,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 14,
+                      fontFamily: font.bold,
+                    }}>
+                    {numberWithCommas(dataPoint, true)}
+                  </Text>
                 </LinearGradient>
               </TouchableOpacity>
             </View>

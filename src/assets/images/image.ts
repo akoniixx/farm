@@ -26,4 +26,6 @@ export default {
   lottiedroner: require('./lottiedroner.json'),
   emptyareaservice: require('./emptyareaservice.png'),
   areaaround: require('./areaaround.png'),
+  pointEmpty: require('./pointEmpty.png'),
+  bgGetPoint: require('./bgGetPoint.png'),
 };

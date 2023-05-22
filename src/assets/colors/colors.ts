@@ -24,4 +24,6 @@ export default {
   inkLight: '#4F5E71',
   inputText: '#2B2B2B',
   fontGrey: '#4A5158',
+  Surface: '#F6F7F9',
+  redPrice: '#EF4E4E',
 };

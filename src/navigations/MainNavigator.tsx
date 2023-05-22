@@ -30,6 +30,8 @@ import MyRewardScreen from '../screens/MyRewardScreen';
 import RewardDetailScreen from '../screens/RewardDetailScreen';
 import ExchangeAddressScreen from '../screens/ExchangeAddressScreen';
 import CustomAddressScreen from '../screens/CustomAddressScreen';
+import PointHistoryScreen from '../screens/PointScreen/PointHistoryScreen';
+
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
 export type StackParamList = {
@@ -52,6 +54,8 @@ export type StackParamList = {
   ServiceArea: any;
   AllGuruScreen: any;
   DetailGuruScreen: any;
+  PointHistoryScreen: any;
+
   IncomeScreen: undefined;
   HistoryRewardScreen: undefined;
   MyRewardScreen: undefined;
@@ -104,6 +108,8 @@ const MainNavigator: React.FC = () => {
       />
       <Stack.Screen name="ServiceArea" component={ServiceArea} />
       <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
+      <Stack.Screen name="PointHistoryScreen" component={PointHistoryScreen} />
+
       <Stack.Screen name="DetailGuruScreen" component={DetailGuruScreen} />
       <Stack.Screen name="IncomeScreen" component={IncomeScreen} />
       <Stack.Screen

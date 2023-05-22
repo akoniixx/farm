@@ -42,6 +42,7 @@ import * as RootNavigation from '../../navigations/RootNavigation';
 import ExtendModal from '../../components/Modal/ExtendModal';
 import StatusExtend from './StatusExtend';
 import {mixpanel} from '../../../mixpanel';
+import Banner from '../../components/Banner/GetPointBanner';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
@@ -301,7 +302,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 </View>
               </View>
             ) : null}
-            <View style={styles.taskMenu}>
+            {data.status !== 'DONE' ? <Banner /> : null}
+
+            <View style={[styles.taskMenu, {marginVertical: 0}]}>
               <View style={styles.listTile}>
                 <Text
                   style={{
