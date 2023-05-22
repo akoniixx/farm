@@ -8,7 +8,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { colors, font, icons } from '../../assets';
-import { normalize, width } from '../../functions/Normalize';
+import { normalize } from '../../functions/Normalize';
 import image from '../../assets/images/image';
 import CustomHeader from '../../components/CustomHeader';
 import { HistoryPoint } from '../../components/Point/HistoryPoint';

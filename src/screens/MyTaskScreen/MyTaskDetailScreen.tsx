@@ -1,6 +1,7 @@
-import React, { useMemo, useReducer, useState } from 'react';
+import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import {
   Image,
+  ImageBackground,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
@@ -30,12 +31,25 @@ import {
 } from '../../components/TaskDetail/TaskDetail';
 import { MyJobDatasource } from '../../datasource/MyJobDatasource';
 import { normalize } from '../../functions/Normalize';
-import { getStatusToText } from '../../functions/utility';
+import { getStatusToText, numberWithCommas } from '../../functions/utility';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 import Banner from '../../components/Banner/Banner';
 
+interface Campaign {
+  id: string;
+  taskId: string;
+  campaignId: string;
+  campaignName: string;
+  application: string;
+  dronerId: string | null;
+  farmerId: string | null;
+  pointPerRai: number;
+  receivePoint: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
 const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
-  const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [openReview, setOpenReview] = useState<boolean>(false);
   const [toggleModalSuccess, setToggleModalSuccess] = useState<boolean>(false);
   const task = route.params.task;
@@ -45,6 +59,8 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
   const [sprayExpertise, setSprayExpertise] = useState<number>(0);
   const [commentReview, setCommentReview] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [showGetPoint, setShowGetPoint] = useState<boolean>(false);
+  const [taskPointDetail, setTaskPointDetail] = useState<Campaign | null>(null);
   const starImgFilled = icons.starfill;
   const starImgCorner = icons.starCorner;
 
@@ -60,6 +76,17 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
         return 'กลับหน้าหลัก';
     }
   };
+  const getReceivePoint = async () => {
+    const result: Campaign[] = await MyJobDatasource.getReceivePoint(
+      task.task_id,
+    );
+    if (result) {
+      const findFarmer = result.find(el => el.application === 'FARMER');
+      if (findFarmer) {
+        setTaskPointDetail(findFarmer);
+      }
+    }
+  };
   const submitReview = () => {
     setLoading(true);
     MyJobDatasource.submitReview(
@@ -73,15 +100,21 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
     )
       .then(res => {
         setOpenReview(false);
+
         setTimeout(() => {
           setToggleModalSuccess(true);
         }, 500);
+        getReceivePoint();
       })
       .finally(() => setLoading(false));
   };
 
   const submitReviewSuccess = () => {
     setToggleModalSuccess(false);
+    setShowGetPoint(true);
+  };
+  const onCloseGetPoint = () => {
+    setShowGetPoint(false);
     navigation.goBack();
   };
 
@@ -96,6 +129,15 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
     return isShow;
   }, [task.status]);
 
+  const { isDone, isWaitReview } = useMemo(() => {
+    const isWaitReview = task.status === 'WAIT_REVIEW';
+    const isDone = task.status === 'DONE';
+    return {
+      isDone,
+      isWaitReview,
+    };
+  }, [task.status]);
+
   return (
     <View style={{ flex: 1 }}>
       <CustomHeader
@@ -107,41 +149,81 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         horizontal={false}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingHorizontal: normalize(10),
-            paddingVertical: normalize(10),
-          }}>
-          <Text
+        {isDone || isWaitReview ? (
+          <ImageBackground
+            source={isDone ? image.bgDone : image.bgWaitReview}
             style={{
-              fontFamily: font.AnuphanMedium,
-              color: colors.gray,
-              fontSize: normalize(14),
-            }}>
-            {'#' + task.task_no}
-          </Text>
-          <View
-            style={{
-              backgroundColor: getStatusToText(task.status)?.bgcolor,
-              borderColor: getStatusToText(task.status)?.border,
-              borderWidth: 1,
-              borderRadius: 18,
-              paddingVertical: normalize(5),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
               paddingHorizontal: normalize(10),
+              paddingVertical: normalize(10),
             }}>
             <Text
               style={{
-                fontFamily: fonts.AnuphanMedium,
-                fontSize: normalize(16),
-                color: getStatusToText(task.status)?.color,
+                fontFamily: font.AnuphanMedium,
+                color: colors.white,
+                fontSize: normalize(14),
               }}>
-              {getStatusToText(task.status)?.label}
+              {'#' + task.task_no}
             </Text>
+            <View
+              style={{
+                backgroundColor: getStatusToText(task.status)?.bgcolor,
+                borderColor: getStatusToText(task.status)?.border,
+                borderWidth: 1,
+                borderRadius: 18,
+                paddingVertical: normalize(5),
+                paddingHorizontal: normalize(10),
+              }}>
+              <Text
+                style={{
+                  fontFamily: fonts.AnuphanMedium,
+                  fontSize: normalize(16),
+                  color: getStatusToText(task.status)?.color,
+                }}>
+                {getStatusToText(task.status)?.label}
+              </Text>
+            </View>
+          </ImageBackground>
+        ) : (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: normalize(10),
+              paddingVertical: normalize(10),
+            }}>
+            <Text
+              style={{
+                fontFamily: font.AnuphanMedium,
+                color: colors.gray,
+                fontSize: normalize(14),
+              }}>
+              {'#' + task.task_no}
+            </Text>
+            <View
+              style={{
+                backgroundColor: getStatusToText(task.status)?.bgcolor,
+                borderColor: getStatusToText(task.status)?.border,
+                borderWidth: 1,
+                borderRadius: 18,
+                paddingVertical: normalize(5),
+                paddingHorizontal: normalize(10),
+              }}>
+              <Text
+                style={{
+                  fontFamily: fonts.AnuphanMedium,
+                  fontSize: normalize(16),
+                  color: getStatusToText(task.status)?.color,
+                }}>
+                {getStatusToText(task.status)?.label}
+              </Text>
+            </View>
           </View>
-        </View>
+        )}
+
         {isShowGetPoint && (
           <>
             <Banner />
@@ -158,7 +240,9 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             <Text style={styles.plant}>
               {task.plant_name + ' | ' + task.purpose_spray_name}
             </Text>
-            <Text style={styles.price}>{task.total_price + ' ' + 'บาท'}</Text>
+            <Text style={styles.price}>
+              {numberWithCommas(task.total_price, true) + ' ' + 'บาท'}
+            </Text>
           </View>
 
           <MyTaskDateTimeDetail
@@ -269,7 +353,9 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               justifyContent: 'space-between',
             }}>
             <Text style={styles.totalPrice}>ราคารวม</Text>
-            <Text style={styles.totalPrice}>{task.total_price} บาท</Text>
+            <Text style={styles.totalPrice}>
+              {numberWithCommas(task.total_price, true)} บาท
+            </Text>
           </View>
           {task.discount_coupon !== '0' && (
             <View
@@ -292,7 +378,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                   fontFamily: font.AnuphanMedium,
                   color: '#2EC46D',
                 }}>
-                -{task.discount_coupon} บาท
+                -{numberWithCommas(task.discount_coupon, true)} บาท
               </Text>
             </View>
           )}
@@ -318,7 +404,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                   fontFamily: font.AnuphanMedium,
                   color: '#2EC46D',
                 }}>
-                -{task.discount_promotion} บาท
+                -{numberWithCommas(task.discount_promotion, true)} บาท
               </Text>
             </View>
           )}
@@ -335,7 +421,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                   fontFamily: font.AnuphanMedium,
                   color: '#2EC46D',
                 }}>
-                ส่วนลดคะแนน
+                ส่วนลดแต้ม
               </Text>
               <Text
                 style={{
@@ -343,7 +429,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                   fontFamily: font.AnuphanMedium,
                   color: '#2EC46D',
                 }}>
-                -{task.discount_campaign_point} บาท
+                -{numberWithCommas(task.discount_campaign_point, true)} บาท
               </Text>
             </View>
           )}
@@ -376,7 +462,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                 fontFamily: font.AnuphanMedium,
                 color: '#2EC46D',
               }}>
-              {task.total_price} บาท
+              {numberWithCommas(task.total_price, true)} บาท
             </Text>
           </View>
         </View>
@@ -735,7 +821,10 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
       </Modal>
-      <Modal transparent={true} visible={toggleModalSuccess}>
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={toggleModalSuccess}>
         <View
           style={{
             flex: 1,
@@ -783,6 +872,66 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               label="ตกลง"
               color={'#2EC46D'}
               onPress={() => submitReviewSuccess()}
+            />
+          </View>
+        </View>
+      </Modal>
+      <Modal animationType="fade" transparent={true} visible={showGetPoint}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'center',
+            paddingHorizontal: '5%',
+          }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              padding: normalize(20),
+              borderRadius: normalize(8),
+            }}>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: '5%',
+              }}>
+              <Image
+                source={image.getPoint}
+                resizeMode="contain"
+                style={{ width: normalize(130), height: normalize(100) }}
+              />
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  fontSize: normalize(22),
+                  color: colors.fontBlack,
+                  marginTop: normalize(16),
+                }}>
+                คุณได้รับ{' '}
+                <Text
+                  style={{
+                    fontFamily: font.AnuphanMedium,
+                    fontSize: normalize(22),
+                    color: colors.greenLight,
+                  }}>
+                  {taskPointDetail?.receivePoint || 0} แต้ม
+                </Text>{' '}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  fontSize: normalize(22),
+                  color: colors.fontBlack,
+                }}>
+                จากการจ้างโดรนเกษตร
+              </Text>
+            </View>
+
+            <MainButton
+              label="ตกลง"
+              color={'#2EC46D'}
+              onPress={onCloseGetPoint}
             />
           </View>
         </View>

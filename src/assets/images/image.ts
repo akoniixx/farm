@@ -46,4 +46,7 @@ export default {
   substracttop: require('./substracttop.png'),
   substractbottom: require('./subtractbottom.png'),
   bgGetPoint: require('./bgGetPoint.png'),
+  bgDone: require('./bgDone.png'),
+  bgWaitReview: require('./bgWaitReview.png'),
+  getPoint: require('./getPoint.png'),
 };

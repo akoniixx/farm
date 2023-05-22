@@ -1244,6 +1244,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             borderBottomWidth: 1,
           }}>
           <MainButton
+            disable={loading}
             label="ยืนยันการจอง"
             onPress={onSubmit}
             color={colors.greenLight}

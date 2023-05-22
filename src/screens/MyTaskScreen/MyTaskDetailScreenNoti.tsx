@@ -40,7 +40,6 @@ const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
   };
   const [dronerImg, setDronerImg] = useState<string | null>(null);
   useEffect(() => {
-    console.log(task.discountPromotion);
     DronerDatasource.getDronerData(task.droner.id).then(res => {
       res.file.map((item: any) => {
         if (item.category === 'PROFILE_IMAGE') {
@@ -270,6 +269,35 @@ const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
                   },
                 ]}>
                 - {task.discountPromotion} บาท
+              </Text>
+            </View>
+          ) : (
+            <></>
+          )}
+          {task.discountCampaignPoint != 0 ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <Text
+                style={[
+                  styles.totalPrice,
+                  {
+                    color: '#1F8449',
+                  },
+                ]}>
+                ส่วนลดแต้ม
+              </Text>
+              <Text
+                style={[
+                  styles.totalPrice,
+                  {
+                    color: '#1F8449',
+                  },
+                ]}>
+                - {task.discountCampaignPoint} บาท
               </Text>
             </View>
           ) : (
