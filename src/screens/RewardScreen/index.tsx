@@ -51,7 +51,7 @@ export default function RewardScreen({navigation}: any) {
 
                   fontFamily: font.medium,
                 }}>
-                โดรนเนอร์ พอยต์
+                Droner Point
               </Text>
             </View>
           </TouchableOpacity>

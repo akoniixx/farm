@@ -64,4 +64,5 @@ export default {
   gift: require('./gift.png'),
   giftActive: require('./giftActive.png'),
   ICKDronerPoint: require('./ICKDronerPoint.png'),
+  EditGrey: require('./editGrey.png'),
 };

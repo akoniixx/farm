@@ -47,7 +47,9 @@ const registerInstance = axios.create({});
 
 registerInstance.interceptors.request.use(async (config: any) => {
   const token = await AsyncStorage.getItem('token_register');
-  config.headers.Authorization = `Bearer ${token}`;
+  const newToken = await AsyncStorage.getItem('token');
+
+  config.headers.Authorization = `Bearer ${token || newToken || ''}`;
   return config;
 });
 

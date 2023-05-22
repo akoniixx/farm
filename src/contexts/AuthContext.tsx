@@ -4,6 +4,100 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AppState} from 'react-native';
 import {ProfileDatasource} from '../datasource/ProfileDatasource';
 
+interface Address {
+  id: string;
+  address1: string;
+  address2: string;
+  address3: string;
+  provinceId: number;
+  districtId: number;
+  subdistrictId: number;
+  postcode: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface DroneBrand {
+  id: string;
+  name: string;
+  logoImagePath: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Drone {
+  id: string;
+  droneBrandId: string;
+  series: string;
+  droneBrand: DroneBrand;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface DronerDrone {
+  id: string;
+  dronerId: string;
+  droneId: string;
+  serialNo: string;
+  status: string;
+  purchaseYear: string;
+  purchaseMonth: string;
+  reason: any[];
+  drone: Drone;
+  file: any[];
+  createdAt: string;
+  updatedAt: string;
+  comment: string;
+}
+
+interface DronerArea {
+  id: string;
+  provinceId: number;
+  districtId: number;
+  subdistrictId: number;
+  lat: string;
+  long: string;
+  distance: string;
+  locationName: string;
+  mapUrl: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Droner {
+  id: string;
+  dronerCode: string;
+  firstname: string;
+  lastname: string;
+  idNo: string;
+  telephoneNo: string;
+  status: string;
+  reason: any[];
+  birthDate: string;
+  isOpenReceiveTask: boolean;
+  expYear: number;
+  expMonth: number;
+  expPlant: string[];
+  address: Address;
+  dronerDrone: DronerDrone[];
+  dronerArea: DronerArea;
+  file: any[];
+  createdAt: string;
+  updatedAt: string;
+  isDelete: boolean;
+  deleteDate: string | null;
+  comment: string;
+  updateBy: string;
+  createBy: string;
+  isBookBank: boolean;
+  bankName: string | null;
+  bankAccountName: string | null;
+  accountNumber: string | null;
+  isConsentBookBank: boolean;
+}
+
 interface Props {
   children: JSX.Element;
 }
@@ -11,7 +105,7 @@ interface Props {
 interface State {
   isLoading: boolean;
 
-  user: null | any;
+  user: null | Droner;
 }
 
 interface Action {
@@ -72,6 +166,12 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
     }),
     [],
   );
+
+  React.useEffect(() => {
+    if (!state.user) {
+      authContext.getProfileAuth();
+    }
+  }, [authContext, state.user]);
 
   return (
     <AuthContext.Provider value={{authContext, state}}>

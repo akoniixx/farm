@@ -97,7 +97,7 @@ export default function ListReward({navigation}: {navigation: any}) {
                   fontFamily: font.light,
                   fontSize: 14,
                 }}>
-                คะแนน
+                แต้ม
               </Text>
             </Text>
             {item.endDate && (

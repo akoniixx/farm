@@ -1,15 +1,6 @@
 import {Switch} from '@rneui/themed';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {
-  Button,
-  Dimensions,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import React, {useEffect, useState} from 'react';
+import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
 import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
@@ -18,20 +9,15 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
-import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import {Avatar} from '@rneui/base';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import icons from '../../assets/icons/icons';
-import io from 'socket.io-client';
 import {SheetManager} from 'react-native-actions-sheet';
-import {BASE_URL} from '../../config/develop-config';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
-import {decimalConvert, numberWithCommas, socket} from '../../function/utility';
+import {numberWithCommas, socket} from '../../function/utility';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
-import messaging from '@react-native-firebase/messaging';
 import Toast from 'react-native-toast-message';
-import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
-import fonts from '../../assets/fonts';
+import {responsiveWidth} from '../../function/responsive';
 import {mixpanel} from '../../../mixpanel';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {CardGuruKaset} from '../../components/Carousel/CardGuruKaset';

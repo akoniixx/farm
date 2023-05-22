@@ -28,6 +28,8 @@ import IncomeScreen from '../screens/IncomeScreen';
 import HistoryRewardScreen from '../screens/HistoryRewardScreen';
 import MyRewardScreen from '../screens/MyRewardScreen';
 import RewardDetailScreen from '../screens/RewardDetailScreen';
+import ExchangeAddressScreen from '../screens/ExchangeAddressScreen';
+import CustomAddressScreen from '../screens/CustomAddressScreen';
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
 export type StackParamList = {
@@ -56,6 +58,12 @@ export type StackParamList = {
   RewardDetailScreen: {
     navigation: StackNavigationHelpers;
     id: string;
+  };
+  ExchangeAddressScreen: {
+    data: any;
+  };
+  CustomAddressScreen: {
+    data: any;
   };
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
@@ -104,6 +112,14 @@ const MainNavigator: React.FC = () => {
       />
       <Stack.Screen name="MyRewardScreen" component={MyRewardScreen} />
       <Stack.Screen name="RewardDetailScreen" component={RewardDetailScreen} />
+      <Stack.Screen
+        name="ExchangeAddressScreen"
+        component={ExchangeAddressScreen}
+      />
+      <Stack.Screen
+        name="CustomAddressScreen"
+        component={CustomAddressScreen}
+      />
       {/* <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} /> */}
     </Stack.Navigator>
   );

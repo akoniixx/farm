@@ -36,7 +36,7 @@ export default function HistoryRewardScreen({navigation}: Props) {
   const routes = useMemo(() => {
     return [
       {key: 'inProgress', title: 'กำลังดำเนินการ'},
-      {key: 'usedOrReceive', title: 'ได้รับ/ใช้คะแนน'},
+      {key: 'usedOrReceive', title: 'ได้รับ/ใช้แต้ม'},
     ];
   }, []);
   const renderScene = ({route}: any) => {
@@ -53,7 +53,7 @@ export default function HistoryRewardScreen({navigation}: Props) {
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <CustomHeader
         showBackBtn
-        title={'ประวัติการได้รับ/ใช้คะแนน'}
+        title={'ประวัติการได้รับ/ใช้แต้ม'}
         onPressBack={() => navigation.goBack()}
       />
       <LinearGradient
@@ -83,7 +83,7 @@ export default function HistoryRewardScreen({navigation}: Props) {
                 fontFamily: fonts.medium,
                 color: colors.white,
               }}>
-              คะแนน
+              แต้ม
             </Text>
           </Text>
         </View>
