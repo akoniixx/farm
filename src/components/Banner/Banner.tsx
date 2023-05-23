@@ -12,7 +12,7 @@ export default function Banner() {
             fontSize: 16,
             fontFamily: fonts.AnuphanMedium,
           }}>
-          ท่านจะได้รับคะแนนหลังจากรีวิวงาน
+          ท่านจะได้รับแต้มหลังจากรีวิวงาน
         </Text>
       </View>
     </ImageBackground>

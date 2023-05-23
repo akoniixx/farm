@@ -90,10 +90,14 @@ export default function SlipWaitingScreen({
       if (res && res.success) {
         setReason('');
         await AsyncStorage.removeItem('taskId');
-        navigation.navigate('MainScreen');
+        setLoading(false);
       }
     } catch (e) {
       console.log('error', e);
+    } finally {
+      setTimeout(() => {
+        navigation.navigate('MainScreen');
+      }, 500);
     }
   };
   useEffect(() => {
@@ -131,7 +135,8 @@ export default function SlipWaitingScreen({
     if (taskId) {
       getTaskByTaskId(taskId);
     }
-  }, [taskId, navigation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [taskId]);
 
   const NotiFication = () => {
     messaging().onMessage(async message => {

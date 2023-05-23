@@ -24,7 +24,7 @@ import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
 import { ActivityIndicator } from 'react-native-paper';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
-import { useIsFocused } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { useAuth } from '../../contexts/AuthContext';
@@ -118,52 +118,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       )
       .catch(err => console.log(err));
   };
-  // useEffect(() => {
-  //   const getMaintenance = async () => {
-  //     setLoading(true);
-  //     const value = await AsyncStorage.getItem('Maintenance');
-  //     await SystemMaintenance.Maintenance('FARMER')
-  //       .then(res => {
-  //         if (res.responseData != null) {
-  //           if (value === 'read') {
-  //             setMaintenance(res.responseData);
-  //           } else {
-  //             setMaintenance(res.responseData);
-  //             setPopupMaintenance(res.responseData.id ? true : false);
-  //           }
-  //         }
-  //         if (maintenance != null) {
-  //           setStart(
-  //             momentExtend.toBuddhistYear(
-  //               maintenance.dateStart,
-  //               'DD MMMM YYYY',
-  //             ),
-  //           );
-  //           setEnd(
-  //             momentExtend.toBuddhistYear(
-  //               maintenance.dateStart,
-  //               'DD MMMM YYYY',
-  //             ),
-  //           );
-  //           setNotiStart(
-  //             momentExtend.toBuddhistYear(
-  //               maintenance.dateNotiStart,
-  //               'DD MMMM YYYY',
-  //             ),
-  //           );
-  //           setNotiEnd(
-  //             momentExtend.toBuddhistYear(
-  //               maintenance.dateNotiEnd,
-  //               'DD MMMM YYYY',
-  //             ),
-  //           );
-  //         }
-  //       })
-  //       .catch(err => console.log(err))
-  //       .finally(() => setLoading(false));
-  //   };
-  //   getMaintenance();
-  // }, [reload]);
 
   const d = momentExtend.toBuddhistYear(date, 'DD MMMM YYYY');
   const checkDateNoti = d >= notiStart && d <= notiEnd;
@@ -172,11 +126,25 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       const value = await AsyncStorage.getItem('taskId');
       setTaskId(value);
     };
-    getTaskId();
-    getData();
-    getProfile();
-    getNotificationData();
-    getFavDroner();
+
+    const getInitialData = async () => {
+      try {
+        setLoading(true);
+        await Promise.all([
+          getTaskId(),
+          getData(),
+          getProfile(),
+          getNotificationData(),
+          getFavDroner(),
+          findAllNews(),
+        ]);
+      } catch (error) {
+        console.log('error', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getInitialData();
   }, [isFocused]);
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -199,7 +167,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   };
   useEffect(() => {
     const dronerSug = async () => {
-      setLoading(true);
       const value = await AsyncStorage.getItem('token');
       if (value) {
         const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -211,12 +178,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           .then(res => {
             setTaskSug(res);
           })
-          .catch(err => console.log(err))
-          .finally(() => setLoading(false));
+          .catch(err => console.log(err));
       }
     };
     const dronerSugUsed = async () => {
-      setLoading(true);
       const value = await AsyncStorage.getItem('token');
       if (value) {
         const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -232,8 +197,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           .then(res => {
             setTaskSugUsed(res);
           })
-          .catch(err => console.log(err))
-          .finally(() => setLoading(false));
+          .catch(err => console.log(err));
       }
     };
     dronerSug();
@@ -283,7 +247,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     getTaskByTaskId();
   }, [taskId, navigation]);
   const getFavDroner = async () => {
-    setLoading(true);
     const farmer_id: any = await AsyncStorage.getItem('farmer_id');
     const plot_id: any = await AsyncStorage.getItem('plot_id');
     FavoriteDroner.findAllFav(farmer_id, plot_id)
@@ -292,35 +255,28 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           setStatusFav(res);
         }
       })
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false));
+      .catch(err => console.log(err));
   };
-  useEffect(() => {
-    findAllNews();
-  }, [isFocused]);
+
   const findAllNews = async () => {
-    setLoading(true);
     GuruKaset.findAllNews('ACTIVE', 'FARMER', 'created_at', 'DESC', 5, 0)
       .then(res => {
         setGuruKaset(res);
       })
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false));
+      .catch(err => console.log(err));
   };
-  useEffect(() => {
+  useFocusEffect(() => {
     const getPointFarmer = async () => {
-      setRefresh(!refresh);
       const farmer_id: any = await AsyncStorage.getItem('farmer_id');
       await historyPoint
         .getPoint(farmer_id)
         .then(res => {
           setPoint(res.balance);
         })
-        .catch(err => console.log(err))
-        .finally(() => setLoading(false));
+        .catch(err => console.log(err));
     };
     getPointFarmer();
-  }, [isFocused]);
+  });
 
   return (
     <View
@@ -388,13 +344,16 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     )}
                   </TouchableOpacity>
                   <TouchableOpacity
+                    style={{
+                      marginLeft: 10,
+                    }}
                     onPress={() => navigation.navigate('DetailPointScreen')}>
                     <LinearGradient
                       colors={['#41D981', '#26A65C']}
                       start={{ x: 0.85, y: 0.25 }}
                       style={{
-                        left: 10,
-                        padding: 2,
+                        paddingVertical: 2,
+                        paddingHorizontal: 6,
                         flexDirection: 'row',
                         borderRadius: 24,
                         alignItems: 'center',
@@ -411,7 +370,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                           fontFamily: font.AnuphanBold,
                           color: colors.white,
                           fontSize: normalize(16),
-                          paddingHorizontal: 5,
+                          paddingHorizontal: 8,
                         }}>
                         {formatNumberWithComma(point)}
                       </Text>
@@ -727,25 +686,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </View>
                 )}
 
-                {/* <View
-                  style={{
-
-                    marginTop: 16,
-                    paddingVertical: 10,
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: font.AnuphanBold,
-                      fontSize: normalize(20),
-                      color: colors.fontGrey,
-                      paddingHorizontal: 20,
-                    }}>
-                    จ้างนักบินที่เคยจ้าง
-                  </Text>
-                  <View style={{ paddingHorizontal: 20,}}>
-                    <MainButton label={'จ้างนักบินที่เคยจ้าง'} color={'#2EC46D'} onPress={()=>setShowModalCall(true)}/>
-                  </View>
-                  </View> */}
                 <View>
                   <View
                     style={{

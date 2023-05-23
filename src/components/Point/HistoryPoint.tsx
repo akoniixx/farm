@@ -42,11 +42,25 @@ export const HistoryPoint: React.FC<guruData> = ({
           <Text style={styles.title}>
             {action === 'INCREASE' && taskId !== null
               ? 'จ้างโดรนเกษตร'
+              : action === 'RETURN'
+              ? 'คืนแต้ม'
               : 'ส่วนลดฉีดพ่น'}
           </Text>
           <Text style={styles.textDate}>{taskNo}</Text>
         </View>
         {action === 'INCREASE' ? (
+          <View
+            style={{
+              alignItems: 'flex-end',
+            }}>
+            <Text style={styles.positive}>{`${formatNumberWithComma(
+              point,
+            )} คะแนน`}</Text>
+            <Text style={styles.textDate}>
+              {momentExtend.toBuddhistYear(date, `DD MMM YYYY HH:mm น.`)}
+            </Text>
+          </View>
+        ) : action === 'RETURN' ? (
           <View
             style={{
               alignItems: 'flex-end',

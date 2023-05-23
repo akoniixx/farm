@@ -13,6 +13,18 @@ export class MyJobDatasource {
         throw err;
       });
   }
+  static getReceivePoint = (taskId: string): Promise<any> => {
+    return httpClient
+      .get(
+        BASE_URL + '/tasks/task-estimate-point/finish-estimate-point/' + taskId,
+      )
+      .then(response => {
+        return response.data;
+      })
+      .catch(err => {
+        throw err;
+      });
+  };
 
   static async submitReview(
     taskId: string,

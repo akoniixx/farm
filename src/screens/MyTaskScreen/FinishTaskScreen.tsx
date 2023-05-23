@@ -57,7 +57,7 @@ const FinishScreen: React.FC<any> = ({}) => {
       getTaskList();
     }, []),
   );
-
+  console.log(JSON.stringify(taskList, null, 2));
   return (
     <>
       <View

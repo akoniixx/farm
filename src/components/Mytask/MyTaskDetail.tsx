@@ -54,7 +54,7 @@ export const MyTaskDateTimeDetail: React.FC<DateTimeProp> = ({
                 </Text>
                 <Text style={styles.h1}>
                   {' '}
-                  {moment(time).locale('th').format('hh.mm')} น
+                  {moment(time).locale('th').format('HH.mm')} น
                 </Text>
               </View>
             </View>

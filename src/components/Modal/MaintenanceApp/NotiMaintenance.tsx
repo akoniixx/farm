@@ -40,9 +40,9 @@ const NotiMaintenance: React.FC<MaintenanceEntity> = ({ data }) => {
             fontWeight: '800',
           }}>
           ช่วงเวลา{' '}
-          {moment(data.dateStart).add(543, 'year').locale('th').format('hh.mm')}
+          {moment(data.dateStart).add(543, 'year').locale('th').format('HH.mm')}
           {' - '}
-          {moment(data.dateEnd).add(543, 'year').locale('th').format('hh.mm')}
+          {moment(data.dateEnd).add(543, 'year').locale('th').format('HH.mm')}
           {' น.'}
         </Text>
         <View style={{ marginTop: 20, alignItems: 'center' }}>

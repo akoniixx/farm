@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { colors, font, icons } from '../../assets';
+import { colors, icons } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
 import { getStatusToText, numberWithCommas } from '../../functions/utility';
@@ -103,7 +103,7 @@ export const CardTask: React.FC<taskListProps> = ({ task }) => {
           {moment(task.date_appointment)
             .add(543, 'year')
             .locale('th')
-            .format('DD MMMM YYYY, hh.mm')}
+            .format('DD MMMM YYYY, HH.mm')}
           {' น.'}
         </Text>
       </View>

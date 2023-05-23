@@ -22,6 +22,9 @@ export const getAllHistoryPoint = async (
     page: page,
     take: take,
   };
+  // console.log(BASE_URL + '/promotion/historypoint-quota/getallhistory', {
+  //   params,
+  // });
   return httpClient
     .get(BASE_URL + '/promotion/historypoint-quota/getallhistory', { params })
     .then(response => {

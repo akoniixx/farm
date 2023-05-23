@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Image,
   StyleSheet,
@@ -8,7 +8,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { colors, font, icons } from '../../assets';
-import { normalize, width } from '../../functions/Normalize';
+import { normalize } from '../../functions/Normalize';
 import image from '../../assets/images/image';
 import CustomHeader from '../../components/CustomHeader';
 import { HistoryPoint } from '../../components/Point/HistoryPoint';
@@ -59,14 +59,15 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
       setRefreshing(false);
     }, 1000);
   }, []);
-  const loadMoreData = async () => {
+
+  const loadMoreData = useCallback(async () => {
     if (dataAllPoint.length >= total) {
       return;
     }
     try {
       setLoading(true);
       const farmer_id: any = await AsyncStorage.getItem('farmer_id');
-      await getAllHistoryPoint(farmer_id, current, row)
+      await getAllHistoryPoint(farmer_id, current + 1, row)
         .then(res => {
           setDataAllPoint([...dataAllPoint, ...res.history]);
           setLoading(false);
@@ -78,7 +79,7 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [current, dataAllPoint, total]);
 
   return (
     <View
