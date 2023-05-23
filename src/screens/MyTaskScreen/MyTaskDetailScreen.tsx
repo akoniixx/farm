@@ -104,18 +104,23 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
         setTimeout(() => {
           setToggleModalSuccess(true);
         }, 500);
-        getReceivePoint();
       })
       .finally(() => setLoading(false));
   };
 
-  const submitReviewSuccess = () => {
+  const submitReviewSuccess = async () => {
     setToggleModalSuccess(false);
-    setShowGetPoint(true);
+    await getReceivePoint().then(() => {
+      setTimeout(() => {
+        setShowGetPoint(true);
+      }, 500);
+    });
   };
   const onCloseGetPoint = () => {
     setShowGetPoint(false);
-    navigation.goBack();
+    setTimeout(() => {
+      navigation.goBack();
+    }, 500);
   };
 
   const checkReview = () => {
@@ -137,7 +142,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
       isWaitReview,
     };
   }, [task.status]);
-
+  console.log(JSON.stringify(task, null, 2));
   return (
     <View style={{ flex: 1 }}>
       <CustomHeader
@@ -354,7 +359,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             }}>
             <Text style={styles.totalPrice}>ราคารวม</Text>
             <Text style={styles.totalPrice}>
-              {numberWithCommas(task.total_price, true)} บาท
+              {numberWithCommas(task.price, true)} บาท
             </Text>
           </View>
           {task.discount_coupon !== '0' && (
@@ -447,6 +452,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
+              paddingBottom: 8,
             }}>
             <Text
               style={{
@@ -456,14 +462,31 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               }}>
               รวมค่าบริการ
             </Text>
-            <Text
+            <View
               style={{
-                fontSize: normalize(20),
-                fontFamily: font.AnuphanMedium,
-                color: '#2EC46D',
+                justifyContent: 'flex-end',
               }}>
-              {numberWithCommas(task.total_price, true)} บาท
-            </Text>
+              <Text
+                style={{
+                  fontSize: normalize(20),
+                  fontFamily: font.AnuphanMedium,
+                  color: '#2EC46D',
+                }}>
+                {numberWithCommas(task.total_price, true)} บาท
+              </Text>
+              {/* {+task.price !== +task.total_price && (
+                <Text
+                  style={{
+                    color: colors.disable,
+                    fontSize: 16,
+                    fontFamily: fonts.AnuphanMedium,
+                    textAlign: 'right',
+                    textDecorationLine: 'line-through',
+                  }}>
+                  {task.price}
+                </Text>
+              )} */}
+            </View>
           </View>
         </View>
       </ScrollView>

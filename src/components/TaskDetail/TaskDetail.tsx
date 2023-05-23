@@ -75,7 +75,7 @@ export const DateTimeDetail: React.FC<DateTimeProp> = ({
                     .format('DD MMMM YYYY')}
                 </Text>
                 <Text style={styles.h1}>
-                  {moment(time).locale('th').format('hh.mm')} น
+                  {moment(time).locale('th').format('HH.mm')} น
                 </Text>
               </View>
             </View>

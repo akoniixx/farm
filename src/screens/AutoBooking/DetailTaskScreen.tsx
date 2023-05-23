@@ -67,6 +67,7 @@ interface CampaignDetail {
 
 const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const [isUsePoint, setIsUsePoint] = useState(false);
+  const [disabled, setDisabled] = useState(false);
   const [currentCount, setCurrentCount] = useState(0);
   const [myPoint, setMyPoint] = useState(0);
   const [campaignDetail, setCampaignDetail] = useState<CampaignDetail>({
@@ -191,7 +192,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
 
   const getCalculatePoint = useCallback(async () => {
     try {
-      setLoading(true);
       await getCalculatePrice({
         farmerPlotId: taskData.farmerPlotId,
         couponCode: taskData.couponCode || '',
@@ -202,6 +202,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
     } catch (e) {
       console.log(e);
     } finally {
+      setDisabled(false);
       setLoading(false);
     }
   }, [
@@ -896,8 +897,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                     minimum={campaignDetail.minPoint}
                     maximum={isNaN(maximumPointCal) ? 0 : maximumPointCal}
                     currentCount={currentCount}
-                    setLoading={setLoading}
                     setCurrentCount={setCurrentCount}
+                    setDisabled={setDisabled}
                   />
                 </View>
               </View>
@@ -974,7 +975,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                   alignSelf: 'flex-start',
                   paddingRight: 16,
                 }}>
-                แต้มสะสมของท่านไม่ถึงขั้นต่ำ 100 แต้ม ในการเปิดใช้แต้มแลกส่วนลด
+                แต้มสะสมของท่านไม่ถึงขั้นต่ำ {campaignDetail.minPoint} แต้ม
+                ในการเปิดใช้แต้มแลกส่วนลด
               </Text>
             </View>
           )}
@@ -1079,7 +1081,10 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                   fontSize: 18,
                   fontFamily: fonts.SarabunLight,
                 }}>
-                {`${numberWithCommas(calPrice.netPrice.toString(), true)} บาท`}
+                {`${numberWithCommas(
+                  calPrice.priceBefore.toString(),
+                  true,
+                )} บาท`}
               </Text>
             </View>
             {couponInfo.name != '' && (
@@ -1198,21 +1203,36 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              <Text
+              <View
                 style={{
-                  color: colors.greenLight,
-                  fontSize: 18,
-                  fontFamily: fonts.AnuphanMedium,
+                  justifyContent: 'flex-end',
                   marginRight: 8,
                 }}>
-                {`${numberWithCommas(
-                  (couponInfo.name != ''
-                    ? couponInfo.netPrice
-                    : calPrice.netPrice
-                  ).toString(),
-                  true,
-                )} บาท`}
-              </Text>
+                <Text
+                  style={{
+                    color: colors.greenLight,
+                    fontSize: 18,
+                    fontFamily: fonts.AnuphanMedium,
+                  }}>
+                  {`${numberWithCommas(
+                    calPrice.netPrice.toString(),
+                    true,
+                  )} บาท`}
+                </Text>
+                {+calPrice.netPrice !== +calPrice.priceBefore && (
+                  <Text
+                    style={{
+                      color: colors.disable,
+                      fontSize: 16,
+                      fontFamily: fonts.AnuphanMedium,
+                      textAlign: 'right',
+                      textDecorationLine: 'line-through',
+                    }}>
+                    {calPrice.priceBefore}
+                  </Text>
+                )}
+              </View>
+
               <Image
                 source={icons.arrowUpBold}
                 style={{
@@ -1244,7 +1264,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             borderBottomWidth: 1,
           }}>
           <MainButton
-            disable={loading}
+            disable={disabled}
             label="ยืนยันการจอง"
             onPress={onSubmit}
             color={colors.greenLight}

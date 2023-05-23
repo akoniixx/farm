@@ -11,9 +11,7 @@ import { SheetManager } from 'react-native-actions-sheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons } from '../../assets';
 import fonts from '../../assets/fonts';
-import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
-import { CallingModal } from '../../components/Modal/CallingModal';
 import { DronerCard } from '../../components/Mytask/DronerCard';
 import {
   DateTimeDetail,
@@ -22,7 +20,7 @@ import {
 } from '../../components/TaskDetail/TaskDetail';
 import { DronerDatasource } from '../../datasource/DronerDatasource';
 import { normalize } from '../../functions/Normalize';
-import { getStatusToText } from '../../functions/utility';
+import { getStatusToText, numberWithCommas } from '../../functions/utility';
 
 const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
   const task = route.params.task;
@@ -324,14 +322,28 @@ const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
               }}>
               รวมค่าบริการ
             </Text>
-            <Text
-              style={{
-                fontSize: normalize(20),
-                fontFamily: font.AnuphanMedium,
-                color: '#2EC46D',
-              }}>
-              {task.totalPrice} บาท
-            </Text>
+            <View>
+              <Text
+                style={{
+                  fontSize: normalize(20),
+                  fontFamily: font.AnuphanMedium,
+                  color: '#2EC46D',
+                }}>
+                {numberWithCommas(task.totalPrice, true)} บาท
+              </Text>
+              {/* {+task.price !== +task.totalPrice && (
+                <Text
+                  style={{
+                    color: colors.disable,
+                    fontSize: 16,
+                    fontFamily: fonts.AnuphanMedium,
+                    textAlign: 'right',
+                    textDecorationLine: 'line-through',
+                  }}>
+                  {task.price}
+                </Text>
+              )} */}
+            </View>
           </View>
         </View>
       </ScrollView>

@@ -15,7 +15,8 @@ interface Props {
   minimum?: number;
   maximum: number;
   setCurrentCount: React.Dispatch<React.SetStateAction<number>>;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+  setDisabled?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export default function Counter({
   unitIncrement = 10,
@@ -23,6 +24,7 @@ export default function Counter({
   minimum = 100,
   maximum,
   setCurrentCount,
+  setDisabled,
 }: Props) {
   const refInput = React.useRef<TextInput>(null);
 
@@ -32,6 +34,7 @@ export default function Counter({
         ? maximum
         : currentCount + unitIncrement,
     );
+    setDisabled?.(true);
   };
   const onDecrement = () => {
     if (currentCount > minimum) {
@@ -39,17 +42,26 @@ export default function Counter({
         prev - unitIncrement < minimum ? minimum : prev - unitIncrement,
       );
     }
+    setDisabled?.(true);
   };
   const onChangeText = (text: string) => {
     const valueNumber = text.replace(/,/g, '');
     setCurrentCount(
       Number(valueNumber) > maximum ? maximum : Number(valueNumber),
     );
+    setDisabled?.(true);
   };
   const onBlur = () => {
-    setCurrentCount(
-      currentCount > minimum ? Math.floor(currentCount / 10) * 10 : minimum,
-    );
+    console.log(currentCount > minimum);
+
+    setCurrentCount(prev => {
+      if (prev === currentCount && prev > minimum) {
+        return Math.floor(prev / 10) * 10;
+      }
+      return currentCount > minimum
+        ? Math.floor(currentCount / 10) * 10
+        : minimum;
+    });
   };
 
   return (

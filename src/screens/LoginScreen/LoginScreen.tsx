@@ -16,8 +16,6 @@ import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import { InputPhone } from '../../components/InputPhone';
 import { MainButton } from '../../components/Button/MainButton';
-import Toast from 'react-native-toast-message';
-import * as RootNavigation from '../../navigations/RootNavigation';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { normalize } from '../../functions/Normalize';
 
@@ -65,7 +63,7 @@ const LoginScreen: React.FC<any> = ({ navigation }) => {
                 label="ถัดไป"
                 color={colors.greenLight}
                 onPress={() => navigation.navigate('OtpScreen')}
-                disable={value.length != 10}
+                disable={value?.length !== 10}
               />
 
               <MainButton
