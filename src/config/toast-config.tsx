@@ -777,6 +777,45 @@ export const toastConfig = {
       </View>
     </TouchableOpacity>
   ),
+  receivePoint: ({onPress, text1, props}: any) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.modalBgSuccess}>
+        <View
+          style={{
+            flexDirection: 'row',
+          }}>
+          <Image
+            source={icons.success}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text style={styles.info}>คุณได้รับ {text1} แต้ม</Text>
+            <Text style={styles.info}>จากการจ้างโดรนกษตร</Text>
+          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </TouchableOpacity>
+  ),
 };
 
 const styles = StyleSheet.create({

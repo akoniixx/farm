@@ -132,6 +132,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                   params: {taskId: message.data?.taskId},
                 });
                 break;
+            case 'RECEIVE_POINT':
+              RootNavigation.navigate('Main', {
+                screen: 'receivePoint',
+              });
+                break;
             default:
               break;
           }
@@ -198,6 +203,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
               screen: 'TaskDetailScreen',
               params: {taskId: message.data?.taskId},
             });
+            break;
+        case 'RECEIVE_POINT':
+          RootNavigation.navigate('Main', {
+            screen: 'receivePoint',
+          });
             break;
         default:
           break;
@@ -354,6 +364,19 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
               Toast.hide()
             },
           });
+        case 'RECEIVE_POINT' :
+          Toast.show({
+            type : 'receivePoint',
+            topOffset : 40,
+            position: 'top',
+            text1 : message.data?.point,
+            onPress() {
+              RootNavigation.navigate('Main', {
+                screen: 'PointHistoryScreen',
+              })
+              Toast.hide()
+            },
+          })
         default:
           break;
       }

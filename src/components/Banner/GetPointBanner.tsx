@@ -12,7 +12,7 @@ export default function Banner() {
             fontSize: 16,
             fontFamily: fonts.medium,
           }}>
-          ท่านจะได้รับแต้มหลังจากรีวิวงาน
+          ท่านจะได้รับแต้มหลังเกษตรกรรีวิวงาน
         </Text>
       </View>
     </ImageBackground>

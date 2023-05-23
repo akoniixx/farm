@@ -11,6 +11,7 @@ import { BackHandler } from 'react-native';
 import buddhaEra from 'dayjs/plugin/buddhistEra';
 import dayjs from 'dayjs';
 import { AuthProvider } from './src/contexts/AuthContext';
+import * as RootNavigation from './src/navigations/RootNavigation';
 dayjs.extend(buddhaEra);
 import {
   firebaseInitialize,
