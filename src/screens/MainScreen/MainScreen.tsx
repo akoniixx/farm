@@ -457,9 +457,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 />
                 <View
                   style={{
-                    alignItems: 'center',
-                    top: -70,
-                    position: 'relative',
+                    position: 'absolute',
+                    right: '40%',
+                    top : '60%'
                   }}>
                   <Pagination
                     dotsLength={guruKaset.data.length}
