@@ -12,9 +12,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		15B5C69CB9394B9689A6AE7A /* Anuphan-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 772F96D02BEA4F9FB73501EB /* Anuphan-SemiBold.ttf */; };
 		2C844838A6C2B9544A3F7AD0 /* libPods-Droner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A90357E0C0F32867BB01D27 /* libPods-Droner.a */; };
 		5759926C3F87992F8D262912 /* libPods-Droner-DronerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAEFC834ADA44DCE44AD8B86 /* libPods-Droner-DronerTests.a */; };
-		602C8F7128A261A5007D6E25 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 602C8F7028A261A5007D6E25 /* FontAwesome.ttf */; };
 		60AC83AD28858DCD00CED949 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 60AC83AC28858DCD00CED949 /* AntDesign.ttf */; };
 		60DC076C28AB7E5E000756CF /* geolocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DC076B28AB7E5E000756CF /* geolocation.swift */; };
 		60F03EE22883795100CFC2C7 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE12883795100CFC2C7 /* fonts */; };
@@ -22,6 +22,11 @@
 		60F03EE6288380E700CFC2C7 /* Anuphan-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE5288380E700CFC2C7 /* Anuphan-Light.otf */; };
 		60F03EE8288380FA00CFC2C7 /* Anuphan-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE7288380FA00CFC2C7 /* Anuphan-Medium.otf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		E1D80EDC2A20B324005A5B62 /* FacebookAEM in Frameworks */ = {isa = PBXBuildFile; productRef = E1D80EDB2A20B324005A5B62 /* FacebookAEM */; };
+		E1D80EDE2A20B324005A5B62 /* FacebookBasics in Frameworks */ = {isa = PBXBuildFile; productRef = E1D80EDD2A20B324005A5B62 /* FacebookBasics */; };
+		E1D80EE02A20B324005A5B62 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = E1D80EDF2A20B324005A5B62 /* FacebookCore */; };
+		E1D80EE22A20B324005A5B62 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = E1D80EE12A20B324005A5B62 /* FacebookLogin */; };
+		E1D80EE42A20B324005A5B62 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = E1D80EE32A20B324005A5B62 /* FacebookShare */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +64,7 @@
 		60F03EE92883810900CFC2C7 /* Anuphan-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Anuphan-Bold.otf"; path = "../src/assets/fonts/Anuphan-Bold.otf"; sourceTree = "<group>"; };
 		60F03EEA2883812300CFC2C7 /* Anuphan-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Anuphan-Light.otf"; path = "../src/assets/fonts/Anuphan-Light.otf"; sourceTree = "<group>"; };
 		60F03EEB2883813700CFC2C7 /* Anuphan-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Anuphan-Medium.otf"; path = "../src/assets/fonts/Anuphan-Medium.otf"; sourceTree = "<group>"; };
+		772F96D02BEA4F9FB73501EB /* Anuphan-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Anuphan-SemiBold.ttf"; path = "../src/assets/fonts/Anuphan-SemiBold.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Droner/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BD49078068B87B57FC3B6468 /* Pods-Droner-DronerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner-DronerTests.debug.xcconfig"; path = "Target Support Files/Pods-Droner-DronerTests/Pods-Droner-DronerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C19F56C161539819DF0B9F45 /* Pods-Droner-DronerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner-DronerTests.release.xcconfig"; path = "Target Support Files/Pods-Droner-DronerTests/Pods-Droner-DronerTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -80,7 +86,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1D80EE22A20B324005A5B62 /* FacebookLogin in Frameworks */,
+				E1D80EDE2A20B324005A5B62 /* FacebookBasics in Frameworks */,
+				E1D80EE42A20B324005A5B62 /* FacebookShare in Frameworks */,
+				E1D80EDC2A20B324005A5B62 /* FacebookAEM in Frameworks */,
 				2C844838A6C2B9544A3F7AD0 /* libPods-Droner.a in Frameworks */,
+				E1D80EE02A20B324005A5B62 /* FacebookCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,6 +140,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4900852108AD46B4B296BAD7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				772F96D02BEA4F9FB73501EB /* Anuphan-SemiBold.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -156,6 +175,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
 				60DC076A28AB7E5E000756CF /* Droner-Bridging-Header.h */,
+				4900852108AD46B4B296BAD7 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -225,6 +245,13 @@
 			dependencies = (
 			);
 			name = Droner;
+			packageProductDependencies = (
+				E1D80EDB2A20B324005A5B62 /* FacebookAEM */,
+				E1D80EDD2A20B324005A5B62 /* FacebookBasics */,
+				E1D80EDF2A20B324005A5B62 /* FacebookCore */,
+				E1D80EE12A20B324005A5B62 /* FacebookLogin */,
+				E1D80EE32A20B324005A5B62 /* FacebookShare */,
+			);
 			productName = Droner;
 			productReference = 13B07F961A680F5B00A75B9A /* Droner.app */;
 			productType = "com.apple.product-type.application";
@@ -255,6 +282,9 @@
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
+			packageReferences = (
+				E1D80EDA2A20B324005A5B62 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
+			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -277,7 +307,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				602C8F7128A261A5007D6E25 /* FontAwesome.ttf in Resources */,
 				60AC83AD28858DCD00CED949 /* AntDesign.ttf in Resources */,
 				60F03EE8288380FA00CFC2C7 /* Anuphan-Medium.otf in Resources */,
 				60F03EE6288380E700CFC2C7 /* Anuphan-Light.otf in Resources */,
@@ -286,6 +315,7 @@
 				0FF9C0EC2910DB3E007F4EEE /* main.jsbundle.xib in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				15B5C69CB9394B9689A6AE7A /* Anuphan-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -788,6 +818,45 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E1D80EDA2A20B324005A5B62 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 14.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E1D80EDB2A20B324005A5B62 /* FacebookAEM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1D80EDA2A20B324005A5B62 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookAEM;
+		};
+		E1D80EDD2A20B324005A5B62 /* FacebookBasics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1D80EDA2A20B324005A5B62 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookBasics;
+		};
+		E1D80EDF2A20B324005A5B62 /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1D80EDA2A20B324005A5B62 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
+		};
+		E1D80EE12A20B324005A5B62 /* FacebookLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1D80EDA2A20B324005A5B62 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookLogin;
+		};
+		E1D80EE32A20B324005A5B62 /* FacebookShare */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1D80EDA2A20B324005A5B62 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookShare;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }
