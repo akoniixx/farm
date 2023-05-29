@@ -106,7 +106,7 @@ export default function ListReward({navigation}: {navigation: any}) {
                   fontFamily: font.light,
                   fontSize: 14,
                 }}>
-                อีก {moment(item.endDate).diff(moment(), 'days')} วัน
+                หมดอายุอีก {moment(item.endDate).diff(moment(), 'days')} วัน
               </Text>
             )}
           </View>

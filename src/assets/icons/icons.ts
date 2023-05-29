@@ -66,4 +66,10 @@ export default {
   ICKDronerPoint: require('./ICKDronerPoint.png'),
   EditGrey: require('./editGrey.png'),
   point: require('./point.png'),
+  successIcon: require('./successIcon.png'),
+  warningDanger: require('./warningDanger.png'),
+  checkFillSuccess: require('./checkFillSuccess.png'),
+  mission: require('./mission.png'),
+  mission_active: require('./mission_active.png'),
+  arrowUpCollapse: require('./arrowUpCollapse.png'),
 };

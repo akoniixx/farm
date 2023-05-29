@@ -31,6 +31,7 @@ import RewardDetailScreen from '../screens/RewardDetailScreen';
 import ExchangeAddressScreen from '../screens/ExchangeAddressScreen';
 import CustomAddressScreen from '../screens/CustomAddressScreen';
 import PointHistoryScreen from '../screens/PointScreen/PointHistoryScreen';
+import RedeemScreen from '../screens/RedeemScreen';
 
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
@@ -62,11 +63,15 @@ export type StackParamList = {
   RewardDetailScreen: {
     navigation: StackNavigationHelpers;
     id: string;
+    isDigital?: boolean;
   };
   ExchangeAddressScreen: {
     data: any;
   };
   CustomAddressScreen: {
+    data: any;
+  };
+  RedeemScreen: {
     data: any;
   };
   // DeleteSuccess: {
@@ -126,6 +131,7 @@ const MainNavigator: React.FC = () => {
         name="CustomAddressScreen"
         component={CustomAddressScreen}
       />
+      <Stack.Screen name="RedeemScreen" component={RedeemScreen} />
       {/* <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} /> */}
     </Stack.Navigator>
   );

@@ -26,7 +26,15 @@ import {SheetManager} from 'react-native-actions-sheet';
 import {ActionContext} from '../../../App';
 import {dialCall} from '../../function/utility';
 import RewardScreen from '../../screens/RewardScreen';
+import MissionScreen from '../../screens/MissionScreen';
 
+export type TabNavigatorParamList = {
+  mission: undefined;
+  home: undefined;
+  myTask: undefined;
+  reward: undefined;
+  profile: undefined;
+};
 const Tab = createBottomTabNavigator();
 
 const MainTapNavigator: React.FC<any> = ({navigation}) => {
@@ -49,6 +57,13 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
       component: MainTaskScreen,
       activeIcon: icons.task_active,
       inactiveIcon: icons.task,
+    },
+    {
+      name: 'mission',
+      title: 'ภารกิจ',
+      component: MissionScreen,
+      activeIcon: icons.mission_active,
+      inactiveIcon: icons.mission,
     },
     {
       name: 'reward',

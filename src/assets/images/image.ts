@@ -28,4 +28,8 @@ export default {
   areaaround: require('./areaaround.png'),
   pointEmpty: require('./pointEmpty.png'),
   bgGetPoint: require('./bgGetPoint.png'),
+  bgMyReward: require('./bgMyReward.png'),
+  bgHeaderMission: require('./bgHeaderMission.png'),
+  successStamp: require('./successStamp.png'),
+  fullQuota: require('./fullQuota.png'),
 };

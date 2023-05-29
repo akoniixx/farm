@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   SafeAreaView,
   StyleSheet,
   Image,
@@ -14,6 +13,8 @@ import {colors, font} from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import {numberWithCommas} from '../../function/utility';
 import AddressDetail from './AddressDetail';
+import Modal from '../../components/Modal/Modal';
+import Text from '../../components/Text';
 
 interface Props {
   navigation: any;
@@ -21,8 +22,10 @@ interface Props {
 }
 export default function ExchangeAddressScreen({navigation, route}: Props) {
   const {data} = route.params;
+  const [isConfirm, setIsConfirm] = React.useState(false);
   const onConfirm = () => {
     console.log('confirm');
+    setIsConfirm(true);
   };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
@@ -125,7 +128,7 @@ export default function ExchangeAddressScreen({navigation, route}: Props) {
               style={{
                 fontSize: 16,
                 fontFamily: font.medium,
-                color: colors.fontBlack,
+                color: colors.decreasePoint,
                 lineHeight: 28,
               }}>
               {numberWithCommas(data.usePoint.toString(), true)} แต้ม
@@ -162,6 +165,64 @@ export default function ExchangeAddressScreen({navigation, route}: Props) {
           <Text style={styles.textButton}>ยืนยันการแลก</Text>
         </TouchableOpacity>
       </View>
+      <Modal visible={isConfirm}>
+        <View
+          style={{
+            backgroundColor: colors.white,
+            borderRadius: 12,
+            padding: 16,
+            width: '100%',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: font.medium,
+              color: colors.fontBlack,
+            }}>
+            กรุณาตรวจสอบข้อมูลของท่าน
+          </Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: font.medium,
+              color: colors.fontBlack,
+            }}>
+            ก่อนยืนยันการแลกของรางวัล
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              fontFamily: font.light,
+              color: colors.inkLight,
+              marginTop: 8,
+            }}>
+            หากกดยืนยันการแลกแล้ว
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              fontFamily: font.light,
+              color: colors.inkLight,
+            }}>
+            จะไม่สามารถแลกแต้มคืนได้
+          </Text>
+          <TouchableOpacity
+            style={[styles.button, {marginTop: 16}]}
+            onPress={() => {
+              setIsConfirm(true);
+            }}>
+            <Text style={styles.textButton}>ยืนยัน</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.subButton}
+            onPress={() => {
+              setIsConfirm(false);
+            }}>
+            <Text style={styles.textSubButton}>ยกเลิก</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -218,5 +279,34 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     shadowRadius: 16,
+  },
+  disabledButton: {
+    width: '100%',
+    backgroundColor: colors.disable,
+    borderRadius: 12,
+    height: 54,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#DCDFE3',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+  },
+  subButton: {
+    width: '100%',
+    backgroundColor: 'transparent',
+    borderRadius: 12,
+    height: 54,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+  },
+  textSubButton: {
+    fontSize: 18,
+    fontFamily: font.bold,
+    color: colors.fontBlack,
   },
 });

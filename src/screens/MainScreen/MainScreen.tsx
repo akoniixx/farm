@@ -273,7 +273,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 </LinearGradient>
               </TouchableOpacity>
             </View> */}
-            <View style={{marginTop: normalize(5)}}>
+            <View>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('PointHistoryScreen');
@@ -283,25 +283,29 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   start={{x: 0, y: 0.5}}
                   end={{x: 1, y: 0.5}}
                   style={{
-                    paddingHorizontal: normalize(10),
-                    paddingVertical: normalize(5),
+                    paddingHorizontal: normalize(4),
+                    paddingVertical: normalize(4),
                     borderRadius: 30,
                     flexDirection: 'row',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
                   }}>
                   <Image
                     source={icons.point}
                     style={{
-                      width: normalize(21),
-                      height: normalize(21),
+                      width: normalize(28),
+                      height: normalize(28),
                       marginRight: 5,
                     }}
                   />
                   <Text
                     style={{
                       color: 'white',
-                      fontSize: 14,
+                      fontSize: 18,
                       fontFamily: font.bold,
+                      textAlign: 'right',
+                      minWidth: normalize(24),
+                      paddingRight: normalize(8),
                     }}>
                     {numberWithCommas(dataPoint, true)}
                   </Text>

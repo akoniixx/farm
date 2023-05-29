@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useMemo} from 'react';
-import {colors, font} from '../../assets';
+import {colors, font, icons} from '../../assets';
 import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
@@ -18,16 +18,21 @@ import CustomHeader from '../../components/CustomHeader';
 import {numberWithCommas} from '../../function/utility';
 import mockImage from '../../assets/mockImage';
 import Counter from '../../components/Counter/Counter';
+import {normalize} from '../../function/Normalize';
+import Modal from '../../components/Modal/Modal';
 interface Props {
   navigation: StackNavigationHelpers;
   route: RouteProp<StackParamList, 'RewardDetailScreen'>;
 }
 export default function RewardDetailScreen({navigation, route}: Props) {
+  const {isDigital = true} = route.params;
   const currentPoint = 6000;
   const width = useWindowDimensions().width - 32;
   const requirePoint = 2000;
-  const amount = 420;
   const [counter, setCounter] = React.useState(1);
+  const [isConfirm, setIsConfirm] = React.useState(false);
+  const [showSuccessExchangeModal, setShowSuccessExchangeModal] =
+    React.useState(false);
 
   useEffect(() => {
     if (requirePoint > currentPoint) {
@@ -66,7 +71,33 @@ export default function RewardDetailScreen({navigation, route}: Props) {
       <CustomHeader
         showBackBtn
         onPressBack={() => navigation.goBack()}
-        title={`${numberWithCommas(currentPoint.toString(), true)} แต้ม`}
+        headerCenter={
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+            }}>
+            <Image
+              source={icons.ICKDronerPoint}
+              style={{
+                width: 30,
+                height: 30,
+                marginRight: 8,
+              }}
+            />
+            <Text
+              style={{
+                fontFamily: font.bold,
+                fontSize: normalize(20),
+                color: colors.fontBlack,
+                textAlign: 'center',
+              }}>
+              {numberWithCommas(currentPoint.toString(), true)} แต้ม
+            </Text>
+          </View>
+        }
       />
       <ScrollView>
         <View
@@ -101,17 +132,20 @@ export default function RewardDetailScreen({navigation, route}: Props) {
             <Text
               style={{
                 fontSize: 20,
+                marginTop: 8,
                 fontFamily: font.medium,
               }}>
               ใช้แต้ม {numberWithCommas(requirePoint.toString(), true)} แต้ม
             </Text>
-            <Counter
-              count={counter}
-              isDisableMinus={isDisableMinus}
-              isDisablePlus={isDisablePlus}
-              setCount={count => setCounter(count)}
-              isLimit={isLimit}
-            />
+            {!isDigital && (
+              <Counter
+                count={counter}
+                isDisableMinus={isDisableMinus}
+                isDisablePlus={isDisablePlus}
+                setCount={count => setCounter(count)}
+                isLimit={isLimit}
+              />
+            )}
           </View>
           {/* <View style={styles({disable: disableButton}).amountContainer}>
             <Text
@@ -131,6 +165,34 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               {amount}
             </Text>
           </View> */}
+          {isDigital && (
+            <View
+              style={{
+                borderRadius: 10,
+                padding: 10,
+                minHeight: 62,
+                marginTop: 16,
+                backgroundColor: colors.skySoft,
+                width: 162,
+              }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: font.medium,
+                  color: colors.skyDark,
+                }}>
+                หมดอายุอีก 120 วัน
+              </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontFamily: font.bold,
+                  color: colors.fontBlack,
+                }}>
+                30 ต.ค. 66
+              </Text>
+            </View>
+          )}
           <View
             style={{
               marginTop: 16,
@@ -202,12 +264,49 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         <TouchableOpacity
           disabled={disableButton}
           style={styles({disable: disableButton}).button}
-          onPress={onPressExchange}>
+          onPress={isDigital ? () => setIsConfirm(true) : onPressExchange}>
           <Text style={styles({disable: disableButton}).textButton}>
             แลกแต้ม
           </Text>
         </TouchableOpacity>
       </View>
+      <Modal
+        visible={isConfirm}
+        onPressPrimary={() => {
+          setIsConfirm(false);
+          setShowSuccessExchangeModal(true);
+        }}
+        title={'ยืนยันการแลกแต้ม'}
+        onPressSecondary={() => setIsConfirm(false)}
+        subTitle={'ท่านต้องการยืนยันการแลกแต้มหรือไม่'}
+      />
+      <Modal
+        showClose
+        onClose={() => setShowSuccessExchangeModal(false)}
+        iconTop={
+          <Image
+            source={icons.successIcon}
+            style={{width: 42, height: 42, marginBottom: 16}}
+          />
+        }
+        visible={showSuccessExchangeModal}
+        onPressPrimary={() => {
+          setShowSuccessExchangeModal(false);
+          navigation.navigate('RedeemScreen', {
+            data: {
+              image: mockImage.reward1,
+            },
+          });
+        }}
+        onPressSecondary={() => {
+          setShowSuccessExchangeModal(false);
+          navigation.navigate('MyRewardScreen');
+        }}
+        title={'แลกแต้มสำเร็จ'}
+        subTitle={'คูปองพร้อมใช้งานแล้ว'}
+        titlePrimary="ใช้คูปองทันที"
+        titleSecondary="ยังไม่ใช้ ดูรีวอร์ดของฉัน >"
+      />
     </SafeAreaView>
   );
 }
@@ -259,5 +358,14 @@ const styles = ({disable}: {disable?: boolean}) =>
       },
       shadowOpacity: 0.2,
       shadowRadius: 16,
+    },
+    subButton: {
+      width: '100%',
+      backgroundColor: 'transparent',
+      borderRadius: 12,
+      height: 54,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 16,
     },
   });

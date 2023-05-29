@@ -3,6 +3,11 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-swift.h>  
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <React/RCTLinkingManager.h> // <- Add This Import
+#import <FBAEMKit/FBAEMKit.h>
+
 #import "RNSplashScreen.h"
 
 #import <React/RCTAppSetupUtils.h>
@@ -31,10 +36,33 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
 
 @implementation AppDelegate
+
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+[FBAEMReporter configureWithNetworker:nil appID:@"{181756618165362}" reporter:nil]; // Replace {app-id} with your Facebook App id
+[FBAEMReporter enable];
+[FBAEMReporter handleURL:url];
+
+  if ([[FBSDKApplicationDelegate sharedInstance] application:app openURL:url options:options]) {
+    return YES;
+  }
+
  
+  if ([RCTLinkingManager application:app openURL:url options:options]) {
+    return YES;
+  }
+ 
+  return NO;
+}
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+
+                       
+                       
   [GMSServices provideAPIKey:@"AIzaSyDg4BI3Opn-Bo2Pnr40Z7PKlC6MOv8T598"];
   RCTAppSetupPrepareApp(application);
 
@@ -73,6 +101,9 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   [RNSplashScreen show];
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+                       didFinishLaunchingWithOptions:launchOptions];
+
   return YES;
 }
 

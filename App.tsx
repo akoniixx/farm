@@ -11,17 +11,18 @@ import {BackHandler} from 'react-native';
 import buddhaEra from 'dayjs/plugin/buddhistEra';
 import dayjs from 'dayjs';
 import {AuthProvider} from './src/contexts/AuthContext';
+import {Settings} from 'react-native-fbsdk-next';
 dayjs.extend(buddhaEra);
 import {
   firebaseInitialize,
-  getFCMToken,
   requestUserPermission,
 } from './src/firebase/notification';
 import {Platform} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {mixpanel} from './mixpanel';
+import {requestTrackingPermission} from 'react-native-tracking-transparency';
 import {checkNotifications} from 'react-native-permissions';
 import 'moment/locale/th';
+import './src/components/Sheet';
 
 type ActionContextType = {
   actiontaskId: string | null;
@@ -37,15 +38,25 @@ const ActionContext = createContext<ActionContextType>(ActionContextState);
 
 const App = () => {
   const [actiontaskId, setActiontaskId] = useState<string | null>('');
+  const requestTracking = async () => {
+    const status = await requestTrackingPermission();
+    if (status === 'authorized') {
+      Settings.setAdvertiserTrackingEnabled(true);
+    } else {
+      Settings.setAdvertiserTrackingEnabled(false);
+    }
+  };
   useEffect(() => {
     mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
+
     if (Platform.OS === 'ios') {
       firebaseInitialize();
     }
     requestUserPermission();
     checkPermission();
+    requestTracking();
   }, []);
 
   const checkPermission = () => {
