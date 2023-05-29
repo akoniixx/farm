@@ -1,3 +1,7 @@
+## Feature [1.3.0] 2023-05-25
+- Add feature history point 
+- Add point toast and noti
+
 ## Fix [1.2.4] 2023-04-25
 - fix price display
 - fix upload documant

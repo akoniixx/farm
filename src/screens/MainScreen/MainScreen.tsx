@@ -54,6 +54,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     React.useCallback(() => {
       getProfile();
       openSocket();
+      getPointDroner();
     }, []),
   );
 
@@ -477,6 +478,28 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   inactiveDotScale={0.9}
                   tappableDots={true}
                 />
+                <View
+                  style={{
+                    position: 'absolute',
+                    right: '40%',
+                    top: '60%',
+                  }}>
+                  <Pagination
+                    dotsLength={guruKaset.data.length}
+                    activeDotIndex={index}
+                    carouselRef={isCarousel}
+                    dotStyle={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: 5,
+                      marginHorizontal: 0,
+                      backgroundColor: colors.fontBlack,
+                    }}
+                    inactiveDotOpacity={0.4}
+                    inactiveDotScale={0.9}
+                    tappableDots={true}
+                  />
+                </View>
               </View>
             </View>
           ) : null}
