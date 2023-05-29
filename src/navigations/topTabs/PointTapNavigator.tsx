@@ -6,7 +6,6 @@ import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import fonts from '../../assets/fonts';
 import {colors} from '../../assets';
 
-import {mixpanel} from '../../../mixpanel';
 import UsedPointScreen from '../../screens/PointScreen/UsedPointScreen';
 import PendingPointScreen from '../../screens/PointScreen/PendingPointScreen';
 

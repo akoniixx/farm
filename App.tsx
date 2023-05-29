@@ -39,7 +39,12 @@ const ActionContext = createContext<ActionContextType>(ActionContextState);
 const App = () => {
   const [actiontaskId, setActiontaskId] = useState<string | null>('');
   const requestTracking = async () => {
+    const currentStatus = await Settings.getAdvertiserTrackingEnabled();
+    if (currentStatus) {
+      return;
+    }
     const status = await requestTrackingPermission();
+
     if (status === 'authorized') {
       Settings.setAdvertiserTrackingEnabled(true);
     } else {

@@ -25,10 +25,10 @@ import {CardGuruKaset} from '../../components/Carousel/CardGuruKaset';
 import {GuruKaset} from '../../datasource/GuruDatasource';
 import {historyPoint} from '../../datasource/HistoryPointDatasource';
 import LinearGradient from 'react-native-linear-gradient';
+import {usePoint} from '../../contexts/PointContext';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
-  const currentPoint = 123450;
   const [profile, setProfile] = useState({
     name: '',
     lastname: '',
@@ -41,6 +41,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     isOpenReceiveTask: false,
     status: '',
   });
+  const {getCurrentPoint, currentPoint} = usePoint();
   const [openNoti, setOpenNoti] = useState(false);
   const [guruKaset, setGuruKaset] = useState<any>();
   const isCarousel = React.useRef(null);
@@ -50,7 +51,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const [index, setIndex] = React.useState(0);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
-  const [dataPoint, setDataPoint] = useState<any>();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -73,22 +73,22 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   useEffect(() => {
+    const getPointDroner = async () => {
+      try {
+        setLoading(true);
+        await getCurrentPoint();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
     getProfile();
     openSocket();
     getPointDroner();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getPointDroner = async () => {
-    setLoading(true);
-    const droner_id: any = await AsyncStorage.getItem('droner_id');
-    await historyPoint
-      .getPoint(droner_id)
-      .then(res => {
-        setDataPoint(res.balance);
-      })
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false));
-  };
   const openSocket = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     await socket.connect();
@@ -307,7 +307,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                       minWidth: normalize(24),
                       paddingRight: normalize(8),
                     }}>
-                    {numberWithCommas(dataPoint, true)}
+                    {numberWithCommas(currentPoint.toString(), true)}
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>

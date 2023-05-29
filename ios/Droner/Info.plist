@@ -19,6 +19,8 @@
 <string>8a0ce86f62551714f3c4463f9482fbac</string>
 <key>FacebookDisplayName</key>
 <string>นักบินโดรน</string>
+<key>AdvertiserTrackingEnabled</key>
+<string>true</string>
 <key>FacebookAutoLogAppEventsEnabled</key>
  <string>
  isAdvertiserTrackingEnabled</string>
@@ -26,7 +28,6 @@
 <array>
   <string>fbapi</string>
   <string>fb-messenger-api</string>
-  <string>fbauth2</string>
   <string>fbshareextension</string>
 </array>
 	<key>CFBundleDevelopmentRegion</key>
