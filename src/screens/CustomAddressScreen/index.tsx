@@ -13,6 +13,8 @@ import AnimatedInput from '../../components/Input/AnimatedInput';
 import Dropdown from '../../components/Dropdown/Dropdown';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 export default function CustomAddressScreen({
   navigation,
@@ -21,8 +23,7 @@ export default function CustomAddressScreen({
   navigation: any;
   route: any;
 }) {
-  const {data} = route.params;
-
+  const {data, isEdit = false, initialValue = {}} = route.params;
   const [objInput, setObjInput] = React.useState({
     addressNo: '',
     detail: '',
@@ -44,17 +45,63 @@ export default function CustomAddressScreen({
   const [districts, setDistricts] = React.useState([]);
   const [subDistricts, setSubDistricts] = React.useState([]);
   const [postCode, setPostCode] = React.useState<any>([]);
+  const [loading, setLoading] = React.useState(false);
   const onConfirm = async () => {
-    console.log(objInput);
-    navigation.goBack();
+    try {
+      setLoading(true);
+      const dronerId = await AsyncStorage.getItem('droner_id');
+      const payload = {
+        dronerId: dronerId || '',
+        address1: objInput.addressNo,
+        address2: objInput.detail,
+        provinceId: objInput.province.value,
+        districtId: objInput.district.value,
+        subdistrictId: objInput.subDistrict.value,
+        postcode: objInput.postCode,
+      };
+      if (isEdit) {
+        await ProfileDatasource.postAddressList(payload);
+      } else {
+        await ProfileDatasource.editAddressList({
+          ...payload,
+          addressId: initialValue.id,
+        });
+      }
+      setLoading(false);
+      setTimeout(() => {
+        navigation.goBack();
+      }, 300);
+    } catch (e) {
+      console.log(e);
+    }
   };
   useEffect(() => {
-    // const getAllKey = async () => {
-    //   const keys = await AsyncStorage.getAllKeys();
-    //   console.log(keys);
-    // };
-
-    // getAllKey();
+    const getInitialValue = async () => {
+      try {
+        if (isEdit) {
+          setObjInput({
+            addressNo: initialValue.address1,
+            detail: initialValue.address2,
+            province: {
+              label: initialValue.province.provinceName,
+              value: initialValue.province.provinceId,
+            },
+            district: {
+              label: initialValue.district.districtName,
+              value: initialValue.district.districtId,
+            },
+            subDistrict: {
+              label: initialValue.subdistrict.subdistrictName,
+              value: initialValue.subdistrict.subdistrictId,
+            },
+            postCode: initialValue.postcode,
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getInitialValue();
 
     QueryLocation.QueryProvince()
       .then(res => {
@@ -146,6 +193,10 @@ export default function CustomAddressScreen({
                   label: '',
                   value: '',
                 },
+                subDistrict: {
+                  label: '',
+                  value: '',
+                },
                 postCode: '',
               });
             }}
@@ -220,6 +271,11 @@ export default function CustomAddressScreen({
           <Text style={styles.textButton}>บันทึก</Text>
         </TouchableOpacity>
       </View>
+      <Spinner
+        visible={loading}
+        textContent="Loading..."
+        textStyle={{color: '#FFF'}}
+      />
     </SafeAreaView>
   );
 }

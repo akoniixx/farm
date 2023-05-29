@@ -7,14 +7,28 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {colors, font, icons} from '../../assets';
 import LinearGradient from 'react-native-linear-gradient';
 import {numberWithCommas} from '../../function/utility';
 import ListReward from './ListReward';
 import image from '../../assets/images/image';
+import {usePoint} from '../../contexts/PointContext';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 export default function RewardScreen({navigation}: any) {
+  const {currentPoint, getCurrentPoint} = usePoint();
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const getPoint = async () => {
+      try {
+        await Promise.all([getCurrentPoint()]);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getPoint();
+  }, [getCurrentPoint]);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <View style={styles.container}>
@@ -23,6 +37,7 @@ export default function RewardScreen({navigation}: any) {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
+            paddingHorizontal: 16,
           }}>
           <TouchableOpacity
             style={{
@@ -49,7 +64,7 @@ export default function RewardScreen({navigation}: any) {
                     fontFamily: font.bold,
                     color: colors.white,
                   }}>
-                  {numberWithCommas(`123000`, true)}
+                  {numberWithCommas(currentPoint.toString(), true)}
                 </Text>
                 <Text
                   style={{
@@ -119,13 +134,19 @@ export default function RewardScreen({navigation}: any) {
             style={{
               fontSize: 18,
               fontFamily: font.bold,
+              paddingHorizontal: 16,
               color: colors.fontBlack,
             }}>
             รีวอร์ดทั้งหมด
           </Text>
-          <ListReward navigation={navigation} />
+          <ListReward navigation={navigation} setLoading={setLoading} />
         </View>
       </View>
+      <Spinner
+        visible={loading}
+        textContent="Loading..."
+        textStyle={{color: '#FFF'}}
+      />
     </SafeAreaView>
   );
 }
@@ -139,6 +160,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   container: {
-    padding: 16,
+    paddingVertical: 16,
   },
 });

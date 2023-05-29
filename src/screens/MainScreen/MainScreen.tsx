@@ -17,13 +17,11 @@ import {numberWithCommas, socket} from '../../function/utility';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
 import Toast from 'react-native-toast-message';
-import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import fonts from '../../assets/fonts';
 import {mixpanel} from '../../../mixpanel';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {CardGuruKaset} from '../../components/Carousel/CardGuruKaset';
 import {GuruKaset} from '../../datasource/GuruDatasource';
-import {historyPoint} from '../../datasource/HistoryPointDatasource';
 import LinearGradient from 'react-native-linear-gradient';
 import {usePoint} from '../../contexts/PointContext';
 
@@ -73,19 +71,9 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    const getPointDroner = async () => {
-      try {
-        setLoading(true);
-        await getCurrentPoint();
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
     getProfile();
     openSocket();
-    getPointDroner();
+    getCurrentPoint();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

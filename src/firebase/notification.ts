@@ -33,6 +33,10 @@ export async function requestUserPermission() {
 
 export const getFCMToken = async () => {
   try {
+    const localFcmToken = await AsyncStorage.getItem('fcmToken');
+    if (localFcmToken) {
+      return;
+    }
     const token = await messaging().getToken();
     await AsyncStorage.setItem('fcmtoken', token);
   } catch (err) {

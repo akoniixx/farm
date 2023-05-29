@@ -4,13 +4,50 @@ import {colors, font, icons} from '../../assets';
 import {useAuth} from '../../contexts/AuthContext';
 import {insertHyphenInTelNumber} from '../../function/mutateText';
 import RadioList from '../../components/RadioList';
+import {RewardParams} from '.';
+import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import {useFocusEffect} from '@react-navigation/native';
 
+interface AddressType {
+  id: string;
+  address1: string;
+  address2: string;
+  address3: string;
+  provinceId: number;
+  districtId: number;
+  subdistrictId: number;
+  postcode: string;
+  createdAt: string;
+  updatedAt: string;
+  province: {
+    provinceId: number;
+    provinceName: string;
+    region: string;
+  };
+  district: {
+    districtId: number;
+    districtName: string;
+    provinceId: number;
+    provinceName: string;
+  };
+  subdistrict: {
+    subdistrictId: number;
+    subdistrictName: string;
+    districtId: number;
+    districtName: string;
+    provinceId: number;
+    provinceName: string;
+    lat: string | null;
+    long: string | null;
+    postcode: string;
+  };
+}
 export default function AddressDetail({
   navigation,
   data,
 }: {
   navigation: any;
-  data: any;
+  data: RewardParams;
 }) {
   const {
     state: {user},
@@ -18,15 +55,43 @@ export default function AddressDetail({
   const [radioAddress, setRadioAddress] = React.useState<'default' | 'custom'>(
     'default',
   );
-
+  const [addressList, setAddressList] = React.useState<AddressType[]>([]);
+  const [mainAddress, secondAddress] = useMemo(() => {
+    const mergeAddress = addressList.map(item => {
+      if (!item) {
+        return null;
+      }
+      return {
+        ...item,
+        addressName: `${item.address1} ${item.address2} ${item.province.provinceName} ${item.district.districtName} ${item.subdistrict.subdistrictName} ${item.postcode}`,
+        value: item.id,
+      };
+    });
+    return mergeAddress;
+  }, [addressList]);
   const onChangeRadioAddress = (value: any) => {
     setRadioAddress(value);
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const getAddressListById = async () => {
+        try {
+          const result = await ProfileDatasource.getAddressListById(
+            user?.id || '',
+          );
+          const state = [result.address, result.otherAddress];
+          setAddressList(state);
+        } catch (e) {
+          console.log(e);
+        }
+      };
+      getAddressListById();
+    }, [user?.id]),
+  );
   const userPhoneNumber = useMemo(() => {
     return insertHyphenInTelNumber(user?.telephoneNo || '');
   }, [user?.telephoneNo]);
-  const isHave = false;
   const dataList = [
     {
       label: 'ค่าเริ่มต้น',
@@ -41,8 +106,7 @@ export default function AddressDetail({
               fontSize: 16,
               marginTop: 8,
             }}>
-            123/57 หมู่7 ถนนรังสิตปทุมธานี ตำบลคลองหนึ่ง อำเภอเมืองปทุมธานี
-            จังหวัดปทุมธานี 13180
+            {mainAddress?.addressName}
           </Text>
         </View>
       ),
@@ -50,8 +114,15 @@ export default function AddressDetail({
     {
       label: 'ที่อยู่อื่น',
       value: 'custom',
-      extra: (
-        <TouchableOpacity>
+      extra: secondAddress ? (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('CustomAddressScreen', {
+              isEdit: true,
+              initialValue: secondAddress,
+              data: data,
+            });
+          }}>
           <Image
             source={icons.EditGrey}
             style={{
@@ -60,8 +131,11 @@ export default function AddressDetail({
             }}
           />
         </TouchableOpacity>
+      ) : (
+        <></>
       ),
-      belowComponent: isHave ? (
+      // eslint-disable-next-line no-extra-boolean-cast
+      belowComponent: !!secondAddress ? (
         <View>
           <Text
             style={{
@@ -70,8 +144,7 @@ export default function AddressDetail({
               fontSize: 16,
               marginTop: 8,
             }}>
-            123/001 หมู่5 ถนนรังสิตปทุมธานี ตำบลคลองหนึ่ง อำเภอเมืองปทุมธานี
-            จังหวัดปทุมธานี 12112
+            {secondAddress?.addressName}
           </Text>
         </View>
       ) : (
@@ -91,9 +164,7 @@ export default function AddressDetail({
               borderRadius: 8,
             }}
             onPress={() => {
-              navigation.navigate('CustomAddressScreen', {
-                data,
-              });
+              navigation.navigate('CustomAddressScreen', {data});
             }}>
             <Text
               style={{

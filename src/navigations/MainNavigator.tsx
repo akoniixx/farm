@@ -70,6 +70,8 @@ export type StackParamList = {
   };
   CustomAddressScreen: {
     data: any;
+    isEdit?: boolean;
+    initialValues?: any;
   };
   RedeemScreen: {
     data: any;

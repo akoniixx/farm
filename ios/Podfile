@@ -16,6 +16,7 @@ pod 'react-native-google-maps', :path => rn_maps_path
 pod 'Firebase', :modular_headers => true
 pod 'FirebaseCore', :modular_headers => true
 pod 'GoogleUtilities', :modular_headers => true
+ 
 $RNFirebaseAsStaticFramework = true
 
 

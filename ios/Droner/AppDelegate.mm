@@ -45,6 +45,8 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 [FBAEMReporter enable];
 [FBAEMReporter handleURL:url];
 
+
+
   if ([[FBSDKApplicationDelegate sharedInstance] application:app openURL:url options:options]) {
     return YES;
   }

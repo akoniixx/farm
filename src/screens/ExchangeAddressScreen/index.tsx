@@ -5,8 +5,9 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  useWindowDimensions,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';
 import {colors, font} from '../../assets';
@@ -15,18 +16,59 @@ import {numberWithCommas} from '../../function/utility';
 import AddressDetail from './AddressDetail';
 import Modal from '../../components/Modal/Modal';
 import Text from '../../components/Text';
-
+import FastImage from 'react-native-fast-image';
+import RenderHTML from 'react-native-render-html';
+import {usePoint} from '../../contexts/PointContext';
 interface Props {
   navigation: any;
   route: RouteProp<StackParamList, 'ExchangeAddressScreen'>;
 }
+export interface RewardParams {
+  id: string;
+  rewardName: string;
+  imagePath: string | null;
+  rewardType: string;
+  rewardExchange: string;
+  rewardNo: string;
+  score: number | null;
+  amount: number;
+  used: number;
+  remain: number;
+  description: string;
+  condition: string;
+  startExchangeDate: string | null;
+  expiredExchangeDate: string | null;
+  startUsedDate: string | null;
+  expiredUsedDate: string | null;
+  startExchangeDateCronJob: string | null;
+  expiredExchangeDateCronJob: string | null;
+  startUsedDateCronJob: string | null;
+  expiredUsedDateCronJob: string | null;
+  digitalCode: string | null;
+  status: string;
+  statusUsed: string | null;
+  createAt: string;
+  updateAt: string;
+  amountExchange: number;
+  usePoint: number;
+}
+
 export default function ExchangeAddressScreen({navigation, route}: Props) {
   const {data} = route.params;
   const [isConfirm, setIsConfirm] = React.useState(false);
+  const {currentPoint} = usePoint();
+  const [exchangeDetail, setExchangeDetail] = React.useState<RewardParams>(
+    {} as RewardParams,
+  );
   const onConfirm = () => {
-    console.log('confirm');
     setIsConfirm(true);
   };
+  useEffect(() => {
+    if (data) {
+      setExchangeDetail(data);
+    }
+  }, [data]);
+  const {width} = useWindowDimensions();
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <CustomHeader
@@ -40,8 +82,8 @@ export default function ExchangeAddressScreen({navigation, route}: Props) {
             style={{
               flex: 0.2,
             }}>
-            <Image
-              source={data.image}
+            <FastImage
+              source={{uri: data.imagePath}}
               resizeMode="contain"
               style={{
                 width: 80,
@@ -59,17 +101,20 @@ export default function ExchangeAddressScreen({navigation, route}: Props) {
               }}>
               สินค้า
             </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: font.bold,
-                color: colors.fontBlack,
-                marginTop: 4,
-                lineHeight: 28,
-                alignSelf: 'flex-start',
-              }}>
-              {data.title}
-            </Text>
+            <RenderHTML
+              contentWidth={width * 0.8}
+              source={{html: exchangeDetail.rewardName}}
+              tagsStyles={{
+                p: {
+                  fontSize: 16,
+                  fontFamily: font.bold,
+                  color: colors.fontBlack,
+                  marginTop: 4,
+                  lineHeight: 28,
+                  alignSelf: 'flex-start',
+                },
+              }}
+            />
           </View>
         </View>
         <View style={styles.content}>
@@ -91,7 +136,7 @@ export default function ExchangeAddressScreen({navigation, route}: Props) {
                 color: colors.fontBlack,
                 lineHeight: 28,
               }}>
-              {data.amount}
+              {exchangeDetail.amountExchange}
             </Text>
           </View>
           <View style={styles.row}>
@@ -111,7 +156,7 @@ export default function ExchangeAddressScreen({navigation, route}: Props) {
                 color: colors.fontBlack,
                 lineHeight: 28,
               }}>
-              {numberWithCommas(data.usePoint.toString(), true)} แต้ม
+              {numberWithCommas(currentPoint.toString(), true)} แต้ม
             </Text>
           </View>
           <View style={styles.row}>
@@ -153,11 +198,15 @@ export default function ExchangeAddressScreen({navigation, route}: Props) {
 
                 color: colors.fontBlack,
               }}>
-              {numberWithCommas(data.pointLeft.toString(), true)} แต้ม
+              {numberWithCommas(
+                (currentPoint - exchangeDetail.usePoint).toString(),
+                true,
+              )}{' '}
+              แต้ม
             </Text>
           </View>
         </View>
-        <AddressDetail navigation={navigation} data={data} />
+        <AddressDetail navigation={navigation} data={exchangeDetail} />
       </ScrollView>
 
       <View style={styles.footer}>

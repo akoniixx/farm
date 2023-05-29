@@ -23,6 +23,7 @@ import {requestTrackingPermission} from 'react-native-tracking-transparency';
 import {checkNotifications} from 'react-native-permissions';
 import 'moment/locale/th';
 import './src/components/Sheet';
+import {PointProvider} from './src/contexts/PointContext';
 
 type ActionContextType = {
   actiontaskId: string | null;
@@ -77,9 +78,11 @@ const App = () => {
       <ActionContext.Provider value={{actiontaskId, setActiontaskId}}>
         <NavigationContainer ref={navigationRef}>
           <AuthProvider>
-            <SheetProvider>
-              <AppNavigator />
-            </SheetProvider>
+            <PointProvider>
+              <SheetProvider>
+                <AppNavigator />
+              </SheetProvider>
+            </PointProvider>
           </AuthProvider>
           <Toast config={toastConfig} />
         </NavigationContainer>

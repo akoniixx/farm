@@ -37,7 +37,7 @@ const AnimatedInput = ({
 
   useEffect(() => {
     if (value.trim() !== '') {
-      animateLabel(-10, 0.8);
+      animateLabel(-10, 1);
     }
   }, [value, animateLabel]);
 

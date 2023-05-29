@@ -15,39 +15,66 @@ import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import CustomHeader from '../../components/CustomHeader';
-import {numberWithCommas} from '../../function/utility';
+import {momentExtend, numberWithCommas} from '../../function/utility';
 import mockImage from '../../assets/mockImage';
 import Counter from '../../components/Counter/Counter';
 import {normalize} from '../../function/Normalize';
 import Modal from '../../components/Modal/Modal';
+import {rewardDatasource} from '../../datasource/RewardDatasource';
+import {RewardListType} from '../RewardScreen/ListReward';
+import {usePoint} from '../../contexts/PointContext';
+import HTML from 'react-native-render-html';
+
+import moment from 'moment';
+import {useAuth} from '../../contexts/AuthContext';
+import FastImage from 'react-native-fast-image';
 interface Props {
   navigation: StackNavigationHelpers;
   route: RouteProp<StackParamList, 'RewardDetailScreen'>;
 }
 export default function RewardDetailScreen({navigation, route}: Props) {
-  const {isDigital = true} = route.params;
-  const currentPoint = 6000;
+  const {isDigital, id} = route.params;
+
   const width = useWindowDimensions().width - 32;
-  const requirePoint = 2000;
   const [counter, setCounter] = React.useState(1);
+  const {currentPoint} = usePoint();
   const [isConfirm, setIsConfirm] = React.useState(false);
   const [showSuccessExchangeModal, setShowSuccessExchangeModal] =
     React.useState(false);
-
-  useEffect(() => {
-    if (requirePoint > currentPoint) {
-      setCounter(0);
+  const [rewardDetail, setRewardDetail] = React.useState<RewardListType>(
+    {} as RewardListType,
+  );
+  const requirePoint = useMemo(() => {
+    if (!rewardDetail.score) {
+      return 0;
     }
-  }, []);
+    return +rewardDetail.score;
+  }, [rewardDetail]);
+  useEffect(() => {
+    const getRewardById = async () => {
+      try {
+        const result = await rewardDatasource.getRewardDetail(id);
+        const resultData: RewardListType = {
+          ...result,
+        };
+        if (resultData.score && +resultData.score > currentPoint) {
+          setCounter(0);
+        }
+        setRewardDetail(resultData);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    if (id) {
+      getRewardById();
+    }
+  }, [id, currentPoint]);
   const onPressExchange = () => {
     navigation.navigate('ExchangeAddressScreen', {
       data: {
-        id: route.params.id,
-        title: 'เสื้อไอคอนเกษตกร 2 ตัว มูลค่า 1,000 บาท',
-        amount: counter,
+        ...rewardDetail,
+        amountExchange: counter,
         usePoint: requirePoint * counter,
-        image: mockImage.reward1,
-        pointLeft: currentPoint - requirePoint * counter,
       },
     });
   };
@@ -58,7 +85,8 @@ export default function RewardDetailScreen({navigation, route}: Props) {
 
       const disableButton =
         counter <= 0 || counter * requirePoint > currentPoint;
-      const isDisablePlus = counter * requirePoint > currentPoint;
+      const isDisablePlus = (counter + 1) * requirePoint >= currentPoint;
+
       return {
         isLimit: (counter || 1) * requirePoint >= currentPoint,
         isDisableMinus,
@@ -66,6 +94,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         disableButton,
       };
     }, [counter, currentPoint, requirePoint]);
+  console.log('rewardDetail', JSON.stringify(rewardDetail, null, 2));
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <CustomHeader
@@ -104,8 +133,10 @@ export default function RewardDetailScreen({navigation, route}: Props) {
           style={{
             paddingHorizontal: 16,
           }}>
-          <Image
-            source={mockImage.reward1}
+          <FastImage
+            source={{
+              uri: rewardDetail.imagePath,
+            }}
             style={{
               height: width,
               width: width,
@@ -121,7 +152,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               lineHeight: 40,
               width: '80%',
             }}>
-            เสื้อไอคอนเกษตกร 2 ตัว มูลค่า 1,000 บาท
+            {rewardDetail.rewardName || ''}
           </Text>
           <View
             style={{
@@ -165,7 +196,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               {amount}
             </Text>
           </View> */}
-          {isDigital && (
+          {isDigital && rewardDetail?.expiredExchangeDate && (
             <View
               style={{
                 borderRadius: 10,
@@ -181,7 +212,9 @@ export default function RewardDetailScreen({navigation, route}: Props) {
                   fontFamily: font.medium,
                   color: colors.skyDark,
                 }}>
-                หมดอายุอีก 120 วัน
+                หมดอายุอีก{' '}
+                {moment(rewardDetail.expiredUsedDate).diff(moment(), 'days')}{' '}
+                วัน
               </Text>
               <Text
                 style={{
@@ -189,7 +222,10 @@ export default function RewardDetailScreen({navigation, route}: Props) {
                   fontFamily: font.bold,
                   color: colors.fontBlack,
                 }}>
-                30 ต.ค. 66
+                {momentExtend.toBuddhistYear(
+                  rewardDetail?.expiredUsedDate?.toString() || '',
+                  'DD MMM YYYY',
+                )}
               </Text>
             </View>
           )}
@@ -205,24 +241,20 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               }}>
               รายละเอียด
             </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: font.light,
-                color: colors.gray,
-                lineHeight: 28,
-              }}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book. It has
-              survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was
-              popularised in the 1960s with the release of Letraset sheets
-              containing Lorem Ipsum passages, and more recently with desktop
-              publishing software like Aldus PageMaker including versions of
-              Lorem Ipsum.
-            </Text>
+            <HTML
+              source={{
+                html: rewardDetail.description || '',
+              }}
+              contentWidth={width}
+              tagsStyles={{
+                p: {
+                  fontSize: 16,
+                  fontFamily: font.light,
+                  color: colors.gray,
+                  lineHeight: 28,
+                },
+              }}
+            />
           </View>
           <View
             style={{
@@ -236,21 +268,20 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               }}>
               เงื่อนไข
             </Text>
-            {[1, 2, 3, 4, 5].map((item, index) => {
-              return (
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: font.light,
-                    color: colors.gray,
-                    lineHeight: 28,
-                  }}>
-                  {`\u2022`} Lorem Ipsum is simply dummy text of the printing
-                  and typesetting industry. Lorem Ipsum has been the industry's
-                  standard
-                </Text>
-              );
-            })}
+            <HTML
+              source={{
+                html: rewardDetail.condition || '',
+              }}
+              contentWidth={width}
+              tagsStyles={{
+                p: {
+                  fontSize: 16,
+                  fontFamily: font.light,
+                  color: colors.gray,
+                  lineHeight: 28,
+                },
+              }}
+            />
           </View>
 
           <View

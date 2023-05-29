@@ -16,7 +16,6 @@ import DashedLine from 'react-native-dashed-line';
 import {momentExtend} from '../../function/utility';
 import moment from 'moment';
 import {SheetManager} from 'react-native-actions-sheet';
-import axios from 'axios';
 import {BASE_URL, httpClient} from '../../config/develop-config';
 
 interface Props {

@@ -32,4 +32,5 @@ export default {
   bgHeaderMission: require('./bgHeaderMission.png'),
   successStamp: require('./successStamp.png'),
   fullQuota: require('./fullQuota.png'),
+  missionProgressBar: require('./missionProgressBar.json'),
 };

@@ -23,7 +23,7 @@ export default function CardMission({
   isDouble = false,
   isFullQuota = true,
   isExpire = false,
-  current = 10,
+  current = 30,
   total = 100,
   imageSource = mockImage.reward2,
 }: Props) {

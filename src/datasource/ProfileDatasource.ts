@@ -230,4 +230,50 @@ export class ProfileDatasource {
       .then(res => res.data)
       .catch(err => console.log(err));
   }
+  static async getAddressListById(id: string) {
+    return httpClient
+      .get(BASE_URL + `/droner/droner-address/${id}`)
+      .then(res => res.data)
+      .catch(err => console.log(err));
+  }
+  static async postAddressList({
+    dronerId,
+    ...payload
+  }: {
+    dronerId: string;
+    provinceId: string;
+    districtId: string;
+    subdistrictId: string;
+    postcode: string;
+    address1: string;
+    address2: string;
+  }) {
+    return httpClient
+      .post(BASE_URL + `/droner/add-other-address/${dronerId}`, {
+        address3: '',
+        ...payload,
+      })
+      .then(res => res.data)
+      .catch(err => console.log(err));
+  }
+  static async editAddressList({
+    addressId,
+    ...payload
+  }: {
+    addressId: string;
+    provinceId: string;
+    districtId: string;
+    subdistrictId: string;
+    postcode: string;
+    address1: string;
+    address2: string;
+  }) {
+    return httpClient
+      .post(BASE_URL + `/droner/update-other-address/${addressId}`, {
+        address3: '',
+        ...payload,
+      })
+      .then(res => res.data)
+      .catch(err => console.log(err));
+  }
 }

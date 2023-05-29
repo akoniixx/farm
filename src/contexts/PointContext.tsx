@@ -21,6 +21,7 @@ export const PointProvider: React.FC<Props> = ({children}) => {
     try {
       const droner_id: any = await AsyncStorage.getItem('droner_id');
       const result = await historyPoint.getPoint(droner_id);
+      console.log('result', JSON.stringify(result, null, 2));
       setCurrentPoint(result.balance);
     } catch (error) {
       console.log(error);
