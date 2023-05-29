@@ -163,7 +163,11 @@ export default function ContentList({
                       } ไร่)`}
                     </Text>
                     <Text style={styles({}).textMoney}>
-                    ฿{numberWithCommas(calTotalPrice(item.price,item.revenuePromotion),true)}
+                      ฿
+                      {numberWithCommas(
+                        calTotalPrice(item.price, item.revenuePromotion),
+                        true,
+                      )}
                     </Text>
                   </View>
                   <Text

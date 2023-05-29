@@ -723,7 +723,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   </View>
                 </ScrollView>
                 <MainButton
-                  disable={!brand || !brandtype  ? true : false}
+                  disable={!brand || !brandtype ? true : false}
                   label="ถัดไป"
                   color={colors.orange}
                   onPress={addDrone}

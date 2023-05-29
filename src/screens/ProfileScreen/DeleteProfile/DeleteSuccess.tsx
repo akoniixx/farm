@@ -5,7 +5,7 @@ import {normalize} from '../../../function/Normalize';
 import colors from '../../../assets/colors/colors';
 import image from '../../../assets/images/image';
 import {MainButton} from '../../../components/Button/MainButton';
-import { callCenterDash } from '../../../definitions/callCenterNumber';
+import {callCenterDash} from '../../../definitions/callCenterNumber';
 
 const DeleteSuccess: React.FC<any> = ({navigation}) => {
   const {width} = useWindowDimensions();

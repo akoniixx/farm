@@ -14,7 +14,12 @@ import {normalize} from '@rneui/themed';
 import {MainButton} from '../Button/MainButton';
 import {colors, font, icons} from '../../assets';
 import fonts from '../../assets/fonts';
-import {calTotalPrice, numberWithCommas, openGps, socket} from '../../function/utility';
+import {
+  calTotalPrice,
+  numberWithCommas,
+  openGps,
+  socket,
+} from '../../function/utility';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import ActionSheet, {
   SheetManager,
@@ -25,7 +30,7 @@ import {TaskDatasource} from '../../datasource/TaskDatasource';
 import Toast from 'react-native-toast-message';
 import {useFocusEffect} from '@react-navigation/native';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
-import { mixpanel } from '../../../mixpanel';
+import {mixpanel} from '../../../mixpanel';
 
 export const NewTaskModal = (
   props: SheetProps<{
@@ -169,7 +174,12 @@ export const NewTaskModal = (
                 color: '#2EC66E',
                 fontSize: normalize(17),
               }}>
-              ฿ {data?.price ? numberWithCommas(calTotalPrice(data?.price,data?.revenuePromotion)) : null}
+              ฿{' '}
+              {data?.price
+                ? numberWithCommas(
+                    calTotalPrice(data?.price, data?.revenuePromotion),
+                  )
+                : null}
             </Text>
           </View>
           <View

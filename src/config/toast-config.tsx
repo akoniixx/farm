@@ -9,7 +9,10 @@ import Toast from 'react-native-toast-message';
 import {TabActions} from '@react-navigation/native';
 import {responsiveHeigth, responsiveWidth} from '../function/responsive';
 import fonts from '../assets/fonts';
-import { callCenterDash, callcenterNumber } from '../definitions/callCenterNumber';
+import {
+  callCenterDash,
+  callcenterNumber,
+} from '../definitions/callCenterNumber';
 
 const toastStyle = {
   backgroundColor: '#3EBD93',
@@ -332,8 +335,8 @@ export const toastConfig = {
           />
           <View
             style={{
-              paddingHorizontal : normalize(10),
-              width : '90%'
+              paddingHorizontal: normalize(10),
+              width: '90%',
             }}>
             <Text style={styles.info}>{text1}</Text>
           </View>

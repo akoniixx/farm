@@ -14,13 +14,14 @@ import {normalize} from '../function/Normalize';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 interface Prop {
-  title?: string;
+  title?: string | JSX.Element;
   showBackBtn?: boolean;
   titleColor?: string;
   backgroundColor?: string;
   onPressBack?: () => void;
   headerRight?: () => JSX.Element;
   headerLeft?: () => JSX.Element;
+  headerCenter?: JSX.Element;
   style?: ViewProps;
   image?: () => JSX.Element;
 }
@@ -35,29 +36,41 @@ const CustomHeader: React.FC<Prop> = ({
   headerLeft,
   headerRight,
   image,
+  headerCenter,
 }) => {
   return (
-    <SafeAreaView style={[{ backgroundColor: backgroundColor ?? colors.white }, style]}>
-      <View style={styles.headerWraper}>
-        <View style={styles.headerLeftWrapper}>
+    <SafeAreaView style={[styles.headerSafeArea, style]}>
+      <View style={styles.headerWrapper}>
+        <View style={headerLeft ? styles.headerLeftWrapper : styles.noLeftSide}>
           {showBackBtn && (
             <TouchableOpacity
               style={{paddingVertical: 14, paddingHorizontal: 24}}
               onPress={onPressBack}>
-              <Icon name="left" size={30} color={titleColor ?? "black"} />
+              <Icon name="left" size={30} color={titleColor ?? 'black'} />
             </TouchableOpacity>
           )}
           {headerLeft?.()}
         </View>
         <View style={styles.headerTitleWraper}>
-          <Text style={{
-              fontFamily: font.bold,
-              fontSize: normalize(20),
-              color: titleColor ?? colors.fontBlack,
-              textAlign: 'center',
-            }}>{title}</Text>
+          {headerCenter ? (
+            headerCenter
+          ) : (
+            <Text
+              style={{
+                fontFamily: font.bold,
+                fontSize: normalize(20),
+                color: titleColor ?? colors.fontBlack,
+                textAlign: 'center',
+              }}>
+              {title}
+            </Text>
+          )}
         </View>
-        <View style={styles.headerRightWrapper}>{headerRight?.()}</View>
+
+        <View
+          style={headerRight ? styles.headerRightWrapper : styles.noRightSide}>
+          {headerRight?.()}
+        </View>
         <View style={styles.fav}>{image?.()}</View>
       </View>
     </SafeAreaView>
@@ -70,7 +83,15 @@ const styles = StyleSheet.create({
   headerSafeArea: {
     backgroundColor: colors.white,
   },
-  headerWraper: {
+  noRightSide: {
+    width: normalize(30),
+  },
+  noLeftSide: {
+    width: normalize(60),
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerWrapper: {
     flexDirection: 'row',
     justifyContent: 'center',
     height: normalize(75),

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import { font, image } from '../../assets';
+import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
+import {font, image} from '../../assets';
 import colors from '../../assets/colors/colors';
-import { momentExtend, numberWithCommas } from '../../function/utility';
-import { normalize } from '../../function/Normalize';
+import {momentExtend, numberWithCommas} from '../../function/utility';
+import {normalize} from '../../function/Normalize';
 
 interface guruData {
   index: any;
@@ -31,21 +31,16 @@ export const PendingPoint: React.FC<guruData> = ({
           paddingVertical: 15,
         }}>
         <View>
-          <Text style={styles.title}>
-            {action }
-          </Text>
+          <Text style={styles.title}>{action}</Text>
           <Text style={styles.textDate}>{'#' + taskNo}</Text>
         </View>
-      
-          <View>
-            <Text style={styles.positive}>{`≈ ${numberWithCommas(
-              point,
-            )} `}</Text>
-            <Text style={styles.textDate}>
-              {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm น.`)}
-            </Text>
-          </View>
-       
+
+        <View>
+          <Text style={styles.positive}>{`≈ ${numberWithCommas(point)} `}</Text>
+          <Text style={styles.textDate}>
+            {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm น.`)}
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -53,7 +48,8 @@ export const PendingPoint: React.FC<guruData> = ({
           paddingVertical: 0.5,
           width: '95%',
           alignSelf: 'center',
-        }}/>
+        }}
+      />
     </View>
   );
 };

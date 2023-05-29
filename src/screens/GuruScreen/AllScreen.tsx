@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React, {useEffect, useReducer, useRef, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -12,18 +12,18 @@ import ActionSheet from 'react-native-actions-sheet';
 import colors from '../../assets/colors/colors';
 import icons from '../../assets/icons/icons';
 import CustomHeader from '../../components/CustomHeader';
-import { CardGuru } from '../../components/Guru/CardGuru';
+import {CardGuru} from '../../components/Guru/CardGuru';
 
-import { font } from '../../assets/index';
-import { useIsFocused } from '@react-navigation/native';
-import { GuruKaset } from '../../datasource/GuruDatasource';
+import {font} from '../../assets/index';
+import {useIsFocused} from '@react-navigation/native';
+import {GuruKaset} from '../../datasource/GuruDatasource';
 
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { normalize } from '../../function/Normalize';
-import { momentExtend } from '../../function/utility';
+import {normalize} from '../../function/Normalize';
+import {momentExtend} from '../../function/utility';
 
-const AllGuruScreen: React.FC<any> = ({ navigation }) => {
+const AllGuruScreen: React.FC<any> = ({navigation}) => {
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
   const filterNews = useRef<any>();
@@ -47,22 +47,22 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <CustomHeader
         title="กูรูเกษตร"
         showBackBtn
         onPressBack={() => navigation.goBack()}
         image={() => (
           <TouchableOpacity
-            onPress={async() => {
+            onPress={async () => {
               filterNews.current.show();
             }}>
-            <Image source={icons.filter} style={{ width: 28, height: 29 }} />
+            <Image source={icons.filter} style={{width: 28, height: 29}} />
           </TouchableOpacity>
         )}
       />
-      <ScrollView style={{ backgroundColor: '#F8F9FA' }}>
-        <View style={{ paddingVertical: 10 }}>
+      <ScrollView style={{backgroundColor: '#F8F9FA'}}>
+        <View style={{paddingVertical: 10}}>
           {data != undefined ? (
             <View>
               <ScrollView>
@@ -107,7 +107,7 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
               justifyContent: 'space-between',
               paddingHorizontal: normalize(20),
             }}>
-            <Text style={{ fontSize: 22, fontFamily: font.medium }}>
+            <Text style={{fontSize: 22, fontFamily: font.medium}}>
               เรียงลำดับบทความ
             </Text>
             <Text
@@ -128,8 +128,8 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
               paddingVertical: 5,
               borderColor: colors.disable,
             }}></View>
-          <View style={{ flex: 1 }}>
-            <View style={{ paddingVertical: 20 }}>
+          <View style={{flex: 1}}>
+            <View style={{paddingVertical: 20}}>
               <TouchableOpacity
                 onPress={async () => {
                   filterNews.current.hide();
@@ -167,7 +167,7 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
                   alignSelf: 'center',
                 }}></View>
             </View>
-            <View style={{ paddingVertical: 5 }}>
+            <View style={{paddingVertical: 5}}>
               <TouchableOpacity
                 onPress={async () => {
                   filterNews.current.hide();
@@ -211,7 +211,7 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
       <Spinner
         visible={loading}
         textContent={'Loading...'}
-        textStyle={{ color: '#FFF' }}
+        textStyle={{color: '#FFF'}}
       />
     </SafeAreaView>
   );

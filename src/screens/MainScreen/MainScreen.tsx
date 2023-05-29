@@ -1,37 +1,31 @@
-import { Switch } from '@rneui/themed';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, font } from '../../assets';
-import { normalize } from '../../function/Normalize';
+import {Switch} from '@rneui/themed';
+import React, {useEffect, useState} from 'react';
+import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
+import {colors, font} from '../../assets';
+import {normalize} from '../../function/Normalize';
 import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
-import { stylesCentral } from '../../styles/StylesCentral';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {stylesCentral} from '../../styles/StylesCentral';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ProfileDatasource } from '../../datasource/ProfileDatasource';
-import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { Avatar } from '@rneui/base';
+import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import icons from '../../assets/icons/icons';
-import io from 'socket.io-client';
-import { SheetManager } from 'react-native-actions-sheet';
-import { BASE_URL } from '../../config/develop-config';
-import { TaskDatasource } from '../../datasource/TaskDatasource';
-import { decimalConvert, numberWithCommas, socket } from '../../function/utility';
-import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import {SheetManager} from 'react-native-actions-sheet';
+import {TaskDatasource} from '../../datasource/TaskDatasource';
+import {numberWithCommas, socket} from '../../function/utility';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
-import messaging from '@react-native-firebase/messaging';
 import Toast from 'react-native-toast-message';
-import { responsiveHeigth, responsiveWidth } from '../../function/responsive';
 import fonts from '../../assets/fonts';
-import { mixpanel } from '../../../mixpanel';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-import { CardGuruKaset } from '../../components/Carousel/CardGuruKaset';
-import { GuruKaset } from '../../datasource/GuruDatasource';
-import { historyPoint } from '../../datasource/HistoryPointDatasource';
+import {mixpanel} from '../../../mixpanel';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
+import {CardGuruKaset} from '../../components/Carousel/CardGuruKaset';
+import {GuruKaset} from '../../datasource/GuruDatasource';
 import LinearGradient from 'react-native-linear-gradient';
+import {usePoint} from '../../contexts/PointContext';
 
-const MainScreen: React.FC<any> = ({ navigation, route }) => {
+const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
   const [profile, setProfile] = useState({
     name: '',
@@ -45,23 +39,22 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     isOpenReceiveTask: false,
     status: '',
   });
+  const {getCurrentPoint, currentPoint} = usePoint();
   const [openNoti, setOpenNoti] = useState(false);
   const [guruKaset, setGuruKaset] = useState<any>();
   const isCarousel = React.useRef(null);
-  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+  const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
   const imageWidth = screenWidth / 2;
   const screen = Dimensions.get('window');
   const [index, setIndex] = React.useState(0);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
-  const [dataPoint, setDataPoint] = useState<any>();
-
 
   useFocusEffect(
     React.useCallback(() => {
       getProfile();
       openSocket();
-      getPointDroner()
+      getCurrentPoint();
     }, []),
   );
 
@@ -81,25 +74,14 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   useEffect(() => {
     getProfile();
     openSocket();
-    getPointDroner()
+    getCurrentPoint();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
-  const getPointDroner = async () => {
-    setLoading(true);
-    const droner_id: any = await AsyncStorage.getItem('droner_id');
-    await historyPoint
-        .getPoint(droner_id)
-        .then(res => {
-            setDataPoint(res.balance);
-        })
-        .catch(err => console.log(err))
-        .finally(() => setLoading(false));
-};
   const openSocket = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     await socket.connect();
-    socket.on(`send-task-${dronerId!}`, ({ data, image_profile_url }) => {
+    socket.on(`send-task-${dronerId!}`, ({data, image_profile_url}) => {
       //Modal Task Screen
       SheetManager.show('NewTaskSheet', {
         payload: {
@@ -170,7 +152,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     TaskDatasource.openReceiveTask(dronerId!, isOpen)
       .then(res => {
-        setProfile({ ...profile, isOpenReceiveTask: res.isOpenReceiveTask });
+        setProfile({...profile, isOpenReceiveTask: res.isOpenReceiveTask});
         if (!isOpen) {
           TaskDatasource.getTaskById(
             dronerId!,
@@ -205,8 +187,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           });
         }}
       />
-      <View style={[stylesCentral.container, { paddingTop: insets.top }]}>
-        <View >
+      <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
+        <View>
           <View style={styles.headCard}>
             <View>
               <Text
@@ -219,15 +201,15 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               </Text>
               <View style={styles.activeContainer}>
                 <Switch
-                  trackColor={{ false: '#767577', true: colors.green }}
+                  trackColor={{false: '#767577', true: colors.green}}
                   thumbColor={profile.isOpenReceiveTask ? 'white' : '#f4f3f4'}
                   value={profile.isOpenReceiveTask}
                   onValueChange={value => {
-                    openReceiveTask(value)
+                    openReceiveTask(value);
                     if (value === true) {
-                      mixpanel.track('click to open recive task status')
+                      mixpanel.track('click to open recive task status');
                     } else {
-                      mixpanel.track('click to close recive task status')
+                      mixpanel.track('click to close recive task status');
                     }
                   }}
                   disabled={profile.status !== 'ACTIVE'}
@@ -235,69 +217,93 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 <Text style={styles.activeFont}>เปิดรับงาน</Text>
               </View>
             </View>
-           {/*  <View>
+            {/*  <View>
               <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('ProfileScreen', {
-                    navbar: false,
-                  });
-                }}>
-                <View
+                style={{
+                  width: responsiveWidth(100),
+                }}
+                onPress={() => navigation.navigate('HistoryRewardScreen')}>
+                <LinearGradient
+                  colors={['#FA7052', '#F89132']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 0.8, y: 1}}
                   style={{
-                    width: normalize(50),
-                    height: normalize(65),
-                    position: 'relative',
+                    flexDirection: 'row',
+                    borderRadius: 20,
+                    alignItems: 'center',
+                    padding: 2,
                   }}>
-                  <Avatar
-                    size={normalize(50)}
-                    rounded
-                    source={
-                      profile.image != '' ? { uri: profile.image } : icons.account
-                    }
-                  />
                   <View
                     style={{
-                      width: normalize(50),
-                      height: normalize(16),
-                      borderRadius: normalize(8),
-                      position: 'absolute',
-                      left: normalize(0),
-                      top: normalize(43),
-                      backgroundColor: colors.fontBlack,
-                      display: 'flex',
                       flexDirection: 'row',
                       alignItems: 'center',
-                      justifyContent: 'center',
+                      justifyContent: 'space-between',
                     }}>
-                    <Text
-                      style={{
-                        fontFamily: font.medium,
-                        fontSize: normalize(12),
-                        color: colors.white,
-                        paddingRight: normalize(2),
-                      }}>{`${profile.ratingAvg}`}</Text>
                     <Image
-                      source={icons.review}
+                      source={icons.ICKDronerPoint}
                       style={{
-                        width: normalize(12),
-                        height: normalize(12),
+                        width: 32,
+                        height: 32,
+                        marginRight: 8,
                       }}
                     />
+                    <View>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontFamily: font.bold,
+                          color: colors.white,
+                          lineHeight: 30,
+                        }}>
+                        {numberWithCommas(currentPoint.toString(), true)}
+                      </Text>
+                    </View>
                   </View>
-                </View>
+                </LinearGradient>
               </TouchableOpacity>
             </View> */}
-            <View style={{marginTop:normalize(5)}}>
-              <TouchableOpacity onPress={()=>{  navigation.navigate('PointHistoryScreen');}}>
-              <LinearGradient colors={[ '#FA7052','#F89132' ]} start={{x:0,y:0.5}} end={{x:1 , y:0.5}} style={{paddingHorizontal:normalize(10),paddingVertical:normalize(5),borderRadius:30,flexDirection:'row',alignItems:'center'}}>
-                <Image source={icons.point} style={{width:normalize(21),height:normalize(21),marginRight:5}} />
-                <Text style={{color:'white',fontSize:14,fontFamily:font.bold}}>{numberWithCommas(dataPoint,true)}</Text>
-              </LinearGradient>
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('PointHistoryScreen');
+                }}>
+                <LinearGradient
+                  colors={['#FA7052', '#F89132']}
+                  start={{x: 0, y: 0.5}}
+                  end={{x: 1, y: 0.5}}
+                  style={{
+                    paddingHorizontal: normalize(4),
+                    paddingVertical: normalize(4),
+                    borderRadius: 30,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={icons.point}
+                    style={{
+                      width: normalize(28),
+                      height: normalize(28),
+                      marginRight: 5,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 18,
+                      fontFamily: font.bold,
+                      textAlign: 'right',
+                      minWidth: normalize(24),
+                      paddingRight: normalize(8),
+                    }}>
+                    {numberWithCommas(currentPoint.toString(), true)}
+                  </Text>
+                </LinearGradient>
               </TouchableOpacity>
             </View>
           </View>
-         
-            {/*  <View style={{height: normalize(95)}}>
+
+          {/*  <View style={{height: normalize(95)}}>
               <ScrollView
                 showsHorizontalScrollIndicator={false}
                 horizontal
@@ -395,71 +401,88 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 </View>
               </ScrollView>
             </View> */}
-            <View
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              
+                fontFamily: font.bold,
+                fontSize: normalize(14),
+                color: colors.fontBlack,
+                paddingHorizontal: 20,
+              }}>
+              กูรูเกษตร
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('AllGuruScreen');
               }}>
               <Text
                 style={{
                   fontFamily: font.bold,
                   fontSize: normalize(14),
                   color: colors.fontBlack,
-                  paddingHorizontal: 20,
+
+                  paddingHorizontal: 10,
                 }}>
-                กูรูเกษตร
+                ดูทั้งหมด
               </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('AllGuruScreen');
+            </TouchableOpacity>
+          </View>
+          {guruKaset != undefined ? (
+            <View>
+              <Carousel
+                autoplay={true}
+                autoplayInterval={7000}
+                autoplayDelay={5000}
+                loop={true}
+                ref={isCarousel}
+                data={guruKaset.data}
+                sliderWidth={screen.width}
+                itemWidth={screen.width}
+                onSnapToItem={index => setIndex(index)}
+                useScrollView={true}
+                vertical={false}
+                renderItem={({item}: any) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={async () => {
+                        await AsyncStorage.setItem('guruId', `${item.id}`);
+                        navigation.push('DetailGuruScreen');
+                      }}>
+                      <CardGuruKaset background={item.image_path} />
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+              <View
+                style={{
+                  alignItems: 'center',
+                  top: -70,
+                  position: 'relative',
                 }}>
-                <Text
-                  style={{
-                    fontFamily: font.bold,
-                    fontSize: normalize(14),
-                    color: colors.fontBlack,
-                   
-                    paddingHorizontal: 10,
-                  }}>
-                  ดูทั้งหมด
-                </Text>
-              </TouchableOpacity>
-            </View>
-            {guruKaset != undefined ? (
-              <View >
-                <Carousel
-                  autoplay={true}
-                  autoplayInterval={7000}
-                  autoplayDelay={5000}
-                  loop={true}
-                  ref={isCarousel}
-                  data={guruKaset.data}
-                  sliderWidth={screen.width}
-                  itemWidth={screen.width}
-                  onSnapToItem={index => setIndex(index)}
-                  useScrollView={true}
-                  vertical={false}
-                  renderItem={({ item }: any) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={async () => {
-                          await AsyncStorage.setItem(
-                            'guruId',
-                            `${item.id}`,
-                          );
-                          navigation.push('DetailGuruScreen');
-                        }}>
-                        <CardGuruKaset background={item.image_path} />
-                      </TouchableOpacity>
-                    );
+                <Pagination
+                  dotsLength={guruKaset.data.length}
+                  activeDotIndex={index}
+                  carouselRef={isCarousel}
+                  dotStyle={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: 5,
+                    marginHorizontal: 0,
+                    backgroundColor: colors.fontBlack,
                   }}
+                  inactiveDotOpacity={0.4}
+                  inactiveDotScale={0.9}
+                  tappableDots={true}
                 />
                 <View
                   style={{
                     position: 'absolute',
                     right: '40%',
-                    top : '60%'
+                    top: '60%',
                   }}>
                   <Pagination
                     dotsLength={guruKaset.data.length}
@@ -478,10 +501,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   />
                 </View>
               </View>
-            ) : null}
-          
+            </View>
+          ) : null}
         </View>
-        <View style={{flex:1}} >
+        <View style={{flex: 1}}>
           <TaskTapNavigator
             isOpenReceiveTask={profile.isOpenReceiveTask}
             dronerStatus={profile.status}
@@ -497,7 +520,7 @@ const styles = StyleSheet.create({
   headCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: normalize(23),
+    paddingHorizontal: 16,
     paddingTop: normalize(5),
   },
   activeContainer: {

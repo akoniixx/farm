@@ -16,6 +16,7 @@ pod 'react-native-google-maps', :path => rn_maps_path
 pod 'Firebase', :modular_headers => true
 pod 'FirebaseCore', :modular_headers => true
 pod 'GoogleUtilities', :modular_headers => true
+ 
 $RNFirebaseAsStaticFramework = true
 
 
@@ -49,12 +50,20 @@ $RNFirebaseAsStaticFramework = true
 
   post_install do |installer|
     react_native_post_install(installer)
-  
+    
+
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
         # Disable arm64 builds for the simulator
         config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
       end
     end
+
+    installer.aggregate_targets.first.user_project.native_targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['LIBRARY_SEARCH_PATHS'] = ['$(inherited)', '$(SDKROOT)/usr/lib/swift']
+      end
+    end
   end
 end
+

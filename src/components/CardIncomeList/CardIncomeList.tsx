@@ -18,7 +18,7 @@ const CardIncomeList = ({styleContainer, data}: Props): JSX.Element => {
   const dataCard = [
     {
       title: 'รายได้วันนี้',
-      value: numberWithCommas(totalRevenueToday?.toString(),true) || 0,
+      value: numberWithCommas(totalRevenueToday?.toString(), true) || 0,
       icons: icons.income,
       unitPostion: 'front',
       unit: '฿',
@@ -26,7 +26,7 @@ const CardIncomeList = ({styleContainer, data}: Props): JSX.Element => {
     },
     {
       title: 'รายได้ทั้งหมด',
-      value: numberWithCommas(totalRevenue?.toString(),true) || 0,
+      value: numberWithCommas(totalRevenue?.toString(), true) || 0,
       icons: icons.income,
       unitPostion: 'front',
       unit: '฿',

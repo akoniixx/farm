@@ -10,6 +10,7 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {normalize} from '../../function/Normalize';
 import {stylesCentral} from '../../styles/StylesCentral';
 import ContentList from './ContentList';
+import CustomHeader from '../../components/CustomHeader';
 
 export interface DataType {
   price: any;
@@ -32,7 +33,7 @@ export interface State {
   totalRevenue: number;
 }
 
-const IncomeScreen: React.FC = () => {
+const IncomeScreen: React.FC<{navigation: any}> = ({navigation}) => {
   const insets = useSafeAreaInsets();
   const [type, setType] = React.useState<string>('week');
   const [data, setData] = useState<DataType[]>([]);
@@ -85,21 +86,22 @@ const IncomeScreen: React.FC = () => {
   }, [type]);
   return (
     <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
-      <View
-        style={{
-          alignItems: 'center',
-          paddingVertical: normalize(20),
-          backgroundColor: colors.white,
-        }}>
-        <Text
-          style={{
-            fontFamily: fonts.bold,
-            fontSize: normalize(19),
-            color: colors.fontBlack,
-          }}>
-          รายได้
-        </Text>
-      </View>
+      <CustomHeader
+        showBackBtn={true}
+        onPressBack={() => {
+          navigation.goBack();
+        }}
+        title={
+          <Text
+            style={{
+              fontFamily: fonts.bold,
+              fontSize: normalize(19),
+              color: colors.fontBlack,
+            }}>
+            รายได้
+          </Text>
+        }
+      />
       <View>
         <CardIncomeList data={dataHeader} />
       </View>

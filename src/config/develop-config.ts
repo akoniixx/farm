@@ -3,8 +3,8 @@ import axios from 'axios';
 import * as RootNavigation from '../navigations/RootNavigation';
 
 export const BASE_URL = 'https://api-dev-dnds.iconkaset.com';
-export const MIXPANEL_DEV = 'dbdab0029a094a9cd5a329d2fb86f3a9'
-export const MIXPANEL_PROD = '2c9e81de185d8112243c357376c986e3'
+export const MIXPANEL_DEV = 'dbdab0029a094a9cd5a329d2fb86f3a9';
+export const MIXPANEL_PROD = '2c9e81de185d8112243c357376c986e3';
 
 axios.interceptors.request.use(async (config: any) => {
   const token = await AsyncStorage.getItem('token');
@@ -47,7 +47,9 @@ const registerInstance = axios.create({});
 
 registerInstance.interceptors.request.use(async (config: any) => {
   const token = await AsyncStorage.getItem('token_register');
-  config.headers.Authorization = `Bearer ${token}`;
+  const newToken = await AsyncStorage.getItem('token');
+
+  config.headers.Authorization = `Bearer ${token || newToken || ''}`;
   return config;
 });
 

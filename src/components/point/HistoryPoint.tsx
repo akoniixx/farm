@@ -1,9 +1,9 @@
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import { font, image } from '../../assets';
+import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
+import {font, image} from '../../assets';
 import colors from '../../assets/colors/colors';
-import { momentExtend, numberWithCommas } from '../../function/utility';
-import { normalize } from '../../function/Normalize';
+import {momentExtend, numberWithCommas} from '../../function/utility';
+import {normalize} from '../../function/Normalize';
 
 interface guruData {
   index: any;
@@ -66,7 +66,8 @@ export const HistoryPoint: React.FC<guruData> = ({
           paddingVertical: 0.5,
           width: '95%',
           alignSelf: 'center',
-        }}/>
+        }}
+      />
     </View>
   );
 };

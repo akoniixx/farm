@@ -64,19 +64,22 @@ export const socket = io(BASE_URL, {
   path: '/tasks/task/socket',
 });
 
+export const calTotalPrice = (totalprice: string, discount: string) => {
+  let totalPrice = parseInt(totalprice) + parseInt(discount);
+  let text = totalPrice.toString();
+  return text;
+};
 
-export const calTotalPrice = (totalprice:string,discount:string) => {
-  let totalPrice =  parseInt(totalprice) + parseInt(discount)
-  let text = totalPrice.toString()
-  return  text
-}
-
-export const calTotalPromotion = (p1:string,p2:string,p3:string,p4:string) => {
-  let totalPrice =  parseInt(p1) + parseInt(p2) + parseInt(p3) + parseInt(p4)
-  let text = totalPrice.toString()
-  return  text
-}
-
+export const calTotalPromotion = (
+  p1: string,
+  p2: string,
+  p3: string,
+  p4: string,
+) => {
+  let totalPrice = parseInt(p1) + parseInt(p2) + parseInt(p3) + parseInt(p4);
+  let text = totalPrice.toString();
+  return text;
+};
 
 export const momentExtend = {
   toBuddhistYear: (date: string | Date, format = 'DD MMMM YYYY') => {

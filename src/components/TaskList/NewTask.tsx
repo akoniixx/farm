@@ -5,7 +5,7 @@ import {colors, image, icons} from '../../assets';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {numberWithCommas} from '../../function/utility';
 import {useNavigation} from '@react-navigation/native';
-import { mixpanel } from '../../../mixpanel';
+import {mixpanel} from '../../../mixpanel';
 
 const NewTask: React.FC<any> = (props: any) => {
   const date = new Date(props.date);
@@ -43,9 +43,8 @@ const NewTask: React.FC<any> = (props: any) => {
     <TouchableOpacity
       onPress={() => {
         mixpanel.track('View detail task from new task list');
-        navigation.navigate('TaskDetailScreen', {taskId})}
-        
-        }>
+        navigation.navigate('TaskDetailScreen', {taskId});
+      }}>
       <View style={styles.taskMenu}>
         <View style={styles.listTile}>
           <Text
@@ -225,8 +224,8 @@ const NewTask: React.FC<any> = (props: any) => {
             }}
             onPress={() => {
               mixpanel.track('Accept task from new task list');
-              onPressReceiveTask()
-              }}>
+              onPressReceiveTask();
+            }}>
             <View
               style={{
                 width: '50%',

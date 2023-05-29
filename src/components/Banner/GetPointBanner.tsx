@@ -1,12 +1,12 @@
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import {View, Text, StyleSheet, ImageBackground} from 'react-native';
 import React from 'react';
-import { image } from '../../assets';
+import {image} from '../../assets';
 import fonts from '../../assets/fonts';
 
 export default function Banner() {
   return (
     <ImageBackground source={image.bgGetPoint} style={styles.container}>
-      <View style={{ paddingHorizontal: 16 }}>
+      <View style={{paddingHorizontal: 16}}>
         <Text
           style={{
             fontSize: 16,

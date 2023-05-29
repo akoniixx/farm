@@ -24,7 +24,15 @@ import UploadDronerLicenseScreen from '../screens/ProfileScreen/UploadDocument/U
 import ServiceArea from '../screens/ProfileScreen/ServiceArea';
 import AllGuruScreen from '../screens/GuruScreen/AllScreen';
 import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
+import IncomeScreen from '../screens/IncomeScreen';
+import HistoryRewardScreen from '../screens/HistoryRewardScreen';
+import MyRewardScreen from '../screens/MyRewardScreen';
+import RewardDetailScreen from '../screens/RewardDetailScreen';
+import ExchangeAddressScreen from '../screens/ExchangeAddressScreen';
+import CustomAddressScreen from '../screens/CustomAddressScreen';
 import PointHistoryScreen from '../screens/PointScreen/PointHistoryScreen';
+import RedeemScreen from '../screens/RedeemScreen';
+
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
 export type StackParamList = {
@@ -43,11 +51,31 @@ export type StackParamList = {
   AddIDCardScreen: any;
   NotificationList: any;
   UploadDronerLicenseScreen: any;
-  UploadBankingScreen:any;
-  ServiceArea : any;
-  AllGuruScreen:any;
-  DetailGuruScreen:any;
-  PointHistoryScreen:any;
+  UploadBankingScreen: any;
+  ServiceArea: any;
+  AllGuruScreen: any;
+  DetailGuruScreen: any;
+  PointHistoryScreen: any;
+
+  IncomeScreen: undefined;
+  HistoryRewardScreen: undefined;
+  MyRewardScreen: undefined;
+  RewardDetailScreen: {
+    navigation: StackNavigationHelpers;
+    id: string;
+    isDigital?: boolean;
+  };
+  ExchangeAddressScreen: {
+    data: any;
+  };
+  CustomAddressScreen: {
+    data: any;
+    isEdit?: boolean;
+    initialValues?: any;
+  };
+  RedeemScreen: {
+    data: any;
+  };
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
   // };
@@ -77,12 +105,35 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="DeleteProfileScreen" component={DeleteProfile} />
       <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
       <Stack.Screen name="NotificationList" component={NotificationList} />
-      <Stack.Screen name="UploadDronerLicenseScreen" component={UploadDronerLicenseScreen} />
-      <Stack.Screen name="UploadBankingScreen" component={UploadBankingScreen} />
+      <Stack.Screen
+        name="UploadDronerLicenseScreen"
+        component={UploadDronerLicenseScreen}
+      />
+      <Stack.Screen
+        name="UploadBankingScreen"
+        component={UploadBankingScreen}
+      />
       <Stack.Screen name="ServiceArea" component={ServiceArea} />
-      <Stack.Screen name='AllGuruScreen' component={AllGuruScreen} />
-      <Stack.Screen name='DetailGuruScreen' component={DetailGuruScreen} />
-      <Stack.Screen name='PointHistoryScreen' component={PointHistoryScreen} />
+      <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
+      <Stack.Screen name="PointHistoryScreen" component={PointHistoryScreen} />
+
+      <Stack.Screen name="DetailGuruScreen" component={DetailGuruScreen} />
+      <Stack.Screen name="IncomeScreen" component={IncomeScreen} />
+      <Stack.Screen
+        name="HistoryRewardScreen"
+        component={HistoryRewardScreen}
+      />
+      <Stack.Screen name="MyRewardScreen" component={MyRewardScreen} />
+      <Stack.Screen name="RewardDetailScreen" component={RewardDetailScreen} />
+      <Stack.Screen
+        name="ExchangeAddressScreen"
+        component={ExchangeAddressScreen}
+      />
+      <Stack.Screen
+        name="CustomAddressScreen"
+        component={CustomAddressScreen}
+      />
+      <Stack.Screen name="RedeemScreen" component={RedeemScreen} />
       {/* <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} /> */}
     </Stack.Navigator>
   );

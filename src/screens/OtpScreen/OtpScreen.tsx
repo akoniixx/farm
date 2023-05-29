@@ -27,8 +27,8 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
-import { getFCMToken } from '../../firebase/notification';
-import { mixpanel } from '../../../mixpanel';
+import {getFCMToken} from '../../firebase/notification';
+import {mixpanel} from '../../../mixpanel';
 
 const CELL_COUNT = 6;
 
@@ -152,13 +152,12 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
               getFCMToken();
               const fcmtoken = await AsyncStorage.getItem('fcmtoken');
               FCMtokenDatasource.saveFCMtoken(fcmtoken!)
-                .then(res =>
-                  {
-                    mixpanel.track('Login Success')
-                    RootNavigation.navigate('Main', {
+                .then(res => {
+                  mixpanel.track('Login Success');
+                  RootNavigation.navigate('Main', {
                     screen: 'MainScreen',
-                  })}
-                )
+                  });
+                })
                 .catch(err => console.log(err));
             })
             .catch(err => {
