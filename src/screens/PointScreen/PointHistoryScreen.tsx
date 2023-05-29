@@ -71,31 +71,31 @@ const DetailPointScreen: React.FC<any> = ({navigation, route}) => {
 };
 export default DetailPointScreen;
 
-const styles = StyleSheet.create({
-  inner: {
-    marginTop: normalize(50),
-    paddingHorizontal: normalize(17),
-  },
-  container: {
-    flex: 1,
-  },
-  HeadBg: {
-    width: '100%',
-    height: normalize(140),
-    backgroundColor: colors.green,
-  },
-  empty: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    display: 'flex',
-    paddingVertical: '50%',
-  },
-  textEmpty: {
-    fontFamily: font.light,
-    fontSize: normalize(18),
-    lineHeight: normalize(30),
-    textAlign: 'center',
-    color: colors.fontGrey,
-  },
-});
+// const styles = StyleSheet.create({
+//   inner: {
+//     marginTop: normalize(50),
+//     paddingHorizontal: normalize(17),
+//   },
+//   container: {
+//     flex: 1,
+//   },
+//   HeadBg: {
+//     width: '100%',
+//     height: normalize(140),
+//     backgroundColor: colors.green,
+//   },
+//   empty: {
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     alignSelf: 'center',
+//     display: 'flex',
+//     paddingVertical: '50%',
+//   },
+//   textEmpty: {
+//     fontFamily: font.light,
+//     fontSize: normalize(18),
+//     lineHeight: normalize(30),
+//     textAlign: 'center',
+//     color: colors.fontGrey,
+//   },
+// });

@@ -43,7 +43,7 @@ export default function RewardScreen({navigation}: any) {
             style={{
               flex: 0.48,
             }}
-            onPress={() => navigation.navigate('HistoryRewardScreen')}>
+            onPress={() => navigation.navigate('PointHistoryScreen')}>
             <LinearGradient
               colors={['#FA7052', '#F89132']}
               start={{x: 0, y: 0}}
