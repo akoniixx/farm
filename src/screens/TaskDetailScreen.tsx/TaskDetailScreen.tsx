@@ -642,22 +642,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   ) : (
                     <View style={{borderColor: colors.orange}}>
                       <Text>เงินสด</Text>
-                    </View>}
-
-                  <View>
-
-                  </View>
-                </View>
-                <View style={{ marginTop: normalize(17) }}>
-
-                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text>จากบริษัท</Text>
-                    <Text>{numberWithCommas(calTotalPromotion(data?.discountCoupon, data?.discountPromotion, data?.revenuePromotion,data?.discountCampaignPoint))} ฿</Text>
-                  </View>
-                  <View style={{ width: '70%' }}>
-                    <Text>หลังจากงานเสร็จสิ้น ท่านจะได้รับเงิน
-                      ภายใน 1-2 วันทำการ</Text>
-                    <View>
                     </View>
                   )}
 

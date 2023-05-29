@@ -54,7 +54,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     React.useCallback(() => {
       getProfile();
       openSocket();
-      getPointDroner();
+      getCurrentPoint();
     }, []),
   );
 

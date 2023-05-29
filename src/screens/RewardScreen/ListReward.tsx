@@ -77,7 +77,6 @@ export default function ListReward({
     };
     getFirstListReward();
   }, []);
-  console.log(JSON.stringify(listReward, null, 2));
   const loadMore = async () => {
     if (listReward.data.length >= listReward.count) {
       return;

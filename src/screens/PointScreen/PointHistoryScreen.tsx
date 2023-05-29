@@ -22,26 +22,11 @@ import {
 } from '../../datasource/HistoryPointDatasource';
 import LinearGradient from 'react-native-linear-gradient';
 import PointTapNavigator from '../../navigations/topTabs/PointTapNavigator';
+import {usePoint} from '../../contexts/PointContext';
 
 const DetailPointScreen: React.FC<any> = ({navigation, route}) => {
-  const [dataPoint, setDataPoint] = useState<any>();
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    getPointDroner();
-  }, []);
-  const getPointDroner = async () => {
-    setLoading(true);
-    const droner_id: any = await AsyncStorage.getItem('droner_id');
-    await historyPoint
-      .getPoint(droner_id)
-      .then(res => {
-        setDataPoint(res.balance);
-      })
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false));
-  };
-
+  const {currentPoint} = usePoint();
   return (
     <View
       style={{
@@ -76,7 +61,7 @@ const DetailPointScreen: React.FC<any> = ({navigation, route}) => {
               marginLeft: normalize(15),
               marginRight: normalize(5),
             }}>
-            {numberWithCommas(dataPoint, true)} แต้ม
+            {numberWithCommas(currentPoint.toString(), true)} แต้ม
           </Text>
         </View>
       </LinearGradient>
