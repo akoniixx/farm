@@ -227,7 +227,7 @@ export default function RedeemDetailScreen({navigation, route}: Props) {
                   fontFamily: font.medium,
                   color: colors.gray,
                 }}>
-                สถานะ : <Text>wait api</Text>
+                สถานะ : <Text>{}</Text>
               </Text>
             </View>
           </View>
