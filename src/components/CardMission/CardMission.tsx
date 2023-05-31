@@ -19,11 +19,11 @@ interface Props {
   imageSource?: any;
 }
 export default function CardMission({
-  isComplete = false,
-  isDouble = false,
-  isFullQuota = true,
+  isComplete = true,
+  isDouble = true,
+  isFullQuota = false,
   isExpire = false,
-  current = 30,
+  current = 80,
   total = 100,
   imageSource = mockImage.reward2,
 }: Props) {
@@ -69,7 +69,7 @@ export default function CardMission({
                 source={icons.successIcon}
                 style={{
                   width: 24,
-                  height: 20,
+                  height: 24,
                   marginRight: 4,
                 }}
               />

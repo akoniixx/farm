@@ -9,7 +9,7 @@ import CardMission from '../../components/CardMission/CardMission';
 
 export default function CollapseItem() {
   const [isCollapse, setIsCollapse] = React.useState<boolean>(true);
-  const animatedValue = useRef(new Animated.Value(0)).current;
+  const animatedValue = useRef(new Animated.Value(1)).current;
   const rai = 600;
   const dateEnd = moment().add(4, 'months').toISOString();
   const dateStart = moment().toISOString();
@@ -68,7 +68,7 @@ export default function CollapseItem() {
                 {
                   rotate: animatedValue.interpolate({
                     inputRange: [0, 1],
-                    outputRange: ['0deg', '180deg'],
+                    outputRange: ['180deg', '0deg'],
                   }),
                 },
               ],

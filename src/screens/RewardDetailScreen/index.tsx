@@ -23,10 +23,9 @@ import Modal from '../../components/Modal/Modal';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
 import {RewardListType} from '../RewardScreen/ListReward';
 import {usePoint} from '../../contexts/PointContext';
-import HTML from 'react-native-render-html';
+import HTML, {RenderHTML} from 'react-native-render-html';
 
 import moment from 'moment';
-import {useAuth} from '../../contexts/AuthContext';
 import FastImage from 'react-native-fast-image';
 interface Props {
   navigation: StackNavigationHelpers;
@@ -70,7 +69,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
     }
   }, [id, currentPoint]);
   const onPressExchange = () => {
-    navigation.navigate('ExchangeAddressScreen', {
+    navigation.navigate('RedeemAddressScreen', {
       data: {
         ...rewardDetail,
         amountExchange: counter,
@@ -85,7 +84,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
 
       const disableButton =
         counter <= 0 || counter * requirePoint > currentPoint;
-      const isDisablePlus = (counter + 1) * requirePoint >= currentPoint;
+      const isDisablePlus = (counter + 1) * requirePoint > currentPoint;
 
       return {
         isLimit: (counter || 1) * requirePoint >= currentPoint,
@@ -94,7 +93,6 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         disableButton,
       };
     }, [counter, currentPoint, requirePoint]);
-  console.log('rewardDetail', JSON.stringify(rewardDetail, null, 2));
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <CustomHeader
@@ -145,15 +143,19 @@ export default function RewardDetailScreen({navigation, route}: Props) {
           />
         </View>
         <View style={styles({disable: disableButton}).container}>
-          <Text
-            style={{
-              fontSize: 24,
-              fontFamily: font.bold,
-              lineHeight: 40,
-              width: '80%',
-            }}>
-            {rewardDetail.rewardName || ''}
-          </Text>
+          <RenderHTML
+            tagsStyles={{
+              body: {
+                fontSize: 24,
+                fontFamily: font.bold,
+                color: colors.fontBlack,
+              },
+            }}
+            contentWidth={width}
+            source={{
+              html: rewardDetail?.rewardName || '',
+            }}
+          />
           <View
             style={{
               flexDirection: 'row',
@@ -235,7 +237,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
             }}>
             <Text
               style={{
-                fontSize: 16,
+                fontSize: 18,
                 fontFamily: font.medium,
                 color: colors.fontBlack,
               }}>
@@ -247,8 +249,8 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               }}
               contentWidth={width}
               tagsStyles={{
-                p: {
-                  fontSize: 16,
+                body: {
+                  fontSize: 18,
                   fontFamily: font.light,
                   color: colors.gray,
                   lineHeight: 28,
@@ -262,7 +264,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
             }}>
             <Text
               style={{
-                fontSize: 16,
+                fontSize: 18,
                 fontFamily: font.medium,
                 color: colors.fontBlack,
               }}>
@@ -274,8 +276,8 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               }}
               contentWidth={width}
               tagsStyles={{
-                p: {
-                  fontSize: 16,
+                body: {
+                  fontSize: 18,
                   fontFamily: font.light,
                   color: colors.gray,
                   lineHeight: 28,

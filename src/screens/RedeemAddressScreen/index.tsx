@@ -2,10 +2,9 @@ import {
   View,
   SafeAreaView,
   StyleSheet,
-  Image,
-  TouchableOpacity,
   ScrollView,
   useWindowDimensions,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useEffect} from 'react';
 import {RouteProp} from '@react-navigation/native';
@@ -14,14 +13,13 @@ import {colors, font} from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import {numberWithCommas} from '../../function/utility';
 import AddressDetail from './AddressDetail';
-import Modal from '../../components/Modal/Modal';
 import Text from '../../components/Text';
 import FastImage from 'react-native-fast-image';
 import RenderHTML from 'react-native-render-html';
 import {usePoint} from '../../contexts/PointContext';
 interface Props {
   navigation: any;
-  route: RouteProp<StackParamList, 'ExchangeAddressScreen'>;
+  route: RouteProp<StackParamList, 'RedeemAddressScreen'>;
 }
 export interface RewardParams {
   id: string;
@@ -53,16 +51,17 @@ export interface RewardParams {
   usePoint: number;
 }
 
-export default function ExchangeAddressScreen({navigation, route}: Props) {
+export default function RedeemAddressScreen({navigation, route}: Props) {
   const {data} = route.params;
-  const [isConfirm, setIsConfirm] = React.useState(false);
   const {currentPoint} = usePoint();
-  const [exchangeDetail, setExchangeDetail] = React.useState<RewardParams>(
-    {} as RewardParams,
-  );
+  const [isConfirm, setIsConfirm] = React.useState(false);
   const onConfirm = () => {
     setIsConfirm(true);
   };
+  const [exchangeDetail, setExchangeDetail] = React.useState<RewardParams>(
+    {} as RewardParams,
+  );
+
   useEffect(() => {
     if (data) {
       setExchangeDetail(data);
@@ -84,7 +83,6 @@ export default function ExchangeAddressScreen({navigation, route}: Props) {
             }}>
             <FastImage
               source={{uri: data.imagePath}}
-              resizeMode="contain"
               style={{
                 width: 80,
                 height: 80,
@@ -105,8 +103,8 @@ export default function ExchangeAddressScreen({navigation, route}: Props) {
               contentWidth={width * 0.8}
               source={{html: exchangeDetail.rewardName}}
               tagsStyles={{
-                p: {
-                  fontSize: 16,
+                body: {
+                  fontSize: 20,
                   fontFamily: font.bold,
                   color: colors.fontBlack,
                   marginTop: 4,
@@ -206,72 +204,18 @@ export default function ExchangeAddressScreen({navigation, route}: Props) {
             </Text>
           </View>
         </View>
-        <AddressDetail navigation={navigation} data={exchangeDetail} />
+        <AddressDetail
+          navigation={navigation}
+          data={exchangeDetail}
+          isConfirm={isConfirm}
+          setIsConfirm={setIsConfirm}
+        />
       </ScrollView>
-
       <View style={styles.footer}>
         <TouchableOpacity style={styles.button} onPress={onConfirm}>
           <Text style={styles.textButton}>ยืนยันการแลก</Text>
         </TouchableOpacity>
       </View>
-      <Modal visible={isConfirm}>
-        <View
-          style={{
-            backgroundColor: colors.white,
-            borderRadius: 12,
-            padding: 16,
-            width: '100%',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              fontSize: 20,
-              fontFamily: font.medium,
-              color: colors.fontBlack,
-            }}>
-            กรุณาตรวจสอบข้อมูลของท่าน
-          </Text>
-          <Text
-            style={{
-              fontSize: 20,
-              fontFamily: font.medium,
-              color: colors.fontBlack,
-            }}>
-            ก่อนยืนยันการแลกของรางวัล
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: font.light,
-              color: colors.inkLight,
-              marginTop: 8,
-            }}>
-            หากกดยืนยันการแลกแล้ว
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: font.light,
-              color: colors.inkLight,
-            }}>
-            จะไม่สามารถแลกแต้มคืนได้
-          </Text>
-          <TouchableOpacity
-            style={[styles.button, {marginTop: 16}]}
-            onPress={() => {
-              setIsConfirm(true);
-            }}>
-            <Text style={styles.textButton}>ยืนยัน</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.subButton}
-            onPress={() => {
-              setIsConfirm(false);
-            }}>
-            <Text style={styles.textSubButton}>ยกเลิก</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 }
@@ -328,34 +272,5 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     shadowRadius: 16,
-  },
-  disabledButton: {
-    width: '100%',
-    backgroundColor: colors.disable,
-    borderRadius: 12,
-    height: 54,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#DCDFE3',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-  },
-  subButton: {
-    width: '100%',
-    backgroundColor: 'transparent',
-    borderRadius: 12,
-    height: 54,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 16,
-  },
-  textSubButton: {
-    fontSize: 18,
-    fontFamily: font.bold,
-    color: colors.fontBlack,
   },
 });

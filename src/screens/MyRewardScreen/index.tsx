@@ -47,7 +47,7 @@ export default function MyRewardScreen({navigation}: {navigation: any}) {
       <CustomHeader
         showBackBtn
         title={'รีวอร์ดของฉัน'}
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => navigation.navigate('reward')}
       />
 
       <TabView

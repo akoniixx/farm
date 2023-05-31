@@ -418,11 +418,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
             <View
               style={{backgroundColor: colors.white, padding: normalize(15)}}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Icon
-                  name="edit"
-                  size={13}
-                  color="black"
-                  style={{marginRight: 20}}
+                <Image
+                  source={icons.note}
+                  style={{marginRight: 20, height: 24, width: 24}}
                 />
                 <Text style={styles.fontGray}>
                   {data.comment ? data.comment : '-'}
@@ -644,8 +642,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                       <Text>เงินสด</Text>
                     </View>
                   )}
-
-                  <View></View>
                 </View>
                 <View style={{marginTop: normalize(17)}}>
                   <View
@@ -661,6 +657,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                           data?.discountCoupon,
                           data?.discountPromotion,
                           data?.revenuePromotion,
+                          data?.discountCampaignPoint,
                         ),
                       )}{' '}
                       ฿
@@ -682,11 +679,13 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                     flexDirection: 'row',
                     alignItems: 'center',
                   }}>
-                  <Icon
-                    name="exclamationcircleo"
-                    size={24}
-                    color={colors.gray}
-                    style={{marginRight: 20}}
+                  <Image
+                    source={icons.warningGrey}
+                    style={{
+                      marginRight: 8,
+                      width: normalize(24),
+                      height: normalize(24),
+                    }}
                   />
                   <Text
                     style={{

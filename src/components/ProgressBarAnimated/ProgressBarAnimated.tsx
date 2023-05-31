@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import React from 'react';
 // import LinearGradient from 'react-native-linear-gradient';
 import Lottie from 'lottie-react-native';
@@ -15,7 +15,7 @@ export default function ProgressBarAnimated({
   color?: string;
 }) {
   const progress = (current / total) * 100;
-  const lottieWidth = (progress / 100) * 200;
+
   return (
     <View style={[styles.container, {height}]}>
       {/* <LinearGradient
@@ -26,7 +26,7 @@ export default function ProgressBarAnimated({
       /> */}
       <View
         style={{
-          width: lottieWidth,
+          width: `${progress}%`,
           height: '100%',
         }}>
         <Lottie
