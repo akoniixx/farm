@@ -7,13 +7,14 @@ import {
   Dimensions,
   RefreshControl,
 } from 'react-native';
-import HTML from 'react-native-render-html';
+
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import {font} from '../../assets';
 import {numberWithCommas} from '../../function/utility';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
+import RenderHTML from '../../components/RenderHTML/RenderHTML';
 
 export interface RewardListType {
   id: string;
@@ -103,6 +104,9 @@ export default function ListReward({
   };
   const renderItem = useMemo(() => {
     return ({item}: {item: RewardListType; index: number}) => {
+      const dateDiff = moment(item.expiredUsedDate).fromNow();
+      const isExpired =
+        item.expiredUsedDate && moment(item.expiredUsedDate).isAfter(moment());
       return (
         <>
           <TouchableOpacity
@@ -127,7 +131,7 @@ export default function ListReward({
                 paddingVertical: 10,
                 paddingHorizontal: 8,
               }}>
-              <HTML
+              <RenderHTML
                 source={{html: item.rewardName}}
                 contentWidth={Dimensions.get('window').width / 2}
                 tagsStyles={{
@@ -152,14 +156,13 @@ export default function ListReward({
                   แต้ม
                 </Text>
               </Text>
-              {item.expiredUsedDate && (
+              {isExpired && (
                 <Text
                   style={{
                     fontFamily: font.light,
                     fontSize: 14,
                   }}>
-                  หมดอายุอีก{' '}
-                  {moment(item.expiredUsedDate).diff(moment(), 'days')} วัน
+                  หมดอายุอีก {dateDiff}
                 </Text>
               )}
             </View>

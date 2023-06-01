@@ -1,5 +1,5 @@
 import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {colors} from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import {normalize} from '@rneui/themed';
@@ -7,8 +7,16 @@ import fonts from '../../assets/fonts';
 import {TabBar, TabView} from 'react-native-tab-view';
 import ReadyToUseTab from './ReadyToUseTab';
 import HistoryTab from './HistoryTab';
+import {useFocusEffect} from '@react-navigation/native';
 
-export default function MyRewardScreen({navigation}: {navigation: any}) {
+export default function MyRewardScreen({
+  navigation,
+  route: r,
+}: {
+  route: any;
+  navigation: any;
+}) {
+  const {tab = 'readyToUse'} = r.params;
   const [key, setKey] = React.useState(0);
   const renderTabBar = (props: any) => (
     <TabBar
@@ -32,6 +40,14 @@ export default function MyRewardScreen({navigation}: {navigation: any}) {
       {key: 'history', title: 'ประวัติ'},
     ];
   }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (tab) {
+        const index = routes.findIndex(i => i.key === tab);
+        setKey(index);
+      }
+    }, [routes, tab]),
+  );
   const renderScene = ({route}: any) => {
     switch (route.key) {
       case 'readyToUse':

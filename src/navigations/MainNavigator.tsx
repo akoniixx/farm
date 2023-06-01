@@ -33,6 +33,7 @@ import CustomAddressScreen from '../screens/CustomAddressScreen';
 import PointHistoryScreen from '../screens/PointScreen/PointHistoryScreen';
 import RedeemScreen from '../screens/RedeemScreen';
 import RedeemDetailScreen from '../screens/RedeemDetailScreen';
+import MissionDetailScreen from '../screens/MissionDetailScreen';
 
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
@@ -68,6 +69,7 @@ export type StackParamList = {
   };
   RedeemAddressScreen: {
     data: any;
+    missionData: any;
   };
   CustomAddressScreen: {
     data: any;
@@ -78,6 +80,9 @@ export type StackParamList = {
     data: any;
   };
   RedeemDetailScreen: {
+    id: string;
+  };
+  MissionDetailScreen: {
     id: string;
   };
   // DeleteSuccess: {
@@ -138,7 +143,19 @@ const MainNavigator: React.FC = () => {
         component={CustomAddressScreen}
       />
       <Stack.Screen name="RedeemScreen" component={RedeemScreen} />
-      <Stack.Screen name="RedeemDetailScreen" component={RedeemDetailScreen} />
+      <Stack.Group
+        screenOptions={{
+          gestureEnabled: false,
+        }}>
+        <Stack.Screen
+          name="RedeemDetailScreen"
+          component={RedeemDetailScreen}
+        />
+      </Stack.Group>
+      <Stack.Screen
+        name="MissionDetailScreen"
+        component={MissionDetailScreen}
+      />
       {/* <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} /> */}
     </Stack.Navigator>
   );

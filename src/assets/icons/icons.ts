@@ -72,4 +72,5 @@ export default {
   mission: require('./mission.png'),
   mission_active: require('./mission_active.png'),
   arrowUpCollapse: require('./arrowUpCollapse.png'),
+  copyClipboard: require('./copyClipboard.png'),
 };

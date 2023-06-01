@@ -54,8 +54,8 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
           <Image
             source={icons.close}
             style={{
-              width: 24,
-              height: 24,
+              width: 16,
+              height: 16,
             }}
           />
         </TouchableOpacity>

@@ -1,30 +1,19 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
-import {colors, font} from '../../assets';
+import {colors} from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
-import FastImage from 'react-native-fast-image';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import {momentExtend, numberWithCommas} from '../../function/utility';
-import RenderHTML from 'react-native-render-html';
-import {usePoint} from '../../contexts/PointContext';
+import Content from './Content';
 
 interface Props {
   navigation: any;
   route: RouteProp<StackParamList, 'RedeemDetailScreen'>;
 }
 
-interface RedeemDetail {
+export interface RedeemDetail {
   id: string;
   dronerId: string;
   campaignId: string | null;
@@ -39,7 +28,7 @@ interface RedeemDetail {
   rewardId: string;
   rewardName: string;
   rewardQuantity: number;
-  rewardCode: string;
+  redeemNo: string;
   receiverDetail: {
     tel: string;
     address: string;
@@ -48,6 +37,10 @@ interface RedeemDetail {
   };
   createAt: string;
   updateAt: string;
+  redeemDetail: {
+    rewardType: string;
+    redeemStatus: string;
+  };
   dronerRedeemHistories: {
     id: string;
     dronerTransactionId: string;
@@ -59,6 +52,7 @@ interface RedeemDetail {
     createAt: string;
     updateAt: string;
     updateBy: string;
+
     dronerTransaction: {
       id: string;
       dronerId: string;
@@ -134,26 +128,9 @@ interface RedeemDetail {
     };
   };
 }
-const mappingStatus = {
-  REQUEST: 'คำร้องขอแลก',
-  PREPARE: 'เตรียมจัดส่ง',
-  DONE: 'ส่งแล้ว',
-  CANCEL: 'ยกเลิก',
-  EXPIRED: 'หมดอายุ',
-  USED: 'ใช้แล้ว',
-};
-const mappingStatusColor = {
-  REQUEST: '#EBBB00',
-  PREPARE: colors.orange,
-  DONE: colors.green,
-  CANCEL: colors.decreasePoint,
-  EXPIRED: colors.decreasePoint,
-  USED: colors.green,
-};
 
 export default function RedeemDetailScreen({navigation, route}: Props) {
   const {id} = route.params;
-  const width = Dimensions.get('window').width;
   const [loading, setLoading] = useState(true);
   const [redeemDetail, setRedeemDetail] = useState<RedeemDetail>(
     {} as RedeemDetail,
@@ -175,7 +152,6 @@ export default function RedeemDetailScreen({navigation, route}: Props) {
       getRedeemDetail();
     }
   }, [id]);
-  console.log(JSON.stringify(redeemDetail, null, 2));
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
@@ -183,200 +159,15 @@ export default function RedeemDetailScreen({navigation, route}: Props) {
         showBackBtn
         onPressBack={() =>
           navigation.navigate('MyRewardScreen', {
-            tab: 'history',
+            tab:
+              redeemDetail.redeemDetail.rewardType === 'PHYSICAL'
+                ? 'history'
+                : 'readyToUse',
           })
         }
         title="สรุปรายละเอียดการแลก"
       />
-      {loading ? (
-        <></>
-      ) : (
-        <ScrollView>
-          <View style={styles.container}>
-            <View
-              style={{
-                flex: 0.2,
-              }}>
-              <FastImage
-                source={{uri: redeemDetail?.reward?.imagePath}}
-                style={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: 8,
-                }}
-              />
-            </View>
-            <View style={{paddingLeft: 16, flex: 0.8}}>
-              <RenderHTML
-                contentWidth={width * 0.8}
-                source={{html: redeemDetail.reward.rewardName}}
-                tagsStyles={{
-                  body: {
-                    fontSize: 20,
-                    fontFamily: font.bold,
-                    color: colors.fontBlack,
-                    marginTop: 4,
-                    lineHeight: 28,
-                    alignSelf: 'flex-start',
-                  },
-                }}
-              />
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: font.medium,
-                  color: colors.gray,
-                }}>
-                สถานะ : <Text>{}</Text>
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              borderBottomColor: colors.greys5,
-              borderBottomWidth: 1,
-              padding: 16,
-            }}>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: font.light,
-                color: colors.gray,
-              }}>
-              บริษัทจะจัดส่งสินค้า/ของรางวัลให้ท่านภายใน 14 วันทำการ
-            </Text>
-          </View>
-          <View style={styles.content}>
-            <View style={styles.row}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  lineHeight: 28,
-
-                  fontFamily: font.medium,
-                  color: colors.grey2,
-                }}>
-                จำนวน
-              </Text>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: font.medium,
-                  color: colors.fontBlack,
-                  lineHeight: 28,
-                }}>
-                {redeemDetail.rewardQuantity}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: font.medium,
-                  color: colors.grey2,
-                  lineHeight: 28,
-                }}>
-                แต้มที่ใช้แลก
-              </Text>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: font.medium,
-                  color: colors.decreasePoint,
-                  lineHeight: 28,
-                }}>
-                {numberWithCommas(redeemDetail.amountValue.toString(), true)}{' '}
-                แต้ม
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: font.medium,
-                  color: colors.grey2,
-                  lineHeight: 28,
-                }}>
-                วัน/เวลาที่ทำรายการ
-              </Text>
-              <Text
-                style={{
-                  fontSize: 16,
-
-                  lineHeight: 28,
-                }}>
-                {momentExtend.toBuddhistYear(
-                  redeemDetail.createAt,
-                  'DD MMM YYYY HH:mm',
-                )}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  lineHeight: 28,
-
-                  fontFamily: font.medium,
-                  color: colors.grey2,
-                }}>
-                รหัสการทำรายการ
-              </Text>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: font.medium,
-                  lineHeight: 28,
-
-                  color: colors.fontBlack,
-                }}>
-                {redeemDetail.rewardCode}
-              </Text>
-            </View>
-          </View>
-          <View style={{padding: 16}}>
-            <Text
-              style={{
-                fontSize: 18,
-                fontFamily: font.bold,
-                color: colors.fontBlack,
-              }}>
-              ที่อยู่ในการจัดส่ง
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: font.light,
-                color: colors.gray,
-                marginVertical: 4,
-              }}>
-              ชื่อ-นามสกุล : {redeemDetail?.receiverDetail.firstname}{' '}
-              {redeemDetail?.receiverDetail.lastname}
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: font.light,
-                color: colors.gray,
-                marginVertical: 4,
-              }}>
-              เบอร์โทรศัพท์ : {redeemDetail?.receiverDetail.tel}
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: font.light,
-                color: colors.gray,
-                marginVertical: 4,
-                alignSelf: 'flex-start',
-                width: '90%',
-                lineHeight: 24,
-              }}>
-              ที่อยู่ : {redeemDetail?.receiverDetail?.address}
-            </Text>
-          </View>
-        </ScrollView>
-      )}
+      {loading ? <></> : <Content redeemDetail={redeemDetail} />}
 
       <Spinner
         visible={loading}
@@ -387,57 +178,3 @@ export default function RedeemDetailScreen({navigation, route}: Props) {
     </SafeAreaView>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    borderBottomColor: colors.greys5,
-    borderBottomWidth: 1,
-    borderTopColor: colors.greys5,
-    borderTopWidth: 1,
-    flexDirection: 'row',
-  },
-  content: {
-    padding: 16,
-    borderBottomColor: colors.greys5,
-    borderBottomWidth: 1,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  footer: {
-    height: 100,
-    backgroundColor: colors.white,
-
-    flexDirection: 'row',
-    padding: 16,
-    elevation: 8,
-    shadowColor: '#242D35',
-    shadowOffset: {
-      width: 0,
-      height: -8,
-    },
-    shadowOpacity: 0.04,
-    shadowRadius: 16,
-  },
-  textButton: {
-    fontSize: 18,
-    fontFamily: font.bold,
-    color: colors.white,
-  },
-  button: {
-    width: '100%',
-    backgroundColor: colors.orange,
-    borderRadius: 12,
-    height: 54,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#F86820',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-  },
-});

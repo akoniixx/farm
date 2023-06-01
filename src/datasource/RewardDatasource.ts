@@ -24,6 +24,8 @@ const getListRewards = async ({page, take}: RewardPayload) => {
         page: page,
         take: take,
         status: 'ACTIVE',
+        rewardExchange: 'SCORE',
+        rewardType: 'PHYSICAL',
       },
     })
     .then(res => {
@@ -47,7 +49,9 @@ const getRewardDetail = async (id: string) => {
 };
 const redeemReward = async (payload: RedeemPayload) => {
   return httpClient
-    .post(BASE_URL + '/promotion/droner-transactions/redeem-reward', payload)
+    .post(BASE_URL + '/promotion/droner-transactions/redeem-reward', {
+      ...payload,
+    })
     .then(res => {
       return res.data;
     })

@@ -1,18 +1,14 @@
-import {BaseToast, ErrorToast, ToastProps} from 'react-native-toast-message';
 import colors from '../assets/colors/colors';
 import React from 'react';
-import {height, normalize} from '../function/Normalize';
+import {normalize} from '../function/Normalize';
 import {font} from '../assets';
-import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import icons from '../assets/icons/icons';
 import Toast from 'react-native-toast-message';
-import {TabActions} from '@react-navigation/native';
 import {responsiveHeigth, responsiveWidth} from '../function/responsive';
 import fonts from '../assets/fonts';
-import {
-  callCenterDash,
-  callcenterNumber,
-} from '../definitions/callCenterNumber';
+import {callCenterDash} from '../definitions/callCenterNumber';
+import Text from '../components/Text';
 
 const toastStyle = {
   backgroundColor: '#3EBD93',
@@ -819,6 +815,36 @@ export const toastConfig = {
       </View>
     </TouchableOpacity>
   ),
+  copiedSuccess: ({}: any) => {
+    return (
+      <View
+        style={{
+          height: 100,
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: colors.white,
+          flexDirection: 'row',
+        }}>
+        <Image
+          source={icons.successIcon}
+          style={{
+            width: normalize(30),
+            height: normalize(30),
+            marginRight: normalize(10),
+          }}
+        />
+        <Text
+          style={{
+            fontFamily: fonts.bold,
+            fontSize: normalize(20),
+            color: colors.fontBlack,
+          }}>
+          คัดลอกสำเร็จ
+        </Text>
+      </View>
+    );
+  },
 };
 
 const styles = StyleSheet.create({

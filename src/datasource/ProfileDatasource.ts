@@ -269,7 +269,7 @@ export class ProfileDatasource {
     address2: string;
   }) {
     return httpClient
-      .post(BASE_URL + `/droner/update-other-address/${addressId}`, {
+      .patch(BASE_URL + `/droner/update-other-address/${addressId}`, {
         address3: '',
         ...payload,
       })

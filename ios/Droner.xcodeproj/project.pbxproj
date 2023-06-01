@@ -150,7 +150,6 @@
 			children = (
 				60DC076B28AB7E5E000756CF /* geolocation.swift */,
 				602C8F7028A261A5007D6E25 /* FontAwesome.ttf */,
-				60AC83AC28858DCD00CED949 /* AntDesign.ttf */,
 				60F03EEB2883813700CFC2C7 /* Anuphan-Medium.otf */,
 				60F03EEA2883812300CFC2C7 /* Anuphan-Light.otf */,
 				60F03EE92883810900CFC2C7 /* Anuphan-Bold.otf */,

@@ -15,8 +15,8 @@ import {numberWithCommas} from '../../function/utility';
 import AddressDetail from './AddressDetail';
 import Text from '../../components/Text';
 import FastImage from 'react-native-fast-image';
-import RenderHTML from 'react-native-render-html';
 import {usePoint} from '../../contexts/PointContext';
+import RenderHTML from '../../components/RenderHTML/RenderHTML';
 interface Props {
   navigation: any;
   route: RouteProp<StackParamList, 'RedeemAddressScreen'>;
@@ -52,9 +52,10 @@ export interface RewardParams {
 }
 
 export default function RedeemAddressScreen({navigation, route}: Props) {
-  const {data} = route.params;
-  const {currentPoint} = usePoint();
+  const {data = null, missionData = null} = route.params;
+  const {currentPoint, getCurrentPoint} = usePoint();
   const [isConfirm, setIsConfirm] = React.useState(false);
+
   const onConfirm = () => {
     setIsConfirm(true);
   };
@@ -65,8 +66,10 @@ export default function RedeemAddressScreen({navigation, route}: Props) {
   useEffect(() => {
     if (data) {
       setExchangeDetail(data);
+      getCurrentPoint();
     }
-  }, [data]);
+    console.log('data', missionData);
+  }, [data, getCurrentPoint, missionData]);
   const {width} = useWindowDimensions();
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>

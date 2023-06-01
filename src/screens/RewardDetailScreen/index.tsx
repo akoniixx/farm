@@ -23,10 +23,10 @@ import Modal from '../../components/Modal/Modal';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
 import {RewardListType} from '../RewardScreen/ListReward';
 import {usePoint} from '../../contexts/PointContext';
-import HTML, {RenderHTML} from 'react-native-render-html';
 
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
+import RenderHTML from '../../components/RenderHTML/RenderHTML';
 interface Props {
   navigation: StackNavigationHelpers;
   route: RouteProp<StackParamList, 'RewardDetailScreen'>;
@@ -43,6 +43,9 @@ export default function RewardDetailScreen({navigation, route}: Props) {
   const [rewardDetail, setRewardDetail] = React.useState<RewardListType>(
     {} as RewardListType,
   );
+  const isExpired =
+    rewardDetail.expiredUsedDate &&
+    moment(rewardDetail.expiredUsedDate).isAfter(moment());
   const requirePoint = useMemo(() => {
     if (!rewardDetail.score) {
       return 0;
@@ -198,7 +201,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               {amount}
             </Text>
           </View> */}
-          {isDigital && rewardDetail?.expiredExchangeDate && (
+          {isDigital && isExpired && (
             <View
               style={{
                 borderRadius: 10,
@@ -206,7 +209,8 @@ export default function RewardDetailScreen({navigation, route}: Props) {
                 minHeight: 62,
                 marginTop: 16,
                 backgroundColor: colors.skySoft,
-                width: 162,
+                minWidth: 180,
+                maxWidth: 200,
               }}>
               <Text
                 style={{
@@ -214,9 +218,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
                   fontFamily: font.medium,
                   color: colors.skyDark,
                 }}>
-                หมดอายุอีก{' '}
-                {moment(rewardDetail.expiredUsedDate).diff(moment(), 'days')}{' '}
-                วัน
+                หมดอายุอีก {moment(rewardDetail.expiredUsedDate).fromNow()}
               </Text>
               <Text
                 style={{
@@ -243,7 +245,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               }}>
               รายละเอียด
             </Text>
-            <HTML
+            <RenderHTML
               source={{
                 html: rewardDetail.description || '',
               }}
@@ -270,7 +272,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               }}>
               เงื่อนไข
             </Text>
-            <HTML
+            <RenderHTML
               source={{
                 html: rewardDetail.condition || '',
               }}

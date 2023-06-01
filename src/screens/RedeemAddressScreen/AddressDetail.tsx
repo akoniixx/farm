@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import React, {useEffect, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {colors, font, icons} from '../../assets';
 import {useAuth} from '../../contexts/AuthContext';
 import {insertHyphenInTelNumber} from '../../function/mutateText';
@@ -12,7 +12,7 @@ import {
   RedeemPayload,
   rewardDatasource,
 } from '../../datasource/RewardDatasource';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
+import {usePoint} from '../../contexts/PointContext';
 
 interface AddressType {
   id: string;
@@ -82,13 +82,14 @@ export default function AddressDetail({
   const onChangeRadioAddress = (value: any) => {
     setRadioAddress(value);
   };
+  const {getCurrentPoint} = usePoint();
 
   const onConfirmRedeem = async () => {
     try {
       const addressId =
         radioAddress === 'default' ? mainAddress?.id : secondAddress?.id;
       const payload: RedeemPayload = {
-        rewardId: data.id,
+        rewardId: data?.id,
         dronerId: user?.id || '',
         quantity: data.amountExchange,
         updateBy: `${user?.firstname} ${user?.lastname}`,
@@ -102,8 +103,11 @@ export default function AddressDetail({
           tel: user?.telephoneNo || '',
         },
       };
+
       const result = await rewardDatasource.redeemReward(payload);
+      await getCurrentPoint();
       setIsConfirm(false);
+
       setTimeout(() => {
         navigation.navigate('RedeemDetailScreen', {
           id: result.dronerTransaction.id,

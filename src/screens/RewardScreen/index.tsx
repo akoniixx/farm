@@ -80,7 +80,11 @@ export default function RewardScreen({navigation}: any) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate('MyRewardScreen')}
+            onPress={() =>
+              navigation.navigate('MyRewardScreen', {
+                tab: 'readyToUse',
+              })
+            }
             style={{
               minHeight: 64,
 
