@@ -32,6 +32,7 @@ import RedeemAddressScreen from '../screens/RedeemAddressScreen';
 import CustomAddressScreen from '../screens/CustomAddressScreen';
 import PointHistoryScreen from '../screens/PointScreen/PointHistoryScreen';
 import RedeemScreen from '../screens/RedeemScreen';
+import CampaignScreen from '../screens/CampaignScreen/CampaignScreen';
 import RedeemDetailScreen from '../screens/RedeemDetailScreen';
 import MissionDetailScreen from '../screens/MissionDetailScreen';
 
@@ -79,6 +80,7 @@ export type StackParamList = {
   RedeemScreen: {
     data: any;
   };
+  CampaignScreen: any;
   RedeemDetailScreen: {
     id: string;
   };
@@ -157,6 +159,7 @@ const MainNavigator: React.FC = () => {
         component={MissionDetailScreen}
       />
       {/* <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} /> */}
+      <Stack.Screen name="CampaignScreen" component={CampaignScreen} />
     </Stack.Navigator>
   );
 };

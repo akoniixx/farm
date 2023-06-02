@@ -24,6 +24,9 @@ import {CardGuruKaset} from '../../components/Carousel/CardGuruKaset';
 import {GuruKaset} from '../../datasource/GuruDatasource';
 import LinearGradient from 'react-native-linear-gradient';
 import {usePoint} from '../../contexts/PointContext';
+import image from '../../assets/images/image';
+import {Campaign} from '../../datasource/CampaignDatasource';
+import Draggable from 'react-native-draggable';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -49,6 +52,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const [index, setIndex] = React.useState(0);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
+  const [campaignImage, setCampaignImage] = useState<string>('');
 
   useFocusEffect(
     React.useCallback(() => {
@@ -72,6 +76,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   useEffect(() => {
+    fecthImage();
     getProfile();
     openSocket();
     getCurrentPoint();
@@ -90,6 +95,14 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           image_profile_url,
         },
       });
+    });
+  };
+
+  const fecthImage = async () => {
+    const dronerId = await AsyncStorage.getItem('droner_id');
+    await Campaign.getImage('DRONER', 'QUATA', 'ACTIVE').then(res => {
+      setLoading(true);
+      setCampaignImage(res.data[0].pathImageFloating);
     });
   };
 
@@ -187,7 +200,22 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           });
         }}
       />
+
       <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
+        <View
+          style={{position: 'absolute', top: '95%', left: '60%', zIndex: 1}}>
+          <Draggable>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('CampaignScreen')}>
+              <Image
+                source={{uri: campaignImage}}
+                style={{width: 150, height: 60}}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </Draggable>
+        </View>
+
         <View>
           <View style={styles.headCard}>
             <View>
@@ -457,11 +485,12 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   );
                 }}
               />
+
               <View
                 style={{
-                  alignItems: 'center',
-                  top: -70,
-                  position: 'relative',
+                  position: 'absolute',
+                  right: '40%',
+                  top: '60%',
                 }}>
                 <Pagination
                   dotsLength={guruKaset.data.length}
@@ -478,28 +507,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                   inactiveDotScale={0.9}
                   tappableDots={true}
                 />
-                <View
-                  style={{
-                    position: 'absolute',
-                    right: '40%',
-                    top: '60%',
-                  }}>
-                  <Pagination
-                    dotsLength={guruKaset.data.length}
-                    activeDotIndex={index}
-                    carouselRef={isCarousel}
-                    dotStyle={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: 5,
-                      marginHorizontal: 0,
-                      backgroundColor: colors.fontBlack,
-                    }}
-                    inactiveDotOpacity={0.4}
-                    inactiveDotScale={0.9}
-                    tappableDots={true}
-                  />
-                </View>
               </View>
             </View>
           ) : null}
