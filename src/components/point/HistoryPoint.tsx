@@ -12,7 +12,7 @@ interface guruData {
   action: any;
   taskId: any;
   taskNo: any;
-  campaignName:string
+  campaignName: string;
 }
 export const HistoryPoint: React.FC<guruData> = ({
   index,
@@ -21,7 +21,7 @@ export const HistoryPoint: React.FC<guruData> = ({
   action,
   taskId,
   taskNo,
-  campaignName
+  campaignName,
 }) => {
   return (
     <View key={index}>
@@ -38,7 +38,10 @@ export const HistoryPoint: React.FC<guruData> = ({
               ? campaignName
               : campaignName}
           </Text>
-          <Text style={styles.textDate}>{taskNo? '#':'' }{taskNo}</Text>
+          <Text style={styles.textDate}>
+            {taskNo ? '#' : ''}
+            {taskNo}
+          </Text>
         </View>
         {action === 'INCREASE' ? (
           <View>

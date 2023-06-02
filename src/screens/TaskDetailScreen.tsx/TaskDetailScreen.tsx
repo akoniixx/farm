@@ -661,6 +661,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                           data?.discountCoupon,
                           data?.discountPromotion,
                           data?.revenuePromotion,
+                          data?.discountCampaignPoint,
                         ),
                       )}{' '}
                       ฿
