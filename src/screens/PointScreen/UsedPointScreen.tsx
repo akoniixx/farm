@@ -23,12 +23,13 @@ const UsedPointScreen: React.FC<any> = ({navigation, route}) => {
   const [total, setTotal] = useState(0);
   useEffect(() => {
     getHistoryPoint();
-  }, [current, row]);
+  }, []);
   const getHistoryPoint = async () => {
     setLoading(true);
     const droner_id: any = await AsyncStorage.getItem('droner_id');
     await getAllHistoryPoint(droner_id, 1, row)
       .then(res => {
+        setTotal(res.count);
         setDataAllPoint(res.history);
       })
       .catch(err => console.log(err))
@@ -41,6 +42,7 @@ const UsedPointScreen: React.FC<any> = ({navigation, route}) => {
       setRefreshing(false);
     }, 1000);
   }, []);
+
   const loadMoreData = async () => {
     if (dataAllPoint.length >= total) {
       return;
@@ -48,7 +50,7 @@ const UsedPointScreen: React.FC<any> = ({navigation, route}) => {
     try {
       setLoading(true);
       const droner_id: any = await AsyncStorage.getItem('droner_id');
-      await getAllHistoryPoint(droner_id, current, row)
+      await getAllHistoryPoint(droner_id, current + 1, row)
         .then(res => {
           setDataAllPoint([...dataAllPoint, ...res.history]);
           setLoading(false);
@@ -78,6 +80,7 @@ const UsedPointScreen: React.FC<any> = ({navigation, route}) => {
             data={dataAllPoint}
             renderItem={({item, index}) => (
               <HistoryPoint
+                {...item}
                 index={index}
                 date={item.createAt}
                 point={item.amountValue}

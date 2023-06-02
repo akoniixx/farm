@@ -502,7 +502,8 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                         <Text
                           style={{
                             fontFamily: fonts.medium,
-                            fontSize: normalize(14),
+                            fontSize:
+                              Platform.OS === 'android' ? 12 : normalize(14),
                             color: isFocused ? colors.orange : colors.gray,
                             marginTop: item.name === 'profile' ? 4 : 2,
                           }}>

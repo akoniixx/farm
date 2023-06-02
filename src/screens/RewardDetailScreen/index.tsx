@@ -23,11 +23,10 @@ import Modal from '../../components/Modal/Modal';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
 import {RewardListType} from '../RewardScreen/ListReward';
 import {usePoint} from '../../contexts/PointContext';
-import HTML from 'react-native-render-html';
 
 import moment from 'moment';
-import {useAuth} from '../../contexts/AuthContext';
 import FastImage from 'react-native-fast-image';
+import RenderHTML from '../../components/RenderHTML/RenderHTML';
 interface Props {
   navigation: StackNavigationHelpers;
   route: RouteProp<StackParamList, 'RewardDetailScreen'>;
@@ -44,6 +43,9 @@ export default function RewardDetailScreen({navigation, route}: Props) {
   const [rewardDetail, setRewardDetail] = React.useState<RewardListType>(
     {} as RewardListType,
   );
+  const isExpired =
+    rewardDetail.expiredUsedDate &&
+    moment(rewardDetail.expiredUsedDate).isAfter(moment());
   const requirePoint = useMemo(() => {
     if (!rewardDetail.score) {
       return 0;
@@ -70,7 +72,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
     }
   }, [id, currentPoint]);
   const onPressExchange = () => {
-    navigation.navigate('ExchangeAddressScreen', {
+    navigation.navigate('RedeemAddressScreen', {
       data: {
         ...rewardDetail,
         amountExchange: counter,
@@ -85,7 +87,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
 
       const disableButton =
         counter <= 0 || counter * requirePoint > currentPoint;
-      const isDisablePlus = (counter + 1) * requirePoint >= currentPoint;
+      const isDisablePlus = (counter + 1) * requirePoint > currentPoint;
 
       return {
         isLimit: (counter || 1) * requirePoint >= currentPoint,
@@ -94,7 +96,6 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         disableButton,
       };
     }, [counter, currentPoint, requirePoint]);
-  console.log('rewardDetail', JSON.stringify(rewardDetail, null, 2));
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <CustomHeader
@@ -145,15 +146,19 @@ export default function RewardDetailScreen({navigation, route}: Props) {
           />
         </View>
         <View style={styles({disable: disableButton}).container}>
-          <Text
-            style={{
-              fontSize: 24,
-              fontFamily: font.bold,
-              lineHeight: 40,
-              width: '80%',
-            }}>
-            {rewardDetail.rewardName || ''}
-          </Text>
+          <RenderHTML
+            tagsStyles={{
+              body: {
+                fontSize: 24,
+                fontFamily: font.bold,
+                color: colors.fontBlack,
+              },
+            }}
+            contentWidth={width}
+            source={{
+              html: rewardDetail?.rewardName || '',
+            }}
+          />
           <View
             style={{
               flexDirection: 'row',
@@ -196,7 +201,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               {amount}
             </Text>
           </View> */}
-          {isDigital && rewardDetail?.expiredExchangeDate && (
+          {isDigital && isExpired && (
             <View
               style={{
                 borderRadius: 10,
@@ -204,7 +209,8 @@ export default function RewardDetailScreen({navigation, route}: Props) {
                 minHeight: 62,
                 marginTop: 16,
                 backgroundColor: colors.skySoft,
-                width: 162,
+                minWidth: 180,
+                maxWidth: 200,
               }}>
               <Text
                 style={{
@@ -212,9 +218,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
                   fontFamily: font.medium,
                   color: colors.skyDark,
                 }}>
-                หมดอายุอีก{' '}
-                {moment(rewardDetail.expiredUsedDate).diff(moment(), 'days')}{' '}
-                วัน
+                หมดอายุอีก {moment(rewardDetail.expiredUsedDate).fromNow()}
               </Text>
               <Text
                 style={{
@@ -235,20 +239,20 @@ export default function RewardDetailScreen({navigation, route}: Props) {
             }}>
             <Text
               style={{
-                fontSize: 16,
+                fontSize: 18,
                 fontFamily: font.medium,
                 color: colors.fontBlack,
               }}>
               รายละเอียด
             </Text>
-            <HTML
+            <RenderHTML
               source={{
                 html: rewardDetail.description || '',
               }}
               contentWidth={width}
               tagsStyles={{
-                p: {
-                  fontSize: 16,
+                body: {
+                  fontSize: 18,
                   fontFamily: font.light,
                   color: colors.gray,
                   lineHeight: 28,
@@ -262,20 +266,20 @@ export default function RewardDetailScreen({navigation, route}: Props) {
             }}>
             <Text
               style={{
-                fontSize: 16,
+                fontSize: 18,
                 fontFamily: font.medium,
                 color: colors.fontBlack,
               }}>
               เงื่อนไข
             </Text>
-            <HTML
+            <RenderHTML
               source={{
                 html: rewardDetail.condition || '',
               }}
               contentWidth={width}
               tagsStyles={{
-                p: {
-                  fontSize: 16,
+                body: {
+                  fontSize: 18,
                   fontFamily: font.light,
                   color: colors.gray,
                   lineHeight: 28,

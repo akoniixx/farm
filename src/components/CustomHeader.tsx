@@ -6,12 +6,10 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StyleSheet,
-  StatusBar,
   ViewProps,
 } from 'react-native';
-import {colors, font} from '../assets';
+import {colors, font, icons} from '../assets';
 import {normalize} from '../function/Normalize';
-import Icon from 'react-native-vector-icons/AntDesign';
 
 interface Prop {
   title?: string | JSX.Element;
@@ -46,7 +44,13 @@ const CustomHeader: React.FC<Prop> = ({
             <TouchableOpacity
               style={{paddingVertical: 14, paddingHorizontal: 24}}
               onPress={onPressBack}>
-              <Icon name="left" size={30} color={titleColor ?? 'black'} />
+              <Image
+                source={icons.arrowLeft}
+                style={{
+                  width: 28,
+                  height: 28,
+                }}
+              />
             </TouchableOpacity>
           )}
           {headerLeft?.()}

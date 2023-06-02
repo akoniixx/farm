@@ -74,4 +74,5 @@ export default {
   arrowUpCollapse: require('./arrowUpCollapse.png'),
   tableReward: require('./tableReward.png'),
   ruleReward: require('./ruleReward.png'),
+  copyClipboard: require('./copyClipboard.png'),
 };

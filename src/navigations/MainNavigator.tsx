@@ -28,11 +28,13 @@ import IncomeScreen from '../screens/IncomeScreen';
 import HistoryRewardScreen from '../screens/HistoryRewardScreen';
 import MyRewardScreen from '../screens/MyRewardScreen';
 import RewardDetailScreen from '../screens/RewardDetailScreen';
-import ExchangeAddressScreen from '../screens/ExchangeAddressScreen';
+import RedeemAddressScreen from '../screens/RedeemAddressScreen';
 import CustomAddressScreen from '../screens/CustomAddressScreen';
 import PointHistoryScreen from '../screens/PointScreen/PointHistoryScreen';
 import RedeemScreen from '../screens/RedeemScreen';
 import CampaignScreen from '../screens/CampaignScreen/CampaignScreen';
+import RedeemDetailScreen from '../screens/RedeemDetailScreen';
+import MissionDetailScreen from '../screens/MissionDetailScreen';
 
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
@@ -66,8 +68,9 @@ export type StackParamList = {
     id: string;
     isDigital?: boolean;
   };
-  ExchangeAddressScreen: {
+  RedeemAddressScreen: {
     data: any;
+    missionData: any;
   };
   CustomAddressScreen: {
     data: any;
@@ -78,6 +81,12 @@ export type StackParamList = {
     data: any;
   };
   CampaignScreen: any;
+  RedeemDetailScreen: {
+    id: string;
+  };
+  MissionDetailScreen: {
+    id: string;
+  };
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
   // };
@@ -128,14 +137,27 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="MyRewardScreen" component={MyRewardScreen} />
       <Stack.Screen name="RewardDetailScreen" component={RewardDetailScreen} />
       <Stack.Screen
-        name="ExchangeAddressScreen"
-        component={ExchangeAddressScreen}
+        name="RedeemAddressScreen"
+        component={RedeemAddressScreen}
       />
       <Stack.Screen
         name="CustomAddressScreen"
         component={CustomAddressScreen}
       />
       <Stack.Screen name="RedeemScreen" component={RedeemScreen} />
+      <Stack.Group
+        screenOptions={{
+          gestureEnabled: false,
+        }}>
+        <Stack.Screen
+          name="RedeemDetailScreen"
+          component={RedeemDetailScreen}
+        />
+      </Stack.Group>
+      <Stack.Screen
+        name="MissionDetailScreen"
+        component={MissionDetailScreen}
+      />
       {/* <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} /> */}
       <Stack.Screen name="CampaignScreen" component={CampaignScreen} />
     </Stack.Navigator>

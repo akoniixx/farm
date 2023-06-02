@@ -51,7 +51,13 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
           autoFocus={autoFocus}
         />
         <TouchableOpacity style={styles.clearBtn} onPress={() => setNumber('')}>
-          <Icon name="close" />
+          <Image
+            source={icons.close}
+            style={{
+              width: 16,
+              height: 16,
+            }}
+          />
         </TouchableOpacity>
       </View>
       {!onError ? null : <Text style={styles.textError}>{errorMessage}</Text>}

@@ -59,7 +59,7 @@ export default function CustomAddressScreen({
         subdistrictId: objInput.subDistrict.value,
         postcode: objInput.postCode,
       };
-      if (isEdit) {
+      if (!isEdit) {
         await ProfileDatasource.postAddressList(payload);
       } else {
         await ProfileDatasource.editAddressList({
