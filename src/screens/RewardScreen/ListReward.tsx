@@ -3,20 +3,18 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  Image,
-  ImageBackground,
-  ScrollView,
   TouchableOpacity,
   Dimensions,
+  RefreshControl,
 } from 'react-native';
-import HTML from 'react-native-render-html';
-import React, {useEffect, useMemo, useState} from 'react';
-import mockImage from '../../assets/mockImage';
+
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import {font} from '../../assets';
 import {numberWithCommas} from '../../function/utility';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
+import RenderHTML from '../../components/RenderHTML/RenderHTML';
 
 export interface RewardListType {
   id: string;
@@ -60,23 +58,29 @@ export default function ListReward({
     data: [],
   });
   const take = 10;
+  const widthImg = Dimensions.get('window').width / 2 - 32;
+  const [refreshing, setRefreshing] = useState(false);
+  const getFirstListReward = useCallback(async () => {
+    try {
+      setLoading(true);
+      const result = await rewardDatasource.getListRewards({
+        page: 1,
+        take,
+      });
+      setListReward(result);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [setLoading, take]);
   useEffect(() => {
-    const getFirstListReward = async () => {
-      try {
-        setLoading(true);
-        const result = await rewardDatasource.getListRewards({
-          page: 1,
-          take,
-        });
-        setListReward(result);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
     getFirstListReward();
-  }, []);
+  }, [getFirstListReward]);
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await getFirstListReward().finally(() => setRefreshing(false));
+  }, [getFirstListReward]);
   const loadMore = async () => {
     if (listReward.data.length >= listReward.count) {
       return;
@@ -99,74 +103,81 @@ export default function ListReward({
     }
   };
   const renderItem = useMemo(() => {
-    return ({item}: {item: RewardListType}) => {
+    return ({item}: {item: RewardListType; index: number}) => {
+      const dateDiff = moment(item.expiredUsedDate).fromNow();
+      const isExpired =
+        item.expiredUsedDate && moment(item.expiredUsedDate).isAfter(moment());
       return (
-        <TouchableOpacity
-          style={[styles.card]}
-          onPress={() => {
-            navigation.navigate('RewardDetailScreen', {
-              id: item.id,
-              isDigital: item.rewardType === 'DIGITAL',
-            });
-          }}>
-          <FastImage
-            style={{
-              width: '100%',
-              height: 190,
-              borderTopLeftRadius: 12,
-              borderTopRightRadius: 12,
-            }}
-            source={{uri: item.imagePath}}
-          />
-          <View
-            style={{
-              paddingVertical: 10,
-              paddingHorizontal: 8,
+        <>
+          <TouchableOpacity
+            style={[styles.card]}
+            onPress={() => {
+              navigation.navigate('RewardDetailScreen', {
+                id: item.id,
+                isDigital: item.rewardType === 'DIGITAL',
+              });
             }}>
-            <HTML
-              source={{html: item.rewardName}}
-              contentWidth={Dimensions.get('window').width / 2}
-              tagsStyles={{
-                p: {
+            <FastImage
+              style={{
+                width: widthImg + 2,
+                height: widthImg + 2,
+                borderTopLeftRadius: 12,
+                borderTopRightRadius: 12,
+              }}
+              source={{uri: item.imagePath}}
+            />
+            <View
+              style={{
+                paddingVertical: 10,
+                paddingHorizontal: 8,
+              }}>
+              <RenderHTML
+                source={{html: item.rewardName}}
+                contentWidth={Dimensions.get('window').width / 2}
+                tagsStyles={{
+                  body: {
+                    fontFamily: font.semiBold,
+                    fontSize: 18,
+                  },
+                }}
+              />
+              <Text
+                style={{
                   fontFamily: font.medium,
                   fontSize: 14,
-                },
-              }}
-            />
-            <Text
-              style={{
-                fontFamily: font.medium,
-                fontSize: 14,
-                paddingVertical: 4,
-              }}>
-              {numberWithCommas((item.score || 0).toString(), true)}{' '}
-              <Text
-                style={{
-                  fontFamily: font.light,
-                  fontSize: 14,
+                  paddingVertical: 4,
                 }}>
-                แต้ม
+                {numberWithCommas((item.score || 0).toString(), true)}{' '}
+                <Text
+                  style={{
+                    fontFamily: font.light,
+                    fontSize: 14,
+                  }}>
+                  แต้ม
+                </Text>
               </Text>
-            </Text>
-            {item.expiredUsedDate && (
-              <Text
-                style={{
-                  fontFamily: font.light,
-                  fontSize: 14,
-                }}>
-                หมดอายุอีก {moment(item.expiredUsedDate).diff(moment(), 'days')}{' '}
-                วัน
-              </Text>
-            )}
-          </View>
-        </TouchableOpacity>
+              {isExpired && (
+                <Text
+                  style={{
+                    fontFamily: font.light,
+                    fontSize: 14,
+                  }}>
+                  หมดอายุอีก {dateDiff}
+                </Text>
+              )}
+            </View>
+          </TouchableOpacity>
+        </>
       );
     };
   }, [navigation]);
   return (
     <FlatList
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       style={{marginTop: 16}}
-      data={listReward.data}
+      data={listReward?.data || []}
       renderItem={renderItem}
       numColumns={2}
       onEndReached={loadMore}
@@ -190,9 +201,10 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: '#DCDFE3',
-    flex: 0.48,
     flexGrow: 1,
     margin: 6,
+    flex: 0.48,
+    maxWidth: Dimensions.get('window').width / 2 - 32,
   },
   itemSeparator: {
     width: 10,

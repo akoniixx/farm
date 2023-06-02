@@ -10,8 +10,7 @@ import {toastConfig} from './src/config/toast-config';
 import {BackHandler} from 'react-native';
 import buddhaEra from 'dayjs/plugin/buddhistEra';
 import dayjs from 'dayjs';
-import {AuthProvider} from './src/contexts/AuthContext';
-import * as RootNavigation from './src/navigations/RootNavigation';
+import {AuthProvider, useAuth} from './src/contexts/AuthContext';
 import {Settings} from 'react-native-fbsdk-next';
 
 dayjs.extend(buddhaEra);
@@ -26,7 +25,13 @@ import {checkNotifications} from 'react-native-permissions';
 import 'moment/locale/th';
 import './src/components/Sheet';
 import {PointProvider} from './src/contexts/PointContext';
-
+import moment from 'moment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+moment.updateLocale('th', {
+  relativeTime: {
+    future: '%s',
+  },
+});
 type ActionContextType = {
   actiontaskId: string | null;
   setActiontaskId: React.Dispatch<React.SetStateAction<string | null>>;
@@ -54,17 +59,24 @@ const App = () => {
       Settings.setAdvertiserTrackingEnabled(false);
     }
   };
+
   useEffect(() => {
     mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
-
+    const getToken = async () => {
+      const token = await AsyncStorage.getItem('token');
+      const dronerId = await AsyncStorage.getItem('droner_id');
+      console.log('token', token);
+      console.log('dronerId', dronerId);
+    };
     if (Platform.OS === 'ios') {
       firebaseInitialize();
     }
     requestUserPermission();
     checkPermission();
     requestTracking();
+    getToken();
   }, []);
 
   const checkPermission = () => {

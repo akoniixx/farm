@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
 import {font, image} from '../../assets';
 import colors from '../../assets/colors/colors';
@@ -12,17 +12,26 @@ interface guruData {
   action: any;
   taskId: any;
   taskNo: any;
-  campaignName:string
+  campaignName: string;
+  rewardId: string;
+  rewardName: string;
+  redeemNo: string;
 }
 export const HistoryPoint: React.FC<guruData> = ({
   index,
   date,
   point,
   action,
-  taskId,
   taskNo,
-  campaignName
+  campaignName,
+  ...props
 }) => {
+  console.log(JSON.stringify(props, null, 2));
+  const isHaveReward = useMemo(() => {
+    if (props.rewardId !== null) {
+      return true;
+    }
+  }, [props.rewardId]);
   return (
     <View key={index}>
       <View
@@ -34,28 +43,37 @@ export const HistoryPoint: React.FC<guruData> = ({
         }}>
         <View>
           <Text style={styles.title}>
-            {action === 'INCREASE' && taskId !== null
-              ? campaignName
-              : campaignName}
+            {isHaveReward ? `แลก${props.rewardName}` : campaignName}
           </Text>
-          <Text style={styles.textDate}>{taskNo? '#':'' }{taskNo}</Text>
+          <Text style={styles.textDate}>
+            {/* {taskNo ? '#' : '#'} */}
+            {isHaveReward ? props.redeemNo : taskNo}
+          </Text>
         </View>
         {action === 'INCREASE' ? (
-          <View>
+          <View
+            style={{
+              alignItems: 'flex-end',
+            }}>
             <Text style={styles.positive}>{`+ ${numberWithCommas(
               point,
+              true,
             )} `}</Text>
             <Text style={styles.textDate}>
-              {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm น.`)}
+              {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm `)}
             </Text>
           </View>
         ) : (
-          <View>
+          <View
+            style={{
+              alignItems: 'flex-end',
+            }}>
             <Text style={styles.negative}>{`- ${numberWithCommas(
               point,
+              true,
             )} `}</Text>
             <Text style={styles.textDate}>
-              {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm น.`)}
+              {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm `)}
             </Text>
           </View>
         )}

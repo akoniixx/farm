@@ -33,4 +33,5 @@ export default {
   successStamp: require('./successStamp.png'),
   fullQuota: require('./fullQuota.png'),
   missionProgressBar: require('./missionProgressBar.json'),
+  emptyMission: require('./emptyMission.png'),
 };

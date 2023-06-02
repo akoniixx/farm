@@ -14,7 +14,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		15B5C69CB9394B9689A6AE7A /* Anuphan-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 772F96D02BEA4F9FB73501EB /* Anuphan-SemiBold.ttf */; };
 		524A8C9D4BA403CDE3515401 /* libPods-Droner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D23BCECF9EB9DC1C25168D9C /* libPods-Droner.a */; };
-		60AC83AD28858DCD00CED949 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 60AC83AC28858DCD00CED949 /* AntDesign.ttf */; };
 		60DC076C28AB7E5E000756CF /* geolocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DC076B28AB7E5E000756CF /* geolocation.swift */; };
 		60F03EE22883795100CFC2C7 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE12883795100CFC2C7 /* fonts */; };
 		60F03EE4288380D400CFC2C7 /* Anuphan-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE3288380D400CFC2C7 /* Anuphan-Bold.otf */; };
@@ -50,7 +49,6 @@
 		38B90D92F33F7267A0E0A19F /* Pods-Droner-DronerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner-DronerTests.release.xcconfig"; path = "Target Support Files/Pods-Droner-DronerTests/Pods-Droner-DronerTests.release.xcconfig"; sourceTree = "<group>"; };
 		4972CE45B55C596C45F97E07 /* Pods-Droner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner.release.xcconfig"; path = "Target Support Files/Pods-Droner/Pods-Droner.release.xcconfig"; sourceTree = "<group>"; };
 		602C8F7028A261A5007D6E25 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
-		60AC83AC28858DCD00CED949 /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = ../src/assets/fonts/AntDesign.ttf; sourceTree = "<group>"; };
 		60DC076B28AB7E5E000756CF /* geolocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = geolocation.swift; sourceTree = "<group>"; };
 		60F03EE12883795100CFC2C7 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../src/assets/fonts; sourceTree = "<group>"; };
 		60F03EE3288380D400CFC2C7 /* Anuphan-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Anuphan-Bold.otf"; path = "../src/assets/fonts/Anuphan-Bold.otf"; sourceTree = "<group>"; };
@@ -152,7 +150,6 @@
 			children = (
 				60DC076B28AB7E5E000756CF /* geolocation.swift */,
 				602C8F7028A261A5007D6E25 /* FontAwesome.ttf */,
-				60AC83AC28858DCD00CED949 /* AntDesign.ttf */,
 				60F03EEB2883813700CFC2C7 /* Anuphan-Medium.otf */,
 				60F03EEA2883812300CFC2C7 /* Anuphan-Light.otf */,
 				60F03EE92883810900CFC2C7 /* Anuphan-Bold.otf */,
@@ -288,7 +285,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60AC83AD28858DCD00CED949 /* AntDesign.ttf in Resources */,
 				60F03EE8288380FA00CFC2C7 /* Anuphan-Medium.otf in Resources */,
 				60F03EE6288380E700CFC2C7 /* Anuphan-Light.otf in Resources */,
 				60F03EE4288380D400CFC2C7 /* Anuphan-Bold.otf in Resources */,
@@ -626,7 +622,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/swift",
 				);
-MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.3.1;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",

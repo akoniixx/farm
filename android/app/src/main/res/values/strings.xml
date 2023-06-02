@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">นักบินโดรน</string>
+    <string name="facebook_app_id">181756618165362</string>
+    <string name="facebook_client_token">8a0ce86f62551714f3c4463f9482fbac</string>
 </resources>

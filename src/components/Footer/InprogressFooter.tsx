@@ -28,7 +28,14 @@ export const InprogressFooter: React.FC<InprogressProp> = ({
         style={styles.startButton}
         disabled={statusDelay === 'WAIT_APPROVE'}
         onPress={() => mainFunc()}>
-        <Icon name="checkcircleo" size={22} color="white" />
+        <Image
+          source={icons.success}
+          style={{
+            marginRight: 8,
+            width: normalize(24),
+            height: normalize(24),
+          }}
+        />
         <Text
           style={{
             fontFamily: font.bold,

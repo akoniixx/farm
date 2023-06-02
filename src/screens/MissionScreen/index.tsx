@@ -1,14 +1,13 @@
-import {View, SafeAreaView, StyleSheet, ImageBackground} from 'react-native';
+import {View, StyleSheet, ImageBackground, Platform} from 'react-native';
 import React from 'react';
-import {StackScreenProps} from '@react-navigation/stack';
-import {StackParamList} from '../../navigations/MainNavigator';
+
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {TabNavigatorParamList} from '../../navigations/bottomTabs/MainTapNavigator';
-import {RouteProp} from '@react-navigation/native';
 import {colors, font, image} from '../../assets';
 import Text from '../../components/Text';
 import TabCustom from '../../components/TabCustom/TabCustom';
 import Body from './Body';
+import {SafeAreaView} from 'react-native-safe-area-context';
 type MissionScreenProps = {
   navigation: BottomTabNavigationProp<TabNavigatorParamList, 'mission'>;
 };
@@ -38,6 +37,7 @@ export default function MissionScreen({navigation}: MissionScreenProps) {
   };
   return (
     <SafeAreaView
+      edges={['right', 'bottom', 'left']}
       style={{
         flex: 1,
       }}>
@@ -59,20 +59,35 @@ export default function MissionScreen({navigation}: MissionScreenProps) {
             }}>
             ภารกิจ
           </Text>
-          <TabCustom
+          {/* <TabCustom
             tabs={tabLists}
             value={selectedTab}
             onChangeTab={handleTabChange}
+          /> */}
+          <View
+            style={{
+              height: 45,
+            }}
           />
         </View>
       </ImageBackground>
-      <Body />
+      <Body navigation={navigation} />
     </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
   headerContainer: {
-    height: 120,
-    width: '100%',
+    ...Platform.select({
+      ios: {
+        height: 150,
+        width: '100%',
+        justifyContent: 'flex-end',
+      },
+      android: {
+        height: 100,
+        width: '100%',
+        justifyContent: 'flex-end',
+      },
+    }),
   },
 });

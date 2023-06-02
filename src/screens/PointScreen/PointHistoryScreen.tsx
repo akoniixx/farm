@@ -25,7 +25,6 @@ import PointTapNavigator from '../../navigations/topTabs/PointTapNavigator';
 import {usePoint} from '../../contexts/PointContext';
 
 const DetailPointScreen: React.FC<any> = ({navigation, route}) => {
-  const [loading, setLoading] = useState(false);
   const {currentPoint} = usePoint();
   return (
     <View
