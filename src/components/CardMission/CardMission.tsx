@@ -16,22 +16,27 @@ interface Props {
   onPress?: () => void;
   isDouble?: boolean;
   isComplete?: boolean;
-  isExpire?: boolean;
+  isExpired?: boolean;
   isFullQuota?: boolean;
   title?: string;
-  desc?: string;
   current?: number;
   total?: number;
   imageSource?: any;
+  missionName?: string;
+  description?: string;
+  isStatusComplete?: boolean;
 }
 export default function CardMission({
-  isComplete = true,
-  isDouble = true,
+  isComplete = false,
+  isDouble = false,
   isFullQuota = false,
-  isExpire = false,
-  current = 50,
+  isExpired = false,
+  current = 0,
   total = 100,
-  imageSource = mockImage.reward2,
+  imageSource,
+  missionName,
+  description,
+  isStatusComplete = false,
   onPress,
 }: Props) {
   return (
@@ -39,7 +44,7 @@ export default function CardMission({
       style={[
         styles.card,
         {
-          backgroundColor: isExpire ? colors.softGrey2 : colors.white,
+          backgroundColor: isExpired ? colors.softGrey2 : colors.white,
         },
       ]}
       activeOpacity={0.8}
@@ -51,8 +56,7 @@ export default function CardMission({
             fontSize: 16,
             fontFamily: font.bold,
           }}>
-          บินสะสมครบ 100 ไร่ (400 แต้ม)บินสะสมครบ 100 ไร่ (400 แต้ม)บินสะสมครบ
-          100 ไร่ บินสะสมครบ 100 ไร่ (400 แต้ม)บินสะสมครบ 100 ไร่
+          {missionName}
         </Text>
       </View>
       <View
@@ -75,13 +79,13 @@ export default function CardMission({
               fontSize: 14,
               fontFamily: font.light,
             }}>
-            รับเสื้อไอคอนเกษตร มูลค่า 500 บาท
+            {description}
           </Text>
 
           <ProgressBarAnimated
             current={current}
             total={total}
-            isDisabled={isExpire || isFullQuota}
+            isDisabled={isExpired || isFullQuota}
           />
 
           <View
@@ -115,7 +119,7 @@ export default function CardMission({
               </Text>
             </View>
 
-            {isComplete && (
+            {isComplete && !isStatusComplete && (
               <Text
                 style={{
                   fontSize: 14,
@@ -152,10 +156,12 @@ export default function CardMission({
               </View>
             </>
           )}
-          {isExpire || isFullQuota ? (
+          {isExpired || isFullQuota ? (
             <Grayscale>
               <ImageBackground
-                source={imageSource}
+                source={{
+                  uri: imageSource,
+                }}
                 imageStyle={{
                   borderRadius: 34,
                 }}
@@ -226,7 +232,9 @@ export default function CardMission({
           ) : (
             <>
               <ImageBackground
-                source={imageSource}
+                source={{
+                  uri: imageSource,
+                }}
                 imageStyle={{
                   borderRadius: 34,
                 }}

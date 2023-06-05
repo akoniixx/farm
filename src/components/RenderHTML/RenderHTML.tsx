@@ -1,12 +1,17 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import RHTML, {RenderHTMLProps} from 'react-native-render-html';
 import {font} from '../../assets';
 
 interface Props extends RenderHTMLProps {}
 export default function RenderHTML(props: Props) {
+  const htmlCss = useMemo(() => {
+    return props.tagsStyles;
+  }, [props.tagsStyles]);
   return (
     <RHTML
       {...props}
+      enableExperimentalBRCollapsing
+      tagsStyles={htmlCss}
       systemFonts={[font.light, font.semiBold, font.medium, font.bold]}
     />
   );

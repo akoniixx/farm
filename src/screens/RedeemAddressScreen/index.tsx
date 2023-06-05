@@ -17,6 +17,7 @@ import Text from '../../components/Text';
 import FastImage from 'react-native-fast-image';
 import {usePoint} from '../../contexts/PointContext';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
+import Modal from '../../components/Modal/Modal';
 interface Props {
   navigation: any;
   route: RouteProp<StackParamList, 'RedeemAddressScreen'>;
@@ -54,11 +55,17 @@ export interface RewardParams {
 export default function RedeemAddressScreen({navigation, route}: Props) {
   const {data = null, missionData = null} = route.params;
   const {currentPoint, getCurrentPoint} = usePoint();
+  const [missionDetail, setMissionDetail] = React.useState<any>(null);
   const [isConfirm, setIsConfirm] = React.useState(false);
+  const [isConfirmMission, setIsConfirmMission] = React.useState(false);
 
   const onConfirm = () => {
     setIsConfirm(true);
   };
+  const onShowConfirmMission = () => {
+    setIsConfirmMission(true);
+  };
+  const onConfirmMission = async () => {};
   const [exchangeDetail, setExchangeDetail] = React.useState<RewardParams>(
     {} as RewardParams,
   );
@@ -68,7 +75,9 @@ export default function RedeemAddressScreen({navigation, route}: Props) {
       setExchangeDetail(data);
       getCurrentPoint();
     }
-    console.log('data', missionData);
+    if (missionData) {
+      setMissionDetail(missionData);
+    }
   }, [data, getCurrentPoint, missionData]);
   const {width} = useWindowDimensions();
   return (
@@ -79,134 +88,223 @@ export default function RedeemAddressScreen({navigation, route}: Props) {
         title="สรุปรายละเอียดการแลก"
       />
       <ScrollView>
-        <View style={styles.container}>
-          <View
-            style={{
-              flex: 0.2,
-            }}>
-            <FastImage
-              source={{uri: data.imagePath}}
-              style={{
-                width: 80,
-                height: 80,
-                borderRadius: 8,
-              }}
-            />
-          </View>
-          <View style={{paddingLeft: 16, flex: 0.8}}>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: font.medium,
-                color: colors.gray,
-              }}>
-              สินค้า
-            </Text>
-            <RenderHTML
-              contentWidth={width * 0.8}
-              source={{html: exchangeDetail.rewardName}}
-              tagsStyles={{
-                body: {
-                  fontSize: 20,
-                  fontFamily: font.bold,
-                  color: colors.fontBlack,
-                  marginTop: 4,
-                  lineHeight: 28,
-                  alignSelf: 'flex-start',
-                },
-              }}
-            />
-          </View>
-        </View>
-        <View style={styles.content}>
-          <View style={styles.row}>
-            <Text
-              style={{
-                fontSize: 16,
-                lineHeight: 28,
+        {Object.keys(exchangeDetail).length > 0 && (
+          <>
+            <View style={styles.container}>
+              <View
+                style={{
+                  flex: 0.2,
+                }}>
+                <FastImage
+                  source={{uri: data.imagePath}}
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: 8,
+                  }}
+                />
+              </View>
+              <View style={{paddingLeft: 16, flex: 0.8}}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: font.medium,
+                    color: colors.gray,
+                  }}>
+                  สินค้า
+                </Text>
+                <RenderHTML
+                  contentWidth={width * 0.8}
+                  source={{html: exchangeDetail.rewardName}}
+                  tagsStyles={{
+                    body: {
+                      fontSize: 18,
+                      fontFamily: font.bold,
+                      color: colors.fontBlack,
+                      marginTop: 4,
+                      alignSelf: 'flex-start',
+                    },
+                  }}
+                />
+              </View>
+            </View>
+            <View style={styles.content}>
+              <View style={styles.row}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 28,
 
-                fontFamily: font.medium,
-                color: colors.grey2,
-              }}>
-              จำนวน
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: font.medium,
-                color: colors.fontBlack,
-                lineHeight: 28,
-              }}>
-              {exchangeDetail.amountExchange}
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: font.medium,
-                color: colors.grey2,
-                lineHeight: 28,
-              }}>
-              แต้มสะสมปัจจุบัน
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: font.medium,
-                color: colors.fontBlack,
-                lineHeight: 28,
-              }}>
-              {numberWithCommas(currentPoint.toString(), true)} แต้ม
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: font.medium,
-                color: colors.grey2,
-                lineHeight: 28,
-              }}>
-              ใช้แต้ม
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: font.medium,
-                color: colors.decreasePoint,
-                lineHeight: 28,
-              }}>
-              {numberWithCommas(data.usePoint.toString(), true)} แต้ม
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text
-              style={{
-                fontSize: 16,
-                lineHeight: 28,
+                    fontFamily: font.medium,
+                    color: colors.grey2,
+                  }}>
+                  จำนวน
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: font.medium,
+                    color: colors.fontBlack,
+                    lineHeight: 28,
+                  }}>
+                  {exchangeDetail.amountExchange}
+                </Text>
+              </View>
+              <View style={styles.row}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: font.medium,
+                    color: colors.grey2,
+                    lineHeight: 28,
+                  }}>
+                  แต้มสะสมปัจจุบัน
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: font.medium,
+                    color: colors.fontBlack,
+                    lineHeight: 28,
+                  }}>
+                  {numberWithCommas(currentPoint.toString(), true)} แต้ม
+                </Text>
+              </View>
+              <View style={styles.row}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: font.medium,
+                    color: colors.grey2,
+                    lineHeight: 28,
+                  }}>
+                  ใช้แต้ม
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: font.medium,
+                    color: colors.decreasePoint,
+                    lineHeight: 28,
+                  }}>
+                  {numberWithCommas(data.usePoint.toString(), true)} แต้ม
+                </Text>
+              </View>
+              <View style={styles.row}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 28,
 
-                fontFamily: font.medium,
-                color: colors.grey2,
-              }}>
-              แต้มคงเหลือ
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: font.medium,
-                lineHeight: 28,
+                    fontFamily: font.medium,
+                    color: colors.grey2,
+                  }}>
+                  แต้มคงเหลือ
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: font.medium,
+                    lineHeight: 28,
 
-                color: colors.fontBlack,
-              }}>
-              {numberWithCommas(
-                (currentPoint - exchangeDetail.usePoint).toString(),
-                true,
-              )}{' '}
-              แต้ม
-            </Text>
-          </View>
-        </View>
+                    color: colors.fontBlack,
+                  }}>
+                  {numberWithCommas(
+                    (currentPoint - exchangeDetail.usePoint).toString(),
+                    true,
+                  )}{' '}
+                  แต้ม
+                </Text>
+              </View>
+            </View>
+          </>
+        )}
+        {missionDetail && (
+          <>
+            <View style={styles.container}>
+              <View
+                style={{
+                  flex: 0.2,
+                }}>
+                <FastImage
+                  source={{uri: missionDetail?.imagePath}}
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: 8,
+                  }}
+                />
+              </View>
+              <View style={{paddingLeft: 16, flex: 0.8}}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: font.medium,
+                    color: colors.gray,
+                  }}>
+                  สินค้า
+                </Text>
+                <RenderHTML
+                  contentWidth={width * 0.8}
+                  source={{html: missionData.rewardName}}
+                  tagsStyles={{
+                    body: {
+                      fontSize: 18,
+                      fontFamily: font.bold,
+                      color: colors.fontBlack,
+                      marginTop: 4,
+                      alignSelf: 'flex-start',
+                    },
+                  }}
+                />
+              </View>
+            </View>
+            <View style={styles.content}>
+              <View style={styles.row}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 28,
+
+                    fontFamily: font.medium,
+                    color: colors.grey2,
+                  }}>
+                  จำนวน
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: font.medium,
+                    color: colors.fontBlack,
+                    lineHeight: 28,
+                  }}>
+                  {missionDetail.amount}
+                </Text>
+              </View>
+              <View style={styles.row}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: font.medium,
+                    color: colors.grey2,
+                    lineHeight: 28,
+                  }}>
+                  จากภารกิจ
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: font.medium,
+                    color: colors.orange,
+                    lineHeight: 28,
+                  }}>
+                  {missionDetail.missionName}
+                </Text>
+              </View>
+            </View>
+          </>
+        )}
+
         <AddressDetail
           navigation={navigation}
           data={exchangeDetail}
@@ -215,10 +313,63 @@ export default function RedeemAddressScreen({navigation, route}: Props) {
         />
       </ScrollView>
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.button} onPress={onConfirm}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={missionDetail ? onShowConfirmMission : onConfirm}>
           <Text style={styles.textButton}>ยืนยันการแลก</Text>
         </TouchableOpacity>
       </View>
+      <Modal visible={isConfirmMission}>
+        <View
+          style={{
+            backgroundColor: colors.white,
+            borderRadius: 12,
+            padding: 16,
+            width: '100%',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: font.medium,
+              color: colors.fontBlack,
+            }}>
+            กรุณาตรวจสอบ
+          </Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: font.medium,
+              color: colors.fontBlack,
+            }}>
+            ที่อยู่จัดส่งของท่านก่อนการยืนยัน
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              fontFamily: font.light,
+              color: colors.inkLight,
+              marginTop: 8,
+            }}>
+            หากกดยืนยันแล้ว จะไม่สามารถยกเลิกการจัดส่งได้
+          </Text>
+
+          <TouchableOpacity
+            style={[styles.button, {marginTop: 16}]}
+            onPress={() => {
+              onConfirmMission();
+            }}>
+            <Text style={styles.textButton}>ยืนยัน</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.subButton}
+            onPress={() => {
+              setIsConfirmMission(false);
+            }}>
+            <Text style={styles.textSubButton}>ยกเลิก</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -275,5 +426,35 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     shadowRadius: 16,
+  },
+
+  disabledButton: {
+    width: '100%',
+    backgroundColor: colors.disable,
+    borderRadius: 12,
+    height: 54,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#DCDFE3',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+  },
+  subButton: {
+    width: '100%',
+    backgroundColor: 'transparent',
+    borderRadius: 12,
+    height: 54,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+  },
+  textSubButton: {
+    fontSize: 18,
+    fontFamily: font.bold,
+    color: colors.fontBlack,
   },
 });

@@ -2,32 +2,35 @@
 import {
   View,
   Text,
-  FlatList,
   StyleSheet,
-  Image,
   SectionList,
+  RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
-import React, {useMemo} from 'react';
-import moment from 'moment';
-import mockImage from '../../assets/mockImage';
+import React, {useCallback, useMemo} from 'react';
 import {colors} from '../../assets';
 import fonts from '../../assets/fonts';
 import {momentExtend} from '../../function/utility';
+import {useFocusEffect} from '@react-navigation/native';
+import {rewardDatasource} from '../../datasource/RewardDatasource';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import FastImage from 'react-native-fast-image';
+import RenderHTML from '../../components/RenderHTML/RenderHTML';
 
 const mappingStatusText = {
   REQUEST: 'คำร้องขอแลก',
-  DELIVERING: 'เตรียมจัดส่ง',
+  PREPARE: 'เตรียมจัดส่ง',
   USED: 'ใช้แล้ว',
-  DELIVERED: 'ส่งแล้ว',
-  EXPIRED: 'หมดอายุ',
+  DONE: 'ส่งแล้ว',
+  EXPIRE: 'หมดอายุ',
   CANCEL: 'ยกเลิก',
 };
 const mappingStatusColor = {
   REQUEST: colors.orange,
-  DELIVERING: colors.orange,
+  PREPARE: colors.orange,
   USED: colors.green,
-  DELIVERED: colors.green,
-  EXPIRED: colors.gray,
+  DONE: colors.green,
+  EXPIRE: colors.gray,
   CANCEL: colors.decreasePoint,
 };
 // const mappingStatusColorText = {
@@ -38,70 +41,133 @@ const mappingStatusColor = {
 //   EXPIRED: colors.gray,
 //   CANCEL: colors.decreasePoint,
 // };
-export default function HistoryTab() {
-  const mockData = useMemo(() => {
-    const progressData = [
-      {
-        id: 1,
-        title: 'ส่วนลด ศูนย์ ICPX มูลค่า 1,000 บาท',
-        date: moment().toISOString(),
-        image: mockImage.reward1,
-        status: 'REQUEST',
-      },
+interface RedemptionTransaction {
+  dronerTransactionsId: string;
+  redeemDetail: RedeemDetail;
+  rewardId: string;
+  rewardName: string;
+  imagePath: string;
+  rewardType: string;
+  rewardExchange: string;
+  dronerRedeemHistoriesId: string;
+  redeemDate: string;
+}
 
-      {
-        id: 3,
-        title: 'ส่วนลด ศูนย์ ICPX มูลค่า 2,000 บาท ',
-        date: moment().subtract(2, 'day').toISOString(),
-        image: mockImage.reward2,
-        status: 'DELIVERING',
-      },
-    ];
+interface RedeemDetail {
+  remark: string;
+  rewardType: string;
+  trackingNo: string;
+  redeemStatus: string;
+  deliveryCompany: string;
+}
 
-    const completeData = [
-      {
-        id: 1,
-        title: 'ส่วนลด ศูนย์ ICPX มูลค่า 1,000 บาท',
-        date: moment().toISOString(),
-        image: mockImage.reward3,
-        status: 'USED',
-      },
-      {
-        id: 2,
-        title: 'ส่วนลด ศูนย์ ICPX มูลค่า 1,500 บาท',
-        date: moment().subtract(1, 'day').toISOString(),
-        image: mockImage.reward3,
-        status: 'EXPIRED',
-      },
-      {
-        id: 3,
-        title: 'ส่วนลด ศูนย์ ICPX มูลค่า 2,000 บาท ',
-        date: moment().subtract(2, 'day').toISOString(),
-        image: mockImage.reward3,
-        status: 'DELIVERED',
-      },
-    ];
+export default function HistoryTab({navigation}: {navigation: any}) {
+  const take = 10;
+  const [prepareData, setPrepareData] = React.useState<RedemptionTransaction[]>(
+    [],
+  );
+  const [doneData, setDoneData] = React.useState<RedemptionTransaction[]>([]);
+  const [total, setTotal] = React.useState(0);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const getHistoryReward = useCallback(async () => {
+    try {
+      const dronerId = await AsyncStorage.getItem('droner_id');
+      const result = await rewardDatasource.getHistoryRedeem({
+        dronerId: dronerId || '',
+        page: 1,
+        take,
+      });
+      setTotal(result.count);
+      const curPrepareData: RedemptionTransaction[] = [];
+      const curDoneData: RedemptionTransaction[] = [];
+      (result.data || []).forEach((el: RedemptionTransaction) => {
+        const isStatusDone = el.redeemDetail.redeemStatus === 'DONE';
+        if (isStatusDone) {
+          curDoneData.push(el);
+        } else {
+          curPrepareData.push(el);
+        }
+      });
+      setPrepareData(curPrepareData);
+      setDoneData(curDoneData);
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, []);
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await getHistoryReward();
+    setRefreshing(false);
+  }, [getHistoryReward]);
+  useFocusEffect(
+    React.useCallback(() => {
+      getHistoryReward();
+    }, [getHistoryReward]),
+  );
+
+  const historyData = useMemo(() => {
     return [
       {
         title: 'กำลังดำเนินการ',
-        data: progressData,
+        data: prepareData,
         sectionName: 'progress',
       },
       {
         title: 'เสร็จสิ้น',
-        data: completeData,
+        data: doneData,
         sectionName: 'complete',
       },
     ];
-  }, []);
+  }, [prepareData, doneData]);
+
+  const onLoadingMore = async () => {
+    if (doneData.length + prepareData.length < total) {
+      const dronerId = await AsyncStorage.getItem('droner_id');
+      const result = await rewardDatasource.getHistoryRedeem({
+        dronerId: dronerId || '',
+        page: Math.ceil((doneData.length + prepareData.length) / take) + 1,
+        take,
+      });
+      const curPrepareData: RedemptionTransaction[] = [];
+      const curDoneData: RedemptionTransaction[] = [];
+      (result.data || []).forEach((el: RedemptionTransaction) => {
+        const isStatusDone = el.redeemDetail.redeemStatus === 'DONE';
+        if (isStatusDone) {
+          curDoneData.push(el);
+        } else {
+          curPrepareData.push(el);
+        }
+      });
+      setPrepareData([...prepareData, ...curPrepareData]);
+      setDoneData([...doneData, ...curDoneData]);
+    } else {
+      console.log('end');
+    }
+  };
+  const onPressItem = (id: string) => {
+    navigation.navigate('RedeemDetailScreen', {id});
+  };
   return (
     <SectionList
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       contentContainerStyle={{
         paddingHorizontal: 16,
         marginTop: 16,
       }}
-      keyExtractor={(item, index) => `${item.id}-${index}`}
-      sections={mockData}
+      onEndReached={onLoadingMore}
+      ListFooterComponent={
+        <View
+          style={{
+            height: 100,
+          }}
+        />
+      }
+      stickySectionHeadersEnabled={false}
+      keyExtractor={(item, index) => `-${index}`}
+      sections={historyData || []}
       renderSectionHeader={({section: {title}}) => {
         return (
           <Text
@@ -116,10 +182,17 @@ export default function HistoryTab() {
         );
       }}
       renderItem={({item, section}) => {
+        const statusRedeem = item.redeemDetail.redeemStatus;
         return (
-          <View style={styles({type: section.sectionName}).card}>
-            <Image
-              source={item.image}
+          <TouchableOpacity
+            onPress={() => {
+              onPressItem(item.dronerTransactionsId);
+            }}
+            style={styles({type: section.sectionName}).card}>
+            <FastImage
+              source={{
+                uri: item.imagePath,
+              }}
               style={{
                 borderRadius: 10,
                 width: 76,
@@ -131,13 +204,16 @@ export default function HistoryTab() {
               style={{
                 width: '75%',
               }}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: fonts.medium,
-                }}>
-                {item.title}
-              </Text>
+              <RenderHTML
+                source={{html: item.rewardName}}
+                contentWidth={500}
+                tagsStyles={{
+                  body: {
+                    fontSize: 16,
+                    fontFamily: fonts.medium,
+                  },
+                }}
+              />
               <Text
                 style={{
                   marginTop: 4,
@@ -145,7 +221,7 @@ export default function HistoryTab() {
                   fontFamily: fonts.light,
                 }}>
                 {`แลกเมื่อ ${momentExtend.toBuddhistYear(
-                  item.date,
+                  item.redeemDate,
                   'DD MMM YYYY HH:mm',
                 )}`}
               </Text>
@@ -164,7 +240,7 @@ export default function HistoryTab() {
                     marginRight: 4,
                     backgroundColor:
                       mappingStatusColor[
-                        item.status as keyof typeof mappingStatusColor
+                        statusRedeem as keyof typeof mappingStatusColor
                       ],
                   }}
                 />
@@ -176,13 +252,13 @@ export default function HistoryTab() {
                   }}>
                   {
                     mappingStatusText[
-                      item.status as keyof typeof mappingStatusText
+                      statusRedeem as keyof typeof mappingStatusText
                     ]
                   }
                 </Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         );
       }}
     />

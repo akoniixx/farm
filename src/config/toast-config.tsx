@@ -825,6 +825,14 @@ export const toastConfig = {
           alignItems: 'center',
           backgroundColor: colors.white,
           flexDirection: 'row',
+          elevation: 8,
+          shadowColor: '#242D35',
+          shadowOffset: {
+            width: 0,
+            height: 8,
+          },
+          shadowOpacity: 0.04,
+          shadowRadius: 16,
         }}>
         <Image
           source={icons.successIcon}

@@ -8,6 +8,7 @@ import Text from '../../components/Text';
 import TabCustom from '../../components/TabCustom/TabCustom';
 import Body from './Body';
 import {SafeAreaView} from 'react-native-safe-area-context';
+
 type MissionScreenProps = {
   navigation: BottomTabNavigationProp<TabNavigatorParamList, 'mission'>;
 };
@@ -35,6 +36,7 @@ export default function MissionScreen({navigation}: MissionScreenProps) {
   const handleTabChange = (value: string) => {
     setSelectedTab(value);
   };
+
   return (
     <SafeAreaView
       edges={['right', 'bottom', 'left']}
@@ -59,11 +61,7 @@ export default function MissionScreen({navigation}: MissionScreenProps) {
             }}>
             ภารกิจ
           </Text>
-          {/* <TabCustom
-            tabs={tabLists}
-            value={selectedTab}
-            onChangeTab={handleTabChange}
-          /> */}
+
           <View
             style={{
               height: 45,

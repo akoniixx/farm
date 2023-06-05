@@ -1,33 +1,32 @@
-import {View, Text, FlatList, StyleSheet, Image} from 'react-native';
+import {View, FlatList, StyleSheet, Image, Dimensions} from 'react-native';
 import React, {useMemo} from 'react';
 import moment from 'moment';
-import {colors} from '../../assets';
-import mockImage from '../../assets/mockImage';
+import {colors, image} from '../../assets';
 import fonts from '../../assets/fonts';
-import dayjs from 'dayjs';
 import {momentExtend} from '../../function/utility';
+import Text from '../../components/Text';
 
 export default function ReadyToUseTab() {
   const mockData = useMemo(() => {
     const data = [
-      {
-        id: 1,
-        title: 'ส่วนลด ศูนย์ ICPX มูลค่า 1,000 บาท',
-        date: moment().toISOString(),
-        image: mockImage.reward3,
-      },
-      {
-        id: 2,
-        title: 'ส่วนลด ศูนย์ ICPX มูลค่า 1,500 บาท',
-        date: moment().subtract(1, 'day').toISOString(),
-        image: mockImage.reward3,
-      },
-      {
-        id: 3,
-        title: 'ส่วนลด ศูนย์ ICPX มูลค่า 2,000 บาท ',
-        date: moment().subtract(2, 'day').toISOString(),
-        image: mockImage.reward3,
-      },
+      // {
+      //   id: 1,
+      //   title: 'ส่วนลด ศูนย์ ICPX มูลค่า 1,000 บาท',
+      //   date: moment().toISOString(),
+      //   image: mockImage.reward3,
+      // },
+      // {
+      //   id: 2,
+      //   title: 'ส่วนลด ศูนย์ ICPX มูลค่า 1,500 บาท',
+      //   date: moment().subtract(1, 'day').toISOString(),
+      //   image: mockImage.reward3,
+      // },
+      // {
+      //   id: 3,
+      //   title: 'ส่วนลด ศูนย์ ICPX มูลค่า 2,000 บาท ',
+      //   date: moment().subtract(2, 'day').toISOString(),
+      //   image: mockImage.reward3,
+      // },
     ];
     return data;
   }, []);
@@ -102,6 +101,31 @@ export default function ReadyToUseTab() {
           </View>
         );
       }}
+      ListEmptyComponent={
+        <View
+          style={{
+            height: Dimensions.get('window').height - 300,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image
+            source={image.emptyReward}
+            style={{
+              width: 155,
+              height: 130,
+              marginBottom: 16,
+            }}
+          />
+          <Text
+            style={{
+              fontFamily: fonts.light,
+              fontSize: 16,
+              color: colors.gray,
+            }}>
+            ไม่มีรีวอร์ด
+          </Text>
+        </View>
+      }
     />
   );
 }

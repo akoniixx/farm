@@ -53,7 +53,7 @@ export default function MyRewardScreen({
       case 'readyToUse':
         return <ReadyToUseTab />;
       case 'history':
-        return <HistoryTab />;
+        return <HistoryTab navigation={navigation} />;
       default:
         return null;
     }

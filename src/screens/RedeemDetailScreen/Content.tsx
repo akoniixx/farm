@@ -7,14 +7,13 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, {useEffect, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {colors, font, icons} from '../../assets';
 import FastImage from 'react-native-fast-image';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
 import {RedeemDetail} from '.';
 import {momentExtend, numberWithCommas} from '../../function/utility';
 import Clipboard from '@react-native-community/clipboard';
-import {SheetManager} from 'react-native-actions-sheet';
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
 
 interface Props {
@@ -52,6 +51,7 @@ export default function Content({redeemDetail}: Props) {
       type: 'copiedSuccess',
     });
   };
+  console.log(JSON.stringify(redeemDetail, null, 2), 'redeemDetail');
 
   return (
     <ScrollView>
@@ -157,7 +157,7 @@ export default function Content({redeemDetail}: Props) {
               }}
               onPress={() => {
                 onCopyClipboard(
-                  redeemDetail.dronerRedeemHistories[0].trackingNo || 'test',
+                  redeemDetail.dronerRedeemHistories[0].trackingNo || '-',
                 );
               }}>
               <Text
@@ -167,7 +167,7 @@ export default function Content({redeemDetail}: Props) {
                   color: colors.fontBlack,
                   lineHeight: 28,
                 }}>
-                {redeemDetail.dronerRedeemHistories[0].trackingNo || 'test'}
+                {redeemDetail.redeemDetail.trackingNo || '-'}
               </Text>
               <Image
                 source={isCopy ? icons.checkFillSuccess : icons.copyClipboard}
@@ -201,7 +201,7 @@ export default function Content({redeemDetail}: Props) {
                 color: colors.fontBlack,
                 lineHeight: 28,
               }}>
-              {redeemDetail.dronerRedeemHistories[0].deliveryCompany}
+              {redeemDetail.redeemDetail.deliveryCompany}
             </Text>
           </View>
           <View
@@ -226,7 +226,7 @@ export default function Content({redeemDetail}: Props) {
                 color: colors.fontBlack,
                 lineHeight: 28,
               }}>
-              {redeemDetail.dronerRedeemHistories[0].remark}
+              {redeemDetail.redeemDetail.remark}
             </Text>
           </View>
           <Text

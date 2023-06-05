@@ -6,18 +6,19 @@ import moment from 'moment';
 import {colors, font, icons} from '../../assets';
 import {momentExtend, numberWithCommas} from '../../function/utility';
 import CardMission from '../../components/CardMission/CardMission';
-import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
-import {TabNavigatorParamList} from '../../navigations/bottomTabs/MainTapNavigator';
+import {Mission} from './Body';
 interface Props {
   navigation: any;
+  mission: Mission;
 }
-export default function CollapseItem({navigation}: Props) {
+export default function CollapseItem({navigation, mission}: Props) {
   const [isCollapse, setIsCollapse] = React.useState<boolean>(true);
   const animatedValue = useRef(new Animated.Value(1)).current;
-  const rai = 600;
-  const dateEnd = moment().add(4, 'days').toISOString();
+  const rai = mission.condition[0].allRai;
+
   const dateStart = moment().toISOString();
-  const isLessThanTenDays = moment(dateEnd).diff(moment(), 'days') <= 10;
+  const isLessThanTenDays =
+    moment(mission.endDate).diff(moment(), 'days') <= 10;
   const animate = () => {
     Animated.timing(animatedValue, {
       toValue: 1,
@@ -32,7 +33,7 @@ export default function CollapseItem({navigation}: Props) {
       useNativeDriver: true,
     }).start();
   };
-
+  console.log('mission', JSON.stringify(mission, null, 2));
   return (
     <>
       <Pressable
@@ -59,7 +60,7 @@ export default function CollapseItem({navigation}: Props) {
             style={{
               fontSize: 20,
             }}>
-            บินปั๊บรับแต้ม ลุ้นโชคชั้นที่ 2 ลุ้นโชคชั้นที่ 2 (1/4)
+            {mission.campaignName}
           </Text>
           <Text
             style={{
@@ -67,7 +68,7 @@ export default function CollapseItem({navigation}: Props) {
                 ? colors.decreasePoint
                 : colors.fontBlack,
             }}>
-            อีก {moment(dateEnd).fromNow()}
+            อีก {moment(mission.endDate).fromNow()}
           </Text>
         </View>
         <View
@@ -95,40 +96,84 @@ export default function CollapseItem({navigation}: Props) {
 
       {isCollapse && (
         <>
-          <View style={styles.boxOrange}>
-            <View style={styles.row}>
-              <Text
-                style={{
-                  fontFamily: font.bold,
-                  fontSize: 14,
-                }}>
-                จำนวนไร่สะสม
-              </Text>
-              <Text
-                style={{
-                  marginLeft: 8,
-                  fontFamily: font.bold,
-                  fontSize: 14,
+          {rai > 0 ? (
+            <View style={styles.boxOrange}>
+              <View style={styles.row}>
+                <Text
+                  style={{
+                    fontFamily: font.bold,
+                    fontSize: 14,
+                  }}>
+                  จำนวนไร่สะสม
+                </Text>
+                <Text
+                  style={{
+                    marginLeft: 8,
+                    fontFamily: font.bold,
+                    fontSize: 14,
 
-                  color: colors.orange,
+                    color: colors.orange,
+                  }}>
+                  {numberWithCommas(rai.toString(), true)} ไร่
+                </Text>
+              </View>
+              <Text
+                style={{
+                  fontFamily: font.light,
+                  fontSize: 10,
+                  marginTop: 4,
                 }}>
-                {numberWithCommas(rai.toString(), true)} ไร่
+                เริ่มนับจำนวนไร่สะสมตั้งแต่{' '}
+                {momentExtend.toBuddhistYear(dateStart, 'DD MMM YYYY')} ถึง{' '}
+                {momentExtend.toBuddhistYear(mission.endDate)}
               </Text>
             </View>
-            <Text
+          ) : (
+            <View
               style={{
-                fontFamily: font.light,
-                fontSize: 10,
-                marginTop: 4,
-              }}>
-              เริ่มนับจำนวนไร่สะสมตั้งแต่{' '}
-              {momentExtend.toBuddhistYear(dateStart, 'DD MMM YYYY')} ถึง{' '}
-              {momentExtend.toBuddhistYear(dateEnd)}
-            </Text>
-          </View>
-          <CardMission
-            onPress={() => navigation.navigate('MissionDetailScreen')}
-          />
+                height: 12,
+              }}
+            />
+          )}
+          {mission.condition.map(el => {
+            const isComplete = el.allRai >= el.rai;
+            const current = el.allRai > el.rai ? el.rai : el.allRai;
+            const isExpired = moment().isAfter(mission.endDate);
+            const isStatusComplete = el.status === 'COMPLETE';
+            return (
+              <CardMission
+                isComplete={isComplete}
+                current={current}
+                isStatusComplete={isStatusComplete}
+                imageSource={el.reward.imagePath}
+                isExpired={isExpired}
+                total={el.rai}
+                isDouble={false}
+                missionName={el.missionName}
+                description={`รับ${el.reward.rewardName}`}
+                isFullQuota={false}
+                key={el.num}
+                onPress={() =>
+                  navigation.navigate('MissionDetailScreen', {
+                    data: {
+                      current,
+                      isComplete,
+                      isExpired,
+                      isStatusComplete,
+                      missionName: el.missionName,
+                      reward: el.reward,
+                      endDate: mission.endDate,
+                      total: el.rai,
+                      conditionReward: el.conditionReward,
+                      descriptionReward: el.descriptionReward,
+                      num: el.num,
+                      missionId: mission.id,
+                    },
+                  })
+                }
+              />
+            );
+          })}
         </>
       )}
       <View

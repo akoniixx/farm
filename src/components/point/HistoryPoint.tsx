@@ -26,7 +26,7 @@ export const HistoryPoint: React.FC<guruData> = ({
   campaignName,
   ...props
 }) => {
-  console.log(JSON.stringify(props, null, 2));
+  console.log(JSON.stringify(props.redeemNo, null, 2));
   const isHaveReward = useMemo(() => {
     if (props.rewardId !== null) {
       return true;
@@ -41,42 +41,52 @@ export const HistoryPoint: React.FC<guruData> = ({
           paddingHorizontal: 15,
           paddingVertical: 15,
         }}>
-        <View>
+        <View style={{flex: 0.7}}>
           <Text style={styles.title}>
-            {isHaveReward ? `แลก${props.rewardName}` : campaignName}
+            {action === 'RETURN'
+              ? 'คืนแต้ม'
+              : isHaveReward
+              ? `แลก${props.rewardName}`
+              : campaignName}
           </Text>
           <Text style={styles.textDate}>
             {/* {taskNo ? '#' : '#'} */}
-            {isHaveReward ? props.redeemNo : taskNo}
+            {action === 'RETURN'
+              ? props.redeemNo
+              : isHaveReward
+              ? props.redeemNo
+              : taskNo}
           </Text>
         </View>
-        {action === 'INCREASE' ? (
-          <View
-            style={{
-              alignItems: 'flex-end',
-            }}>
-            <Text style={styles.positive}>{`+ ${numberWithCommas(
-              point,
-              true,
-            )} `}</Text>
-            <Text style={styles.textDate}>
-              {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm `)}
-            </Text>
-          </View>
-        ) : (
-          <View
-            style={{
-              alignItems: 'flex-end',
-            }}>
-            <Text style={styles.negative}>{`- ${numberWithCommas(
-              point,
-              true,
-            )} `}</Text>
-            <Text style={styles.textDate}>
-              {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm `)}
-            </Text>
-          </View>
-        )}
+        <View style={{flex: 0.3}}>
+          {action === 'INCREASE' || action === 'RETURN' ? (
+            <View
+              style={{
+                alignItems: 'flex-end',
+              }}>
+              <Text style={styles.positive}>{`+ ${numberWithCommas(
+                point,
+                true,
+              )} `}</Text>
+              <Text style={styles.textDate}>
+                {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm `)}
+              </Text>
+            </View>
+          ) : (
+            <View
+              style={{
+                alignItems: 'flex-end',
+              }}>
+              <Text style={styles.negative}>{`- ${numberWithCommas(
+                point,
+                true,
+              )} `}</Text>
+              <Text style={styles.textDate}>
+                {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm `)}
+              </Text>
+            </View>
+          )}
+        </View>
       </View>
       <View
         style={{

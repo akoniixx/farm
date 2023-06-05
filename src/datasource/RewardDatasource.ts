@@ -75,10 +75,34 @@ const getRedeemDetail = async (id: string) => {
       throw err;
     });
 };
+const getHistoryRedeem = async (payload: {
+  dronerId: string;
+  take: number;
+  page: number;
+}) => {
+  const genQuery = Object.keys(payload).map(key => {
+    return key + '=' + payload[key as keyof typeof payload];
+  });
+  return httpClient
+    .get(
+      BASE_URL +
+        '/promotion/reward/my-reward-history/' +
+        '?' +
+        genQuery.join('&'),
+    )
+    .then(res => {
+      return res.data;
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+};
 
 export const rewardDatasource = {
   getListRewards,
   getRewardDetail,
   redeemReward,
   getRedeemDetail,
+  getHistoryRedeem,
 };

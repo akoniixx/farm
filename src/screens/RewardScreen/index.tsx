@@ -15,20 +15,23 @@ import ListReward from './ListReward';
 import image from '../../assets/images/image';
 import {usePoint} from '../../contexts/PointContext';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function RewardScreen({navigation}: any) {
   const {currentPoint, getCurrentPoint} = usePoint();
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    const getPoint = async () => {
-      try {
-        await Promise.all([getCurrentPoint()]);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    getPoint();
-  }, [getCurrentPoint]);
+  useFocusEffect(
+    React.useCallback(() => {
+      const getPoint = async () => {
+        try {
+          await getCurrentPoint();
+        } catch (e) {
+          console.log(e);
+        }
+      };
+      getPoint();
+    }, [getCurrentPoint]),
+  );
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <View style={styles.container}>

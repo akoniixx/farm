@@ -40,6 +40,9 @@ export interface RedeemDetail {
   redeemDetail: {
     rewardType: string;
     redeemStatus: string;
+    deliveryCompany: string | null;
+    trackingNo: string | null;
+    remark: string | null;
   };
   dronerRedeemHistories: {
     id: string;

@@ -85,7 +85,20 @@ export type StackParamList = {
     id: string;
   };
   MissionDetailScreen: {
-    id: string;
+    data: {
+      current: number;
+      isComplete: boolean;
+      isExpired: boolean;
+      isStatusComplete: boolean;
+      reward: any;
+      endDate: string;
+      total: number;
+      missionName: string;
+      conditionReward: string;
+      descriptionReward: string;
+      num: number;
+      missionId: string;
+    };
   };
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
