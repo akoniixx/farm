@@ -20,12 +20,14 @@ export interface CampaignEntitie {
   updateBy: string;
   pathImageBanner: string;
   pathImageReward: string;
+  pathImageRewardRound: string;
   missionNo: string;
   createdAt: string;
   updatedAt: string;
   isDeleteFarmer: boolean;
   isDeleteDroner: boolean;
   countSubMission: number;
+  rulesCampaign: string;
 }
 
 export const init_campaign: CampaignEntitie = {
@@ -41,10 +43,12 @@ export const init_campaign: CampaignEntitie = {
   updateBy: '',
   pathImageBanner: '',
   pathImageReward: '',
+  pathImageRewardRound: '',
   missionNo: '',
   createdAt: '',
   updatedAt: '',
   isDeleteFarmer: false,
   isDeleteDroner: false,
   countSubMission: 0,
+  rulesCampaign: '',
 };

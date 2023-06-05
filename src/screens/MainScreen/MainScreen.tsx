@@ -76,7 +76,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    fecthImage();
     getProfile();
     openSocket();
     getCurrentPoint();
@@ -95,14 +94,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           image_profile_url,
         },
       });
-    });
-  };
-
-  const fecthImage = async () => {
-    const dronerId = await AsyncStorage.getItem('droner_id');
-    await Campaign.getImage('DRONER', 'QUATA', 'ACTIVE').then(res => {
-      setLoading(true);
-      setCampaignImage(res.data[0].pathImageFloating);
     });
   };
 
@@ -202,20 +193,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
       />
 
       <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
-        <View
-          style={{position: 'absolute', top: '95%', left: '60%', zIndex: 1}}>
-          <Draggable>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('CampaignScreen')}>
-              <Image
-                source={{uri: campaignImage}}
-                style={{width: 150, height: 60}}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </Draggable>
-        </View>
-
         <View>
           <View style={styles.headCard}>
             <View>

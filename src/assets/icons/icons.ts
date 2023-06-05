@@ -75,4 +75,5 @@ export default {
   tableReward: require('./tableReward.png'),
   ruleReward: require('./ruleReward.png'),
   copyClipboard: require('./copyClipboard.png'),
+  winnerCampaignBlank: require('./WinnerCampaignBlank.png'),
 };
