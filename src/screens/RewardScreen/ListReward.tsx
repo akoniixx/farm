@@ -119,8 +119,8 @@ export default function ListReward({
             }}>
             <FastImage
               style={{
-                width: widthImg + 2,
-                height: widthImg + 2,
+                width: widthImg,
+                height: widthImg,
                 borderTopLeftRadius: 12,
                 borderTopRightRadius: 12,
               }}

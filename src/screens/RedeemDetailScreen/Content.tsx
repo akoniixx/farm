@@ -1,20 +1,21 @@
 import {
   View,
-  Text,
   StyleSheet,
   ScrollView,
   Dimensions,
   TouchableOpacity,
   Image,
+  Platform,
 } from 'react-native';
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {colors, font, icons} from '../../assets';
 import FastImage from 'react-native-fast-image';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
 import {RedeemDetail} from '.';
 import {momentExtend, numberWithCommas} from '../../function/utility';
 import Clipboard from '@react-native-community/clipboard';
-import {Toast} from 'react-native-toast-message/lib/src/Toast';
+import PopUp from '../../components/PopUp';
+import Text from '../../components/Text';
 
 interface Props {
   redeemDetail: RedeemDetail;
@@ -47,10 +48,15 @@ export default function Content({redeemDetail}: Props) {
 
   const onCopyClipboard = async (text: string) => {
     Clipboard.setString(text);
-    Toast.show({
-      type: 'copiedSuccess',
-    });
+    setIsCopy(true);
   };
+  useEffect(() => {
+    if (isCopy) {
+      setTimeout(() => {
+        setIsCopy(false);
+      }, 1000);
+    }
+  }, [isCopy]);
 
   return (
     <ScrollView>
@@ -68,7 +74,8 @@ export default function Content({redeemDetail}: Props) {
             }}
           />
         </View>
-        <View style={{paddingLeft: 16, flex: 0.8}}>
+        <View
+          style={{paddingLeft: Platform.OS === 'android' ? 32 : 16, flex: 0.8}}>
           <RenderHTML
             contentWidth={width * 0.8}
             source={{html: redeemDetail.reward.rewardName}}
@@ -270,7 +277,6 @@ export default function Content({redeemDetail}: Props) {
           </View>
         </View>
       )}
-
       <View style={styles.content}>
         <View style={styles.row}>
           <Text
@@ -293,26 +299,51 @@ export default function Content({redeemDetail}: Props) {
             {redeemDetail.rewardQuantity}
           </Text>
         </View>
-        <View style={styles.row}>
-          <Text
-            style={{
-              fontSize: 16,
-              fontFamily: font.medium,
-              color: colors.grey2,
-              lineHeight: 28,
-            }}>
-            แต้มที่ใช้แลก
-          </Text>
-          {/* <Text
-            style={{
-              fontSize: 16,
-              fontFamily: font.medium,
-              color: colors.decreasePoint,
-              lineHeight: 28,
-            }}>
-            {numberWithCommas(redeemDetail.amountValue.toString(), true)} แต้ม
-          </Text> */}
-        </View>
+        {!!redeemDetail?.redeemDetail.missionName && (
+          <View style={styles.row}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: font.medium,
+                color: colors.grey2,
+                lineHeight: 28,
+              }}>
+              จากภารกิจ
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: font.medium,
+                lineHeight: 28,
+                color: colors.orange,
+              }}>
+              {redeemDetail.redeemDetail.missionName}
+            </Text>
+          </View>
+        )}
+
+        {!!redeemDetail?.amountValue && (
+          <View style={styles.row}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: font.medium,
+                color: colors.grey2,
+                lineHeight: 28,
+              }}>
+              แต้มที่ใช้แลก
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: font.medium,
+                color: colors.decreasePoint,
+                lineHeight: 28,
+              }}>
+              {numberWithCommas(redeemDetail.amountValue.toString(), true)} แต้ม
+            </Text>
+          </View>
+        )}
         <View style={styles.row}>
           <Text
             style={{
@@ -326,7 +357,7 @@ export default function Content({redeemDetail}: Props) {
           <Text
             style={{
               fontSize: 16,
-
+              fontFamily: font.medium,
               lineHeight: 28,
             }}>
             {momentExtend.toBuddhistYear(
@@ -399,6 +430,33 @@ export default function Content({redeemDetail}: Props) {
           ที่อยู่ : {redeemDetail?.receiverDetail?.address}
         </Text>
       </View>
+      <PopUp setIsVisible={setIsCopy} isVisible={isCopy}>
+        <View
+          style={{
+            padding: 16,
+            alignItems: 'center',
+            flexDirection: 'row',
+            backgroundColor: 'rgba(0,0,0,0.9)',
+            borderRadius: 8,
+          }}>
+          <Image
+            source={icons.successIcon}
+            style={{
+              width: 24,
+              height: 24,
+              marginRight: 8,
+            }}
+          />
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: font.medium,
+              color: colors.white,
+            }}>
+            คัดลอกเรียบร้อย
+          </Text>
+        </View>
+      </PopUp>
     </ScrollView>
   );
 }

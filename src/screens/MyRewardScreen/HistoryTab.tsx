@@ -84,11 +84,13 @@ export default function HistoryTab({navigation}: {navigation: any}) {
       const curPrepareData: RedemptionTransaction[] = [];
       const curDoneData: RedemptionTransaction[] = [];
       (result.data || []).forEach((el: RedemptionTransaction) => {
-        const isStatusDone = el.redeemDetail.redeemStatus === 'DONE';
-        if (isStatusDone) {
-          curDoneData.push(el);
-        } else {
+        const isPrepare =
+          el.redeemDetail.redeemStatus === 'PREPARE' ||
+          el.redeemDetail.redeemStatus === 'REQUEST';
+        if (isPrepare) {
           curPrepareData.push(el);
+        } else {
+          curDoneData.push(el);
         }
       });
       setPrepareData(curPrepareData);
@@ -138,11 +140,13 @@ export default function HistoryTab({navigation}: {navigation: any}) {
       const curPrepareData: RedemptionTransaction[] = [];
       const curDoneData: RedemptionTransaction[] = [];
       (result.data || []).forEach((el: RedemptionTransaction) => {
-        const isStatusDone = el.redeemDetail.redeemStatus === 'DONE';
-        if (isStatusDone) {
-          curDoneData.push(el);
-        } else {
+        const isPrepare =
+          el.redeemDetail.redeemStatus === 'PREPARE' ||
+          el.redeemDetail.redeemStatus === 'REQUEST';
+        if (isPrepare) {
           curPrepareData.push(el);
+        } else {
+          curDoneData.push(el);
         }
       });
       setPrepareData([...prepareData, ...curPrepareData]);
@@ -152,6 +156,7 @@ export default function HistoryTab({navigation}: {navigation: any}) {
     }
   };
   const onPressItem = (id: string) => {
+    // console.log(id);
     navigation.navigate('RedeemDetailScreen', {id});
   };
   const EmptyState = () => {
@@ -230,6 +235,7 @@ export default function HistoryTab({navigation}: {navigation: any}) {
             <FastImage
               source={{
                 uri: item.imagePath,
+                cache: FastImage.cacheControl.immutable,
               }}
               style={{
                 borderRadius: 10,

@@ -5,6 +5,7 @@ import {
   ScrollView,
   useWindowDimensions,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import React, {useEffect} from 'react';
 import {RouteProp} from '@react-navigation/native';
@@ -105,7 +106,11 @@ export default function RedeemAddressScreen({navigation, route}: Props) {
                   }}
                 />
               </View>
-              <View style={{paddingLeft: 16, flex: 0.8}}>
+              <View
+                style={{
+                  paddingLeft: Platform.OS === 'android' ? 32 : 16,
+                  flex: 0.8,
+                }}>
                 <Text
                   style={{
                     fontSize: 16,
@@ -236,7 +241,11 @@ export default function RedeemAddressScreen({navigation, route}: Props) {
                   }}
                 />
               </View>
-              <View style={{paddingLeft: 16, flex: 0.8}}>
+              <View
+                style={{
+                  paddingLeft: Platform.OS === 'android' ? 32 : 16,
+                  flex: 0.8,
+                }}>
                 <Text
                   style={{
                     fontSize: 16,

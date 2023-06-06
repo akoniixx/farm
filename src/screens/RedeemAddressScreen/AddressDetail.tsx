@@ -190,6 +190,7 @@ export default function AddressDetail({
               fontFamily: font.light,
               fontSize: 16,
               marginTop: 8,
+              marginLeft: 8,
             }}>
             {mainAddress?.addressName}
           </Text>
@@ -229,6 +230,7 @@ export default function AddressDetail({
               fontFamily: font.light,
               fontSize: 16,
               marginTop: 8,
+              marginLeft: 8,
             }}>
             {secondAddress?.addressName}
           </Text>

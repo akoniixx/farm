@@ -113,6 +113,7 @@ export default function MissionDetailScreen({navigation, route}: Props) {
                 onPress={() =>
                   navigation.navigate('RedeemDetailScreen', {
                     id: dronerTransactionId,
+                    isFromMissionDetail: true,
                   })
                 }
                 style={{

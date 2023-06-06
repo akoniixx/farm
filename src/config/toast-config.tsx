@@ -819,7 +819,7 @@ export const toastConfig = {
     return (
       <View
         style={{
-          height: 100,
+          height: 40,
           width: '100%',
           justifyContent: 'center',
           alignItems: 'center',

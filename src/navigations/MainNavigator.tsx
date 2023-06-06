@@ -91,6 +91,7 @@ export type StackParamList = {
   CampaignScreen: any;
   RedeemDetailScreen: {
     id: string;
+    isFromMissionDetail: true;
   };
   MissionDetailScreen: {
     data: {
