@@ -40,6 +40,7 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
       .then(res => {
         setLoading(true);
         setCampaign(res.data[0]);
+        setRaiIncondition(res.data[0].condition[0].rai);
 
         Campaign.getQuota(res.data[0].id, dronerId)
           .then(respon => {
@@ -47,7 +48,7 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
             setAllValue(respon.allValue);
             setAfterRai(respon.afterRai);
             setBalance(respon.balance);
-            setRaiIncondition(respon.campaign.condition[0].rai);
+           
           })
           .catch(err => console.log(err))
           .finally(() => {
@@ -156,7 +157,7 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                   }}>
                   <Text>เริ่มนับจำนวนไร่สะสม </Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text>{afterRai % raiIncondition}</Text>
+                    <Text>{afterRai?afterRai % raiIncondition:0}</Text>
                     <Text>{'/' + raiIncondition}</Text>
                   </View>
                 </View>
@@ -188,7 +189,7 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                   <Text style={[styles.valueFont]}>ทั้งหมด</Text>
                   <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
                     <Text style={[styles.valueFont, {fontSize: 32}]}>
-                      {allValue}
+                      {allValue?allValue:0}
                     </Text>
                     <Text
                       style={[styles.valueFont, {fontSize: 12, marginLeft: 5}]}>
@@ -208,7 +209,7 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                   <Text style={[styles.valueFont]}>(ได้รับทอง)</Text>
                   <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
                     <Text style={[styles.valueFont, {fontSize: 32}]}>
-                      {allValue - balance}
+                      {allValue? allValue - balance:0}
                     </Text>
                     <Text
                       style={[styles.valueFont, {fontSize: 12, marginLeft: 5}]}>
@@ -222,7 +223,7 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                   <Text style={[styles.valueFont]}>(ลุ้นโชคครั้งถัดไป)</Text>
                   <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
                     <Text style={[styles.valueFont, {fontSize: 32}]}>
-                      {balance}
+                      {balance? balance:0}
                     </Text>
                     <Text
                       style={[styles.valueFont, {fontSize: 12, marginLeft: 5}]}>
