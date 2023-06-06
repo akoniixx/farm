@@ -806,7 +806,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </TouchableOpacity>
                 </View>
                 {taskSugUsed.length != 0 ? (
-                  <View style={{ height: 'auto' }}>
+                  <View style={{ height: 'auto', paddingHorizontal: 20 }}>
                     <ScrollView
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}>
@@ -911,7 +911,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     นักบินโดรนที่แนะนำ
                   </Text>
                 </View>
-                <View style={{ height: 'auto' }}>
+                <View style={{ height: 'auto', paddingHorizontal: 20 }}>
                   <ScrollView
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}>

@@ -201,7 +201,6 @@ const styles = StyleSheet.create({
         width: normalize(160),
         borderRadius: 10,
         borderWidth: 1,
-        left: '10%',
         borderColor: colors.bg,
       },
       android: {
@@ -210,7 +209,6 @@ const styles = StyleSheet.create({
         width: normalize(160),
         borderRadius: 10,
         borderWidth: 1,
-        left: '10%',
         borderColor: colors.bg,
       },
     }),
