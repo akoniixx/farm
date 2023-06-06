@@ -825,7 +825,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                               key={index}
                               index={index}
                               profile={item.image_droner}
-                              background={''}
+                              background={item.task_image}
                               name={item.firstname + ' ' + item.lastname}
                               rate={item.rating_avg}
                               total_task={item.count_rating}
@@ -930,7 +930,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                             key={index}
                             index={index}
                             profile={item.image_droner}
-                            background={''}
+                            background={item.task_image}
                             name={item.firstname + ' ' + item.lastname}
                             rate={item.rating_avg}
                             total_task={item.count_rating}
