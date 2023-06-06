@@ -53,6 +53,8 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
   const [campaignImage, setCampaignImage] = useState<string>('');
+  const [showCampaign,setShowCampaign] = useState<'flex'|'none'>('flex')
+  
 
   useFocusEffect(
     React.useCallback(() => {
@@ -76,7 +78,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    fecthImage();
+    fecthImage()
     getProfile();
     openSocket();
     getCurrentPoint();
@@ -100,10 +102,15 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
   const fecthImage = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
-    await Campaign.getImage('DRONER', 'QUATA', 'ACTIVE').then(res => {
-      setLoading(true);
-      setCampaignImage(res.data[0].pathImageFloating);
-    });
+    await Campaign.getImage('DRONER', 'QUATA', 'ACTIVE')
+      .then(res => {
+        setLoading(true);
+        setCampaignImage(res.data[0].pathImageFloating);
+      })
+      .catch(err => console.log(err))
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const getProfile = async () => {
@@ -201,21 +208,26 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
         }}
       />
 
-      <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
-        <View
-          style={{position: 'absolute', top: '95%', left: '60%', zIndex: 1}}>
-          <Draggable>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('CampaignScreen')}>
-              <Image
-                source={{uri: campaignImage}}
-                style={{width: 150, height: 60}}
-                resizeMode="contain"
-              />
+<View
+        style={{ display:showCampaign ,position: 'absolute', bottom: 20, right: 10 , zIndex:1 }}>
+          <View style={{width:10,marginLeft:20}}>
+            <TouchableOpacity onPress={()=>setShowCampaign('none')}>
+              <Image source={icons.x} style={{width:10,height:10}}/>
             </TouchableOpacity>
-          </Draggable>
-        </View>
+          </View>
+       
+          <TouchableOpacity
+            onPress={() => navigation.navigate('CampaignScreen')}>
+            <Image
+              source={{uri: campaignImage}}
+              style={{width: 150, height: 60}}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+       
+      </View>
 
+      <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
         <View>
           <View style={styles.headCard}>
             <View>

@@ -25,10 +25,10 @@ import {momentExtend} from '../../function/utility';
 const CampaignScreen: React.FC<any> = ({navigation, route}) => {
   const [campaign, setCampaign] = useState<CampaignEntitie>(init_campaign);
   const [loading, setLoading] = useState<boolean>(false);
-  const [beforeRai, setBeforeRai] = useState<number>(1);
-  const [rai, setRai] = useState<number>(1);
   const [allValue, setAllValue] = useState<number>(0);
   const [balance, setBalance] = useState<number>(0);
+  const [afterRai, setAfterRai] = useState<number>(0);
+  const [raiIncondition, setRaiIncondition] = useState<number>(0);
   const width = Dimensions.get('window').width;
   useEffect(() => {
     fecthImage();
@@ -44,11 +44,10 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
         Campaign.getQuota(res.data[0].id, dronerId)
           .then(respon => {
             setLoading(true);
-            setBeforeRai(respon.beforeRai);
-            setRai(respon.campaign.condition[0].rai);
             setAllValue(respon.allValue);
+            setAfterRai(respon.afterRai);
             setBalance(respon.balance);
-            console.log(respon, 'dsdjdjk');
+            setRaiIncondition(respon.campaign.condition[0].rai);
           })
           .catch(err => console.log(err))
           .finally(() => {
@@ -139,12 +138,15 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                       styles.rewardFont,
                       {fontSize: normalize(28), marginRight: 20},
                     ]}>
-                    {beforeRai}
+                    {afterRai}
                   </Text>
                   <Text style={styles.rewardFont}>ไร่</Text>
                 </View>
               </View>
-              <ProgressBarAnimated current={rai % beforeRai} total={rai} />
+              <ProgressBarAnimated
+                current={afterRai % raiIncondition}
+                total={raiIncondition}
+              />
               <View>
                 <View
                   style={{
@@ -154,8 +156,8 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                   }}>
                   <Text>เริ่มนับจำนวนไร่สะสม </Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text>{rai % beforeRai}</Text>
-                    <Text>{'/' + beforeRai}</Text>
+                    <Text>{afterRai % raiIncondition}</Text>
+                    <Text>{'/' + raiIncondition}</Text>
                   </View>
                 </View>
                 <Text>
@@ -237,7 +239,12 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('DateCampaignScreen', {
+                  image: campaign.pathImageRewardRound,
+                })
+              }>
               <View style={styles.tableReward}>
                 <Image
                   source={icons.tableReward}
@@ -261,7 +268,12 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                 </View>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('RulesCampaignScreen', {
+                  rules: campaign.rulesCampaign,
+                })
+              }>
               <View style={styles.tableReward}>
                 <Image
                   source={icons.ruleReward}
@@ -288,7 +300,8 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
             </TouchableOpacity>
           </View>
           <View style={{marginTop: normalize(24), marginBottom: normalize(70)}}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('WinnerCampaignScreen')}>
               <View
                 style={[styles.tableReward, {justifyContent: 'flex-start'}]}>
                 <Image

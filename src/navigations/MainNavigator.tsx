@@ -35,6 +35,9 @@ import RedeemScreen from '../screens/RedeemScreen';
 import CampaignScreen from '../screens/CampaignScreen/CampaignScreen';
 import RedeemDetailScreen from '../screens/RedeemDetailScreen';
 import MissionDetailScreen from '../screens/MissionDetailScreen';
+import WinnerCampaignScreen from '../screens/CampaignScreen/WinnerCampaignScreen';
+import RulesCampaignScreen from '../screens/CampaignScreen/RulesCampaignScreen';
+import DateCampaignScreen from '../screens/CampaignScreen/DateCampaign';
 
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
@@ -63,6 +66,11 @@ export type StackParamList = {
   IncomeScreen: undefined;
   HistoryRewardScreen: undefined;
   MyRewardScreen: undefined;
+
+  WinnerCampaignScreen: any;
+  RulesCampaignScreen: any;
+  DateCampaignScreen: any;
+
   RewardDetailScreen: {
     navigation: StackNavigationHelpers;
     id: string;
@@ -104,6 +112,7 @@ export type StackParamList = {
   //   navigation: StackNavigationHelpers;
   // };
 };
+
 export type StackNativeScreenProps<T extends keyof StackParamList> =
   NativeStackScreenProps<StackParamList, T>;
 const Stack = createStackNavigator<StackParamList>();
@@ -173,6 +182,15 @@ const MainNavigator: React.FC = () => {
       />
       {/* <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} /> */}
       <Stack.Screen name="CampaignScreen" component={CampaignScreen} />
+      <Stack.Screen
+        name="WinnerCampaignScreen"
+        component={WinnerCampaignScreen}
+      />
+      <Stack.Screen
+        name="RulesCampaignScreen"
+        component={RulesCampaignScreen}
+      />
+      <Stack.Screen name="DateCampaignScreen" component={DateCampaignScreen} />
     </Stack.Navigator>
   );
 };
