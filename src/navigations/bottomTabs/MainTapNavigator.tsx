@@ -27,6 +27,9 @@ import {ActionContext} from '../../../App';
 import {dialCall} from '../../function/utility';
 import RewardScreen from '../../screens/RewardScreen';
 import MissionScreen from '../../screens/MissionScreen';
+import Draggable from 'react-native-draggable';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Campaign} from '../../datasource/CampaignDatasource';
 
 export type TabNavigatorParamList = {
   mission: undefined;
@@ -43,6 +46,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   const [registerfailedModalNoti, setRegisterFailedModalNoti] = useState(false);
   const [initialRouteName, setInitialRouteName] = useState('home');
   const {actiontaskId, setActiontaskId} = useContext(ActionContext);
+
+  const [campaignImage, setCampaignImage] = useState<string>('');
+
+
+  
   const ListPath = [
     {
       name: 'home',
@@ -451,6 +459,8 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           setRegisterFailedModalNoti(false);
         }}
       />
+
+     
       <Tab.Navigator
         screenOptions={{headerShown: false}}
         initialRouteName={initialRouteName}>
