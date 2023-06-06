@@ -16,6 +16,9 @@ interface guruData {
   rewardId: string;
   rewardName: string;
   redeemNo: string;
+  redeemDetail: {
+    redeemNo: string;
+  };
 }
 export const HistoryPoint: React.FC<guruData> = ({
   index,
@@ -26,12 +29,12 @@ export const HistoryPoint: React.FC<guruData> = ({
   campaignName,
   ...props
 }) => {
-  console.log(JSON.stringify(props.redeemNo, null, 2));
   const isHaveReward = useMemo(() => {
     if (props.rewardId !== null) {
       return true;
     }
   }, [props.rewardId]);
+
   return (
     <View key={index}>
       <View
@@ -52,7 +55,7 @@ export const HistoryPoint: React.FC<guruData> = ({
           <Text style={styles.textDate}>
             {/* {taskNo ? '#' : '#'} */}
             {action === 'RETURN'
-              ? props.redeemNo
+              ? props.redeemDetail.redeemNo || '-'
               : isHaveReward
               ? props.redeemNo
               : taskNo}

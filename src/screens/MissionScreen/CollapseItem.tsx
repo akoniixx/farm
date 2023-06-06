@@ -33,7 +33,6 @@ export default function CollapseItem({navigation, mission}: Props) {
       useNativeDriver: true,
     }).start();
   };
-  console.log('mission', JSON.stringify(mission, null, 2));
   return (
     <>
       <Pressable
@@ -68,7 +67,7 @@ export default function CollapseItem({navigation, mission}: Props) {
                 ? colors.decreasePoint
                 : colors.fontBlack,
             }}>
-            อีก {moment(mission.endDate).fromNow()}
+            อีก {moment(mission.endDate).diff(moment(), 'days')} วัน
           </Text>
         </View>
         <View
@@ -167,7 +166,7 @@ export default function CollapseItem({navigation, mission}: Props) {
                       conditionReward: el.conditionReward,
                       descriptionReward: el.descriptionReward,
                       num: el.num,
-                      missionId: mission.id,
+                      missionId: el.missionId,
                     },
                   })
                 }

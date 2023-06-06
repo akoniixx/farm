@@ -61,12 +61,12 @@ export default function MissionScreen({navigation}: MissionScreenProps) {
             }}>
             ภารกิจ
           </Text>
-
+          {/* 
           <View
             style={{
               height: 45,
             }}
-          />
+          /> */}
         </View>
       </ImageBackground>
       <Body navigation={navigation} />
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     ...Platform.select({
       ios: {
-        height: 150,
+        height: 136,
         width: '100%',
         justifyContent: 'flex-end',
       },

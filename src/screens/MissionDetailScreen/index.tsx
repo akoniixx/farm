@@ -1,5 +1,5 @@
 import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';
 import CustomHeader from '../../components/CustomHeader';
@@ -7,13 +7,31 @@ import {colors, font} from '../../assets';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import CardDetail from './CardDetail';
 import Text from '../../components/Text';
+import {rewardDatasource} from '../../datasource/RewardDatasource';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 interface Props {
   navigation: any;
   route: RouteProp<StackParamList, 'MissionDetailScreen'>;
 }
+const mappingStatusText = {
+  WAIT_REQUEST: 'ยังไม่ได้ยืนยันที่อยู่',
+  REQUEST: 'คำร้องขอแลก',
+  PREPARE: 'เตรียมจัดส่ง',
+  DONE: 'ส่งแล้ว',
+};
+const mappingStatusColor = {
+  WAIT_REQUEST: colors.decreasePoint,
+  REQUEST: colors.orange,
+  PREPARE: colors.orange,
+  DONE: colors.green,
+};
 
 export default function MissionDetailScreen({navigation, route}: Props) {
   const {data} = route.params;
+  // console.log(JSON.stringify(data, null, 2));
+  const [currentStatus, setCurrentStatus] = React.useState<string>('');
+  const [dronerTransactionId, setDronerTransactionId] =
+    React.useState<string>('');
   const onPress = () => {
     navigation.navigate('RedeemAddressScreen', {
       missionData: {
@@ -23,12 +41,42 @@ export default function MissionDetailScreen({navigation, route}: Props) {
         amount: 1,
         step: data.num,
         imagePath: data.reward.imagePath,
+        rewardId: data.reward.id,
       },
     });
   };
 
-  console.log('data', JSON.stringify(data, null, 2));
+  useEffect(() => {
+    const getStatusRewardMission = async () => {
+      try {
+        const dronerId = await AsyncStorage.getItem('droner_id');
+        const result = await rewardDatasource.getRewardStatus({
+          missionId: data.missionId,
+          rewardId: data.reward.id,
+          dronerId: dronerId || '',
+        });
 
+        if (result) {
+          setCurrentStatus(result.status);
+          setDronerTransactionId(result.dronerTransactionId);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getStatusRewardMission();
+  }, [data.missionId, data.reward.id]);
+
+  const isWaitRequest = useMemo(() => {
+    if (currentStatus && currentStatus === 'WAIT_REQUEST' && data.isComplete) {
+      return true;
+    }
+  }, [currentStatus, data.isComplete]);
+  const isRequest = useMemo(() => {
+    if (currentStatus && currentStatus !== 'WAIT_REQUEST' && data.isComplete) {
+      return true;
+    }
+  }, [currentStatus, data.isComplete]);
   return (
     <SafeAreaView
       edges={['right', 'top', 'left']}
@@ -58,8 +106,64 @@ export default function MissionDetailScreen({navigation, route}: Props) {
               total={data.total}
               missionName={data.missionName}
               disabled={data.isExpired}
+              imagePath={data.reward.imagePath}
             />
-            {data.isComplete && !data.isStatusComplete && (
+            {isRequest && dronerTransactionId && (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('RedeemDetailScreen', {
+                    id: dronerTransactionId,
+                  })
+                }
+                style={{
+                  padding: 16,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderColor: colors.orange,
+                  borderRadius: 8,
+                  backgroundColor: colors.lightOrange,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: font.semiBold,
+                    fontSize: 14,
+                  }}>
+                  สถานะ :{' '}
+                  <Text
+                    style={{
+                      fontFamily: font.semiBold,
+                      fontSize: 14,
+
+                      color:
+                        mappingStatusColor[
+                          currentStatus as keyof typeof mappingStatusColor
+                        ],
+                    }}>
+                    {
+                      mappingStatusText[
+                        currentStatus as keyof typeof mappingStatusText
+                      ]
+                    }
+                  </Text>
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.bold,
+                    }}>
+                    {'ดูรีวิอร์ดของฉัน >'}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
+
+            {isWaitRequest && (
               <View
                 style={{
                   marginVertical: 8,
@@ -120,7 +224,7 @@ export default function MissionDetailScreen({navigation, route}: Props) {
               </Text>
             </View>
           </View>
-          {data.isComplete && !data.isStatusComplete && (
+          {isWaitRequest && (
             <View
               style={{
                 padding: 16,

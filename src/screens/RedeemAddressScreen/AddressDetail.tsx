@@ -9,6 +9,7 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {useFocusEffect} from '@react-navigation/native';
 import Modal from '../../components/Modal/Modal';
 import {
+  RedeemMissionPayload,
   RedeemPayload,
   rewardDatasource,
 } from '../../datasource/RewardDatasource';
@@ -53,9 +54,15 @@ export default function AddressDetail({
   data,
   isConfirm,
   setIsConfirm,
+  setIsConfirmMission,
+  isConfirmMission,
+  missionDetail,
 }: {
+  isConfirmMission: boolean;
+  setIsConfirmMission: (value: boolean) => void;
   navigation: any;
   isConfirm: boolean;
+  missionDetail: any;
   data: RewardParams;
   setIsConfirm: (value: boolean) => void;
 }) {
@@ -83,7 +90,39 @@ export default function AddressDetail({
     setRadioAddress(value);
   };
   const {getCurrentPoint} = usePoint();
+  const onConfirmMission = async () => {
+    try {
+      const addressId =
+        radioAddress === 'default' ? mainAddress?.id : secondAddress?.id;
+      const payload: RedeemMissionPayload = {
+        dronerId: user?.id || '',
+        quantity: 1,
+        updateBy: `${user?.firstname} ${user?.lastname}`,
+        receiverDetail: {
+          addressId: addressId || '',
+          address: (radioAddress === 'default'
+            ? mainAddress?.addressName
+            : secondAddress?.addressName) as string,
+          firstname: user?.firstname || '',
+          lastname: user?.lastname || '',
+          tel: user?.telephoneNo || '',
+        },
+        missionId: missionDetail.missionId,
+        step: missionDetail.step,
+        rewardId: missionDetail.rewardId,
+      };
+      const result = await rewardDatasource.redeemRewardMission(payload);
 
+      setIsConfirmMission(false);
+      setTimeout(() => {
+        navigation.navigate('RedeemDetailScreen', {
+          id: result.id,
+        });
+      }, 400);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const onConfirmRedeem = async () => {
     try {
       const addressId =
@@ -236,6 +275,7 @@ export default function AddressDetail({
       ),
     },
   ];
+
   return (
     <>
       <View style={styles.container}>
@@ -360,6 +400,57 @@ export default function AddressDetail({
             style={styles.subButton}
             onPress={() => {
               setIsConfirm(false);
+            }}>
+            <Text style={styles.textSubButton}>ยกเลิก</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+      <Modal visible={isConfirmMission}>
+        <View
+          style={{
+            backgroundColor: colors.white,
+            borderRadius: 12,
+            padding: 16,
+            width: '100%',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: font.medium,
+              color: colors.fontBlack,
+            }}>
+            กรุณาตรวจสอบ
+          </Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: font.medium,
+              color: colors.fontBlack,
+            }}>
+            ที่อยู่จัดส่งของท่านก่อนการยืนยัน
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              fontFamily: font.light,
+              color: colors.inkLight,
+              marginTop: 8,
+            }}>
+            หากกดยืนยันแล้ว จะไม่สามารถยกเลิกการจัดส่งได้
+          </Text>
+
+          <TouchableOpacity
+            style={[styles.button, {marginTop: 16}]}
+            onPress={() => {
+              onConfirmMission();
+            }}>
+            <Text style={styles.textButton}>ยืนยัน</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.subButton}
+            onPress={() => {
+              setIsConfirmMission(false);
             }}>
             <Text style={styles.textSubButton}>ยกเลิก</Text>
           </TouchableOpacity>

@@ -17,6 +17,22 @@ export interface RedeemPayload {
   };
   updateBy: string;
 }
+
+export interface RedeemMissionPayload {
+  missionId: string;
+  step: number;
+  dronerId: string;
+  rewardId: string;
+  quantity: number;
+  updateBy: string;
+  receiverDetail: {
+    firstname: string;
+    lastname: string;
+    tel: string;
+    address: string;
+    addressId: string;
+  };
+}
 const getListRewards = async ({page, take}: RewardPayload) => {
   return httpClient
     .get(BASE_URL + '/promotion/reward/queryall', {
@@ -98,6 +114,30 @@ const getHistoryRedeem = async (payload: {
       throw err;
     });
 };
+const redeemRewardMission = async (payload: RedeemMissionPayload) => {
+  return httpClient
+    .post(BASE_URL + '/promotion/droner-transactions/redeem-reward', {
+      ...payload,
+    })
+    .then(res => {
+      return res.data;
+    });
+};
+const getRewardStatus = async (payload: {
+  dronerId: string;
+  missionId: string;
+  rewardId: string;
+}) => {
+  const genQuery = Object.keys(payload).map(key => {
+    return key + '=' + payload[key as keyof typeof payload];
+  });
+
+  return httpClient
+    .get(BASE_URL + '/promotion/reward/get-redeem-status?' + genQuery.join('&'))
+    .then(res => {
+      return res.data;
+    });
+};
 
 export const rewardDatasource = {
   getListRewards,
@@ -105,4 +145,6 @@ export const rewardDatasource = {
   redeemReward,
   getRedeemDetail,
   getHistoryRedeem,
+  redeemRewardMission,
+  getRewardStatus,
 };

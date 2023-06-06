@@ -1,11 +1,4 @@
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  Dimensions,
-} from 'react-native';
+import {View, StyleSheet, ScrollView, Image, Dimensions} from 'react-native';
 import React, {useEffect} from 'react';
 
 import CollapseItem from './CollapseItem';
@@ -47,6 +40,7 @@ interface Condition {
   point: string | null;
   quata: number;
   rewardId: string;
+  missionId: string;
   rewardName: string | null;
   missionName: string;
   rewardRound: number;
@@ -112,7 +106,6 @@ export default function Body({navigation}: Props) {
     };
     getAllMission();
   }, []);
-  console.log(JSON.stringify(missionList, null, 2));
   const EmptyContent = () => {
     return (
       <View

@@ -155,7 +155,6 @@ export default function RedeemDetailScreen({navigation, route}: Props) {
       getRedeemDetail();
     }
   }, [id]);
-
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <CustomHeader

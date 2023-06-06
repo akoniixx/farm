@@ -9,6 +9,7 @@ import moment from 'moment';
 import {momentExtend} from '../../function/utility';
 import icons from '../../assets/icons/icons';
 import {Grayscale} from 'react-native-color-matrix-image-filters';
+import FastImage from 'react-native-fast-image';
 
 interface Props {
   disabled?: boolean;
@@ -17,6 +18,7 @@ interface Props {
   total: number;
   current: number;
   missionName: string;
+  imagePath: string;
 }
 export default function CardDetail({
   disabled = false,
@@ -25,12 +27,12 @@ export default function CardDetail({
   current,
   total,
   missionName,
+  imagePath,
 }: Props) {
   const isSuccess = useMemo(() => {
     return current / total >= 1;
   }, [current, total]);
 
-  console.log(JSON.stringify(cardData, null, 2), 'cardData');
   return (
     <View
       style={[
@@ -52,8 +54,10 @@ export default function CardDetail({
             />
           </Grayscale>
         ) : (
-          <Image
-            source={mockImage.reward1}
+          <FastImage
+            source={{
+              uri: imagePath,
+            }}
             style={{
               width: 68,
               height: 68,
@@ -103,7 +107,7 @@ export default function CardDetail({
             <Text
               style={{
                 marginLeft: 8,
-              }}>{`(อีก ${moment(dateEnd).fromNow()})`}</Text>
+              }}>{`(อีก ${moment(dateEnd).diff(moment(), 'days')} วัน)`}</Text>
           )}
         </View>
         <View

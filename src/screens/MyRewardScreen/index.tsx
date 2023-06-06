@@ -1,5 +1,5 @@
-import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
-import React, {useEffect, useMemo} from 'react';
+import {Text, SafeAreaView, StyleSheet} from 'react-native';
+import React, {useMemo} from 'react';
 import {colors} from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import {normalize} from '@rneui/themed';

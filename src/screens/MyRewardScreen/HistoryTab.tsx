@@ -6,9 +6,10 @@ import {
   SectionList,
   RefreshControl,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import React, {useCallback, useMemo} from 'react';
-import {colors} from '../../assets';
+import {colors, image} from '../../assets';
 import fonts from '../../assets/fonts';
 import {momentExtend} from '../../function/utility';
 import {useFocusEffect} from '@react-navigation/native';
@@ -16,6 +17,7 @@ import {rewardDatasource} from '../../datasource/RewardDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FastImage from 'react-native-fast-image';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
+import {Image} from 'react-native';
 
 const mappingStatusText = {
   REQUEST: 'คำร้องขอแลก',
@@ -107,20 +109,24 @@ export default function HistoryTab({navigation}: {navigation: any}) {
   );
 
   const historyData = useMemo(() => {
-    return [
-      {
+    const sectionData = [];
+
+    if (prepareData.length > 0) {
+      sectionData.push({
         title: 'กำลังดำเนินการ',
         data: prepareData,
         sectionName: 'progress',
-      },
-      {
+      });
+    }
+    if (doneData.length > 0) {
+      sectionData.push({
         title: 'เสร็จสิ้น',
         data: doneData,
         sectionName: 'complete',
-      },
-    ];
+      });
+    }
+    return sectionData;
   }, [prepareData, doneData]);
-
   const onLoadingMore = async () => {
     if (doneData.length + prepareData.length < total) {
       const dronerId = await AsyncStorage.getItem('droner_id');
@@ -148,6 +154,33 @@ export default function HistoryTab({navigation}: {navigation: any}) {
   const onPressItem = (id: string) => {
     navigation.navigate('RedeemDetailScreen', {id});
   };
+  const EmptyState = () => {
+    return (
+      <View
+        style={{
+          height: Dimensions.get('window').height - 300,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Image
+          source={image.emptyReward}
+          style={{
+            width: 155,
+            height: 130,
+            marginBottom: 16,
+          }}
+        />
+        <Text
+          style={{
+            fontFamily: fonts.light,
+            fontSize: 16,
+            color: colors.gray,
+          }}>
+          ไม่มีรีวอร์ด
+        </Text>
+      </View>
+    );
+  };
   return (
     <SectionList
       refreshControl={
@@ -168,7 +201,11 @@ export default function HistoryTab({navigation}: {navigation: any}) {
       stickySectionHeadersEnabled={false}
       keyExtractor={(item, index) => `-${index}`}
       sections={historyData || []}
-      renderSectionHeader={({section: {title}}) => {
+      renderSectionHeader={({section: {title, data}}) => {
+        if (data.length < 1) {
+          return EmptyState();
+        }
+
         return (
           <Text
             style={{
@@ -183,6 +220,7 @@ export default function HistoryTab({navigation}: {navigation: any}) {
       }}
       renderItem={({item, section}) => {
         const statusRedeem = item.redeemDetail.redeemStatus;
+        const isMission = item.rewardExchange !== 'SCORE';
         return (
           <TouchableOpacity
             onPress={() => {
@@ -231,31 +269,56 @@ export default function HistoryTab({navigation}: {navigation: any}) {
 
                   flexDirection: 'row',
                   alignItems: 'center',
+                  justifyContent: 'space-between',
                 }}>
                 <View
                   style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: 3,
-                    marginRight: 4,
-                    backgroundColor:
-                      mappingStatusColor[
-                        statusRedeem as keyof typeof mappingStatusColor
-                      ],
-                  }}
-                />
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontFamily: fonts.light,
-                    color: colors.gray,
+                    flexDirection: 'row',
+                    alignItems: 'center',
                   }}>
-                  {
-                    mappingStatusText[
-                      statusRedeem as keyof typeof mappingStatusText
-                    ]
-                  }
-                </Text>
+                  <View
+                    style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: 3,
+                      marginRight: 4,
+                      backgroundColor:
+                        mappingStatusColor[
+                          statusRedeem as keyof typeof mappingStatusColor
+                        ],
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontFamily: fonts.light,
+                      color: colors.gray,
+                    }}>
+                    {
+                      mappingStatusText[
+                        statusRedeem as keyof typeof mappingStatusText
+                      ]
+                    }
+                  </Text>
+                </View>
+                {isMission && (
+                  <View
+                    style={{
+                      borderRadius: 10,
+                      backgroundColor: '#FBCC96',
+                      paddingVertical: 2,
+                      paddingHorizontal: 8,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontFamily: fonts.semiBold,
+                        color: '#993A03',
+                      }}>
+                      ภารกิจ
+                    </Text>
+                  </View>
+                )}
               </View>
             </View>
           </TouchableOpacity>

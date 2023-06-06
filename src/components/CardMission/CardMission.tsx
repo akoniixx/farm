@@ -9,7 +9,6 @@ import React from 'react';
 import {colors, font, icons, image} from '../../assets';
 import Text from '../Text';
 import ProgressBarAnimated from '../ProgressBarAnimated/ProgressBarAnimated';
-import mockImage from '../../assets/mockImage';
 import {Grayscale} from 'react-native-color-matrix-image-filters';
 import {numberWithCommas} from '../../function/utility';
 interface Props {
@@ -137,7 +136,7 @@ export default function CardMission({
                 style={{
                   width: 68,
                   height: 68,
-                  zIndex: 2,
+                  zIndex: 1,
                   opacity: 0.7,
                   position: 'absolute',
                   borderRadius: 34,
@@ -150,7 +149,7 @@ export default function CardMission({
                   style={{
                     width: 40,
                     height: 34,
-                    zIndex: 2,
+                    zIndex: 4,
                   }}
                 />
               </View>

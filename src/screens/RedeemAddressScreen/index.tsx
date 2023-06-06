@@ -18,6 +18,7 @@ import FastImage from 'react-native-fast-image';
 import {usePoint} from '../../contexts/PointContext';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
 import Modal from '../../components/Modal/Modal';
+import {rewardDatasource} from '../../datasource/RewardDatasource';
 interface Props {
   navigation: any;
   route: RouteProp<StackParamList, 'RedeemAddressScreen'>;
@@ -65,7 +66,7 @@ export default function RedeemAddressScreen({navigation, route}: Props) {
   const onShowConfirmMission = () => {
     setIsConfirmMission(true);
   };
-  const onConfirmMission = async () => {};
+
   const [exchangeDetail, setExchangeDetail] = React.useState<RewardParams>(
     {} as RewardParams,
   );
@@ -306,8 +307,11 @@ export default function RedeemAddressScreen({navigation, route}: Props) {
         )}
 
         <AddressDetail
+          isConfirmMission={isConfirmMission}
+          setIsConfirmMission={setIsConfirmMission}
           navigation={navigation}
           data={exchangeDetail}
+          missionDetail={missionDetail}
           isConfirm={isConfirm}
           setIsConfirm={setIsConfirm}
         />
@@ -319,57 +323,6 @@ export default function RedeemAddressScreen({navigation, route}: Props) {
           <Text style={styles.textButton}>ยืนยันการแลก</Text>
         </TouchableOpacity>
       </View>
-      <Modal visible={isConfirmMission}>
-        <View
-          style={{
-            backgroundColor: colors.white,
-            borderRadius: 12,
-            padding: 16,
-            width: '100%',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              fontSize: 20,
-              fontFamily: font.medium,
-              color: colors.fontBlack,
-            }}>
-            กรุณาตรวจสอบ
-          </Text>
-          <Text
-            style={{
-              fontSize: 20,
-              fontFamily: font.medium,
-              color: colors.fontBlack,
-            }}>
-            ที่อยู่จัดส่งของท่านก่อนการยืนยัน
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: font.light,
-              color: colors.inkLight,
-              marginTop: 8,
-            }}>
-            หากกดยืนยันแล้ว จะไม่สามารถยกเลิกการจัดส่งได้
-          </Text>
-
-          <TouchableOpacity
-            style={[styles.button, {marginTop: 16}]}
-            onPress={() => {
-              onConfirmMission();
-            }}>
-            <Text style={styles.textButton}>ยืนยัน</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.subButton}
-            onPress={() => {
-              setIsConfirmMission(false);
-            }}>
-            <Text style={styles.textSubButton}>ยกเลิก</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 }

@@ -51,7 +51,6 @@ export default function Content({redeemDetail}: Props) {
       type: 'copiedSuccess',
     });
   };
-  console.log(JSON.stringify(redeemDetail, null, 2), 'redeemDetail');
 
   return (
     <ScrollView>
@@ -156,9 +155,7 @@ export default function Content({redeemDetail}: Props) {
                 alignItems: 'center',
               }}
               onPress={() => {
-                onCopyClipboard(
-                  redeemDetail.dronerRedeemHistories[0].trackingNo || '-',
-                );
+                onCopyClipboard(redeemDetail.redeemDetail.trackingNo || '');
               }}>
               <Text
                 style={{
@@ -306,7 +303,7 @@ export default function Content({redeemDetail}: Props) {
             }}>
             แต้มที่ใช้แลก
           </Text>
-          <Text
+          {/* <Text
             style={{
               fontSize: 16,
               fontFamily: font.medium,
@@ -314,7 +311,7 @@ export default function Content({redeemDetail}: Props) {
               lineHeight: 28,
             }}>
             {numberWithCommas(redeemDetail.amountValue.toString(), true)} แต้ม
-          </Text>
+          </Text> */}
         </View>
         <View style={styles.row}>
           <Text
