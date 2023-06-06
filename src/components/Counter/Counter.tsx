@@ -27,15 +27,33 @@ export default function Counter({
       <TouchableOpacity
         disabled={isDisableMinus}
         onPress={handleDecrease}
-        style={styles.button}>
+        style={[
+          styles.button,
+          {
+            opacity: isDisableMinus ? 0.5 : 1,
+          },
+        ]}>
         <Text style={styles.fontButton}>-</Text>
       </TouchableOpacity>
-      <Text style={styles.countText}>{count}</Text>
+      <Text
+        style={[
+          styles.countText,
+          {
+            opacity: isDisableMinus || isLimit ? 0.5 : 1,
+          },
+        ]}>
+        {count}
+      </Text>
       <TouchableOpacity
         disabled={isLimit || isDisablePlus}
         onPress={handleIncrease}
-        style={styles.button}>
-        <Text style={styles.fontButton}>+</Text>
+        style={[
+          styles.button,
+          {
+            opacity: isDisableMinus ? 0.5 : 1,
+          },
+        ]}>
+        <Text style={[styles.fontButton]}>+</Text>
       </TouchableOpacity>
     </View>
   );
@@ -44,12 +62,12 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 20,
-    padding: 16,
+    marginVertical: 4,
+    padding: 4,
   },
   countText: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontFamily: font.bold,
     width: 50,
     textAlign: 'center',
   },

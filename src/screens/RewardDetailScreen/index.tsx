@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import {
   View,
-  Text,
   SafeAreaView,
   StyleSheet,
   Image,
@@ -27,6 +26,7 @@ import {usePoint} from '../../contexts/PointContext';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
+import Text from '../../components/Text';
 interface Props {
   navigation: StackNavigationHelpers;
   route: RouteProp<StackParamList, 'RewardDetailScreen'>;
@@ -43,6 +43,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
   const [rewardDetail, setRewardDetail] = React.useState<RewardListType>(
     {} as RewardListType,
   );
+  const [cantExchange, setCantExchange] = React.useState(false);
   const isExpired =
     rewardDetail.expiredUsedDate &&
     moment(rewardDetail.expiredUsedDate).isAfter(moment());
@@ -60,7 +61,8 @@ export default function RewardDetailScreen({navigation, route}: Props) {
           ...result,
         };
         if (resultData.score && +resultData.score > currentPoint) {
-          setCounter(0);
+          setCounter(1);
+          setCantExchange(true);
         }
         setRewardDetail(resultData);
       } catch (e) {
@@ -145,6 +147,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
             }}
           />
         </View>
+
         <View style={styles({disable: disableButton}).container}>
           <RenderHTML
             tagsStyles={{
@@ -165,14 +168,16 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
-            <Text
-              style={{
-                fontSize: 20,
-                marginTop: 8,
-                fontFamily: font.medium,
-              }}>
-              ใช้แต้ม {numberWithCommas(requirePoint.toString(), true)} แต้ม
-            </Text>
+            <View>
+              <Text
+                style={{
+                  fontSize: 20,
+                  marginTop: 8,
+                  fontFamily: font.medium,
+                }}>
+                ใช้แต้ม {numberWithCommas(requirePoint.toString(), true)} แต้ม
+              </Text>
+            </View>
             {!isDigital && (
               <Counter
                 count={counter}
@@ -183,6 +188,16 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               />
             )}
           </View>
+          {cantExchange && (
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: font.medium,
+                color: colors.decreasePoint,
+              }}>
+              แต้มสะสมของคุณไม่ถึงจำนวนที่แลกได้
+            </Text>
+          )}
           {/* <View style={styles({disable: disableButton}).amountContainer}>
             <Text
               style={{
@@ -233,6 +248,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               </Text>
             </View>
           )}
+
           <View
             style={{
               marginTop: 16,
@@ -352,7 +368,7 @@ const styles = ({disable}: {disable?: boolean}) =>
       padding: 16,
     },
     amountContainer: {
-      paddingVertical: 8,
+      paddingTop: 8,
       paddingLeft: 16,
       paddingRight: 40,
       backgroundColor: colors.orangeSoft,

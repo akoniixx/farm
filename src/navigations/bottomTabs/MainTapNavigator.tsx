@@ -413,6 +413,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
               Toast.hide();
             },
           });
+          break;
         case 'RECEIVE_POINT':
           Toast.show({
             type: 'receivePoint',
@@ -426,6 +427,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
               Toast.hide();
             },
           });
+          break;
         default:
           break;
       }

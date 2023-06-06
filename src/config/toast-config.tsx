@@ -819,12 +819,20 @@ export const toastConfig = {
     return (
       <View
         style={{
-          height: 100,
+          height: 40,
           width: '100%',
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: colors.white,
           flexDirection: 'row',
+          elevation: 8,
+          shadowColor: '#242D35',
+          shadowOffset: {
+            width: 0,
+            height: 8,
+          },
+          shadowOpacity: 0.04,
+          shadowRadius: 16,
         }}>
         <Image
           source={icons.successIcon}

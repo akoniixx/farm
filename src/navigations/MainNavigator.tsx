@@ -91,9 +91,23 @@ export type StackParamList = {
   CampaignScreen: any;
   RedeemDetailScreen: {
     id: string;
+    isFromMissionDetail: true;
   };
   MissionDetailScreen: {
-    id: string;
+    data: {
+      current: number;
+      isComplete: boolean;
+      isExpired: boolean;
+      isStatusComplete: boolean;
+      reward: any;
+      endDate: string;
+      total: number;
+      missionName: string;
+      conditionReward: string;
+      descriptionReward: string;
+      num: number;
+      missionId: string;
+    };
   };
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;

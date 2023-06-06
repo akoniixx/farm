@@ -1,4 +1,4 @@
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';
@@ -40,6 +40,10 @@ export interface RedeemDetail {
   redeemDetail: {
     rewardType: string;
     redeemStatus: string;
+    deliveryCompany: string | null;
+    trackingNo: string | null;
+    remark: string | null;
+    missionName?: string | null;
   };
   dronerRedeemHistories: {
     id: string;
@@ -130,11 +134,12 @@ export interface RedeemDetail {
 }
 
 export default function RedeemDetailScreen({navigation, route}: Props) {
-  const {id} = route.params;
+  const {id, isFromMissionDetail} = route.params;
   const [loading, setLoading] = useState(true);
   const [redeemDetail, setRedeemDetail] = useState<RedeemDetail>(
     {} as RedeemDetail,
   );
+
   useEffect(() => {
     const getRedeemDetail = async () => {
       try {
@@ -152,22 +157,27 @@ export default function RedeemDetailScreen({navigation, route}: Props) {
       getRedeemDetail();
     }
   }, [id]);
+  const onPressBack = () =>
+    navigation.navigate('MyRewardScreen', {
+      tab:
+        redeemDetail.redeemDetail.rewardType === 'PHYSICAL'
+          ? 'history'
+          : 'readyToUse',
+    });
 
+  const onPressBackFromMissionDetail = () => {
+    navigation.goBack();
+  };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <CustomHeader
         showBackBtn
-        onPressBack={() =>
-          navigation.navigate('MyRewardScreen', {
-            tab:
-              redeemDetail.redeemDetail.rewardType === 'PHYSICAL'
-                ? 'history'
-                : 'readyToUse',
-          })
+        onPressBack={
+          isFromMissionDetail ? onPressBackFromMissionDetail : onPressBack
         }
         title="สรุปรายละเอียดการแลก"
       />
-      {loading ? <></> : <Content redeemDetail={redeemDetail} />}
+      {loading ? <View /> : <Content redeemDetail={redeemDetail} />}
 
       <Spinner
         visible={loading}

@@ -2,32 +2,37 @@
 import {
   View,
   Text,
-  FlatList,
   StyleSheet,
-  Image,
   SectionList,
+  RefreshControl,
+  TouchableOpacity,
+  Dimensions,
 } from 'react-native';
-import React, {useMemo} from 'react';
-import moment from 'moment';
-import mockImage from '../../assets/mockImage';
-import {colors} from '../../assets';
+import React, {useCallback, useMemo} from 'react';
+import {colors, image} from '../../assets';
 import fonts from '../../assets/fonts';
 import {momentExtend} from '../../function/utility';
+import {useFocusEffect} from '@react-navigation/native';
+import {rewardDatasource} from '../../datasource/RewardDatasource';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import FastImage from 'react-native-fast-image';
+import RenderHTML from '../../components/RenderHTML/RenderHTML';
+import {Image} from 'react-native';
 
 const mappingStatusText = {
   REQUEST: 'คำร้องขอแลก',
-  DELIVERING: 'เตรียมจัดส่ง',
+  PREPARE: 'เตรียมจัดส่ง',
   USED: 'ใช้แล้ว',
-  DELIVERED: 'ส่งแล้ว',
-  EXPIRED: 'หมดอายุ',
+  DONE: 'ส่งแล้ว',
+  EXPIRE: 'หมดอายุ',
   CANCEL: 'ยกเลิก',
 };
 const mappingStatusColor = {
   REQUEST: colors.orange,
-  DELIVERING: colors.orange,
+  PREPARE: colors.orange,
   USED: colors.green,
-  DELIVERED: colors.green,
-  EXPIRED: colors.gray,
+  DONE: colors.green,
+  EXPIRE: colors.gray,
   CANCEL: colors.decreasePoint,
 };
 // const mappingStatusColorText = {
@@ -38,71 +43,174 @@ const mappingStatusColor = {
 //   EXPIRED: colors.gray,
 //   CANCEL: colors.decreasePoint,
 // };
-export default function HistoryTab() {
-  const mockData = useMemo(() => {
-    const progressData = [
-      {
-        id: 1,
-        title: 'ส่วนลด ศูนย์ ICPX มูลค่า 1,000 บาท',
-        date: moment().toISOString(),
-        image: mockImage.reward1,
-        status: 'REQUEST',
-      },
+interface RedemptionTransaction {
+  dronerTransactionsId: string;
+  redeemDetail: RedeemDetail;
+  rewardId: string;
+  rewardName: string;
+  imagePath: string;
+  rewardType: string;
+  rewardExchange: string;
+  dronerRedeemHistoriesId: string;
+  redeemDate: string;
+}
 
-      {
-        id: 3,
-        title: 'ส่วนลด ศูนย์ ICPX มูลค่า 2,000 บาท ',
-        date: moment().subtract(2, 'day').toISOString(),
-        image: mockImage.reward2,
-        status: 'DELIVERING',
-      },
-    ];
+interface RedeemDetail {
+  remark: string;
+  rewardType: string;
+  trackingNo: string;
+  redeemStatus: string;
+  deliveryCompany: string;
+}
 
-    const completeData = [
-      {
-        id: 1,
-        title: 'ส่วนลด ศูนย์ ICPX มูลค่า 1,000 บาท',
-        date: moment().toISOString(),
-        image: mockImage.reward3,
-        status: 'USED',
-      },
-      {
-        id: 2,
-        title: 'ส่วนลด ศูนย์ ICPX มูลค่า 1,500 บาท',
-        date: moment().subtract(1, 'day').toISOString(),
-        image: mockImage.reward3,
-        status: 'EXPIRED',
-      },
-      {
-        id: 3,
-        title: 'ส่วนลด ศูนย์ ICPX มูลค่า 2,000 บาท ',
-        date: moment().subtract(2, 'day').toISOString(),
-        image: mockImage.reward3,
-        status: 'DELIVERED',
-      },
-    ];
-    return [
-      {
-        title: 'กำลังดำเนินการ',
-        data: progressData,
-        sectionName: 'progress',
-      },
-      {
-        title: 'เสร็จสิ้น',
-        data: completeData,
-        sectionName: 'complete',
-      },
-    ];
+export default function HistoryTab({navigation}: {navigation: any}) {
+  const take = 10;
+  const [prepareData, setPrepareData] = React.useState<RedemptionTransaction[]>(
+    [],
+  );
+  const [doneData, setDoneData] = React.useState<RedemptionTransaction[]>([]);
+  const [total, setTotal] = React.useState(0);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const getHistoryReward = useCallback(async () => {
+    try {
+      const dronerId = await AsyncStorage.getItem('droner_id');
+      const result = await rewardDatasource.getHistoryRedeem({
+        dronerId: dronerId || '',
+        page: 1,
+        take,
+      });
+      setTotal(result.count);
+      const curPrepareData: RedemptionTransaction[] = [];
+      const curDoneData: RedemptionTransaction[] = [];
+      (result.data || []).forEach((el: RedemptionTransaction) => {
+        const isPrepare =
+          el.redeemDetail.redeemStatus === 'PREPARE' ||
+          el.redeemDetail.redeemStatus === 'REQUEST';
+        if (isPrepare) {
+          curPrepareData.push(el);
+        } else {
+          curDoneData.push(el);
+        }
+      });
+      setPrepareData(curPrepareData);
+      setDoneData(curDoneData);
+    } catch (error) {
+      console.log('error', error);
+    }
   }, []);
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await getHistoryReward();
+    setRefreshing(false);
+  }, [getHistoryReward]);
+  useFocusEffect(
+    React.useCallback(() => {
+      getHistoryReward();
+    }, [getHistoryReward]),
+  );
+
+  const historyData = useMemo(() => {
+    const sectionData = [];
+
+    if (prepareData.length > 0) {
+      sectionData.push({
+        title: 'กำลังดำเนินการ',
+        data: prepareData,
+        sectionName: 'progress',
+      });
+    }
+    if (doneData.length > 0) {
+      sectionData.push({
+        title: 'เสร็จสิ้น',
+        data: doneData,
+        sectionName: 'complete',
+      });
+    }
+    return sectionData;
+  }, [prepareData, doneData]);
+  const onLoadingMore = async () => {
+    if (doneData.length + prepareData.length < total) {
+      const dronerId = await AsyncStorage.getItem('droner_id');
+      const result = await rewardDatasource.getHistoryRedeem({
+        dronerId: dronerId || '',
+        page: Math.ceil((doneData.length + prepareData.length) / take) + 1,
+        take,
+      });
+      const curPrepareData: RedemptionTransaction[] = [];
+      const curDoneData: RedemptionTransaction[] = [];
+      (result.data || []).forEach((el: RedemptionTransaction) => {
+        const isPrepare =
+          el.redeemDetail.redeemStatus === 'PREPARE' ||
+          el.redeemDetail.redeemStatus === 'REQUEST';
+        if (isPrepare) {
+          curPrepareData.push(el);
+        } else {
+          curDoneData.push(el);
+        }
+      });
+      setPrepareData([...prepareData, ...curPrepareData]);
+      setDoneData([...doneData, ...curDoneData]);
+    } else {
+      console.log('end');
+    }
+  };
+  const onPressItem = (id: string) => {
+    // console.log(id);
+    navigation.navigate('RedeemDetailScreen', {id});
+  };
+  const EmptyState = () => {
+    return (
+      <View
+        style={{
+          height: Dimensions.get('window').height - 300,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Image
+          source={image.emptyReward}
+          style={{
+            width: 155,
+            height: 130,
+            marginBottom: 16,
+          }}
+        />
+        <Text
+          style={{
+            fontFamily: fonts.light,
+            fontSize: 16,
+            color: colors.gray,
+          }}>
+          ไม่มีรีวอร์ด
+        </Text>
+      </View>
+    );
+  };
   return (
     <SectionList
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       contentContainerStyle={{
         paddingHorizontal: 16,
         marginTop: 16,
       }}
-      keyExtractor={(item, index) => `${item.id}-${index}`}
-      sections={mockData}
-      renderSectionHeader={({section: {title}}) => {
+      onEndReached={onLoadingMore}
+      ListFooterComponent={
+        <View
+          style={{
+            height: 100,
+          }}
+        />
+      }
+      stickySectionHeadersEnabled={false}
+      keyExtractor={(item, index) => `-${index}`}
+      sections={historyData || []}
+      renderSectionHeader={({section: {title, data}}) => {
+        if (data.length < 1) {
+          return EmptyState();
+        }
+
         return (
           <Text
             style={{
@@ -116,10 +224,19 @@ export default function HistoryTab() {
         );
       }}
       renderItem={({item, section}) => {
+        const statusRedeem = item.redeemDetail.redeemStatus;
+        const isMission = item.rewardExchange !== 'SCORE';
         return (
-          <View style={styles({type: section.sectionName}).card}>
-            <Image
-              source={item.image}
+          <TouchableOpacity
+            onPress={() => {
+              onPressItem(item.dronerTransactionsId);
+            }}
+            style={styles({type: section.sectionName}).card}>
+            <FastImage
+              source={{
+                uri: item.imagePath,
+                cache: FastImage.cacheControl.immutable,
+              }}
               style={{
                 borderRadius: 10,
                 width: 76,
@@ -131,13 +248,16 @@ export default function HistoryTab() {
               style={{
                 width: '75%',
               }}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: fonts.medium,
-                }}>
-                {item.title}
-              </Text>
+              <RenderHTML
+                source={{html: item.rewardName}}
+                contentWidth={500}
+                tagsStyles={{
+                  body: {
+                    fontSize: 16,
+                    fontFamily: fonts.medium,
+                  },
+                }}
+              />
               <Text
                 style={{
                   marginTop: 4,
@@ -145,7 +265,7 @@ export default function HistoryTab() {
                   fontFamily: fonts.light,
                 }}>
                 {`แลกเมื่อ ${momentExtend.toBuddhistYear(
-                  item.date,
+                  item.redeemDate,
                   'DD MMM YYYY HH:mm',
                 )}`}
               </Text>
@@ -155,34 +275,59 @@ export default function HistoryTab() {
 
                   flexDirection: 'row',
                   alignItems: 'center',
+                  justifyContent: 'space-between',
                 }}>
                 <View
                   style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: 3,
-                    marginRight: 4,
-                    backgroundColor:
-                      mappingStatusColor[
-                        item.status as keyof typeof mappingStatusColor
-                      ],
-                  }}
-                />
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontFamily: fonts.light,
-                    color: colors.gray,
+                    flexDirection: 'row',
+                    alignItems: 'center',
                   }}>
-                  {
-                    mappingStatusText[
-                      item.status as keyof typeof mappingStatusText
-                    ]
-                  }
-                </Text>
+                  <View
+                    style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: 3,
+                      marginRight: 4,
+                      backgroundColor:
+                        mappingStatusColor[
+                          statusRedeem as keyof typeof mappingStatusColor
+                        ],
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontFamily: fonts.light,
+                      color: colors.gray,
+                    }}>
+                    {
+                      mappingStatusText[
+                        statusRedeem as keyof typeof mappingStatusText
+                      ]
+                    }
+                  </Text>
+                </View>
+                {isMission && (
+                  <View
+                    style={{
+                      borderRadius: 10,
+                      backgroundColor: '#FBCC96',
+                      paddingVertical: 2,
+                      paddingHorizontal: 8,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontFamily: fonts.semiBold,
+                        color: '#993A03',
+                      }}>
+                      ภารกิจ
+                    </Text>
+                  </View>
+                )}
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         );
       }}
     />
