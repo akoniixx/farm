@@ -157,8 +157,8 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                   }}>
                   <Text>เริ่มนับจำนวนไร่สะสม </Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text>{afterRai?afterRai % raiIncondition:0}</Text>
-                    <Text>{'/' + raiIncondition}</Text>
+                    <Text style={{fontFamily:font.medium,fontSize:16,color:'#FB8705'}}>{afterRai?afterRai % raiIncondition:0}</Text>
+                    <Text style={{fontFamily:font.medium,fontSize:16}}>{'/' + raiIncondition}</Text>
                   </View>
                 </View>
                 <Text>
@@ -222,7 +222,7 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                   <Text style={[styles.valueFont]}>คงเหลือ</Text>
                   <Text style={[styles.valueFont]}>(ลุ้นโชคครั้งถัดไป)</Text>
                   <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
-                    <Text style={[styles.valueFont, {fontSize: 32}]}>
+                    <Text style={[styles.valueFont, {fontSize: 32,color:'#FFFA7D'}]}>
                       {balance? balance:0}
                     </Text>
                     <Text
