@@ -34,4 +34,5 @@ export default {
   fullQuota: require('./fullQuota.png'),
   missionProgressBar: require('./missionProgressBar.json'),
   emptyMission: require('./emptyMission.png'),
+  emptyReward: require('./emptyReward.png'),
 };

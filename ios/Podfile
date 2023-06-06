@@ -64,6 +64,7 @@ end
   use_flipper!()
 
   post_install do |installer|
+    
     react_native_post_install(installer)
     __apply_Xcode_14_3_RC_post_install_workaround(installer)
     installer.pods_project.targets.each do |target|
