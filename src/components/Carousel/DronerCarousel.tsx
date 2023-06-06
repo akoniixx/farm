@@ -51,7 +51,7 @@ const DronerSugg: React.FC<dronerData> = ({
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
           style={{ height: normalize(70) }}
-          source={background === '' ? image.bg_droner : { uri: background }}>
+          source={background === null ? image.bg_droner : { uri: background }}>
           <View key={index}>
             <Image
               source={profile === '' ? image.empty_plot : { uri: profile }}
@@ -162,7 +162,6 @@ const styles = StyleSheet.create({
         width: normalize(160),
         borderRadius: 10,
         borderWidth: 1,
-        left: '10%',
         borderColor: colors.bg,
       },
       android: {
@@ -171,7 +170,6 @@ const styles = StyleSheet.create({
         width: normalize(160),
         borderRadius: 10,
         borderWidth: 1,
-        left: '10%',
         borderColor: colors.bg,
         marginBottom: 10,
       },
