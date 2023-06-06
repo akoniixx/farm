@@ -1,3 +1,5 @@
+## Fix [v1.4.2] 2023-06-06
+- fix coupon detail
 ## Fix [v1.4.1] 2023-06-06
 - fix task img droner used in main screen
 ## Feature [v1.4.0] 2023-05-16
