@@ -51,7 +51,7 @@ const DronerSugg: React.FC<dronerData> = ({
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
           style={{ height: normalize(70) }}
-          source={background === '' ? image.bg_droner : { uri: background }}>
+          source={background === null ? image.bg_droner : { uri: background }}>
           <View key={index}>
             <Image
               source={profile === '' ? image.empty_plot : { uri: profile }}
