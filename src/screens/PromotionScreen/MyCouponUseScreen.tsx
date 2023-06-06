@@ -24,9 +24,6 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
   const [modal, setModal] = useState<boolean>(false);
   const getData = (page: number, take: number, used?: boolean) => {
     getMyCoupon(page, take, used).then(res => {
-      res.data.map((item: any) => {
-        console.log(item.couponOfflineCode);
-      });
       setCount(res.count);
       setData(res.data);
     });
@@ -78,11 +75,12 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
             onScrollEndDrag={onScrollEnd}
             data={data}
             ListFooterComponent={<View style={{ height: normalize(250) }} />}
-            renderItem={({ item }) => (
+            renderItem={({ item }) => {
+              return(
               <CouponCard
                 id={item.promotion.id}
                 couponCode={
-                  item.promotion.couponType === 'ONLINE'
+                  item.promotion.promotionType === 'ONLINE'
                     ? item.promotion.couponCode
                     : item.offlineCode
                 }
@@ -121,7 +119,7 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
                 keepthis={false}
                 disabled={false}
               />
-            )}
+            )}}
             keyExtractor={item => item.promotion.id}
           />
         </View>
