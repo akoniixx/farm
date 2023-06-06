@@ -49,22 +49,8 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
 
   const [campaignImage, setCampaignImage] = useState<string>('');
 
-  useEffect(() => {
-    fecthImage();
-  }, []);
 
-  const fecthImage = async () => {
-    const dronerId = await AsyncStorage.getItem('droner_id');
-    await Campaign.getImage('DRONER', 'QUATA', 'ACTIVE')
-      .then(res => {
-        setLoading(true);
-        setCampaignImage(res.data[0].pathImageFloating);
-      })
-      .catch(err => console.log(err))
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+  
   const ListPath = [
     {
       name: 'home',
@@ -474,19 +460,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
         }}
       />
 
-      <View
-        style={{position: 'absolute', bottom: '20%', left: '60%', zIndex: 1}}>
-        <Draggable>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('CampaignScreen')}>
-            <Image
-              source={{uri: campaignImage}}
-              style={{width: 150, height: 60}}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </Draggable>
-      </View>
+     
       <Tab.Navigator
         screenOptions={{headerShown: false}}
         initialRouteName={initialRouteName}>
