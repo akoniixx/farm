@@ -53,6 +53,8 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
   const [campaignImage, setCampaignImage] = useState<string>('');
+  const [showCampaign,setShowCampaign] = useState<'flex'|'none'>('flex')
+  
 
   useFocusEffect(
     React.useCallback(() => {
@@ -207,8 +209,13 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
       />
 
 <View
-        style={{ position: 'absolute', bottom: 80, right: 150 , zIndex:1 }}>
-        <Draggable>
+        style={{ display:showCampaign ,position: 'absolute', bottom: 20, right: 10 , zIndex:1 }}>
+          <View style={{width:10,marginLeft:20}}>
+            <TouchableOpacity onPress={()=>setShowCampaign('none')}>
+              <Image source={icons.x} style={{width:10,height:10}}/>
+            </TouchableOpacity>
+          </View>
+       
           <TouchableOpacity
             onPress={() => navigation.navigate('CampaignScreen')}>
             <Image
@@ -217,7 +224,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
               resizeMode="contain"
             />
           </TouchableOpacity>
-        </Draggable>
+       
       </View>
 
       <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
