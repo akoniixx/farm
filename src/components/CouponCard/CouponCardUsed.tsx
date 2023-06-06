@@ -47,7 +47,6 @@ const CouponCardUsed: React.FC<CouponCardEntities> = ({
   disabled,
   callback,
 }) => {
-  console.log(couponCode);
   return (
     <TouchableOpacity
       onPress={() => {
