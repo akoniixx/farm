@@ -45,7 +45,7 @@ export default function Content({redeemDetail}: Props) {
       isCancel: redeemDetail.redeemDetail.redeemStatus === 'CANCEL',
     };
   }, [redeemDetail.redeemDetail.redeemStatus]);
-
+  console.log('redeemDetail', JSON.stringify(redeemDetail, null, 2));
   const onCopyClipboard = async (text: string) => {
     Clipboard.setString(text);
     setIsCopy(true);
@@ -272,7 +272,7 @@ export default function Content({redeemDetail}: Props) {
                 color: colors.fontBlack,
                 lineHeight: 28,
               }}>
-              {redeemDetail.dronerRedeemHistories[0].remark}
+              {redeemDetail.redeemDetail.remark}
             </Text>
           </View>
         </View>

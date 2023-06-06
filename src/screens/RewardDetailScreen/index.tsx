@@ -92,12 +92,14 @@ export default function RewardDetailScreen({navigation, route}: Props) {
       const isDisablePlus = (counter + 1) * requirePoint > currentPoint;
 
       return {
-        isLimit: (counter || 1) * requirePoint >= currentPoint,
+        isLimit: counter * requirePoint >= currentPoint,
         isDisableMinus,
         isDisablePlus,
         disableButton,
       };
     }, [counter, currentPoint, requirePoint]);
+
+  console.log(isLimit, isDisableMinus, isDisablePlus, disableButton);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <CustomHeader

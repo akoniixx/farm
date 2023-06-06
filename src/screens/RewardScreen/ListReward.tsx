@@ -11,7 +11,7 @@ import {
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
-import {font} from '../../assets';
+import {colors, font} from '../../assets';
 import {numberWithCommas} from '../../function/utility';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
@@ -138,6 +138,7 @@ export default function ListReward({
                   body: {
                     fontFamily: font.semiBold,
                     fontSize: 18,
+                    color: colors.fontBlack,
                   },
                 }}
               />
@@ -146,12 +147,14 @@ export default function ListReward({
                   fontFamily: font.medium,
                   fontSize: 14,
                   paddingVertical: 4,
+                  color: colors.fontBlack,
                 }}>
                 {numberWithCommas((item.score || 0).toString(), true)}{' '}
                 <Text
                   style={{
                     fontFamily: font.light,
                     fontSize: 14,
+                    color: colors.fontBlack,
                   }}>
                   แต้ม
                 </Text>

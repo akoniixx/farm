@@ -39,7 +39,7 @@ export default function Counter({
         style={[
           styles.countText,
           {
-            opacity: isDisableMinus || isLimit ? 0.5 : 1,
+            opacity: isDisablePlus || isLimit ? 0.5 : 1,
           },
         ]}>
         {count}
@@ -50,7 +50,7 @@ export default function Counter({
         style={[
           styles.button,
           {
-            opacity: isDisableMinus ? 0.5 : 1,
+            opacity: isDisablePlus ? 0.5 : 1,
           },
         ]}>
         <Text style={[styles.fontButton]}>+</Text>

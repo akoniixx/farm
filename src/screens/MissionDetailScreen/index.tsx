@@ -68,10 +68,10 @@ export default function MissionDetailScreen({navigation, route}: Props) {
   }, [data.missionId, data.reward.id]);
 
   const isWaitRequest = useMemo(() => {
-    if (currentStatus && currentStatus === 'WAIT_REQUEST' && data.isComplete) {
+    if (!data.isStatusComplete && data.isComplete) {
       return true;
     }
-  }, [currentStatus, data.isComplete]);
+  }, [data.isStatusComplete, data.isComplete]);
   const isRequest = useMemo(() => {
     if (currentStatus && currentStatus !== 'WAIT_REQUEST' && data.isComplete) {
       return true;
@@ -108,7 +108,7 @@ export default function MissionDetailScreen({navigation, route}: Props) {
               disabled={data.isExpired}
               imagePath={data.reward.imagePath}
             />
-            {isRequest && dronerTransactionId && (
+            {isRequest && (
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate('RedeemDetailScreen', {
