@@ -1,3 +1,5 @@
+## Fix [v1.4.3] 2023-06-07
+- fix plotName & lat long
 ## Fix [v1.4.2] 2023-06-06
 - fix coupon detail
 ## Fix [v1.4.1] 2023-06-06

@@ -68,22 +68,14 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const debounceValue = useDebounceValue(searchValue, 800);
   const [searchLocation] = useState('');
   const [selectPlot, setSelectPlot] = useState<any>();
-  const [plotIndex, setPlotIndex] = useState(1);
-  const [value, setValue] = useState(null);
   const [plantName, setPlantName] = useState<any>();
   const [raiAmount, setraiAmount] = useState<any>();
   const [plantListSelect, setPlantListSelect] = useState(plant);
   const [landmark, setlandmark] = useState<any>('');
-  const [plotDataUI, setplotDataUI] = useState<any>([]);
-  const [plotData, setplotData] = useState<any>([]);
   const [lat, setlat] = useState<any>();
   const [long, setlong] = useState<any>();
-
   const [plotName, setplotName] = useState<any>(null);
-  const [plotNameNull, setPlotNameNull] = useState<any>(null);
-  const actionSheet = useRef<any>();
   const plantSheet = useRef<any>();
-  const deTailPlot = useRef<any>();
   const mapSheet = useRef<any>();
   const plotArea = useRef<any>();
   const [plotAreas, setPlotAreas] = useState<any>([]);
@@ -288,7 +280,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
           },
         } = result;
         const { lat, lng } = location;
-        setlat(lng);
+        setlat(lat);
         setlong(lng);
         setPosition(prev => ({
           ...prev,
@@ -356,7 +348,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   setplotName(value);
                 }}
                 clearTextOnFocus={true}
-                value={plantName}
+                defaultValue={plantName}
                 style={[styles.input, { borderColor: colors.disable }]}
                 editable={true}
                 placeholder={
