@@ -1,3 +1,7 @@
+## Feature [1.4.0] 2023-06-07
+- Add feature history point 
+- Add point toast and noti
+
 ## Feature [1.3.0] 2023-05-25
 - Add feature history point 
 - Add point toast and noti
