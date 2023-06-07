@@ -16,9 +16,11 @@ export default function CollapseItem({navigation, mission}: Props) {
   const animatedValue = useRef(new Animated.Value(1)).current;
   const rai = mission.condition[0].allRai;
 
-  const dateStart = moment().toISOString();
+  const dateStart = moment(mission.startDate).toISOString();
   const isLessThanTenDays =
     moment(mission.endDate).diff(moment(), 'days') <= 10;
+  const isLessThanDay = moment(mission.endDate).diff(moment(), 'days') <= 0;
+
   const animate = () => {
     Animated.timing(animatedValue, {
       toValue: 1,
@@ -33,6 +35,12 @@ export default function CollapseItem({navigation, mission}: Props) {
       useNativeDriver: true,
     }).start();
   };
+  const isEndMission = moment(mission.endDate).isBefore(moment());
+
+  if (isEndMission) {
+    return <View />;
+  }
+
   return (
     <>
       <Pressable
@@ -67,7 +75,9 @@ export default function CollapseItem({navigation, mission}: Props) {
                 ? colors.decreasePoint
                 : colors.fontBlack,
             }}>
-            อีก {moment(mission.endDate).diff(moment(), 'days')} วัน
+            {isLessThanDay
+              ? `อีก ${moment(mission.endDate).fromNow()} `
+              : `อีก ${moment(mission.endDate).diff(moment(), 'days')} วัน`}
           </Text>
         </View>
         <View
@@ -139,6 +149,7 @@ export default function CollapseItem({navigation, mission}: Props) {
             const current = el.allRai > el.rai ? el.rai : el.allRai;
             const isExpired = moment().isAfter(mission.endDate);
             const isStatusComplete = el.status === 'COMPLETE';
+
             return (
               <CardMission
                 isComplete={isComplete}

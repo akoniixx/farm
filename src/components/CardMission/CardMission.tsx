@@ -127,6 +127,15 @@ export default function CardMission({
                 กดรับของรางวัล
               </Text>
             )}
+            {isComplete && isStatusComplete && (
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: colors.green,
+                }}>
+                แลกของรางวัลแล้ว
+              </Text>
+            )}
           </View>
         </View>
         <View style={{flex: 0.2, alignItems: 'flex-end'}}>

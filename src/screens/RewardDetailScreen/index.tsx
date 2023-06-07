@@ -36,6 +36,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
 
   const width = useWindowDimensions().width - 32;
   const [counter, setCounter] = React.useState(1);
+
   const {currentPoint} = usePoint();
   const [isConfirm, setIsConfirm] = React.useState(false);
   const [showSuccessExchangeModal, setShowSuccessExchangeModal] =
@@ -73,6 +74,12 @@ export default function RewardDetailScreen({navigation, route}: Props) {
       getRewardById();
     }
   }, [id, currentPoint]);
+
+  const isOverRemain = useMemo(() => {
+    if (rewardDetail.remain) {
+      return counter > rewardDetail.remain;
+    }
+  }, [rewardDetail.remain, counter]);
   const onPressExchange = () => {
     navigation.navigate('RedeemAddressScreen', {
       data: {
@@ -99,7 +106,6 @@ export default function RewardDetailScreen({navigation, route}: Props) {
       };
     }, [counter, currentPoint, requirePoint]);
 
-  console.log(isLimit, isDisableMinus, isDisablePlus, disableButton);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <CustomHeader
@@ -182,6 +188,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
             </View>
             {!isDigital && (
               <Counter
+                remaining={rewardDetail.remain}
                 count={counter}
                 isDisableMinus={isDisableMinus}
                 isDisablePlus={isDisablePlus}
@@ -315,8 +322,8 @@ export default function RewardDetailScreen({navigation, route}: Props) {
       </ScrollView>
       <View style={styles({disable: disableButton}).footer}>
         <TouchableOpacity
-          disabled={disableButton}
-          style={styles({disable: disableButton}).button}
+          disabled={disableButton || isOverRemain}
+          style={styles({disable: disableButton || isOverRemain}).button}
           onPress={isDigital ? () => setIsConfirm(true) : onPressExchange}>
           <Text style={styles({disable: disableButton}).textButton}>
             แลกแต้ม
