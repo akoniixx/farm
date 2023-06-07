@@ -134,7 +134,7 @@ export default function CollapseItem({navigation, mission}: Props) {
                 }}>
                 เริ่มนับจำนวนไร่สะสมตั้งแต่{' '}
                 {momentExtend.toBuddhistYear(dateStart, 'DD MMM YYYY')} ถึง{' '}
-                {momentExtend.toBuddhistYear(mission.endDate)}
+                {momentExtend.toBuddhistYear(mission.endDate, 'DD MMM YYYY')}
               </Text>
             </View>
           ) : (
@@ -149,7 +149,6 @@ export default function CollapseItem({navigation, mission}: Props) {
             const current = el.allRai > el.rai ? el.rai : el.allRai;
             const isExpired = moment().isAfter(mission.endDate);
             const isStatusComplete = el.status === 'COMPLETE';
-
             return (
               <CardMission
                 isComplete={isComplete}

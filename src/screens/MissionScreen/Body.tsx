@@ -127,7 +127,6 @@ export default function Body({navigation}: Props) {
       contentSize.height - paddingToBottom
     );
   };
-  console.log(JSON.stringify(missionList, null, 2));
   const onLoadMore = async () => {
     try {
       if (missionList.count > missionList.mission.length) {

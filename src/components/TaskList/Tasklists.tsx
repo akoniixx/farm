@@ -10,7 +10,7 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native';
-import {numberWithCommas} from '../../function/utility';
+import {momentExtend, numberWithCommas} from '../../function/utility';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {SheetManager} from 'react-native-actions-sheet';
 import Modal from 'react-native-modal';
@@ -19,7 +19,6 @@ import ExtendModal from '../Modal/ExtendModal';
 import {mixpanel} from '../../../mixpanel';
 
 const Tasklists: React.FC<any> = (props: any) => {
-  const date = new Date(props.date);
   const d = new Date(props.date);
   d.setHours(d.getHours() - 3);
   const checkdate = new Date(d);
@@ -135,9 +134,10 @@ const Tasklists: React.FC<any> = (props: any) => {
               paddingLeft: normalize(8),
               fontSize: normalize(14),
               color: colors.fontBlack,
-            }}>{`${date.getDate()}/${date.getMonth() + 1}/${
-            date.getFullYear() + 543
-          },${date.getHours()}:${date.getMinutes()} น.`}</Text>
+            }}>{`${momentExtend.toBuddhistYear(
+            props.date,
+            'DD MMM YYYY HH:mm',
+          )} น.`}</Text>
         </View>
 
         <View

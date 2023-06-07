@@ -16,6 +16,7 @@ import {colors, font, icons} from '../../assets';
 import fonts from '../../assets/fonts';
 import {
   calTotalPrice,
+  momentExtend,
   numberWithCommas,
   openGps,
   socket,
@@ -202,9 +203,10 @@ export const NewTaskModal = (
                 paddingLeft: normalize(8),
                 fontSize: normalize(14),
                 color: colors.fontBlack,
-              }}>{`${date.getDate()}/${date.getMonth() + 1}/${
-              date.getFullYear() + 543
-            },${date.getHours()}:${date.getMinutes()} น.`}</Text>
+              }}>{`${momentExtend.toBuddhistYear(
+              date,
+              'DD MMM YYYY HH:mm',
+            )} น.`}</Text>
           </View>
         </View>
         {/* Farmer detail */}

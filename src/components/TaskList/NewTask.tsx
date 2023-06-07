@@ -3,7 +3,7 @@ import {normalize} from '@rneui/themed';
 import fonts from '../../assets/fonts';
 import {colors, image, icons} from '../../assets';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
-import {numberWithCommas} from '../../function/utility';
+import {momentExtend, numberWithCommas} from '../../function/utility';
 import {useNavigation} from '@react-navigation/native';
 import {mixpanel} from '../../../mixpanel';
 
@@ -113,9 +113,10 @@ const NewTask: React.FC<any> = (props: any) => {
               paddingLeft: normalize(8),
               fontSize: normalize(14),
               color: colors.fontBlack,
-            }}>{`${date.getDate()}/${date.getMonth() + 1}/${
-            date.getFullYear() + 543
-          },${date.getHours()}:${date.getMinutes()} น.`}</Text>
+            }}>{`${momentExtend.toBuddhistYear(
+            props.date,
+            'DD MMM YYYY HH:mm',
+          )} น.`}</Text>
         </View>
         <View
           style={{

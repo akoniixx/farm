@@ -3,7 +3,11 @@ import {normalize} from '@rneui/themed';
 import fonts from '../../assets/fonts';
 import {colors, image, icons, font} from '../../assets';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
-import {getStatusToText, numberWithCommas} from '../../function/utility';
+import {
+  getStatusToText,
+  momentExtend,
+  numberWithCommas,
+} from '../../function/utility';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {SheetManager} from 'react-native-actions-sheet';
 
@@ -92,9 +96,10 @@ const MainTasklists: React.FC<any> = (props: any) => {
               paddingLeft: normalize(8),
               fontSize: normalize(14),
               color: colors.fontBlack,
-            }}>{`${date.getDate()}/${date.getMonth() + 1}/${
-            date.getFullYear() + 543
-          },${date.getHours()}:${date.getMinutes()} น.`}</Text>
+            }}>{`${momentExtend.toBuddhistYear(
+            props.date,
+            'DD MMM YYYY HH:mm',
+          )} น.`}</Text>
         </View>
 
         {props.status === 'WAIT_REVIEW' || props.status === 'DONE' ? (
@@ -119,9 +124,10 @@ const MainTasklists: React.FC<any> = (props: any) => {
                   fontFamily: font.light,
                   fontSize: normalize(12),
                   color: 'black',
-                }}>{`${finishDate.getDate()}/${finishDate.getMonth() + 1}/${
-                finishDate.getFullYear() + 543
-              } ${finishDate.getHours()}:${finishDate.getMinutes()} น.`}</Text>
+                }}>{`${momentExtend.toBuddhistYear(
+                finishDate,
+                'DD MMM YYYY HH:mm',
+              )} น.`}</Text>
             </View>
           </View>
         ) : (
