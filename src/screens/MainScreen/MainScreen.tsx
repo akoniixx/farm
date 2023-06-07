@@ -53,8 +53,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
   const [campaignImage, setCampaignImage] = useState<string>('');
-  const [showCampaign,setShowCampaign] = useState<'flex'|'none'>('flex')
-  
+  const [showCampaign, setShowCampaign] = useState<'flex' | 'none'>('flex');
 
   useFocusEffect(
     React.useCallback(() => {
@@ -78,7 +77,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    fecthImage()
+    fecthImage();
     getProfile();
     openSocket();
     getCurrentPoint();
@@ -208,23 +207,27 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
         }}
       />
 
-<View
-        style={{ display:showCampaign ,position: 'absolute', bottom: 20, right: 10 , zIndex:1 }}>
-          <View style={{width:10,marginLeft:20}}>
-            <TouchableOpacity onPress={()=>setShowCampaign('none')}>
-              <Image source={icons.x} style={{width:10,height:10}}/>
-            </TouchableOpacity>
-          </View>
-       
-          <TouchableOpacity
-            onPress={() => navigation.navigate('CampaignScreen')}>
-            <Image
-              source={{uri: campaignImage}}
-              style={{width: 150, height: 60}}
-              resizeMode="contain"
-            />
+      <View
+        style={{
+          display: showCampaign,
+          position: 'absolute',
+          bottom: 20,
+          right: 10,
+          zIndex: 1,
+        }}>
+        <View style={{width: 10, marginLeft: 20}}>
+          <TouchableOpacity onPress={() => setShowCampaign('none')}>
+            <Image source={icons.x} style={{width: 10, height: 10}} />
           </TouchableOpacity>
-       
+        </View>
+
+        <TouchableOpacity onPress={() => navigation.navigate('CampaignScreen')}>
+          <Image
+            source={{uri: campaignImage}}
+            style={{width: 150, height: 60}}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
       </View>
 
       <View style={[stylesCentral.container, {paddingTop: insets.top}]}>

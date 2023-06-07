@@ -24,6 +24,7 @@ interface Props {
   missionName?: string;
   description?: string;
   isStatusComplete?: boolean;
+  isStatusRequest?: boolean;
 }
 export default function CardMission({
   isComplete = false,
@@ -124,7 +125,7 @@ export default function CardMission({
                   fontSize: 14,
                   color: colors.decreasePoint,
                 }}>
-                กดรับของรางวัล
+                กดแลกของรางวัล
               </Text>
             )}
             {isComplete && isStatusComplete && (

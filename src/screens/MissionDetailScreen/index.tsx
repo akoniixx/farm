@@ -72,7 +72,7 @@ export default function MissionDetailScreen({navigation, route}: Props) {
       return true;
     }
   }, [data.isStatusComplete, data.isComplete]);
-  const isRequest = useMemo(() => {
+  const isShowBox = useMemo(() => {
     if (currentStatus && currentStatus !== 'WAIT_REQUEST' && data.isComplete) {
       return true;
     }
@@ -108,7 +108,7 @@ export default function MissionDetailScreen({navigation, route}: Props) {
               disabled={data.isExpired}
               imagePath={data.reward.imagePath}
             />
-            {isRequest && (
+            {isShowBox && (
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate('RedeemDetailScreen', {

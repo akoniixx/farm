@@ -22,6 +22,7 @@ import {
   calTotalPromotion,
   dialCall,
   getStatusToText,
+  momentExtend,
   numberWithCommas,
   openGps,
 } from '../../function/utility';
@@ -375,13 +376,10 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                     paddingLeft: normalize(8),
                     fontSize: normalize(14),
                     color: colors.fontBlack,
-                  }}>{`${convertDate(data.dateAppointment).getDate()}/${
-                  convertDate(data.dateAppointment).getMonth() + 1
-                }/${
-                  convertDate(data.dateAppointment).getFullYear() + 543
-                },${convertDate(data.dateAppointment).getHours()}:${convertDate(
-                  data.dateAppointment,
-                ).getMinutes()} น.`}</Text>
+                  }}>{`${momentExtend.toBuddhistYear(
+                  dateAppointment,
+                  'DD MMM YYYY HH:mm',
+                )} น.`}</Text>
               </View>
               {data?.statusDelay !== null && (
                 <StatusExtend

@@ -28,7 +28,7 @@ const mappingStatusText = {
   CANCEL: 'ยกเลิก',
 };
 const mappingStatusColor = {
-  REQUEST: colors.orange,
+  REQUEST: '#EBBB00',
   PREPARE: colors.orange,
   USED: colors.green,
   DONE: colors.green,
@@ -226,12 +226,13 @@ export default function HistoryTab({navigation}: {navigation: any}) {
       renderItem={({item, section}) => {
         const statusRedeem = item.redeemDetail.redeemStatus;
         const isMission = item.rewardExchange !== 'SCORE';
+
         return (
           <TouchableOpacity
             onPress={() => {
               onPressItem(item.dronerTransactionsId);
             }}
-            style={styles({type: section.sectionName}).card}>
+            style={styles({type: statusRedeem}).card}>
             <FastImage
               source={{
                 uri: item.imagePath,
@@ -276,6 +277,7 @@ export default function HistoryTab({navigation}: {navigation: any}) {
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',
+                  flex: 1,
                 }}>
                 <View
                   style={{
@@ -333,15 +335,26 @@ export default function HistoryTab({navigation}: {navigation: any}) {
     />
   );
 }
-const styles = ({type}: {type: string}) =>
-  StyleSheet.create({
+const styles = ({type}: {type: string}) => {
+  const isRequest = type === 'REQUEST';
+  const isPrepare = type === 'PREPARE';
+  return StyleSheet.create({
     card: {
-      backgroundColor: type === 'progress' ? colors.lightOrange : colors.white,
+      backgroundColor: isPrepare
+        ? colors.lightOrange
+        : isRequest
+        ? '#FFF8DC'
+        : colors.white,
       padding: 16,
       borderRadius: 10,
       marginBottom: 16,
       flexDirection: 'row',
       borderWidth: 1,
-      borderColor: type === 'progress' ? colors.darkOrange : colors.disable,
+      borderColor: isPrepare
+        ? colors.darkOrange
+        : isRequest
+        ? mappingStatusColor.REQUEST
+        : colors.disable,
     },
   });
+};
