@@ -69,11 +69,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const [location, setLocation] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>();
   const debounceValue = useDebounceValue(searchValue, 800);
-  const [searchLocation] = useState('');
   const [selectPlot, setSelectPlot] = useState<any>();
-  const [count, setCount] = useState(1);
-  const [plotIndex, setPlotIndex] = useState(1);
-  const [value, setValue] = useState(null);
   const [plantName, setPlantName] = useState<any>();
   const [raiAmount, setraiAmount] = useState<any>();
   const [plantListSelect, setPlantListSelect] = useState(plant);
@@ -83,7 +79,6 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const [lat, setlat] = useState<any>();
   const [long, setlong] = useState<any>();
   const [plotName, setplotName] = useState<any>(null);
-  const actionSheet = useRef<any>();
   const plantSheet = useRef<any>();
   const deTailPlot = useRef<any>();
   const mapSheet = useRef<any>();
@@ -226,7 +221,6 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
     plantSheet.current.hide();
   };
   const selectPlotArea = (value: any) => {
-    console.log(value);
     setSelectPlot(value);
     plotArea.current.hide();
   };
@@ -282,7 +276,6 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
       console.log(e);
     }
   };
-
   const fetchLocation = async (text?: string) => {
     await QueryLocation.getSubdistrictIdCreateNewPlot().then(res => {
       setLocation(res);
