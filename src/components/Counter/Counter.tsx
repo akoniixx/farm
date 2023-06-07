@@ -7,6 +7,7 @@ interface Props {
   isLimit?: boolean;
   isDisablePlus: boolean;
   isDisableMinus: boolean;
+  remaining?: number;
 }
 
 export default function Counter({
@@ -15,6 +16,7 @@ export default function Counter({
   isLimit = false,
   isDisablePlus = false,
   isDisableMinus = false,
+  remaining,
 }: Props) {
   const handleIncrease = () => {
     setCount(count + 1);
@@ -22,6 +24,7 @@ export default function Counter({
   const handleDecrease = () => {
     setCount(count - 1);
   };
+  const checkRemaining = remaining && remaining <= count;
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -39,18 +42,18 @@ export default function Counter({
         style={[
           styles.countText,
           {
-            opacity: isDisableMinus || isLimit ? 0.5 : 1,
+            opacity: isDisablePlus || isLimit ? 0.5 : 1,
           },
         ]}>
         {count}
       </Text>
       <TouchableOpacity
-        disabled={isLimit || isDisablePlus}
+        disabled={isLimit || isDisablePlus || !!checkRemaining}
         onPress={handleIncrease}
         style={[
           styles.button,
           {
-            opacity: isDisableMinus ? 0.5 : 1,
+            opacity: isDisablePlus ? 0.5 : 1,
           },
         ]}>
         <Text style={[styles.fontButton]}>+</Text>

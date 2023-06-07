@@ -116,14 +116,14 @@ export default function HistoryTab({navigation}: {navigation: any}) {
     if (prepareData.length > 0) {
       sectionData.push({
         title: 'กำลังดำเนินการ',
-        data: prepareData,
+        data: prepareData || [],
         sectionName: 'progress',
       });
     }
     if (doneData.length > 0) {
       sectionData.push({
         title: 'เสร็จสิ้น',
-        data: doneData,
+        data: doneData || [],
         sectionName: 'complete',
       });
     }

@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
+  useWindowDimensions,
 } from 'react-native';
 import MainTaskScreen from '../../screens/MainTaskScreen/MainTaskScreen';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
@@ -42,6 +43,8 @@ const Tab = createBottomTabNavigator();
 
 const MainTapNavigator: React.FC<any> = ({navigation}) => {
   const [loading, setLoading] = useState(true);
+  const width = useWindowDimensions().width;
+  const belowMedium = width < 400;
   const [registerNoti, setRegisterNoti] = useState(false);
   const [registerfailedModalNoti, setRegisterFailedModalNoti] = useState(false);
   const [initialRouteName, setInitialRouteName] = useState('home');
@@ -49,8 +52,6 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
 
   const [campaignImage, setCampaignImage] = useState<string>('');
 
-
-  
   const ListPath = [
     {
       name: 'home',
@@ -462,7 +463,6 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
         }}
       />
 
-     
       <Tab.Navigator
         screenOptions={{headerShown: false}}
         initialRouteName={initialRouteName}>
@@ -515,7 +515,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                           style={{
                             fontFamily: fonts.medium,
                             fontSize:
-                              Platform.OS === 'android' ? 12 : normalize(14),
+                              Platform.OS === 'android'
+                                ? 12
+                                : belowMedium
+                                ? normalize(12)
+                                : normalize(14),
                             color: isFocused ? colors.orange : colors.gray,
                             marginTop: item.name === 'profile' ? 4 : 2,
                           }}>

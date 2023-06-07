@@ -1,4 +1,11 @@
-import {View, StyleSheet, ScrollView, Image, Dimensions} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Image,
+  Dimensions,
+  NativeScrollEvent,
+} from 'react-native';
 import React, {useEffect} from 'react';
 
 import CollapseItem from './CollapseItem';
@@ -8,6 +15,7 @@ import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {TabNavigatorParamList} from '../../navigations/bottomTabs/MainTapNavigator';
 import {missionDatasource} from '../../datasource/MissionDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
 
 interface Props {
   navigation: BottomTabNavigationProp<TabNavigatorParamList, 'mission'>;
@@ -89,23 +97,57 @@ export default function Body({navigation}: Props) {
     mission: [],
   });
 
-  useEffect(() => {
-    const getAllMission = async () => {
-      try {
+  useFocusEffect(
+    React.useCallback(() => {
+      const getAllMission = async () => {
+        try {
+          const dronerId = await AsyncStorage.getItem('droner_id');
+          const payload = {
+            page: 1,
+            take: 10,
+            dronerId: dronerId || '',
+          };
+          const res = await missionDatasource.getListMissions(payload);
+          setMissionList(res);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      getAllMission();
+    }, []),
+  );
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }: NativeScrollEvent) => {
+    const paddingToBottom = 20;
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
+  console.log(JSON.stringify(missionList, null, 2));
+  const onLoadMore = async () => {
+    try {
+      if (missionList.count > missionList.mission.length) {
         const dronerId = await AsyncStorage.getItem('droner_id');
         const payload = {
-          page: 1,
+          page: Math.ceil(missionList.mission.length / 10) + 1,
           take: 10,
           dronerId: dronerId || '',
         };
         const res = await missionDatasource.getListMissions(payload);
-        setMissionList(res);
-      } catch (err) {
-        console.log(err);
+        setMissionList({
+          count: res.count,
+          mission: [...missionList.mission, ...res.mission],
+        });
       }
-    };
-    getAllMission();
-  }, []);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const EmptyContent = () => {
     return (
       <View
@@ -146,7 +188,14 @@ export default function Body({navigation}: Props) {
   return (
     <View>
       {missionList.mission.length > 0 ? (
-        <ScrollView style={styles.container}>
+        <ScrollView
+          scrollEventThrottle={16}
+          style={styles.container}
+          onScroll={({nativeEvent}) => {
+            if (isCloseToBottom(nativeEvent)) {
+              onLoadMore();
+            }
+          }}>
           {missionList.mission.map((item, index) => {
             return (
               <CollapseItem

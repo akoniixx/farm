@@ -69,6 +69,8 @@ export default function CardDetail({
         <View
           style={{
             marginLeft: 16,
+            flex: 1,
+            alignSelf: 'flex-start',
           }}>
           <Text
             style={{
