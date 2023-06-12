@@ -207,10 +207,6 @@ export default function HistoryTab({navigation}: {navigation: any}) {
       keyExtractor={(item, index) => `-${index}`}
       sections={historyData || []}
       renderSectionHeader={({section: {title, data}}) => {
-        if (data.length < 1) {
-          return EmptyState();
-        }
-
         return (
           <Text
             style={{
@@ -223,6 +219,7 @@ export default function HistoryTab({navigation}: {navigation: any}) {
           </Text>
         );
       }}
+      ListEmptyComponent={EmptyState()}
       renderItem={({item, section}) => {
         const statusRedeem = item.redeemDetail.redeemStatus;
         const isMission = item.rewardExchange !== 'SCORE';

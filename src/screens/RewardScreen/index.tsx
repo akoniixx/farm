@@ -144,7 +144,7 @@ export default function RewardScreen({navigation}: any) {
               paddingHorizontal: 16,
               color: colors.fontBlack,
             }}>
-            รีวอร์ดทั้งหมด
+            ของรางวัล/รีวอร์ด
           </Text>
           <ListReward navigation={navigation} setLoading={setLoading} />
         </View>

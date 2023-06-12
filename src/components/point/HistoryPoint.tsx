@@ -55,7 +55,7 @@ export const HistoryPoint: React.FC<guruData> = ({
           <Text style={styles.textDate}>
             {/* {taskNo ? '#' : '#'} */}
             {action === 'RETURN'
-              ? props.redeemDetail.redeemNo || '-'
+              ? props?.redeemDetail?.redeemNo || '-'
               : isHaveReward
               ? props.redeemNo
               : taskNo}

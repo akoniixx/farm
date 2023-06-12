@@ -45,7 +45,6 @@ export default function Content({redeemDetail}: Props) {
       isCancel: redeemDetail.redeemDetail.redeemStatus === 'CANCEL',
     };
   }, [redeemDetail.redeemDetail.redeemStatus]);
-  console.log('redeemDetail', JSON.stringify(redeemDetail, null, 2));
   const onCopyClipboard = async (text: string) => {
     Clipboard.setString(text);
     setIsCopy(true);
