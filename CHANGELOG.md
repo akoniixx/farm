@@ -1,4 +1,4 @@
-## Fix [v1.4.ภ] 2023-06-12
+## Fix [v1.4.4] 2023-06-12
 - fix calculate price with coupon
 ## Fix [v1.4.3] 2023-06-07
 - fix plotName & lat long
