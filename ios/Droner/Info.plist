@@ -2,32 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>fb181756618165362</string>
-			</array>
-		</dict>
-	</array>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>$(PRODUCT_NAME) requires your permission to track in order to show you more relevant ads.</string>
-	<key>FacebookAppID</key>
-	<string>181756618165362</string>
-	<key>FacebookClientToken</key>
-	<string>8a0ce86f62551714f3c4463f9482fbac</string>
-	<key>FacebookDisplayName</key>
-	<string>นักบินโดรน</string>
 	<key>AdvertiserTrackingEnabled</key>
 	<string>true</string>
-	<key>FacebookAutoLogAppEventsEnabled</key>
-	<string>
- isAdvertiserTrackingEnabled</string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>comgooglemaps</string>
-	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -46,8 +22,30 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb181756618165362</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FacebookAppID</key>
+	<string>181756618165362</string>
+	<key>FacebookAutoLogAppEventsEnabled</key>
+	<string>
+ isAdvertiserTrackingEnabled</string>
+	<key>FacebookClientToken</key>
+	<string>8a0ce86f62551714f3c4463f9482fbac</string>
+	<key>FacebookDisplayName</key>
+	<string>นักบินโดรน</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>comgooglemaps</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -71,6 +69,8 @@
 	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>IconKaset Droner would like access to your photo gallery, so you can use it as your profile.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>$(PRODUCT_NAME) requires your permission to track in order to show you more relevant ads.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Anuphan-Bold.otf</string>
