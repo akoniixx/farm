@@ -439,20 +439,6 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
                     cropName: conditionCheck.cropName,
                     raiAmount: conditionCheck.raiAmount,
                   }).then(res => {
-                    console.log({
-                      id: item.id,
-                      promotionId: item.promotionId,
-                      couponCode:
-                        item.promotion.promotionType === 'ONLINE'
-                          ? item.promotion.couponCode
-                          : item.offlineCode!,
-                      promotionType: item.promotion.promotionType,
-                      name: item.promotion.couponName,
-                      discountType: item.promotion.discountType,
-                      discount: res.responseData.priceCouponDiscount,
-                      netPrice: res.responseData.netPrice,
-                      err: '',
-                    })
                     setCoupon({
                       id: item.id,
                       promotionId: item.promotionId,
