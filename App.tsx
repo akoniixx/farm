@@ -7,12 +7,13 @@ import Toast from 'react-native-toast-message';
 import {SheetProvider} from 'react-native-actions-sheet';
 import './src/sheet/Sheets';
 import {toastConfig} from './src/config/toast-config';
-import {BackHandler} from 'react-native';
+import {Alert, BackHandler, Linking} from 'react-native';
 import buddhaEra from 'dayjs/plugin/buddhistEra';
 import dayjs from 'dayjs';
-import {AuthProvider, useAuth} from './src/contexts/AuthContext';
+import {AuthProvider} from './src/contexts/AuthContext';
 import {Settings} from 'react-native-fbsdk-next';
-
+import VersionCheck from 'react-native-version-check';
+import DeviceInfo from 'react-native-device-info';
 dayjs.extend(buddhaEra);
 import {
   firebaseInitialize,
@@ -26,6 +27,9 @@ import 'moment/locale/th';
 import './src/components/Sheet';
 import {PointProvider} from './src/contexts/PointContext';
 import moment from 'moment';
+import RNExitApp from 'react-native-kill-app';
+
+import packageJson from './package.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 moment.updateLocale('th', {
   relativeTime: {
@@ -43,7 +47,7 @@ const ActionContextState = {
 };
 
 const ActionContext = createContext<ActionContextType>(ActionContextState);
-
+const latestVersion = packageJson.version;
 const App = () => {
   const [actiontaskId, setActiontaskId] = useState<string | null>('');
   const requestTracking = async () => {
@@ -59,7 +63,40 @@ const App = () => {
       Settings.setAdvertiserTrackingEnabled(false);
     }
   };
+  const checkVersion = async () => {
+    const isIOS = Platform.OS === 'ios';
+    const currentVersion = VersionCheck.getCurrentVersion();
 
+    const needUpdate = await VersionCheck.needUpdate({
+      currentVersion,
+      latestVersion,
+    });
+    const packageName = DeviceInfo.getBundleId();
+    const storeUrl = await VersionCheck.getAppStoreUrl({
+      appID: '6443516628',
+      appName: 'เรียกโดรน - ไอคอนเกษตร',
+    });
+
+    const playStoreUrl = await VersionCheck.getPlayStoreUrl({
+      packageName: 'com.iconkaset.droner',
+    });
+
+    if (needUpdate.isNeeded) {
+      Alert.alert('มีการอัพเดทใหม่', undefined, [
+        {
+          text: 'อัพเดท',
+          onPress: () => {
+            if (isIOS) {
+              Linking.openURL(storeUrl);
+            } else {
+              Linking.openURL(playStoreUrl);
+            }
+            RNExitApp.exitApp();
+          },
+        },
+      ]);
+    }
+  };
   useEffect(() => {
     mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
@@ -77,6 +114,7 @@ const App = () => {
     checkPermission();
     requestTracking();
     getToken();
+    checkVersion();
   }, []);
 
   const checkPermission = () => {

@@ -81,6 +81,8 @@ export default function ListReward({
     setRefreshing(true);
     await getFirstListReward().finally(() => setRefreshing(false));
   }, [getFirstListReward]);
+
+  console.log('listReward.data', JSON.stringify(listReward.data, null, 2));
   const loadMore = async () => {
     if (listReward.data.length >= listReward.count) {
       return;
