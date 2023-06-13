@@ -1,6 +1,6 @@
 {
   "name": "droner",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -43,6 +43,7 @@
     "react-native-color-matrix-image-filters": "^6.0.3",
     "react-native-confirmation-code-field": "^7.3.0",
     "react-native-dashed-line": "^1.1.0",
+    "react-native-device-info": "^10.6.0",
     "react-native-document-picker": "^8.1.1",
     "react-native-draggable": "^3.3.0",
     "react-native-dropdown-picker": "^5.4.2",
@@ -74,6 +75,7 @@
     "react-native-toast-message": "^2.1.5",
     "react-native-tracking-transparency": "^0.1.2",
     "react-native-vector-icons": "^9.2.0",
+    "react-native-version-check": "^3.4.7",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "socket.io-client": "^4.5.2",
     "yarn": "^1.22.19",

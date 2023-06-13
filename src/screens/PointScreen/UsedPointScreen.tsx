@@ -76,7 +76,23 @@ const UsedPointScreen: React.FC<any> = ({navigation, route}) => {
             }
             onEndReached={loadMoreData}
             keyExtractor={(item, index) => index.toString()}
-            ListFooterComponent={<View style={{height: normalize(450)}} />}
+            ListFooterComponent={
+              <View
+                style={{
+                  alignSelf: 'center',
+                  paddingVertical: normalize(150),
+                  height: '100%',
+                }}>
+                <Image
+                  source={image.pointEmpty}
+                  style={{width: normalize(130), height: normalize(120)}}
+                />
+                <View style={{top: normalize(20)}}>
+                  <Text style={styles.textEmpty}>ไม่มีคะแนนที่ได้รับ</Text>
+                  <Text style={styles.textEmpty}>และการที่ใช้คะแนน</Text>
+                </View>
+              </View>
+            }
             data={dataAllPoint}
             renderItem={({item, index}) => (
               <HistoryPoint

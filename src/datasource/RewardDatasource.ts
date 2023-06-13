@@ -41,7 +41,7 @@ const getListRewards = async ({page, take}: RewardPayload) => {
         take: take,
         status: 'ACTIVE',
         rewardExchange: 'SCORE',
-        rewardType: 'PHYSICAL',
+        // rewardType: 'PHYSICAL',
       },
     })
     .then(res => {
