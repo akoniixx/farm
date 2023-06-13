@@ -30,7 +30,7 @@ import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { useAuth } from '../../contexts/AuthContext';
 import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import { mixpanel } from '../../../mixpanel';
+import { mixpanel, mixpanel_token } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DronerSugg from '../../components/Carousel/DronerCarousel';
@@ -48,6 +48,7 @@ import { CardGuruKaset } from '../../components/Carousel/GuruKaset';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { historyPoint } from '../../datasource/HistoryPointDatasource';
 import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
+import axios from 'axios';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -153,6 +154,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       getProfileAuth();
       ProfileDatasource.getProfile(farmer_id!)
         .then(async res => {
+          await sendProfilesToMixpanel(res)
           await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
           dispatch({
             type: 'InitProfile',
@@ -277,6 +279,25 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     };
     getPointFarmer();
   });
+
+  const sendProfilesToMixpanel = async(profiles:any) => {
+    const options = {
+      method: 'POST',
+      headers: {accept: 'text/plain', 'content-type': 'application/json'},
+      body: JSON.stringify([
+        {
+          $token: mixpanel_token,
+          $distinct_id: await mixpanel.getDistinctId(),
+          $set: profiles
+        }
+      ])
+    };
+    
+    fetch('https://api.mixpanel.com/engage#profile-set', options)
+      .then(response => response.json())
+      .then(response => console.log(response))
+      .catch(err => console.error(err));
+}
 
   return (
     <View
@@ -705,6 +726,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     </Text>
                     <TouchableOpacity
                       onPress={() => {
+                        mixpanel.track('Tab to all guru list ');
                         navigation.navigate('AllGuruScreen');
                       }}>
                       <Text
