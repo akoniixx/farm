@@ -63,40 +63,40 @@ const App = () => {
       Settings.setAdvertiserTrackingEnabled(false);
     }
   };
-  const checkVersion = async () => {
-    const isIOS = Platform.OS === 'ios';
-    const currentVersion = VersionCheck.getCurrentVersion();
+  // const checkVersion = async () => {
+  //   const isIOS = Platform.OS === 'ios';
+  //   const currentVersion = VersionCheck.getCurrentVersion();
 
-    const needUpdate = await VersionCheck.needUpdate({
-      currentVersion,
-      latestVersion,
-    });
-    const packageName = DeviceInfo.getBundleId();
-    const storeUrl = await VersionCheck.getAppStoreUrl({
-      appID: '6443516628',
-      appName: 'นักบินโดรน - ไอคอนเกษตร',
-    });
+  //   const needUpdate = await VersionCheck.needUpdate({
+  //     currentVersion,
+  //     latestVersion,
+  //   });
+  //   const packageName = DeviceInfo.getBundleId();
+  //   const storeUrl = await VersionCheck.getAppStoreUrl({
+  //     appID: '6443516628',
+  //     appName: 'นักบินโดรน - ไอคอนเกษตร',
+  //   });
 
-    const playStoreUrl = await VersionCheck.getPlayStoreUrl({
-      packageName: 'com.iconkaset.farmer',
-    });
+  //   const playStoreUrl = await VersionCheck.getPlayStoreUrl({
+  //     packageName: 'com.iconkaset.farmer',
+  //   });
 
-    if (needUpdate.isNeeded) {
-      Alert.alert('มีการอัพเดทใหม่', undefined, [
-        {
-          text: 'อัพเดท',
-          onPress: () => {
-            if (isIOS) {
-              Linking.openURL(storeUrl);
-            } else {
-              Linking.openURL(playStoreUrl);
-            }
-            RNExitApp.exitApp();
-          },
-        },
-      ]);
-    }
-  };
+  //   if (needUpdate.isNeeded) {
+  //     Alert.alert('มีการอัพเดทใหม่', undefined, [
+  //       {
+  //         text: 'อัพเดท',
+  //         onPress: () => {
+  //           if (isIOS) {
+  //             Linking.openURL(storeUrl);
+  //           } else {
+  //             Linking.openURL(playStoreUrl);
+  //           }
+  //           RNExitApp.exitApp();
+  //         },
+  //       },
+  //     ]);
+  //   }
+  // };
   useEffect(() => {
     mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
@@ -114,7 +114,7 @@ const App = () => {
     checkPermission();
     requestTracking();
     getToken();
-    checkVersion();
+    // checkVersion();
   }, []);
 
   const checkPermission = () => {

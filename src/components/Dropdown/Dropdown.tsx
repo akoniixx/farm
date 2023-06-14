@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Platform} from 'react-native';
 import React from 'react';
 import {colors, font} from '../../assets';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -29,7 +29,7 @@ export default function Dropdown({onChange, placeholder, items, value}: Props) {
         fontSize: 16,
       }}
       zIndex={3000}
-      zIndexInverse={1000}
+      zIndexInverse={3000}
       style={{
         borderWidth: 1,
         borderColor: colors.grey3,
@@ -69,11 +69,23 @@ export default function Dropdown({onChange, placeholder, items, value}: Props) {
       setOpen={setOpen}
       setValue={onChange}
       dropDownDirection="BOTTOM"
-      dropDownContainerStyle={{
-        borderColor: colors.disable,
-        zIndex: 3001,
-        backgroundColor: colors.white,
-      }}
+      dropDownContainerStyle={
+        Platform.OS === 'ios'
+          ? {
+              borderColor: colors.disable,
+              zIndex: 3001,
+
+              backgroundColor: colors.white,
+            }
+          : {
+              position: 'relative',
+              top: 0,
+              borderColor: colors.disable,
+              zIndex: 3001,
+
+              backgroundColor: colors.white,
+            }
+      }
     />
   );
 }
