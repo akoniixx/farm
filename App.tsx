@@ -74,11 +74,11 @@ const App = () => {
     const packageName = DeviceInfo.getBundleId();
     const storeUrl = await VersionCheck.getAppStoreUrl({
       appID: '6443516628',
-      appName: 'เรียกโดรน - ไอคอนเกษตร',
+      appName: 'นักบินโดรน - ไอคอนเกษตร',
     });
 
     const playStoreUrl = await VersionCheck.getPlayStoreUrl({
-      packageName: 'com.iconkaset.droner',
+      packageName: 'com.iconkaset.farmer',
     });
 
     if (needUpdate.isNeeded) {

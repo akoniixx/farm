@@ -25,6 +25,8 @@ interface Prop {
 
 const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const dronerStatus = props.dronerStatus;
+
+  const [error, setError] = useState<string>('');
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [checkResIsComplete, setCheckResIsComplete] = useState<boolean>(false);
@@ -108,9 +110,18 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     const result = await ImagePicker.launchImageLibrary({
       mediaType: 'photo',
     });
+
     if (!result.didCancel) {
+      const fileSize = result?.assets?.[0]?.fileSize || 0;
+      const isFileMoreThan5MB = fileSize > 5 * 1024 * 1024;
+      if (isFileMoreThan5MB) {
+        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 5 MB');
+        return false;
+      }
+
       setFinishImg(result);
       setImgUploaded(true);
+      setError('');
     }
   }, [finishImg]);
   const onFinishTask = () => {
@@ -228,6 +239,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                 toggleModalReview={toggleModalReview}
                 setComment={setComment}
                 comment={comment}
+                error={error}
                 toggleModalSuccess={toggleModalSuccess}
                 setToggleModalSuccess={setToggleModalSuccess}
                 onFinishTask={onFinishTask}
