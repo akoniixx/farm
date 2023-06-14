@@ -16,13 +16,13 @@ const PointContext = React.createContext<Context>({
 
 export const PointProvider: React.FC<Props> = ({children}) => {
   const [currentPoint, setCurrentPoint] = React.useState<number>(0);
-  console.log(currentPoint);
+
   const getCurrentPoint = async () => {
     try {
-      // const droner_id: any = await AsyncStorage.getItem('droner_id');
-      // const result = await historyPoint.getPoint(droner_id);
-
-      setCurrentPoint(100000);
+      const droner_id: any = await AsyncStorage.getItem('droner_id');
+      const result = await historyPoint.getPoint(droner_id);
+      // console.log('result', JSON.stringify(result, null, 2));
+      setCurrentPoint(result.balance);
     } catch (error) {
       console.log(error);
     }
