@@ -22,7 +22,7 @@ export interface PayloadCal {
 export class PlotDatasource {
   static async getPlotlist(farmer_id: string): Promise<any> {
     return httpClient
-      .get(BASE_URL + `/farmer-plot?farmerId=${farmer_id}`)
+      .get(BASE_URL + `/farmer-plot?farmerId=${farmer_id}&take=100`)
       .then(response => {
         return response.data;
       })

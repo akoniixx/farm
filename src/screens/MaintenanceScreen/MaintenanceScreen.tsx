@@ -1,4 +1,4 @@
-import { View, Image, SafeAreaView, Platform, BackHandler } from 'react-native';
+import { View, Image, SafeAreaView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { stylesCentral } from '../../styles/StylesCentral';

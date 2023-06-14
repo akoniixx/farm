@@ -8,8 +8,9 @@ import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-toast-message';
 import { SheetProvider } from 'react-native-actions-sheet';
 import { toastConfig } from './src/config/toast-config';
-import { BackHandler, Platform } from 'react-native';
+import { Alert, BackHandler, Linking, Platform } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
+import VersionCheck from 'react-native-version-check';
 import 'moment/locale/th';
 import {
   firebaseInitialize,
@@ -23,7 +24,44 @@ import { AuthProvider } from './src/contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from './mixpanel';
 import { RecoilRoot } from 'recoil';
+import RNExitApp from 'react-native-kill-app';
+import packageJson from './package.json';
 const App = () => {
+  const latestVersion = packageJson.version;
+  const checkVersion = async () => {
+    const isIOS = Platform.OS === 'ios';
+    const currentVersion = VersionCheck.getCurrentVersion();
+
+    const needUpdate = await VersionCheck.needUpdate({
+      currentVersion,
+      latestVersion,
+    });
+
+    const storeUrl = await VersionCheck.getAppStoreUrl({
+      appID: '1668317592',
+      appName: 'เรียกโดรน - ไอคอนเกษตร',
+    });
+
+    const playStoreUrl = await VersionCheck.getPlayStoreUrl({
+      packageName: 'com.iconkaset.droner',
+    });
+
+    if (needUpdate.isNeeded) {
+      Alert.alert('มีการอัพเดทใหม่', undefined, [
+        {
+          text: 'อัพเดท',
+          onPress: () => {
+            if (isIOS) {
+              Linking.openURL(storeUrl);
+            } else {
+              Linking.openURL(playStoreUrl);
+            }
+            RNExitApp.exitApp();
+          },
+        },
+      ]);
+    }
+  };
   useEffect(() => {
     mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
