@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   SafeAreaView,
   TouchableOpacity,
   Image,
@@ -17,6 +16,8 @@ import {momentExtend} from '../../function/utility';
 import moment from 'moment';
 import {SheetManager} from 'react-native-actions-sheet';
 import {BASE_URL, httpClient} from '../../config/develop-config';
+import Text from '../../components/Text';
+import {useAuth} from '../../contexts/AuthContext';
 
 interface Props {
   navigation: any;
@@ -30,9 +31,26 @@ interface Branch {
   nameEn: string | null;
   updatedAt: string;
 }
+
+const mappingStatusText = {
+  REQUEST: 'พร้อมใช้',
+  USED: 'ใช้แล้ว',
+  EXPIRED: 'หมดอายุ',
+  CANCEL: 'ยกเลิก',
+};
+const mappingStatusColor = {
+  REQUEST: colors.orange,
+  USED: colors.green,
+  EXPIRED: colors.grayPlaceholder,
+  CANCEL: colors.decreasePoint,
+};
 export default function RedeemScreen({navigation, route}: Props) {
-  const {data} = route.params;
+  const {data, imagePath} = route.params;
   const [selectedArea, setSelectedArea] = React.useState<any>(null);
+
+  const {
+    state: {user},
+  } = useAuth();
   const [dataBranch, setDataBranch] = React.useState<Branch[]>([]);
   useEffect(() => {
     const getBranch = async () => {
@@ -83,8 +101,9 @@ export default function RedeemScreen({navigation, route}: Props) {
             }}>
             <View style={styles.card}>
               <Image
-                resizeMode="contain"
-                source={data.image}
+                source={{
+                  uri: imagePath,
+                }}
                 style={{
                   width: 72,
                   height: 72,
@@ -96,22 +115,23 @@ export default function RedeemScreen({navigation, route}: Props) {
                 style={{
                   flex: 0.8,
                   flexDirection: 'row',
-                  height: 72,
                   paddingLeft: 16,
                   alignItems: 'center',
                   justifyContent: 'space-between',
+                  minHeight: 72,
                 }}>
                 <View
                   style={{
                     flex: 0.8,
-                    height: 72,
+                    minHeight: 72,
                   }}>
                   <Text
+                    numberOfLines={3}
                     style={{
                       fontSize: 16,
                       fontFamily: font.bold,
                     }}>
-                    ส่วนลด ศูนย์ ICPX มูลค่า 1,500 บาท
+                    {data.dronerTransaction.rewardName}
                   </Text>
                   <Text
                     style={{
@@ -123,9 +143,18 @@ export default function RedeemScreen({navigation, route}: Props) {
                     <Text
                       style={{
                         fontFamily: font.bold,
-                        color: colors.orange,
+                        color:
+                          mappingStatusColor[
+                            data.dronerTransaction.redeemDetail
+                              .redeemStatus as keyof typeof mappingStatusColor
+                          ],
                       }}>
-                      พร้อมใช้
+                      {
+                        mappingStatusText[
+                          data.dronerTransaction.redeemDetail
+                            .redeemStatus as keyof typeof mappingStatusText
+                        ]
+                      }
                     </Text>
                   </Text>
                 </View>
@@ -167,11 +196,12 @@ export default function RedeemScreen({navigation, route}: Props) {
                     fontSize: 14,
                     fontFamily: font.light,
                   }}>
-                  หมดอายุการใช้{' '}
+                  {/* หมดอายุการใช้{' '}
                   {momentExtend.toBuddhistYear(
                     moment().add(1, 'days').toISOString(),
                     'DD MMM YYYY ',
-                  )}
+                  )} */}
+                  รอ api
                 </Text>
               </View>
 
@@ -180,25 +210,83 @@ export default function RedeemScreen({navigation, route}: Props) {
                   fontSize: 32,
                   fontFamily: font.bold,
                 }}>
-                9KNQKFDKH1
+                {data.dronerTransaction.redeemDetail.redeemCode}
               </Text>
               <View
                 style={{
-                  height: 42,
                   width: '100%',
-                  justifyContent: 'center',
-                  backgroundColor: colors.orangeSoft,
-                  borderBottomRightRadius: 10,
-                  borderBottomLeftRadius: 10,
-                  paddingHorizontal: 16,
                 }}>
-                <Text
+                <View
                   style={{
-                    fontFamily: font.medium,
-                    color: colors.darkOrange2,
+                    padding: 10,
                   }}>
-                  รหัสการทำรายการ RD00000001
-                </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                    }}>
+                    แลกโดย
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                      }}>
+                      {user?.firstname} {user?.lastname}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                      }}>
+                      แลกเมื่อ
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                      }}>
+                      {user?.telephoneNo}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                      }}>
+                      {momentExtend.toBuddhistYear(
+                        data.createAt,
+                        'DD MMM YYYY HH:mm',
+                      )}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    height: 42,
+                    width: '100%',
+                    justifyContent: 'center',
+                    backgroundColor: colors.orangeSoft,
+                    borderBottomRightRadius: 10,
+                    borderBottomLeftRadius: 10,
+                    paddingHorizontal: 16,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.medium,
+                      color: colors.darkOrange2,
+                      fontSize: 14,
+                    }}>
+                    รหัสการทำรายการ {data.dronerTransaction.redeemNo}
+                  </Text>
+                </View>
               </View>
             </View>
             <View style={styles.warningBox}>
@@ -266,6 +354,7 @@ const styles = StyleSheet.create({
     borderColor: colors.grey3,
     borderRadius: 10,
     flexDirection: 'row',
+    minHeight: 72,
   },
   cardContent: {
     borderWidth: 1,

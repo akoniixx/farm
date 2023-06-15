@@ -13,7 +13,7 @@ import dayjs from 'dayjs';
 import {AuthProvider} from './src/contexts/AuthContext';
 import {Settings} from 'react-native-fbsdk-next';
 import VersionCheck from 'react-native-version-check';
-import DeviceInfo from 'react-native-device-info';
+import storeVersion from 'react-native-store-version';
 dayjs.extend(buddhaEra);
 import {
   firebaseInitialize,
@@ -29,7 +29,6 @@ import {PointProvider} from './src/contexts/PointContext';
 import moment from 'moment';
 import RNExitApp from 'react-native-kill-app';
 
-import packageJson from './package.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 moment.updateLocale('th', {
   relativeTime: {
@@ -47,7 +46,7 @@ const ActionContextState = {
 };
 
 const ActionContext = createContext<ActionContextType>(ActionContextState);
-const latestVersion = packageJson.version;
+
 const App = () => {
   const [actiontaskId, setActiontaskId] = useState<string | null>('');
   const requestTracking = async () => {
@@ -63,40 +62,46 @@ const App = () => {
       Settings.setAdvertiserTrackingEnabled(false);
     }
   };
-  // const checkVersion = async () => {
-  //   const isIOS = Platform.OS === 'ios';
-  //   const currentVersion = VersionCheck.getCurrentVersion();
+  const checkVersion = async () => {
+    const isIOS = Platform.OS === 'ios';
+    const currentVersion = VersionCheck.getCurrentVersion();
+    const storeUrl = await VersionCheck.getAppStoreUrl({
+      appID: '6443516628',
+      appName: 'นักบินโดรน - ไอคอนเกษตร',
+    });
 
-  //   const needUpdate = await VersionCheck.needUpdate({
-  //     currentVersion,
-  //     latestVersion,
-  //   });
-  //   const packageName = DeviceInfo.getBundleId();
-  //   const storeUrl = await VersionCheck.getAppStoreUrl({
-  //     appID: '6443516628',
-  //     appName: 'นักบินโดรน - ไอคอนเกษตร',
-  //   });
+    const playStoreUrl = await VersionCheck.getPlayStoreUrl({
+      packageName: 'com.iconkaset.farmer',
+    });
 
-  //   const playStoreUrl = await VersionCheck.getPlayStoreUrl({
-  //     packageName: 'com.iconkaset.farmer',
-  //   });
+    const {remote} = await storeVersion({
+      version: currentVersion,
+      androidStoreURL: playStoreUrl,
+      iosStoreURL: storeUrl,
+      country: 'TH',
+    });
 
-  //   if (needUpdate.isNeeded) {
-  //     Alert.alert('มีการอัพเดทใหม่', undefined, [
-  //       {
-  //         text: 'อัพเดท',
-  //         onPress: () => {
-  //           if (isIOS) {
-  //             Linking.openURL(storeUrl);
-  //           } else {
-  //             Linking.openURL(playStoreUrl);
-  //           }
-  //           RNExitApp.exitApp();
-  //         },
-  //       },
-  //     ]);
-  //   }
-  // };
+    const needUpdate = await VersionCheck.needUpdate({
+      currentVersion,
+      latestVersion: remote,
+    });
+
+    if (needUpdate.isNeeded) {
+      Alert.alert('มีการอัพเดทใหม่', undefined, [
+        {
+          text: 'อัพเดท',
+          onPress: () => {
+            if (isIOS) {
+              Linking.openURL(storeUrl);
+            } else {
+              Linking.openURL(playStoreUrl);
+            }
+            RNExitApp.exitApp();
+          },
+        },
+      ]);
+    }
+  };
   useEffect(() => {
     mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
@@ -114,7 +119,7 @@ const App = () => {
     checkPermission();
     requestTracking();
     getToken();
-    // checkVersion();
+    checkVersion();
   }, []);
 
   const checkPermission = () => {

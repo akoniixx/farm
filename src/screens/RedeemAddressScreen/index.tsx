@@ -28,6 +28,7 @@ export interface RewardParams {
   id: string;
   rewardName: string;
   imagePath: string | null;
+
   rewardType: string;
   rewardExchange: string;
   rewardNo: string;
