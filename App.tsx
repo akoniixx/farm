@@ -25,27 +25,30 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from './mixpanel';
 import { RecoilRoot } from 'recoil';
 import RNExitApp from 'react-native-kill-app';
-import packageJson from './package.json';
+import storeVersion from 'react-native-store-version';
 const App = () => {
-  const latestVersion = packageJson.version;
   const checkVersion = async () => {
     const isIOS = Platform.OS === 'ios';
     const currentVersion = VersionCheck.getCurrentVersion();
 
-    const needUpdate = await VersionCheck.needUpdate({
-      currentVersion,
-      latestVersion,
-    });
-
     const storeUrl = await VersionCheck.getAppStoreUrl({
       appID: '1668317592',
-      appName: 'เรียกโดรน - ไอคอนเกษตร',
     });
 
     const playStoreUrl = await VersionCheck.getPlayStoreUrl({
       packageName: 'com.iconkaset.droner',
     });
+    const { remote } = await storeVersion({
+      version: currentVersion,
+      androidStoreURL: playStoreUrl,
+      iosStoreURL: storeUrl,
+      country: 'TH',
+    });
 
+    const needUpdate = await VersionCheck.needUpdate({
+      currentVersion,
+      latestVersion: remote,
+    });
     if (needUpdate.isNeeded) {
       Alert.alert('มีการอัพเดทใหม่', undefined, [
         {
@@ -76,6 +79,9 @@ const App = () => {
     }
     requestUserPermission();
     getToken();
+    checkVersion();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getToken = async () => {

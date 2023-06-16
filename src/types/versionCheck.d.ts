@@ -12,4 +12,11 @@ declare module 'react-native-version-check' {
   }>;
   export function getAppStoreUrl({}: any): Promise<string>;
   export function getPlayStoreUrl({}: any): Promise<string>;
+  export function getLatestVersion({
+    provider,
+  }: {
+    provider: string;
+  }): Promise<string>;
+  export function getPackageName(): Promise<string>;
+  export function getCountry(): Promise<string>;
 }
