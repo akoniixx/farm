@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   FlatList,
   StyleSheet,
   TouchableOpacity,
@@ -15,6 +14,7 @@ import {colors, font} from '../../assets';
 import {numberWithCommas} from '../../function/utility';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
+import Text from '../../components/Text';
 
 export interface RewardListType {
   id: string;

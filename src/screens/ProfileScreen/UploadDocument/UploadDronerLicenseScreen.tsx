@@ -4,7 +4,6 @@ import {
   Modal,
   SafeAreaView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -16,6 +15,7 @@ import {MainButton} from '../../../components/Button/MainButton';
 import {ProfileDatasource} from '../../../datasource/ProfileDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import Text from '../../../components/Text';
 
 const UploadDronerLicenseScreen: React.FC<any> = ({navigation, route}) => {
   const dronerLicense = route.params.dronerLicense;

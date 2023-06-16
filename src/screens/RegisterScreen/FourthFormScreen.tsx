@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   SafeAreaView,
   StyleSheet,
   Dimensions,
@@ -15,6 +14,7 @@ import {colors, font, image} from '../../assets';
 import {MainButton} from '../../components/Button/MainButton';
 import {ProgressBar} from '../../components/ProgressBar';
 import {Register} from '../../datasource/AuthDatasource';
+import Text from '../../components/Text';
 
 const width = Dimensions.get('window').width;
 

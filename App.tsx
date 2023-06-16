@@ -67,7 +67,6 @@ const App = () => {
     const currentVersion = VersionCheck.getCurrentVersion();
     const storeUrl = await VersionCheck.getAppStoreUrl({
       appID: '6443516628',
-      appName: 'นักบินโดรน - ไอคอนเกษตร',
     });
 
     const playStoreUrl = await VersionCheck.getPlayStoreUrl({

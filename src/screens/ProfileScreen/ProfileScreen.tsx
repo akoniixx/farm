@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   Image,
   ScrollView,
@@ -39,6 +38,7 @@ import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import Geolocation from 'react-native-geolocation-service';
+import Text from '../../components/Text';
 
 const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
