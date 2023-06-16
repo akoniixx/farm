@@ -2,6 +2,7 @@ import {View, Text} from 'react-native';
 import React from 'react';
 import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';
+import {colors} from '../../assets';
 interface Props {
   navigation: any;
   route: RouteProp<StackParamList, 'RedeemDetailDigitalScreen'>;

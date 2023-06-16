@@ -89,6 +89,7 @@ export type StackParamList = {
   RedeemScreen: {
     data: DigitalRewardType;
     imagePath: string;
+    expiredUsedDate: string;
   };
   CampaignScreen: any;
   RedeemDetailScreen: {

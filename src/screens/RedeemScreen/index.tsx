@@ -11,13 +11,10 @@ import CustomHeader from '../../components/CustomHeader';
 import {colors, font, icons} from '../../assets';
 import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';
-import DashedLine from 'react-native-dashed-line';
-import {momentExtend} from '../../function/utility';
-import moment from 'moment';
 import {SheetManager} from 'react-native-actions-sheet';
 import {BASE_URL, httpClient} from '../../config/develop-config';
 import Text from '../../components/Text';
-import {useAuth} from '../../contexts/AuthContext';
+import CardRedeemDigital from '../../components/CardRedeemDigital/CardRedeemDigital';
 
 interface Props {
   navigation: any;
@@ -32,25 +29,10 @@ interface Branch {
   updatedAt: string;
 }
 
-const mappingStatusText = {
-  REQUEST: 'พร้อมใช้',
-  USED: 'ใช้แล้ว',
-  EXPIRED: 'หมดอายุ',
-  CANCEL: 'ยกเลิก',
-};
-const mappingStatusColor = {
-  REQUEST: colors.orange,
-  USED: colors.green,
-  EXPIRED: colors.grayPlaceholder,
-  CANCEL: colors.decreasePoint,
-};
 export default function RedeemScreen({navigation, route}: Props) {
-  const {data, imagePath} = route.params;
+  const {data, imagePath, expiredUsedDate} = route.params;
   const [selectedArea, setSelectedArea] = React.useState<any>(null);
 
-  const {
-    state: {user},
-  } = useAuth();
   const [dataBranch, setDataBranch] = React.useState<Branch[]>([]);
   useEffect(() => {
     const getBranch = async () => {
@@ -99,196 +81,11 @@ export default function RedeemScreen({navigation, route}: Props) {
             style={{
               flex: 1,
             }}>
-            <View style={styles.card}>
-              <Image
-                source={{
-                  uri: imagePath,
-                }}
-                style={{
-                  width: 72,
-                  height: 72,
-                  borderRadius: 10,
-                  flex: 0.2,
-                }}
-              />
-              <View
-                style={{
-                  flex: 0.8,
-                  flexDirection: 'row',
-                  paddingLeft: 16,
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  minHeight: 72,
-                }}>
-                <View
-                  style={{
-                    flex: 0.8,
-                    minHeight: 72,
-                  }}>
-                  <Text
-                    numberOfLines={3}
-                    style={{
-                      fontSize: 16,
-                      fontFamily: font.bold,
-                    }}>
-                    {data.dronerTransaction.rewardName}
-                  </Text>
-                  <Text
-                    style={{
-                      marginTop: 8,
-                      fontSize: 16,
-                      fontFamily: font.light,
-                    }}>
-                    สถานะ :{' '}
-                    <Text
-                      style={{
-                        fontFamily: font.bold,
-                        color:
-                          mappingStatusColor[
-                            data.dronerTransaction.redeemDetail
-                              .redeemStatus as keyof typeof mappingStatusColor
-                          ],
-                      }}>
-                      {
-                        mappingStatusText[
-                          data.dronerTransaction.redeemDetail
-                            .redeemStatus as keyof typeof mappingStatusText
-                        ]
-                      }
-                    </Text>
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  onPress={() => console.log('test')}
-                  style={{
-                    flex: 0.2,
-                    alignItems: 'flex-end',
-                  }}>
-                  <Image
-                    source={icons.arrowRight}
-                    style={{
-                      width: 32,
-                      height: 32,
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <DashedLine
-              dashLength={14}
-              dashGap={4}
-              dashColor={colors.grey3}
-              style={{
-                marginHorizontal: 10,
-              }}
+            <CardRedeemDigital
+              imagePath={imagePath}
+              data={data}
+              expiredUsedDate={expiredUsedDate}
             />
-            <View style={styles.cardContent}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  width: '100%',
-                  justifyContent: 'flex-start',
-                  paddingVertical: 8,
-                  paddingHorizontal: 16,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontFamily: font.light,
-                  }}>
-                  {/* หมดอายุการใช้{' '}
-                  {momentExtend.toBuddhistYear(
-                    moment().add(1, 'days').toISOString(),
-                    'DD MMM YYYY ',
-                  )} */}
-                  รอ api
-                </Text>
-              </View>
-
-              <Text
-                style={{
-                  fontSize: 32,
-                  fontFamily: font.bold,
-                }}>
-                {data.dronerTransaction.redeemDetail.redeemCode}
-              </Text>
-              <View
-                style={{
-                  width: '100%',
-                }}>
-                <View
-                  style={{
-                    padding: 10,
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                    }}>
-                    แลกโดย
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                      }}>
-                      {user?.firstname} {user?.lastname}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                      }}>
-                      แลกเมื่อ
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                      }}>
-                      {user?.telephoneNo}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                      }}>
-                      {momentExtend.toBuddhistYear(
-                        data.createAt,
-                        'DD MMM YYYY HH:mm',
-                      )}
-                    </Text>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    height: 42,
-                    width: '100%',
-                    justifyContent: 'center',
-                    backgroundColor: colors.orangeSoft,
-                    borderBottomRightRadius: 10,
-                    borderBottomLeftRadius: 10,
-                    paddingHorizontal: 16,
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: font.medium,
-                      color: colors.darkOrange2,
-                      fontSize: 14,
-                    }}>
-                    รหัสการทำรายการ {data.dronerTransaction.redeemNo}
-                  </Text>
-                </View>
-              </View>
-            </View>
             <View style={styles.warningBox}>
               <Image
                 source={icons.warningDanger}

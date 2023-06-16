@@ -3,7 +3,11 @@ interface RedeemDetail {
   rewardType: string;
   rewardExchange: string;
   rewardQuantity: number;
-  redeemCode: string;
+  branch: string | null;
+  digitalReward: {
+    redeemCode: string;
+    isRedeem: boolean;
+  };
 }
 
 interface DronerRedeemHistory {

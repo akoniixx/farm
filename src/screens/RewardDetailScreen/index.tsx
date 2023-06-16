@@ -56,8 +56,8 @@ export default function RewardDetailScreen({navigation, route}: Props) {
   );
   const [cantExchange, setCantExchange] = React.useState(false);
   const isExpired =
-    rewardDetail.expiredUsedDate &&
-    moment(rewardDetail.expiredUsedDate).isAfter(moment());
+    rewardDetail.expiredExchangeDate &&
+    moment(rewardDetail.expiredExchangeDate).isAfter(moment());
   const requirePoint = useMemo(() => {
     if (!rewardDetail.score) {
       return 0;
@@ -383,6 +383,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
           navigation.navigate('RedeemScreen', {
             data: resultRedeemDigital,
             imagePath: rewardDetail.imagePath,
+            expiredUsedDate: rewardDetail.expiredUsedDate,
           });
         }}
         onPressSecondary={() => {
