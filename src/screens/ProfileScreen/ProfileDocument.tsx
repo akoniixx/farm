@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {normalize} from '@rneui/themed';
@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'react-native-image-picker';
 import {width} from '../../function/Normalize';
 import {useFocusEffect} from '@react-navigation/native';
+import Text from '../../components/Text';
 
 const ProfileDocument: React.FC<any> = ({navigation, route}) => {
   const profilestate = route.params.profile;

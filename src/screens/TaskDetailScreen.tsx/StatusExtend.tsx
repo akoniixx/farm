@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 import React from 'react';
 import fonts from '../../assets/fonts';
 import {normalize} from '../../function/Normalize';
@@ -6,6 +6,7 @@ import colors from '../../assets/colors/colors';
 import dayjs from 'dayjs';
 import icons from '../../assets/icons/icons';
 import Divider from '../../components/Divider';
+import Text from '../../components/Text';
 
 interface Props {
   status: 'WAIT_APPROVE' | 'APPROVED' | 'REJECTED' | null;

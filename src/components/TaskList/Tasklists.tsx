@@ -20,6 +20,7 @@ import {mixpanel} from '../../../mixpanel';
 
 const Tasklists: React.FC<any> = (props: any) => {
   const d = new Date(props.date);
+
   d.setHours(d.getHours() - 3);
   const checkdate = new Date(d);
   const today = new Date();
@@ -475,6 +476,21 @@ const Tasklists: React.FC<any> = (props: any) => {
               </View>
             )}
           </View>
+          {props.error && (
+            <View
+              style={{
+                marginTop: 8,
+              }}>
+              <Text
+                style={{
+                  fontFamily: font.bold,
+                  fontSize: normalize(14),
+                  color: colors.decreasePoint,
+                }}>
+                {props.error}
+              </Text>
+            </View>
+          )}
           <View
             style={{
               flexDirection: 'row',

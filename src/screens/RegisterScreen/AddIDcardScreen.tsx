@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
@@ -25,6 +24,7 @@ import {ProgressBar} from '../../components/ProgressBar';
 import Lottie from 'lottie-react-native';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {mixpanel} from '../../../mixpanel';
+import Text from '../../components/Text';
 
 const width = Dimensions.get('window').width;
 

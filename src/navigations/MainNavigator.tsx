@@ -38,6 +38,7 @@ import MissionDetailScreen from '../screens/MissionDetailScreen';
 import WinnerCampaignScreen from '../screens/CampaignScreen/WinnerCampaignScreen';
 import RulesCampaignScreen from '../screens/CampaignScreen/RulesCampaignScreen';
 import DateCampaignScreen from '../screens/CampaignScreen/DateCampaign';
+import {DigitalRewardType} from '../types/TypeRewardDigital';
 
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
@@ -86,12 +87,17 @@ export type StackParamList = {
     initialValues?: any;
   };
   RedeemScreen: {
-    data: any;
+    data: DigitalRewardType;
+    imagePath: string;
+    expiredUsedDate: string;
   };
   CampaignScreen: any;
   RedeemDetailScreen: {
     id: string;
     isFromMissionDetail: true;
+  };
+  RedeemDetailDigitalScreen: {
+    id: string;
   };
   MissionDetailScreen: {
     data: {

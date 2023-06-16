@@ -139,10 +139,24 @@ const getRewardStatus = async (payload: {
     });
 };
 
+const redeemRewardDigital = async (payload: {}) => {
+  return httpClient
+    .post(BASE_URL + '/promotion/droner-transactions/redeem-reward', {
+      ...payload,
+    })
+    .then(res => {
+      return res.data;
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+};
 export const rewardDatasource = {
   getListRewards,
   getRewardDetail,
   redeemReward,
+  redeemRewardDigital,
   getRedeemDetail,
   getHistoryRedeem,
   redeemRewardMission,

@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   SafeAreaView,
   TouchableOpacity,
   Image,
@@ -12,11 +11,10 @@ import CustomHeader from '../../components/CustomHeader';
 import {colors, font, icons} from '../../assets';
 import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';
-import DashedLine from 'react-native-dashed-line';
-import {momentExtend} from '../../function/utility';
-import moment from 'moment';
 import {SheetManager} from 'react-native-actions-sheet';
 import {BASE_URL, httpClient} from '../../config/develop-config';
+import Text from '../../components/Text';
+import CardRedeemDigital from '../../components/CardRedeemDigital/CardRedeemDigital';
 
 interface Props {
   navigation: any;
@@ -30,9 +28,11 @@ interface Branch {
   nameEn: string | null;
   updatedAt: string;
 }
+
 export default function RedeemScreen({navigation, route}: Props) {
-  const {data} = route.params;
+  const {data, imagePath, expiredUsedDate} = route.params;
   const [selectedArea, setSelectedArea] = React.useState<any>(null);
+
   const [dataBranch, setDataBranch] = React.useState<Branch[]>([]);
   useEffect(() => {
     const getBranch = async () => {
@@ -81,126 +81,11 @@ export default function RedeemScreen({navigation, route}: Props) {
             style={{
               flex: 1,
             }}>
-            <View style={styles.card}>
-              <Image
-                resizeMode="contain"
-                source={data.image}
-                style={{
-                  width: 72,
-                  height: 72,
-                  borderRadius: 10,
-                  flex: 0.2,
-                }}
-              />
-              <View
-                style={{
-                  flex: 0.8,
-                  flexDirection: 'row',
-                  height: 72,
-                  paddingLeft: 16,
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}>
-                <View
-                  style={{
-                    flex: 0.8,
-                    height: 72,
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontFamily: font.bold,
-                    }}>
-                    ส่วนลด ศูนย์ ICPX มูลค่า 1,500 บาท
-                  </Text>
-                  <Text
-                    style={{
-                      marginTop: 8,
-                      fontSize: 16,
-                      fontFamily: font.light,
-                    }}>
-                    สถานะ :{' '}
-                    <Text
-                      style={{
-                        fontFamily: font.bold,
-                        color: colors.orange,
-                      }}>
-                      พร้อมใช้
-                    </Text>
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  onPress={() => console.log('test')}
-                  style={{
-                    flex: 0.2,
-                    alignItems: 'flex-end',
-                  }}>
-                  <Image
-                    source={icons.arrowRight}
-                    style={{
-                      width: 32,
-                      height: 32,
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <DashedLine
-              dashLength={14}
-              dashGap={4}
-              dashColor={colors.grey3}
-              style={{
-                marginHorizontal: 10,
-              }}
+            <CardRedeemDigital
+              imagePath={imagePath}
+              data={data}
+              expiredUsedDate={expiredUsedDate}
             />
-            <View style={styles.cardContent}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  width: '100%',
-                  justifyContent: 'flex-start',
-                  paddingVertical: 8,
-                  paddingHorizontal: 16,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontFamily: font.light,
-                  }}>
-                  หมดอายุการใช้{' '}
-                  {momentExtend.toBuddhistYear(
-                    moment().add(1, 'days').toISOString(),
-                    'DD MMM YYYY ',
-                  )}
-                </Text>
-              </View>
-
-              <Text
-                style={{
-                  fontSize: 32,
-                  fontFamily: font.bold,
-                }}>
-                9KNQKFDKH1
-              </Text>
-              <View
-                style={{
-                  height: 42,
-                  width: '100%',
-                  justifyContent: 'center',
-                  backgroundColor: colors.orangeSoft,
-                  borderBottomRightRadius: 10,
-                  borderBottomLeftRadius: 10,
-                  paddingHorizontal: 16,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: font.medium,
-                    color: colors.darkOrange2,
-                  }}>
-                  รหัสการทำรายการ RD00000001
-                </Text>
-              </View>
-            </View>
             <View style={styles.warningBox}>
               <Image
                 source={icons.warningDanger}
@@ -266,6 +151,7 @@ const styles = StyleSheet.create({
     borderColor: colors.grey3,
     borderRadius: 10,
     flexDirection: 'row',
+    minHeight: 72,
   },
   cardContent: {
     borderWidth: 1,

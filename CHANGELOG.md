@@ -1,3 +1,9 @@
+## Feature [1.4.1] 2023-06-16
+- Force update app
+- Warning update app
+- Add feature reward Digital 
+- fix bug text transparent
+
 ## Feature [1.4.0] 2023-06-07
 - Add feature history point 
 - Add point toast and noti

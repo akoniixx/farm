@@ -97,6 +97,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     const result = await ImagePicker.launchImageLibrary({
       mediaType: 'photo',
     });
+
     if (!result.didCancel) {
       setFinishImg(result);
       setImgUploaded(true);

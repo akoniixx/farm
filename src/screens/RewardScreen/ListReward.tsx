@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   FlatList,
   StyleSheet,
   TouchableOpacity,
@@ -15,6 +14,7 @@ import {colors, font} from '../../assets';
 import {numberWithCommas} from '../../function/utility';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
+import Text from '../../components/Text';
 
 export interface RewardListType {
   id: string;
@@ -82,7 +82,6 @@ export default function ListReward({
     await getFirstListReward().finally(() => setRefreshing(false));
   }, [getFirstListReward]);
 
-  console.log('listReward.data', JSON.stringify(listReward.data, null, 2));
   const loadMore = async () => {
     if (listReward.data.length >= listReward.count) {
       return;

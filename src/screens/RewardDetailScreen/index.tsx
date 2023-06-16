@@ -27,12 +27,22 @@ import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
 import Text from '../../components/Text';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAuth} from '../../contexts/AuthContext';
+import {DigitalRewardType} from '../../types/TypeRewardDigital';
 interface Props {
   navigation: StackNavigationHelpers;
   route: RouteProp<StackParamList, 'RewardDetailScreen'>;
 }
 export default function RewardDetailScreen({navigation, route}: Props) {
   const {isDigital, id} = route.params;
+  const {getCurrentPoint} = usePoint();
+  const {
+    state: {user},
+  } = useAuth();
+
+  const [resultRedeemDigital, setResultRedeemDigital] =
+    React.useState<DigitalRewardType>({} as DigitalRewardType);
 
   const width = useWindowDimensions().width - 32;
   const [counter, setCounter] = React.useState(1);
@@ -46,8 +56,8 @@ export default function RewardDetailScreen({navigation, route}: Props) {
   );
   const [cantExchange, setCantExchange] = React.useState(false);
   const isExpired =
-    rewardDetail.expiredUsedDate &&
-    moment(rewardDetail.expiredUsedDate).isAfter(moment());
+    rewardDetail.expiredExchangeDate &&
+    moment(rewardDetail.expiredExchangeDate).isAfter(moment());
   const requirePoint = useMemo(() => {
     if (!rewardDetail.score) {
       return 0;
@@ -74,6 +84,24 @@ export default function RewardDetailScreen({navigation, route}: Props) {
       getRewardById();
     }
   }, [id, currentPoint]);
+
+  const onRedeemDigital = async () => {
+    try {
+      const dronerId = await AsyncStorage.getItem('droner_id');
+      const payload: any = {
+        rewardId: id,
+        quantity: 1,
+        dronerId,
+        updateBy: `${user?.firstname} ${user?.lastname}`,
+      };
+      const result = await rewardDatasource.redeemReward(payload);
+      setShowSuccessExchangeModal(true);
+      await getCurrentPoint();
+      setResultRedeemDigital(result);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const isOverRemain = useMemo(() => {
     if (rewardDetail.remain) {
@@ -334,7 +362,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         visible={isConfirm}
         onPressPrimary={() => {
           setIsConfirm(false);
-          setShowSuccessExchangeModal(true);
+          onRedeemDigital();
         }}
         title={'ยืนยันการแลกแต้ม'}
         onPressSecondary={() => setIsConfirm(false)}
@@ -353,9 +381,9 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         onPressPrimary={() => {
           setShowSuccessExchangeModal(false);
           navigation.navigate('RedeemScreen', {
-            data: {
-              image: mockImage.reward1,
-            },
+            data: resultRedeemDigital,
+            imagePath: rewardDetail.imagePath,
+            expiredUsedDate: rewardDetail.expiredUsedDate,
           });
         }}
         onPressSecondary={() => {
