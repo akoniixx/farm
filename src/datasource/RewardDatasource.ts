@@ -114,6 +114,29 @@ const getHistoryRedeem = async (payload: {
       throw err;
     });
 };
+const getHistoryReadyToUseRedeem = async (payload: {
+  dronerId: string;
+  take: number;
+  page: number;
+}) => {
+  const genQuery = Object.keys(payload).map(key => {
+    return key + '=' + payload[key as keyof typeof payload];
+  });
+  return httpClient
+    .get(
+      BASE_URL +
+        '/promotion/reward/my-reward-ready-to-use/' +
+        '?' +
+        genQuery.join('&'),
+    )
+    .then(res => {
+      return res.data;
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+};
 const redeemRewardMission = async (payload: RedeemMissionPayload) => {
   return httpClient
     .post(BASE_URL + '/promotion/droner-transactions/redeem-reward', {
@@ -138,8 +161,23 @@ const getRewardStatus = async (payload: {
       return res.data;
     });
 };
-
-const redeemRewardDigital = async (payload: {}) => {
+const useRedeemCode = async (payload: {
+  dronerTransactionId: string;
+  branchCode: string;
+  branchName: string;
+  updateBy: string;
+}) => {
+  return httpClient
+    .post(BASE_URL + '/promotion/droner-transactions/use-redeem-code', payload)
+    .then(res => {
+      return res.data;
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+};
+const redeemRewardDigital = async (payload: any) => {
   return httpClient
     .post(BASE_URL + '/promotion/droner-transactions/redeem-reward', {
       ...payload,
@@ -161,4 +199,6 @@ export const rewardDatasource = {
   getHistoryRedeem,
   redeemRewardMission,
   getRewardStatus,
+  useRedeemCode,
+  getHistoryReadyToUseRedeem,
 };

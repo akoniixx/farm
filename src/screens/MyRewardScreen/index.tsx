@@ -51,7 +51,7 @@ export default function MyRewardScreen({
   const renderScene = ({route}: any) => {
     switch (route.key) {
       case 'readyToUse':
-        return <ReadyToUseTab />;
+        return <ReadyToUseTab navigation={navigation} />;
       case 'history':
         return <HistoryTab navigation={navigation} />;
       default:

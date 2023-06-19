@@ -1,15 +1,3 @@
-interface RedeemDetail {
-  redeemStatus: string;
-  rewardType: string;
-  rewardExchange: string;
-  rewardQuantity: number;
-  branch: string | null;
-  digitalReward: {
-    redeemCode: string;
-    isRedeem: boolean;
-  };
-}
-
 interface DronerRedeemHistory {
   status: string;
   updateBy: string;
@@ -23,7 +11,7 @@ interface DronerRedeemHistory {
   updateAt: string;
 }
 
-interface DronerTransaction {
+export interface DronerTransaction {
   dronerId: string;
   rewardId: string;
   rewardName: string;
@@ -37,7 +25,8 @@ interface DronerTransaction {
   afterRai: number;
   raiAmount: number;
   receiverDetail: any;
-  redeemDetail: RedeemDetail;
+  redeemDetail: DigitalDetail;
+
   dronerRedeemHistories: DronerRedeemHistory[];
   campaignId: any;
   campaignName: any;
@@ -45,6 +34,7 @@ interface DronerTransaction {
   id: string;
   createAt: string;
   updateAt: string;
+  reward: Reward;
 }
 
 export interface DigitalRewardType {
@@ -55,6 +45,66 @@ export interface DigitalRewardType {
   taskNo: any;
   pointNo: any;
   id: string;
+  createAt: string;
+  updateAt: string;
+}
+
+interface DigitalDetail {
+  branch: {
+    code: string;
+    name: string;
+  };
+  rewardType: string;
+  redeemStatus: string;
+  digitalReward: {
+    isRedeem: boolean;
+    redeemCode: string;
+  };
+  rewardExchange: string;
+  rewardQuantity: number;
+}
+
+interface DronerRedeemHistory {
+  id: string;
+  dronerTransactionId: string;
+  status: string;
+  beforeStatus: any;
+  deliveryCompany: any;
+  trackingNo: any;
+  remark: any;
+  redeemCode: any;
+  branchName: any;
+  branchCode: any;
+  createAt: string;
+  updateAt: string;
+  updateBy: string;
+}
+
+interface Reward {
+  id: string;
+  rewardName: string;
+  imagePath: string;
+  rewardType: string;
+  rewardExchange: string;
+  rewardNo: string;
+  score: number;
+  amount: number;
+  used: number;
+  remain: string;
+  description: string;
+  condition: string;
+  startExchangeDate: string;
+  expiredExchangeDate: string;
+  startUsedDate: string;
+  expiredUsedDate: string;
+  startExchangeDateCronJob: any;
+  expiredExchangeDateCronJob: string;
+  startUsedDateCronJob: any;
+  expiredUsedDateCronJob: string;
+  digitalCode: string;
+  status: string;
+  statusUsed: string;
+  createBy: string;
   createAt: string;
   updateAt: string;
 }

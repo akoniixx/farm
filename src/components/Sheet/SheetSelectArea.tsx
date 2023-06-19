@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   FlatList,
   TouchableOpacity,
   Image,
@@ -13,6 +12,8 @@ import ActionSheet, {
   SheetProps,
 } from 'react-native-actions-sheet';
 import {colors, font, icons} from '../../assets';
+import {useAuth} from '../../contexts/AuthContext';
+import {rewardDatasource} from '../../datasource/RewardDatasource';
 interface Branch {
   createdAt: string;
   id: string;
@@ -22,8 +23,13 @@ interface Branch {
   updatedAt: string;
 }
 export default function SheetSelectArea(props: SheetProps) {
-  const [selectedArea, setSelectedArea] = React.useState<any>();
+  const [selectedArea, setSelectedArea] = React.useState<any>(undefined);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [listBranch, setListBranch] = React.useState<Branch[]>([]);
+  const {
+    state: {user},
+  } = useAuth();
+  const navigation = props.payload.navigation;
   useEffect(() => {
     if (props?.payload?.selected) {
       setSelectedArea(props.payload.selected);
@@ -32,6 +38,37 @@ export default function SheetSelectArea(props: SheetProps) {
       setListBranch(props.payload.data);
     }
   }, [props.payload]);
+
+  const onPressRedeem = async () => {
+    try {
+      setLoading(true);
+      const payload = {
+        dronerTransactionId: props.payload.dronerTransactionId,
+        branchCode: selectedArea.id,
+        branchName: selectedArea.name,
+        updateBy: `${user?.firstname} ${user?.lastname}`,
+      };
+
+      const result = await rewardDatasource.useRedeemCode(payload);
+      if (result) {
+        setLoading(false);
+        setSelectedArea(undefined);
+
+        await SheetManager.hide(props.sheetId, {
+          payload: {
+            selected: undefined,
+          },
+        });
+        navigation.navigate('RedeemDetailDigitalScreen', {
+          id: result.id,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <ActionSheet
       useBottomSafeAreaPadding
@@ -47,7 +84,7 @@ export default function SheetSelectArea(props: SheetProps) {
       containerStyle={{
         height: '70%',
       }}>
-      <View style={styles.container}>
+      <View style={styles().container}>
         <Text
           style={{
             fontFamily: font.bold,
@@ -73,7 +110,7 @@ export default function SheetSelectArea(props: SheetProps) {
           return (
             <TouchableOpacity
               onPress={() => setSelectedArea(item)}
-              style={styles.list}>
+              style={styles().list}>
               <Text
                 style={{
                   fontFamily: font.medium,
@@ -96,21 +133,26 @@ export default function SheetSelectArea(props: SheetProps) {
       />
       <View
         style={[
-          styles.footer,
+          styles().footer,
           {
             paddingHorizontal: 16,
             borderBottomWidth: 0,
           },
         ]}>
         <TouchableOpacity
-          style={styles.button}
+          disabled={!selectedArea || loading}
+          style={
+            styles({
+              disable: !selectedArea || loading,
+            }).button
+          }
           onPress={() => {
-            console.log('done');
+            onPressRedeem();
           }}>
-          <Text style={styles.textButton}>ยืนยันการใช้</Text>
+          <Text style={styles().textButton}>ยืนยันการใช้</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.subButton}
+          style={styles().subButton}
           onPress={async () => {
             await SheetManager.hide(props.sheetId, {
               payload: {
@@ -118,78 +160,79 @@ export default function SheetSelectArea(props: SheetProps) {
               },
             });
           }}>
-          <Text style={styles.textSubButton}>ยกเลิก</Text>
+          <Text style={styles().textSubButton}>ยกเลิก</Text>
         </TouchableOpacity>
       </View>
     </ActionSheet>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 16,
-    borderBottomWidth: 1,
-    borderColor: colors.disable,
-    paddingBottom: 16,
-  },
-  footer: {
-    paddingVertical: 16,
-    backgroundColor: colors.white,
-
-    elevation: 8,
-    shadowColor: '#242D35',
-    shadowOffset: {
-      width: 0,
-      height: -8,
+const styles = (props?: any) =>
+  StyleSheet.create({
+    container: {
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 16,
+      borderBottomWidth: 1,
+      borderColor: colors.disable,
+      paddingBottom: 16,
     },
-    shadowOpacity: 0.04,
-    shadowRadius: 16,
-  },
-  list: {
-    width: '100%',
-    paddingVertical: 16,
-    minHeight: 60,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderColor: colors.disable,
-  },
-  textButton: {
-    fontSize: 18,
-    fontFamily: font.bold,
-    color: colors.white,
-  },
-  button: {
-    width: '100%',
-    backgroundColor: colors.darkBlue,
-    borderRadius: 8,
-    height: 54,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // shadowColor: colors.darkBlue,
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 4,
-    // },
-    // shadowOpacity: 0.2,
-    // shadowRadius: 16,
-  },
-  textSubButton: {
-    fontSize: 18,
-    fontFamily: font.bold,
-    color: colors.fontBlack,
-  },
-  subButton: {
-    width: '100%',
-    backgroundColor: 'transparent',
-    borderRadius: 8,
-    height: 54,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 16,
-  },
-});
+    footer: {
+      paddingVertical: 16,
+      backgroundColor: colors.white,
+
+      elevation: 8,
+      shadowColor: '#242D35',
+      shadowOffset: {
+        width: 0,
+        height: -8,
+      },
+      shadowOpacity: 0.04,
+      shadowRadius: 16,
+    },
+    list: {
+      width: '100%',
+      paddingVertical: 16,
+      minHeight: 60,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 16,
+      borderBottomWidth: 1,
+      borderColor: colors.disable,
+    },
+    textButton: {
+      fontSize: 18,
+      fontFamily: font.bold,
+      color: colors.white,
+    },
+    button: {
+      width: '100%',
+      backgroundColor: props?.disable ? colors.disable : colors.darkBlue,
+      borderRadius: 8,
+      height: 54,
+      alignItems: 'center',
+      justifyContent: 'center',
+      // shadowColor: colors.darkBlue,
+      // shadowOffset: {
+      //   width: 0,
+      //   height: 4,
+      // },
+      // shadowOpacity: 0.2,
+      // shadowRadius: 16,
+    },
+    textSubButton: {
+      fontSize: 18,
+      fontFamily: font.bold,
+      color: colors.fontBlack,
+    },
+    subButton: {
+      width: '100%',
+      backgroundColor: 'transparent',
+      borderRadius: 8,
+      height: 54,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 16,
+    },
+  });

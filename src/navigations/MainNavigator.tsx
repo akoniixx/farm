@@ -1,9 +1,6 @@
-import React, {createContext, useMemo} from 'react';
+import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import HomeScreen from '../screens/HomeScreen/HomeScreen';
-import LoginScreen from '../screens/LoginScreen/LoginScreen';
-import PinScreen from '../screens/PinScreen/PinScreen';
-import OtpScreen from '../screens/OtpScreen/OtpScreen';
+
 import MainTapNavigator from './bottomTabs/MainTapNavigator';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import TaskDetailScreen from '../screens/TaskDetailScreen.tsx/TaskDetailScreen';
@@ -39,6 +36,7 @@ import WinnerCampaignScreen from '../screens/CampaignScreen/WinnerCampaignScreen
 import RulesCampaignScreen from '../screens/CampaignScreen/RulesCampaignScreen';
 import DateCampaignScreen from '../screens/CampaignScreen/DateCampaign';
 import {DigitalRewardType} from '../types/TypeRewardDigital';
+import RedeemDetailDigitalScreen from '../screens/RedeemDetailDigitalScreen';
 
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
@@ -98,6 +96,7 @@ export type StackParamList = {
   };
   RedeemDetailDigitalScreen: {
     id: string;
+    isFromHistory: boolean;
   };
   MissionDetailScreen: {
     data: {
@@ -181,6 +180,10 @@ const MainNavigator: React.FC = () => {
         <Stack.Screen
           name="RedeemDetailScreen"
           component={RedeemDetailScreen}
+        />
+        <Stack.Screen
+          name="RedeemDetailDigitalScreen"
+          component={RedeemDetailDigitalScreen}
         />
       </Stack.Group>
       <Stack.Screen

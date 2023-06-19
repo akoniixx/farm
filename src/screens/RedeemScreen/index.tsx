@@ -45,6 +45,7 @@ export default function RedeemScreen({navigation, route}: Props) {
     };
     getBranch();
   }, []);
+
   return (
     <SafeAreaView
       style={{
@@ -121,6 +122,8 @@ export default function RedeemScreen({navigation, route}: Props) {
                   payload: {
                     selected: selectedArea,
                     data: dataBranch,
+                    dronerTransactionId: data.dronerTransaction.id,
+                    navigation,
                   },
                 });
                 if (result?.selected) {
