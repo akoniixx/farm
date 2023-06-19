@@ -7,7 +7,7 @@ import {
   NativeScrollEvent,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React from 'react';
 
 import CollapseItem from './CollapseItem';
 import Text from '../../components/Text';
@@ -17,10 +17,12 @@ import {TabNavigatorParamList} from '../../navigations/bottomTabs/MainTapNavigat
 import {missionDatasource} from '../../datasource/MissionDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
-import { Campaign } from '../../datasource/CampaignDatasource';
+import {Campaign} from '../../datasource/CampaignDatasource';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 interface Props {
   navigation: BottomTabNavigationProp<TabNavigatorParamList, 'mission'>;
+  fetchImage: () => Promise<void>;
 }
 export interface Mission {
   id: string;
@@ -90,7 +92,7 @@ interface Reward {
   updateAt: string;
 }
 
-export default function Body({navigation}: Props) {
+export default function Body({navigation, fetchImage}: Props) {
   const [missionList, setMissionList] = React.useState<{
     count: number;
     mission: Mission[];
@@ -98,8 +100,7 @@ export default function Body({navigation}: Props) {
     count: 0,
     mission: [],
   });
-  const [campaignImage, setCampaignImage] =  React.useState<string>('');
-  const [loading, setLoading] = React.useState(false);
+
   useFocusEffect(
     React.useCallback(() => {
       const getAllMission = async () => {
@@ -117,8 +118,8 @@ export default function Body({navigation}: Props) {
         }
       };
       getAllMission();
-      fecthImage()
-    }, []),
+      fetchImage();
+    }, [fetchImage]),
   );
   const isCloseToBottom = ({
     layoutMeasurement,
@@ -150,20 +151,6 @@ export default function Body({navigation}: Props) {
       console.log(err);
     }
   };
-
-  const fecthImage = async () => {
-    const dronerId = await AsyncStorage.getItem('droner_id');
-    await Campaign.getImage('DRONER', 'QUATA', 'ACTIVE')
-      .then(res => {
-        setLoading(true);
-        setCampaignImage(res.data[0].pathImageFloating);
-      })
-      .catch(err => console.log(err))
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
 
   const EmptyContent = () => {
     return (
@@ -235,22 +222,6 @@ export default function Body({navigation}: Props) {
           <EmptyContent />
         </View>
       )}
-
-<View
-        style={{
-          position: 'absolute',
-          bottom: 120,
-          right: 14,
-          zIndex: 1,
-        }}>
-        <TouchableOpacity onPress={() => navigation.navigate('CampaignScreen')}>
-          <Image
-            source={{uri: campaignImage}}
-            style={{width: 150, height: 60}}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }

@@ -388,7 +388,9 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         }}
         onPressSecondary={() => {
           setShowSuccessExchangeModal(false);
-          navigation.navigate('MyRewardScreen');
+          navigation.navigate('MyRewardScreen', {
+            tab: 'readyToUse',
+          });
         }}
         title={'แลกแต้มสำเร็จ'}
         subTitle={'คูปองพร้อมใช้งานแล้ว'}
