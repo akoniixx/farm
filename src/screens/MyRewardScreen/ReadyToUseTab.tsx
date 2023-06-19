@@ -1,49 +1,129 @@
-import {View, FlatList, StyleSheet, Image, Dimensions} from 'react-native';
-import React, {useMemo} from 'react';
-import moment from 'moment';
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  Image,
+  Dimensions,
+  RefreshControl,
+  TouchableOpacity,
+} from 'react-native';
+import React, {useCallback} from 'react';
 import {colors, image} from '../../assets';
 import fonts from '../../assets/fonts';
 import {momentExtend} from '../../function/utility';
 import Text from '../../components/Text';
-
-export default function ReadyToUseTab() {
-  const mockData = useMemo(() => {
-    const data = [
-      // {
-      //   id: 1,
-      //   title: 'ส่วนลด ศูนย์ ICPX มูลค่า 1,000 บาท',
-      //   date: moment().toISOString(),
-      //   image: mockImage.reward3,
-      // },
-      // {
-      //   id: 2,
-      //   title: 'ส่วนลด ศูนย์ ICPX มูลค่า 1,500 บาท',
-      //   date: moment().subtract(1, 'day').toISOString(),
-      //   image: mockImage.reward3,
-      // },
-      // {
-      //   id: 3,
-      //   title: 'ส่วนลด ศูนย์ ICPX มูลค่า 2,000 บาท ',
-      //   date: moment().subtract(2, 'day').toISOString(),
-      //   image: mockImage.reward3,
-      // },
-    ];
-    return data;
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {rewardDatasource} from '../../datasource/RewardDatasource';
+import {useFocusEffect} from '@react-navigation/native';
+import {RedemptionTransaction} from '../../types/MyRewardType';
+import FastImage from 'react-native-fast-image';
+import RenderHTML from '../../components/RenderHTML/RenderHTML';
+const mappingStatusText = {
+  REQUEST: 'พร้อมใช้',
+  PREPARE: 'เตรียมจัดส่ง',
+  USED: 'ใช้แล้ว',
+  DONE: 'ส่งแล้ว',
+  EXPIRE: 'หมดอายุ',
+  CANCEL: 'ยกเลิก',
+};
+const mappingStatusColor = {
+  REQUEST: colors.orange,
+  PREPARE: colors.orange,
+  USED: colors.green,
+  DONE: colors.green,
+  EXPIRE: colors.gray,
+  CANCEL: colors.decreasePoint,
+};
+export default function ReadyToUseTab({navigation}: {navigation: any}) {
+  const take = 10;
+  const [total, setTotal] = React.useState<number>(0);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [data, setData] = React.useState<RedemptionTransaction[]>([]);
+  const getHistoryRewardReadyToUse = useCallback(async () => {
+    try {
+      const dronerId = await AsyncStorage.getItem('droner_id');
+      const result = await rewardDatasource.getHistoryReadyToUseRedeem({
+        dronerId: dronerId || '',
+        page: 1,
+        take,
+      });
+      setTotal(result.count);
+      setData(result.data);
+    } catch (error) {
+      console.log('error', error);
+    }
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getHistoryRewardReadyToUse();
+    }, [getHistoryRewardReadyToUse]),
+  );
+
+  const onNavigation = async (item: RedemptionTransaction) => {
+    try {
+      const result = await rewardDatasource.getRedeemDetail(
+        item.dronerTransactionsId,
+      );
+      navigation.navigate('RedeemScreen', {
+        imagePath: item.imagePath,
+        data: {
+          dronerTransaction: {
+            ...result,
+          },
+        },
+        expiredUsedDate: result.reward.expiredUsedDate,
+      });
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await getHistoryRewardReadyToUse();
+    setRefreshing(false);
+  }, [getHistoryRewardReadyToUse]);
+  const onLoadMore = useCallback(async () => {
+    if (data.length < total) {
+      try {
+        const dronerId = await AsyncStorage.getItem('droner_id');
+        const result = await rewardDatasource.getHistoryReadyToUseRedeem({
+          dronerId: dronerId || '',
+          page: Math.ceil(data.length / take) + 1,
+          take,
+        });
+        setData(prev => [...prev, ...result.data]);
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
+  }, [total, data.length]);
   return (
     <FlatList
+      onEndReached={onLoadMore}
       style={{
         marginTop: 16,
       }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       contentContainerStyle={{
         paddingHorizontal: 16,
       }}
-      data={mockData}
+      data={data}
       renderItem={({item}) => {
+        const isMission = item.rewardExchange !== 'SCORE';
+        const statusRedeem = item.redeemDetail.redeemStatus;
+
         return (
-          <View style={styles.card}>
-            <Image
-              source={item.image}
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => onNavigation(item)}>
+            <FastImage
+              source={{
+                uri: item.imagePath,
+              }}
               style={{
                 borderRadius: 10,
                 width: 76,
@@ -55,52 +135,96 @@ export default function ReadyToUseTab() {
               style={{
                 width: '75%',
               }}>
+              <RenderHTML
+                source={{html: item.rewardName}}
+                contentWidth={500}
+                tagsStyles={{
+                  body: {
+                    fontSize: 16,
+                    fontFamily: fonts.medium,
+                  },
+                }}
+              />
               <Text
                 style={{
-                  fontSize: 16,
-                  fontFamily: fonts.medium,
-                }}>
-                {item.title}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
                   marginTop: 4,
-
+                  fontSize: 14,
                   fontFamily: fonts.light,
                 }}>
                 {`แลกเมื่อ ${momentExtend.toBuddhistYear(
-                  item.date,
+                  item.redeemDate,
                   'DD MMM YYYY HH:mm',
                 )}`}
               </Text>
               <View
                 style={{
+                  marginTop: 4,
+
                   flexDirection: 'row',
                   alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flex: 1,
                 }}>
                 <View
                   style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: 3,
-                    marginRight: 4,
-                    backgroundColor: colors.orange,
-                  }}
-                />
-                <Text
-                  style={{
-                    marginTop: 4,
-                    fontSize: 14,
-                    fontFamily: fonts.light,
+                    flexDirection: 'row',
+                    alignItems: 'center',
                   }}>
-                  พร้อมใช้
-                </Text>
+                  <View
+                    style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: 3,
+                      marginRight: 4,
+                      backgroundColor:
+                        mappingStatusColor[
+                          statusRedeem as keyof typeof mappingStatusColor
+                        ],
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontFamily: fonts.light,
+                      color: colors.gray,
+                    }}>
+                    {
+                      mappingStatusText[
+                        statusRedeem as keyof typeof mappingStatusText
+                      ]
+                    }
+                  </Text>
+                </View>
+                {isMission && (
+                  <View
+                    style={{
+                      borderRadius: 10,
+                      backgroundColor: '#FBCC96',
+                      paddingVertical: 2,
+                      paddingHorizontal: 8,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontFamily: fonts.semiBold,
+                        color: '#993A03',
+                      }}>
+                      ภารกิจ
+                    </Text>
+                  </View>
+                )}
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         );
       }}
+      ListFooterComponent={
+        <View
+          style={{
+            height: 60,
+          }}
+        />
+      }
       ListEmptyComponent={
         <View
           style={{

@@ -35,4 +35,7 @@ export default {
   missionProgressBar: require('./missionProgressBar.json'),
   emptyMission: require('./emptyMission.png'),
   emptyReward: require('./emptyReward.png'),
+  cancelBanner: require('./cancelBanner.png'),
+  expiredBanner: require('./expiredBanner.png'),
+  usedBanner: require('./usedBanner.png'),
 };

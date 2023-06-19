@@ -15,7 +15,6 @@ import {StackParamList} from '../../navigations/MainNavigator';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import CustomHeader from '../../components/CustomHeader';
 import {momentExtend, numberWithCommas} from '../../function/utility';
-import mockImage from '../../assets/mockImage';
 import Counter from '../../components/Counter/Counter';
 import {normalize} from '../../function/Normalize';
 import Modal from '../../components/Modal/Modal';
@@ -83,7 +82,8 @@ export default function RewardDetailScreen({navigation, route}: Props) {
     if (id) {
       getRewardById();
     }
-  }, [id, currentPoint]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const onRedeemDigital = async () => {
     try {
@@ -95,8 +95,8 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         updateBy: `${user?.firstname} ${user?.lastname}`,
       };
       const result = await rewardDatasource.redeemReward(payload);
-      setShowSuccessExchangeModal(true);
       await getCurrentPoint();
+      setShowSuccessExchangeModal(true);
       setResultRedeemDigital(result);
     } catch (e) {
       console.log(e);

@@ -1,6 +1,6 @@
 import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
-import {font, icons} from '../../assets';
+import {font, image} from '../../assets';
 import colors from '../../assets/colors/colors';
 import {DigitalRewardType} from '../../types/TypeRewardDigital';
 import FastImage from 'react-native-fast-image';
@@ -8,6 +8,7 @@ import DashedLine from 'react-native-dashed-line';
 import {useAuth} from '../../contexts/AuthContext';
 import {momentExtend} from '../../function/utility';
 import Text from '../Text';
+import moment from 'moment';
 const mappingStatusText = {
   REQUEST: 'พร้อมใช้',
   USED: 'ใช้แล้ว',
@@ -30,6 +31,15 @@ export default function CardRedeemDigital({
   data,
   expiredUsedDate,
 }: Props) {
+  const isExpired = React.useMemo(() => {
+    return moment(expiredUsedDate).isBefore(moment());
+  }, [expiredUsedDate]);
+  const isUsed = React.useMemo(() => {
+    return data?.dronerTransaction?.redeemDetail?.redeemStatus === 'USED';
+  }, [data]);
+  const isCancel = React.useMemo(() => {
+    return data?.dronerTransaction?.redeemDetail?.redeemStatus === 'CANCEL';
+  }, [data]);
   const {
     state: {user},
   } = useAuth();
@@ -72,7 +82,7 @@ export default function CardRedeemDigital({
                 fontSize: 16,
                 fontFamily: font.bold,
               }}>
-              {data.dronerTransaction.rewardName}
+              {data?.dronerTransaction?.rewardName}
             </Text>
             <Text
               style={{
@@ -143,14 +153,91 @@ export default function CardRedeemDigital({
             {momentExtend.toBuddhistYear(expiredUsedDate, 'DD MMM YYYY ')}
           </Text>
         </View>
+        {isUsed ? (
+          <View
+            style={{
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              resizeMode="contain"
+              source={image.usedBanner}
+              style={{
+                position: 'absolute',
+                height: 80,
+                zIndex: 1,
+              }}
+            />
+            <Text
+              style={{
+                fontSize: 32,
+                opacity: 0.2,
+                fontFamily: font.bold,
+              }}>
+              {data.dronerTransaction.redeemDetail.digitalReward.redeemCode}
+            </Text>
+          </View>
+        ) : isExpired ? (
+          <View
+            style={{
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              resizeMode="contain"
+              source={image.expiredBanner}
+              style={{
+                position: 'absolute',
+                height: 80,
+                zIndex: 1,
+              }}
+            />
+            <Text
+              style={{
+                fontSize: 32,
+                opacity: 0.2,
+                fontFamily: font.bold,
+              }}>
+              {data.dronerTransaction.redeemDetail.digitalReward.redeemCode}
+            </Text>
+          </View>
+        ) : isCancel ? (
+          <View
+            style={{
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              resizeMode="contain"
+              source={image.expiredBanner}
+              style={{
+                position: 'absolute',
+                height: 80,
+                zIndex: 1,
+              }}
+            />
+            <Text
+              style={{
+                fontSize: 32,
+                opacity: 0.2,
+                fontFamily: font.bold,
+              }}>
+              {data.dronerTransaction.redeemDetail.digitalReward.redeemCode}
+            </Text>
+          </View>
+        ) : (
+          <Text
+            style={{
+              fontSize: 32,
+              fontFamily: font.bold,
+            }}>
+            {data.dronerTransaction.redeemDetail.digitalReward.redeemCode}
+          </Text>
+        )}
 
-        <Text
-          style={{
-            fontSize: 32,
-            fontFamily: font.bold,
-          }}>
-          {data.dronerTransaction.redeemDetail.digitalReward.redeemCode}
-        </Text>
         <View
           style={{
             width: '100%',
@@ -228,6 +315,19 @@ export default function CardRedeemDigital({
           </View>
         </View>
       </View>
+
+      {isCancel && (
+        <Text
+          style={{
+            marginTop: 8,
+            paddingHorizontal: 16,
+            alignSelf: 'flex-start',
+            flex: 1,
+            fontSize: 14,
+          }}>
+          หมายเหตุ : นักบินโทรแจ้งยกเลิกการใช้แต้มแลกของรางวัล
+        </Text>
+      )}
     </>
   );
 }

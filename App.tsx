@@ -90,11 +90,7 @@ const App = () => {
         {
           text: 'อัพเดท',
           onPress: () => {
-            if (isIOS) {
-              Linking.openURL(storeUrl);
-            } else {
-              Linking.openURL(playStoreUrl);
-            }
+            Linking.openURL(isIOS ? storeUrl : playStoreUrl);
             RNExitApp.exitApp();
           },
         },
@@ -134,13 +130,15 @@ const App = () => {
       <ActionContext.Provider value={{actiontaskId, setActiontaskId}}>
         <NavigationContainer ref={navigationRef}>
           <AuthProvider>
-            <PointProvider>
-              <SheetProvider>
-                <AppNavigator />
-              </SheetProvider>
-            </PointProvider>
+            <>
+              <PointProvider>
+                <SheetProvider>
+                  <AppNavigator />
+                </SheetProvider>
+              </PointProvider>
+              <Toast config={toastConfig} />
+            </>
           </AuthProvider>
-          <Toast config={toastConfig} />
         </NavigationContainer>
       </ActionContext.Provider>
     </>

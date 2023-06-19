@@ -1,3 +1,7 @@
+## Feature [1.4.2] 2023-06-19
+- History feature reward Digital
+- Digital reward Detail screen 
+
 ## Feature [1.4.1] 2023-06-16
 - Force update app
 - Warning update app
