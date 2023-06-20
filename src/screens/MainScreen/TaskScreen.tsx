@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {normalize} from '@rneui/themed';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Image, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import {FlatList} from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -18,6 +18,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import {dataUpdateStatusEntity} from '../../entities/TaskScreenEntities';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {callcenterNumber} from '../../definitions/callCenterNumber';
+import {AnimatedCircularProgress} from 'react-native-circular-progress';
 
 interface Prop {
   dronerStatus: string;
@@ -364,6 +365,87 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
               </View>
             </View>
           ) : null}
+          {dronerStatus == 'OPEN' ? (
+            <View style={{backgroundColor: colors.grayBg}}>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  padding: normalize(10),
+                  margin: normalize(10),
+                  borderWidth: 2,
+                  borderColor: colors.greyWhite,
+                  borderRadius: 16,
+                }}>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      display: 'flex',
+                      backgroundColor: '#FFF7F4',
+                      paddingHorizontal: normalize(10),
+                      paddingVertical: normalize(5),
+                      borderRadius: 16,
+                    }}>
+                    <Text
+                      style={{
+                        color: '#B16F05',
+                        fontFamily: fonts.bold,
+                        fontSize: normalize(16),
+                      }}>
+                      รอยืนยันตัวตน
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    paddingBottom: normalize(20),
+                    marginTop: normalize(5),
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontSize: normalize(18),
+                      color: 'black',
+                    }}>
+                    อีกนิดเดียว มากรอกข้อมูลโปรไฟล์ของคุณให้ ครบถ้วน
+                    เพื่อเริ่มรับงานบินโดรนในระบบ
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <AnimatedCircularProgress
+                    size={50}
+                    width={5}
+                    fill={50}
+                    tintColor="#FB8705"
+                    backgroundColor="#FFEFDD"
+                    rotation={0}>
+                    {fill => (
+                      <Text
+                        style={{
+                          fontFamily: fonts.medium,
+                          fontSize: normalize(14),
+                          color: colors.fontBlack,
+                        }}>
+                        {'50%'}
+                      </Text>
+                    )}
+                  </AnimatedCircularProgress>
+                  <TouchableOpacity
+                  // onPress={() => {
+                  //       navtoMenuProfile
+                  //     }}
+                  >
+                    <View style={styles.button}>
+                      <Text style={styles.textButton}>เพิ่มข้อมูลโปรไฟล์</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          ) : null}
         </>
       )}
       <Spinner
@@ -375,3 +457,15 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   );
 };
 export default TaskScreen;
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: colors.orange,
+    padding: 12,
+    borderRadius: 20,
+  },
+  textButton: {
+    fontFamily: fonts.bold,
+    fontSize: normalize(14),
+    color: colors.white,
+  },
+});

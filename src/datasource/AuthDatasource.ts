@@ -311,6 +311,23 @@ export class Register {
         console.log(error);
       });
   }
+  static async registerUpPlants(
+    expPlant: string[],
+  ): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    return registerClient
+      .post(BASE_URL + '/auth/droner/register', {
+        id: droner_id,
+        status: 'OPEN',
+        expPlant: expPlant
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
   static async registerSkipStep4(): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient

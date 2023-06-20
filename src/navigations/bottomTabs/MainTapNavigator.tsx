@@ -31,6 +31,7 @@ import MissionScreen from '../../screens/MissionScreen';
 import Draggable from 'react-native-draggable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Campaign} from '../../datasource/CampaignDatasource';
+import MyProfileScreen from '../../screens/ProfileVerifyScreen/MyProfileScreen';
 
 export type TabNavigatorParamList = {
   mission: undefined;
@@ -84,7 +85,9 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     {
       name: 'profile',
       title: 'โปรไฟล์',
-      component: ProfileScreen,
+      component: 
+      MyProfileScreen,
+      // ProfileScreen,
       activeIcon: icons.profileActive,
       inactiveIcon: icons.profile,
     },
