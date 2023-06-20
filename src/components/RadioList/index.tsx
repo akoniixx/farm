@@ -1,6 +1,7 @@
 import React, {useEffect, useRef} from 'react';
-import {View, Text, TouchableOpacity, Animated, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, Animated, StyleSheet} from 'react-native';
 import {colors, font} from '../../assets';
+import Text from '../Text';
 
 interface Props {
   onPress: () => void;

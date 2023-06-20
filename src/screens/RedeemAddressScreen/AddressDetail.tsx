@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {colors, font, icons} from '../../assets';
 import {useAuth} from '../../contexts/AuthContext';
 import {insertHyphenInTelNumber} from '../../function/mutateText';
@@ -57,6 +57,7 @@ export default function AddressDetail({
   setIsConfirmMission,
   isConfirmMission,
   missionDetail,
+  setDisableButton,
 }: {
   isConfirmMission: boolean;
   setIsConfirmMission: (value: boolean) => void;
@@ -65,6 +66,7 @@ export default function AddressDetail({
   missionDetail: any;
   data: RewardParams;
   setIsConfirm: (value: boolean) => void;
+  setDisableButton: (value: boolean) => void;
 }) {
   const {
     state: {user},
@@ -72,6 +74,7 @@ export default function AddressDetail({
   const [radioAddress, setRadioAddress] = React.useState<'default' | 'custom'>(
     'default',
   );
+  const [disabled, setDisabled] = React.useState<boolean>(true);
   const [addressList, setAddressList] = React.useState<AddressType[]>([]);
   const [mainAddress, secondAddress] = useMemo(() => {
     const mergeAddress = addressList.map(item => {
@@ -90,8 +93,11 @@ export default function AddressDetail({
     setRadioAddress(value);
   };
   const {getCurrentPoint} = usePoint();
+
   const onConfirmMission = async () => {
     try {
+      setDisabled(true);
+
       const addressId =
         radioAddress === 'default' ? mainAddress?.id : secondAddress?.id;
       const payload: RedeemMissionPayload = {
@@ -125,6 +131,7 @@ export default function AddressDetail({
   };
   const onConfirmRedeem = async () => {
     try {
+      setDisabled(true);
       const addressId =
         radioAddress === 'default' ? mainAddress?.id : secondAddress?.id;
       const payload: RedeemPayload = {
@@ -166,6 +173,7 @@ export default function AddressDetail({
           );
           const state = [result.address, result.otherAddress];
           setAddressList(state);
+          setDisabled(false);
         } catch (e) {
           console.log(e);
         }
@@ -173,6 +181,22 @@ export default function AddressDetail({
       getAddressListById();
     }, [user?.id]),
   );
+
+  useEffect(() => {
+    const checkAddress = async () => {
+      const [mainAdd, secondAdd] = addressList;
+      if (radioAddress === 'default') {
+        setDisableButton(mainAdd ? false : true);
+      } else {
+        setDisableButton(secondAdd ? false : true);
+      }
+    };
+    if (addressList.length > 0) {
+      checkAddress();
+    } else {
+      setDisableButton(true);
+    }
+  }, [addressList, radioAddress, setDisableButton]);
   const userPhoneNumber = useMemo(() => {
     return insertHyphenInTelNumber(user?.telephoneNo || '');
   }, [user?.telephoneNo]);
@@ -245,8 +269,8 @@ export default function AddressDetail({
               alignItems: 'center',
               padding: 10,
               margin: 8,
-              width: 112,
-              height: 40,
+              width: 140,
+              minHeight: 40,
               borderWidth: 1,
               borderColor: '#FB8705',
               borderRadius: 8,
@@ -400,6 +424,7 @@ export default function AddressDetail({
             จะไม่สามารถแลกแต้มคืนได้
           </Text>
           <TouchableOpacity
+            disabled={disabled}
             style={[styles.button, {marginTop: 16}]}
             onPress={() => {
               onConfirmRedeem();
@@ -451,6 +476,7 @@ export default function AddressDetail({
           </Text>
 
           <TouchableOpacity
+            disabled={disabled}
             style={[styles.button, {marginTop: 16}]}
             onPress={() => {
               onConfirmMission();

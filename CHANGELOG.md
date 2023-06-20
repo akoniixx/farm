@@ -1,3 +1,6 @@
+## Feature [1.5.2] 2023-09-20
+- fix bug digital reward 
+- validate radio select
 ## Enchance [1.5.1] 2023-06-20
 - comment status
 

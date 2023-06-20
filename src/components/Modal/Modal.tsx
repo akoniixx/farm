@@ -21,6 +21,7 @@ interface Props {
   showClose?: boolean;
   onClose?: () => void;
   iconTop?: JSX.Element;
+  disablePrimary?: boolean;
 }
 export default function Modal({
   visible,
@@ -33,6 +34,7 @@ export default function Modal({
   titleSecondary = 'ยกเลิก',
   showClose = false,
   onClose,
+  disablePrimary = false,
   iconTop,
 }: Props) {
   return (
@@ -103,6 +105,7 @@ export default function Modal({
               </Text>
             )}
             <TouchableOpacity
+              disabled={disablePrimary}
               style={[styles.button, {marginTop: 16}]}
               onPress={() => {
                 onPressPrimary && onPressPrimary();
