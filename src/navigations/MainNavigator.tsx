@@ -116,6 +116,7 @@ export type StackParamList = {
       descriptionReward: string;
       num: number;
       missionId: string;
+      status: string;
     };
   };
   MyProfileScreen: any;

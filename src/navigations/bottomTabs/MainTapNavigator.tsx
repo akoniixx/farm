@@ -18,12 +18,10 @@ import MainTaskScreen from '../../screens/MainTaskScreen/MainTaskScreen';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
 import {TabActions} from '@react-navigation/native';
-import RegisterFailedNotification from '../../components/Modal/RegisterFailedNotification';
 import RegisterFailedModal from '../../components/Modal/RegisterFailedModalNotification';
 import Toast from 'react-native-toast-message';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import * as RootNavigation from '../../navigations/RootNavigation';
-import {SheetManager} from 'react-native-actions-sheet';
 import {ActionContext} from '../../../App';
 import {dialCall} from '../../function/utility';
 import RewardScreen from '../../screens/RewardScreen';
@@ -39,6 +37,7 @@ export type TabNavigatorParamList = {
   myTask: undefined;
   reward: undefined;
   profile: undefined;
+  CampaignScreen: undefined;
 };
 const Tab = createBottomTabNavigator();
 
@@ -85,8 +84,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     {
       name: 'profile',
       title: 'โปรไฟล์',
-      component: 
-      MyProfileScreen,
+      component: MyProfileScreen,
       // ProfileScreen,
       activeIcon: icons.profileActive,
       inactiveIcon: icons.profile,

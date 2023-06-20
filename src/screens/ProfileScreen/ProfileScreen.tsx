@@ -382,6 +382,24 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
               </TouchableOpacity>
             )}
           </View>
+          {profilestate.status === 'REJECTED' ? (
+            <View style={styles.commentBg}>
+              <Text style={styles.commentFront}>
+                หมายเหตุ : บัตรประชาชนไม่ชัดเจน/ไม่ถูกต้อง
+                กรุณาติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. 02-233-9000
+              </Text>
+            </View>
+          ) : profilestate.status === 'INACTIVE' ? (
+            <View style={styles.commentBg}>
+              <Text style={styles.commentFront}>
+                หมายเหตุ : หากต้องการเปิดใช้งานบัญชี กรุณาติดต่อเจ้าหน้าที่ โทร.
+                02-233-9000
+              </Text>
+            </View>
+          ) : (
+            <></>
+          )}
+
           <View
             style={{
               paddingVertical: normalize(15),
@@ -1103,5 +1121,17 @@ const styles = StyleSheet.create({
     fontSize: normalize(16),
     color: '#2EC66E',
     paddingEnd: normalize(8),
+  },
+  commentBg: {
+    backgroundColor: '#FFF7F4',
+    borderColor: '#FEE9E1',
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+  },
+  commentFront: {
+    fontFamily: font.medium,
+    fontSize: normalize(14),
+    color: '#242D35',
   },
 });

@@ -26,12 +26,28 @@ const mappingStatusColor = {
   DONE: colors.green,
 };
 
+const mappingDigitalStatusText = {
+  REQUEST: 'พร้อมใช้',
+};
+const mappingDigitalStatusColor = {
+  REQUEST: colors.orange,
+};
+
 export default function MissionDetailScreen({navigation, route}: Props) {
   const {data} = route.params;
-  // console.log(JSON.stringify(data, null, 2));
+
   const [currentStatus, setCurrentStatus] = React.useState<string>('');
   const [dronerTransactionId, setDronerTransactionId] =
     React.useState<string>('');
+
+  const {isDigital, isNotProgress} = useMemo(() => {
+    return {
+      isDigital: data.reward.rewardType === 'DIGITAL',
+      isNotProgress:
+        data.reward.rewardType === 'DIGITAL' && data.status !== 'INPROGRESS',
+    };
+  }, [data.reward, data.status]);
+
   const onPress = () => {
     navigation.navigate('RedeemAddressScreen', {
       missionData: {
@@ -69,14 +85,14 @@ export default function MissionDetailScreen({navigation, route}: Props) {
 
   const isWaitRequest = useMemo(() => {
     if (!data.isStatusComplete && data.isComplete) {
-      return true;
+      return true && !isDigital;
     }
-  }, [data.isStatusComplete, data.isComplete]);
+  }, [data.isStatusComplete, data.isComplete, isDigital]);
   const isShowBox = useMemo(() => {
     if (currentStatus && currentStatus !== 'WAIT_REQUEST' && data.isComplete) {
-      return true;
+      return true && !isDigital;
     }
-  }, [currentStatus, data.isComplete]);
+  }, [currentStatus, data.isComplete, isDigital]);
   return (
     <SafeAreaView
       edges={['right', 'top', 'left']}
@@ -108,6 +124,67 @@ export default function MissionDetailScreen({navigation, route}: Props) {
               disabled={data.isExpired}
               imagePath={data.reward.imagePath}
             />
+
+            {/* <TouchableOpacity
+              onPress={() => {
+                if (isDigital && data.status === 'WAIT_REQUEST') {
+                  navigation.navigate('RedeemDetailDigitalScreen', {
+                    isFromHistory: false,
+                    id: dronerTransactionId,
+                  });
+                } else {
+                  navigation.navigate('MyRewardScreen', {
+                    tab: 'history',
+                  });
+                }
+              }}
+              style={{
+                padding: 16,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderWidth: 1,
+                borderColor: colors.orange,
+                borderRadius: 8,
+                backgroundColor: colors.lightOrange,
+              }}>
+              <Text
+                style={{
+                  fontFamily: font.semiBold,
+                  fontSize: 14,
+                }}>
+                สถานะ :{' '}
+                <Text
+                  style={{
+                    fontFamily: font.semiBold,
+                    fontSize: 14,
+
+                    color:
+                      mappingStatusColor[
+                        currentStatus as keyof typeof mappingStatusColor
+                      ],
+                  }}>
+                  {
+                    mappingStatusText[
+                      currentStatus as keyof typeof mappingStatusText
+                    ]
+                  }
+                </Text>
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: font.bold,
+                  }}>
+                  {'ดูรีวิอร์ดของฉัน >'}
+                </Text>
+              </View>
+            </TouchableOpacity> */}
+
             {isShowBox && (
               <TouchableOpacity
                 onPress={() =>

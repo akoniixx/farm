@@ -16,6 +16,7 @@ import image from '../../assets/images/image';
 import {usePoint} from '../../contexts/PointContext';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {useFocusEffect} from '@react-navigation/native';
+import {mixpanel} from '../../../mixpanel';
 
 export default function RewardScreen({navigation}: any) {
   const {currentPoint, getCurrentPoint} = usePoint();
@@ -46,7 +47,10 @@ export default function RewardScreen({navigation}: any) {
             style={{
               flex: 0.48,
             }}
-            onPress={() => navigation.navigate('PointHistoryScreen')}>
+            onPress={() => {
+              mixpanel.track('กดดูประวัติการใช้คะแนนจากหน้ารีวอร์ด');
+              navigation.navigate('PointHistoryScreen');
+            }}>
             <LinearGradient
               colors={['#FA7052', '#F89132']}
               start={{x: 0, y: 0}}
@@ -83,14 +87,14 @@ export default function RewardScreen({navigation}: any) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() =>
+            onPress={() => {
+              mixpanel.track('กดดูรีวอร์ดของฉัน');
               navigation.navigate('MyRewardScreen', {
                 tab: 'readyToUse',
-              })
-            }
+              });
+            }}
             style={{
               minHeight: 64,
-
               flex: 0.48,
               borderWidth: 1,
               borderColor: colors.orange,

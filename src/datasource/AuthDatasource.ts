@@ -311,15 +311,13 @@ export class Register {
         console.log(error);
       });
   }
-  static async registerUpPlants(
-    expPlant: string[],
-  ): Promise<any> {
+  static async registerUpPlants(expPlant: string[]): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient
       .post(BASE_URL + '/auth/droner/register', {
         id: droner_id,
         status: 'OPEN',
-        expPlant: expPlant
+        expPlant: expPlant,
       })
       .then(response => {
         return response.data;
