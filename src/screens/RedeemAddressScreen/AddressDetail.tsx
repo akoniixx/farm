@@ -331,22 +331,30 @@ export default function AddressDetail({
           }}>
           ที่อยู่ :{' '}
         </Text>
-        <View
-          style={{
-            marginTop: 16,
-          }}>
-          {dataList.map(el => {
-            return (
-              <RadioList
-                belowComponent={el.belowComponent}
-                onPress={() => onChangeRadioAddress(el.value)}
-                isSelected={radioAddress === el.value}
-                label={el.label}
-                extra={el.extra}
-              />
-            );
-          })}
-        </View>
+
+        {dataList.length < 1 ? (
+          <View
+            style={{
+              marginTop: 16,
+            }}></View>
+        ) : (
+          <View
+            style={{
+              marginTop: 16,
+            }}>
+            {dataList.map(el => {
+              return (
+                <RadioList
+                  belowComponent={el.belowComponent}
+                  onPress={() => onChangeRadioAddress(el.value)}
+                  isSelected={radioAddress === el.value}
+                  label={el.label}
+                  extra={el.extra}
+                />
+              );
+            })}
+          </View>
+        )}
       </View>
 
       <Modal visible={isConfirm}>

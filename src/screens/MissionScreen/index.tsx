@@ -6,13 +6,12 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {TabNavigatorParamList} from '../../navigations/bottomTabs/MainTapNavigator';
 import {colors, font, image} from '../../assets';
 import Text from '../../components/Text';
-import TabCustom from '../../components/TabCustom/TabCustom';
 import Body from './Body';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Campaign} from '../../datasource/CampaignDatasource';
@@ -59,6 +58,11 @@ export default function MissionScreen({navigation}: MissionScreenProps) {
         setLoading(false);
       });
   };
+  useEffect(() => {
+    if (navigation.isFocused()) {
+      fetchImage();
+    }
+  }, [navigation]);
 
   return (
     <SafeAreaView

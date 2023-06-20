@@ -92,7 +92,7 @@ interface Reward {
   updateAt: string;
 }
 
-export default function Body({navigation, fetchImage}: Props) {
+export default function Body({navigation}: Props) {
   const [missionList, setMissionList] = React.useState<{
     count: number;
     mission: Mission[];
@@ -118,8 +118,7 @@ export default function Body({navigation, fetchImage}: Props) {
         }
       };
       getAllMission();
-      fetchImage();
-    }, [fetchImage]),
+    }, []),
   );
   const isCloseToBottom = ({
     layoutMeasurement,
