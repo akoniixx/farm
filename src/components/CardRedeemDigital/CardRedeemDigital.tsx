@@ -1,4 +1,4 @@
-import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 import React from 'react';
 import {font, image} from '../../assets';
 import colors from '../../assets/colors/colors';
@@ -51,17 +51,21 @@ export default function CardRedeemDigital({
   return (
     <>
       <View style={styles.card}>
-        <FastImage
-          source={{
-            uri: imagePath,
-          }}
+        <View
           style={{
-            width: 72,
-            height: 72,
-            borderRadius: 10,
             flex: 0.2,
-          }}
-        />
+          }}>
+          <FastImage
+            source={{
+              uri: imagePath,
+            }}
+            style={{
+              width: 72,
+              height: 72,
+              borderRadius: 10,
+            }}
+          />
+        </View>
         <View
           style={{
             flex: 0.8,
@@ -197,8 +201,7 @@ export default function CardRedeemDigital({
             <Text
               style={{
                 fontSize: 32,
-                opacity: 0.2,
-                fontFamily: font.bold,
+                color: colors.softGrey2,
               }}>
               {data.dronerTransaction.redeemDetail.digitalReward.redeemCode}
             </Text>
@@ -212,7 +215,7 @@ export default function CardRedeemDigital({
             }}>
             <Image
               resizeMode="contain"
-              source={image.expiredBanner}
+              source={image.cancelBanner}
               style={{
                 position: 'absolute',
                 height: 80,

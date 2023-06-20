@@ -54,6 +54,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
   const [rewardDetail, setRewardDetail] = React.useState<RewardListType>(
     {} as RewardListType,
   );
+  const [disableExchange, setDisableExchange] = React.useState(false);
   const [cantExchange, setCantExchange] = React.useState(false);
   const isExpired =
     rewardDetail.expiredExchangeDate &&
@@ -88,6 +89,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
 
   const onRedeemDigital = async () => {
     try {
+      setDisableExchange(true);
       const dronerId = await AsyncStorage.getItem('droner_id');
       const payload: any = {
         rewardId: id,
@@ -99,8 +101,11 @@ export default function RewardDetailScreen({navigation, route}: Props) {
       await getCurrentPoint();
       setShowSuccessExchangeModal(true);
       setResultRedeemDigital(result);
+      setDisableExchange(false);
     } catch (e) {
       console.log(e);
+    } finally {
+      setDisableExchange(false);
     }
   };
 
@@ -131,7 +136,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         isLimit: counter * requirePoint >= currentPoint,
         isDisableMinus,
         isDisablePlus,
-        disableButton,
+        disableButton: disableButton,
       };
     }, [counter, currentPoint, requirePoint]);
 
@@ -374,6 +379,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
       </View>
       <Modal
         visible={isConfirm}
+        disablePrimary={disableButton}
         onPressPrimary={() => {
           mixpanel.track('กดยืนยันแลกแต้มแบบdigital');
           setIsConfirm(false);
