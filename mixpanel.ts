@@ -7,3 +7,5 @@ export const mixpanel = new Mixpanel(
   trackAutomaticEvents,
 );
 mixpanel.init();
+
+export const mixpanel_token = MIXPANEL_DEV ;

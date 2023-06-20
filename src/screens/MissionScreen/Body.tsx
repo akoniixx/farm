@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {Campaign} from '../../datasource/CampaignDatasource';
 import Spinner from 'react-native-loading-spinner-overlay';
+import {mixpanel} from '../../../mixpanel';
 
 interface Props {
   navigation: BottomTabNavigationProp<TabNavigatorParamList, 'mission'>;

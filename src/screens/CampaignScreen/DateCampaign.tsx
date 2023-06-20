@@ -5,6 +5,7 @@ import {colors, font} from '../../assets';
 import {Dimensions, Image, SafeAreaView, Text, View} from 'react-native';
 import icons from '../../assets/icons/icons';
 import {normalize} from '../../function/Normalize';
+import {mixpanel} from '../../../mixpanel';
 
 const DateCampaignScreen: React.FC<any> = ({navigation, route}) => {
   const width = Dimensions.get('window').width;
@@ -14,7 +15,10 @@ const DateCampaignScreen: React.FC<any> = ({navigation, route}) => {
       <CustomHeader
         title="ตารางการจับรางวัล"
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('กดย้อนกลับจากหน้าตารางจับรางวัล');
+          navigation.goBack();
+        }}
       />
 
       <View style={{flex: 1, alignItems: 'center'}}>

@@ -7,6 +7,7 @@ import {colors, font, icons} from '../../assets';
 import {momentExtend, numberWithCommas} from '../../function/utility';
 import CardMission from '../../components/CardMission/CardMission';
 import {Mission} from './Body';
+import {mixpanel} from '../../../mixpanel';
 interface Props {
   navigation: any;
   mission: Mission;
@@ -162,7 +163,8 @@ export default function CollapseItem({navigation, mission}: Props) {
                 description={`รับ${el.reward.rewardName}`}
                 isFullQuota={false}
                 key={el.num}
-                onPress={() =>
+                onPress={() => {
+                  mixpanel.track('กดการ์ดภารกิจ');
                   navigation.navigate('MissionDetailScreen', {
                     data: {
                       ...el,
@@ -180,8 +182,8 @@ export default function CollapseItem({navigation, mission}: Props) {
                       num: el.num,
                       missionId: el.missionId,
                     },
-                  })
-                }
+                  });
+                }}
               />
             );
           })}
