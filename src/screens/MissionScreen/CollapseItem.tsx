@@ -165,7 +165,9 @@ export default function CollapseItem({navigation, mission}: Props) {
                 onPress={() =>
                   navigation.navigate('MissionDetailScreen', {
                     data: {
+                      ...el,
                       current,
+                      status: el.status,
                       isComplete,
                       isExpired,
                       isStatusComplete,

@@ -76,7 +76,7 @@ const UsedPointScreen: React.FC<any> = ({navigation, route}) => {
             }
             onEndReached={loadMoreData}
             keyExtractor={(item, index) => index.toString()}
-            ListFooterComponent={
+            ListEmptyComponent={
               <View
                 style={{
                   alignSelf: 'center',
