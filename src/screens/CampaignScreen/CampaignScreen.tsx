@@ -21,6 +21,7 @@ import colors from '../../assets/colors/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProgressBarAnimated from '../../components/ProgressBarAnimated/ProgressBarAnimated';
 import {momentExtend} from '../../function/utility';
+import {mixpanel} from '../../../mixpanel';
 
 const CampaignScreen: React.FC<any> = ({navigation, route}) => {
   const [campaign, setCampaign] = useState<CampaignEntitie>(init_campaign);
@@ -48,7 +49,6 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
             setAllValue(respon.allValue);
             setAfterRai(respon.afterRai);
             setBalance(respon.balance);
-           
           })
           .catch(err => console.log(err))
           .finally(() => {
@@ -157,8 +157,17 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                   }}>
                   <Text>เริ่มนับจำนวนไร่สะสม </Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={{fontFamily:font.medium,fontSize:16,color:'#FB8705'}}>{afterRai?afterRai % raiIncondition:0}</Text>
-                    <Text style={{fontFamily:font.medium,fontSize:16}}>{'/' + raiIncondition}</Text>
+                    <Text
+                      style={{
+                        fontFamily: font.medium,
+                        fontSize: 16,
+                        color: '#FB8705',
+                      }}>
+                      {afterRai ? afterRai % raiIncondition : 0}
+                    </Text>
+                    <Text style={{fontFamily: font.medium, fontSize: 16}}>
+                      {'/' + raiIncondition}
+                    </Text>
                   </View>
                 </View>
                 <Text>
@@ -189,7 +198,7 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                   <Text style={[styles.valueFont]}>ทั้งหมด</Text>
                   <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
                     <Text style={[styles.valueFont, {fontSize: 32}]}>
-                      {allValue?allValue:0}
+                      {allValue ? allValue : 0}
                     </Text>
                     <Text
                       style={[styles.valueFont, {fontSize: 12, marginLeft: 5}]}>
@@ -209,7 +218,7 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                   <Text style={[styles.valueFont]}>(ได้รับทอง)</Text>
                   <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
                     <Text style={[styles.valueFont, {fontSize: 32}]}>
-                      {allValue? allValue - balance:0}
+                      {allValue ? allValue - balance : 0}
                     </Text>
                     <Text
                       style={[styles.valueFont, {fontSize: 12, marginLeft: 5}]}>
@@ -222,8 +231,12 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                   <Text style={[styles.valueFont]}>คงเหลือ</Text>
                   <Text style={[styles.valueFont]}>(ลุ้นโชคครั้งถัดไป)</Text>
                   <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
-                    <Text style={[styles.valueFont, {fontSize: 32,color:'#FFFA7D'}]}>
-                      {balance? balance:0}
+                    <Text
+                      style={[
+                        styles.valueFont,
+                        {fontSize: 32, color: '#FFFA7D'},
+                      ]}>
+                      {balance ? balance : 0}
                     </Text>
                     <Text
                       style={[styles.valueFont, {fontSize: 12, marginLeft: 5}]}>
@@ -241,11 +254,12 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
               justifyContent: 'space-between',
             }}>
             <TouchableOpacity
-              onPress={() =>
+              onPress={() => {
+                mixpanel.track('กดดูตารางจับรางวัลทอง');
                 navigation.navigate('DateCampaignScreen', {
                   image: campaign.pathImageRewardRound,
-                })
-              }>
+                });
+              }}>
               <View style={styles.tableReward}>
                 <Image
                   source={icons.tableReward}
@@ -270,11 +284,12 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() =>
+              onPress={() => {
+                mixpanel.track('กดดูกติกาและเงื่อนไขทอง');
                 navigation.navigate('RulesCampaignScreen', {
                   rules: campaign.rulesCampaign,
-                })
-              }>
+                });
+              }}>
               <View style={styles.tableReward}>
                 <Image
                   source={icons.ruleReward}
@@ -302,7 +317,10 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
           </View>
           <View style={{marginTop: normalize(24), marginBottom: normalize(70)}}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('WinnerCampaignScreen')}>
+              onPress={() => {
+                mixpanel.track('กดดูประกาศรายชื่อผู้โชคดีรับสร้อยคอทองคำ');
+                navigation.navigate('WinnerCampaignScreen');
+              }}>
               <View
                 style={[styles.tableReward, {justifyContent: 'flex-start'}]}>
                 <Image

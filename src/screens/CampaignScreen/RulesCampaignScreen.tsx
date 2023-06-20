@@ -5,6 +5,7 @@ import {colors, font} from '../../assets';
 import {Image, SafeAreaView, Text, View} from 'react-native';
 import icons from '../../assets/icons/icons';
 import {normalize} from '../../function/Normalize';
+import {mixpanel} from '../../../mixpanel';
 
 const RulesCampaignScreen: React.FC<any> = ({navigation, route}) => {
   let rules = route.params.rules;
@@ -14,7 +15,10 @@ const RulesCampaignScreen: React.FC<any> = ({navigation, route}) => {
       <CustomHeader
         title="กติกาและเงื่อนไข"
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('กดย้อนกลับจากหน้ากติกาทอง');
+          navigation.goBack();
+        }}
       />
 
       <View style={{flex: 1, paddingHorizontal: normalize(15)}}>

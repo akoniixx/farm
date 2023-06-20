@@ -22,6 +22,7 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import image from '../../assets/images/image';
 import {momentExtend} from '../../function/utility';
 import {normalize} from '../../function/Normalize';
+import {mixpanel} from '../../../mixpanel';
 
 const DetailGuruScreen: React.FC<any> = ({navigation}) => {
   const isFocused = useIsFocused();
@@ -54,7 +55,13 @@ const DetailGuruScreen: React.FC<any> = ({navigation}) => {
 
   return (
     <SafeAreaView style={{backgroundColor: colors.white, flex: 1}}>
-      <CustomHeader showBackBtn onPressBack={() => navigation.goBack()} />
+      <CustomHeader
+        showBackBtn
+        onPressBack={() => {
+          mixpanel.track('กดย้อนกลับจากหน้ารายละเอียดกูรูเกษตร');
+          navigation.goBack();
+        }}
+      />
       {data != undefined ? (
         <ScrollView>
           <View>

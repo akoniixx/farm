@@ -90,6 +90,7 @@ const App = () => {
         {
           text: 'อัพเดท',
           onPress: () => {
+            mixpanel.track('กดอัพเดทแอพ')
             Linking.openURL(isIOS ? storeUrl : playStoreUrl);
             RNExitApp.exitApp();
           },
