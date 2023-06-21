@@ -48,7 +48,7 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
   const [count, setCount] = useState(1);
   const [droneIndex, setDroneIndex] = useState(1);
   const [drone, setDrone] = useState<any>();
-  const [droneBrand, setDroneBrand] = useState<any>();
+  const [percentSuccess, setPercentSuccess] = useState<any>();
 
   const showActionSheet = () => {
     actionSheet.current.show();
@@ -58,7 +58,7 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
       const droner_id = await AsyncStorage.getItem('droner_id');
       ProfileDatasource.getProfile(droner_id!).then(res => {
         setDrone(res.dronerDrone);
-        const filter = res.dronerDrone.map((x: any) => x.drone.droneBrand);
+        setPercentSuccess(res.percentSuccess);
       });
     };
     getProfile();
@@ -202,7 +202,7 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
             onPress={async () => {
               setLoading(true);
               incrementCount();
-              Register.uploadDronerdrone(dronedata)
+              Register.uploadDronerdrone(dronedata, Number(percentSuccess) + 15)
                 .then(res => {
                   setLoading(false);
                   setBrand(null);

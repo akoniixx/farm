@@ -39,6 +39,7 @@ import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import Geolocation from 'react-native-geolocation-service';
 import Text from '../../components/Text';
+import CustomHeader from '../../components/CustomHeader';
 
 const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -262,19 +263,19 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   };
   return (
     <SafeAreaView style={[stylesCentral.container]}>
-      {backbotton ? (
+      {/* {backbotton ? (
         <View style={styles.appBar}>
           <Text style={styles.appBarHeader}>โปรไฟล์ของฉัน</Text>
         </View>
-      ) : (
-        <View style={styles.appBarBack}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Image source={icons.arrowLeft} style={styles.listTileIcon} />
-          </TouchableOpacity>
-          <Text style={[styles.appBarHeader]}>โปรไฟล์ของฉัน</Text>
-          <View style={styles.listTileIcon} />
-        </View>
-      )}
+      ) : ( */}
+      <View style={styles.appBarBack}>
+        <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
+          <Image source={icons.arrowLeft} style={styles.listTileIcon} />
+        </TouchableOpacity>
+        <Text style={[styles.appBarHeader]}>โปรไฟล์ของฉัน</Text>
+        <View style={styles.listTileIcon} />
+      </View>
+      {/* )} */}
       <View style={[styles.body]}>
         <ScrollView>
           <View style={styles.profile}>

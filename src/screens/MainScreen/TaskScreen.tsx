@@ -20,6 +20,7 @@ import * as RootNavigation from '../../navigations/RootNavigation';
 import {callcenterNumber} from '../../definitions/callCenterNumber';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import MyProfileScreen from '../ProfileVerifyScreen/MyProfileScreen';
+import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 
 interface Prop {
   dronerStatus: string;
@@ -45,6 +46,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const [comment, setComment] = useState<string>('');
   const [idUpload, setIdUpload] = useState<string>('');
   const [updateBy, setUpdateBy] = useState<string>('');
+  const [percentSuccess, setPercentSuccess] = useState<number>(0);
   const [dataUpdateStatus, setDataUpdateStatus] =
     useState<dataUpdateStatusEntity>({
       id: '',
@@ -166,8 +168,11 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
         setLoading(false);
         console.log(err);
       });
-  };
 
+    ProfileDatasource.getProfile(droner_id!).then(res => {
+      setPercentSuccess(res.percentSuccess);
+    });
+  };
   const closeFinishModal = () => {
     setToggleModalUpload(false);
     setFinishImg(null);
@@ -419,7 +424,8 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                   <AnimatedCircularProgress
                     size={50}
                     width={5}
-                    fill={50}
+                    fill={Number(percentSuccess)}
+                    prefill={0}
                     tintColor="#FB8705"
                     backgroundColor="#FFEFDD"
                     rotation={0}>
@@ -427,10 +433,10 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                       <Text
                         style={{
                           fontFamily: fonts.medium,
-                          fontSize: normalize(14),
+                          fontSize: normalize(12),
                           color: colors.fontBlack,
                         }}>
-                        {'50%'}
+                        {percentSuccess + '%'}
                       </Text>
                     )}
                   </AnimatedCircularProgress>

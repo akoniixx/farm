@@ -35,6 +35,7 @@ import {callcenterNumber} from '../../definitions/callCenterNumber';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import MyProfileScreen from '../ProfileVerifyScreen/MyProfileScreen';
 import * as RootNavigation from '../../navigations/RootNavigation';
+import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 
 interface Prop {
   isOpenReceiveTask: boolean;
@@ -60,6 +61,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   const [selectedTaskId, setSelectedTaskId] = useState<string>('');
   const [dronerId, setDronerId] = useState<string>('');
   const {actiontaskId, setActiontaskId} = useContext(ActionContext);
+  const [percentSuccess, setPercentSuccess] = useState<number>(0);
 
   const getData = async () => {
     setLoading(true);
@@ -73,6 +75,10 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
         }
       })
       .catch(err => console.log(err));
+
+    ProfileDatasource.getProfile(dronerId!).then(res => {
+      setPercentSuccess(res.percentSuccess);
+    });
   };
   const receiveTask = async () => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
@@ -384,7 +390,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                 <AnimatedCircularProgress
                   size={50}
                   width={5}
-                  fill={50}
+                  fill={Number(percentSuccess)}
                   tintColor="#FB8705"
                   backgroundColor="#FFEFDD"
                   rotation={0}>
@@ -392,10 +398,10 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                     <Text
                       style={{
                         fontFamily: fonts.medium,
-                        fontSize: normalize(14),
+                        fontSize: normalize(12),
                         color: colors.fontBlack,
                       }}>
-                      {'50%'}
+                      {percentSuccess + '%'}
                     </Text>
                   )}
                 </AnimatedCircularProgress>

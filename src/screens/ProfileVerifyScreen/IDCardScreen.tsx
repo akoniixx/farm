@@ -2,7 +2,9 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {
   Dimensions,
   Image,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -19,23 +21,34 @@ import * as ImagePicker from 'react-native-image-picker';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {Register} from '../../datasource/AuthDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import  Lottie  from 'lottie-react-native';
+import Lottie from 'lottie-react-native';
 
 const IDCardScreen: React.FC<any> = ({navigation, route}) => {
   const [telNo, setTelNo] = useState<any>(null);
   const width = Dimensions.get('window').width;
   const [image, setImage] = useState<any>(null);
   const [idcard, setIdCard] = useState<any>('');
-  const [openModal, setOpenModal] = useState(false);
+  const [imgCard, setImgCard] = useState<any>('');
+  const [idNo, setId] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<any>();
+  const [percentSuccess, setPercentSuccess] = useState<any>();
 
   useEffect(() => {
     const getProfile = async () => {
       const droner_id = await AsyncStorage.getItem('droner_id');
       ProfileDatasource.getProfile(droner_id!).then(res => {
-        setProfile(res)
+        setProfile(res);
         setTelNo(res.telephoneNo);
+        setPercentSuccess(res.percentSuccess);
+        setId(res.idNo);
+        if (res.file) {
+          ProfileDatasource.getImgePath(droner_id!, res.file[0].path).then(
+            res => {
+              setImgCard(res.url);
+            },
+          );
+        }
       });
     };
     getProfile();
@@ -45,7 +58,9 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
       mediaType: 'photo',
     });
     if (!result.didCancel) {
-      setImage(result);
+      if (result == null) {
+        setImage(result);
+      }
     }
   }, [image]);
 
@@ -56,10 +71,14 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
         showBackBtn
         onPressBack={() => navigation.goBack()}
       />
-      <>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          persistentScrollbar={false}>
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        persistentScrollbar={false}>
+        <KeyboardAvoidingView
+          style={{flex: 1}}
+          keyboardVerticalOffset={100}
+          behavior={Platform.OS === 'ios' ? 'position' : 'height'}>
           <View style={styles.inner}>
             <View style={{paddingVertical: 20}}>
               <Text style={styles.text}>
@@ -104,7 +123,7 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
                   alignSelf: 'center',
                 }}
                 onPress={onAddImage}>
-                {image == null ? (
+                {image == null && !imgCard ? (
                   <View style={styles.addImage}>
                     <View style={styles.camera}>
                       <Image
@@ -147,21 +166,35 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
                         borderRadius: 20,
                         zIndex: 0,
                       }}>
-                      <Image
-                        source={{
-                          uri: image ? image.assets[0].uri : null,
-                        }}
-                        style={{
-                          width: width * 0.9,
-                          height: normalize(162),
-                          borderRadius: 20,
-                        }}
-                      />
+                      {imgCard ? (
+                        <Image
+                          source={{
+                            uri: imgCard,
+                          }}
+                          style={{
+                            width: width * 0.9,
+                            height: normalize(162),
+                            borderRadius: 20,
+                          }}
+                        />
+                      ) : (
+                        <Image
+                          source={{
+                            uri: image ? image.assets[0].uri : null,
+                          }}
+                          style={{
+                            width: width * 0.9,
+                            height: normalize(162),
+                            borderRadius: 20,
+                          }}
+                        />
+                      )}
                     </View>
                   </View>
                 )}
               </TouchableOpacity>
               <TextInput
+                defaultValue={idNo}
                 style={styles.input}
                 placeholder="เลขบัตรประชาชน"
                 maxLength={13}
@@ -182,15 +215,17 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
                     ? colors.orange
                     : colors.disable
                 }
-                disable={
-                  idcard.length === 13 && image != null ? false : true
-                }
+                disable={idcard.length === 13 && image != null ? false : true}
                 onPress={() => {
                   if (idcard.length === 13 && image != null) {
-                      setLoading(true);
-                      Register.registerStep4(telNo, idcard)
+                    setLoading(true);
+                    Register.registerStep4(
+                      telNo,
+                      idcard,
+                      Number(percentSuccess) + 20,
+                    )
                       .then(res => {
-                        Register.uploadDronerCard(image)
+                        ProfileDatasource.uploadDronerIDCard(image)
                           .then(res => {
                             setLoading(false);
                             navigation.navigate('MyProfileScreen');
@@ -203,38 +238,38 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
               />
             </View>
             <Modal transparent={true} visible={loading}>
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: 'rgba(0,0,0,0.5)',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
               <View
                 style={{
-                  backgroundColor: colors.white,
-                  width: normalize(50),
-                  height: normalize(50),
-                  display: 'flex',
+                  flex: 1,
+                  backgroundColor: 'rgba(0,0,0,0.5)',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  borderRadius: normalize(8),
                 }}>
-                <Lottie
-                  source={img.loading}
-                  autoPlay
-                  loop
+                <View
                   style={{
+                    backgroundColor: colors.white,
                     width: normalize(50),
                     height: normalize(50),
-                  }}
-                />
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: normalize(8),
+                  }}>
+                  <Lottie
+                    source={img.loading}
+                    autoPlay
+                    loop
+                    style={{
+                      width: normalize(50),
+                      height: normalize(50),
+                    }}
+                  />
+                </View>
               </View>
-            </View>
-          </Modal>
+            </Modal>
           </View>
-        </ScrollView>
-      </>
+        </KeyboardAvoidingView>
+      </ScrollView>
     </View>
   );
 };

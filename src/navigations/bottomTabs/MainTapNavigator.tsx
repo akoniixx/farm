@@ -17,7 +17,7 @@ import {
 import MainTaskScreen from '../../screens/MainTaskScreen/MainTaskScreen';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
-import {TabActions} from '@react-navigation/native';
+import {TabActions, useIsFocused} from '@react-navigation/native';
 import RegisterFailedModal from '../../components/Modal/RegisterFailedModalNotification';
 import Toast from 'react-native-toast-message';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
@@ -51,6 +51,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   const [initialRouteName, setInitialRouteName] = useState('home');
   const {actiontaskId, setActiontaskId} = useContext(ActionContext);
   const [status, setStatus] = useState<any>();
+  const isFocused = useIsFocused();
 
   const [campaignImage, setCampaignImage] = useState<string>('');
 
@@ -62,7 +63,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
       });
     };
     getProfile();
-  }, []);
+  }, [isFocused]);
   const ListPath = [
     {
       name: 'home',

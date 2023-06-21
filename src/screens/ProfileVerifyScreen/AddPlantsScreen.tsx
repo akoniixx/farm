@@ -31,20 +31,39 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
   const [plantListSelect, setPlantListSelect] = useState(plantList);
   const [addPlant, setAddPlant] = useState<string>('');
-  const [plantsData, setPlantsData] = useState<any>();
   const [result, setResult] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [percentSuccess, setPercentSuccess] = useState<any>();
 
   useEffect(() => {
     const getProfile = async () => {
       const droner_id = await AsyncStorage.getItem('droner_id');
       await ProfileDatasource.getProfile(droner_id!).then(res => {
-        setPlantsData(res.expPlant);
+        setPercentSuccess(res.percentSuccess)
+        let mapPlants = plantListSelect.map(x => {
+          if (res.expPlant.includes(x.value)) {
+            return {
+              ...x,
+              active: true,
+            };
+          } else {
+            return {...x};
+          }
+        });
+        res.expPlant.map((x: any) => {
+          if (!mapPlants.some(val => val.value === x)) {
+            mapPlants.push({
+              value: x,
+              active: true,
+            });
+          }
+        });
+        setPlantListSelect(mapPlants);
       });
     };
     getProfile();
   }, []);
-  console.log(JSON.stringify(plantsData,null,2))
+
   const handleSelect = (
     value: any,
     index: number,
@@ -69,6 +88,8 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
       const newplant = {value: value, active: true};
       data.push(newplant);
       setPlantListSelect(data);
+      setAddPlant('')
+      
     }
   };
   return (
@@ -92,25 +113,26 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
               (กรุณาเลือกอย่างน้อย 1 อย่าง)
             </Text>
           </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-              }}>
-              {plantListSelect.map((v, i) => (
-                <PlantSelect
-                  key={i}
-                  label={v.value}
-                  active={v.active}
-                  onPress={() =>
-                    handleSelect(plantListSelect, i, v.value, v.active)
-                  }
-                />
-              ))}
-            </View>
-        
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+            }}>
+            {plantListSelect.map((v, i) => (
+              <PlantSelect
+                key={i}
+                label={v.value}
+                active={v.active}
+                onPress={() =>
+                  handleSelect(plantListSelect, i, v.value, v.active)
+                }
+              />
+            ))}
+          </View>
+
           <View style={styles.input}>
             <TextInput
+              value={addPlant}
               placeholder="พืชอื่นๆ"
               placeholderTextColor={colors.disable}
               style={{
@@ -121,27 +143,26 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
               }}
               onChangeText={value => setAddPlant(value)}
             />
-            <View style={{alignSelf: 'flex-end',bottom: '35%'}}>
-            {addPlant.length != 0 ? (
-              <TouchableOpacity
-                style={{
-                  marginBottom: normalize(10),
-                  width: normalize(60),
-                  height: normalize(30),
-                  borderRadius: 6,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: '#2BB0ED',
-                }}
-                onPress={() => addSelect(addPlant)}>
-                <Text style={[styles.h2, {color: colors.white}]}>เพิ่ม</Text>
-              </TouchableOpacity>
-            ) : (
-              <></>
-            )}
+            <View style={{alignSelf: 'flex-end', bottom: '35%'}}>
+              {addPlant.length != 0 ? (
+                <TouchableOpacity
+                  style={{
+                    marginBottom: normalize(10),
+                    width: normalize(60),
+                    height: normalize(30),
+                    borderRadius: 6,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#2BB0ED',
+                  }}
+                  onPress={() => addSelect(addPlant)}>
+                  <Text style={[styles.h2, {color: colors.white}]}>เพิ่ม</Text>
+                </TouchableOpacity>
+              ) : (
+                <></>
+              )}
             </View>
-          
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -195,7 +216,7 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
                 plant.push(item.value);
               }
             });
-            Register.registerUpPlants(plant)
+            Register.registerUpPlants(plant,Number(percentSuccess)  + 15)
               .then(res => {
                 setLoading(false);
                 navigation.navigate('MyProfileScreen');
@@ -213,7 +234,7 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
 export default AddPlantsScreen;
 const styles = StyleSheet.create({
   inner: {
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     paddingHorizontal: normalize(17),
   },
   h1: {

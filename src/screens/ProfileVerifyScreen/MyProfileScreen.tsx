@@ -27,7 +27,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [drone, setDrone] = useState();
   const [plants, setPlants] = useState();
   const [idCard, setIdCard] = useState();
-  const [checkNum, setCheckNum] = useState<number>(50);
+  const [checkNum, setCheckNum] = useState<number>(0);
   const [checked, setChecked] = useState<number>(50);
   const [reload, setReload] = useState(false);
 
@@ -40,26 +40,18 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
       setLoading(true);
       const droner_id = await AsyncStorage.getItem('droner_id');
       ProfileDatasource.getProfile(droner_id!).then(res => {
-        console.log(JSON.stringify(res.status, null, 2));
         setLoading(false);
         setDrone(res.dronerDrone[0]);
         setPlants(res.expPlant[0]);
         setIdCard(res.idNo);
+        setCheckNum(res.percentSuccess);
+        if (res.status === 'PENDING') {
+          setShowModal(true);
+        }
       });
     };
     getProfile();
-    checkData();
   }, [isFocused]);
-  const checkData = () => {
-    if (drone && plants && idCard) {
-      // Register.changeToPending().then(res => {
-      //   setShowModal(true);
-      // });
-  
-      setReload(!reload);
-    }
-  };
-
 
   return (
     <SafeAreaView style={[stylesCentral.container]}>
