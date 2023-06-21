@@ -76,7 +76,6 @@ end
           config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'FOLLY_HAVE_CLOCK_GETTIME=1']
         end
       end
-
       target.build_configurations.each do |config|
         # Disable arm64 builds for the simulator
         config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'

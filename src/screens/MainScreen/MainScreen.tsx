@@ -83,7 +83,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     getCurrentPoint();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   const openSocket = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     await socket.connect();

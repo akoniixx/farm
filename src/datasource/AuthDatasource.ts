@@ -262,13 +262,14 @@ export class Register {
       });
   }
 
-  static async uploadDronerdrone(dronerDrone: any): Promise<any> {
+  static async uploadDronerdrone(dronerDrone: any, percentSuccess: number): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient
       .post(BASE_URL + '/auth/droner/register', {
         id: droner_id,
         dronerDrone: dronerDrone,
         status: 'OPEN',
+        percentSuccess: percentSuccess
       })
       .then(async response => {
         return response.data;
@@ -311,6 +312,42 @@ export class Register {
         console.log(error);
       });
   }
+  static async registerUpPlants(expPlant: string[], percentSuccess: number): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    return registerClient
+      .post(BASE_URL + '/auth/droner/register', {
+        id: droner_id,
+        expPlant: expPlant,
+        status: 'OPEN',
+        percentSuccess: percentSuccess
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  static async uploadDronerCard(file: any): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    const data = new FormData();
+    data.append('file', {
+      uri: file.assets[0].uri,
+      name: file.assets[0].fileName,
+      type: file.assets[0].type,
+    });
+    data.append('resourceId', droner_id);
+    data.append('resource', 'DRONER');
+    data.append('category', 'ID_CARD_IMAGE');
+    return uploadFileClient
+      .post(BASE_URL + '/file/upload', {data, status: 'OPEN'})
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
   static async registerSkipStep4(): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient
@@ -326,13 +363,14 @@ export class Register {
       });
   }
 
-  static async registerStep4(telephoneNo: string, idNo: string): Promise<any> {
+  static async registerStep4(telephoneNo: string, idNo: string, percentSuccess: number): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient
       .post(BASE_URL + '/auth/droner/register', {
         id: droner_id,
         telephoneNo: telephoneNo,
         idNo: idNo,
+        percentSuccess: percentSuccess
       })
       .then(response => {
         return response.data;
