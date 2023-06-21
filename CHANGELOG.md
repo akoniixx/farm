@@ -1,3 +1,6 @@
+## Enchance [1.5.4] 2023-06-21
+- enhance flow register
+
 ## Feature [1.5.3] 2023-09-21
 - exchange reward bug
 - bug fix
