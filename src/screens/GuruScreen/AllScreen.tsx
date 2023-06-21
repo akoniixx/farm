@@ -22,6 +22,7 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {normalize} from '../../function/Normalize';
 import {momentExtend} from '../../function/utility';
+import {mixpanel} from '../../../mixpanel';
 
 const AllGuruScreen: React.FC<any> = ({navigation}) => {
   const isFocused = useIsFocused();
@@ -51,10 +52,14 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
       <CustomHeader
         title="กูรูเกษตร"
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('กดย้อนกลับจากหน้ารวมข่าวสารกูรูเกษตร');
+          navigation.goBack();
+        }}
         image={() => (
           <TouchableOpacity
             onPress={async () => {
+              mixpanel.track('กดฟิลเตอร์ กูรูเกษตร');
               filterNews.current.show();
             }}>
             <Image source={icons.filter} style={{width: 28, height: 29}} />
@@ -71,6 +76,7 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
                     <TouchableOpacity
                       key={index}
                       onPress={async () => {
+                        mixpanel.track('กดอ่านกูรูเกษตรในหน้ารวมข่าวสาร');
                         await AsyncStorage.setItem('guruId', `${item.id}`);
                         navigation.push('DetailGuruScreen');
                       }}>
@@ -117,6 +123,7 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
                 fontSize: normalize(16),
               }}
               onPress={() => {
+                mixpanel.track('กดยกเลิกฟิลเตอร์ กูรูเกษตร');
                 filterNews.current.hide();
               }}>
               ยกเลิก
@@ -132,6 +139,7 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
             <View style={{paddingVertical: 20}}>
               <TouchableOpacity
                 onPress={async () => {
+                  mixpanel.track('เลือกฟิลเตอร์กูรูเกษตรล่าสุด');
                   filterNews.current.hide();
                   await GuruKaset.findAllNews(
                     'ACTIVE',
@@ -170,6 +178,7 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
             <View style={{paddingVertical: 5}}>
               <TouchableOpacity
                 onPress={async () => {
+                  mixpanel.track('เลือกฟิลเตอร์กูรูเกษตรนิยมมากสุด');
                   filterNews.current.hide();
                   await GuruKaset.findAllNews(
                     'ACTIVE',

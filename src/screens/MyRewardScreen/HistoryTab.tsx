@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import {
   View,
-  Text,
   StyleSheet,
   SectionList,
   RefreshControl,
@@ -18,6 +17,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import FastImage from 'react-native-fast-image';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
 import {Image} from 'react-native';
+import {RedemptionTransaction} from '../../types/MyRewardType';
+import Text from '../../components/Text';
 
 const mappingStatusText = {
   REQUEST: 'คำร้องขอแลก',
@@ -43,25 +44,6 @@ const mappingStatusColor = {
 //   EXPIRED: colors.gray,
 //   CANCEL: colors.decreasePoint,
 // };
-interface RedemptionTransaction {
-  dronerTransactionsId: string;
-  redeemDetail: RedeemDetail;
-  rewardId: string;
-  rewardName: string;
-  imagePath: string;
-  rewardType: string;
-  rewardExchange: string;
-  dronerRedeemHistoriesId: string;
-  redeemDate: string;
-}
-
-interface RedeemDetail {
-  remark: string;
-  rewardType: string;
-  trackingNo: string;
-  redeemStatus: string;
-  deliveryCompany: string;
-}
 
 export default function HistoryTab({navigation}: {navigation: any}) {
   const take = 10;
@@ -223,11 +205,16 @@ export default function HistoryTab({navigation}: {navigation: any}) {
       renderItem={({item, section}) => {
         const statusRedeem = item.redeemDetail.redeemStatus;
         const isMission = item.rewardExchange !== 'SCORE';
+        const isDigital = item.rewardType === 'DIGITAL';
 
         return (
           <TouchableOpacity
             onPress={() => {
-              onPressItem(item.dronerTransactionsId);
+              isDigital
+                ? navigation.navigate('RedeemDetailDigitalScreen', {
+                    id: item.dronerTransactionsId,
+                  })
+                : onPressItem(item.dronerTransactionsId);
             }}
             style={styles({type: statusRedeem}).card}>
             <FastImage

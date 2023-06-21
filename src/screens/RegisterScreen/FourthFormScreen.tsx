@@ -15,6 +15,7 @@ import {MainButton} from '../../components/Button/MainButton';
 import {ProgressBar} from '../../components/ProgressBar';
 import {Register} from '../../datasource/AuthDatasource';
 import Text from '../../components/Text';
+import {mixpanel} from '../../../mixpanel';
 
 const width = Dimensions.get('window').width;
 
@@ -78,6 +79,7 @@ const FourthFormScreen: React.FC<any> = ({route, navigation}) => {
           label="ถัดไป"
           color={colors.orange}
           onPress={() => {
+            mixpanel.track('กดไปยังหน้าอัพโหลดเอกสาร');
             navigation.navigate('AddIDCardScreen', {
               tele: telNo,
               profile: Profile,
@@ -92,6 +94,7 @@ const FourthFormScreen: React.FC<any> = ({route, navigation}) => {
             color={colors.white}
             fontColor={colors.fontBlack}
             onPress={() => {
+              mixpanel.track('กดข้ามหน้าอัพโหลดเอกสาร');
               Register.registerSkipStep4()
                 .then(res => navigation.navigate('SuccessScreen'))
                 .catch(err => console.log(err));

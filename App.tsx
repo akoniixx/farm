@@ -70,7 +70,7 @@ const App = () => {
     });
 
     const playStoreUrl = await VersionCheck.getPlayStoreUrl({
-      packageName: 'com.iconkaset.farmer',
+      packageName: 'com.iconkaset.droner',
     });
 
     const {remote} = await storeVersion({
@@ -90,11 +90,8 @@ const App = () => {
         {
           text: 'อัพเดท',
           onPress: () => {
-            if (isIOS) {
-              Linking.openURL(storeUrl);
-            } else {
-              Linking.openURL(playStoreUrl);
-            }
+            mixpanel.track('กดอัพเดทแอพ');
+            Linking.openURL(isIOS ? storeUrl : playStoreUrl);
             RNExitApp.exitApp();
           },
         },
@@ -134,13 +131,15 @@ const App = () => {
       <ActionContext.Provider value={{actiontaskId, setActiontaskId}}>
         <NavigationContainer ref={navigationRef}>
           <AuthProvider>
-            <PointProvider>
-              <SheetProvider>
-                <AppNavigator />
-              </SheetProvider>
-            </PointProvider>
+            <>
+              <PointProvider>
+                <SheetProvider>
+                  <AppNavigator />
+                </SheetProvider>
+              </PointProvider>
+              <Toast config={toastConfig} />
+            </>
           </AuthProvider>
-          <Toast config={toastConfig} />
         </NavigationContainer>
       </ActionContext.Provider>
     </>

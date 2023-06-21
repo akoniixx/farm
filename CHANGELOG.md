@@ -1,5 +1,17 @@
-## Feature [1.4.2] 2023-06-21
-- Re flow register
+## Feature [1.5.2] 2023-09-20
+- fix bug digital reward 
+- validate radio select
+## Enchance [1.5.1] 2023-06-20
+- comment status
+
+## Enchance [1.5.0] 2023-06-20
+- tacking mixpanel mission reward campaign
+
+## Feature [1.4.3] 2023-06-20
+- Fix bug image re-render every time
+## Feature [1.4.2] 2023-06-19
+- History feature reward Digital
+- Digital reward Detail screen 
 
 ## Feature [1.4.1] 2023-06-16
 - Force update app

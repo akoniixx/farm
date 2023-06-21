@@ -5,6 +5,7 @@ import {colors, font} from '../../assets';
 import {Image, SafeAreaView, Text, View} from 'react-native';
 import icons from '../../assets/icons/icons';
 import {normalize} from '../../function/Normalize';
+import {mixpanel} from '../../../mixpanel';
 
 const WinnerCampaignScreen: React.FC<any> = ({navigation, route}) => {
   return (
@@ -12,7 +13,10 @@ const WinnerCampaignScreen: React.FC<any> = ({navigation, route}) => {
       <CustomHeader
         title="ประกาศรายชื่อผู้โชคดี"
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('กดย้อนกลับจากหน้าประกาศรายชื่อทอง');
+          navigation.goBack();
+        }}
       />
 
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>

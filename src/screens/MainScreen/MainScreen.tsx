@@ -18,7 +18,7 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
 import Toast from 'react-native-toast-message';
 import fonts from '../../assets/fonts';
-import {mixpanel} from '../../../mixpanel';
+import {mixpanel, mixpanel_token} from '../../../mixpanel';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {CardGuruKaset} from '../../components/Carousel/CardGuruKaset';
 import {GuruKaset} from '../../datasource/GuruDatasource';
@@ -116,6 +116,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     const droner_id = await AsyncStorage.getItem('droner_id');
     ProfileDatasource.getProfile(droner_id!)
       .then(res => {
+        sendProfilesToMixpanel(res);
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
@@ -167,6 +168,25 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
       .catch(err => console.log(err));
   };
 
+  const sendProfilesToMixpanel = async (profiles: any) => {
+    const options = {
+      method: 'POST',
+      headers: {accept: 'text/plain', 'content-type': 'application/json'},
+      body: JSON.stringify([
+        {
+          $token: mixpanel_token,
+          $distinct_id: await mixpanel.getDistinctId(),
+          $set: profiles,
+        },
+      ]),
+    };
+
+    fetch('https://api.mixpanel.com/engage#profile-set', options)
+      .then(response => response.json())
+      .then(response => console.log(response))
+      .catch(err => console.error(err));
+  };
+
   const openReceiveTask = async (isOpen: boolean) => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     TaskDatasource.openReceiveTask(dronerId!, isOpen)
@@ -216,12 +236,20 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           zIndex: 1,
         }}>
         <View style={{width: 10, marginLeft: 20}}>
-          <TouchableOpacity onPress={() => setShowCampaign('none')}>
+          <TouchableOpacity
+            onPress={() => {
+              mixpanel.track('กดปิดแคมเปญทอง');
+              setShowCampaign('none');
+            }}>
             <Image source={icons.x} style={{width: 10, height: 10}} />
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate('CampaignScreen')}>
+        <TouchableOpacity
+          onPress={() => {
+            mixpanel.track('กดแคมเปญทองจากหน้าแรก');
+            navigation.navigate('CampaignScreen');
+          }}>
           <Image
             source={{uri: campaignImage}}
             style={{width: 150, height: 60}}
@@ -308,6 +336,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
             <View>
               <TouchableOpacity
                 onPress={() => {
+                  mixpanel.track('กดดูประวัติการได้รับแต้ม/ใช้แต้ม');
                   navigation.navigate('PointHistoryScreen');
                 }}>
                 <LinearGradient

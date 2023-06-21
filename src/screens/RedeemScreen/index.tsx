@@ -15,6 +15,7 @@ import {SheetManager} from 'react-native-actions-sheet';
 import {BASE_URL, httpClient} from '../../config/develop-config';
 import Text from '../../components/Text';
 import CardRedeemDigital from '../../components/CardRedeemDigital/CardRedeemDigital';
+import moment from 'moment';
 
 interface Props {
   navigation: any;
@@ -32,7 +33,9 @@ interface Branch {
 export default function RedeemScreen({navigation, route}: Props) {
   const {data, imagePath, expiredUsedDate} = route.params;
   const [selectedArea, setSelectedArea] = React.useState<any>(null);
-
+  const isExpired = React.useMemo(() => {
+    return moment(expiredUsedDate).isBefore(moment());
+  }, [expiredUsedDate]);
   const [dataBranch, setDataBranch] = React.useState<Branch[]>([]);
   useEffect(() => {
     const getBranch = async () => {
@@ -45,6 +48,7 @@ export default function RedeemScreen({navigation, route}: Props) {
     };
     getBranch();
   }, []);
+
   return (
     <SafeAreaView
       style={{
@@ -103,40 +107,44 @@ export default function RedeemScreen({navigation, route}: Props) {
                   color: colors.decreasePoint,
                 }}>
                 ท่านสามารถใช้ส่วนลดนี้ โดยไปที่หน้าสาขาที่ต้องการใช้บริการ
-                พร้อมยื่นแสดงหน้าจอส่วนลดนี้ให้กับเจ้าหน้าที่
-                เพื่อให้เจ้าหน้าที่ ยืนยันการใช้สิทธิ์
+                พร้อมยื่นแสดงหน้าจอส่วนลดนี้ให้กับเจ้าหน้าที่เพื่อให้เจ้าหน้าที่
+                ยืนยันการใช้สิทธิ์
               </Text>
             </View>
           </View>
-          <View
-            style={{
-              marginBottom: 16,
-            }}>
-            <TouchableOpacity
-              style={styles.buttonPrimary}
-              onPress={async () => {
-                const result: {
-                  selected: any;
-                } = await SheetManager.show('selectArea', {
-                  payload: {
-                    selected: selectedArea,
-                    data: dataBranch,
-                  },
-                });
-                if (result?.selected) {
-                  setSelectedArea(result.selected);
-                }
+          {!isExpired && (
+            <View
+              style={{
+                marginBottom: 16,
               }}>
-              <Text
-                style={{
-                  color: colors.white,
-                  fontSize: 20,
-                  fontFamily: font.bold,
+              <TouchableOpacity
+                style={styles.buttonPrimary}
+                onPress={async () => {
+                  const result: {
+                    selected: any;
+                  } = await SheetManager.show('selectArea', {
+                    payload: {
+                      selected: selectedArea,
+                      data: dataBranch,
+                      dronerTransactionId: data.dronerTransaction.id,
+                      navigation,
+                    },
+                  });
+                  if (result?.selected) {
+                    setSelectedArea(result.selected);
+                  }
                 }}>
-                กดรับสิทธิ์ (เฉพาะเจ้าหน้าที่)
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <Text
+                  style={{
+                    color: colors.white,
+                    fontSize: 20,
+                    fontFamily: font.bold,
+                  }}>
+                  กดรับสิทธิ์ (เฉพาะเจ้าหน้าที่)
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -15,7 +15,6 @@ import {StackParamList} from '../../navigations/MainNavigator';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import CustomHeader from '../../components/CustomHeader';
 import {momentExtend, numberWithCommas} from '../../function/utility';
-import mockImage from '../../assets/mockImage';
 import Counter from '../../components/Counter/Counter';
 import {normalize} from '../../function/Normalize';
 import Modal from '../../components/Modal/Modal';
@@ -30,6 +29,7 @@ import Text from '../../components/Text';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuth} from '../../contexts/AuthContext';
 import {DigitalRewardType} from '../../types/TypeRewardDigital';
+import {mixpanel} from '../../../mixpanel';
 interface Props {
   navigation: StackNavigationHelpers;
   route: RouteProp<StackParamList, 'RewardDetailScreen'>;
@@ -54,6 +54,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
   const [rewardDetail, setRewardDetail] = React.useState<RewardListType>(
     {} as RewardListType,
   );
+  const [disableExchange, setDisableExchange] = React.useState(false);
   const [cantExchange, setCantExchange] = React.useState(false);
   const isExpired =
     rewardDetail.expiredExchangeDate &&
@@ -83,10 +84,12 @@ export default function RewardDetailScreen({navigation, route}: Props) {
     if (id) {
       getRewardById();
     }
-  }, [id, currentPoint]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const onRedeemDigital = async () => {
     try {
+      setDisableExchange(true);
       const dronerId = await AsyncStorage.getItem('droner_id');
       const payload: any = {
         rewardId: id,
@@ -95,11 +98,14 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         updateBy: `${user?.firstname} ${user?.lastname}`,
       };
       const result = await rewardDatasource.redeemReward(payload);
-      setShowSuccessExchangeModal(true);
       await getCurrentPoint();
+      setShowSuccessExchangeModal(true);
       setResultRedeemDigital(result);
+      setDisableExchange(false);
     } catch (e) {
       console.log(e);
+    } finally {
+      setDisableExchange(false);
     }
   };
 
@@ -130,7 +136,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         isLimit: counter * requirePoint >= currentPoint,
         isDisableMinus,
         isDisablePlus,
-        disableButton,
+        disableButton: disableButton,
       };
     }, [counter, currentPoint, requirePoint]);
 
@@ -138,7 +144,10 @@ export default function RewardDetailScreen({navigation, route}: Props) {
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <CustomHeader
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('กดกลับจากหน้ารายละเอียดรีวอร์ด');
+          navigation.goBack();
+        }}
         headerCenter={
           <View
             style={{
@@ -352,7 +361,17 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         <TouchableOpacity
           disabled={disableButton || isOverRemain}
           style={styles({disable: disableButton || isOverRemain}).button}
-          onPress={isDigital ? () => setIsConfirm(true) : onPressExchange}>
+          onPress={
+            isDigital
+              ? () => {
+                  mixpanel.track('กดแลกแต้มแบบdigital');
+                  setIsConfirm(true);
+                }
+              : () => {
+                  mixpanel.track('กดแลกแต้มแบบphysical');
+                  onPressExchange;
+                }
+          }>
           <Text style={styles({disable: disableButton}).textButton}>
             แลกแต้ม
           </Text>
@@ -360,17 +379,25 @@ export default function RewardDetailScreen({navigation, route}: Props) {
       </View>
       <Modal
         visible={isConfirm}
+        disablePrimary={disableButton}
         onPressPrimary={() => {
+          mixpanel.track('กดยืนยันแลกแต้มแบบdigital');
           setIsConfirm(false);
           onRedeemDigital();
         }}
         title={'ยืนยันการแลกแต้ม'}
-        onPressSecondary={() => setIsConfirm(false)}
+        onPressSecondary={() => {
+          mixpanel.track('กดยกเลิกแลกแต้มแบบdigital');
+          setIsConfirm(false);
+        }}
         subTitle={'ท่านต้องการยืนยันการแลกแต้มหรือไม่'}
       />
       <Modal
         showClose
-        onClose={() => setShowSuccessExchangeModal(false)}
+        onClose={() => {
+          mixpanel.track('กดปิด modal หลังจากแลกรางวัล');
+          setShowSuccessExchangeModal(false);
+        }}
         iconTop={
           <Image
             source={icons.successIcon}
@@ -379,6 +406,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         }
         visible={showSuccessExchangeModal}
         onPressPrimary={() => {
+          mixpanel.track('กดใช้คูปองทันทีหลังจากแลกรางวัล');
           setShowSuccessExchangeModal(false);
           navigation.navigate('RedeemScreen', {
             data: resultRedeemDigital,
@@ -387,8 +415,11 @@ export default function RewardDetailScreen({navigation, route}: Props) {
           });
         }}
         onPressSecondary={() => {
+          mixpanel.track('กดยังไม่ใช้คูปองหลังจากแลกรางวัล');
           setShowSuccessExchangeModal(false);
-          navigation.navigate('MyRewardScreen');
+          navigation.navigate('MyRewardScreen', {
+            tab: 'readyToUse',
+          });
         }}
         title={'แลกแต้มสำเร็จ'}
         subTitle={'คูปองพร้อมใช้งานแล้ว'}

@@ -23,6 +23,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import PointTapNavigator from '../../navigations/topTabs/PointTapNavigator';
 import {usePoint} from '../../contexts/PointContext';
+import {mixpanel} from '../../../mixpanel';
 
 const DetailPointScreen: React.FC<any> = ({navigation, route}) => {
   const {currentPoint} = usePoint();
@@ -36,7 +37,10 @@ const DetailPointScreen: React.FC<any> = ({navigation, route}) => {
         <CustomHeader
           title="ประวัติการได้รับ/ใช้แต้ม"
           showBackBtn
-          onPressBack={() => navigation.goBack()}
+          onPressBack={() => {
+            mixpanel.track('กดกลับจากหน้าประวัติการได้รับ/ใช้แต้ม');
+            navigation.goBack();
+          }}
         />
       </View>
       <LinearGradient

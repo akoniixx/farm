@@ -15,6 +15,7 @@ import {numberWithCommas} from '../../function/utility';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
 import Text from '../../components/Text';
+import {mixpanel} from '../../../mixpanel';
 
 export interface RewardListType {
   id: string;
@@ -113,6 +114,7 @@ export default function ListReward({
           <TouchableOpacity
             style={[styles.card]}
             onPress={() => {
+              mixpanel.track('กดดูรายละเอียดของรางวัล');
               navigation.navigate('RewardDetailScreen', {
                 id: item.id,
                 isDigital: item.rewardType === 'DIGITAL',
