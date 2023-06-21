@@ -43,10 +43,7 @@
 	<string>8a0ce86f62551714f3c4463f9482fbac</string>
 	<key>FacebookDisplayName</key>
 	<string>นักบินโดรน</string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>comgooglemaps</string>
-	</array>
+	 
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -91,7 +88,13 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+    <string>http</string>
+    <string>https</string>
+	<string>comgooglemaps</string>
 
+    </array>
  
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

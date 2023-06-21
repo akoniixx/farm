@@ -532,11 +532,11 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
               <View
                 style={{
                   position: 'absolute',
-                  right: '40%',
+                  right: Dimensions.get('window').width / 2 - 72,
                   top: '60%',
                 }}>
                 <Pagination
-                  dotsLength={guruKaset.data.length}
+                  dotsLength={guruKaset?.data?.length}
                   activeDotIndex={index}
                   carouselRef={isCarousel}
                   dotStyle={{
