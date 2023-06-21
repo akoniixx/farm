@@ -96,6 +96,11 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         quantity: 1,
         dronerId,
         updateBy: `${user?.firstname} ${user?.lastname}`,
+        receiverDetail: {
+          firstname: user?.firstname,
+          lastname: user?.lastname,
+          tel: user?.telephoneNo,
+        },
       };
       const result = await rewardDatasource.redeemReward(payload);
       await getCurrentPoint();
@@ -379,7 +384,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
       </View>
       <Modal
         visible={isConfirm}
-        disablePrimary={disableButton}
+        disablePrimary={disableExchange}
         onPressPrimary={() => {
           mixpanel.track('กดยืนยันแลกแต้มแบบdigital');
           setIsConfirm(false);
