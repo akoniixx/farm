@@ -85,14 +85,20 @@ export default function MissionDetailScreen({navigation, route}: Props) {
 
   const isWaitRequest = useMemo(() => {
     if (!data.isStatusComplete && data.isComplete) {
-      return true && !isDigital;
+      return true;
     }
-  }, [data.isStatusComplete, data.isComplete, isDigital]);
+  }, [data.isStatusComplete, data.isComplete]);
   const isShowBox = useMemo(() => {
-    if (currentStatus && currentStatus !== 'WAIT_REQUEST' && data.isComplete) {
-      return true && !isDigital;
+    if (
+      currentStatus &&
+      currentStatus !== 'WAIT_REQUEST' &&
+      data.isComplete &&
+      !data.isStatusComplete
+    ) {
+      return true;
     }
-  }, [currentStatus, data.isComplete, isDigital]);
+  }, [currentStatus, data.isComplete, data.isStatusComplete]);
+
   return (
     <SafeAreaView
       edges={['right', 'top', 'left']}

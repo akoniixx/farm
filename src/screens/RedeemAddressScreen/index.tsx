@@ -18,8 +18,7 @@ import Text from '../../components/Text';
 import FastImage from 'react-native-fast-image';
 import {usePoint} from '../../contexts/PointContext';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
-import Modal from '../../components/Modal/Modal';
-import {rewardDatasource} from '../../datasource/RewardDatasource';
+
 interface Props {
   navigation: any;
   route: RouteProp<StackParamList, 'RedeemAddressScreen'>;
@@ -61,7 +60,7 @@ export default function RedeemAddressScreen({navigation, route}: Props) {
   const [missionDetail, setMissionDetail] = React.useState<any>(null);
   const [isConfirm, setIsConfirm] = React.useState(false);
   const [isConfirmMission, setIsConfirmMission] = React.useState(false);
-
+  const [disableButton, setDisableButton] = React.useState(false);
   const onConfirm = () => {
     setIsConfirm(true);
   };
@@ -324,11 +323,13 @@ export default function RedeemAddressScreen({navigation, route}: Props) {
           missionDetail={missionDetail}
           isConfirm={isConfirm}
           setIsConfirm={setIsConfirm}
+          setDisableButton={setDisableButton}
         />
       </ScrollView>
       <View style={styles.footer}>
         <TouchableOpacity
-          style={styles.button}
+          disabled={disableButton}
+          style={disableButton ? styles.disabledButton : styles.button}
           onPress={missionDetail ? onShowConfirmMission : onConfirm}>
           <Text style={styles.textButton}>ยืนยันการแลก</Text>
         </TouchableOpacity>

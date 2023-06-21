@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import {
   View,
-  Text,
   StyleSheet,
   SectionList,
   RefreshControl,
@@ -19,6 +18,7 @@ import FastImage from 'react-native-fast-image';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
 import {Image} from 'react-native';
 import {RedemptionTransaction} from '../../types/MyRewardType';
+import Text from '../../components/Text';
 
 const mappingStatusText = {
   REQUEST: 'คำร้องขอแลก',

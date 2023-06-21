@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   FlatList,
   TouchableOpacity,
@@ -14,6 +13,7 @@ import ActionSheet, {
 import {colors, font, icons} from '../../assets';
 import {useAuth} from '../../contexts/AuthContext';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
+import Text from '../Text';
 interface Branch {
   createdAt: string;
   id: string;
@@ -71,7 +71,6 @@ export default function SheetSelectArea(props: SheetProps) {
   };
   return (
     <ActionSheet
-      useBottomSafeAreaPadding
       //   onClose={async () => {
       //     await SheetManager.hide(props.sheetId, {
       //       payload: {
