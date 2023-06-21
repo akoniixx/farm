@@ -27,7 +27,7 @@ export default function SheetSelectArea(props: SheetProps) {
   const [selectedArea, setSelectedArea] = React.useState<any>(undefined);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [listBranch, setListBranch] = React.useState<Branch[]>([]);
-  console.log('listBranch', JSON.stringify(listBranch, null, 2));
+
   const {
     state: {user},
   } = useAuth();
