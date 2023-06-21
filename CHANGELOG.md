@@ -1,3 +1,6 @@
+## Feature [1.4.2] 2023-06-21
+- Re flow register
+
 ## Feature [1.4.1] 2023-06-16
 - Force update app
 - Warning update app

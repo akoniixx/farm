@@ -23,6 +23,7 @@ import {Authentication} from '../../datasource/AuthDatasource';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {mixpanel} from '../../../mixpanel';
+import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 
 const LoginScreen: React.FC<any> = ({navigation}) => {
   const [value, setValue] = useState<string>('');
@@ -36,14 +37,20 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
     Authentication.generateOtp(value)
       .then(result => {
         const telNumber = value;
-        setValue('');
-        setLoading(false);
-        navigation.navigate('OtpScreen', {
-          telNumber: telNumber,
-          token: result.result.token,
-          refCode: result.result.refCode,
-          isRegisterScreen: false,
-        });
+        if(result.result.percentSuccess >= 50){
+          setValue('');
+          setLoading(false);
+          navigation.navigate('OtpScreen', {
+            telNumber: telNumber,
+            token: result.result.token,
+            refCode: result.result.refCode,
+            isRegisterScreen: false,
+          });
+        }
+        else{
+          setLoading(false);
+          setErrMessage('ไม่พบเบอร์โทรนี้ในระบบโปรดลงทะเบียนอีกครั้ง');
+        }
       })
       .catch(err => {
         setLoading(false);
@@ -52,6 +59,7 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
         } else if (err.response.data.statusCode === 400) {
           setErrMessage('ไม่พบเบอร์โทรนี้ในระบบโปรดลงทะเบียนอีกครั้ง');
         } else if (err) {
+          console.log(err)
           Toast.show({
             type: 'error',
             text1: 'ระบบเครือขายมีปัญหา กรุณาลองใหม่อีกครั้งในภายหลัง',

@@ -414,4 +414,98 @@ export class Register {
         console.log(error);
       });
   }
+
+  static async registerStep1V2(
+    firstname : string,
+    lastname : string,
+    telephoneNo: string,
+  ){
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    if(!droner_id){
+      return registerClient
+      .post(BASE_URL + '/auth/droner/register',{
+        firstname: firstname,
+        lastname: lastname,
+        telephoneNo: telephoneNo,
+        status: 'OPEN',
+        address : {
+          address1 : "42 ถนนสุรวงศ์ ซอยสุรวงศ์",
+          provinceId: 10,
+          districtId: 1004,
+          subdistrictId: 10040500,
+          postcode: 10500,
+        },
+        percentSuccess : 25
+      }).then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+    else{
+      console.log({
+        id : droner_id,
+        firstname: firstname,
+        lastname: lastname,
+        telephoneNo: telephoneNo,
+        status: 'OPEN',
+        address : {
+          address1 : "42 ถนนสุรวงศ์ ซอยสุรวงศ์",
+          provinceId: 10,
+          districtId: 1004,
+          subdistrictId: 10040500,
+          postcode: "10500",
+        },
+        percentSuccess : 25
+      })
+      return registerClient
+      .post(BASE_URL + '/auth/droner/register',{
+        id : droner_id,
+        firstname: firstname,
+        lastname: lastname,
+        telephoneNo: telephoneNo,
+        status: 'OPEN',
+        address : {
+          address1 : "42 ถนนสุรวงศ์ ซอยสุรวงศ์",
+          provinceId: 10,
+          districtId: 1004,
+          subdistrictId: 10040500,
+          postcode: "10500",
+        },
+        percentSuccess : 25
+      }).then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  }
+  static async registerStep2V2(
+    locationName: string,
+    lat: string,
+    long: string,
+    provinceId?: number,
+    districtId?: number,
+    subdistrictId?: number,
+  ){
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    return registerClient
+    .post(BASE_URL + '/auth/droner/register',{
+      id : droner_id,
+      status: 'OPEN',
+      percentSuccess : 50,
+      dronerArea: {
+        lat: lat,
+        long: long,
+        provinceId: provinceId,
+        districtId: districtId,
+        subdistrictId: subdistrictId,
+        locationName: locationName,
+      },
+    }).then(res => {
+      return res.data
+    }).catch(err => console.log(err))
+  }
 }

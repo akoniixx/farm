@@ -123,7 +123,7 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
               setLoading(false);
               setErrOTP(false);
               await AsyncStorage.setItem('token_register', result.accessToken);
-              navigation.navigate('FirstFormScreen', {
+              navigation.navigate('FirstFormScreenV2', {
                 tele: route.params.telNumber,
               });
             })
