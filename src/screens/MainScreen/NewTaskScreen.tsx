@@ -32,6 +32,10 @@ import {socket} from '../../function/utility';
 import {ActionContext} from '../../../App';
 import {mixpanel} from '../../../mixpanel';
 import {callcenterNumber} from '../../definitions/callCenterNumber';
+import {AnimatedCircularProgress} from 'react-native-circular-progress';
+import MyProfileScreen from '../ProfileVerifyScreen/MyProfileScreen';
+import * as RootNavigation from '../../navigations/RootNavigation';
+import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 
 interface Prop {
   isOpenReceiveTask: boolean;
@@ -40,6 +44,7 @@ interface Prop {
 
 const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   const [unsendTask, setUnsendtask] = useState([]);
+  const navigation = RootNavigation.navigate;
   const dronerStatus = props.dronerStatus;
   const {isOpenReceiveTask} = props;
   const [data, setData] = useState<any>([]);
@@ -56,6 +61,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   const [selectedTaskId, setSelectedTaskId] = useState<string>('');
   const [dronerId, setDronerId] = useState<string>('');
   const {actiontaskId, setActiontaskId} = useContext(ActionContext);
+  const [percentSuccess, setPercentSuccess] = useState<number>(0);
 
   const getData = async () => {
     setLoading(true);
@@ -69,6 +75,10 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
         }
       })
       .catch(err => console.log(err));
+
+    ProfileDatasource.getProfile(dronerId!).then(res => {
+      setPercentSuccess(res.percentSuccess);
+    });
   };
   const receiveTask = async () => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
@@ -166,7 +176,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   return (
     <>
       <View style={[{flex: 1, backgroundColor: colors.grayBg, padding: 8}]}>
-        {data.length == 0 && !isOpenReceiveTask && dronerStatus === 'ACTIVE' && (
+        {data.length == 0 && !isOpenReceiveTask && dronerStatus === 'ACTIVE' ? (
           <View
             style={[
               stylesCentral.center,
@@ -186,6 +196,18 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                 กรุณากดเปิดรับงานเพื่อที่จะไม่พลาดงานสำหรับคุณ!
               </Text>
             </View>
+          </View>
+        ) : (
+          <View
+            style={[
+              stylesCentral.center,
+              {flex: 1, backgroundColor: colors.grayBg, padding: 8},
+            ]}>
+            <Image
+              source={image.blankTask}
+              style={{width: normalize(136), height: normalize(111)}}
+            />
+            <Text style={stylesCentral.blankFont}>ยังไม่มีงานที่ต้องทำ</Text>
           </View>
         )}
         {data.length == 0 && isOpenReceiveTask && dronerStatus === 'ACTIVE' && (
@@ -306,6 +328,91 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                   โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร.{' '}
                   {callcenterNumber}
                 </Text>
+              </View>
+            </View>
+          </View>
+        ) : null}
+        {dronerStatus == 'OPEN' ? (
+          <View
+            style={{
+              backgroundColor: colors.grayBg,
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}>
+            <View
+              style={{
+                backgroundColor: 'white',
+                padding: normalize(10),
+                margin: normalize(10),
+                borderWidth: 2,
+                borderColor: colors.greyWhite,
+                borderRadius: 16,
+              }}>
+              <View style={{flexDirection: 'row'}}>
+                <View
+                  style={{
+                    display: 'flex',
+                    backgroundColor: '#FFF7F4',
+                    paddingHorizontal: normalize(10),
+                    paddingVertical: normalize(5),
+                    borderRadius: 16,
+                  }}>
+                  <Text
+                    style={{
+                      color: '#B16F05',
+                      fontFamily: fonts.bold,
+                      fontSize: normalize(16),
+                    }}>
+                    รอยืนยันตัวตน
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  paddingBottom: normalize(20),
+                  marginTop: normalize(5),
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fonts.medium,
+                    fontSize: normalize(18),
+                    color: 'black',
+                  }}>
+                  อีกนิดเดียว มากรอกข้อมูลโปรไฟล์ของคุณให้ ครบถ้วน
+                  เพื่อเริ่มรับงานบินโดรนในระบบ
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <AnimatedCircularProgress
+                  size={50}
+                  width={5}
+                  fill={Number(percentSuccess)}
+                  tintColor="#FB8705"
+                  backgroundColor="#FFEFDD"
+                  rotation={0}>
+                  {fill => (
+                    <Text
+                      style={{
+                        fontFamily: fonts.medium,
+                        fontSize: normalize(12),
+                        color: colors.fontBlack,
+                      }}>
+                      {percentSuccess + '%'}
+                    </Text>
+                  )}
+                </AnimatedCircularProgress>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation('MyProfileScreen', MyProfileScreen)
+                  }>
+                  <View style={styles.button}>
+                    <Text style={styles.textButton}>เพิ่มข้อมูลโปรไฟล์</Text>
+                  </View>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -477,5 +584,15 @@ const styles = StyleSheet.create({
     fontFamily: font.light,
     fontSize: normalize(14),
     color: colors.gray,
+  },
+  button: {
+    backgroundColor: colors.orange,
+    padding: 12,
+    borderRadius: 20,
+  },
+  textButton: {
+    fontFamily: fonts.bold,
+    fontSize: normalize(14),
+    color: colors.white,
   },
 });
