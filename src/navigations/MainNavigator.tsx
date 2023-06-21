@@ -37,6 +37,10 @@ import RulesCampaignScreen from '../screens/CampaignScreen/RulesCampaignScreen';
 import DateCampaignScreen from '../screens/CampaignScreen/DateCampaign';
 import {DigitalRewardType} from '../types/TypeRewardDigital';
 import RedeemDetailDigitalScreen from '../screens/RedeemDetailDigitalScreen';
+import MyProfileScreen from '../screens/ProfileVerifyScreen/MyProfileScreen';
+import IDCardScreen from '../screens/ProfileVerifyScreen/IDCardScreen';
+import AddDroneScreen from '../screens/ProfileVerifyScreen/AddDroneScreen';
+import AddPlantsScreen from '../screens/ProfileVerifyScreen/AddPlantsScreen';
 
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
@@ -115,6 +119,10 @@ export type StackParamList = {
       status: string;
     };
   };
+  MyProfileScreen: any;
+  IDCardScreen: any;
+  AddPlantsScreen: any;
+  AddDroneScreen: any;
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
   // };
@@ -202,6 +210,10 @@ const MainNavigator: React.FC = () => {
         component={RulesCampaignScreen}
       />
       <Stack.Screen name="DateCampaignScreen" component={DateCampaignScreen} />
+      <Stack.Screen name="MyProfileScreen" component={MyProfileScreen} />
+      <Stack.Screen name="IDCardScreen" component={IDCardScreen} />
+      <Stack.Screen name="AddDroneScreen" component={AddDroneScreen} />
+      <Stack.Screen name="AddPlantsScreen" component={AddPlantsScreen} />
     </Stack.Navigator>
   );
 };

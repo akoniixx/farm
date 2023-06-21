@@ -38,4 +38,8 @@ export default {
   cancelBanner: require('./cancelBanner.png'),
   expiredBanner: require('./expiredBanner.png'),
   usedBanner: require('./usedBanner.png'),
+  num1: require('./num1.png'),
+  num2: require('./num2.png'),
+  num3: require('./num3.png'),
+  regisSuccess: require('./regisSuccess.png'),
 };

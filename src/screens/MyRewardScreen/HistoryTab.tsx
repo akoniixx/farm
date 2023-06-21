@@ -25,7 +25,7 @@ const mappingStatusText = {
   PREPARE: 'เตรียมจัดส่ง',
   USED: 'ใช้แล้ว',
   DONE: 'ส่งแล้ว',
-  EXPIRE: 'หมดอายุ',
+  EXPIRED: 'หมดอายุ',
   CANCEL: 'ยกเลิก',
 };
 const mappingStatusColor = {
@@ -33,7 +33,7 @@ const mappingStatusColor = {
   PREPARE: colors.orange,
   USED: colors.green,
   DONE: colors.green,
-  EXPIRE: colors.gray,
+  EXPIRED: colors.gray,
   CANCEL: colors.decreasePoint,
 };
 // const mappingStatusColorText = {

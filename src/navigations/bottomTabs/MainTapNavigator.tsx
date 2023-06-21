@@ -17,7 +17,7 @@ import {
 import MainTaskScreen from '../../screens/MainTaskScreen/MainTaskScreen';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
-import {TabActions} from '@react-navigation/native';
+import {TabActions, useIsFocused} from '@react-navigation/native';
 import RegisterFailedModal from '../../components/Modal/RegisterFailedModalNotification';
 import Toast from 'react-native-toast-message';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
@@ -26,6 +26,11 @@ import {ActionContext} from '../../../App';
 import {dialCall} from '../../function/utility';
 import RewardScreen from '../../screens/RewardScreen';
 import MissionScreen from '../../screens/MissionScreen';
+import Draggable from 'react-native-draggable';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Campaign} from '../../datasource/CampaignDatasource';
+import MyProfileScreen from '../../screens/ProfileVerifyScreen/MyProfileScreen';
+import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 
 export type TabNavigatorParamList = {
   mission: undefined;
@@ -45,9 +50,20 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   const [registerfailedModalNoti, setRegisterFailedModalNoti] = useState(false);
   const [initialRouteName, setInitialRouteName] = useState('home');
   const {actiontaskId, setActiontaskId} = useContext(ActionContext);
+  const [status, setStatus] = useState<any>();
+  const isFocused = useIsFocused();
 
   const [campaignImage, setCampaignImage] = useState<string>('');
 
+  useEffect(() => {
+    const getProfile = async () => {
+      const droner_id = await AsyncStorage.getItem('droner_id');
+      ProfileDatasource.getProfile(droner_id!).then(res => {
+        setStatus(res.status);
+      });
+    };
+    getProfile();
+  }, [isFocused]);
   const ListPath = [
     {
       name: 'home',
@@ -80,7 +96,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     {
       name: 'profile',
       title: 'โปรไฟล์',
-      component: ProfileScreen,
+      component: status === 'OPEN' ? MyProfileScreen : ProfileScreen,
       activeIcon: icons.profileActive,
       inactiveIcon: icons.profile,
     },

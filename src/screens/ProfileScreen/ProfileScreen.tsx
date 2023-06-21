@@ -39,11 +39,12 @@ import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import Geolocation from 'react-native-geolocation-service';
 import Text from '../../components/Text';
+import CustomHeader from '../../components/CustomHeader';
 
 const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const {
-    authContext: {getProfileAuth}
+    authContext: {getProfileAuth},
   } = useAuth();
   const backbotton = !route.params ? true : route.params.navbar;
   const windowWidth = Dimensions.get('screen').width;
@@ -262,19 +263,19 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   };
   return (
     <SafeAreaView style={[stylesCentral.container]}>
-      {backbotton ? (
+      {/* {backbotton ? (
         <View style={styles.appBar}>
           <Text style={styles.appBarHeader}>โปรไฟล์ของฉัน</Text>
         </View>
-      ) : (
-        <View style={styles.appBarBack}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Image source={icons.arrowLeft} style={styles.listTileIcon} />
-          </TouchableOpacity>
-          <Text style={[styles.appBarHeader]}>โปรไฟล์ของฉัน</Text>
-          <View style={styles.listTileIcon} />
-        </View>
-      )}
+      ) : ( */}
+      <View style={styles.appBarBack}>
+        <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
+          <Image source={icons.arrowLeft} style={styles.listTileIcon} />
+        </TouchableOpacity>
+        <Text style={[styles.appBarHeader]}>โปรไฟล์ของฉัน</Text>
+        <View style={styles.listTileIcon} />
+      </View>
+      {/* )} */}
       <View style={[styles.body]}>
         <ScrollView>
           <View style={styles.profile}>
@@ -382,19 +383,24 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
               </TouchableOpacity>
             )}
           </View>
-          {profilestate.status === 'REJECTED' ?
-          <View style={styles.commentBg}>
-          <Text style={styles.commentFront}>หมายเหตุ : บัตรประชาชนไม่ชัดเจน/ไม่ถูกต้อง 
-            กรุณาติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. 02-233-9000</Text>
-        </View>: profilestate.status === 'INACTIVE' ?
-        
-        <View style={styles.commentBg}>
-        <Text style={styles.commentFront}>หมายเหตุ : หากต้องการเปิดใช้งานบัญชี 
-          กรุณาติดต่อเจ้าหน้าที่ โทร. 02-233-9000</Text>
-      </View>: <></>
-          
-          }
-          
+          {profilestate.status === 'REJECTED' ? (
+            <View style={styles.commentBg}>
+              <Text style={styles.commentFront}>
+                หมายเหตุ : บัตรประชาชนไม่ชัดเจน/ไม่ถูกต้อง
+                กรุณาติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. 02-233-9000
+              </Text>
+            </View>
+          ) : profilestate.status === 'INACTIVE' ? (
+            <View style={styles.commentBg}>
+              <Text style={styles.commentFront}>
+                หมายเหตุ : หากต้องการเปิดใช้งานบัญชี กรุณาติดต่อเจ้าหน้าที่ โทร.
+                02-233-9000
+              </Text>
+            </View>
+          ) : (
+            <></>
+          )}
+
           <View
             style={{
               paddingVertical: normalize(15),
@@ -1118,16 +1124,15 @@ const styles = StyleSheet.create({
     paddingEnd: normalize(8),
   },
   commentBg: {
-    backgroundColor:'#FFF7F4',
-    borderColor:'#FEE9E1',
-    borderWidth:1,
-    paddingHorizontal:10,
-    paddingVertical:12
+    backgroundColor: '#FFF7F4',
+    borderColor: '#FEE9E1',
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
   },
-  commentFront:{
+  commentFront: {
     fontFamily: font.medium,
     fontSize: normalize(14),
-    color:'#242D35'
-  }
-
+    color: '#242D35',
+  },
 });
