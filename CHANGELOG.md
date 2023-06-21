@@ -1,6 +1,7 @@
 ## Feature [1.5.3] 2023-09-21
 - exchange reward bug
 - bug fix
+- change enum key
 
 ## Feature [1.5.2] 2023-09-20
 - fix bug digital reward 
