@@ -89,9 +89,9 @@ const App = () => {
       Alert.alert('มีการอัพเดทใหม่', undefined, [
         {
           text: 'อัพเดท',
-          onPress: () => {
+          onPress: async () => {
             mixpanel.track('กดอัพเดทแอพ');
-            Linking.openURL(isIOS ? storeUrl : playStoreUrl);
+            await Linking.openURL(isIOS ? storeUrl : playStoreUrl);
             RNExitApp.exitApp();
           },
         },

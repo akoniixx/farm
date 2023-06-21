@@ -374,7 +374,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
                 }
               : () => {
                   mixpanel.track('กดแลกแต้มแบบphysical');
-                  onPressExchange;
+                  onPressExchange();
                 }
           }>
           <Text style={styles({disable: disableButton}).textButton}>
