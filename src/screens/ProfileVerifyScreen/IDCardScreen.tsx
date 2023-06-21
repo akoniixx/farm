@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {
   Dimensions,
   Image,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,26 +12,29 @@ import {
 } from 'react-native';
 import colors from '../../assets/colors/colors';
 import CustomHeader from '../../components/CustomHeader';
-import {font, icons, image} from '../../assets';
+import {font, icons, image as img} from '../../assets';
 import {normalize, width} from '../../function/Normalize';
 import {MainButton} from '../../components/Button/MainButton';
 import * as ImagePicker from 'react-native-image-picker';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {Register} from '../../datasource/AuthDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import  Lottie  from 'lottie-react-native';
 
 const IDCardScreen: React.FC<any> = ({navigation, route}) => {
   const [telNo, setTelNo] = useState<any>(null);
   const width = Dimensions.get('window').width;
-  const [imageCard, setImageCard] = useState<any>(null);
+  const [image, setImage] = useState<any>(null);
   const [idcard, setIdCard] = useState<any>('');
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState<any>();
 
   useEffect(() => {
     const getProfile = async () => {
       const droner_id = await AsyncStorage.getItem('droner_id');
       ProfileDatasource.getProfile(droner_id!).then(res => {
+        setProfile(res)
         setTelNo(res.telephoneNo);
       });
     };
@@ -41,9 +45,10 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
       mediaType: 'photo',
     });
     if (!result.didCancel) {
-      setImageCard(result);
+      setImage(result);
     }
-  }, [imageCard]);
+  }, [image]);
+
   return (
     <View style={{flex: 1, backgroundColor: colors.white}}>
       <CustomHeader
@@ -62,7 +67,7 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
               </Text>
               <View style={{paddingVertical: 30}}>
                 <Image
-                  source={image.idcard}
+                  source={img.idcard}
                   style={{
                     width: 250,
                     height: 250,
@@ -99,7 +104,7 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
                   alignSelf: 'center',
                 }}
                 onPress={onAddImage}>
-                {imageCard === null ? (
+                {image == null ? (
                   <View style={styles.addImage}>
                     <View style={styles.camera}>
                       <Image
@@ -144,7 +149,7 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
                       }}>
                       <Image
                         source={{
-                          uri: imageCard ? imageCard.assets[0].uri : null,
+                          uri: image ? image.assets[0].uri : null,
                         }}
                         style={{
                           width: width * 0.9,
@@ -173,19 +178,19 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
               <MainButton
                 label="บันทึก"
                 color={
-                  idcard.length === 13 && imageCard != null
+                  idcard.length === 13 && image != null
                     ? colors.orange
                     : colors.disable
                 }
                 disable={
-                  idcard.length === 13 && imageCard != null ? false : true
+                  idcard.length === 13 && image != null ? false : true
                 }
                 onPress={() => {
-                  if (idcard.length === 13 && imageCard != null) {
-                    setLoading(true);
-                    Register.registerStep4(telNo, idcard)
+                  if (idcard.length === 13 && image != null) {
+                      setLoading(true);
+                      Register.registerStep4(telNo, idcard)
                       .then(res => {
-                        Register.uploadDronerIDCard(imageCard)
+                        Register.uploadDronerCard(image)
                           .then(res => {
                             setLoading(false);
                             navigation.navigate('MyProfileScreen');
@@ -197,6 +202,36 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
                 }}
               />
             </View>
+            <Modal transparent={true} visible={loading}>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  backgroundColor: colors.white,
+                  width: normalize(50),
+                  height: normalize(50),
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: normalize(8),
+                }}>
+                <Lottie
+                  source={img.loading}
+                  autoPlay
+                  loop
+                  style={{
+                    width: normalize(50),
+                    height: normalize(50),
+                  }}
+                />
+              </View>
+            </View>
+          </Modal>
           </View>
         </ScrollView>
       </>

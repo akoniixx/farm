@@ -19,6 +19,7 @@ import {dataUpdateStatusEntity} from '../../entities/TaskScreenEntities';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {callcenterNumber} from '../../definitions/callCenterNumber';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
+import MyProfileScreen from '../ProfileVerifyScreen/MyProfileScreen';
 
 interface Prop {
   dronerStatus: string;
@@ -26,7 +27,7 @@ interface Prop {
 
 const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const dronerStatus = props.dronerStatus;
-
+  const navigation = RootNavigation.navigate;
   const [error, setError] = useState<string>('');
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -434,10 +435,9 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                     )}
                   </AnimatedCircularProgress>
                   <TouchableOpacity
-                  // onPress={() => {
-                  //       navtoMenuProfile
-                  //     }}
-                  >
+                    onPress={() =>
+                      navigation('MyProfileScreen', MyProfileScreen)
+                    }>
                     <View style={styles.button}>
                       <Text style={styles.textButton}>เพิ่มข้อมูลโปรไฟล์</Text>
                     </View>

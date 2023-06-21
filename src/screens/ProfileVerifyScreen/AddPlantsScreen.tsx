@@ -44,6 +44,7 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
     };
     getProfile();
   }, []);
+  console.log(JSON.stringify(plantsData,null,2))
   const handleSelect = (
     value: any,
     index: number,
@@ -91,7 +92,6 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
               (กรุณาเลือกอย่างน้อย 1 อย่าง)
             </Text>
           </View>
-          {plantsData ? (
             <View
               style={{
                 flexDirection: 'row',
@@ -108,25 +108,7 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
                 />
               ))}
             </View>
-          ) : (
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-              }}>
-              {plantListSelect.map((v, i) => (
-                <PlantSelect
-                  key={i}
-                  label={v.value}
-                  active={v.active}
-                  onPress={() =>
-                    handleSelect(plantListSelect, i, v.value, v.active)
-                  }
-                />
-              ))}
-            </View>
-          )}
-
+        
           <View style={styles.input}>
             <TextInput
               placeholder="พืชอื่นๆ"
@@ -139,6 +121,7 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
               }}
               onChangeText={value => setAddPlant(value)}
             />
+            <View style={{alignSelf: 'flex-end',bottom: '35%'}}>
             {addPlant.length != 0 ? (
               <TouchableOpacity
                 style={{
@@ -157,6 +140,8 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
             ) : (
               <></>
             )}
+            </View>
+          
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -203,7 +188,7 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
           label="บันทึก"
           color={colors.orange}
           onPress={() => {
-            setLoading(true);
+            // setLoading(true);
             let plant: string[] = [];
             plantListSelect.map(item => {
               if (item.active) {

@@ -38,8 +38,6 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
   const [brand, setBrand] = useState<any>(null);
   const [brandtype, setBrandType] = useState<any>(null);
   const [itemstype, setItemstype] = useState<any>([]);
-  const [image1, setImage1] = useState<any>(null);
-  const [image2, setImage2] = useState<any>(null);
   const [open, setOpen] = useState(false);
   const [opentype, setOpentype] = useState(false);
   const [value, setValue] = useState(null);
@@ -49,9 +47,22 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
   const [dronedata, setDronedata] = useState<any>([]);
   const [count, setCount] = useState(1);
   const [droneIndex, setDroneIndex] = useState(1);
+  const [drone, setDrone] = useState<any>();
+  const [droneBrand, setDroneBrand] = useState<any>();
+
   const showActionSheet = () => {
     actionSheet.current.show();
   };
+  useEffect(() => {
+    const getProfile = async () => {
+      const droner_id = await AsyncStorage.getItem('droner_id');
+      ProfileDatasource.getProfile(droner_id!).then(res => {
+        setDrone(res.dronerDrone);
+        const filter = res.dronerDrone.map((x: any) => x.drone.droneBrand);
+      });
+    };
+    getProfile();
+  }, []);
   useEffect(() => {
     Register.getDroneBrand(1, 14)
       .then(result => {
@@ -132,6 +143,25 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
             </Text>
           </View>
           <ScrollView>
+            {drone && (
+              <View
+                style={{
+                  marginTop: normalize(10),
+                  display: 'flex',
+                  justifyContent: 'center',
+                  paddingHorizontal: normalize(15),
+                }}>
+                {drone.map((item: any, index: number) => (
+                  <DroneBrandingItem
+                    key={index}
+                    dronebrand={item.drone.droneBrand.name}
+                    serialbrand={item.serialNo}
+                    status={'PENDING'}
+                    image={item.drone.droneBrand.logoImagePath}
+                  />
+                ))}
+              </View>
+            )}
             {dronedataUI.length === 0 && dronedata.length === 0 ? (
               <></>
             ) : (
@@ -175,8 +205,6 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
               Register.uploadDronerdrone(dronedata)
                 .then(res => {
                   setLoading(false);
-                  setImage1(null);
-                  setImage2(null);
                   setBrand(null);
                   setBrandType(null);
                   setdroneno(null);

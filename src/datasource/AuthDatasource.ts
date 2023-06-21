@@ -316,9 +316,29 @@ export class Register {
     return registerClient
       .post(BASE_URL + '/auth/droner/register', {
         id: droner_id,
-        status: 'OPEN',
         expPlant: expPlant,
+        status: 'OPEN'
       })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  static async uploadDronerCard(file: any): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    const data = new FormData();
+    data.append('file', {
+      uri: file.assets[0].uri,
+      name: file.assets[0].fileName,
+      type: file.assets[0].type,
+    });
+    data.append('resourceId', droner_id);
+    data.append('resource', 'DRONER');
+    data.append('category', 'ID_CARD_IMAGE');
+    return uploadFileClient
+      .post(BASE_URL + '/file/upload', {data, status: 'OPEN'})
       .then(response => {
         return response.data;
       })

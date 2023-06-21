@@ -33,6 +33,8 @@ import {ActionContext} from '../../../App';
 import {mixpanel} from '../../../mixpanel';
 import {callcenterNumber} from '../../definitions/callCenterNumber';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
+import MyProfileScreen from '../ProfileVerifyScreen/MyProfileScreen';
+import * as RootNavigation from '../../navigations/RootNavigation';
 
 interface Prop {
   isOpenReceiveTask: boolean;
@@ -41,6 +43,7 @@ interface Prop {
 
 const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   const [unsendTask, setUnsendtask] = useState([]);
+  const navigation = RootNavigation.navigate;
   const dronerStatus = props.dronerStatus;
   const {isOpenReceiveTask} = props;
   const [data, setData] = useState<any>([]);
@@ -167,7 +170,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   return (
     <>
       <View style={[{flex: 1, backgroundColor: colors.grayBg, padding: 8}]}>
-        {data.length == 0 && !isOpenReceiveTask && dronerStatus === 'ACTIVE' && (
+        {data.length == 0 && !isOpenReceiveTask && dronerStatus === 'ACTIVE' ? (
           <View
             style={[
               stylesCentral.center,
@@ -187,6 +190,18 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                 กรุณากดเปิดรับงานเพื่อที่จะไม่พลาดงานสำหรับคุณ!
               </Text>
             </View>
+          </View>
+        ) : (
+          <View
+            style={[
+              stylesCentral.center,
+              {flex: 1, backgroundColor: colors.grayBg, padding: 8},
+            ]}>
+            <Image
+              source={image.blankTask}
+              style={{width: normalize(136), height: normalize(111)}}
+            />
+            <Text style={stylesCentral.blankFont}>ยังไม่มีงานที่ต้องทำ</Text>
           </View>
         )}
         {data.length == 0 && isOpenReceiveTask && dronerStatus === 'ACTIVE' && (
@@ -385,10 +400,9 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                   )}
                 </AnimatedCircularProgress>
                 <TouchableOpacity
-                // onPress={() => {
-                //       navtoMenuProfile
-                //     }}
-                >
+                  onPress={() =>
+                    navigation('MyProfileScreen', MyProfileScreen)
+                  }>
                   <View style={styles.button}>
                     <Text style={styles.textButton}>เพิ่มข้อมูลโปรไฟล์</Text>
                   </View>

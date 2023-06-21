@@ -21,12 +21,16 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import {Register} from '../../datasource/AuthDatasource';
 
 const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [drone, setDrone] = useState();
   const [plants, setPlants] = useState();
   const [idCard, setIdCard] = useState();
   const [checkNum, setCheckNum] = useState<number>(50);
+  const [checked, setChecked] = useState<number>(50);
+  const [reload, setReload] = useState(false);
+
   const [showModal, setShowModal] = useState(false);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
@@ -36,18 +40,26 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
       setLoading(true);
       const droner_id = await AsyncStorage.getItem('droner_id');
       ProfileDatasource.getProfile(droner_id!).then(res => {
+        console.log(JSON.stringify(res.status, null, 2));
         setLoading(false);
         setDrone(res.dronerDrone[0]);
         setPlants(res.expPlant[0]);
         setIdCard(res.idNo);
-        if (res.status === 'PENDING') {
-          setShowModal(true);
-        }
       });
     };
     getProfile();
+    checkData();
   }, [isFocused]);
-  // console.log(drone, plants, idCard);
+  const checkData = () => {
+    if (drone && plants && idCard) {
+      // Register.changeToPending().then(res => {
+      //   setShowModal(true);
+      // });
+  
+      setReload(!reload);
+    }
+  };
+
 
   return (
     <SafeAreaView style={[stylesCentral.container]}>
@@ -224,6 +236,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
+                navigation.navigate('ProfileScreen');
                 setShowModal(false);
               }}
               style={{

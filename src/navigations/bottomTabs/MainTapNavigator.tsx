@@ -30,6 +30,7 @@ import Draggable from 'react-native-draggable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Campaign} from '../../datasource/CampaignDatasource';
 import MyProfileScreen from '../../screens/ProfileVerifyScreen/MyProfileScreen';
+import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 
 export type TabNavigatorParamList = {
   mission: undefined;
@@ -49,9 +50,19 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   const [registerfailedModalNoti, setRegisterFailedModalNoti] = useState(false);
   const [initialRouteName, setInitialRouteName] = useState('home');
   const {actiontaskId, setActiontaskId} = useContext(ActionContext);
+  const [status, setStatus] = useState<any>();
 
   const [campaignImage, setCampaignImage] = useState<string>('');
 
+  useEffect(() => {
+    const getProfile = async () => {
+      const droner_id = await AsyncStorage.getItem('droner_id');
+      ProfileDatasource.getProfile(droner_id!).then(res => {
+        setStatus(res.status);
+      });
+    };
+    getProfile();
+  }, []);
   const ListPath = [
     {
       name: 'home',
@@ -84,8 +95,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     {
       name: 'profile',
       title: 'โปรไฟล์',
-      component: MyProfileScreen,
-      // ProfileScreen,
+      component: status === 'OPEN' ? MyProfileScreen : ProfileScreen,
       activeIcon: icons.profileActive,
       inactiveIcon: icons.profile,
     },
