@@ -115,7 +115,7 @@ export default function RedeemScreen({navigation, route}: Props) {
           {!isExpired && (
             <View
               style={{
-                marginBottom: 16,
+                marginVertical: 16,
               }}>
               <TouchableOpacity
                 style={styles.buttonPrimary}

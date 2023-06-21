@@ -21,11 +21,13 @@ interface Branch {
   name: string;
   nameEn: string | null;
   updatedAt: string;
+  branchCode: string;
 }
 export default function SheetSelectArea(props: SheetProps) {
   const [selectedArea, setSelectedArea] = React.useState<any>(undefined);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [listBranch, setListBranch] = React.useState<Branch[]>([]);
+  console.log('listBranch', JSON.stringify(listBranch, null, 2));
   const {
     state: {user},
   } = useAuth();
@@ -44,8 +46,9 @@ export default function SheetSelectArea(props: SheetProps) {
       setLoading(true);
       const payload = {
         dronerTransactionId: props.payload.dronerTransactionId,
-        branchCode: selectedArea.id,
+        branchCode: selectedArea.branchCode,
         branchName: selectedArea.name,
+
         updateBy: `${user?.firstname} ${user?.lastname}`,
       };
 
@@ -117,7 +120,7 @@ export default function SheetSelectArea(props: SheetProps) {
                 }}>
                 {item.name}
               </Text>
-              {selectedArea?.id === item.id && (
+              {selectedArea?.branchCode === item.branchCode && (
                 <Image
                   source={icons.checkFillSuccess}
                   style={{

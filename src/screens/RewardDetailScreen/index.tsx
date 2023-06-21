@@ -39,6 +39,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
   const {getCurrentPoint} = usePoint();
   const {
     state: {user},
+    authContext: {getProfileAuth},
   } = useAuth();
 
   const [resultRedeemDigital, setResultRedeemDigital] =
@@ -104,6 +105,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
       };
       const result = await rewardDatasource.redeemReward(payload);
       await getCurrentPoint();
+      await getProfileAuth();
       setShowSuccessExchangeModal(true);
       setResultRedeemDigital(result);
       setDisableExchange(false);
