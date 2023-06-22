@@ -76,50 +76,55 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
             data={data}
             ListFooterComponent={<View style={{ height: normalize(250) }} />}
             renderItem={({ item }) => {
-              return(
-              <CouponCard
-                id={item.promotion.id}
-                couponCode={
-                  item.promotion.promotionType === 'ONLINE'
-                    ? item.promotion.couponCode
-                    : item.offlineCode
-                }
-                couponName={item.promotion.couponName}
-                couponType={item.promotion.couponType}
-                promotionType={item.promotion.promotionType}
-                promotionStatus={item.promotion.promotionStatus}
-                discountType={item.promotion.discountType}
-                discount={item.promotion.discount}
-                count={item.promotion.count}
-                keep={item.promotion.keep}
-                used={item.promotion.used}
-                startDate={item.promotion.startDate}
-                expiredDate={item.promotion.expiredDate}
-                description={item.promotion.description}
-                condition={item.promotion.condition}
-                conditionSpecificFarmer={item.promotion.conditionSpecificFarmer}
-                couponConditionRai={item.promotion.couponConditionRai}
-                couponConditionRaiMin={item.promotion.couponConditionRaiMin}
-                couponConditionRaiMax={item.promotion.couponConditionRaiMax}
-                couponConditionService={item.promotion.couponConditionService}
-                couponConditionServiceMin={
-                  item.promotion.couponConditionServiceMin
-                }
-                couponConditionServiceMax={
-                  item.promotion.couponConditionServiceMax
-                }
-                couponConditionPlant={item.promotion.couponConditionPlant}
-                couponConditionPlantList={
-                  item.promotion.couponConditionPlantList
-                }
-                couponConditionProvince={item.promotion.couponConditionProvince}
-                couponConditionProvinceList={
-                  item.promotion.couponConditionProvinceList
-                }
-                keepthis={false}
-                disabled={false}
-              />
-            )}}
+              return (
+                <CouponCard
+                  id={item.promotion.id}
+                  couponCode={
+                    item.promotion.promotionType === 'ONLINE'
+                      ? item.promotion.couponCode
+                      : item.offlineCode
+                  }
+                  couponName={item.promotion.couponName}
+                  couponType={item.promotion.couponType}
+                  promotionType={item.promotion.promotionType}
+                  promotionStatus={item.promotion.promotionStatus}
+                  discountType={item.promotion.discountType}
+                  discount={item.promotion.discount}
+                  count={item.promotion.count}
+                  keep={item.promotion.keep}
+                  used={item.promotion.used}
+                  startDate={item.promotion.startDate}
+                  expiredDate={item.promotion.expiredDate}
+                  description={item.promotion.description}
+                  condition={item.promotion.condition}
+                  conditionSpecificFarmer={
+                    item.promotion.conditionSpecificFarmer
+                  }
+                  couponConditionRai={item.promotion.couponConditionRai}
+                  couponConditionRaiMin={item.promotion.couponConditionRaiMin}
+                  couponConditionRaiMax={item.promotion.couponConditionRaiMax}
+                  couponConditionService={item.promotion.couponConditionService}
+                  couponConditionServiceMin={
+                    item.promotion.couponConditionServiceMin
+                  }
+                  couponConditionServiceMax={
+                    item.promotion.couponConditionServiceMax
+                  }
+                  couponConditionPlant={item.promotion.couponConditionPlant}
+                  couponConditionPlantList={
+                    item.promotion.couponConditionPlantList
+                  }
+                  couponConditionProvince={
+                    item.promotion.couponConditionProvince
+                  }
+                  couponConditionProvinceList={
+                    item.promotion.couponConditionProvinceList
+                  }
+                  keepthis={false}
+                  disabled={false}
+                />
+              );
+            }}
             keyExtractor={item => item.promotion.id}
           />
         </View>

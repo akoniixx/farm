@@ -45,7 +45,7 @@ const DronerSugg: React.FC<dronerData> = ({
   callBack,
 }) => {
   return (
-    <View style={{ paddingHorizontal: 5 }}>
+    <View style={{ paddingHorizontal: 8 }}>
       <View style={[styles.cards]}>
         <ImageBackground
           borderTopLeftRadius={10}

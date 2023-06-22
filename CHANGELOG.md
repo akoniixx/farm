@@ -1,3 +1,5 @@
+## Fix [v1.4.6] 2023-06-22
+- added modal profile status rejected & inactive
 ## Fix [v1.4.5] 2023-06-21
 
 ## Fix [v1.4.4] 2023-06-12

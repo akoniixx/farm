@@ -61,7 +61,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [showGetPoint, setShowGetPoint] = useState<boolean>(false);
   const [taskPointDetail, setTaskPointDetail] = useState<Campaign | null>(null);
-  const [disableReview,setDisableReview] = useState<boolean>(true)
+  const [disableReview, setDisableReview] = useState<boolean>(true);
   const starImgFilled = icons.starfill;
   const starImgCorner = icons.starCorner;
 
@@ -78,11 +78,11 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
     }
   };
 
-useEffect(()=>{
-  if(pilotEtiquette !== 0 && punctuality !== 0 && sprayExpertise !== 0){
-    setDisableReview(false)
-  }
-},[pilotEtiquette,punctuality,sprayExpertise])
+  useEffect(() => {
+    if (pilotEtiquette !== 0 && punctuality !== 0 && sprayExpertise !== 0) {
+      setDisableReview(false);
+    }
+  }, [pilotEtiquette, punctuality, sprayExpertise]);
 
   const getReceivePoint = async () => {
     const result: Campaign[] = await MyJobDatasource.getReceivePoint(
@@ -96,7 +96,7 @@ useEffect(()=>{
     }
   };
   const submitReview = () => {
-    setDisableReview(true)
+    setDisableReview(true);
     setLoading(true);
     MyJobDatasource.submitReview(
       task.task_id,
@@ -151,7 +151,7 @@ useEffect(()=>{
       isWaitReview,
     };
   }, [task.status]);
-  
+
   return (
     <View style={{ flex: 1 }}>
       <CustomHeader

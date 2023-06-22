@@ -4,6 +4,7 @@ import {
   FlatList,
   Image,
   Linking,
+  Modal,
   Platform,
   StyleSheet,
   Text,
@@ -27,13 +28,16 @@ import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import PlotInProfile from '../../components/Plots/PlotsInProfile';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { useIsFocused } from '@react-navigation/native';
+import { callcenterNumber } from '../../definitions/callCenterNumber';
 
 const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
+  const [reason, setReason] = useState<any>('');
   const noti = route.params?.noti ?? false;
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+  const [showModalCall, setShowModalCall] = useState(false);
 
   const isFocused = useIsFocused();
   const onLogout = async () => {
@@ -66,6 +70,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
       ProfileDatasource.getProfile(farmer_id!)
         .then(async res => {
           setLoading(true);
+          setReason(res.reason);
           const imgPath = res.file.filter((item: any) => {
             if (item.category === 'PROFILE_IMAGE') {
               return item;
@@ -174,7 +179,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   style={{
                     marginTop: normalize(10),
                     height: normalize(28),
-                    borderRadius: normalize(12),
+                    borderRadius: normalize(15),
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -235,7 +240,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                     marginTop: normalize(10),
                     width: normalize(135),
                     height: normalize(28),
-                    borderRadius: normalize(12),
+                    borderRadius: normalize(15),
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -298,12 +303,234 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </View>
           </View>
         </View>
+        {profilestate.status === 'REJECTED' && (
+          <View style={{ paddingHorizontal: 25, paddingBottom: 15 }}>
+            <View style={styles.card}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[styles.textVerify, { fontWeight: '800' }]}>
+                  หมายเหตุ :
+                </Text>
+                <Text style={styles.textVerify}> {reason}</Text>
+              </View>
+
+              <Text style={styles.textVerify}>
+                กรุณาติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข
+              </Text>
+              <View style={{ paddingTop: 15 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setShowModalCall(true);
+                  }}
+                  style={{
+                    ...Platform.select({
+                      ios: {
+                        height: 60,
+                        backgroundColor: colors.white,
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
+                        borderRadius: 12,
+                        borderWidth: 1,
+                        borderColor: colors.blueBorder,
+                      },
+                      android: {
+                        height: 60,
+                        paddingVertical: 8,
+                        paddingHorizontal: 16,
+                        backgroundColor: colors.white,
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
+                        width: '100%',
+                        borderRadius: 12,
+                        marginBottom: 8,
+                        borderWidth: 1,
+                        borderColor: colors.blueBorder,
+                        bottom: 15,
+                      },
+                    }),
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      alignSelf: 'center',
+                    }}>
+                    <Image
+                      style={{
+                        width: 24,
+                        height: 24,
+                        marginRight: 16,
+                      }}
+                      source={icons.calling}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: font.AnuphanMedium,
+                        color: colors.blueBorder,
+                        fontSize: 20,
+                      }}>
+                      โทรหาเจ้าหน้าที่
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        )}
+        {profilestate.status === 'INACTIVE' && (
+          <View style={{ paddingHorizontal: 25, paddingBottom: 15 }}>
+            <View style={styles.card}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[styles.textVerify, { fontWeight: '800' }]}>
+                  หมายเหตุ :
+                </Text>
+                <Text style={styles.textVerify}>
+                  {' '}
+                  บัญชีของท่านถูกปิดการใช้งาน
+                </Text>
+              </View>
+
+              <Text style={styles.textVerify}>
+                หากต้องการเปิดใช้งานบัญชี กรุณาติดต่อ เจ้าหน้าที่
+              </Text>
+              <View style={{ paddingTop: 15 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setShowModalCall(true);
+                  }}
+                  style={{
+                    ...Platform.select({
+                      ios: {
+                        height: 60,
+                        backgroundColor: colors.white,
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
+                        borderRadius: 12,
+                        borderWidth: 1,
+                        borderColor: colors.blueBorder,
+                      },
+                      android: {
+                        height: 60,
+                        paddingVertical: 8,
+                        paddingHorizontal: 16,
+                        backgroundColor: colors.white,
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
+                        width: '100%',
+                        borderRadius: 12,
+                        marginBottom: 8,
+                        borderWidth: 1,
+                        borderColor: colors.blueBorder,
+                        bottom: 15,
+                      },
+                    }),
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      alignSelf: 'center',
+                    }}>
+                    <Image
+                      style={{
+                        width: 24,
+                        height: 24,
+                        marginRight: 16,
+                      }}
+                      source={icons.calling}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: font.AnuphanMedium,
+                        color: colors.blueBorder,
+                        fontSize: 20,
+                      }}>
+                      โทรหาเจ้าหน้าที่
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        )}
+        {/* <View style={{ paddingHorizontal: 25, paddingBottom: 15 }}>
+          <View style={styles.card}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={[styles.textVerify, { fontWeight: '800' }]}>
+                หมายเหตุ :
+              </Text>
+              <Text style={styles.textVerify}> {reason}</Text>
+            </View>
+
+            <Text style={styles.textVerify}>
+              กรุณาติดต่อเจ้าหน้าที่ เพื่อ ดำเนินการแก้ไข
+            </Text>
+            <View style={{ paddingTop: 15 }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowModalCall(true);
+                }}
+                style={{
+                  ...Platform.select({
+                    ios: {
+                      height: 60,
+                      backgroundColor: colors.white,
+                      justifyContent: 'center',
+                      alignItems: 'flex-start',
+                      borderRadius: 12,
+                      borderWidth: 1,
+                      borderColor: colors.blueBorder,
+                    },
+                    android: {
+                      height: 60,
+                      paddingVertical: 8,
+                      paddingHorizontal: 16,
+                      backgroundColor: colors.white,
+                      justifyContent: 'center',
+                      alignItems: 'flex-start',
+                      width: '100%',
+                      borderRadius: 12,
+                      marginBottom: 8,
+                      borderWidth: 1,
+                      borderColor: colors.blueBorder,
+                      bottom: 15,
+                    },
+                  }),
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                  }}>
+                  <Image
+                    style={{
+                      width: 24,
+                      height: 24,
+                      marginRight: 16,
+                    }}
+                    source={icons.calling}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanMedium,
+                      color: colors.blueBorder,
+                      fontSize: 20,
+                    }}>
+                    โทรหาเจ้าหน้าที่
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View> */}
+
         <View
           style={{
             paddingHorizontal: 2,
             backgroundColor: '#EBEEF0',
             height: 3,
-          }}></View>
+          }}
+        />
         <View style={[styles.section2]}>
           <View
             style={{
@@ -431,7 +658,8 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             paddingHorizontal: 2,
             backgroundColor: '#EBEEF0',
             height: 3,
-          }}></View>
+          }}
+        />
         <View style={[styles.section3]}>
           <View
             style={{
@@ -556,6 +784,86 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             )}
           </View>
         </View>
+        <Modal animationType="fade" transparent={true} visible={showModalCall}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              paddingHorizontal: 16,
+              paddingBottom: 32,
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(`tel:${callcenterNumber}`);
+              }}
+              style={{
+                height: 60,
+                paddingVertical: 8,
+                paddingHorizontal: 16,
+                backgroundColor: colors.white,
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+                width: '100%',
+                borderRadius: 12,
+                marginBottom: 8,
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  style={{
+                    width: 24,
+                    height: 24,
+                    marginRight: 16,
+                  }}
+                  source={icons.callBlue}
+                />
+                <Text
+                  style={{
+                    fontFamily: font.AnuphanMedium,
+                    color: '#007AFF',
+                    fontSize: 20,
+                  }}>
+                  {`โทร +66 2-233-9000`}
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setShowModalCall(false);
+              }}
+              style={{
+                height: 60,
+                paddingVertical: 8,
+                paddingHorizontal: 16,
+                backgroundColor: colors.white,
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                borderRadius: 12,
+                marginBottom: 8,
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: font.AnuphanMedium,
+                    color: '#007AFF',
+                    fontSize: 20,
+                  }}>
+                  ยกเลิก
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </Modal>
       </ScrollView>
       <Spinner
         visible={loading}
@@ -644,5 +952,17 @@ const styles = StyleSheet.create({
   icon: {
     width: normalize(24),
     height: normalize(24),
+  },
+  card: {
+    backgroundColor: colors.redLight,
+    borderWidth: 1,
+    padding: normalize(12),
+    borderRadius: 15,
+    borderColor: colors.transOrange,
+  },
+  textVerify: {
+    fontSize: normalize(16),
+    fontFamily: font.SarabunLight,
+    lineHeight: 34,
   },
 });
