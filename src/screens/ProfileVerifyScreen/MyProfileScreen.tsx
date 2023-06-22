@@ -28,9 +28,6 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [plants, setPlants] = useState();
   const [idCard, setIdCard] = useState();
   const [checkNum, setCheckNum] = useState<number>(0);
-  const [checked, setChecked] = useState<number>(50);
-  const [reload, setReload] = useState(false);
-
   const [showModal, setShowModal] = useState(false);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
@@ -45,8 +42,10 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
         setPlants(res.expPlant[0]);
         setIdCard(res.idNo);
         setCheckNum(res.percentSuccess);
-        if (res.status === 'PENDING') {
-          setShowModal(true);
+        if (res.dronerDrone[0] && res.expPlant[0]) {
+          Register.changeToPending().then(res => {
+            setShowModal(true);
+          });
         }
       });
     };
@@ -108,7 +107,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
                   alignItems: 'center',
                 }}>
                 <Image
-                  source={drone ? icons.checkOrange : image.num1}
+                  source={!drone ? image.num1 : icons.checkOrange}
                   style={{width: 30, height: 30}}
                 />
                 <Text style={styles.text}>เพิ่มโดรน</Text>
@@ -128,29 +127,10 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
                   alignItems: 'center',
                 }}>
                 <Image
-                  source={plants ? icons.checkOrange : image.num2}
+                  source={!plants ? image.num2 : icons.checkOrange}
                   style={{width: 30, height: 30}}
                 />
                 <Text style={styles.text}>เพิ่มพืชที่เคยฉีดพ่น</Text>
-              </View>
-              <Image
-                source={icons.arrowRight}
-                style={{width: 30, height: 30}}
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('IDCardScreen')}>
-            <View style={styles.listTile}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Image
-                  source={idCard ? icons.checkOrange : image.num3}
-                  style={{width: 30, height: 30}}
-                />
-                <Text style={styles.text}>เพิ่มรูปคู่บัตรประชาชน</Text>
               </View>
               <Image
                 source={icons.arrowRight}
@@ -228,7 +208,9 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('ProfileScreen');
+                navigation.navigate('ProfileScreen', {
+                  navbar: false,
+                });
                 setShowModal(false);
               }}
               style={{
