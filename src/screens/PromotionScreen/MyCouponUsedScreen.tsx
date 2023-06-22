@@ -2,8 +2,10 @@ import {
   Dimensions,
   FlatList,
   Image,
+  Modal,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
@@ -16,12 +18,16 @@ import CouponCard from '../../components/CouponCard/CouponCard';
 import { MainButton } from '../../components/Button/MainButton';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import SelectDronerCouponModal from '../../components/Modal/SelectDronerCoupon';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 
 const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [data, setData] = useState<any[]>([]);
   const [modal, setModal] = useState<boolean>(false);
+  const [modalVerify, setModalVerify] = useState<boolean>(false);
+  const [status, setStatus] = useState();
   const getData = (page: number, take: number, used?: boolean) => {
     getMyCoupon(page, take, used).then(res => {
       setCount(res.count);
@@ -30,6 +36,7 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
   };
   useEffect(() => {
     getData(page, 5, true);
+    getProfile();
   }, []);
   const onScrollEnd = () => {
     let pageNow = page;
@@ -39,6 +46,17 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
         setPage(pageNow + 1);
         setData(newData);
       });
+    }
+  };
+  const getProfile = async () => {
+    const value = await AsyncStorage.getItem('token');
+    if (value) {
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      ProfileDatasource.getProfile(farmer_id!)
+        .then(async res => {
+          setStatus(res.status);
+        })
+        .catch(err => console.log(err));
     }
   };
   return (
@@ -147,9 +165,98 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
         <MainButton
           label="จ้างนักบินโดรน"
           color={colors.greenLight}
-          onPress={() => setModal(true)}
+          onPress={() =>
+            status === 'INACTIVE' || status === 'REJECTED'
+              ? setModalVerify(true)
+              : setModal(true)
+          }
         />
       </View>
+      <Modal animationType="fade" transparent={true} visible={modalVerify}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingHorizontal: 16,
+            paddingBottom: 32,
+          }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              marginTop: 10,
+              width: '100%',
+              paddingVertical: normalize(16),
+              borderRadius: 12,
+              paddingHorizontal: 16,
+            }}>
+            <Text
+              style={{
+                fontFamily: font.AnuphanMedium,
+                fontSize: 22,
+                textAlign: 'center',
+              }}>
+              ท่านไม่สามารถจ้าง
+            </Text>
+            <Text
+              style={{
+                fontFamily: font.AnuphanMedium,
+                fontSize: 22,
+                textAlign: 'center',
+              }}>
+              โดรนเกษตรได้ในขณะนี้ เนื่องจาก
+            </Text>
+            <Text
+              style={{
+                fontFamily: font.AnuphanMedium,
+                fontSize: 22,
+                textAlign: 'center',
+              }}>
+              {status === 'REJECTED'
+                ? 'ท่านยังยืนยันตัวตนไม่สำเร็จ'
+                : 'บัญชีของท่านปิดการใช้งาน'}
+            </Text>
+            <Text
+              style={{
+                fontFamily: font.SarabunLight,
+                textAlign: 'center',
+                fontSize: 20,
+                marginVertical: 16,
+                lineHeight: 30,
+              }}>
+              กรุณาติดต่อเจ้าหน้าที่{' '}
+              {status === 'REJECTED'
+                ? 'เพื่อดำเนินการแก้ไข'
+                : 'เพื่อเปิดการใช้งานบัญชี'}
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                setModalVerify(false);
+              }}
+              style={{
+                height: 60,
+                paddingVertical: 8,
+                paddingHorizontal: 16,
+                backgroundColor: colors.greenLight,
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                borderRadius: 8,
+                marginBottom: 8,
+              }}>
+              <Text
+                style={{
+                  fontFamily: font.AnuphanMedium,
+                  color: colors.white,
+                  fontSize: 20,
+                }}>
+                ตกลง
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

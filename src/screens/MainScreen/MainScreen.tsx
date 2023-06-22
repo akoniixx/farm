@@ -99,6 +99,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [end, setEnd] = useState<any>();
   const [start, setStart] = useState<any>();
   const [notiEnd, setNotiEnd] = useState<any>();
+  const [reason, setReason] = useState<any>('');
   const [notiStart, setNotiStart] = useState<any>();
   const [point, setPoint] = useState<any>();
   const getData = async () => {
@@ -154,7 +155,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       getProfileAuth();
       ProfileDatasource.getProfile(farmer_id!)
         .then(async res => {
-          await sendProfilesToMixpanel(res)
+          setReason(res.reason);
+          await sendProfilesToMixpanel(res);
           await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
           dispatch({
             type: 'InitProfile',
@@ -280,24 +282,24 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     getPointFarmer();
   });
 
-  const sendProfilesToMixpanel = async(profiles:any) => {
+  const sendProfilesToMixpanel = async (profiles: any) => {
     const options = {
       method: 'POST',
-      headers: {accept: 'text/plain', 'content-type': 'application/json'},
+      headers: { accept: 'text/plain', 'content-type': 'application/json' },
       body: JSON.stringify([
         {
           $token: mixpanel_token,
           $distinct_id: await mixpanel.getDistinctId(),
-          $set: profiles
-        }
-      ])
+          $set: profiles,
+        },
+      ]),
     };
-    
+
     fetch('https://api.mixpanel.com/engage#profile-set', options)
       .then(response => response.json())
       .then(response => console.log(response))
       .catch(err => console.error(err));
-}
+  };
 
   return (
     <View
@@ -404,7 +406,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 style={{
                   flexDirection: 'row',
                   paddingTop: 130,
-                  paddingBottom: profilestate.status === 'REJECTED' ? 32 : 0,
+                  paddingBottom:
+                    profilestate.status === 'REJECTED' ||
+                    profilestate.status === 'INACTIVE'
+                      ? 32
+                      : 0,
                   alignSelf: 'center',
                 }}>
                 <TouchableOpacity
@@ -613,100 +619,247 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   )}
                 </View>
                 {profilestate.status === 'REJECTED' && (
-                  <View>
-                    <View
-                      style={{
-                        paddingHorizontal: 20,
-                        height: 176,
-                        width: normalize(340),
-                        alignSelf: 'center',
-                        backgroundColor: '#FFF9F2',
-                        borderWidth: 1,
-                        borderColor: '#FEDBB4',
-                        borderRadius: 10,
-                      }}>
-                      <View style={{ padding: 15, alignSelf: 'center' }}>
-                        <View style={{ flexDirection: 'row' }}>
-                          <Image
-                            source={icons.warning}
-                            style={{ width: 20, height: 20, marginRight: 10 }}
-                          />
-                          <Text style={[styles.textAlert]}>
-                            การยืนยันตัวตนไม่สำเร็จ อาจะส่งผลต่อ
+                  <View
+                    style={{
+                      width: normalize(350),
+                      alignSelf: 'center',
+                      backgroundColor: '#FFF9F2',
+                      borderWidth: 1,
+                      borderColor: '#FEDBB4',
+                      borderRadius: 15,
+                    }}>
+                    <View style={{ padding: 15 }}>
+                      <View
+                        style={{
+                          borderColor:
+                            profilestate.status === 'REJECTED'
+                              ? colors.darkOrange
+                              : colors.fontGrey,
+                          borderWidth: 1,
+                          borderRadius: 15,
+                          padding: 4,
+                          backgroundColor:
+                            profilestate.status === 'REJECTED'
+                              ? colors.white
+                              : colors.greyDivider,
+                          width: profilestate.status === 'REJECTED' ? 170 : 105,
+                        }}>
+                        <View
+                          style={{
+                            justifyContent: 'space-between',
+                            flexDirection: 'row',
+                            paddingHorizontal: 5,
+                          }}>
+                          {profilestate.status === 'REJECTED' ? (
+                            <Image
+                              source={icons.wrong}
+                              style={{
+                                width: 15,
+                                height: 15,
+                                alignSelf: 'center',
+                              }}
+                            />
+                          ) : null}
+
+                          <Text
+                            style={{
+                              fontFamily: font.AnuphanMedium,
+                              color:
+                                profilestate.status === 'REJECTED'
+                                  ? colors.error
+                                  : colors.fontGrey,
+                              fontSize: normalize(14),
+                            }}>
+                            {profilestate.status === 'REJECTED'
+                              ? 'ยืนยันตัวตนไม่สำเร็จ'
+                              : 'ปิดการใช้งาน'}
                           </Text>
                         </View>
-                        <Text style={[styles.textAlert, { marginLeft: 30 }]}>
-                          การจ้างงานโดรนเกษตร กรุณาติดต่อ
+                      </View>
+                      <View style={{ paddingVertical: 8 }}>
+                        <Text style={[styles.textAlert]}>
+                          {profilestate.status === 'REJECTED'
+                            ? reason
+                            : 'บัญชีของท่านถูกปิดการใช้งาน หากต้องการ'}
                         </Text>
-                        <Text style={[styles.textAlert, { marginLeft: 30 }]}>
-                          เจ้าหน้าที่ เพื่อยืนยันสถานะ
+                        <Text style={[styles.textAlert]}>
+                          {profilestate.status === 'REJECTED'
+                            ? 'กรุณาติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข'
+                            : 'เปิดใช้งานบัญชี กรุณาติดต่อเจ้าหน้าที่'}
                         </Text>
                       </View>
-                      <View style={{ paddingHorizontal: 10 }}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            setShowModalCall(true);
-                          }}
+                    </View>
+                    <View style={{ paddingHorizontal: 10 }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setShowModalCall(true);
+                        }}
+                        style={{
+                          ...Platform.select({
+                            ios: {
+                              height: 60,
+                              paddingVertical: 8,
+                              paddingHorizontal: 16,
+                              backgroundColor: colors.white,
+                              justifyContent: 'center',
+                              alignItems: 'flex-start',
+                              width: '100%',
+                              borderRadius: 12,
+                              marginBottom: 8,
+                              borderWidth: 1,
+                              borderColor: colors.blueBorder,
+                            },
+                            android: {
+                              height: 60,
+                              paddingVertical: 8,
+                              paddingHorizontal: 16,
+                              backgroundColor: colors.white,
+                              justifyContent: 'center',
+                              alignItems: 'flex-start',
+                              width: '100%',
+                              borderRadius: 12,
+                              marginBottom: 8,
+                              borderWidth: 1,
+                              borderColor: colors.blueBorder,
+                              bottom: 15,
+                            },
+                          }),
+                        }}>
+                        <View
                           style={{
-                            ...Platform.select({
-                              ios: {
-                                height: 60,
-                                paddingVertical: 8,
-                                paddingHorizontal: 16,
-                                backgroundColor: colors.white,
-                                justifyContent: 'center',
-                                alignItems: 'flex-start',
-                                width: '100%',
-                                borderRadius: 12,
-                                marginBottom: 8,
-                                borderWidth: 1,
-                                borderColor: colors.blueBorder,
-                              },
-                              android: {
-                                height: 60,
-                                paddingVertical: 8,
-                                paddingHorizontal: 16,
-                                backgroundColor: colors.white,
-                                justifyContent: 'center',
-                                alignItems: 'flex-start',
-                                width: '100%',
-                                borderRadius: 12,
-                                marginBottom: 8,
-                                borderWidth: 1,
-                                borderColor: colors.blueBorder,
-                                bottom: 15,
-                              },
-                            }),
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            alignSelf: 'center',
                           }}>
-                          <View
+                          <Image
                             style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              alignSelf: 'center',
+                              width: 24,
+                              height: 24,
+                              marginRight: 16,
+                            }}
+                            source={icons.calling}
+                          />
+                          <Text
+                            style={{
+                              fontFamily: font.AnuphanMedium,
+                              color: colors.blueBorder,
+                              fontSize: 20,
                             }}>
-                            <Image
-                              style={{
-                                width: 24,
-                                height: 24,
-                                marginRight: 16,
-                              }}
-                              source={icons.calling}
-                            />
-                            <Text
-                              style={{
-                                fontFamily: font.AnuphanMedium,
-                                color: colors.blueBorder,
-                                fontSize: 20,
-                              }}>
-                              โทรหาเจ้าหน้าที่
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
-                      </View>
+                            โทรหาเจ้าหน้าที่
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
                     </View>
                   </View>
                 )}
-
+                {profilestate.status === 'INACTIVE' && (
+                  <View
+                    style={{
+                      width: normalize(350),
+                      alignSelf: 'center',
+                      backgroundColor: '#FFF9F2',
+                      borderWidth: 1,
+                      borderColor: '#FEDBB4',
+                      borderRadius: 15,
+                    }}>
+                    <View style={{ padding: 15 }}>
+                      <View
+                        style={{
+                          borderColor: colors.fontGrey,
+                          borderWidth: 1,
+                          borderRadius: 15,
+                          padding: 4,
+                          backgroundColor: colors.greyDivider,
+                          width: 105,
+                        }}>
+                        <View
+                          style={{
+                            justifyContent: 'space-between',
+                            flexDirection: 'row',
+                            paddingHorizontal: 5,
+                          }}>
+                          <Text
+                            style={{
+                              fontFamily: font.AnuphanMedium,
+                              color: colors.fontGrey,
+                              fontSize: normalize(14),
+                            }}>
+                            ปิดการใช้งาน
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={{ paddingVertical: 8 }}>
+                        <Text style={[styles.textAlert]}>
+                          บัญชีของท่านถูกปิดการใช้งาน หากต้องการ
+                        </Text>
+                        <Text style={[styles.textAlert]}>
+                          เปิดใช้งานบัญชี กรุณาติดต่อเจ้าหน้าที่
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={{ paddingHorizontal: 10 }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setShowModalCall(true);
+                        }}
+                        style={{
+                          ...Platform.select({
+                            ios: {
+                              height: 60,
+                              paddingVertical: 8,
+                              paddingHorizontal: 16,
+                              backgroundColor: colors.white,
+                              justifyContent: 'center',
+                              alignItems: 'flex-start',
+                              width: '100%',
+                              borderRadius: 12,
+                              marginBottom: 8,
+                              borderWidth: 1,
+                              borderColor: colors.blueBorder,
+                            },
+                            android: {
+                              height: 60,
+                              paddingVertical: 8,
+                              paddingHorizontal: 16,
+                              backgroundColor: colors.white,
+                              justifyContent: 'center',
+                              alignItems: 'flex-start',
+                              width: '100%',
+                              borderRadius: 12,
+                              marginBottom: 8,
+                              borderWidth: 1,
+                              borderColor: colors.blueBorder,
+                              bottom: 15,
+                            },
+                          }),
+                        }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            alignSelf: 'center',
+                          }}>
+                          <Image
+                            style={{
+                              width: 24,
+                              height: 24,
+                              marginRight: 16,
+                            }}
+                            source={icons.calling}
+                          />
+                          <Text
+                            style={{
+                              fontFamily: font.AnuphanMedium,
+                              color: colors.blueBorder,
+                              fontSize: 20,
+                            }}>
+                            โทรหาเจ้าหน้าที่
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                )}
                 <View>
                   <View
                     style={{
@@ -828,7 +981,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </TouchableOpacity>
                 </View>
                 {taskSugUsed.length != 0 ? (
-                  <View style={{ height: 'auto', paddingHorizontal: 20 }}>
+                  <View style={{ height: 'auto' }}>
                     <ScrollView
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}>
@@ -933,7 +1086,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     นักบินโดรนที่แนะนำ
                   </Text>
                 </View>
-                <View style={{ height: 'auto', paddingHorizontal: 20 }}>
+                <View style={{ height: 'auto' }}>
                   <ScrollView
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}>
@@ -1191,7 +1344,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 fontSize: 22,
                 textAlign: 'center',
               }}>
-              ท่านยังยืนยันตัวตนไม่สำเร็จ
+              {profilestate.status === 'REJECTED'
+                ? 'ท่านยังยืนยันตัวตนไม่สำเร็จ'
+                : 'บัญชีของท่านปิดการใช้งาน'}
             </Text>
             <Text
               style={{
@@ -1199,8 +1354,12 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 textAlign: 'center',
                 fontSize: 20,
                 marginVertical: 16,
+                lineHeight: 30,
               }}>
-              กรุณาติดต่อเจ้าหน้าที่ เพื่อยืนยันสถานะ
+              กรุณาติดต่อเจ้าหน้าที่{' '}
+              {profilestate.status === 'REJECTED'
+                ? 'เพื่อดำเนินการแก้ไข'
+                : 'เพื่อเปิดการใช้งานบัญชี'}
             </Text>
             <TouchableOpacity
               onPress={() => {
@@ -1239,6 +1398,7 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunLight,
     fontSize: normalize(16),
     color: colors.fontBlack,
+    lineHeight: 26,
   },
   textEmpty: {
     fontFamily: font.SarabunLight,

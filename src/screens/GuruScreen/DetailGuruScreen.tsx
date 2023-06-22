@@ -53,10 +53,13 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ backgroundColor: colors.white, flex: 1 }}>
-      <CustomHeader showBackBtn onPressBack={() => {
-         mixpanel.track('Tab back from Detail Guru Screen');
-        navigation.goBack()
-        }} />
+      <CustomHeader
+        showBackBtn
+        onPressBack={() => {
+          mixpanel.track('Tab back from Detail Guru Screen');
+          navigation.goBack();
+        }}
+      />
       {data != undefined ? (
         <ScrollView>
           <View>
