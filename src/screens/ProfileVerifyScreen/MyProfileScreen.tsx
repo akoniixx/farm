@@ -24,13 +24,10 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {Register} from '../../datasource/AuthDatasource';
 
 const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
-  const [drone, setDrone] = useState();
+  const [drone, setDrone] = useState<any>([]);
   const [plants, setPlants] = useState();
   const [idCard, setIdCard] = useState();
   const [checkNum, setCheckNum] = useState<number>(0);
-  const [checked, setChecked] = useState<number>(50);
-  const [reload, setReload] = useState(false);
-
   const [showModal, setShowModal] = useState(false);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
@@ -40,13 +37,16 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
       setLoading(true);
       const droner_id = await AsyncStorage.getItem('droner_id');
       ProfileDatasource.getProfile(droner_id!).then(res => {
+        console.log(res.dronerDrone)
         setLoading(false);
-        setDrone(res.dronerDrone[0]);
-        setPlants(res.expPlant[0]);
+        setDrone(res.dronerDrone);
+        setPlants(res.expPlant);
         setIdCard(res.idNo);
         setCheckNum(res.percentSuccess);
-        if (res.status === 'PENDING') {
-          setShowModal(true);
+        if (res.dronerDrone[0] && res.expPlant[0]) {
+          Register.changeToPending().then(res => {
+            setShowModal(true);
+          });
         }
       });
     };
@@ -70,9 +70,10 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
               paddingVertical: 10,
             }}>
             <AnimatedCircularProgress
+              prefill={0}
               size={60}
               width={5}
-              fill={checkNum}
+              fill={Number(checkNum)}
               tintColor="#FB8705"
               backgroundColor="#FFEFDD"
               rotation={0}>
@@ -108,7 +109,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
                   alignItems: 'center',
                 }}>
                 <Image
-                  source={drone ? icons.checkOrange : image.num1}
+                  source={drone.length === 0 ?  image.num1 : icons.checkOrange}
                   style={{width: 30, height: 30}}
                 />
                 <Text style={styles.text}>เพิ่มโดรน</Text>
@@ -128,29 +129,10 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
                   alignItems: 'center',
                 }}>
                 <Image
-                  source={plants ? icons.checkOrange : image.num2}
+                  source={!plants ? image.num2 : icons.checkOrange}
                   style={{width: 30, height: 30}}
                 />
                 <Text style={styles.text}>เพิ่มพืชที่เคยฉีดพ่น</Text>
-              </View>
-              <Image
-                source={icons.arrowRight}
-                style={{width: 30, height: 30}}
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('IDCardScreen')}>
-            <View style={styles.listTile}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Image
-                  source={idCard ? icons.checkOrange : image.num3}
-                  style={{width: 30, height: 30}}
-                />
-                <Text style={styles.text}>เพิ่มรูปคู่บัตรประชาชน</Text>
               </View>
               <Image
                 source={icons.arrowRight}
@@ -228,7 +210,9 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('ProfileScreen');
+                navigation.navigate('ProfileScreen', {
+                  navbar: false,
+                });
                 setShowModal(false);
               }}
               style={{
