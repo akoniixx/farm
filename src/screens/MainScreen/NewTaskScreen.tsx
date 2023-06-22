@@ -332,7 +332,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
             </View>
           </View>
         ) : null}
-        {dronerStatus == 'OPEN' ? (
+        {/* {dronerStatus == 'OPEN' ? (
           <View
             style={{
               backgroundColor: colors.grayBg,
@@ -416,7 +416,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
               </View>
             </View>
           </View>
-        ) : null}
+        ) : null} */}
         {data.length > 0 && (
           <View>
             <FlatList

@@ -371,7 +371,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
               </View>
             </View>
           ) : null}
-          {dronerStatus == 'OPEN' ? (
+          {/* {dronerStatus == 'OPEN' ? (
             <View style={{backgroundColor: colors.grayBg}}>
               <View
                 style={{
@@ -451,7 +451,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                 </View>
               </View>
             </View>
-          ) : null}
+          ) : null} */}
         </>
       )}
       <Spinner
