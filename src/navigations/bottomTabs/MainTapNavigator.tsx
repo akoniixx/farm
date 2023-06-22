@@ -96,7 +96,9 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     {
       name: 'profile',
       title: 'โปรไฟล์',
-      component: status === 'OPEN' ? MyProfileScreen : ProfileScreen,
+      component:
+        status === 'OPEN' ? MyProfileScreen :
+        ProfileScreen,
       activeIcon: icons.profileActive,
       inactiveIcon: icons.profile,
     },

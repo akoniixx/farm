@@ -27,10 +27,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [drone, setDrone] = useState<any>([]);
   const [plants, setPlants] = useState();
   const [idCard, setIdCard] = useState();
-  const [checkNum, setCheckNum] = useState<any>(0);
-  const [checked, setChecked] = useState<number>(50);
-  const [reload, setReload] = useState(false);
-
+  const [checkNum, setCheckNum] = useState<number>(0);
   const [showModal, setShowModal] = useState(false);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
@@ -45,9 +42,11 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
         setDrone(res.dronerDrone);
         setPlants(res.expPlant);
         setIdCard(res.idNo);
-        setCheckNum(Number(res.percentSuccess));
-        if (res.status === 'PENDING') {
-          setShowModal(true);
+        setCheckNum(res.percentSuccess);
+        if (res.dronerDrone[0] && res.expPlant[0]) {
+          Register.changeToPending().then(res => {
+            setShowModal(true);
+          });
         }
       });
     };
@@ -141,25 +140,6 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
               />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('IDCardScreen')}>
-            <View style={styles.listTile}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Image
-                  source={idCard ? icons.checkOrange : image.num3}
-                  style={{width: 30, height: 30}}
-                />
-                <Text style={styles.text}>เพิ่มรูปคู่บัตรประชาชน</Text>
-              </View>
-              <Image
-                source={icons.arrowRight}
-                style={{width: 30, height: 30}}
-              />
-            </View>
-          </TouchableOpacity>
         </View>
       </View>
       <Modal animationType="fade" transparent={true} visible={showModal}>
@@ -230,7 +210,9 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('ProfileScreen');
+                navigation.navigate('ProfileScreen', {
+                  navbar: false,
+                });
                 setShowModal(false);
               }}
               style={{

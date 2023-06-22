@@ -474,7 +474,8 @@ export class Register {
           postcode: 10500,
         },
         percentSuccess : 25
-      }).then(response => {
+      }).then(async response => {
+        await AsyncStorage.setItem('droner_id',response.data.id);
         return response.data;
       })
       .catch(error => {
@@ -482,21 +483,6 @@ export class Register {
       });
     }
     else{
-      console.log({
-        id : droner_id,
-        firstname: firstname,
-        lastname: lastname,
-        telephoneNo: telephoneNo,
-        status: 'OPEN',
-        address : {
-          address1 : "42 ถนนสุรวงศ์ ซอยสุรวงศ์",
-          provinceId: 10,
-          districtId: 1004,
-          subdistrictId: 10040500,
-          postcode: "10500",
-        },
-        percentSuccess : 25
-      })
       return registerClient
       .post(BASE_URL + '/auth/droner/register',{
         id : droner_id,

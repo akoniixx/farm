@@ -216,7 +216,7 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
                 plant.push(item.value);
               }
             });
-            Register.registerUpPlants(plant,Number(percentSuccess)  + 15)
+            Register.registerUpPlants(plant,Number(percentSuccess)  + 25)
               .then(res => {
                 setLoading(false);
                 navigation.navigate('MyProfileScreen');

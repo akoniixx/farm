@@ -70,14 +70,13 @@ export default function CardRedeemDigital({
           style={{
             flex: 0.8,
             flexDirection: 'row',
-            paddingLeft: 16,
+            marginLeft: 24,
             alignItems: 'center',
             justifyContent: 'space-between',
             minHeight: 72,
           }}>
           <View
             style={{
-              flex: 0.8,
               minHeight: 72,
             }}>
             <Text
