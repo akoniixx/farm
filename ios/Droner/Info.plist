@@ -2,7 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-
 	<key>AdvertiserTrackingEnabled</key>
 	<string>true</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -43,7 +42,12 @@
 	<string>8a0ce86f62551714f3c4463f9482fbac</string>
 	<key>FacebookDisplayName</key>
 	<string>นักบินโดรน</string>
-	 
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>http</string>
+		<string>https</string>
+		<string>comgooglemaps</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -70,7 +74,6 @@
 	<key>NSUserTrackingUsageDescription</key>
 	<string>$(PRODUCT_NAME) requires your permission to track in order to show you more relevant ads.</string>
 	<key>UIAppFonts</key>
-	
 	<array>
 		<string>Anuphan-Bold.otf</string>
 		<string>Anuphan-Light.otf</string>
@@ -88,14 +91,6 @@
 	<array>
 		<string>armv7</string>
 	</array>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-    <string>http</string>
-    <string>https</string>
-	<string>comgooglemaps</string>
-
-    </array>
- 
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
