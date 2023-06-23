@@ -37,7 +37,7 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
   }, [isFocused]);
   const findAllNews = async () => {
     setLoading(true);
-    GuruKaset.findAllNews('ACTIVE', 'DRONER', 'created_at', 'DESC')
+    GuruKaset.findAllNews('ACTIVE', 'DRONER', 'NEWS', 'created_at', 'DESC')
       .then(res => {
         if (res) {
           setData(res);
@@ -144,6 +144,7 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
                   await GuruKaset.findAllNews(
                     'ACTIVE',
                     'DRONER',
+                    'NEWS',
                     'created_at',
                     'DESC',
                   ).then(res => {
@@ -183,6 +184,7 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
                   await GuruKaset.findAllNews(
                     'ACTIVE',
                     'DRONER',
+                    'NEWS',
                     'read',
                     'DESC',
                   ).then(res => {

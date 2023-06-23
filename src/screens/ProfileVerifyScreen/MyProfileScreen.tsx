@@ -37,7 +37,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
       setLoading(true);
       const droner_id = await AsyncStorage.getItem('droner_id');
       ProfileDatasource.getProfile(droner_id!).then(res => {
-        console.log(res.dronerDrone)
+        console.log(res.dronerDrone);
         setLoading(false);
         setDrone(res.dronerDrone);
         setPlants(res.expPlant);
@@ -109,7 +109,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
                   alignItems: 'center',
                 }}>
                 <Image
-                  source={drone.length === 0 ?  image.num1 : icons.checkOrange}
+                  source={drone.length === 0 ? image.num1 : icons.checkOrange}
                   style={{width: 30, height: 30}}
                 />
                 <Text style={styles.text}>เพิ่มโดรน</Text>

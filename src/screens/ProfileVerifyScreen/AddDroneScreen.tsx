@@ -353,7 +353,7 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
                   </ScrollView>
                 </View>
                 <MainButton
-                  disable={!brand || !brandtype  ? true : false}
+                  disable={!brand || !brandtype ? true : false}
                   label="เพิ่ม"
                   color={colors.orange}
                   onPress={addDrone}
