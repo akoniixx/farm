@@ -78,5 +78,5 @@ export default {
   winnerCampaignBlank: require('./WinnerCampaignBlank.png'),
   checkOrange: require('./checkOrange.png'),
   closeX: require('./closeX.png'),
-  closeGrey: require('./closeGrey.png')
+  closeGrey: require('./closeGrey.png'),
 };

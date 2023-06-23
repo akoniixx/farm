@@ -87,7 +87,7 @@ const SuccessRegister: React.FC<any> = ({navigation}) => {
                 screen: 'MainScreen',
               }),
             )
-          .catch(err => console.log(err));
+            .catch(err => console.log(err));
         }}
       />
     </View>
