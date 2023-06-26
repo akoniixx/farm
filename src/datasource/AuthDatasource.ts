@@ -262,14 +262,17 @@ export class Register {
       });
   }
 
-  static async uploadDronerdrone(dronerDrone: any, percentSuccess: number): Promise<any> {
+  static async uploadDronerdrone(
+    dronerDrone: any,
+    percentSuccess: number,
+  ): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient
       .post(BASE_URL + '/auth/droner/register', {
         id: droner_id,
         dronerDrone: dronerDrone,
         status: 'OPEN',
-        percentSuccess: percentSuccess
+        percentSuccess: percentSuccess,
       })
       .then(async response => {
         return response.data;
@@ -312,14 +315,17 @@ export class Register {
         console.log(error);
       });
   }
-  static async registerUpPlants(expPlant: string[], percentSuccess: number): Promise<any> {
+  static async registerUpPlants(
+    expPlant: string[],
+    percentSuccess: number,
+  ): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient
       .post(BASE_URL + '/auth/droner/register', {
         id: droner_id,
         expPlant: expPlant,
         status: 'OPEN',
-        percentSuccess: percentSuccess
+        percentSuccess: percentSuccess,
       })
       .then(response => {
         return response.data;
@@ -363,14 +369,18 @@ export class Register {
       });
   }
 
-  static async registerStep4(telephoneNo: string, idNo: string, percentSuccess: number): Promise<any> {
+  static async registerStep4(
+    telephoneNo: string,
+    idNo: string,
+    percentSuccess: number,
+  ): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient
       .post(BASE_URL + '/auth/droner/register', {
         id: droner_id,
         telephoneNo: telephoneNo,
         idNo: idNo,
-        percentSuccess: percentSuccess
+        percentSuccess: percentSuccess,
       })
       .then(response => {
         return response.data;
@@ -454,12 +464,12 @@ export class Register {
   }
 
   static async registerStep1V2(
-    firstname : string,
-    lastname : string,
+    firstname: string,
+    lastname: string,
     telephoneNo: string,
-  ){
+  ) {
     const droner_id = await AsyncStorage.getItem('droner_id');
-    if(!droner_id){
+    if (!droner_id) {
       return registerClient
       .post(BASE_URL + '/auth/droner/register',{
         firstname: firstname,
@@ -485,26 +495,27 @@ export class Register {
     }
     else{
       return registerClient
-      .post(BASE_URL + '/auth/droner/register',{
-        id : droner_id,
-        firstname: firstname,
-        lastname: lastname,
-        telephoneNo: telephoneNo,
-        status: 'OPEN',
-        address : {
-          address1 : "42 ถนนสุรวงศ์ ซอยสุรวงศ์",
-          provinceId: 10,
-          districtId: 1004,
-          subdistrictId: 10040500,
-          postcode: "10500",
-        },
-        percentSuccess : 25
-      }).then(response => {
-        return response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
+        .post(BASE_URL + '/auth/droner/register', {
+          id: droner_id,
+          firstname: firstname,
+          lastname: lastname,
+          telephoneNo: telephoneNo,
+          status: 'OPEN',
+          address: {
+            address1: '42 ถนนสุรวงศ์ ซอยสุรวงศ์',
+            provinceId: 10,
+            districtId: 1004,
+            subdistrictId: 10040500,
+            postcode: '10500',
+          },
+          percentSuccess: 25,
+        })
+        .then(response => {
+          return response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
   static async registerStep2V2(
@@ -514,23 +525,25 @@ export class Register {
     provinceId?: number,
     districtId?: number,
     subdistrictId?: number,
-  ){
+  ) {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient
-    .post(BASE_URL + '/auth/droner/register',{
-      id : droner_id,
-      status: 'OPEN',
-      percentSuccess : 50,
-      dronerArea: {
-        lat: lat,
-        long: long,
-        provinceId: provinceId,
-        districtId: districtId,
-        subdistrictId: subdistrictId,
-        locationName: locationName,
-      },
-    }).then(res => {
-      return res.data
-    }).catch(err => console.log(err))
+      .post(BASE_URL + '/auth/droner/register', {
+        id: droner_id,
+        status: 'OPEN',
+        percentSuccess: 50,
+        dronerArea: {
+          lat: lat,
+          long: long,
+          provinceId: provinceId,
+          districtId: districtId,
+          subdistrictId: subdistrictId,
+          locationName: locationName,
+        },
+      })
+      .then(res => {
+        return res.data;
+      })
+      .catch(err => console.log(err));
   }
 }

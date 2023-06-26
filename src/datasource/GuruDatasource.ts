@@ -5,6 +5,7 @@ export class GuruKaset {
   static async findAllNews(
     status: string,
     application: string,
+    categoryNews?: string,
     sortField?: string,
     sortDirection?: string,
     limit?: number,
@@ -14,6 +15,7 @@ export class GuruKaset {
       .post(BASE_URL + `/promotion/news/find-all-news`, {
         status: status,
         application: application,
+        categoryNews: categoryNews,
         sortField: sortField,
         sortDirection: sortDirection,
         limit: limit,

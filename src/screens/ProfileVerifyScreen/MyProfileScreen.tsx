@@ -108,7 +108,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
                   alignItems: 'center',
                 }}>
                 <Image
-                  source={drone.length === 0 ?  image.num1 : icons.checkOrange}
+                  source={drone.length === 0 ? image.num1 : icons.checkOrange}
                   style={{width: 30, height: 30}}
                 />
                 <Text style={styles.text}>เพิ่มโดรน</Text>
