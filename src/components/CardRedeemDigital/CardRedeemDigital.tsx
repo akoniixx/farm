@@ -318,7 +318,7 @@ export default function CardRedeemDigital({
         </View>
       </View>
 
-      {isCancel && (
+      {isCancel && data.dronerTransaction.redeemDetail.remark && (
         <Text
           style={{
             marginTop: 8,
@@ -327,7 +327,7 @@ export default function CardRedeemDigital({
             flex: 1,
             fontSize: 14,
           }}>
-          หมายเหตุ : นักบินโทรแจ้งยกเลิกการใช้แต้มแลกของรางวัล
+          หมายเหตุ : {data.dronerTransaction.redeemDetail.remark}
         </Text>
       )}
     </>
