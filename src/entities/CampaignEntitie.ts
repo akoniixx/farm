@@ -5,6 +5,7 @@ interface Condition {
   quata: number;
   maxQuata: number;
   rewardId: number | null;
+  rewardName: string;
 }
 
 export interface CampaignEntitie {
@@ -28,6 +29,7 @@ export interface CampaignEntitie {
   isDeleteDroner: boolean;
   countSubMission: number;
   rulesCampaign: string;
+  condition: Array<Condition>;
 }
 
 export const init_campaign: CampaignEntitie = {
@@ -51,4 +53,5 @@ export const init_campaign: CampaignEntitie = {
   isDeleteDroner: false,
   countSubMission: 0,
   rulesCampaign: '',
+  condition: [],
 };

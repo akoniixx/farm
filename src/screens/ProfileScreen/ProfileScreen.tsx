@@ -269,7 +269,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
         </View>
       ) : (
         <View style={styles.appBarBack}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
             <Image source={icons.arrowLeft} style={styles.listTileIcon} />
           </TouchableOpacity>
           <Text style={[styles.appBarHeader]}>โปรไฟล์ของฉัน</Text>

@@ -107,13 +107,11 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
     const dronesUI = [...dronedataUI];
     const newDrone = {
       droneId: brandtype.value,
-      serialNo: droneno,
       status: 'PENDING',
     };
     const newDroneUI = {
       img: brand.image,
       droneBrand: brandtype.label,
-      serialBrand: droneno,
     };
     drones.push(newDrone);
     dronesUI.push(newDroneUI);
@@ -202,7 +200,7 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
             onPress={async () => {
               setLoading(true);
               incrementCount();
-              Register.uploadDronerdrone(dronedata, Number(percentSuccess) + 15)
+              Register.uploadDronerdrone(dronedata, Number(percentSuccess) + 25)
                 .then(res => {
                   setLoading(false);
                   setBrand(null);
@@ -351,21 +349,11 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
                           borderColor: colors.disable,
                         }}
                       />
-                      <TextInput
-                        placeholderTextColor={colors.gray}
-                        onChangeText={v => {
-                          setdroneno(v);
-                        }}
-                        value={droneno}
-                        style={styles.input}
-                        editable={true}
-                        placeholder={'เลขตัวถังโดรน'}
-                      />
                     </View>
                   </ScrollView>
                 </View>
                 <MainButton
-                  disable={!brand || !brandtype || !droneno! ? true : false}
+                  disable={!brand || !brandtype ? true : false}
                   label="เพิ่ม"
                   color={colors.orange}
                   onPress={addDrone}

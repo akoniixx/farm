@@ -39,7 +39,7 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
     const getProfile = async () => {
       const droner_id = await AsyncStorage.getItem('droner_id');
       await ProfileDatasource.getProfile(droner_id!).then(res => {
-        setPercentSuccess(res.percentSuccess)
+        setPercentSuccess(res.percentSuccess);
         let mapPlants = plantListSelect.map(x => {
           if (res.expPlant.includes(x.value)) {
             return {
@@ -88,8 +88,7 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
       const newplant = {value: value, active: true};
       data.push(newplant);
       setPlantListSelect(data);
-      setAddPlant('')
-      
+      setAddPlant('');
     }
   };
   return (
@@ -216,7 +215,7 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
                 plant.push(item.value);
               }
             });
-            Register.registerUpPlants(plant,Number(percentSuccess)  + 15)
+            Register.registerUpPlants(plant, Number(percentSuccess) + 25)
               .then(res => {
                 setLoading(false);
                 navigation.navigate('MyProfileScreen');

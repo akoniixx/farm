@@ -58,9 +58,7 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
       mediaType: 'photo',
     });
     if (!result.didCancel) {
-      if (result == null) {
-        setImage(result);
-      }
+      setImage(result);
     }
   }, [image]);
 

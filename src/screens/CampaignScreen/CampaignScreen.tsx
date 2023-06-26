@@ -45,6 +45,7 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
 
         Campaign.getQuota(res.data[0].id, dronerId)
           .then(respon => {
+            console.log(respon, 'dsds');
             setLoading(true);
             setAllValue(respon.allValue);
             setAfterRai(respon.afterRai);
@@ -116,10 +117,10 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                       fontSize: normalize(14),
                       color: '#B26003',
                     }}>
-                    รางวัลใหญ่
+                    จับรางวัลครั้งถัดไป
                   </Text>
                   <Text style={styles.rewardFont}>
-                    สร้อยคอทองคำ 1 บาทและ 1 สลึง
+                    {campaign?.condition[0]?.rewardName}
                   </Text>
                 </View>
               </View>

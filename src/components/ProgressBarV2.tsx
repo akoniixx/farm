@@ -4,7 +4,7 @@ import {View, StyleSheet} from 'react-native';
 import {normalize} from '@rneui/themed';
 import colors from '../assets/colors/colors';
 import {Text} from '@rneui/base';
-import { width } from '../function/Normalize';
+import {width} from '../function/Normalize';
 
 interface ProgressBarProps {
   index: number;
@@ -23,7 +23,7 @@ export const ProgressBarV2: React.FC<ProgressBarProps> = ({index}) => {
         <View
           key={i}
           style={{
-            width: normalize(width/2 - 34),
+            width: normalize(width / 2 - 34),
             height: 4,
             backgroundColor: i <= index ? colors.orange : colors.disable,
           }}
