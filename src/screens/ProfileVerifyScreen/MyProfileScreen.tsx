@@ -37,7 +37,6 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
       setLoading(true);
       const droner_id = await AsyncStorage.getItem('droner_id');
       ProfileDatasource.getProfile(droner_id!).then(res => {
-        console.log(res.dronerDrone)
         setLoading(false);
         setDrone(res.dronerDrone);
         setPlants(res.expPlant);
@@ -263,6 +262,7 @@ const styles = StyleSheet.create({
   textCard: {
     fontSize: normalize(16),
     fontFamily: fonts.bold,
+    color : colors.fontBlack
   },
   text: {
     fontFamily: font.bold,

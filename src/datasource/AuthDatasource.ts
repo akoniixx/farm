@@ -467,7 +467,8 @@ export class Register {
         telephoneNo: telephoneNo,
         status: 'OPEN',
         address : {
-          address1 : "42 ถนนสุรวงศ์ ซอยสุรวงศ์",
+          address1 : "42",
+          address2 : "ถนนสุรวงศ์ ซอยสุรวงศ์",
           provinceId: 10,
           districtId: 1004,
           subdistrictId: 10040500,

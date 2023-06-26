@@ -4,9 +4,10 @@ import { Avatar, normalize } from "@rneui/themed";
 import { colors, font, icons,image as img } from "../../assets";
 import { ProgressBarV2 } from "../../components/ProgressBarV2";
 import * as ImagePicker from 'react-native-image-picker';
-import { Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, Modal, PermissionsAndroid, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import React, { useCallback, useState } from "react";
 import { MainButton } from "../../components/Button/MainButton";
+import Geolocation from 'react-native-geolocation-service';
 import { Register } from "../../datasource/AuthDatasource";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Lottie from 'lottie-react-native';
@@ -126,32 +127,47 @@ const FirstFormScreenV2 : React.FC<any>= ({navigation, route})=>{
                       disable={!formState.firstname || !formState.lastname}
                       color={colors.orange}
                       label="ถัดไป" 
-                      onPress={()=>{
+                      onPress={async()=>{
                         setLoading(true)
-                        Register.registerStep1V2(
-                            formState.firstname,
-                            formState.lastname,
-                            tele
-                        ).then(async res => {
-                            if(!image){
-                              setLoading(false)
-                              await AsyncStorage.setItem("droner_id",res.id)
-                              navigation.navigate('SecondFormScreenV2', {
-                                  tele: route.params.telNumber,
-                              });
-                            }
-                            else{
-                              Register.uploadProfileImage(image).then(
-                                async resImg => {
+                        if (Platform.OS === 'ios') {
+                          await Geolocation.requestAuthorization('always');
+                        } else if (Platform.OS === 'android') {
+                          await PermissionsAndroid.request(
+                            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                          );
+                        }
+                        Geolocation.getCurrentPosition(
+                          position => {
+                            Register.registerStep1V2(
+                                formState.firstname,
+                                formState.lastname,
+                                tele
+                            ).then(async res => {
+                                if(!image){
                                   setLoading(false)
                                   await AsyncStorage.setItem("droner_id",res.id)
                                   navigation.navigate('SecondFormScreenV2', {
                                       tele: route.params.telNumber,
+                                      latitude: position.coords.latitude,
+                                      longitude: position.coords.longitude,
                                   });
                                 }
-                              )
-                            }
-                        }).catch(err => console.log(err))
+                                else{
+                                  Register.uploadProfileImage(image).then(
+                                    async resImg => {
+                                      setLoading(false)
+                                      await AsyncStorage.setItem("droner_id",res.id)
+                                      navigation.navigate('SecondFormScreenV2', {
+                                          tele: route.params.telNumber,
+                                          latitude: position.coords.latitude,
+                                          longitude: position.coords.longitude,
+                                      });
+                                    }
+                                  )
+                                }
+                            }).catch(err => console.log(err))
+                          }
+                        )
                       }}
                     />
                   </View>
