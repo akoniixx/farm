@@ -1,3 +1,6 @@
+## Enchance [1.5.7] 2023-06-23
+- change default lat long for register
+
 ## Enchance [1.5.6] 2023-06-23
 - winner campaign
 
