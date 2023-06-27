@@ -27,6 +27,7 @@ import {usePoint} from '../../contexts/PointContext';
 import image from '../../assets/images/image';
 import {Campaign} from '../../datasource/CampaignDatasource';
 import Draggable from 'react-native-draggable';
+import AsyncButton from '../../components/Button/AsyncButton';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -295,6 +296,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 <Text style={styles.activeFont}>เปิดรับงาน</Text>
               </View>
             </View>
+
             {/*  <View>
               <TouchableOpacity
                 style={{

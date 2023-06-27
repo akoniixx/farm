@@ -853,6 +853,71 @@ export const toastConfig = {
       </View>
     );
   },
+  taskAlreadyAccepted: ({onPress, text1, props}: any) => (
+    <TouchableOpacity
+      onPress={() => {
+        Toast.hide();
+      }}>
+      <View style={styles.modalBgdroneFailed}>
+        <View
+          style={{
+            flexDirection: 'row',
+          }}>
+          <Image
+            source={icons.closecircle}
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+            }}
+          />
+          <View
+            style={{
+              paddingLeft: normalize(12),
+            }}>
+            <Text
+              style={{
+                fontSize: normalize(16),
+                fontFamily: fonts.bold,
+                color: colors.white,
+                width: 220,
+              }}>
+              {text1}
+            </Text>
+            <Text
+              style={{
+                fontSize: normalize(16),
+                fontFamily: fonts.bold,
+                color: colors.white,
+              }}>
+              ถูกนักบินท่านอื่นรับไปแล้ว
+            </Text>
+            <Text
+              style={{
+                fontSize: normalize(14),
+                fontFamily: fonts.light,
+                color: colors.white,
+              }}>
+              รอแจ้งเตือนงานใหม่ครั้งถัดไปได้อีกครั้ง
+            </Text>
+          </View>
+        </View>
+        <View style={styles.closePosition}>
+          <TouchableOpacity
+            onPress={() => {
+              Toast.hide();
+            }}>
+            <Image
+              source={icons.closewhite}
+              style={{
+                width: normalize(12),
+                height: normalize(12),
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </TouchableOpacity>
+  ),
 };
 
 const styles = StyleSheet.create({

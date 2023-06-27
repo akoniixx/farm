@@ -1,13 +1,13 @@
 import React, {createContext, useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AppNavigator from './src/navigations/AppNavigator';
-import {navigationRef} from './src/navigations/RootNavigation';
+import {navigate, navigationRef} from './src/navigations/RootNavigation';
 import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-toast-message';
 import {SheetProvider} from 'react-native-actions-sheet';
 import './src/sheet/Sheets';
 import {toastConfig} from './src/config/toast-config';
-import {Alert, BackHandler, Linking} from 'react-native';
+import {BackHandler} from 'react-native';
 import buddhaEra from 'dayjs/plugin/buddhistEra';
 import dayjs from 'dayjs';
 import {AuthProvider} from './src/contexts/AuthContext';
@@ -30,6 +30,7 @@ import moment from 'moment';
 import RNExitApp from 'react-native-kill-app';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {isForceUpdate} from './src/function/checkForceUpdate';
 moment.updateLocale('th', {
   relativeTime: {
     future: '%s',
@@ -63,8 +64,8 @@ const App = () => {
     }
   };
   const checkVersion = async () => {
-    const isIOS = Platform.OS === 'ios';
     const currentVersion = VersionCheck.getCurrentVersion();
+    const isIOS = Platform.OS === 'ios';
     const storeUrl = await VersionCheck.getAppStoreUrl({
       appID: '6443516628',
     });
@@ -85,17 +86,19 @@ const App = () => {
       latestVersion: remote,
     });
 
+    const isForce = isForceUpdate({
+      currentVersion: currentVersion,
+      latestVersion: remote,
+    });
+    const updateLater = await AsyncStorage.getItem('updateLater');
+
     if (needUpdate.isNeeded) {
-      Alert.alert('มีการอัพเดทใหม่', undefined, [
-        {
-          text: 'อัพเดท',
-          onPress: async () => {
-            mixpanel.track('กดอัพเดทแอพ');
-            await Linking.openURL(isIOS ? storeUrl : playStoreUrl);
-            RNExitApp.exitApp();
-          },
-        },
-      ]);
+      if (updateLater === 'true' && !isForce) {
+        return;
+      }
+      navigate('ForceUpdate', {
+        isForce,
+      });
     }
   };
   useEffect(() => {

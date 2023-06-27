@@ -172,6 +172,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     const droner_Id = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.getTaskDetail(taskId, droner_Id)
       .then(res => {
+        console.log(JSON.stringify(res.responseData.data, null, 2));
         if (res.success) {
           setData(res.responseData.data);
           let date = new Date(res.responseData.data.dateAppointment);
