@@ -94,3 +94,13 @@ export const momentExtend = {
       .replace(christianYear, buddhishYear);
   },
 };
+
+export const thaiLongDate = (dateString:string) => {
+ const date = new Date(dateString)
+ const result = date.toLocaleDateString('th-TH', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+})
+return result
+}

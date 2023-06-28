@@ -20,7 +20,7 @@ import {font, icons} from '../../assets';
 import colors from '../../assets/colors/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProgressBarAnimated from '../../components/ProgressBarAnimated/ProgressBarAnimated';
-import {momentExtend} from '../../function/utility';
+import {momentExtend, thaiLongDate} from '../../function/utility';
 import {mixpanel} from '../../../mixpanel';
 
 const CampaignScreen: React.FC<any> = ({navigation, route}) => {
@@ -45,7 +45,6 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
 
         Campaign.getQuota(res.data[0].id, dronerId)
           .then(respon => {
-            console.log(respon, 'dsds');
             setLoading(true);
             setAllValue(respon.allValue);
             setAfterRai(respon.afterRai);
@@ -119,8 +118,8 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                     }}>
                     จับรางวัลครั้งถัดไป
                   </Text>
-                  <Text style={styles.rewardFont}>
-                    {campaign?.condition[0]?.rewardName}
+                  <Text style={[styles.rewardFont,{fontFamily:font.bold,marginTop:5}]}>
+                  {thaiLongDate(campaign?.awardDate)}
                   </Text>
                 </View>
               </View>
