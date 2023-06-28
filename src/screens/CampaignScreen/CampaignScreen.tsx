@@ -119,6 +119,7 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                     จับรางวัลครั้งถัดไป
                   </Text>
                   <Text style={[styles.rewardFont,{fontFamily:font.bold,marginTop:5}]}>
+                
                   {thaiLongDate(campaign?.awardDate)}
                   </Text>
                 </View>
@@ -139,7 +140,7 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                       styles.rewardFont,
                       {fontSize: normalize(28), marginRight: 20},
                     ]}>
-                    {afterRai}
+                    {afterRai? afterRai:0}
                   </Text>
                   <Text style={styles.rewardFont}>ไร่</Text>
                 </View>
