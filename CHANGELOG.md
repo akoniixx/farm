@@ -1,3 +1,6 @@
+## Enchance [1.5.9] 2023-06-23
+- change responsive profilescreen
+
 ## Enchance [1.5.8] 2023-06-23
 - remove empty state when status is open or pending
 - remove twice empty state
