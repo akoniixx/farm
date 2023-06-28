@@ -46,12 +46,12 @@ const LoadingNavigator: React.FC<any> = ({navigation}) => {
         });
 
         const needUpdate = await VersionCheck.needUpdate({
-          currentVersion: '1.0.0',
+          currentVersion,
           latestVersion: remote,
         });
 
         const isForce = isForceUpdate({
-          currentVersion: '1.0.0',
+          currentVersion,
           latestVersion: remote,
         });
         const updateLater = await AsyncStorage.getItem('updateLater');

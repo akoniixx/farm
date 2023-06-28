@@ -40,12 +40,13 @@ export default function ForceUpdateScreen({route}: any) {
         packageName: 'com.iconkaset.droner',
       });
       mixpanel.track('กดอัพเดทแอพ');
-      await Linking.openURL(isIOS ? storeUrl : playStoreUrl);
       await AsyncStorage.removeItem('updateLater');
-
+      await Linking.openURL(isIOS ? storeUrl : playStoreUrl);
       RNExitApp.exitApp();
     } catch (e) {
       console.log(e);
+    } finally {
+      RNExitApp.exitApp();
     }
   };
 
