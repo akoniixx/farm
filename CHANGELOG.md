@@ -1,3 +1,8 @@
+## Enchance [1.5.8] 2023-06-23
+- remove empty state when status is open or pending
+- remove twice empty state
+- edit progress circle to image
+
 ## Enchance [1.5.7] 2023-06-23
 - change default lat long for register
 
