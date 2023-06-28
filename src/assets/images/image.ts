@@ -42,4 +42,7 @@ export default {
   num2: require('./num2.png'),
   num3: require('./num3.png'),
   regisSuccess: require('./regisSuccess.png'),
+  inprogress50: require('./inprogress50.png'),
+  inprogress75: require('./inprogress75.png'),
+  inprogress100: require('./inprogress100.png')
 };

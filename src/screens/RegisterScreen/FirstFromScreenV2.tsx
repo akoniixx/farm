@@ -7,6 +7,7 @@ import Geolocation from 'react-native-geolocation-service';
 import * as ImagePicker from 'react-native-image-picker';
 import {
   Image,
+  KeyboardAvoidingView,
   Modal,
   PermissionsAndroid,
   Platform,
@@ -42,19 +43,25 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
   }, [image]);
   return (
     <SafeAreaView style={stylesCentral.container}>
-      <CustomHeader
-        title="ลงทะเบียนนักบินโดรน"
-        showBackBtn
-        onPressBack={() => navigation.goBack()}
-      />
-      <View style={styles.inner}>
-        <View style={styles.container}>
-          <View style={{marginBottom: normalize(10)}}>
-            <ProgressBarV2 index={1} />
-          </View>
-          <Text style={styles.label}>ขั้นตอนที่ 1 จาก 3</Text>
-          <Text style={styles.h1}>กรอกข้อมูลทั่วไป</Text>
+      {/* <View style={styles.inner}> */}
+        {/* <View style={styles.container}> */}
+          <KeyboardAvoidingView
+            style={{flex: 1}}
+            keyboardVerticalOffset={100}
+            behavior={Platform.OS === 'ios' ? 'position' : 'height'}>
           <ScrollView>
+          <CustomHeader
+            title="ลงทะเบียนนักบินโดรน"
+            showBackBtn
+            onPressBack={() => navigation.goBack()}
+          />
+          <View style={styles.inner}>
+          <View style={styles.container}>
+            <View style={{marginBottom: normalize(10)}}>
+              <ProgressBarV2 index={1} />
+            </View>
+            <Text style={styles.label}>ขั้นตอนที่ 1 จาก 2</Text>
+            <Text style={styles.h1}>กรอกข้อมูลทั่วไป</Text>
             <View
               style={{
                 justifyContent: 'center',
@@ -133,8 +140,11 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
               placeholder={'เบอร์โทรศัพท์'}
               placeholderTextColor={colors.disable}
             />
+          </View>
+          </View>
           </ScrollView>
-          <View style={{backgroundColor: colors.white, zIndex: 0}}>
+          </KeyboardAvoidingView>
+          <View style={{backgroundColor: colors.white, zIndex: 0, margin : normalize(17)}}>
             <MainButton
               disable={!formState.firstname || !formState.lastname}
               color={colors.orange}
@@ -182,7 +192,7 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
               }}
             />
           </View>
-        </View>
+        {/* </View> */}
         <Modal transparent={true} visible={loading}>
           <View
             style={{
@@ -213,8 +223,9 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
             </View>
           </View>
         </Modal>
-      </View>
+      {/* </View> */}
     </SafeAreaView>
+    // </KeyboardAvoidingView>
   );
 };
 
