@@ -65,7 +65,7 @@ const App = () => {
   };
   const checkVersion = async () => {
     const currentVersion = VersionCheck.getCurrentVersion();
-    const isIOS = Platform.OS === 'ios';
+
     const storeUrl = await VersionCheck.getAppStoreUrl({
       appID: '6443516628',
     });
