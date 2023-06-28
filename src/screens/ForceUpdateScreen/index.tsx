@@ -30,18 +30,23 @@ export default function ForceUpdateScreen({route}: any) {
   };
 
   const onPressUpdate = async () => {
-    const isIOS = Platform.OS === 'ios';
-    const storeUrl = await VersionCheck.getAppStoreUrl({
-      appID: '6443516628',
-    });
+    try {
+      const isIOS = Platform.OS === 'ios';
+      const storeUrl = await VersionCheck.getAppStoreUrl({
+        appID: '6443516628',
+      });
 
-    const playStoreUrl = await VersionCheck.getPlayStoreUrl({
-      packageName: 'com.iconkaset.droner',
-    });
-    mixpanel.track('กดอัพเดทแอพ');
-    await Linking.openURL(isIOS ? storeUrl : playStoreUrl);
-    await AsyncStorage.removeItem('updateLater');
-    RNExitApp.exitApp();
+      const playStoreUrl = await VersionCheck.getPlayStoreUrl({
+        packageName: 'com.iconkaset.droner',
+      });
+      mixpanel.track('กดอัพเดทแอพ');
+      await Linking.openURL(isIOS ? storeUrl : playStoreUrl);
+      await AsyncStorage.removeItem('updateLater');
+
+      RNExitApp.exitApp();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (

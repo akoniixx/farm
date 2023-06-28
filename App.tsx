@@ -12,8 +12,7 @@ import buddhaEra from 'dayjs/plugin/buddhistEra';
 import dayjs from 'dayjs';
 import {AuthProvider} from './src/contexts/AuthContext';
 import {Settings} from 'react-native-fbsdk-next';
-import VersionCheck from 'react-native-version-check';
-import storeVersion from 'react-native-store-version';
+
 dayjs.extend(buddhaEra);
 import {
   firebaseInitialize,
@@ -27,10 +26,9 @@ import 'moment/locale/th';
 import './src/components/Sheet';
 import {PointProvider} from './src/contexts/PointContext';
 import moment from 'moment';
-import RNExitApp from 'react-native-kill-app';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {isForceUpdate} from './src/function/checkForceUpdate';
+
 moment.updateLocale('th', {
   relativeTime: {
     future: '%s',
@@ -63,44 +61,7 @@ const App = () => {
       Settings.setAdvertiserTrackingEnabled(false);
     }
   };
-  const checkVersion = async () => {
-    const currentVersion = VersionCheck.getCurrentVersion();
 
-    const storeUrl = await VersionCheck.getAppStoreUrl({
-      appID: '6443516628',
-    });
-
-    const playStoreUrl = await VersionCheck.getPlayStoreUrl({
-      packageName: 'com.iconkaset.droner',
-    });
-
-    const {remote} = await storeVersion({
-      version: currentVersion,
-      androidStoreURL: playStoreUrl,
-      iosStoreURL: storeUrl,
-      country: 'TH',
-    });
-
-    const needUpdate = await VersionCheck.needUpdate({
-      currentVersion,
-      latestVersion: remote,
-    });
-
-    const isForce = isForceUpdate({
-      currentVersion: currentVersion,
-      latestVersion: remote,
-    });
-    const updateLater = await AsyncStorage.getItem('updateLater');
-
-    if (needUpdate.isNeeded) {
-      if (updateLater === 'true' && !isForce) {
-        return;
-      }
-      navigate('ForceUpdate', {
-        isForce,
-      });
-    }
-  };
   useEffect(() => {
     mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
@@ -118,7 +79,7 @@ const App = () => {
     checkPermission();
     requestTracking();
     getToken();
-    checkVersion();
+    // checkVersion();
   }, []);
 
   const checkPermission = () => {
