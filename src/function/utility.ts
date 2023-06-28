@@ -96,11 +96,12 @@ export const momentExtend = {
 };
 
 export const thaiLongDate = (dateString:string) => {
- const date = new Date(dateString)
- const result = date.toLocaleDateString('th-TH', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-})
-return result
+  const format = 'YYYY-MM-DD';
+  const thaiDate = moment(dateString, format).locale('th');
+  const day = thaiDate.format('D');
+  const thaiMonthName = thaiDate.format('MMMM');
+  const year = thaiDate.format('YYYY');
+
+  return `${day} ${thaiMonthName} ${year}`;
+
 }
