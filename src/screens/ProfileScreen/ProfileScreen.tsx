@@ -745,16 +745,6 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                           borderColor: colors.disable,
                         }}
                       />
-                      <TextInput
-                        placeholderTextColor={colors.gray}
-                        onChangeText={v => {
-                          setdroneno(v);
-                        }}
-                        value={droneno}
-                        style={styles.input}
-                        editable={true}
-                        placeholder={'เลขตัวถังโดรน'}
-                      />
                     </View>
                   </ScrollView>
                 </View>
