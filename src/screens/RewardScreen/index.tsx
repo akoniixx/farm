@@ -17,6 +17,8 @@ import {usePoint} from '../../contexts/PointContext';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {useFocusEffect} from '@react-navigation/native';
 import {mixpanel} from '../../../mixpanel';
+import Loading from '../../components/Loading/Loading';
+import AsyncButton from '../../components/Button/AsyncButton';
 
 export default function RewardScreen({navigation}: any) {
   const {currentPoint, getCurrentPoint} = usePoint();

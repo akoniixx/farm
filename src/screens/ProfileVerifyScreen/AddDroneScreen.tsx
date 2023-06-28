@@ -135,10 +135,6 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
         <View style={styles.inner}>
           <View style={{padding: 20, flexDirection: 'row'}}>
             <Text style={[styles.text]}>โดรนของคุณ</Text>
-            <Text
-              style={[styles.text, {color: 'rgba(155, 161, 168, 1)', left: 5}]}>
-              (กรุณาเพิ่มอย่างน้อย 1 เครื่อง)
-            </Text>
           </View>
           <ScrollView>
             {drone && (

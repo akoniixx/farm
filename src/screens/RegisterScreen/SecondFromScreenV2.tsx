@@ -134,7 +134,7 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
             <View style={{marginBottom: normalize(10)}}>
               <ProgressBarV2 index={2} />
             </View>
-            <Text style={styles.label}>ขั้นตอนที่ 2 จาก 3</Text>
+            <Text style={styles.label}>ขั้นตอนที่ 2 จาก 2</Text>
             <Text style={styles.h1}>กรอกข้อมูลการบินโดรน</Text>
             <ScrollView>
               <Text style={[styles.h1, {marginTop: normalize(39)}]}>

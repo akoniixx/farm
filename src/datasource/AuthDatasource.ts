@@ -471,28 +471,29 @@ export class Register {
     const droner_id = await AsyncStorage.getItem('droner_id');
     if (!droner_id) {
       return registerClient
-        .post(BASE_URL + '/auth/droner/register', {
-          firstname: firstname,
-          lastname: lastname,
-          telephoneNo: telephoneNo,
-          status: 'OPEN',
-          address: {
-            address1: '42 ถนนสุรวงศ์ ซอยสุรวงศ์',
-            provinceId: 10,
-            districtId: 1004,
-            subdistrictId: 10040500,
-            postcode: 10500,
-          },
-          percentSuccess: 25,
-        })
-        .then(async response => {
-          await AsyncStorage.setItem('droner_id', response.data.id);
-          return response.data;
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    } else {
+      .post(BASE_URL + '/auth/droner/register',{
+        firstname: firstname,
+        lastname: lastname,
+        telephoneNo: telephoneNo,
+        status: 'OPEN',
+        address : {
+          address1 : "42",
+          address2 : "ถนนสุรวงศ์ ซอยสุรวงศ์",
+          provinceId: 10,
+          districtId: 1004,
+          subdistrictId: 10040500,
+          postcode: 10500,
+        },
+        percentSuccess : 25
+      }).then(async response => {
+        await AsyncStorage.setItem('droner_id',response.data.id);
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+    else{
       return registerClient
         .post(BASE_URL + '/auth/droner/register', {
           id: droner_id,

@@ -1,7 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {
+  ActivityIndicator,
+  InteractionManager,
   Modal,
   StyleSheet,
   Text,
@@ -22,12 +24,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {Register} from '../../datasource/AuthDatasource';
+import CircularProgress from '../../components/Progress/CircularProgress';
+// import ProgressCircle from 'react-native-progress-circle'
 
 const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [drone, setDrone] = useState<any>([]);
   const [plants, setPlants] = useState();
   const [idCard, setIdCard] = useState();
-  const [checkNum, setCheckNum] = useState<number>(0);
+  const [checkNum, setCheckNum] = useState<number>(50);
   const [showModal, setShowModal] = useState(false);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
@@ -37,7 +41,6 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
       setLoading(true);
       const droner_id = await AsyncStorage.getItem('droner_id');
       ProfileDatasource.getProfile(droner_id!).then(res => {
-        console.log(res.dronerDrone);
         setLoading(false);
         setDrone(res.dronerDrone);
         setPlants(res.expPlant);
@@ -69,26 +72,17 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
               alignItems: 'center',
               paddingVertical: 10,
             }}>
-            <AnimatedCircularProgress
-              prefill={0}
-              size={60}
-              width={5}
-              fill={Number(checkNum)}
-              tintColor="#FB8705"
-              backgroundColor="#FFEFDD"
-              rotation={0}>
-              {fill => (
-                <Text
-                  style={{
-                    fontFamily: font.medium,
-                    fontSize: normalize(14),
-                    color: colors.fontBlack,
-                  }}>
-                  {checkNum + '%'}
-                </Text>
-              )}
-            </AnimatedCircularProgress>
-
+            <Image source={
+              (checkNum === 50)?
+              image.inprogress50:(
+                checkNum === 75?
+                image.inprogress75:
+                image.inprogress100
+              )
+            } style={{
+              width : normalize(50),
+              height : normalize(50)
+            }}/>
             <Text style={[styles.textCard, {left: 5}]}>
               {`ใช้เวลาเพียง 2 นาที กรอกข้อมูลโปรไฟล์ 
 ของคุณให้สมบูรณ์เพื่อเริ่มรับงานบิน 
@@ -255,7 +249,7 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
   },
   cardProgress: {
-    padding: normalize(8),
+    padding: normalize(16),
     borderWidth: 0.5,
     borderRadius: normalize(15),
     borderColor: colors.disable,
@@ -263,6 +257,7 @@ const styles = StyleSheet.create({
   textCard: {
     fontSize: normalize(16),
     fontFamily: fonts.bold,
+    color : colors.fontBlack
   },
   text: {
     fontFamily: font.bold,
