@@ -36,7 +36,7 @@ const App = () => {
     });
 
     const playStoreUrl = await VersionCheck.getPlayStoreUrl({
-      packageName: 'com.iconkaset.droner',
+      packageName: 'com.iconkaset.farmer',
     });
     const { remote } = await storeVersion({
       version: currentVersion,
