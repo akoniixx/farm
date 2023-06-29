@@ -287,7 +287,7 @@ const PlotSelect: React.FC<Prop> = ({
             </Text>
           </View>
         )}
-        {status === 'INACTIVE' && (
+        {status === 'REJECTED' && (
           <View
             style={{
               backgroundColor: '#FFF0F0',
@@ -307,7 +307,7 @@ const PlotSelect: React.FC<Prop> = ({
                 color: colors.error,
                 fontSize: 18,
               }}>
-              ปิดการใช้งาน
+              ไม่ผ่านการตรวจสอบ
             </Text>
           </View>
         )}

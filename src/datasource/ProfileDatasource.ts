@@ -10,7 +10,9 @@ export class ProfileDatasource {
   static async getProfile(farmer_id: string): Promise<any> {
     return httpClient
       .get(BASE_URL + `/farmer/${farmer_id}`)
-      .then(response => {
+      .then(async response => {
+        const farmer_status = response.data.status;
+        await AsyncStorage.setItem('farmer_status', farmer_status);
         return response.data;
       })
       .catch(error => {

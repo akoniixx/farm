@@ -2,11 +2,13 @@ import {
   Dimensions,
   FlatList,
   Image,
+  Modal,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { normalize } from '@rneui/themed';
 import { useIsFocused } from '@react-navigation/native';
 import { MyCouponCardEntities } from '../../entites/CouponCard';
@@ -16,12 +18,18 @@ import CouponCard from '../../components/CouponCard/CouponCard';
 import { MainButton } from '../../components/Button/MainButton';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import SelectDronerCouponModal from '../../components/Modal/SelectDronerCoupon';
+import { ProfileDatasource } from '../../datasource/ProfileDatasource';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import VerifyStatus from '../../components/Modal/VerifyStatus';
 
 const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [data, setData] = useState<any[]>([]);
   const [modal, setModal] = useState<boolean>(false);
+  const [modalVerify, setModalVerify] = useState<boolean>(false);
+  const [status, setStatus] = useState();
+
   const getData = (page: number, take: number, used?: boolean) => {
     getMyCoupon(page, take, used).then(res => {
       setCount(res.count);
@@ -30,7 +38,20 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
   };
   useEffect(() => {
     getData(page, 5, false);
+    getProfile();
+    getProfile;
   }, []);
+  const getProfile = async () => {
+    const value = await AsyncStorage.getItem('token');
+    if (value) {
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      ProfileDatasource.getProfile(farmer_id!)
+        .then(async res => {
+          setStatus(res.status);
+        })
+        .catch(err => console.log(err));
+    }
+  };
   const onScrollEnd = () => {
     let pageNow = page;
     if (data.length < count) {
@@ -76,50 +97,55 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
             data={data}
             ListFooterComponent={<View style={{ height: normalize(250) }} />}
             renderItem={({ item }) => {
-              return(
-              <CouponCard
-                id={item.promotion.id}
-                couponCode={
-                  item.promotion.promotionType === 'ONLINE'
-                    ? item.promotion.couponCode
-                    : item.offlineCode
-                }
-                couponName={item.promotion.couponName}
-                couponType={item.promotion.couponType}
-                promotionType={item.promotion.promotionType}
-                promotionStatus={item.promotion.promotionStatus}
-                discountType={item.promotion.discountType}
-                discount={item.promotion.discount}
-                count={item.promotion.count}
-                keep={item.promotion.keep}
-                used={item.promotion.used}
-                startDate={item.promotion.startDate}
-                expiredDate={item.promotion.expiredDate}
-                description={item.promotion.description}
-                condition={item.promotion.condition}
-                conditionSpecificFarmer={item.promotion.conditionSpecificFarmer}
-                couponConditionRai={item.promotion.couponConditionRai}
-                couponConditionRaiMin={item.promotion.couponConditionRaiMin}
-                couponConditionRaiMax={item.promotion.couponConditionRaiMax}
-                couponConditionService={item.promotion.couponConditionService}
-                couponConditionServiceMin={
-                  item.promotion.couponConditionServiceMin
-                }
-                couponConditionServiceMax={
-                  item.promotion.couponConditionServiceMax
-                }
-                couponConditionPlant={item.promotion.couponConditionPlant}
-                couponConditionPlantList={
-                  item.promotion.couponConditionPlantList
-                }
-                couponConditionProvince={item.promotion.couponConditionProvince}
-                couponConditionProvinceList={
-                  item.promotion.couponConditionProvinceList
-                }
-                keepthis={false}
-                disabled={false}
-              />
-            )}}
+              return (
+                <CouponCard
+                  id={item.promotion.id}
+                  couponCode={
+                    item.promotion.promotionType === 'ONLINE'
+                      ? item.promotion.couponCode
+                      : item.offlineCode
+                  }
+                  couponName={item.promotion.couponName}
+                  couponType={item.promotion.couponType}
+                  promotionType={item.promotion.promotionType}
+                  promotionStatus={item.promotion.promotionStatus}
+                  discountType={item.promotion.discountType}
+                  discount={item.promotion.discount}
+                  count={item.promotion.count}
+                  keep={item.promotion.keep}
+                  used={item.promotion.used}
+                  startDate={item.promotion.startDate}
+                  expiredDate={item.promotion.expiredDate}
+                  description={item.promotion.description}
+                  condition={item.promotion.condition}
+                  conditionSpecificFarmer={
+                    item.promotion.conditionSpecificFarmer
+                  }
+                  couponConditionRai={item.promotion.couponConditionRai}
+                  couponConditionRaiMin={item.promotion.couponConditionRaiMin}
+                  couponConditionRaiMax={item.promotion.couponConditionRaiMax}
+                  couponConditionService={item.promotion.couponConditionService}
+                  couponConditionServiceMin={
+                    item.promotion.couponConditionServiceMin
+                  }
+                  couponConditionServiceMax={
+                    item.promotion.couponConditionServiceMax
+                  }
+                  couponConditionPlant={item.promotion.couponConditionPlant}
+                  couponConditionPlantList={
+                    item.promotion.couponConditionPlantList
+                  }
+                  couponConditionProvince={
+                    item.promotion.couponConditionProvince
+                  }
+                  couponConditionProvinceList={
+                    item.promotion.couponConditionProvinceList
+                  }
+                  keepthis={false}
+                  disabled={false}
+                />
+              );
+            }}
             keyExtractor={item => item.promotion.id}
           />
         </View>
@@ -152,9 +178,23 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
         <MainButton
           label="จ้างนักบินโดรน"
           color={colors.greenLight}
-          onPress={() => setModal(true)}
+          onPress={() => {
+            status !== 'ACTIVE' ? setModalVerify(true) : setModal(true);
+          }}
         />
       </View>
+      <Modal transparent={true} visible={modalVerify}>
+        <VerifyStatus
+          text={status}
+          show={modalVerify}
+          onClose={() => {
+            setModalVerify(false);
+          }}
+          onMainClick={() => {
+            setModalVerify(false);
+          }}
+        />
+      </Modal>
     </View>
   );
 };

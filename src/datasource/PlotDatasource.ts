@@ -22,7 +22,9 @@ export interface PayloadCal {
 export class PlotDatasource {
   static async getPlotlist(farmer_id: string): Promise<any> {
     return httpClient
-      .get(BASE_URL + `/farmer-plot?farmerId=${farmer_id}&take=100`)
+      .get(BASE_URL + `/farmer-plot?farmerId=${farmer_id}`, {
+        params: { take: 99 },
+      })
       .then(response => {
         return response.data;
       })
@@ -163,6 +165,7 @@ export class PlotDatasource {
     long: string,
     locationName: string,
     plotAreaId: any,
+    status?: string,
   ): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const plotId = await AsyncStorage.getItem('plot_id');
@@ -198,6 +201,7 @@ export class PlotDatasource {
           locationName: locationName,
           plotAreaId: plotAreaId,
           farmerId: farmer_id,
+          status: status,
         })
         .then(response => {
           return response.data;

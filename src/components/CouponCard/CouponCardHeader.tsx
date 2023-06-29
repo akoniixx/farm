@@ -184,10 +184,13 @@ const CouponCardHeader: React.FC<CouponCardEntities> = ({
               : new Date(expiredDate).getTime() - new Date().getTime() >
                 604800000
               ? `ใช้ได้ถึง ${generateTime(expiredDate)}`
-              : `เหลือเวลาใช้อีก ${(
-                  ((new Date(expiredDate).getTime() - new Date().getTime()) /
-                  86400000 > 0)?(new Date(expiredDate).getTime() - new Date().getTime()) /
-                  86400000 :0 
+              : `เหลือเวลาใช้อีก ${((new Date(expiredDate).getTime() -
+                  new Date().getTime()) /
+                  86400000 >
+                0
+                  ? (new Date(expiredDate).getTime() - new Date().getTime()) /
+                    86400000
+                  : 0
                 ).toFixed(0)} วัน`}
           </Text>
         </View>

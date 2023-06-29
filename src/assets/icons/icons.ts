@@ -106,4 +106,7 @@ export default {
   filter: require('./filter.png'),
   multiArrow: require('./multiArrow.png'),
   ICKPoint: require('./ICKPoint.png'),
+  plant_inactive: require('./plant_inactive.png'),
+  location_inactive: require('./location_inactive.png'),
+  plot_inactive: require('./plot_inactive.png'),
 };

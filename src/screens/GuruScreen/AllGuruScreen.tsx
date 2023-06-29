@@ -52,7 +52,7 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
         showBackBtn
         onPressBack={() => {
           mixpanel.track('Tab back from All Guru Screen');
-          navigation.goBack()
+          navigation.goBack();
         }}
         image={() => (
           <TouchableOpacity
