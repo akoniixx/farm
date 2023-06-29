@@ -49,6 +49,7 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { historyPoint } from '../../datasource/HistoryPointDatasource';
 import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
 import axios from 'axios';
+import VerifyStatus from '../../components/Modal/VerifyStatus';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -408,7 +409,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   paddingTop: 130,
                   paddingBottom:
                     profilestate.status === 'REJECTED' ||
-                    profilestate.status === 'INACTIVE'
+                    profilestate.status === 'INACTIVE' ||
+                    profilestate.status === 'PENDING'
                       ? 32
                       : 0,
                   alignSelf: 'center',
@@ -794,6 +796,112 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         </Text>
                         <Text style={[styles.textAlert]}>
                           เปิดใช้งานบัญชี กรุณาติดต่อเจ้าหน้าที่
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={{ paddingHorizontal: 10 }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setShowModalCall(true);
+                        }}
+                        style={{
+                          ...Platform.select({
+                            ios: {
+                              height: 60,
+                              paddingVertical: 8,
+                              paddingHorizontal: 16,
+                              backgroundColor: colors.white,
+                              justifyContent: 'center',
+                              alignItems: 'flex-start',
+                              width: '100%',
+                              borderRadius: 12,
+                              marginBottom: 8,
+                              borderWidth: 1,
+                              borderColor: colors.blueBorder,
+                            },
+                            android: {
+                              height: 60,
+                              paddingVertical: 8,
+                              paddingHorizontal: 16,
+                              backgroundColor: colors.white,
+                              justifyContent: 'center',
+                              alignItems: 'flex-start',
+                              width: '100%',
+                              borderRadius: 12,
+                              marginBottom: 8,
+                              borderWidth: 1,
+                              borderColor: colors.blueBorder,
+                              bottom: 15,
+                            },
+                          }),
+                        }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            alignSelf: 'center',
+                          }}>
+                          <Image
+                            style={{
+                              width: 24,
+                              height: 24,
+                              marginRight: 16,
+                            }}
+                            source={icons.calling}
+                          />
+                          <Text
+                            style={{
+                              fontFamily: font.AnuphanMedium,
+                              color: colors.blueBorder,
+                              fontSize: 20,
+                            }}>
+                            โทรหาเจ้าหน้าที่
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                )}
+                {profilestate.status === 'PENDING' && (
+                  <View
+                    style={{
+                      width: normalize(350),
+                      alignSelf: 'center',
+                      backgroundColor: '#FFF9F2',
+                      borderWidth: 1,
+                      borderColor: '#FEDBB4',
+                      borderRadius: 15,
+                    }}>
+                    <View style={{ padding: 15 }}>
+                      <View
+                        style={{
+                          borderColor: colors.darkOrange,
+                          borderWidth: 1,
+                          borderRadius: 15,
+                          padding: 4,
+                          backgroundColor: '#FFF2E3',
+                          width: 125,
+                        }}>
+                        <View
+                          style={{
+                            justifyContent: 'space-between',
+                            flexDirection: 'row',
+                            paddingHorizontal: 5,
+                          }}>
+                          <Text
+                            style={{
+                              fontFamily: font.AnuphanMedium,
+                              color: '#E27904',
+                              fontSize: normalize(14),
+                            }}>
+                            รอการตรวจสอบ
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={{ paddingVertical: 8 }}>
+                        <Text style={[styles.textAlert]}>
+                          ขณะนี้เจ้าหน้าที่กำลังตรวจสอบเอกสารยืนยันของคุณอยู่
+                          สอบถามข้อมูลเพิ่มเติม กรุณาติดต่อเจ้าหน้าที่
                         </Text>
                       </View>
                     </View>
@@ -1300,93 +1408,17 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           </View>
         </TouchableOpacity>
       )}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={showModalCantBooking}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingHorizontal: 16,
-            paddingBottom: 32,
-          }}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              marginTop: 10,
-              width: '100%',
-              paddingVertical: normalize(16),
-              borderRadius: 12,
-              paddingHorizontal: 16,
-            }}>
-            <Text
-              style={{
-                fontFamily: font.AnuphanMedium,
-                fontSize: 22,
-                textAlign: 'center',
-              }}>
-              ท่านไม่สามารถจ้าง
-            </Text>
-            <Text
-              style={{
-                fontFamily: font.AnuphanMedium,
-                fontSize: 22,
-                textAlign: 'center',
-              }}>
-              โดรนเกษตรได้ในขณะนี้ เนื่องจาก
-            </Text>
-            <Text
-              style={{
-                fontFamily: font.AnuphanMedium,
-                fontSize: 22,
-                textAlign: 'center',
-              }}>
-              {profilestate.status === 'REJECTED'
-                ? 'ท่านยังยืนยันตัวตนไม่สำเร็จ'
-                : 'บัญชีของท่านปิดการใช้งาน'}
-            </Text>
-            <Text
-              style={{
-                fontFamily: font.SarabunLight,
-                textAlign: 'center',
-                fontSize: 20,
-                marginVertical: 16,
-                lineHeight: 30,
-              }}>
-              กรุณาติดต่อเจ้าหน้าที่{' '}
-              {profilestate.status === 'REJECTED'
-                ? 'เพื่อดำเนินการแก้ไข'
-                : 'เพื่อเปิดการใช้งานบัญชี'}
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                setShowModalCantBooking(false);
-              }}
-              style={{
-                height: 60,
-                paddingVertical: 8,
-                paddingHorizontal: 16,
-                backgroundColor: colors.greenLight,
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-                borderRadius: 8,
-                marginBottom: 8,
-              }}>
-              <Text
-                style={{
-                  fontFamily: fonts.AnuphanMedium,
-                  color: colors.white,
-                  fontSize: 20,
-                }}>
-                ตกลง
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+      <Modal transparent={true} visible={showModalCantBooking}>
+        <VerifyStatus
+          text={profilestate.status}
+          show={showModalCantBooking}
+          onClose={() => {
+            setShowModalCantBooking(false);
+          }}
+          onMainClick={() => {
+            setShowModalCantBooking(false);
+          }}
+        />
       </Modal>
     </View>
   );
