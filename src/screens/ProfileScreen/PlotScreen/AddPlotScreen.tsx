@@ -79,6 +79,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const mapSheet = useRef<any>();
   const plotArea = useRef<any>();
   const [plotAreas, setPlotAreas] = useState<any>([]);
+
   const [search, setSearch] = useState<any>({
     term: '',
     fetchPredictions: false,
@@ -327,6 +328,14 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const searchPlotArea = (value: string) => {
     setSearchValue(value);
   };
+  const [defaultNamePlot, setDefaultNamePlot] = useState(
+    !plotName
+      ? `แปลงที่ ${profilestate.plotItem.length + 1} ${
+          plantName !== null && plantName !== undefined ? plantName : ''
+        }`
+      : plotName,
+  );
+
   return (
     <>
       <SafeAreaView style={stylesCentral.container}>
@@ -339,7 +348,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.inner}>
           <View style={{ justifyContent: 'space-around' }}>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
               <Text style={[styles.head, { marginTop: normalize(15) }]}>
                 ชื่อแปลงเกษตร
               </Text>
@@ -348,18 +357,10 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   setplotName(value);
                 }}
                 clearTextOnFocus={true}
-                defaultValue={plantName}
+                defaultValue={!plotName ? plantName : plotName}
                 style={[styles.input, { borderColor: colors.disable }]}
                 editable={true}
-                placeholder={
-                  !plotName
-                    ? `แปลงที่ ${profilestate.plotItem.length + 1} ${
-                        plantName !== null && plantName !== undefined
-                          ? plantName
-                          : ''
-                      }`
-                    : plotName
-                }
+                placeholder={defaultNamePlot}
                 placeholderTextColor={colors.fontGrey}
               />
               <Text style={styles.head}>
