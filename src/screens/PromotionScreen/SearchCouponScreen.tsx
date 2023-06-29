@@ -55,6 +55,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
     keepthis: false,
   });
   const getCoupon = (code: string) => {
+    setDisable(true);
     checkCouponByCode(code)
       .then(res => {
         if (res.canUsed === undefined) {
@@ -97,7 +98,10 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
           }
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => {
+        setDisable(false);
+      });
   };
   return (
     <>
@@ -129,6 +133,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
                 fontSize: normalize(16),
                 color: colors.fontBlack,
               }}
+              keyboardType="numeric"
               placeholder="ระบุรหัสคูปองส่วนลด"
               placeholderTextColor={colors.gray}
               clearButtonMode="always"
