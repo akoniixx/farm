@@ -1,3 +1,6 @@
+## Fix [v1.4.8] 2023-06-29
+- disable button when fire api
+
 ## Fix [v1.4.7] 2023-06-29
 
 - change status color plot card.

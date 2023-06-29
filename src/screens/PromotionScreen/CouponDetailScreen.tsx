@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-} from 'react-native';
+import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
@@ -25,7 +18,9 @@ import { useFocusEffect } from '@react-navigation/native';
 
 const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
   const { detail } = route.params;
+
   const [canKeep, setCanKeep] = useState(false);
+  const [disable, setDisable] = useState(false);
   const checkCoupon = () => {
     checkMyCoupon(detail.couponCode).then(res => {
       if (!res.userMessage) {
@@ -37,11 +32,16 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
   };
 
   const KeepCoupon = () => {
+    setDisable(true);
     keepCoupon(detail.id)
       .then(res => {
+        setDisable(false);
         navigation.navigate('MyCouponScreen');
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => {
+        setDisable(false);
+      });
   };
   useEffect(() => {
     checkCoupon();
@@ -239,6 +239,7 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
           }}>
           <MainButton
             label="เก็บคูปอง"
+            disable={disable}
             color={colors.greenLight}
             onPress={KeepCoupon}
           />

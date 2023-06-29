@@ -182,6 +182,9 @@ export const keepCoupon = async (promotionId: string, couponCode?: string) => {
 
 export const checkMyCoupon = async (couponCode: string) => {
   const farmer_id = await AsyncStorage.getItem('farmer_id');
+  console.log(
+    BASE_URL + `/promotion/farmer-promotions/check/${farmer_id}/${couponCode}`,
+  );
   return httpClient
     .get(
       BASE_URL +

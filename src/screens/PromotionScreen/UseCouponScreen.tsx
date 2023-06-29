@@ -167,73 +167,78 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
   };
 
   const checkOffline = () => {
-    checkCouponByCode(couponOffline).then(res => {
-      if (res.canUsed === undefined) {
-        setCoupon({
-          ...coupon,
-          err: 'ไม่มีรหัสคูปอง โปรดตรวจสอบหมายเลขคูปองอีกครั้ง',
-        });
-      } else {
-        if (res.canUsed) {
-          checkMyCoupon(couponOffline)
-            .then(resCheck => {
-              if (!resCheck.userMessage) {
-                PlotDatasource.getCalculatePrice({
-                  farmerPlotId: conditionCheck.farmerPlotId,
-                  couponCode: couponOffline,
-                  cropName: conditionCheck.cropName,
-                  raiAmount: conditionCheck.raiAmount,
-                }).then(resCal => {
-                  setCoupon({
-                    ...coupon,
-                    err: 'คูปองนี้ถูกเก็บไปแล้ว',
-                  });
-                });
-              } else {
-                if (res.promotionStatus === 'INACTIVE') {
-                  setCoupon({
-                    ...coupon,
-                    err: 'คูปองนี้หมดอายุแล้ว',
-                  });
-                } else {
-                  keepCoupon(res.id, couponOffline)
-                    .then(resKeep => {
-                      let newData = [
-                        {
-                          passCondition: checkCouponCondition(
-                            res.couponConditionRai,
-                            res.couponConditionRaiMax,
-                            res.couponConditionRaiMin,
-                            res.couponConditionService,
-                            res.couponConditionServiceMax,
-                            res.couponConditionServiceMin,
-                            res.couponConditionPlant,
-                            res.couponConditionPlantList,
-                            res.couponConditionProvince,
-                            res.couponConditionProvinceList,
-                          ),
-                          ...resKeep,
-                          promotion: {
-                            ...res,
-                          },
-                        },
-                        ...data,
-                      ];
-                      setData(newData);
-                    })
-                    .catch(err => console.log(err));
-                }
-              }
-            })
-            .catch(err => console.log(err));
-        } else {
+    setDisabled(true);
+    checkCouponByCode(couponOffline)
+      .then(res => {
+        if (res.canUsed === undefined) {
           setCoupon({
             ...coupon,
-            err: 'คูปองนี้ถูกใช้งานแล้ว',
+            err: 'ไม่มีรหัสคูปอง โปรดตรวจสอบหมายเลขคูปองอีกครั้ง',
           });
+        } else {
+          if (res.canUsed) {
+            checkMyCoupon(couponOffline)
+              .then(resCheck => {
+                if (!resCheck.userMessage) {
+                  PlotDatasource.getCalculatePrice({
+                    farmerPlotId: conditionCheck.farmerPlotId,
+                    couponCode: couponOffline,
+                    cropName: conditionCheck.cropName,
+                    raiAmount: conditionCheck.raiAmount,
+                  }).then(resCal => {
+                    setCoupon({
+                      ...coupon,
+                      err: 'คูปองนี้ถูกเก็บไปแล้ว',
+                    });
+                  });
+                } else {
+                  if (res.promotionStatus === 'INACTIVE') {
+                    setCoupon({
+                      ...coupon,
+                      err: 'คูปองนี้หมดอายุแล้ว',
+                    });
+                  } else {
+                    keepCoupon(res.id, couponOffline)
+                      .then(resKeep => {
+                        let newData = [
+                          {
+                            passCondition: checkCouponCondition(
+                              res.couponConditionRai,
+                              res.couponConditionRaiMax,
+                              res.couponConditionRaiMin,
+                              res.couponConditionService,
+                              res.couponConditionServiceMax,
+                              res.couponConditionServiceMin,
+                              res.couponConditionPlant,
+                              res.couponConditionPlantList,
+                              res.couponConditionProvince,
+                              res.couponConditionProvinceList,
+                            ),
+                            ...resKeep,
+                            promotion: {
+                              ...res,
+                            },
+                          },
+                          ...data,
+                        ];
+                        setData(newData);
+                      })
+                      .catch(err => console.log(err));
+                  }
+                }
+              })
+              .catch(err => console.log(err));
+          } else {
+            setCoupon({
+              ...coupon,
+              err: 'คูปองนี้ถูกใช้งานแล้ว',
+            });
+          }
         }
-      }
-    });
+      })
+      .finally(() => {
+        setDisabled(false);
+      });
   };
 
   useEffect(() => {

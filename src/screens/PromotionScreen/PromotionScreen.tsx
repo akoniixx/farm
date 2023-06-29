@@ -185,6 +185,7 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
             onPress={() => navigation.navigate('AllCouponScreen')}>
             <Text
               style={{
+                lineHeight: normalize(28),
                 fontFamily: font.SarabunLight,
                 fontSize: normalize(16),
               }}>
