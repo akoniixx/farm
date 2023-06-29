@@ -38,6 +38,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const noti = route.params?.noti ?? false;
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const [showModalCall, setShowModalCall] = useState(false);
+  const [countPlot, setCountPlot] = useState<any>();
 
   const isFocused = useIsFocused();
   const onLogout = async () => {
@@ -48,7 +49,18 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   };
 
   const newPlotList = useMemo(() => {
-    const convertToArrayNested = profilestate.plotItem.reduce(
+    var sttPlot = profilestate.plotItem.map((x: any) => x.status);
+    var toRemove = 'INACTIVE';
+    var index = sttPlot.indexOf(toRemove);
+    if (index > -1) {
+      sttPlot.splice(index);
+    }
+    console.log(sttPlot);
+    setCountPlot(sttPlot.length);
+    const findPlot = profilestate.plotItem.filter(
+      (x: any) => x.status !== 'INACTIVE',
+    );
+    const convertToArrayNested = findPlot.reduce(
       (acc: any, cur: any, index: number) => {
         const isOdd = index % 2 === 0;
         if (isOdd) {
@@ -63,6 +75,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
     );
     return convertToArrayNested;
   }, [profilestate.plotItem]);
+
   useEffect(() => {
     const getProfile = async () => {
       setLoading(true);
@@ -452,78 +465,75 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </View>
           </View>
         )}
-        {/* <View style={{ paddingHorizontal: 25, paddingBottom: 15 }}>
-          <View style={styles.card}>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={[styles.textVerify, { fontWeight: '800' }]}>
-                หมายเหตุ :
-              </Text>
-              <Text style={styles.textVerify}> {reason}</Text>
-            </View>
-
-            <Text style={styles.textVerify}>
-              กรุณาติดต่อเจ้าหน้าที่ เพื่อ ดำเนินการแก้ไข
-            </Text>
-            <View style={{ paddingTop: 15 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setShowModalCall(true);
-                }}
-                style={{
-                  ...Platform.select({
-                    ios: {
-                      height: 60,
-                      backgroundColor: colors.white,
-                      justifyContent: 'center',
-                      alignItems: 'flex-start',
-                      borderRadius: 12,
-                      borderWidth: 1,
-                      borderColor: colors.blueBorder,
-                    },
-                    android: {
-                      height: 60,
-                      paddingVertical: 8,
-                      paddingHorizontal: 16,
-                      backgroundColor: colors.white,
-                      justifyContent: 'center',
-                      alignItems: 'flex-start',
-                      width: '100%',
-                      borderRadius: 12,
-                      marginBottom: 8,
-                      borderWidth: 1,
-                      borderColor: colors.blueBorder,
-                      bottom: 15,
-                    },
-                  }),
-                }}>
-                <View
+        {profilestate.status === 'PENDING' && (
+          <View style={{ paddingHorizontal: 25, paddingBottom: 15 }}>
+            <View style={styles.card}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={styles.textVerify}>
+                  ขณะนี้เจ้าหน้าที่กำลังตรวจสอบเอกสารยืนยันของคุณอยู่
+                  สอบถามข้อมูลเพิ่มเติม กรุณาติดต่อเจ้าหน้าที่
+                </Text>
+              </View>
+              <View style={{ paddingTop: 15 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setShowModalCall(true);
+                  }}
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    alignSelf: 'center',
+                    ...Platform.select({
+                      ios: {
+                        height: 60,
+                        backgroundColor: colors.white,
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
+                        borderRadius: 12,
+                        borderWidth: 1,
+                        borderColor: colors.blueBorder,
+                      },
+                      android: {
+                        height: 60,
+                        paddingVertical: 8,
+                        paddingHorizontal: 16,
+                        backgroundColor: colors.white,
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
+                        width: '100%',
+                        borderRadius: 12,
+                        marginBottom: 8,
+                        borderWidth: 1,
+                        borderColor: colors.blueBorder,
+                        bottom: 15,
+                      },
+                    }),
                   }}>
-                  <Image
+                  <View
                     style={{
-                      width: 24,
-                      height: 24,
-                      marginRight: 16,
-                    }}
-                    source={icons.calling}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: font.AnuphanMedium,
-                      color: colors.blueBorder,
-                      fontSize: 20,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      alignSelf: 'center',
                     }}>
-                    โทรหาเจ้าหน้าที่
-                  </Text>
-                </View>
-              </TouchableOpacity>
+                    <Image
+                      style={{
+                        width: 24,
+                        height: 24,
+                        marginRight: 16,
+                      }}
+                      source={icons.calling}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: font.AnuphanMedium,
+                        color: colors.blueBorder,
+                        fontSize: 20,
+                      }}>
+                      โทรหาเจ้าหน้าที่
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View> */}
-
+        )}
         <View
           style={{
             paddingHorizontal: 2,
@@ -538,9 +548,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
               justifyContent: 'space-between',
               paddingHorizontal: 15,
             }}>
-            <Text style={[styles.head]}>
-              แปลงของคุณ ({profilestate.plotItem.length})
-            </Text>
+            <Text style={[styles.head]}>แปลงของคุณ ({countPlot})</Text>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('AllPlotScreen');
@@ -768,7 +776,8 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                       paddingVertical: 40,
                     },
                   }),
-                }}></View>
+                }}
+              />
             ) : (
               <View
                 style={{
@@ -780,7 +789,8 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                       paddingVertical: 40,
                     },
                   }),
-                }}></View>
+                }}
+              />
             )}
           </View>
         </View>
@@ -910,6 +920,7 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunLight,
     fontSize: normalize(16),
     color: colors.fontBlack,
+    lineHeight: 28,
   },
   h2: {
     fontFamily: font.SarabunMedium,
@@ -935,7 +946,7 @@ const styles = StyleSheet.create({
   section2: {
     ...Platform.select({
       ios: {
-        padding: 15,
+        padding: 10,
         paddingVertical: 15,
         backgroundColor: colors.white,
       },

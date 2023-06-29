@@ -20,6 +20,7 @@ import * as RootNavigation from '../../navigations/RootNavigation';
 import SelectDronerCouponModal from '../../components/Modal/SelectDronerCoupon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
+import VerifyStatus from '../../components/Modal/VerifyStatus';
 
 const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
@@ -166,96 +167,21 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
           label="จ้างนักบินโดรน"
           color={colors.greenLight}
           onPress={() =>
-            status === 'INACTIVE' || status === 'REJECTED'
-              ? setModalVerify(true)
-              : setModal(true)
+            status !== 'ACTIVE' ? setModalVerify(true) : setModal(true)
           }
         />
       </View>
       <Modal animationType="fade" transparent={true} visible={modalVerify}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingHorizontal: 16,
-            paddingBottom: 32,
-          }}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              marginTop: 10,
-              width: '100%',
-              paddingVertical: normalize(16),
-              borderRadius: 12,
-              paddingHorizontal: 16,
-            }}>
-            <Text
-              style={{
-                fontFamily: font.AnuphanMedium,
-                fontSize: 22,
-                textAlign: 'center',
-              }}>
-              ท่านไม่สามารถจ้าง
-            </Text>
-            <Text
-              style={{
-                fontFamily: font.AnuphanMedium,
-                fontSize: 22,
-                textAlign: 'center',
-              }}>
-              โดรนเกษตรได้ในขณะนี้ เนื่องจาก
-            </Text>
-            <Text
-              style={{
-                fontFamily: font.AnuphanMedium,
-                fontSize: 22,
-                textAlign: 'center',
-              }}>
-              {status === 'REJECTED'
-                ? 'ท่านยังยืนยันตัวตนไม่สำเร็จ'
-                : 'บัญชีของท่านปิดการใช้งาน'}
-            </Text>
-            <Text
-              style={{
-                fontFamily: font.SarabunLight,
-                textAlign: 'center',
-                fontSize: 20,
-                marginVertical: 16,
-                lineHeight: 30,
-              }}>
-              กรุณาติดต่อเจ้าหน้าที่{' '}
-              {status === 'REJECTED'
-                ? 'เพื่อดำเนินการแก้ไข'
-                : 'เพื่อเปิดการใช้งานบัญชี'}
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                setModalVerify(false);
-              }}
-              style={{
-                height: 60,
-                paddingVertical: 8,
-                paddingHorizontal: 16,
-                backgroundColor: colors.greenLight,
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-                borderRadius: 8,
-                marginBottom: 8,
-              }}>
-              <Text
-                style={{
-                  fontFamily: font.AnuphanMedium,
-                  color: colors.white,
-                  fontSize: 20,
-                }}>
-                ตกลง
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <VerifyStatus
+          text={status}
+          show={modalVerify}
+          onClose={() => {
+            setModalVerify(false);
+          }}
+          onMainClick={() => {
+            setModalVerify(false);
+          }}
+        />
       </Modal>
     </View>
   );

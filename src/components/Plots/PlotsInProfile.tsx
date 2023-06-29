@@ -72,7 +72,7 @@ const PlotInProfile: React.FC<plotData> = ({
       style={{
         width: '100%',
       }}>
-      {StatusObject(status).status === 'ตรวจสอบแล้ว' ? (
+      {StatusObject(status).status === 'ตรวจสอบแล้ว' && (
         <View key={index} style={[styles.cards]}>
           <View>
             <Text style={styles.title}>{plotName}</Text>
@@ -140,8 +140,9 @@ const PlotInProfile: React.FC<plotData> = ({
             </View>
           </View>
         </View>
-      ) : (
-        <View key={index} style={[styles.cards]}>
+      )}
+      {StatusObject(status).status === 'รอการตรวจสอบ' && (
+        <View key={index} style={[styles.cardsPending]}>
           <View>
             <Text style={styles.title}>{plotName}</Text>
             <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
@@ -199,6 +200,7 @@ const PlotInProfile: React.FC<plotData> = ({
                   marginRight: '10%',
                   width: normalize(280),
                   bottom: 2,
+                  lineHeight: 30,
                 }}>
                 {locationName.length > 30
                   ? locationName.slice(0, 30) + '...'
@@ -221,12 +223,99 @@ const PlotInProfile: React.FC<plotData> = ({
               <Text
                 style={[
                   styles.label,
-                  {
-                    color: StatusObject(status).fontColor,
-                    fontFamily: font.AnuphanMedium,
-                  },
+                  { color: StatusObject(status).fontColor },
                 ]}>
                 {StatusObject(status).status}
+              </Text>
+            </View>
+          </View>
+        </View>
+      )}
+      {StatusObject(status).status === 'ไม่อนุมัติ' && (
+        <View key={index} style={[styles.cardsRejected]}>
+          <View>
+            <Text style={styles.title}>{plotName}</Text>
+            <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
+              <Image
+                source={icons.plot}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                  marginRight: '40%',
+                  bottom: 2,
+                }}>
+                {raiAmount + ' ' + 'ไร่'}
+              </Text>
+              <Image
+                source={icons.plant}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                  marginRight: '10%',
+                  bottom: 2,
+                }}>
+                {plantName}
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
+              <Image
+                source={icons.location}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                  marginRight: '10%',
+                  width: normalize(280),
+                  bottom: 2,
+                  lineHeight: 30,
+                }}>
+                {locationName.length > 30
+                  ? locationName.slice(0, 30) + '...'
+                  : locationName}
+              </Text>
+            </View>
+            <View
+              style={{
+                marginTop: 10,
+                width: normalize(135),
+                height: normalize(24),
+                borderRadius: normalize(12),
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: StatusObject(status).colorBg,
+                borderColor: StatusObject(status).borderColor,
+                borderWidth: 0.5,
+              }}>
+              <Text
+                style={[
+                  styles.label,
+                  { color: StatusObject(status).fontColor },
+                ]}>
+                {'ไม่ผ่านการตรวจสอบ'}
               </Text>
             </View>
           </View>
@@ -243,7 +332,7 @@ const styles = StyleSheet.create({
     color: '#0D381F',
   },
   label: {
-    fontFamily: font.AnuphanLight,
+    fontFamily: font.AnuphanBold,
     fontSize: normalize(14),
     color: colors.fontGrey,
   },
@@ -258,6 +347,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#ECFBF2',
     borderWidth: 0.5,
     borderColor: colors.greenLight,
+    margin: normalize(10),
+    borderRadius: normalize(10),
+    padding: normalize(10),
+  },
+  cardsPending: {
+    width: Dimensions.get('window').width - normalize(40),
+    height: 'auto',
+    backgroundColor: '#FFFAF3',
+    borderWidth: 0.5,
+    borderColor: '#E27904',
+    margin: normalize(10),
+    borderRadius: normalize(10),
+    padding: normalize(10),
+  },
+  cardsRejected: {
+    width: Dimensions.get('window').width - normalize(40),
+    height: 'auto',
+    backgroundColor: '#FFFAFA',
+    borderWidth: 0.5,
+    borderColor: colors.error,
     margin: normalize(10),
     borderRadius: normalize(10),
     padding: normalize(10),

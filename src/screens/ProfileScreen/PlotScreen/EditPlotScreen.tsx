@@ -281,7 +281,6 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
       setLocation(res);
     });
   };
-
   useEffect(() => {
     const filterBySearchText = () => {
       if (!!debounceValue && location) {
@@ -308,13 +307,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const searchPlotArea = (value: string) => {
     setSearchValue(value);
   };
-  const deletePlot = (value: any) => {
-    let someArray = plotData;
-    someArray = someArray.filter((x: any) => x != value);
-    setplotData(someArray);
-    setplotDataUI(someArray);
-    deTailPlot.current.hide();
-  };
+
   return (
     <>
       <SafeAreaView style={[stylesCentral.container]}>
@@ -608,25 +601,48 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 }
                 color={colors.greenLight}
                 onPress={() => {
-                  setLoading(true);
-                  PlotDatasource.updateFarmerPlot(
-                    plotName,
-                    raiAmount,
-                    landmark,
-                    plantName,
-                    position.latitude,
-                    position.longitude,
-                    search.term,
-                    selectPlot.subdistrictId,
-                  )
-                    .then(res => {
-                      setLoading(false);
-                      navigation.navigate('AllPlotScreen');
-                    })
-                    .catch(err => {
-                      setLoading(false);
-                      console.log(err);
-                    });
+                  if (data.status === 'REJECTED') {
+                    setLoading(true);
+                    PlotDatasource.updateFarmerPlot(
+                      plotName,
+                      raiAmount,
+                      landmark,
+                      plantName,
+                      position.latitude,
+                      position.longitude,
+                      search.term,
+                      selectPlot.subdistrictId,
+                      'PENDING',
+                    )
+                      .then(res => {
+                        setLoading(false);
+                        navigation.navigate('AllPlotScreen');
+                      })
+                      .catch(err => {
+                        setLoading(false);
+                        console.log(err);
+                      });
+                  } else {
+                    setLoading(true);
+                    PlotDatasource.updateFarmerPlot(
+                      plotName,
+                      raiAmount,
+                      landmark,
+                      plantName,
+                      position.latitude,
+                      position.longitude,
+                      search.term,
+                      selectPlot.subdistrictId,
+                    )
+                      .then(res => {
+                        setLoading(false);
+                        navigation.navigate('AllPlotScreen');
+                      })
+                      .catch(err => {
+                        setLoading(false);
+                        console.log(err);
+                      });
+                  }
                 }}
               />
             </View>

@@ -34,6 +34,7 @@ import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import CardReview from '../../components/Carousel/CardReview';
 import { useIsFocused } from '@react-navigation/native';
+import VerifyStatus from '../../components/Modal/VerifyStatus';
 
 const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   const isFocused = useIsFocused();
@@ -43,6 +44,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [statusFav, setStatusFav] = useState<any>();
   const [profile, setProfile] = useState<any>();
+  const [statusFarm, setStatusFarm] = useState<any>();
   const [detailState, dispatch] = useReducer(
     detailDronerReducer,
     initDetailDronerState,
@@ -51,9 +53,15 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   const { width } = Dimensions.get('window');
   const height = width * 0.6;
   const date = new Date();
+  const [modalVerify, setModalVerify] = useState<boolean>(false);
 
   useEffect(() => {
+    const statusFarmer = async () => {
+      const statusFarmer = await AsyncStorage.getItem('farmer_status');
+      setStatusFarm(statusFarmer);
+    };
     dronerDetails();
+    statusFarmer();
   }, [isFocused]);
 
   const dronerDetails = async () => {
@@ -494,7 +502,19 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
               </Text>
             </View>
           </View>
-          <View style={{ height: 20, backgroundColor: '#F8F9FA' }}></View>
+          <View style={{ height: 20, backgroundColor: '#F8F9FA' }} />
+          <Modal transparent={true} visible={modalVerify}>
+            <VerifyStatus
+              text={statusFarm}
+              show={modalVerify}
+              onClose={() => {
+                setModalVerify(false);
+              }}
+              onMainClick={() => {
+                setModalVerify(false);
+              }}
+            />
+          </Modal>
         </ScrollView>
         <View>
           <MainButton
@@ -502,10 +522,12 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
             color={colors.greenLight}
             style={styles.button}
             onPress={() =>
-              navigation.navigate('SelectDateScreen', {
-                isSelectDroner: true,
-                profile: profile,
-              })
+              statusFarm !== 'ACTIVE'
+                ? setModalVerify(true)
+                : navigation.navigate('SelectDateScreen', {
+                    isSelectDroner: true,
+                    profile: profile,
+                  })
             }
           />
         </View>
