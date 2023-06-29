@@ -357,7 +357,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   setplotName(value);
                 }}
                 clearTextOnFocus={true}
-                defaultValue={plantName}
+                defaultValue={!plotName ? plantName : plotName}
                 style={[styles.input, { borderColor: colors.disable }]}
                 editable={true}
                 placeholder={defaultNamePlot}
