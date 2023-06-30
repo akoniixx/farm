@@ -13,6 +13,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import {width} from '../../function/Normalize';
 import {useFocusEffect} from '@react-navigation/native';
 import Text from '../../components/Text';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const ProfileDocument: React.FC<any> = ({navigation, route}) => {
   const profilestate = route.params.profile;
@@ -21,13 +22,30 @@ const ProfileDocument: React.FC<any> = ({navigation, route}) => {
   const [bookBank, setBookBank] = useState();
   const [image, setImage] = useState<any>(null);
   const [profile, setProfile] = useState();
-
+  const [loading, setLoading] = useState(false);
+  const [imageURL, setImageURL] = useState<string>('');
   const onAddImage = useCallback(async () => {
+   
     const result = await ImagePicker.launchImageLibrary({
       mediaType: 'photo',
     });
     if (!result.didCancel) {
-      setImage(result);
+      setLoading(true)
+      console.log('tetett')
+      
+      await ProfileDatasource.uploadDronerIDCard(result)
+      .then(res => {
+        
+       console.log(res)
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        console.log('finallllll')
+        setLoading(false);
+      });
+      setImage(result)
     }
   }, [image]);
 
@@ -45,9 +63,14 @@ const ProfileDocument: React.FC<any> = ({navigation, route}) => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     ProfileDatasource.getProfile(dronerId).then(res => {
       setProfile(res);
-      res?.file?.filter((item: any) => {
+      res?.file?.filter(async (item: any) => {
         if (item.category === 'ID_CARD_IMAGE') {
           setIdCard(item);
+          console.log(item.category)
+          const droner_id = await AsyncStorage.getItem('droner_id');
+        ProfileDatasource.getImgePath(droner_id!, item.path).then(res => {
+      setImageURL(res.url);
+    });
         } else if (item.category === 'DRONER_LICENSE') {
           setDronerLicense(item);
         } else if (item.category === 'BOOK_BANK') {
@@ -108,7 +131,7 @@ const ProfileDocument: React.FC<any> = ({navigation, route}) => {
                     marginVertical: 20,
                   }}
                   onPress={onAddImage}>
-                  {image == null ? (
+                  {image == null && idCard=== undefined ? (
                     <View style={styles.addImage}>
                       <View style={styles.camera}>
                         <Image
@@ -124,7 +147,7 @@ const ProfileDocument: React.FC<any> = ({navigation, route}) => {
                   ) : (
                     <View
                       style={{
-                        width: width * 0.9,
+                        width: '100%',
                         height: normalize(76),
                         borderRadius: 8,
                         flexDirection: 'row',
@@ -138,7 +161,10 @@ const ProfileDocument: React.FC<any> = ({navigation, route}) => {
                       <View
                         style={{alignItems: 'center', flexDirection: 'row'}}>
                         <Image
-                          source={{uri: image.assets[0].uri}}
+                          source={{uri:
+                            image == null && idCard !== undefined
+                              ? imageURL
+                              : image.assets[0].uri,}}
                           style={{
                             width: normalize(36),
                             height: normalize(36),
@@ -146,10 +172,12 @@ const ProfileDocument: React.FC<any> = ({navigation, route}) => {
                         />
                         <View style={{width: '50%', marginLeft: 10}}>
                           <Text ellipsizeMode="tail" numberOfLines={1}>
-                            {image.assets[0].fileName}
+                          {image == null && idCard !== undefined
+                      ? idCard.fileName
+                      : image.assets[0].fileName}
                           </Text>
                         </View>
-                        <Text>{image.assets[0].type}</Text>
+                        
                       </View>
                       <Image
                         source={icons.closeBlack}
@@ -213,6 +241,11 @@ const ProfileDocument: React.FC<any> = ({navigation, route}) => {
           </TouchableOpacity>
         </View>
       </View>
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{color: '#E5E5E5'}}
+      />
     </SafeAreaView>
   );
 };

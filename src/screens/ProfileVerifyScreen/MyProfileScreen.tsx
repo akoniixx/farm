@@ -64,7 +64,10 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
         title={'โปรไฟล์ของคุณ'}
       />
       <View style={[styles.body]}>
-        <View style={[styles.cardProgress]}>
+        <View style={[styles.cardProgress,{
+          flexDirection : 'row',
+          justifyContent : 'space-between'
+        }]}>
           <View
             style={{
               flexDirection: 'row',
@@ -83,14 +86,19 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
               width : normalize(50),
               height : normalize(50)
             }}/>
-            <Text style={[styles.textCard, {left: 5}]}>
-              {`ใช้เวลาเพียง 2 นาที กรอกข้อมูลโปรไฟล์ 
-ของคุณให้สมบูรณ์เพื่อเริ่มรับงานบิน 
-โดรนในระบบ`}
-            </Text>
           </View>
+          <View style={{
+            display : 'flex',
+            justifyContent : 'flex-start',
+            alignItems : 'flex-start',
+            width : '78%'
+          }}>
+          <Text style={[styles.textCard]}>
+              {`ใช้เวลาเพียง 2 นาที กรอกข้อมูลโปรไฟล์ ของคุณให้สมบูรณ์เพื่อเริ่มรับงานบินโดรนในระบบ`}
+            </Text>
           <View style={[styles.pending]}>
             <Text style={[styles.textPending]}>รอยืนยันตัวตน</Text>
+          </View>
           </View>
         </View>
         <View style={{paddingVertical: normalize(12)}}>
@@ -286,7 +294,6 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: normalize(4),
     width: normalize(100),
-    left: '20%',
   },
   textPending: {
     fontSize: normalize(14),

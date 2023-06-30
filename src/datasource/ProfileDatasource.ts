@@ -91,6 +91,28 @@ export class ProfileDatasource {
         console.log(error);
       });
   }
+
+  static async uploadIDCard(file: any): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    const data = new FormData();
+    data.append('file', {
+      uri: file.assets[0].uri,
+      name: file.assets[0].fileName,
+      type: file.assets[0].type,
+    });
+    data.append('resourceId', droner_id);
+    data.append('resource', 'DRONER');
+    data.append('category', 'ID_CARD_IMAGE');
+    return uploadFileProfile
+      .post(BASE_URL + '/file/upload', data)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
   static async uploadDroneLicense(drone_id: any, file: any): Promise<any> {
     const data = new FormData();
     data.append('file', {

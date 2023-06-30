@@ -272,13 +272,6 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
                         flexDirection: 'row',
                       }}>
                       <Text style={styles.text}>ยี่ห้อโดรนฉีดพ่น</Text>
-                      <Text
-                        style={[
-                          styles.text,
-                          {color: colors.gray, paddingLeft: 4},
-                        ]}>
-                        (กรุณาเพิ่มอย่างน้อย 1 รุ่น)
-                      </Text>
                     </View>
                     <View
                       style={{
