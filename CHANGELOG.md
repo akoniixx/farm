@@ -1,3 +1,6 @@
+## Feature [1.6.0] 2023-07-04
+- new main screen
+
 ## Enchance [1.5.9] 2023-06-23
 - change responsive profilescreen
 
