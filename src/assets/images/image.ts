@@ -46,4 +46,7 @@ export default {
   inprogress50: require('./inprogress50.png'),
   inprogress75: require('./inprogress75.png'),
   inprogress100: require('./inprogress100.png'),
+  bgSelectControllerImage: require('./bgSelectControllerImage.png'),
+  defaultImageController: require('./defaultImageController.png'),
+  defaultImageFertilizer: require('./defaultImageFertilizer.png'),
 };

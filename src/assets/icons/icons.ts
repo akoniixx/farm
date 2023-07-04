@@ -79,4 +79,7 @@ export default {
   checkOrange: require('./checkOrange.png'),
   closeX: require('./closeX.png'),
   closeGrey: require('./closeGrey.png'),
+  warningBlack: require('./warningBlack.png'),
+  imageStorage: require('./imageStorage.png'),
+  cameraGray: require('./cameraGray.png'),
 };

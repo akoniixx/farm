@@ -4,6 +4,7 @@ import {
   TouchableOpacityProps,
   StyleSheet,
   View,
+  TextStyle,
 } from 'react-native';
 import React from 'react';
 import {colors, font} from '../../assets';
@@ -20,6 +21,7 @@ interface Props extends TouchableOpacityProps {
   noBorder?: boolean;
   onPress?: () => Promise<void> | void;
   isLoading?: boolean;
+  styleText?: TextStyle;
 }
 export default function AsyncButton({
   title,
@@ -28,6 +30,7 @@ export default function AsyncButton({
   onPress,
   noBorder = false,
   isLoading = false,
+  styleText,
   ...props
 }: Props) {
   const mappingText = {
@@ -49,13 +52,14 @@ export default function AsyncButton({
         {isLoading && <Loading style={{marginRight: 8}} />}
 
         <Text
-          style={
+          style={[
             styles({noBorder})[
               mappingText[
                 type as keyof typeof mappingText
               ] as keyof typeof styles
-            ]
-          }>
+            ],
+            styleText,
+          ]}>
           {title}
         </Text>
       </View>

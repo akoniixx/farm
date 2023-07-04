@@ -4,14 +4,15 @@ import React from 'react';
 import {colors, font} from '../../assets';
 import DropDownPicker from 'react-native-dropdown-picker';
 import fonts from '../../assets/fonts';
-
+interface ItemDropdown {
+  label: string;
+  value: string;
+  image?: string;
+}
 interface Props {
   onChange: any;
   placeholder?: string;
-  items: {
-    label: string;
-    value: string;
-  }[];
+  items: ItemDropdown[];
   value: string;
 }
 export default function Dropdown({onChange, placeholder, items, value}: Props) {
@@ -50,19 +51,29 @@ export default function Dropdown({onChange, placeholder, items, value}: Props) {
       containerStyle={{
         zIndex: 3001,
       }}
-      renderListItem={({label, value}) => (
-        <TouchableOpacity
-          style={{height: 40, paddingHorizontal: 16}}
-          onPress={() => {
-            setOpen(false);
-            onChange({
-              label,
-              value,
-            });
-          }}>
-          <Text style={{fontFamily: fonts.medium}}>{label}</Text>
-        </TouchableOpacity>
-      )}
+      renderListItem={({label, value, ...rest}: any) => {
+        const {image} = rest.item as ItemDropdown;
+
+        return (
+          <TouchableOpacity
+            style={{
+              minHeight: 40,
+              paddingHorizontal: 16,
+              paddingVertical: 16,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              setOpen(false);
+              onChange({
+                label,
+                value,
+              });
+            }}>
+            <Text style={{fontFamily: fonts.medium}}>{label}</Text>
+          </TouchableOpacity>
+        );
+      }}
       open={open}
       value={value}
       items={items}

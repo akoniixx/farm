@@ -264,22 +264,25 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
         </View>
       ) : (
         <>
-          {dronerStatus === 'ACTIVE' ?<View
-            style={[
-              stylesCentral.center,
-              {flex: 1, backgroundColor: colors.grayBg, padding: 8},
-            ]}>
-            <Image
-              source={image.blankTask}
-              style={{width: normalize(136), height: normalize(111)}}
-            />
-            <Text style={stylesCentral.blankFont}>ยังไม่มีงานที่ต้องทำ</Text>
-          </View>:<View
-            style={[
-              stylesCentral.center,
-              {flex: 1, backgroundColor: colors.grayBg, padding: 8},
-            ]}></View>
-          }
+          {dronerStatus === 'ACTIVE' ? (
+            <View
+              style={[
+                stylesCentral.center,
+                {flex: 1, backgroundColor: colors.grayBg, padding: 8},
+              ]}>
+              <Image
+                source={image.blankTask}
+                style={{width: normalize(136), height: normalize(111)}}
+              />
+              <Text style={stylesCentral.blankFont}>ยังไม่มีงานที่ต้องทำ</Text>
+            </View>
+          ) : (
+            <View
+              style={[
+                stylesCentral.center,
+                {flex: 1, backgroundColor: colors.grayBg, padding: 8},
+              ]}></View>
+          )}
           {dronerStatus == 'PENDING' ? (
             <View style={{backgroundColor: colors.grayBg}}>
               <View
@@ -426,17 +429,19 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
-                  <Image source={
-                    (Number(percentSuccess) === 50)?
-                    image.inprogress50:(
-                      Number(percentSuccess) === 75?
-                      image.inprogress75:
-                      image.inprogress100
-                    )
-                  } style={{
-                    width : normalize(50),
-                    height : normalize(50)
-                  }}/>
+                  <Image
+                    source={
+                      Number(percentSuccess) === 50
+                        ? image.inprogress50
+                        : Number(percentSuccess) === 75
+                        ? image.inprogress75
+                        : image.inprogress100
+                    }
+                    style={{
+                      width: normalize(50),
+                      height: normalize(50),
+                    }}
+                  />
                   <TouchableOpacity
                     onPress={() =>
                       navigation('MyProfileScreen', MyProfileScreen)

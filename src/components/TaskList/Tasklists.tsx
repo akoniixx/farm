@@ -17,6 +17,7 @@ import Modal from 'react-native-modal';
 import {MainButton} from '../Button/MainButton';
 import ExtendModal from '../Modal/ExtendModal';
 import {mixpanel} from '../../../mixpanel';
+import ModalTaskDone from '../Modal/ModalTaskDone';
 
 const Tasklists: React.FC<any> = (props: any) => {
   const d = new Date(props.date);
@@ -28,8 +29,7 @@ const Tasklists: React.FC<any> = (props: any) => {
   const defaultRating = props.defaultRating;
   const starImgFilled = props.starImgFilled;
   const starImgCorner = props.starImgCorner;
-  const imgUploaded = props.imgUploaded;
-  const finishImg = props.finishImg;
+
   const toggleModalReview = props.toggleModalReview;
   const toggleModalSuccess = props.toggleModalSuccess;
   const taskId = props.taskId;
@@ -385,154 +385,12 @@ const Tasklists: React.FC<any> = (props: any) => {
           />
         </View>
       </Modal>
-      <Modal isVisible={props.toggleModalUpload}>
-        <View
-          style={{
-            backgroundColor: 'white',
-            justifyContent: 'center',
-            padding: normalize(15),
-            borderRadius: 12,
-          }}>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Text
-              style={{
-                fontFamily: font.bold,
-                fontSize: normalize(19),
-                color: 'black',
-                marginBottom: normalize(10),
-              }}>
-              คุณต้องการเสร็จสิ้นการพ่น
-            </Text>
-            <Text style={styles.g19}>กรุณาตรวจสอบการพ่นและการบินโดรน</Text>
-            <Text style={styles.g19}>
-              หน้างานเสมอ โดยเจ้าหน้าที่จะทำการติดต่อสอบถาม
-            </Text>
-            <Text style={styles.g19}>เกษตรกรและคุณเพื่อความสมบูรณ์ของงาน</Text>
-            {imgUploaded && finishImg !== null ? (
-              <View style={[styles.uploadFrame]}>
-                <Image
-                  source={{uri: finishImg.assets[0].uri}}
-                  style={{
-                    width: normalize(316),
-                    height: normalize(136),
-                    borderRadius: 12,
-                  }}
-                />
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: colors.orange,
-                    padding: 10,
-                    borderRadius: 99,
-                    position: 'absolute',
-                  }}
-                  onPress={props.onAddImage}>
-                  <Text
-                    style={{
-                      fontFamily: font.bold,
-                      fontSize: normalize(14),
-                      color: 'white',
-                    }}>
-                    เปลี่ยนรูป
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <View
-                style={[
-                  styles.uploadFrame,
-                  {
-                    borderStyle: 'dotted',
-                    borderColor: colors.orange,
-                    borderWidth: 2,
-                    borderRadius: 12,
-                    backgroundColor: colors.grayBg,
-                  },
-                ]}>
-                <Text
-                  style={{
-                    fontFamily: font.bold,
-                    fontSize: normalize(14),
-                    color: 'black',
-                  }}>
-                  อัพโหลดภาพงาน
-                </Text>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: colors.orange,
-                    padding: 10,
-                    borderRadius: 99,
-                    marginTop: 10,
-                  }}
-                  onPress={props.onAddImage}>
-                  <Text
-                    style={{
-                      fontFamily: font.bold,
-                      fontSize: normalize(14),
-                      color: 'white',
-                    }}>
-                    เปลี่ยนรูป
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-          {props.error && (
-            <View
-              style={{
-                marginTop: 8,
-              }}>
-              <Text
-                style={{
-                  fontFamily: font.bold,
-                  fontSize: normalize(14),
-                  color: colors.decreasePoint,
-                }}>
-                {props.error}
-              </Text>
-            </View>
-          )}
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: normalize(20),
-            }}>
-            <TouchableOpacity
-              style={[styles.modalBtn, {borderColor: colors.gray}]}
-              onPress={props.closeFinishModal}>
-              <Text
-                style={{
-                  fontFamily: font.bold,
-                  fontSize: normalize(19),
-                  color: 'black',
-                }}>
-                ปิด
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.modalBtn,
-                {
-                  backgroundColor: imgUploaded
-                    ? colors.orange
-                    : colors.greyWhite,
-                  borderColor: imgUploaded ? colors.orange : colors.greyWhite,
-                },
-              ]}
-              onPress={props.onChangImgFinish}
-              disabled={!imgUploaded}>
-              <Text
-                style={{
-                  fontFamily: font.bold,
-                  fontSize: normalize(19),
-                  color: 'white',
-                }}>
-                ยืนยัน
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <ModalTaskDone
+        onClose={props.closeFinishModal}
+        visible={props.toggleModalUpload}
+        onOpenModal={props.setToggleModalUpload}
+      />
+
       <Modal isVisible={toggleModalReview}>
         <View
           style={{
