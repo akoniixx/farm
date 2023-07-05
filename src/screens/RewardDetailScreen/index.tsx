@@ -8,8 +8,9 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+
 import React, {useEffect, useMemo} from 'react';
-import {colors, font, icons} from '../../assets';
+import {colors, font, icons, image} from '../../assets';
 import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
@@ -183,6 +184,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
           </View>
         }
       />
+
       <ScrollView>
         <View
           style={{
@@ -230,6 +232,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
                 ใช้แต้ม {numberWithCommas(requirePoint.toString(), true)} แต้ม
               </Text>
             </View>
+
             {!isDigital && (
               <Counter
                 remaining={rewardDetail.remain}
@@ -384,13 +387,14 @@ export default function RewardDetailScreen({navigation, route}: Props) {
           </Text>
         </TouchableOpacity>
       </View>
+
       <Modal
         visible={isConfirm}
         disablePrimary={disableExchange}
-        onPressPrimary={() => {
+        onPressPrimary={async () => {
           mixpanel.track('กดยืนยันแลกแต้มแบบdigital');
           setIsConfirm(false);
-          onRedeemDigital();
+          await onRedeemDigital();
         }}
         title={'ยืนยันการแลกแต้ม'}
         onPressSecondary={() => {

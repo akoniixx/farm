@@ -42,7 +42,11 @@ export default {
   num2: require('./num2.png'),
   num3: require('./num3.png'),
   regisSuccess: require('./regisSuccess.png'),
+  updateApp: require('./updateApp.png'),
   inprogress50: require('./inprogress50.png'),
   inprogress75: require('./inprogress75.png'),
-  inprogress100: require('./inprogress100.png')
+  inprogress100: require('./inprogress100.png'),
+  bgSelectControllerImage: require('./bgSelectControllerImage.png'),
+  defaultImageController: require('./defaultImageController.png'),
+  defaultImageFertilizer: require('./defaultImageFertilizer.png'),
 };

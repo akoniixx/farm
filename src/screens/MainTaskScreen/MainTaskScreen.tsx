@@ -5,7 +5,7 @@ import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, font} from '../../assets';
 import MainTaskTapNavigator from '../../navigations/topTabs/MainTaskTapNavigator';
 import {stylesCentral} from '../../styles/StylesCentral';
-import messaging from '@react-native-firebase/messaging';
+
 import RegisterNotification from '../../components/Modal/RegisterNotification';
 
 const MainTaskScreen: React.FC<any> = ({navigation}) => {

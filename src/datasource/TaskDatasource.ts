@@ -6,6 +6,14 @@ import {
   uploadFileClient,
 } from '../config/develop-config';
 
+interface PayloadTask {
+  taskId: string;
+  reviewFarmerScore: number;
+  reviewFarmerComment: string;
+  updateBy: string;
+  file: any;
+  fileDrug: any;
+}
 export class TaskDatasource {
   static getTaskById(
     dronerID: string,
@@ -87,23 +95,22 @@ export class TaskDatasource {
       });
   }
 
-  static async finishTask(
-    file: any,
-    taskId: string,
-    reviewFarmerScore: number,
-    reviewFarmerComment: string,
-    updateBy: string,
-  ): Promise<any> {
+  static async finishTask(payload: PayloadTask) {
     const data = new FormData();
-    data.append('taskId', taskId);
-    data.append('reviewFarmerScore', reviewFarmerScore);
-    data.append('reviewFarmerComment', reviewFarmerComment);
+    data.append('taskId', payload.taskId);
+    data.append('reviewFarmerScore', payload.reviewFarmerScore);
+    data.append('reviewFarmerComment', payload.reviewFarmerComment);
     data.append('file', {
-      uri: file.assets[0].uri,
-      name: file.assets[0].fileName,
-      type: file.assets[0].type,
+      uri: payload.file.assets[0].uri,
+      name: payload.file.assets[0].fileName,
+      type: payload.file.assets[0].type,
     });
-    data.append('updateBy', updateBy);
+    data.append('fileDrug', {
+      uri: payload.fileDrug.assets[0].uri,
+      name: payload.fileDrug.assets[0].fileName,
+      type: payload.fileDrug.assets[0].type,
+    });
+    data.append('updateBy', payload.updateBy);
     return taskFormDataClient
       .post(BASE_URL + '/tasks/task/finish-task', data)
       .then(response => {
@@ -114,6 +121,7 @@ export class TaskDatasource {
         throw err;
       });
   }
+
   static async onExtendTaskRequest({
     statusDelay = 'WAIT_APPROVE',
     ...payload

@@ -1,34 +1,42 @@
-import { Switch } from '@rneui/themed';
-import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import { colors, font } from '../../assets';
-import { normalize } from '../../function/Normalize';
+import {Switch} from '@rneui/themed';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  Animated,
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {colors, font} from '../../assets';
+import {normalize} from '../../function/Normalize';
 import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
-import { stylesCentral } from '../../styles/StylesCentral';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import {stylesCentral} from '../../styles/StylesCentral';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ProfileDatasource } from '../../datasource/ProfileDatasource';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import icons from '../../assets/icons/icons';
-import { SheetManager } from 'react-native-actions-sheet';
-import { TaskDatasource } from '../../datasource/TaskDatasource';
-import { numberWithCommas, socket } from '../../function/utility';
-import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import {SheetManager} from 'react-native-actions-sheet';
+import {TaskDatasource} from '../../datasource/TaskDatasource';
+import {numberWithCommas, socket} from '../../function/utility';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
 import Toast from 'react-native-toast-message';
 import fonts from '../../assets/fonts';
-import { mixpanel, mixpanel_token } from '../../../mixpanel';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-import { CardGuruKaset } from '../../components/Carousel/CardGuruKaset';
-import { GuruKaset } from '../../datasource/GuruDatasource';
+import {mixpanel, mixpanel_token} from '../../../mixpanel';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
+import {CardGuruKaset} from '../../components/Carousel/CardGuruKaset';
+import {GuruKaset} from '../../datasource/GuruDatasource';
 import LinearGradient from 'react-native-linear-gradient';
-import { usePoint } from '../../contexts/PointContext';
+import {usePoint} from '../../contexts/PointContext';
 import image from '../../assets/images/image';
-import { Campaign } from '../../datasource/CampaignDatasource';
+import {Campaign} from '../../datasource/CampaignDatasource';
 import Draggable from 'react-native-draggable';
+import AsyncButton from '../../components/Button/AsyncButton';
 
-const MainScreen: React.FC<any> = ({ navigation, route }) => {
+const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
   const [profile, setProfile] = useState({
     name: '',
@@ -42,11 +50,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     isOpenReceiveTask: false,
     status: '',
   });
-  const { getCurrentPoint, currentPoint } = usePoint();
+  const {getCurrentPoint, currentPoint} = usePoint();
   const [openNoti, setOpenNoti] = useState(false);
   const [guruKaset, setGuruKaset] = useState<any>();
   const isCarousel = React.useRef(null);
-  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+  const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
   const imageWidth = screenWidth / 2;
   const screen = Dimensions.get('window');
   const [index, setIndex] = React.useState(0);
@@ -63,7 +71,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const headerScrollHeight = scrollOffsetY.interpolate({
     inputRange: [0, H_SCROLL_DISTANCE],
     outputRange: [H_MAX_HEIGHT, H_MIN_HEIGHT],
-    extrapolate: "clamp"
+    extrapolate: 'clamp',
   });
 
   useFocusEffect(
@@ -105,7 +113,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const openSocket = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     await socket.connect();
-    socket.on(`send-task-${dronerId!}`, ({ data, image_profile_url }) => {
+    socket.on(`send-task-${dronerId!}`, ({data, image_profile_url}) => {
       //Modal Task Screen
       SheetManager.show('NewTaskSheet', {
         payload: {
@@ -189,7 +197,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const sendProfilesToMixpanel = async (profiles: any) => {
     const options = {
       method: 'POST',
-      headers: { accept: 'text/plain', 'content-type': 'application/json' },
+      headers: {accept: 'text/plain', 'content-type': 'application/json'},
       body: JSON.stringify([
         {
           $token: mixpanel_token,
@@ -209,7 +217,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     TaskDatasource.openReceiveTask(dronerId!, isOpen)
       .then(res => {
-        setProfile({ ...profile, isOpenReceiveTask: res.isOpenReceiveTask });
+        setProfile({...profile, isOpenReceiveTask: res.isOpenReceiveTask});
         if (!isOpen) {
           TaskDatasource.getTaskById(
             dronerId!,
@@ -233,8 +241,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err));
   };
 
-
-
   return (
     <BottomSheetModalProvider>
       <RegisterNotification
@@ -247,19 +253,16 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         }}
       />
 
-      <View style={[stylesCentral.container, { paddingTop: insets.top }]}>
-        <View style={{ flex: 1,backgroundColor:'white'}}>
+      <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
+        <View style={{flex: 1, backgroundColor: 'white'}}>
           <Animated.View
             style={{
               height: headerScrollHeight,
-              width: "100%",
-              overflow: "hidden",
+              width: '100%',
+              overflow: 'hidden',
               zIndex: 999,
-              backgroundColor:'white',
-             
-
-            }}
-          >
+              backgroundColor: 'white',
+            }}>
             <View>
               <View style={styles.headCard}>
                 <View>
@@ -273,8 +276,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </Text>
                   <View style={styles.activeContainer}>
                     <Switch
-                      trackColor={{ false: '#767577', true: colors.green }}
-                      thumbColor={profile.isOpenReceiveTask ? 'white' : '#f4f3f4'}
+                      trackColor={{false: '#767577', true: colors.green}}
+                      thumbColor={
+                        profile.isOpenReceiveTask ? 'white' : '#f4f3f4'
+                      }
                       value={profile.isOpenReceiveTask}
                       onValueChange={value => {
                         openReceiveTask(value);
@@ -342,8 +347,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     }}>
                     <LinearGradient
                       colors={['#FA7052', '#F89132']}
-                      start={{ x: 0, y: 0.5 }}
-                      end={{ x: 1, y: 0.5 }}
+                      start={{x: 0, y: 0.5}}
+                      end={{x: 1, y: 0.5}}
                       style={{
                         paddingHorizontal: normalize(4),
                         paddingVertical: normalize(4),
@@ -518,7 +523,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     onSnapToItem={index => setIndex(index)}
                     useScrollView={true}
                     vertical={false}
-                    renderItem={({ item }: any) => {
+                    renderItem={({item}: any) => {
                       return (
                         <TouchableOpacity
                           onPress={async () => {
@@ -573,13 +578,13 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           right: 10,
           zIndex: 1,
         }}>
-        <View style={{ width: 10, marginLeft: 20 }}>
+        <View style={{width: 10, marginLeft: 20}}>
           <TouchableOpacity
             onPress={() => {
               mixpanel.track('กดปิดแคมเปญทอง');
               setShowCampaign('none');
             }}>
-            <Image source={icons.x} style={{ width: 10, height: 10 }} />
+            <Image source={icons.x} style={{width: 10, height: 10}} />
           </TouchableOpacity>
         </View>
 
@@ -589,8 +594,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
             navigation.navigate('CampaignScreen');
           }}>
           <Image
-            source={{ uri: campaignImage }}
-            style={{ width: 150, height: 60 }}
+            source={{uri: campaignImage}}
+            style={{width: 150, height: 60}}
             resizeMode="contain"
           />
         </TouchableOpacity>

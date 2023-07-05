@@ -1,19 +1,18 @@
 import React, {createContext, useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AppNavigator from './src/navigations/AppNavigator';
-import {navigationRef} from './src/navigations/RootNavigation';
+import {navigate, navigationRef} from './src/navigations/RootNavigation';
 import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-toast-message';
 import {SheetProvider} from 'react-native-actions-sheet';
 import './src/sheet/Sheets';
 import {toastConfig} from './src/config/toast-config';
-import {Alert, BackHandler, Linking} from 'react-native';
+import {BackHandler} from 'react-native';
 import buddhaEra from 'dayjs/plugin/buddhistEra';
 import dayjs from 'dayjs';
 import {AuthProvider} from './src/contexts/AuthContext';
 import {Settings} from 'react-native-fbsdk-next';
-import VersionCheck from 'react-native-version-check';
-import storeVersion from 'react-native-store-version';
+
 dayjs.extend(buddhaEra);
 import {
   firebaseInitialize,
@@ -27,9 +26,9 @@ import 'moment/locale/th';
 import './src/components/Sheet';
 import {PointProvider} from './src/contexts/PointContext';
 import moment from 'moment';
-import RNExitApp from 'react-native-kill-app';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 moment.updateLocale('th', {
   relativeTime: {
     future: '%s',
@@ -62,42 +61,7 @@ const App = () => {
       Settings.setAdvertiserTrackingEnabled(false);
     }
   };
-  const checkVersion = async () => {
-    const isIOS = Platform.OS === 'ios';
-    const currentVersion = VersionCheck.getCurrentVersion();
-    const storeUrl = await VersionCheck.getAppStoreUrl({
-      appID: '6443516628',
-    });
 
-    const playStoreUrl = await VersionCheck.getPlayStoreUrl({
-      packageName: 'com.iconkaset.droner',
-    });
-
-    const {remote} = await storeVersion({
-      version: currentVersion,
-      androidStoreURL: playStoreUrl,
-      iosStoreURL: storeUrl,
-      country: 'TH',
-    });
-
-    const needUpdate = await VersionCheck.needUpdate({
-      currentVersion,
-      latestVersion: remote,
-    });
-
-    if (needUpdate.isNeeded) {
-      Alert.alert('มีการอัพเดทใหม่', undefined, [
-        {
-          text: 'อัพเดท',
-          onPress: async () => {
-            mixpanel.track('กดอัพเดทแอพ');
-            await Linking.openURL(isIOS ? storeUrl : playStoreUrl);
-            RNExitApp.exitApp();
-          },
-        },
-      ]);
-    }
-  };
   useEffect(() => {
     mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
@@ -115,7 +79,7 @@ const App = () => {
     checkPermission();
     requestTracking();
     getToken();
-    checkVersion();
+    // checkVersion();
   }, []);
 
   const checkPermission = () => {

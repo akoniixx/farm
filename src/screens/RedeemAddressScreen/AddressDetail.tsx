@@ -156,7 +156,7 @@ export default function AddressDetail({
 
       setTimeout(() => {
         navigation.navigate('RedeemDetailScreen', {
-          id: result.dronerTransaction.id,
+          id: result?.dronerTransaction?.id,
         });
       }, 400);
     } catch (e) {

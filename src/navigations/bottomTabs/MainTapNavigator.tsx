@@ -31,6 +31,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Campaign} from '../../datasource/CampaignDatasource';
 import MyProfileScreen from '../../screens/ProfileVerifyScreen/MyProfileScreen';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import {TaskDatasource} from '../../datasource/TaskDatasource';
 
 export type TabNavigatorParamList = {
   mission: undefined;
@@ -103,6 +104,27 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   ];
 
   useEffect(() => {
+    const checkStatusTask = async (taskId: string, taskNo: string) => {
+      const dronerId = await AsyncStorage.getItem('droner_id');
+      const result = await TaskDatasource.getTaskDetail(taskId, dronerId || '');
+      if (result && result?.responseData?.data?.dronerId) {
+        RootNavigation.navigate('Main', {
+          screen: 'MainScreen',
+        });
+        Toast.show({
+          type: 'taskAlreadyAccepted',
+          onPress: () => {
+            Toast.hide();
+          },
+          text1: `ขออภัย งานหมายเลข #${taskNo}`,
+        });
+      } else {
+        RootNavigation.navigate('Main', {
+          screen: 'TaskDetailScreen',
+          params: {taskId: taskId},
+        });
+      }
+    };
     messaging()
       .getInitialNotification()
       .then(message => {
@@ -127,10 +149,10 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
               setInitialRouteName('profile');
               break;
             case 'NEW_TASK':
-              RootNavigation.navigate('Main', {
-                screen: 'TaskDetailScreen',
-                params: {taskId: message.data?.taskId},
-              });
+              checkStatusTask(
+                message.data?.taskId || '',
+                message?.data?.taskNo || '',
+              );
               break;
             case 'FIRST_REMIND':
               RootNavigation.navigate('Main', {
@@ -199,10 +221,10 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           navigation.dispatch(jumpAction);
           break;
         case 'NEW_TASK':
-          RootNavigation.navigate('Main', {
-            screen: 'TaskDetailScreen',
-            params: {taskId: message.data?.taskId},
-          });
+          checkStatusTask(
+            message.data?.taskId || '',
+            message?.data?.taskNo || '',
+          );
           break;
         case 'FIRST_REMIND':
           RootNavigation.navigate('Main', {

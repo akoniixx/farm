@@ -1,7 +1,6 @@
 import {View, StyleSheet, Image} from 'react-native';
 import React, {useMemo} from 'react';
 import {colors, image} from '../../assets';
-import mockImage from '../../assets/mockImage';
 import Text from '../../components/Text';
 import fonts from '../../assets/fonts';
 import ProgressBarAnimated from '../../components/ProgressBarAnimated/ProgressBarAnimated';
@@ -45,7 +44,9 @@ export default function CardDetail({
         {disabled ? (
           <Grayscale>
             <Image
-              source={mockImage.reward1}
+              source={{
+                uri: imagePath,
+              }}
               style={{
                 width: 68,
                 height: 68,

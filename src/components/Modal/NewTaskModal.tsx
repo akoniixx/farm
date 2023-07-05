@@ -58,7 +58,6 @@ export const NewTaskModal = (
         if (res.success) {
           SheetManager.hide('NewTaskSheet');
         } else {
-          console.log(data);
           setTimeout(() => {
             SheetManager.hide('NewTaskSheet');
           }, 5000);

@@ -62,6 +62,7 @@ interface DigitalDetail {
   };
   rewardExchange: string;
   rewardQuantity: number;
+  remark: string | null;
 }
 
 interface DronerRedeemHistory {
