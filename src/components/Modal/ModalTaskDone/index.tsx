@@ -68,6 +68,8 @@ export default function ModalTaskDone({
   const onTakeImageController = async () => {
     const result = await ImagePicker.launchCamera({
       mediaType: 'photo',
+      maxHeight: 320,
+      maxWidth: 320,
     });
     if (!result.didCancel) {
       const fileSize = result?.assets?.[0]?.fileSize || 0;
@@ -410,6 +412,11 @@ export default function ModalTaskDone({
         }}
       />
       <ModalUploadImage
+        onCancel={() => {
+          setShowModalSelectImage(false);
+
+          onOpenModal();
+        }}
         onPressLibrary={() => {
           onAddImageController();
         }}
