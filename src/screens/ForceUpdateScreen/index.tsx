@@ -17,7 +17,7 @@ import {navigate} from '../../navigations/RootNavigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ForceUpdateScreen({route}: any) {
-  const {isForce = false} = route.params;
+  const {isForce = false, isDev = false} = route.params;
 
   const {width} = useWindowDimensions();
   const widthButton = useMemo(() => {
@@ -48,6 +48,10 @@ export default function ForceUpdateScreen({route}: any) {
     } finally {
       RNExitApp.exitApp();
     }
+  };
+  const onPressByPassDev = async () => {
+    await AsyncStorage.setItem('updateLater', 'true');
+    navigate('initPage', {});
   };
 
   return (
@@ -95,6 +99,15 @@ export default function ForceUpdateScreen({route}: any) {
           </Text>
         </View>
       </View>
+      {isDev && (
+        <AsyncButton
+          title="ByPassDev"
+          onPress={onPressByPassDev}
+          style={{
+            marginBottom: 16,
+          }}
+        />
+      )}
 
       {isForce ? (
         <View

@@ -44,6 +44,10 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const [defaultRating, setDefaultRating] = useState<number>(0);
   const [maxRatting, setMaxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
   const [comment, setComment] = useState<string>('');
+  const [imageFile, setImageFile] = useState<{
+    file: any;
+    fileDrug: any;
+  }>();
   const [idUpload, setIdUpload] = useState<string>('');
   const [updateBy, setUpdateBy] = useState<string>('');
   const [percentSuccess, setPercentSuccess] = useState<number>(0);
@@ -131,13 +135,15 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const onFinishTask = () => {
     setToggleModalReview(false);
     setTimeout(() => setLoading(true), 500);
-    TaskDatasource.finishTask(
-      finishImg,
-      idUpload,
-      defaultRating,
-      comment,
-      updateBy,
-    )
+    const payload = {
+      taskId: idUpload,
+      updateBy: updateBy,
+      reviewFarmerComment: comment,
+      reviewFarmerScore: defaultRating,
+      file: imageFile?.file,
+      fileDrug: imageFile?.fileDrug,
+    };
+    TaskDatasource.finishTask(payload)
       .then(res => {
         setLoading(false);
         setTimeout(() => setToggleModalSuccess(true), 500);
@@ -178,8 +184,9 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     setFinishImg(null);
   };
 
-  const onChangImgFinish = () => {
+  const onChangImgFinish = (payloadFile: any) => {
     setToggleModalUpload(false);
+    setImageFile(payloadFile);
     setTimeout(() => setToggleModalReview(true), 500);
   };
   const onCloseSuccessModal = () => {

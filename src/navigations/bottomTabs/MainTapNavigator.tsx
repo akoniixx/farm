@@ -109,11 +109,6 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
       const result = await TaskDatasource.getTaskDetail(taskId, dronerId || '');
       if (result && result?.responseData?.data?.dronerId) {
         RootNavigation.navigate('Main', {
-          screen: 'TaskDetailScreen',
-          params: {taskId: taskId},
-        });
-      } else {
-        RootNavigation.navigate('Main', {
           screen: 'MainScreen',
         });
         Toast.show({
@@ -122,6 +117,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
             Toast.hide();
           },
           text1: `ขออภัย งานหมายเลข #${taskNo}`,
+        });
+      } else {
+        RootNavigation.navigate('Main', {
+          screen: 'TaskDetailScreen',
+          params: {taskId: taskId},
         });
       }
     };

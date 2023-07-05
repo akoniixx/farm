@@ -55,13 +55,16 @@ const LoadingNavigator: React.FC<any> = ({navigation}) => {
           latestVersion: remote,
         });
         const updateLater = await AsyncStorage.getItem('updateLater');
+        const isDev = true;
 
-        if (needUpdate.isNeeded) {
+        // if (needUpdate.isNeeded && isDev) {
+        if (isDev) {
           if (updateLater === 'true' && !isForce) {
-            return;
+            return getData();
           }
           navigate('ForceUpdate', {
             isForce,
+            isDev,
           });
         } else {
           getData();

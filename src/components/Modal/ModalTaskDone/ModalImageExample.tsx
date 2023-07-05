@@ -1,4 +1,4 @@
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View, Image, Dimensions} from 'react-native';
 import React, {useState} from 'react';
 import Modal from '../Modal';
 import Text from '../../Text';
@@ -6,6 +6,8 @@ import {colors, font, icons, image} from '../../../assets';
 import Dropdown from '../../Dropdown/Dropdown';
 import ZoomableImage from '../../ZoomableImage/ZoomableImage';
 import AsyncButton from '../../Button/AsyncButton';
+import imagesLogoDrone from '../../../assets/imagesLogoDrone';
+import imagesControllerDrone from '../../../assets/imagesControllerDrone';
 
 interface Props {
   visible: boolean;
@@ -16,14 +18,24 @@ const staticData = [
   {
     label: 'DJI',
     value: 'dji',
-    image: 'test',
+    image: imagesLogoDrone.DJILogo,
   },
   {
     label: 'Air Fast Drone',
     value: 'airFastDrone',
-    image: 'test',
+    image: imagesLogoDrone.airFastDroneLogo,
+  },
+  {
+    label: 'Bug Away',
+    value: 'bugAway',
+    image: imagesLogoDrone.bugAwayLogo,
   },
 ];
+const mappingImage = {
+  dji: imagesControllerDrone.DJI,
+  airFastDrone: imagesControllerDrone.airFastDrone,
+  bugAway: imagesControllerDrone.bugAway,
+};
 
 export default function ModalImageExample({visible, onPressBack}: Props) {
   const [selected, setSelected] = useState<{
@@ -63,10 +75,10 @@ export default function ModalImageExample({visible, onPressBack}: Props) {
             marginVertical: 16,
           }}>
           <Dropdown
+            customStyleInput
             placeholder="เลือกยี่ห้อโดรน"
             items={staticData}
             onChange={(v: any) => {
-              console.log(v);
               setSelected(v);
             }}
             value={selected?.value}
@@ -74,13 +86,20 @@ export default function ModalImageExample({visible, onPressBack}: Props) {
         </View>
         <View
           style={{
-            width: 320,
+            zIndex: -1,
             height: 320,
+            width: '100%',
             borderRadius: 12,
             overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}>
           <ZoomableImage
-            source={image.defaultImageController}
+            source={
+              selected.value
+                ? mappingImage[selected?.value as keyof typeof mappingImage]
+                : image.defaultImageController
+            }
             style={{
               width: 320,
               height: 320,

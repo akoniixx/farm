@@ -1,4 +1,10 @@
-import {View, Image, TouchableOpacity, PermissionsAndroid} from 'react-native';
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  PermissionsAndroid,
+  Platform,
+} from 'react-native';
 import React, {useEffect} from 'react';
 import Modal from './Modal';
 import {colors, font, icons} from '../../assets';
@@ -23,7 +29,9 @@ export default function ModalUploadImage({
         'android.permission.CAMERA',
       );
     };
-    requestPermission();
+    if (Platform.OS === 'android') {
+      requestPermission();
+    }
   }, []);
   const staticSelect = [
     {

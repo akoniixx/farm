@@ -21,6 +21,7 @@ import ModalTaskDone from '../Modal/ModalTaskDone';
 
 const Tasklists: React.FC<any> = (props: any) => {
   const d = new Date(props.date);
+  const onChangImgFinish = props.onChangImgFinish;
 
   d.setHours(d.getHours() - 3);
   const checkdate = new Date(d);
@@ -386,6 +387,7 @@ const Tasklists: React.FC<any> = (props: any) => {
         </View>
       </Modal>
       <ModalTaskDone
+        onShowReviewModal={onChangImgFinish}
         onClose={props.closeFinishModal}
         visible={props.toggleModalUpload}
         onOpenModal={props.setToggleModalUpload}

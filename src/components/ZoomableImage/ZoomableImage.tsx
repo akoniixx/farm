@@ -77,7 +77,8 @@ export default function ZoomableImage({source, style}: Props) {
   return (
     <GestureHandlerRootView
       style={{
-        zIndex: 3000,
+        flex: 1,
+        zIndex: 0,
       }}>
       <PanGestureHandler
         activeOffsetX={[0, 0]}
