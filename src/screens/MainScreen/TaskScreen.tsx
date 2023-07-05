@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {normalize} from '@rneui/themed';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Animated, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import {FlatList} from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -24,10 +24,12 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 
 interface Prop {
   dronerStatus: string;
+  scrollOffsetY: Animated.Value
 }
 
 const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const dronerStatus = props.dronerStatus;
+  const scrollOffsetY = props.scrollOffsetY
   const navigation = RootNavigation.navigate;
   const [error, setError] = useState<string>('');
   const [data, setData] = useState<any>([]);
@@ -208,6 +210,9 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
             keyExtractor={element => element.item.taskNo}
             data={data}
             extraData={data}
+            onScroll={Animated.event([
+              { nativeEvent: { contentOffset: { y: scrollOffsetY } } }
+            ])}
             renderItem={({item}: any) => (
               <Tasklists
                 {...item.item}
