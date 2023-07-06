@@ -1,4 +1,4 @@
-import {StyleSheet, View, Image, Dimensions} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
 import React, {useState} from 'react';
 import Modal from '../Modal';
 import Text from '../../Text';
@@ -76,6 +76,9 @@ export default function ModalImageExample({visible, onPressBack}: Props) {
           }}>
           <Dropdown
             customStyleInput
+            dropDownStyle={{
+              position: 'absolute',
+            }}
             placeholder="เลือกยี่ห้อโดรน"
             items={staticData}
             onChange={(v: any) => {

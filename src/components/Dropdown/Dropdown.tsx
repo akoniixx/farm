@@ -9,11 +9,13 @@ import {
   StyleSheet,
   TouchableOpacityProps,
   Animated,
+  ViewStyle,
 } from 'react-native';
 import React from 'react';
 import {colors, font, icons} from '../../assets';
 import DropDownPicker from 'react-native-dropdown-picker';
 import fonts from '../../assets/fonts';
+
 interface ItemDropdown {
   label: string;
   value: string;
@@ -27,6 +29,7 @@ interface Props {
   sizeImage?: number;
   customStyleInput?: boolean;
   stylesInput?: TouchableOpacityProps['style'];
+  dropDownStyle?: ViewStyle;
 }
 export default function Dropdown({
   onChange,
@@ -36,6 +39,7 @@ export default function Dropdown({
   sizeImage = 30,
   customStyleInput = false,
   stylesInput,
+  dropDownStyle,
 }: Props) {
   const [open, setOpen] = React.useState(false);
   const rotateAnimation = React.useRef(new Animated.Value(0)).current;
@@ -187,6 +191,7 @@ export default function Dropdown({
                 zIndex: 3001,
 
                 backgroundColor: colors.white,
+                ...dropDownStyle,
               }
             : {
                 position: 'relative',
@@ -195,6 +200,7 @@ export default function Dropdown({
                 zIndex: 3001,
 
                 backgroundColor: colors.white,
+                ...dropDownStyle,
               }
         }
       />

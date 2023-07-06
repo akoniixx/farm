@@ -98,6 +98,18 @@ export default function ModalTaskDone({
     return () => <StepTwo imgFertilizer={imgFertilizer} />;
   }, [step, onPressToSeeDemo, imgController, imgFertilizer]);
 
+  const styleButtonCondition =
+    step === 0
+      ? {
+          width: '45%',
+          backgroundColor: imgController ? colors.orange : colors.greyWhite,
+          borderColor: imgController ? colors.orange : colors.disable,
+        }
+      : {
+          width: '45%',
+          backgroundColor: imgFertilizer ? colors.orange : colors.greyWhite,
+          borderColor: imgFertilizer ? colors.orange : colors.disable,
+        };
   return (
     <>
       <Modal visible={visible} transparent animationType="fade">
@@ -366,16 +378,7 @@ export default function ModalTaskDone({
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[
-                  styles.modalBtn,
-                  {
-                    width: '45%',
-                    backgroundColor: imgController
-                      ? colors.orange
-                      : colors.greyWhite,
-                    borderColor: imgController ? colors.orange : colors.disable,
-                  },
-                ]}
+                style={[styles.modalBtn, styleButtonCondition]}
                 onPress={() => {
                   if (imgController) {
                     setStep(step + 1);
