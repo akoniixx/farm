@@ -12,14 +12,14 @@ import Text from '../Text';
 
 interface Props {
   visible: boolean;
-
+  onCancel: () => void;
   onPressLibrary: () => void;
   onPressCamera: () => void;
 }
 
 export default function ModalUploadImage({
   visible,
-
+  onCancel,
   onPressLibrary,
   onPressCamera,
 }: Props) {
@@ -48,6 +48,12 @@ export default function ModalUploadImage({
       },
       icon: icons.imageStorage,
     },
+    {
+      label: 'ยกเลิก',
+      onPress: () => {
+        onCancel();
+      },
+    },
   ];
   return (
     <View>
@@ -63,7 +69,7 @@ export default function ModalUploadImage({
             paddingVertical: 8,
           }}>
           {staticSelect.map((el, idx) => {
-            const isFirst = idx === 0;
+            const isLast = idx === staticSelect.length - 1;
             return (
               <TouchableOpacity
                 onPress={el.onPress}
@@ -74,7 +80,7 @@ export default function ModalUploadImage({
                   justifyContent: 'space-between',
                   padding: 16,
                   borderBottomColor: colors.disable,
-                  borderBottomWidth: isFirst ? 1 : 0,
+                  borderBottomWidth: isLast ? 0 : 1,
                   width: '100%',
                 }}>
                 <Text
@@ -84,13 +90,15 @@ export default function ModalUploadImage({
                   }}>
                   {el.label}
                 </Text>
-                <Image
-                  source={el.icon}
-                  style={{
-                    width: 28,
-                    height: 28,
-                  }}
-                />
+                {el.icon && (
+                  <Image
+                    source={el.icon}
+                    style={{
+                      width: 28,
+                      height: 28,
+                    }}
+                  />
+                )}
               </TouchableOpacity>
             );
           })}
