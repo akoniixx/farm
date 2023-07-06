@@ -52,6 +52,16 @@ export type PredictionType = {
   types: string[];
 };
 
+interface AreaServiceEntity {
+  area: string;
+  latitude: number;
+  longitude: number;
+  provinceId: number;
+  districtId: number;
+  subdistrictId: number;
+  locationName: string;
+}
+
 const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const windowWidth = Dimensions.get('window').width;
@@ -65,8 +75,6 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   });
   const [location, setLocation] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>();
-  const debounceValue = useDebounceValue(searchValue, 800);
-  const [searchLocation] = useState('');
   const [selectPlot, setSelectPlot] = useState<any>();
   const [plantName, setPlantName] = useState<any>();
   const [raiAmount, setraiAmount] = useState<any>();
@@ -78,8 +86,9 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const plantSheet = useRef<any>();
   const mapSheet = useRef<any>();
   const plotArea = useRef<any>();
-  const [plotAreas, setPlotAreas] = useState<any>([]);
-
+  const [page, setPage] = useState<number>(0);
+  const [dataStore, setDataStore] = useState<AreaServiceEntity[]>([]);
+  const [dataRender, setDataRender] = useState<AreaServiceEntity[]>([]);
   const [search, setSearch] = useState<any>({
     term: '',
     fetchPredictions: false,
@@ -143,7 +152,6 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   };
   useEffect(() => {
     getLocation();
-    fetchLocation(searchLocation);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -296,34 +304,48 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
       console.log(e);
     }
   };
-
-  const fetchLocation = async (text?: string) => {
-    await QueryLocation.getSubdistrictIdCreateNewPlot().then(res => {
-      setLocation(res);
-    });
-  };
   useEffect(() => {
-    const filterBySearchText = () => {
-      if (debounceValue && location && location?.length > 0) {
-        const words: {
-          districtName: string;
-          provinceName: string;
-          subdistrictName: string;
-        }[] = location;
-        const result = words
-          .filter(word => {
-            return (
-              word.districtName.includes(debounceValue) ||
-              word.subdistrictName.includes(debounceValue) ||
-              word.provinceName.includes(debounceValue)
-            );
-          })
-          .slice(0, 10);
-        setPlotAreas(result);
+    QueryLocation.getSubdistrict(0, '').then(res => {
+      let all = res.map((item: any) => {
+        return {
+          area: `${item.subdistrictName}/${item.districtName}/${item.provinceName}`,
+          latitude: item.lat,
+          longitude: item.long,
+          provinceId: item.provinceId,
+          districtId: item.districtId,
+          subdistrictId: item.subdistrictId,
+        };
+      });
+      setLocation(all);
+    });
+  }, []);
+
+  useEffect(() => {
+    setPage(0);
+    let filter = location.filter(str => str.area.includes(searchValue));
+    let arr = [];
+    for (let i = 0; i < 10; i++) {
+      if (!!filter[i]) {
+        arr.push(filter[i]);
       }
-    };
-    filterBySearchText();
-  }, [debounceValue, location]);
+    }
+    setDataStore(filter);
+    setDataRender(arr);
+  }, [searchValue]);
+
+  useEffect(() => {
+    let arr = [];
+    let skip = dataStore.length;
+    for (
+      let i = 10 * page;
+      i < (10 + 10 * page > skip ? skip : 10 + 10 * page);
+      i++
+    ) {
+      arr.push(dataStore[i]);
+    }
+    let newarr = dataRender.concat(arr);
+    setDataRender(newarr);
+  }, [page]);
 
   const searchPlotArea = (value: string) => {
     setSearchValue(value);
@@ -460,7 +482,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   <Text
                     style={{
                       fontFamily: fonts.AnuphanMedium,
-                      fontSize: normalize(20),
+                      fontSize: normalize(12),
                       color: colors.gray,
                     }}>
                     {!selectPlot ? (
@@ -477,11 +499,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                           fontFamily: font.SarabunLight,
                           color: colors.fontGrey,
                         }}>
-                        {selectPlot.subdistrictName +
-                          '/' +
-                          selectPlot.districtName +
-                          '/' +
-                          selectPlot.provinceName}
+                        {selectPlot.area}
                       </Text>
                     )}
                   </Text>
@@ -806,19 +824,18 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   </TouchableOpacity>
                 ) : null}
               </View>
-              <ScrollView>
-                {plotAreas !== undefined &&
-                  plotAreas.map((v: any, i: any) => (
+              <ScrollView
+                onScrollEndDrag={() => {
+                  if (dataStore.length > dataRender.length) {
+                    setPage(page + 1);
+                  }
+                }}>
+                {dataRender !== undefined &&
+                  dataRender.map((v: any, i: any) => (
                     <TouchableOpacity>
                       <PlantSelect
                         key={i}
-                        label={
-                          v.subdistrictName +
-                          '/' +
-                          v.districtName +
-                          '/' +
-                          v.provinceName
-                        }
+                        label={v.area}
                         id={v}
                         onPress={() => {
                           selectPlotArea(v);

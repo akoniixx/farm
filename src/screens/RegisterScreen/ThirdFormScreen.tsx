@@ -67,6 +67,15 @@ export type PredictionType = {
   terms: Object[];
   types: string[];
 };
+interface AreaServiceEntity {
+  area: string;
+  latitude: number;
+  longitude: number;
+  provinceId: number;
+  districtId: number;
+  subdistrictId: number;
+  locationName: string;
+}
 
 const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   const windowWidth = Dimensions.get('window').width;
@@ -106,6 +115,9 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     term: '',
     fetchPredictions: false,
   });
+  const [page, setPage] = useState<number>(0);
+  const [dataStore, setDataStore] = useState<AreaServiceEntity[]>([]);
+  const [dataRender, setDataRender] = useState<AreaServiceEntity[]>([]);
   const [loading, setLoading] = useState(false);
   const [showPredictions, setShowPredictions] = useState(false);
   const [predictions, setPredictions] = useState<PredictionType[]>([]);
@@ -115,7 +127,6 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
 
   useEffect(() => {
     getLocation();
-    fetchLocation(searchLocation);
   }, [searchLocation]);
 
   const hasPermissionIOS = async () => {
@@ -311,34 +322,48 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     }
   };
 
-  const fetchLocation = async (text?: string) => {
-    await QueryLocation.getSubdistrict(0, text).then(res => {
-      setLocation(res);
+  useEffect(() => {
+    QueryLocation.getSubdistrict(0, '').then(res => {
+      let all = res.map((item: any) => {
+        return {
+          area: `${item.subdistrictName}/${item.districtName}/${item.provinceName}`,
+          latitude: item.lat,
+          longitude: item.long,
+          provinceId: item.provinceId,
+          districtId: item.districtId,
+          subdistrictId: item.subdistrictId,
+        };
+      });
+      setLocation(all);
     });
-  };
+  }, []);
 
   useEffect(() => {
-    const filterBySearchText = () => {
-      if (!!debounceValue) {
-        const words: {
-          districtName: string;
-          provinceName: string;
-          subdistrictName: string;
-        }[] = location;
-        const result = words
-          .filter(word => {
-            return (
-              word.districtName.includes(debounceValue) ||
-              word.subdistrictName.includes(debounceValue) ||
-              word.provinceName.includes(debounceValue)
-            );
-          })
-          .slice(0, 10);
-        setPlotAreas(result);
+    setPage(0);
+    let filter = location.filter(str => str.area.includes(searchValue));
+    let arr = [];
+    for (let i = 0; i < 10; i++) {
+      if (!!filter[i]) {
+        arr.push(filter[i]);
       }
-    };
-    filterBySearchText();
-  }, [debounceValue]);
+    }
+    setDataStore(filter);
+    setDataRender(arr);
+  }, [searchValue]);
+
+  useEffect(() => {
+    let arr = [];
+    let skip = dataStore.length;
+    for (
+      let i = 10 * page;
+      i < (10 + 10 * page > skip ? skip : 10 + 10 * page);
+      i++
+    ) {
+      arr.push(dataStore[i]);
+    }
+    let newarr = dataRender.concat(arr);
+    setDataRender(newarr);
+  }, [page]);
 
   const searchPlotArea = (value: string) => {
     setSearchValue(value);
@@ -651,11 +676,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                             fontFamily: font.SarabunLight,
                             color: colors.fontGrey,
                           }}>
-                          {selectPlot.subdistrictName +
-                            '/' +
-                            selectPlot.districtName +
-                            '/' +
-                            selectPlot.provinceName}
+                          {selectPlot.area}
                         </Text>
                       )}
                     </Text>
@@ -946,19 +967,18 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   </TouchableOpacity>
                 ) : null}
               </View>
-              <ScrollView>
-                {plotAreas !== undefined &&
-                  plotAreas.map((v: any, i: any) => (
+              <ScrollView
+                onScrollEndDrag={() => {
+                  if (dataStore.length > dataRender.length) {
+                    setPage(page + 1);
+                  }
+                }}>
+                {dataRender !== undefined &&
+                  dataRender.map((v: any, i: any) => (
                     <TouchableOpacity>
                       <PlantSelect
                         key={i}
-                        label={
-                          v.subdistrictName +
-                          '/' +
-                          v.districtName +
-                          '/' +
-                          v.provinceName
-                        }
+                        label={v.area}
                         id={v}
                         onPress={() => {
                           selectPlotArea(v);
