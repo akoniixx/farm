@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {normalize} from '@rneui/themed';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Animated, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import {FlatList} from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -24,10 +24,12 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 
 interface Prop {
   dronerStatus: string;
+  scrollOffsetY: Animated.Value
 }
 
 const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const dronerStatus = props.dronerStatus;
+  const scrollOffsetY = props.scrollOffsetY
   const navigation = RootNavigation.navigate;
   const [error, setError] = useState<string>('');
   const [data, setData] = useState<any>([]);
@@ -44,6 +46,10 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const [defaultRating, setDefaultRating] = useState<number>(0);
   const [maxRatting, setMaxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
   const [comment, setComment] = useState<string>('');
+  const [imageFile, setImageFile] = useState<{
+    file: any;
+    fileDrug: any;
+  }>();
   const [idUpload, setIdUpload] = useState<string>('');
   const [updateBy, setUpdateBy] = useState<string>('');
   const [percentSuccess, setPercentSuccess] = useState<number>(0);
@@ -131,13 +137,15 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const onFinishTask = () => {
     setToggleModalReview(false);
     setTimeout(() => setLoading(true), 500);
-    TaskDatasource.finishTask(
-      finishImg,
-      idUpload,
-      defaultRating,
-      comment,
-      updateBy,
-    )
+    const payload = {
+      taskId: idUpload,
+      updateBy: updateBy,
+      reviewFarmerComment: comment,
+      reviewFarmerScore: defaultRating,
+      file: imageFile?.file,
+      fileDrug: imageFile?.fileDrug,
+    };
+    TaskDatasource.finishTask(payload)
       .then(res => {
         setLoading(false);
         setTimeout(() => setToggleModalSuccess(true), 500);
@@ -178,8 +186,9 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     setFinishImg(null);
   };
 
-  const onChangImgFinish = () => {
+  const onChangImgFinish = (payloadFile: any) => {
     setToggleModalUpload(false);
+    setImageFile(payloadFile);
     setTimeout(() => setToggleModalReview(true), 500);
   };
   const onCloseSuccessModal = () => {
@@ -201,6 +210,9 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
             keyExtractor={element => element.item.taskNo}
             data={data}
             extraData={data}
+            onScroll={Animated.event([
+              { nativeEvent: { contentOffset: { y: scrollOffsetY } } }
+            ])}
             renderItem={({item}: any) => (
               <Tasklists
                 {...item.item}
@@ -264,22 +276,25 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
         </View>
       ) : (
         <>
-          {dronerStatus === 'ACTIVE' ?<View
-            style={[
-              stylesCentral.center,
-              {flex: 1, backgroundColor: colors.grayBg, padding: 8},
-            ]}>
-            <Image
-              source={image.blankTask}
-              style={{width: normalize(136), height: normalize(111)}}
-            />
-            <Text style={stylesCentral.blankFont}>ยังไม่มีงานที่ต้องทำ</Text>
-          </View>:<View
-            style={[
-              stylesCentral.center,
-              {flex: 1, backgroundColor: colors.grayBg, padding: 8},
-            ]}></View>
-          }
+          {dronerStatus === 'ACTIVE' ? (
+            <View
+              style={[
+                stylesCentral.center,
+                {flex: 1, backgroundColor: colors.grayBg, padding: 8},
+              ]}>
+              <Image
+                source={image.blankTask}
+                style={{width: normalize(136), height: normalize(111)}}
+              />
+              <Text style={stylesCentral.blankFont}>ยังไม่มีงานที่ต้องทำ</Text>
+            </View>
+          ) : (
+            <View
+              style={[
+                stylesCentral.center,
+                {flex: 1, backgroundColor: colors.grayBg, padding: 8},
+              ]}></View>
+          )}
           {dronerStatus == 'PENDING' ? (
             <View style={{backgroundColor: colors.grayBg}}>
               <View
@@ -426,17 +441,19 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
-                  <Image source={
-                    (Number(percentSuccess) === 50)?
-                    image.inprogress50:(
-                      Number(percentSuccess) === 75?
-                      image.inprogress75:
-                      image.inprogress100
-                    )
-                  } style={{
-                    width : normalize(50),
-                    height : normalize(50)
-                  }}/>
+                  <Image
+                    source={
+                      Number(percentSuccess) === 50
+                        ? image.inprogress50
+                        : Number(percentSuccess) === 75
+                        ? image.inprogress75
+                        : image.inprogress100
+                    }
+                    style={{
+                      width: normalize(50),
+                      height: normalize(50),
+                    }}
+                  />
                   <TouchableOpacity
                     onPress={() =>
                       navigation('MyProfileScreen', MyProfileScreen)

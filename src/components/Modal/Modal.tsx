@@ -6,15 +6,16 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {colors, font, icons} from '../../assets';
+import AsyncButton from '../Button/AsyncButton';
 
 interface Props {
   children?: React.ReactNode;
   visible: boolean;
   title?: string | JSX.Element;
   subTitle?: string | JSX.Element;
-  onPressPrimary?: () => void;
+  onPressPrimary?: () => void | Promise<void>;
   onPressSecondary?: () => void;
   titlePrimary?: string;
   titleSecondary?: string;
@@ -22,6 +23,7 @@ interface Props {
   onClose?: () => void;
   iconTop?: JSX.Element;
   disablePrimary?: boolean;
+  noBackdrop?: boolean;
 }
 export default function Modal({
   visible,
@@ -36,13 +38,18 @@ export default function Modal({
   onClose,
   disablePrimary = false,
   iconTop,
+  noBackdrop = false,
 }: Props) {
+  function isPromise(func: any) {
+    return Promise.resolve(func) instanceof Promise;
+  }
+  const [loading, setLoading] = useState(false);
   return (
     <RNModal transparent={true} visible={visible} animationType="fade">
       <View
         style={{
           flex: 1,
-          backgroundColor: 'rgba(0,0,0,0.5)',
+          backgroundColor: noBackdrop ? 'transparent' : 'rgba(0,0,0,0.5)',
           justifyContent: 'center',
           alignItems: 'center',
           padding: 16,
@@ -104,14 +111,29 @@ export default function Modal({
                 {subTitle}
               </Text>
             )}
-            <TouchableOpacity
+            <AsyncButton
+              style={{
+                marginTop: 24,
+              }}
               disabled={disablePrimary}
-              style={[styles.button, {marginTop: 16}]}
-              onPress={() => {
-                onPressPrimary && onPressPrimary();
-              }}>
-              <Text style={styles.textButton}>{titlePrimary}</Text>
-            </TouchableOpacity>
+              isLoading={loading}
+              title={titlePrimary}
+              onPress={async () => {
+                const isPM = isPromise(onPressPrimary);
+                if (isPM) {
+                  try {
+                    setLoading(true);
+                    await onPressPrimary?.();
+                  } catch (e) {
+                    console.log(e);
+                  } finally {
+                    setLoading(false);
+                  }
+                } else {
+                  onPressPrimary?.();
+                }
+              }}
+            />
             <TouchableOpacity
               style={styles.subButton}
               onPress={() => {

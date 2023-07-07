@@ -313,7 +313,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+			shellScript = "\nset -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3604ED1B43C84B805D73C158 /* [CP] Embed Pods Frameworks */ = {
@@ -579,7 +579,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/swift",
 				);
-				MARKETING_VERSION = 1.5.4;
+				MARKETING_VERSION = 1.5.6;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -622,7 +622,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/swift",
 				);
-				MARKETING_VERSION = 1.5.4;
+				MARKETING_VERSION = 1.5.6;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",

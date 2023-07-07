@@ -35,7 +35,6 @@ import {SheetManager} from 'react-native-actions-sheet';
 import {WaitReceiveFooter} from '../../components/Footer/WaitReceiveFooter';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CModal from 'react-native-modal';
-import * as ImagePicker from 'react-native-image-picker';
 import {CanceledFooter} from '../../components/Footer/CanceledFooter';
 import {callcenterNumber} from '../../definitions/callCenterNumber';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -44,6 +43,7 @@ import ExtendModal from '../../components/Modal/ExtendModal';
 import StatusExtend from './StatusExtend';
 import {mixpanel} from '../../../mixpanel';
 import Banner from '../../components/Banner/GetPointBanner';
+import ModalTaskDone from '../../components/Modal/ModalTaskDone';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
@@ -62,8 +62,16 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const [togleModalUpload, setTogleModalUpload] = useState<boolean>(false);
   const [togleModalReview, setTogleModalReview] = useState<boolean>(false);
   const [togleModalSuccess, setTogleModalSuccess] = useState<boolean>(false);
-  const [imgUploaded, setImgUploaded] = useState<boolean>(false);
-  const [finishImg, setFinishImg] = useState<any>(null);
+  const [imageFile, setImageFile] = useState<any>({
+    file: null,
+    fileDrug: null,
+  });
+
+  const onShowReviewModal = (payload: {file: any; fileDrug: any}) => {
+    setTogleModalReview(true);
+    setImageFile(payload);
+  };
+
   const [defaulRating, setDefaulRating] = useState<number>(0);
   const [isVisibleExtendModal, setIsVisibleExtendModal] =
     useState<boolean>(false);
@@ -93,16 +101,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
       </View>
     );
   };
-  const onAddImage = useCallback(async () => {
-    const result = await ImagePicker.launchImageLibrary({
-      mediaType: 'photo',
-    });
-
-    if (!result.didCancel) {
-      setFinishImg(result);
-      setImgUploaded(true);
-    }
-  }, [finishImg]);
 
   useEffect(() => {
     getDronerId();
@@ -112,13 +110,16 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const onFinishTask = () => {
     setTogleModalReview(false);
     setTimeout(() => setLoading(true), 500);
-    TaskDatasource.finishTask(
-      finishImg,
-      data.id,
-      defaulRating,
-      comment,
-      `${data.droner.firstname} ${data.droner.lastname}`,
-    )
+    const payload = {
+      taskId: data.id,
+      updateBy: `${data.droner.firstname} ${data.droner.lastname}`,
+      reviewFarmerComment: comment,
+      reviewFarmerScore: defaulRating,
+      file: imageFile.file,
+      fileDrug: imageFile.fileDrug,
+    };
+
+    TaskDatasource.finishTask(payload)
       .then(() => {
         setLoading(false);
         setTimeout(() => setTogleModalSuccess(true), 200);
@@ -127,6 +128,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
       .catch(err => {
         setLoading(false);
         console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -135,11 +139,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     setTogleModalSuccess(false);
     setTimeout(() => getTaskDetail(), 200);
     getTaskDetail();
-  };
-
-  const onChangImgFinish = () => {
-    setTogleModalUpload(false);
-    setTimeout(() => setTogleModalReview(true), 500);
   };
 
   const updateTask = (status: string) => {
@@ -246,11 +245,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const convertDate = (date: string) => {
     const cdate = new Date(date);
     return cdate;
-  };
-
-  const closeFinishModal = () => {
-    setTogleModalUpload(false);
-    setFinishImg(null);
   };
 
   const getDronerId = async () => {
@@ -897,139 +891,16 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           </View>
         </View>
       </Modal>
-      <CModal isVisible={togleModalUpload}>
-        <View
-          style={{
-            backgroundColor: 'white',
-            justifyContent: 'center',
-            padding: normalize(15),
-            borderRadius: 12,
-          }}>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Text
-              style={{
-                fontFamily: font.bold,
-                fontSize: normalize(19),
-                color: 'black',
-                marginBottom: normalize(10),
-              }}>
-              คุณต้องการเสร็จสิ้นการพ่น
-            </Text>
-            <Text style={styles.g19}>กรุณาตรวจสอบการพ่นและการบินโดรน</Text>
-            <Text style={styles.g19}>
-              หน้างานเสมอ โดยเจ้าหน้าที่จะทำการติดต่อสอบถาม
-            </Text>
-            <Text style={styles.g19}>เกษตรกรและคุณเพื่อความสมบูรณ์ของงาน</Text>
-            {imgUploaded && finishImg !== null ? (
-              <View style={[styles.uploadFrame]}>
-                <Image
-                  source={{uri: finishImg.assets[0].uri}}
-                  style={{
-                    width: normalize(316),
-                    height: normalize(136),
-                    borderRadius: 12,
-                  }}
-                />
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: colors.orange,
-                    padding: 10,
-                    borderRadius: 99,
-                    position: 'absolute',
-                  }}
-                  onPress={onAddImage}>
-                  <Text
-                    style={{
-                      fontFamily: font.bold,
-                      fontSize: normalize(14),
-                      color: 'white',
-                    }}>
-                    เปลี่ยนรูป
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <View
-                style={[
-                  styles.uploadFrame,
-                  {
-                    borderStyle: 'dotted',
-                    borderColor: colors.orange,
-                    borderWidth: 2,
-                    borderRadius: 12,
-                    backgroundColor: colors.grayBg,
-                  },
-                ]}>
-                <Text
-                  style={{
-                    fontFamily: font.bold,
-                    fontSize: normalize(14),
-                    color: 'black',
-                  }}>
-                  อัพโหลดภาพงาน
-                </Text>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: colors.orange,
-                    padding: 10,
-                    borderRadius: 99,
-                    marginTop: 10,
-                  }}
-                  onPress={onAddImage}>
-                  <Text
-                    style={{
-                      fontFamily: font.bold,
-                      fontSize: normalize(14),
-                      color: 'white',
-                    }}>
-                    เปลี่ยนรูป
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: normalize(20),
-            }}>
-            <TouchableOpacity
-              style={[styles.modalBtn, {borderColor: colors.gray}]}
-              onPress={closeFinishModal}>
-              <Text
-                style={{
-                  fontFamily: font.bold,
-                  fontSize: normalize(19),
-                  color: 'black',
-                }}>
-                ปิด
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.modalBtn,
-                {
-                  backgroundColor: imgUploaded
-                    ? colors.orange
-                    : colors.greyWhite,
-                  borderColor: imgUploaded ? colors.orange : colors.greyWhite,
-                },
-              ]}
-              onPress={onChangImgFinish}
-              disabled={!imgUploaded}>
-              <Text
-                style={{
-                  fontFamily: font.bold,
-                  fontSize: normalize(19),
-                  color: 'white',
-                }}>
-                ยืนยัน
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </CModal>
+      <ModalTaskDone
+        onOpenModal={() => {
+          setTogleModalUpload(true);
+        }}
+        onShowReviewModal={onShowReviewModal}
+        visible={togleModalUpload}
+        onClose={() => {
+          setTogleModalUpload(false);
+        }}
+      />
       <CModal isVisible={togleModalReview}>
         <View
           style={{
@@ -1254,21 +1125,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(14),
     color: colors.gray,
   },
-  uploadFrame: {
-    width: normalize(316),
-    height: normalize(136),
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: normalize(16),
-  },
-  modalBtn: {
-    width: normalize(142),
-    height: normalize(50),
-    borderWidth: 0.2,
-    borderRadius: normalize(8),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+
   reviewBar: {
     justifyContent: 'center',
     flexDirection: 'row',

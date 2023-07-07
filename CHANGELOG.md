@@ -1,3 +1,15 @@
+## Feature [1.6.2] 2023-07-07
+- check allow location
+- change choose location to search subdistrict
+- default address param to "-"
+
+## Feature [1.6.1] 2023-09-20
+- upload multiple image
+- noti change condition
+- add new button to byPass
+## Feature [1.6.0] 2023-07-04
+- new main screen
+
 ## Enchance [1.5.9] 2023-06-23
 - change responsive profilescreen
 
