@@ -1,4 +1,4 @@
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View, Image, Platform} from 'react-native';
 import React, {useState} from 'react';
 import Modal from '../Modal';
 import Text from '../../Text';
@@ -75,6 +75,7 @@ export default function ModalImageExample({visible, onPressBack}: Props) {
             marginVertical: 16,
           }}>
           <Dropdown
+            sizeImage={Platform.OS === 'ios' ? 38 : 42}
             customStyleInput
             dropDownStyle={{
               position: 'absolute',

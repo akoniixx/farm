@@ -2,7 +2,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {normalize} from '@rneui/themed';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Animated, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Animated,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import {FlatList} from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -24,12 +31,12 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 
 interface Prop {
   dronerStatus: string;
-  scrollOffsetY: Animated.Value
+  scrollOffsetY: Animated.Value;
 }
 
 const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const dronerStatus = props.dronerStatus;
-  const scrollOffsetY = props.scrollOffsetY
+  const scrollOffsetY = props.scrollOffsetY;
   const navigation = RootNavigation.navigate;
   const [error, setError] = useState<string>('');
   const [data, setData] = useState<any>([]);
@@ -110,30 +117,11 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     setToggleModalStartTask(true);
   };
 
-  const openModalUpload = (id: string, updateBy: string) => {
-    setIdUpload(id);
-    setUpdateBy(updateBy);
+  const openModalUpload = (name: string) => {
+    setUpdateBy(name);
     setToggleModalUpload(true);
   };
 
-  const onAddImage = useCallback(async () => {
-    const result = await ImagePicker.launchImageLibrary({
-      mediaType: 'photo',
-    });
-
-    if (!result.didCancel) {
-      const fileSize = result?.assets?.[0]?.fileSize || 0;
-      const isFileMoreThan5MB = fileSize > 5 * 1024 * 1024;
-      if (isFileMoreThan5MB) {
-        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 5 MB');
-        return false;
-      }
-
-      setFinishImg(result);
-      setImgUploaded(true);
-      setError('');
-    }
-  }, [finishImg]);
   const onFinishTask = () => {
     setToggleModalReview(false);
     setTimeout(() => setLoading(true), 500);
@@ -145,15 +133,15 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
       file: imageFile?.file,
       fileDrug: imageFile?.fileDrug,
     };
+
     TaskDatasource.finishTask(payload)
       .then(res => {
         setLoading(false);
-        setTimeout(() => setToggleModalSuccess(true), 500);
+        setTimeout(() => setToggleModalSuccess(true), 200);
         setFinishImg(null);
         setDefaultRating(0);
       })
       .catch(err => {
-        console.log(err.response.data);
         Toast.show({
           type: 'error',
           text1: 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
@@ -186,21 +174,19 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     setFinishImg(null);
   };
 
+  const onPressSetTaskId = (id: string) => {
+    setIdUpload(id);
+  };
+
   const onChangImgFinish = (payloadFile: any) => {
     setToggleModalUpload(false);
     setImageFile(payloadFile);
+
     setTimeout(() => setToggleModalReview(true), 500);
   };
   const onCloseSuccessModal = () => {
     setToggleModalSuccess(false);
-    setTimeout(
-      () =>
-        RootNavigation.navigate('Main', {
-          screen: 'TaskDetailScreen',
-          params: {taskId: idUpload},
-        }),
-      500,
-    );
+    setTimeout(() => navigation('TaskDetailScreen', {taskId: idUpload}), 500);
   };
   return (
     <>
@@ -211,66 +197,68 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
             data={data}
             extraData={data}
             onScroll={Animated.event([
-              { nativeEvent: { contentOffset: { y: scrollOffsetY } } }
+              {nativeEvent: {contentOffset: {y: scrollOffsetY}}},
             ])}
-            renderItem={({item}: any) => (
-              <Tasklists
-                {...item.item}
-                id={item.item.taskNo}
-                status={item.item.status}
-                title={item.item.farmerPlot.plantName}
-                price={
-                  parseInt(item.item.price) +
-                  parseInt(item.item.revenuePromotion)
-                }
-                date={item.item.dateAppointment}
-                address={item.item.farmerPlot.locationName}
-                distance={item.item.distance}
-                user={`${item.item.farmer.firstname} ${item.item.farmer.lastname}`}
-                img={item.image_profile_url}
-                preparation={item.item.comment}
-                tel={item.item.farmer.telephoneNo}
-                taskId={item.item.id}
-                farmArea={item.item.farmAreaAmount}
-                toggleModalStartTask={toggleModalStartTask}
-                fetchTask={getData}
-                setToggleModalStartTask={setToggleModalStartTask}
-                setShowModalStartTask={() =>
-                  showModalStartTask(
-                    item.item.id,
-                    item.item.dronerId,
-                    item.item.taskNo,
-                    `${item.item.droner.firstname} ${item.item.droner.lastname}`,
-                  )
-                }
-                startTask={startTask}
-                maxRatting={maxRatting}
-                setDefaultRating={setDefaultRating}
-                defaultRating={defaultRating}
-                starImgFilled={starImgFilled}
-                starImgCorner={starImgCorner}
-                toggleModalUpload={toggleModalUpload}
-                imgUploaded={imgUploaded}
-                finishImg={finishImg}
-                onAddImage={onAddImage}
-                closeFinishModal={closeFinishModal}
-                onChangImgFinish={onChangImgFinish}
-                toggleModalReview={toggleModalReview}
-                setComment={setComment}
-                comment={comment}
-                error={error}
-                toggleModalSuccess={toggleModalSuccess}
-                setToggleModalSuccess={setToggleModalSuccess}
-                onFinishTask={onFinishTask}
-                setToggleModalUpload={() =>
-                  openModalUpload(
-                    item.item.id,
-                    `${item.item.droner.firstname} ${item.item.droner.lastname}`,
-                  )
-                }
-                onCloseSuccessModal={onCloseSuccessModal}
-              />
-            )}
+            renderItem={({item}: any) => {
+              return (
+                <Tasklists
+                  {...item.item}
+                  idTask={item.item.id}
+                  onPressSetTaskId={onPressSetTaskId}
+                  id={item.item.taskNo}
+                  status={item.item.status}
+                  title={item.item.farmerPlot.plantName}
+                  price={
+                    parseInt(item.item.price) +
+                    parseInt(item.item.revenuePromotion)
+                  }
+                  date={item.item.dateAppointment}
+                  address={item.item.farmerPlot.locationName}
+                  distance={item.item.distance}
+                  user={`${item.item.farmer.firstname} ${item.item.farmer.lastname}`}
+                  img={item.image_profile_url}
+                  preparation={item.item.comment}
+                  tel={item.item.farmer.telephoneNo}
+                  taskId={item.item.id}
+                  farmArea={item.item.farmAreaAmount}
+                  toggleModalStartTask={toggleModalStartTask}
+                  fetchTask={getData}
+                  setToggleModalStartTask={setToggleModalStartTask}
+                  setShowModalStartTask={() =>
+                    showModalStartTask(
+                      item.item.id,
+                      item.item.dronerId,
+                      item.item.taskNo,
+                      `${item.item.droner.firstname} ${item.item.droner.lastname}`,
+                    )
+                  }
+                  startTask={startTask}
+                  maxRatting={maxRatting}
+                  setDefaultRating={setDefaultRating}
+                  defaultRating={defaultRating}
+                  starImgFilled={starImgFilled}
+                  starImgCorner={starImgCorner}
+                  toggleModalUpload={toggleModalUpload}
+                  imgUploaded={imgUploaded}
+                  finishImg={finishImg}
+                  closeFinishModal={closeFinishModal}
+                  onChangImgFinish={onChangImgFinish}
+                  toggleModalReview={toggleModalReview}
+                  setComment={setComment}
+                  comment={comment}
+                  error={error}
+                  toggleModalSuccess={toggleModalSuccess}
+                  setToggleModalSuccess={setToggleModalSuccess}
+                  onFinishTask={onFinishTask}
+                  setToggleModalUpload={() =>
+                    openModalUpload(
+                      `${item.item.droner.firstname} ${item.item.droner.lastname}`,
+                    )
+                  }
+                  onCloseSuccessModal={onCloseSuccessModal}
+                />
+              );
+            }}
           />
           <View />
         </View>

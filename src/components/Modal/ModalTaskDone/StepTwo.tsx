@@ -4,9 +4,11 @@ import Text from '../../Text';
 import {colors, font, image} from '../../../assets';
 import * as ImagePicker from 'react-native-image-picker';
 interface Props {
+  error?: string;
+
   imgFertilizer: ImagePicker.ImagePickerResponse | null;
 }
-export default function StepTwo({imgFertilizer}: Props) {
+export default function StepTwo({imgFertilizer, error}: Props) {
   return (
     <View
       style={{
@@ -61,6 +63,23 @@ export default function StepTwo({imgFertilizer}: Props) {
           />
         )}
       </View>
+      {error && (
+        <View
+          style={{
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 8,
+          }}>
+          <Text
+            style={{
+              color: colors.decreasePoint,
+              fontFamily: font.medium,
+            }}>
+            {error}
+          </Text>
+        </View>
+      )}
     </View>
   );
 }

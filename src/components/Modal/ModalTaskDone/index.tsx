@@ -13,8 +13,13 @@ import ModalUploadImage from '../ModalUploadImage';
 interface Props {
   visible: boolean;
   onOpenModal: () => void;
-  onShowReviewModal: (payload: {file: any; fileDrug: any}) => void;
+  onShowReviewModal: (payload: {
+    file: any;
+    fileDrug: any;
+    taskId: string;
+  }) => void;
   onClose: () => void;
+  taskId: string;
 }
 
 const staticData = [
@@ -32,6 +37,7 @@ export default function ModalTaskDone({
   onClose,
   onOpenModal,
   onShowReviewModal,
+  taskId,
 }: Props) {
   const [imgController, setImgController] =
     useState<ImagePicker.ImagePickerResponse | null>(null);
@@ -49,6 +55,8 @@ export default function ModalTaskDone({
   const onAddImageController = async () => {
     const result = await ImagePicker.launchImageLibrary({
       mediaType: 'photo',
+      maxHeight: 1000,
+      maxWidth: 1000,
     });
 
     if (!result.didCancel) {
@@ -56,10 +64,24 @@ export default function ModalTaskDone({
       const isFileMoreThan5MB = fileSize > 5 * 1024 * 1024;
       if (isFileMoreThan5MB) {
         setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 5 MB');
+        onOpenModal();
+        setStep(() => {
+          if (step === 0) {
+            return 1;
+          }
+          return 0;
+        });
+
         return false;
       }
 
-      step === 0 ? setImgController(result) : setImgFertilizer(result);
+      if (step === 0) {
+        setImgController(result);
+        setStep(0);
+      } else {
+        setImgFertilizer(result);
+        setStep(1);
+      }
       setError('');
       setShowModalSelectImage(false);
       onOpenModal();
@@ -68,18 +90,32 @@ export default function ModalTaskDone({
   const onTakeImageController = async () => {
     const result = await ImagePicker.launchCamera({
       mediaType: 'photo',
-      maxHeight: 320,
-      maxWidth: 320,
+      maxHeight: 1000,
+      maxWidth: 1000,
     });
     if (!result.didCancel) {
       const fileSize = result?.assets?.[0]?.fileSize || 0;
       const isFileMoreThan5MB = fileSize > 5 * 1024 * 1024;
       if (isFileMoreThan5MB) {
         setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 5 MB');
+        onOpenModal();
+        setStep(() => {
+          if (step === 0) {
+            return 1;
+          }
+          return 0;
+        });
+
         return false;
       }
 
-      step === 0 ? setImgController(result) : setImgFertilizer(result);
+      if (step === 0) {
+        setImgController(result);
+        setStep(0);
+      } else {
+        setImgFertilizer(result);
+        setStep(1);
+      }
       setError('');
       setShowModalSelectImage(false);
       onOpenModal();
@@ -90,13 +126,14 @@ export default function ModalTaskDone({
     if (step === 0) {
       return () => (
         <StepOne
+          error={error}
           onPressToSeeDemo={onPressToSeeDemo}
           imgController={imgController}
         />
       );
     }
-    return () => <StepTwo imgFertilizer={imgFertilizer} />;
-  }, [step, onPressToSeeDemo, imgController, imgFertilizer]);
+    return () => <StepTwo imgFertilizer={imgFertilizer} error={error} />;
+  }, [step, onPressToSeeDemo, imgController, imgFertilizer, error]);
 
   const styleButtonCondition =
     step === 0
@@ -255,7 +292,7 @@ export default function ModalTaskDone({
                     onClose();
                     setShowModalSelectImage(true);
                   }}
-                  title={imgController ? 'เปลี่ยนรูป' : 'เลือกรูป'}
+                  title={imgFertilizer ? 'เปลี่ยนรูป' : 'เลือกรูป'}
                   style={{
                     flex: 0.3,
                     borderRadius: 30,
@@ -380,14 +417,16 @@ export default function ModalTaskDone({
               <TouchableOpacity
                 style={[styles.modalBtn, styleButtonCondition]}
                 onPress={() => {
-                  if (imgController) {
-                    setStep(step + 1);
+                  if (imgController && step === 0) {
+                    return setStep(1);
                   }
-                  if (imgFertilizer && imgController) {
+                  if (imgFertilizer && imgController && step === 1) {
                     onClose();
                     onShowReviewModal({
                       file: imgController,
+
                       fileDrug: imgFertilizer,
+                      taskId: taskId,
                     });
                   }
                 }}

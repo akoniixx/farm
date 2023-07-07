@@ -3,6 +3,7 @@
 - upload multiple image
 - noti change condition
 - add new button to byPass
+-  resolve bug and Dropdown
 ## Feature [1.6.0] 2023-07-04
 - new main screen
 

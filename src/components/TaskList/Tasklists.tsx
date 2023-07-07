@@ -22,6 +22,7 @@ import ModalTaskDone from '../Modal/ModalTaskDone';
 const Tasklists: React.FC<any> = (props: any) => {
   const d = new Date(props.date);
   const onChangImgFinish = props.onChangImgFinish;
+  const onPressSetTaskId = props.onPressSetTaskId;
 
   d.setHours(d.getHours() - 3);
   const checkdate = new Date(d);
@@ -284,11 +285,12 @@ const Tasklists: React.FC<any> = (props: any) => {
             (props.status === 'WAIT_START' && checkdate >= today) ||
             statusDelay === 'WAIT_APPROVE'
           }
-          onPress={() =>
+          onPress={() => {
+            onPressSetTaskId(props.taskId);
             props.status === 'WAIT_START'
               ? props.setShowModalStartTask()
-              : props.setToggleModalUpload()
-          }
+              : props.setToggleModalUpload();
+          }}
           style={{
             width: normalize(props.status === 'WAIT_START' ? 155 : 127.5),
             height: normalize(49),
@@ -387,6 +389,7 @@ const Tasklists: React.FC<any> = (props: any) => {
         </View>
       </Modal>
       <ModalTaskDone
+        taskId={props.taskId}
         onShowReviewModal={onChangImgFinish}
         onClose={props.closeFinishModal}
         visible={props.toggleModalUpload}
