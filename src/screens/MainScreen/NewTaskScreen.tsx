@@ -46,7 +46,7 @@ interface Prop {
 
 const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   const [unsendTask, setUnsendtask] = useState([]);
-  const scrollOffsetY = props.scrollOffsetY
+  const scrollOffsetY = props.scrollOffsetY;
   const navigation = RootNavigation.navigate;
   const dronerStatus = props.dronerStatus;
   const {isOpenReceiveTask} = props;
@@ -201,8 +201,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
             </View>
           </View>
         ) : (
-          dronerStatus === 'ACTIVE' && <View>
-          </View>
+          dronerStatus === 'ACTIVE' && <View></View>
         )}
         {data.length == 0 && isOpenReceiveTask && dronerStatus === 'ACTIVE' && (
           <View
@@ -381,17 +380,19 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-              <Image source={
-                (Number(percentSuccess) === 50)?
-                image.inprogress50:(
-                  Number(percentSuccess) === 75?
-                  image.inprogress75:
-                  image.inprogress100
-                )
-              } style={{
-                width : normalize(50),
-                height : normalize(50)
-              }}/>
+                <Image
+                  source={
+                    Number(percentSuccess) === 50
+                      ? image.inprogress50
+                      : Number(percentSuccess) === 75
+                      ? image.inprogress75
+                      : image.inprogress100
+                  }
+                  style={{
+                    width: normalize(50),
+                    height: normalize(50),
+                  }}
+                />
                 <TouchableOpacity
                   onPress={() =>
                     navigation('MyProfileScreen', MyProfileScreen)
@@ -409,9 +410,12 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
             <FlatList
               keyExtractor={element => element.item.id}
               data={data}
-              onScroll={Animated.event([
-                { nativeEvent: { contentOffset: { y: scrollOffsetY } } }
-              ])}
+              onScroll={Animated.event(
+                [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
+                {
+                  useNativeDriver: false,
+                },
+              )}
               renderItem={({item}: any) => (
                 <NewTask
                   taskId={item.item.id}

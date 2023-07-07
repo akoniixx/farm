@@ -1,6 +1,5 @@
 import {StyleSheet, View, Image, Platform} from 'react-native';
 import React, {useState} from 'react';
-import Modal from '../Modal';
 import Text from '../../Text';
 import {colors, font, icons, image} from '../../../assets';
 import Dropdown from '../../Dropdown/Dropdown';
@@ -8,6 +7,7 @@ import ZoomableImage from '../../ZoomableImage/ZoomableImage';
 import AsyncButton from '../../Button/AsyncButton';
 import imagesLogoDrone from '../../../assets/imagesLogoDrone';
 import imagesControllerDrone from '../../../assets/imagesControllerDrone';
+import Modal from '../Modal';
 
 interface Props {
   visible: boolean;
@@ -79,6 +79,7 @@ export default function ModalImageExample({visible, onPressBack}: Props) {
             customStyleInput
             dropDownStyle={{
               position: 'absolute',
+              height: 400,
             }}
             placeholder="เลือกยี่ห้อโดรน"
             items={staticData}
@@ -118,8 +119,9 @@ export default function ModalImageExample({visible, onPressBack}: Props) {
             color: colors.darkOrange2,
             marginTop: 8,
             marginBottom: 16,
+            fontSize: 14,
           }}>
-          สามารถขยายภาพได้ด้วยการใช้ 2 นิ้วลากขยาย
+          สามารถขยายภาพได้ด้วยการใช้นิ้วขยาย
         </Text>
         <View style={styles.warningGray}>
           <Image
