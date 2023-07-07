@@ -1,3 +1,7 @@
+## Feature [1.6.2] 2023-07-07
+- check allow location
+- change choose location to search subdistrict
+- default address param to "-"
 
 ## Feature [1.6.1] 2023-09-20
 - upload multiple image

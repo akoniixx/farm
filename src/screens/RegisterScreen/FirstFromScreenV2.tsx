@@ -4,6 +4,7 @@ import {Avatar, normalize} from '@rneui/themed';
 import {colors, font, icons, image as img} from '../../assets';
 import {ProgressBarV2} from '../../components/ProgressBarV2';
 import Geolocation from 'react-native-geolocation-service';
+import RNExitApp from 'react-native-kill-app';
 import * as ImagePicker from 'react-native-image-picker';
 import {
   Image,
@@ -24,6 +25,9 @@ import {MainButton} from '../../components/Button/MainButton';
 import {Register} from '../../datasource/AuthDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Lottie from 'lottie-react-native';
+import {Linking} from 'react-native';
+import { responsiveHeigth, responsiveWidth } from '../../function/responsive';
+
 
 const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
   const tele = route.params.tele;
@@ -33,6 +37,7 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
     lastname: '',
   });
   const [image, setImage] = useState<any>(null);
+  const [allowLoca,setAllowLoca] = useState<boolean>(false);
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
       mediaType: 'photo',
@@ -187,12 +192,15 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                         }
                       })
                       .catch(err => console.log(err));
+                  },
+                  async err => {
+                    setLoading(false)
+                    setAllowLoca(true)
                   }
                 )
               }}
             />
           </View>
-        {/* </View> */}
         <Modal transparent={true} visible={loading}>
           <View
             style={{
@@ -223,7 +231,67 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
             </View>
           </View>
         </Modal>
-      {/* </View> */}
+        <Modal transparent={true} visible={allowLoca}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <View
+              style={{
+                backgroundColor: colors.white,
+                width : responsiveWidth(344),
+                paddingHorizontal : normalize(20),
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: normalize(8),
+                paddingVertical : normalize(20)
+              }}>
+                <Text style={{
+                  fontFamily : font.bold,
+                  fontSize : normalize(19)
+                }}>กรุณาเปิดการตั้งค่า
+                </Text>
+                <Text style={{
+                  fontFamily : font.bold,
+                  fontSize : normalize(19)
+                }}>
+                การเข้าถึงตำแหน่งหรือโลเคชั่น
+                </Text>
+                <Text style={{
+                  fontFamily : font.bold,
+                  fontSize : normalize(19)
+                }}>
+                ในโทรศัพท์
+                </Text>
+                <Text style={{
+                  fontFamily : font.light,
+                  fontSize : normalize(14),
+                  paddingTop : normalize(10)
+                }}>เพื่อเปิดการค้นหาเกษตรกรที่อยู่ใกล้</Text>
+                <Text style={{
+                  fontFamily : font.light,
+                  fontSize : normalize(14)
+                }}>พื้นที่ให้บริการของคุณ</Text>
+                <MainButton 
+                  style={{
+                    width : responsiveWidth(312),
+                    height : responsiveHeigth(53),
+                    marginTop : normalize(20)
+                  }}
+                  label='ตกลง'
+                  color={colors.orange}
+                  onPress={()=>{
+                    Linking.openSettings();
+                    setAllowLoca(false)
+                  }}
+                />
+            </View>
+          </View>
+        </Modal>
     </SafeAreaView>
     // </KeyboardAvoidingView>
   );
