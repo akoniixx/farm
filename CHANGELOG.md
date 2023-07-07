@@ -1,3 +1,6 @@
+## Feature [1.6.3] 2023-07-07
+- fix task multiple image
+- select task correctly
 ## Feature [1.6.2] 2023-07-07
 - check allow location
 - change choose location to search subdistrict

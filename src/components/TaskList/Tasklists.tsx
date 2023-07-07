@@ -20,6 +20,8 @@ import {mixpanel} from '../../../mixpanel';
 import ModalTaskDone from '../Modal/ModalTaskDone';
 
 const Tasklists: React.FC<any> = (props: any) => {
+  const [toggleModalUpload, setToggleModalUpload] = useState<boolean>(false);
+
   const d = new Date(props.date);
   const onChangImgFinish = props.onChangImgFinish;
   const onPressSetTaskId = props.onPressSetTaskId;
@@ -287,9 +289,12 @@ const Tasklists: React.FC<any> = (props: any) => {
           }
           onPress={() => {
             onPressSetTaskId(props.taskId);
-            props.status === 'WAIT_START'
-              ? props.setShowModalStartTask()
-              : props.setToggleModalUpload();
+            if (props.status === 'WAIT_START') {
+              props.setShowModalStartTask();
+            } else {
+              props.setToggleModalUpload();
+              setToggleModalUpload(true);
+            }
           }}
           style={{
             width: normalize(props.status === 'WAIT_START' ? 155 : 127.5),
@@ -391,8 +396,10 @@ const Tasklists: React.FC<any> = (props: any) => {
       <ModalTaskDone
         taskId={props.taskId}
         onShowReviewModal={onChangImgFinish}
-        onClose={props.closeFinishModal}
-        visible={props.toggleModalUpload}
+        onClose={() => {
+          setToggleModalUpload(false);
+        }}
+        visible={toggleModalUpload}
         onOpenModal={props.setToggleModalUpload}
       />
 

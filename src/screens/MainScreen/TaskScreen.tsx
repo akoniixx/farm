@@ -45,7 +45,6 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const [toggleModalStartTask, setToggleModalStartTask] =
     useState<boolean>(false);
 
-  const [toggleModalUpload, setToggleModalUpload] = useState<boolean>(false);
   const [toggleModalReview, setToggleModalReview] = useState<boolean>(false);
   const [toggleModalSuccess, setToggleModalSuccess] = useState<boolean>(false);
   const [imgUploaded, setImgUploaded] = useState<boolean>(false);
@@ -119,7 +118,6 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
 
   const openModalUpload = (name: string) => {
     setUpdateBy(name);
-    setToggleModalUpload(true);
   };
 
   const onFinishTask = () => {
@@ -169,17 +167,12 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
       setPercentSuccess(res.percentSuccess);
     });
   };
-  const closeFinishModal = () => {
-    setToggleModalUpload(false);
-    setFinishImg(null);
-  };
 
   const onPressSetTaskId = (id: string) => {
     setIdUpload(id);
   };
 
   const onChangImgFinish = (payloadFile: any) => {
-    setToggleModalUpload(false);
     setImageFile(payloadFile);
 
     setTimeout(() => setToggleModalReview(true), 500);
@@ -238,10 +231,8 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                   defaultRating={defaultRating}
                   starImgFilled={starImgFilled}
                   starImgCorner={starImgCorner}
-                  toggleModalUpload={toggleModalUpload}
                   imgUploaded={imgUploaded}
                   finishImg={finishImg}
-                  closeFinishModal={closeFinishModal}
                   onChangImgFinish={onChangImgFinish}
                   toggleModalReview={toggleModalReview}
                   setComment={setComment}
