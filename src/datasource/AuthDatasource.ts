@@ -477,12 +477,12 @@ export class Register {
         telephoneNo: telephoneNo,
         status: 'OPEN',
         address : {
-          address1 : "42",
-          address2 : "ถนนสุรวงศ์ ซอยสุรวงศ์",
-          provinceId: 10,
-          districtId: 1004,
-          subdistrictId: 10040500,
-          postcode: 10500,
+          address1 : "-",
+          address2 : "-",
+          provinceId: 0,
+          districtId: 0,
+          subdistrictId: 0,
+          postcode: "-",
         },
         percentSuccess : 25
       }).then(async response => {
@@ -501,12 +501,13 @@ export class Register {
           lastname: lastname,
           telephoneNo: telephoneNo,
           status: 'OPEN',
-          address: {
-            address1: '42 ถนนสุรวงศ์ ซอยสุรวงศ์',
-            provinceId: 10,
-            districtId: 1004,
-            subdistrictId: 10040500,
-            postcode: '10500',
+          address : {
+            address1 : "-",
+            address2 : "-",
+            provinceId: 0,
+            districtId: 0,
+            subdistrictId: 0,
+            postcode: "-",
           },
           percentSuccess: 25,
         })
@@ -519,7 +520,6 @@ export class Register {
     }
   }
   static async registerStep2V2(
-    locationName: string,
     lat: string,
     long: string,
     provinceId?: number,
@@ -538,7 +538,6 @@ export class Register {
           provinceId: provinceId,
           districtId: districtId,
           subdistrictId: subdistrictId,
-          locationName: locationName,
         },
       })
       .then(res => {

@@ -205,7 +205,7 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
                   setValue(null);
                   setValuetype(null);
                   setLoading(false);
-                  navigation.navigate('MyProfileScreen');
+                  navigation.goBack();
                 })
                 .catch(err => console.log(err));
             }}

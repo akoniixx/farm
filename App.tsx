@@ -86,16 +86,16 @@ const App = () => {
     });
 
     if (needUpdate.isNeeded) {
-      Alert.alert('มีการอัพเดทใหม่', undefined, [
-        {
-          text: 'อัพเดท',
-          onPress: async () => {
-            mixpanel.track('กดอัพเดทแอพ');
-            await Linking.openURL(isIOS ? storeUrl : playStoreUrl);
-            RNExitApp.exitApp();
-          },
-        },
-      ]);
+      // Alert.alert('มีการอัพเดทใหม่', undefined, [
+      //   {
+      //     text: 'อัพเดท',
+      //     onPress: async () => {
+      //       mixpanel.track('กดอัพเดทแอพ');
+      //       await Linking.openURL(isIOS ? storeUrl : playStoreUrl);
+      //       RNExitApp.exitApp();
+      //     },
+      //   },
+      // ]);
     }
   };
   useEffect(() => {
