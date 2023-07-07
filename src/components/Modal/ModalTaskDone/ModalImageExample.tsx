@@ -79,6 +79,7 @@ export default function ModalImageExample({visible, onPressBack}: Props) {
             customStyleInput
             dropDownStyle={{
               position: 'absolute',
+              height: 400,
             }}
             placeholder="เลือกยี่ห้อโดรน"
             items={staticData}
@@ -118,8 +119,9 @@ export default function ModalImageExample({visible, onPressBack}: Props) {
             color: colors.darkOrange2,
             marginTop: 8,
             marginBottom: 16,
+            fontSize: 14,
           }}>
-          สามารถขยายภาพได้ด้วยการใช้ 2 นิ้วลากขยาย
+          สามารถขยายภาพได้ด้วยการใช้นิ้วขยาย
         </Text>
         <View style={styles.warningGray}>
           <Image

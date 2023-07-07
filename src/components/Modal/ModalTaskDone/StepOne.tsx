@@ -22,7 +22,7 @@ export default function StepOne({
       style={{
         marginVertical: 16,
       }}>
-      {!imgController && (
+      {/* {!imgController && (
         <>
           <Text
             style={{
@@ -47,7 +47,7 @@ export default function StepOne({
             งานเสร็จสิ้นครั้งนี้จากแอปฯ หรือ Controller
           </Text>
         </>
-      )}
+      )} */}
 
       <View
         style={{

@@ -1,4 +1,10 @@
-import {View, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Platform,
+} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import * as ImagePicker from 'react-native-image-picker';
 import Text from '../../Text';
@@ -138,16 +144,16 @@ export default function ModalTaskDone({
   const styleButtonCondition =
     step === 0
       ? {
-          width: '45%',
+          width: '48%',
           backgroundColor: imgController ? colors.orange : colors.greyWhite,
           borderColor: imgController ? colors.orange : colors.disable,
         }
       : {
-          width: '45%',
+          width: '48%',
           backgroundColor: imgFertilizer ? colors.orange : colors.greyWhite,
           borderColor: imgFertilizer ? colors.orange : colors.disable,
         };
-  console.log('visible :>> ', visible);
+
   return (
     <>
       <Modal visible={visible}>
@@ -157,6 +163,7 @@ export default function ModalTaskDone({
             justifyContent: 'center',
             padding: 16,
             borderRadius: 12,
+            width: '100%',
           }}>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <Text
@@ -212,6 +219,7 @@ export default function ModalTaskDone({
                     }}>
                     <Text
                       style={{
+                        lineHeight: Platform.OS === 'android' ? 0 : 24,
                         fontFamily: font.semiBold,
                         fontSize: 18,
                         color: isActive ? colors.white : colors.grey3,
@@ -381,11 +389,10 @@ export default function ModalTaskDone({
               justifyContent: 'space-between',
               marginTop: normalize(20),
             }}>
-            <TouchableOpacity
-              style={[
-                styles.modalBtn,
-                {borderColor: colors.gray, width: '45%'},
-              ]}
+            <AsyncButton
+              type="secondary"
+              title={step === 0 ? 'ยกเลิก' : 'ย้อนกลับ'}
+              style={{width: '48%'}}
               onPress={() => {
                 if (step === 0) {
                   onClose();
@@ -394,17 +401,10 @@ export default function ModalTaskDone({
                 } else {
                   setStep(step - 1);
                 }
-              }}>
-              <Text
-                style={{
-                  fontFamily: font.bold,
-                  fontSize: 16,
-                  color: 'black',
-                }}>
-                {step === 0 ? 'ยกเลิก' : 'ย้อนกลับ'}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+              }}
+            />
+            <AsyncButton
+              title="ยืนยัน"
               style={[styles.modalBtn, styleButtonCondition]}
               onPress={() => {
                 if (imgController && step === 0) {
@@ -419,17 +419,8 @@ export default function ModalTaskDone({
                   });
                 }
               }}
-              disabled={step === 0 ? !imgController : !imgFertilizer}>
-              <Text
-                style={{
-                  fontFamily: font.bold,
-                  fontSize: 16,
-
-                  color: colors.white,
-                }}>
-                ยืนยัน
-              </Text>
-            </TouchableOpacity>
+              disabled={step === 0 ? !imgController : !imgFertilizer}
+            />
           </View>
         </View>
       </Modal>

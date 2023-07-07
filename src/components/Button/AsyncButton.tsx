@@ -22,6 +22,7 @@ interface Props extends TouchableOpacityProps {
   onPress?: () => Promise<void> | void;
   isLoading?: boolean;
   styleText?: TextStyle;
+  disabled?: boolean;
 }
 export default function AsyncButton({
   title,
@@ -41,7 +42,10 @@ export default function AsyncButton({
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[styles({noBorder})[type as keyof TypeButton], style]}
+      style={[
+        styles({noBorder, disabled: props.disabled})[type as keyof TypeButton],
+        style,
+      ]}
       {...props}>
       <View
         style={{
@@ -53,7 +57,7 @@ export default function AsyncButton({
 
         <Text
           style={[
-            styles({noBorder})[
+            styles({noBorder, disabled: props.disabled})[
               mappingText[
                 type as keyof typeof mappingText
               ] as keyof typeof styles
@@ -67,7 +71,7 @@ export default function AsyncButton({
   );
 }
 
-const styles = (props: {noBorder: boolean}) =>
+const styles = (props: {noBorder: boolean; disabled?: boolean}) =>
   StyleSheet.create({
     primary: {
       backgroundColor: colors.orange,
@@ -77,7 +81,7 @@ const styles = (props: {noBorder: boolean}) =>
       alignItems: 'center',
       flexDirection: 'row',
       borderRadius: 8,
-      shadowColor: '#F86820',
+      shadowColor: props.disabled ? '#fff' : '#F86820',
       shadowOffset: {
         width: 0,
         height: 4,

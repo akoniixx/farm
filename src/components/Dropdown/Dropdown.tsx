@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import {
   View,
-  Text,
   TouchableOpacity,
   Platform,
   Image,
@@ -10,11 +9,13 @@ import {
   TouchableOpacityProps,
   Animated,
   ViewStyle,
+  ScrollView,
 } from 'react-native';
 import React from 'react';
 import {colors, font, icons} from '../../assets';
 import DropDownPicker from 'react-native-dropdown-picker';
 import fonts from '../../assets/fonts';
+import Text from '../Text';
 
 interface ItemDropdown {
   label: string;
@@ -112,98 +113,152 @@ export default function Dropdown({
           </Animated.View>
         </TouchableOpacity>
       )}
-      <DropDownPicker
-        disabled={items.length === 0}
-        listMode="SCROLLVIEW"
-        scrollViewProps={{
-          nestedScrollEnabled: true,
-        }}
-        textStyle={{
-          fontFamily: font.medium,
-          fontSize: 16,
-        }}
-        zIndex={3000}
-        zIndexInverse={3000}
-        style={{
-          display: customStyleInput ? 'none' : 'flex',
-          borderWidth: 1,
-          borderColor: colors.grey3,
-          borderRadius: 5,
-          paddingHorizontal: 16,
-          minHeight: 56,
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          marginBottom: 16,
-          zIndex: 3001,
-        }}
-        placeholder={placeholder}
-        placeholderStyle={{
-          color: colors.grey2,
-          fontFamily: font.light,
-          fontSize: 16,
-        }}
-        containerStyle={{
-          zIndex: 3001,
-        }}
-        renderListItem={({label, value, ...rest}: any) => {
-          const {image} = rest.item as ItemDropdown;
 
-          return (
-            <TouchableOpacity
+      {customStyleInput ? (
+        <>
+          {open && (
+            <ScrollView
               style={{
-                minHeight: 40,
-                paddingHorizontal: 16,
-                paddingVertical: 16,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-              onPress={() => {
-                handlePress();
-                onChange({
-                  label,
-                  value,
-                });
+                backgroundColor: colors.white,
+                height: 200,
+                position: 'absolute',
+                borderRadius: 12,
+                width: '100%',
+                marginTop: 56,
+                borderWidth: 1,
+                borderColor: colors.grey3,
               }}>
-              {image && (
-                <Image
-                  source={image}
-                  style={{
-                    width: sizeImage,
-                    height: sizeImage,
-                    marginRight: 8,
-                  }}
-                />
-              )}
-              <Text style={{fontFamily: fonts.medium}}>{label}</Text>
-            </TouchableOpacity>
-          );
-        }}
-        open={open}
-        value={value}
-        items={items}
-        setOpen={setOpen}
-        setValue={onChange}
-        dropDownDirection="BOTTOM"
-        dropDownContainerStyle={
-          Platform.OS === 'ios'
-            ? {
-                borderColor: colors.disable,
-                zIndex: 3001,
+              {items.map((item, idx) => {
+                const {label, value, image} = item;
+                const isLast = idx === items.length - 1;
+                return (
+                  <TouchableOpacity
+                    style={{
+                      minHeight: 40,
+                      paddingHorizontal: 16,
+                      paddingVertical: 16,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: isLast ? 8 : 0,
+                    }}
+                    onPress={() => {
+                      handlePress();
+                      onChange({
+                        label,
+                        value,
+                      });
+                    }}>
+                    {image && (
+                      <Image
+                        source={image}
+                        style={{
+                          width: sizeImage,
+                          height: sizeImage,
+                          marginRight: 8,
+                        }}
+                      />
+                    )}
+                    <Text style={{fontFamily: fonts.medium}}>{label}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          )}
+        </>
+      ) : (
+        <DropDownPicker
+          disabled={items.length === 0}
+          listMode="SCROLLVIEW"
+          scrollViewProps={{
+            nestedScrollEnabled: true,
+          }}
+          textStyle={{
+            fontFamily: font.medium,
+            fontSize: 16,
+          }}
+          zIndex={3000}
+          zIndexInverse={3000}
+          style={{
+            display: customStyleInput ? 'none' : 'flex',
+            borderWidth: 1,
+            borderColor: colors.grey3,
+            borderRadius: 5,
+            paddingHorizontal: 16,
+            minHeight: 56,
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            marginBottom: 16,
+            zIndex: 3001,
+          }}
+          placeholder={placeholder}
+          placeholderStyle={{
+            color: colors.grey2,
+            fontFamily: font.light,
+            fontSize: 16,
+          }}
+          containerStyle={{
+            zIndex: 3001,
+          }}
+          renderListItem={({label, value, ...rest}: any) => {
+            const {image} = rest.item as ItemDropdown;
 
-                backgroundColor: colors.white,
-                ...dropDownStyle,
-              }
-            : {
-                position: 'relative',
-                top: 0,
-                borderColor: colors.disable,
-                zIndex: 3001,
+            return (
+              <TouchableOpacity
+                style={{
+                  minHeight: 40,
+                  paddingHorizontal: 16,
+                  paddingVertical: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+                onPress={() => {
+                  handlePress();
+                  onChange({
+                    label,
+                    value,
+                  });
+                }}>
+                {image && (
+                  <Image
+                    source={image}
+                    style={{
+                      width: sizeImage,
+                      height: sizeImage,
+                      marginRight: 8,
+                    }}
+                  />
+                )}
+                <Text style={{fontFamily: fonts.medium}}>{label}</Text>
+              </TouchableOpacity>
+            );
+          }}
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={onChange}
+          dropDownDirection="BOTTOM"
+          dropDownContainerStyle={
+            Platform.OS === 'ios'
+              ? {
+                  borderColor: colors.disable,
+                  zIndex: 3001,
 
-                backgroundColor: colors.white,
-                ...dropDownStyle,
-              }
-        }
-      />
+                  backgroundColor: colors.white,
+                  ...dropDownStyle,
+                }
+              : {
+                  position: 'relative',
+                  top: 0,
+                  borderColor: colors.disable,
+                  zIndex: 3001,
+
+                  backgroundColor: colors.white,
+                  ...dropDownStyle,
+                }
+          }
+        />
+      )}
     </>
   );
 }
