@@ -400,7 +400,9 @@ const Tasklists: React.FC<any> = (props: any) => {
           setToggleModalUpload(false);
         }}
         visible={toggleModalUpload}
-        onOpenModal={props.setToggleModalUpload}
+        onOpenModal={() => {
+          setToggleModalUpload(true);
+        }}
       />
 
       <Modal isVisible={toggleModalReview}>

@@ -174,7 +174,6 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
 
   const onChangImgFinish = (payloadFile: any) => {
     setImageFile(payloadFile);
-
     setTimeout(() => setToggleModalReview(true), 500);
   };
   const onCloseSuccessModal = () => {
@@ -189,9 +188,12 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
             keyExtractor={element => element.item.taskNo}
             data={data}
             extraData={data}
-            onScroll={Animated.event([
-              {nativeEvent: {contentOffset: {y: scrollOffsetY}}},
-            ])}
+            onScroll={Animated.event(
+              [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
+              {
+                useNativeDriver: false,
+              },
+            )}
             renderItem={({item}: any) => {
               return (
                 <Tasklists

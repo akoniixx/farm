@@ -9,6 +9,7 @@ import StepTwo from './StepTwo';
 import AsyncButton from '../../Button/AsyncButton';
 import ModalImageExample from './ModalImageExample';
 import ModalUploadImage from '../ModalUploadImage';
+import ReactNativeModal from 'react-native-modal';
 import Modal from '../Modal';
 
 interface Props {
@@ -56,15 +57,12 @@ export default function ModalTaskDone({
   const onAddImageController = async () => {
     const result = await ImagePicker.launchImageLibrary({
       mediaType: 'photo',
-      maxHeight: 1000,
-      maxWidth: 1000,
     });
-
     if (!result.didCancel) {
       const fileSize = result?.assets?.[0]?.fileSize || 0;
-      const isFileMoreThan5MB = fileSize > 5 * 1024 * 1024;
-      if (isFileMoreThan5MB) {
-        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 5 MB');
+      const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
+      if (isFileMoreThan20MB) {
+        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
         onOpenModal();
         setStep(() => {
           if (step === 0) {
@@ -72,10 +70,8 @@ export default function ModalTaskDone({
           }
           return 0;
         });
-
         return false;
       }
-
       if (step === 0) {
         setImgController(result);
         setStep(0);
@@ -85,7 +81,9 @@ export default function ModalTaskDone({
       }
       setError('');
       setShowModalSelectImage(false);
-      onOpenModal();
+      setTimeout(() => {
+        onOpenModal();
+      }, 500);
     }
   };
   const onTakeImageController = async () => {
@@ -96,9 +94,10 @@ export default function ModalTaskDone({
     });
     if (!result.didCancel) {
       const fileSize = result?.assets?.[0]?.fileSize || 0;
-      const isFileMoreThan5MB = fileSize > 5 * 1024 * 1024;
-      if (isFileMoreThan5MB) {
-        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 5 MB');
+      const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
+
+      if (isFileMoreThan20MB) {
+        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
         onOpenModal();
         setStep(() => {
           if (step === 0) {
@@ -148,6 +147,7 @@ export default function ModalTaskDone({
           backgroundColor: imgFertilizer ? colors.orange : colors.greyWhite,
           borderColor: imgFertilizer ? colors.orange : colors.disable,
         };
+  console.log('visible :>> ', visible);
   return (
     <>
       <Modal visible={visible}>

@@ -6,6 +6,7 @@ import {
   Dimensions,
   NativeScrollEvent,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
 import React from 'react';
 
