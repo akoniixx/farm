@@ -895,6 +895,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
         onOpenModal={() => {
           setTogleModalUpload(true);
         }}
+        taskId={data && data.id}
         onShowReviewModal={onShowReviewModal}
         visible={togleModalUpload}
         onClose={() => {

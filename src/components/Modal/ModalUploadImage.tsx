@@ -70,6 +70,32 @@ export default function ModalUploadImage({
           }}>
           {staticSelect.map((el, idx) => {
             const isLast = idx === staticSelect.length - 1;
+            if (isLast) {
+              return (
+                <TouchableOpacity
+                  onPress={el.onPress}
+                  style={{
+                    backgroundColor: 'white',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: 16,
+                    borderBottomColor: colors.disable,
+                    borderBottomWidth: isLast ? 0 : 1,
+                    width: '100%',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.bold,
+                      fontSize: 20,
+                      color: colors.orange,
+                    }}>
+                    {el.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }
+
             return (
               <TouchableOpacity
                 onPress={el.onPress}

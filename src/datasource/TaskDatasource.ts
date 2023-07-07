@@ -97,6 +97,7 @@ export class TaskDatasource {
 
   static async finishTask(payload: PayloadTask) {
     const data = new FormData();
+
     data.append('taskId', payload.taskId);
     data.append('reviewFarmerScore', payload.reviewFarmerScore);
     data.append('reviewFarmerComment', payload.reviewFarmerComment);
