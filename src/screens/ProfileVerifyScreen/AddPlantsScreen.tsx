@@ -218,7 +218,7 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
             Register.registerUpPlants(plant, Number(percentSuccess) + 25)
               .then(res => {
                 setLoading(false);
-                navigation.navigate('MyProfileScreen');
+                navigation.goBack()
               })
               .catch(err => {
                 console.log(err);
