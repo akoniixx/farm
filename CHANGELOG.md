@@ -1,3 +1,8 @@
+## Feature [1.6.4] 2023-07-10
+- fix bug google map in android
+- fix font overflow in android
+- fix modal theme dark text
+
 ## Feature [1.6.3] 2023-07-07
 - fix task multiple image
 - select task correctly
