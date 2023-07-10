@@ -180,6 +180,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
                 fontSize: 22,
                 textAlign: 'center',
                 paddingBottom: 2,
+                color : colors.fontBlack
               }}>
               ยินดีด้วย!
             </Text>
@@ -189,6 +190,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
                 fontSize: 22,
                 textAlign: 'center',
                 paddingBottom: 20,
+                color : colors.fontBlack
               }}>
               คุณทำโปรไฟล์เสร็จสมบูรณ์แล้ว
             </Text>
@@ -198,6 +200,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
                 fontSize: 18,
                 textAlign: 'center',
                 paddingBottom: 2,
+                color : colors.fontBlack
               }}>
               กรุณารอเจ้าหน้าที่ตรวจสอบเอกสารยืนยัน
             </Text>
@@ -207,6 +210,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
                 fontSize: 18,
                 textAlign: 'center',
                 paddingBottom: 20,
+                color : colors.fontBlack
               }}>
               บัญชีนักบินโดรนของคุณ เพื่อรับงานบินโดรน
             </Text>

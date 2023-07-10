@@ -390,12 +390,7 @@ const ServiceArea: React.FC<any> = ({navigation, route}) => {
                 <Pressable onPress={() => setEdit(true)}>
                   <View style={[styles.input, {marginVertical: normalize(20)}]}>
                     <Text style={styles.label}>ตำบล/ อำเภอ/ จังหวัด</Text>
-                    <TextInput
-                      value={searchResult}
-                      style={styles.inputvalue}
-                      editable={false}
-                      placeholderTextColor={colors.disable}
-                    />
+                    <Text style={styles.inputvalue}>{searchResult}</Text>
                   </View>
                 </Pressable>
                 <Text style={styles.inputvalue}>

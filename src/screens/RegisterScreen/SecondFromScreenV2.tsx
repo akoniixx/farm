@@ -72,7 +72,12 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
   });
 
   useEffect(()=>{
-    // getLocation()
+    setPosition({
+      latitude: route.params.latitude,
+      longitude: route.params.longitude,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    });
   },[])
 
   useEffect(() => {
@@ -465,19 +470,15 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
                       paddingLeft: normalize(10),
                       fontFamily: font.medium,
                       fontSize: normalize(16),
+                      color : colors.fontBlack
                     }}>
                     พื้นที่ให้บริการหลัก
                   </Text>
                 </View>
                 <Pressable onPress={() => setEdit(true)}>
-                  <View style={[styles.input, {marginVertical: normalize(20)}]}>
+                  <View style={[styles.input,{marginVertical : normalize(20)}]}>
                     <Text style={styles.label}>ตำบล/ อำเภอ/ จังหวัด</Text>
-                    <TextInput
-                      value={searchResult}
-                      style={styles.inputvalue}
-                      editable={false}
-                      placeholderTextColor={colors.disable}
-                    />
+                    <Text style={styles.inputvalue}>{searchResult}</Text>
                   </View>
                 </Pressable>
                 <Text style={styles.inputvalue}>
@@ -485,9 +486,8 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
                 </Text>
                 <View style={{position: 'relative'}}>
                   <MapView.Animated
-                    mapType={'satellite'}
-                    zoomEnabled={true}
                     minZoomLevel={14}
+                    mapType={'satellite'}
                     style={styles.map}
                     provider={PROVIDER_GOOGLE}
                     region={position}
@@ -539,124 +539,6 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
         </View>
     </SafeAreaView>
   );
-  // return (
-  //   <SafeAreaView style={stylesCentral.container}>
-  //     <CustomHeader
-  //       title="ลงทะเบียนนักบินโดรน"
-  //       showBackBtn
-  //       onPressBack={() => navigation.goBack()}
-  //     />
-  //     <View style={styles.first}>
-  //       <View style={styles.inner}>
-  //         <View style={styles.container}>
-  //           <View style={{marginBottom: normalize(10)}}>
-  //             <ProgressBarV2 index={2} />
-  //           </View>
-  //           <Text style={styles.label}>ขั้นตอนที่ 2 จาก 2</Text>
-  //           <Text style={styles.h1}>กรอกข้อมูลการบินโดรน</Text>
-  //           <ScrollView>
-  //             <Text style={[styles.h1, {marginTop: normalize(39)}]}>
-  //               พื้นที่ให้บริการหลัก
-  //             </Text>
-  //             <View
-  //               style={{
-  //                 borderColor: colors.gray,
-  //                 borderWidth: 1,
-  //                 padding: 10,
-  //                 borderRadius: 10,
-  //                 marginVertical: 20,
-  //                 flexDirection: 'row',
-  //                 alignItems: 'center',
-  //               }}>
-  //               <Image
-  //                 source={image.map}
-  //                 style={{
-  //                   width: normalize(24),
-  //                   height: normalize(22),
-  //                   marginRight: 10,
-  //                 }}
-  //               />
-  //               <Text
-  //                 style={{
-  //                   fontFamily: fonts.medium,
-  //                   fontSize: normalize(16),
-  //                   color: colors.gray,
-  //                 }}>
-  //                 {address}
-  //               </Text>
-  //             </View>
-  //             <View style={{flex: 1}}>
-  //               <MapView.Animated
-  //                 style={styles.map}
-  //                 provider={PROVIDER_GOOGLE}
-  //                 initialRegion={position}
-  //                 showsUserLocation={true}
-  //                 onRegionChangeComplete={region => setPosition(region)}
-  //                 showsMyLocationButton={true}
-  //               />
-  //               <View style={styles.markerFixed}>
-  //                 <Image style={styles.marker} source={image.marker} />
-  //               </View>
-  //             </View>
-  //           </ScrollView>
-  //           <View style={{backgroundColor: colors.white, zIndex: 0}}>
-  //             <MainButton
-  //               disable={!address}
-  //               color={colors.orange}
-  //               label="ถัดไป"
-  //               onPress={() => {
-                  // Register.registerStep2V2(
-  //                   address,
-  //                   lat,
-  //                   long,
-  //                   provinceId,
-  //                   districtId,
-  //                   subdistrictId,
-  //                 )
-  //                   .then(res =>
-  //                     navigation.navigate('SuccessScreen', {
-  //                       tele: route.params.telNumber,
-  //                     }),
-  //                   )
-  //                   .catch(err => console.log(err));
-  //               }}
-  //             />
-  //           </View>
-  //         </View>
-  //       </View>
-  //       <Modal transparent={true} visible={loading}>
-  //         <View
-  //           style={{
-  //             flex: 1,
-  //             backgroundColor: 'rgba(0,0,0,0.5)',
-  //             justifyContent: 'center',
-  //             alignItems: 'center',
-  //           }}>
-  //           <View
-  //             style={{
-  //               backgroundColor: colors.white,
-  //               width: normalize(50),
-  //               height: normalize(50),
-  //               display: 'flex',
-  //               justifyContent: 'center',
-  //               alignItems: 'center',
-  //               borderRadius: normalize(8),
-  //             }}>
-  //             <Lottie
-  //               source={image.loading}
-  //               autoPlay
-  //               loop
-  //               style={{
-  //                 width: normalize(50),
-  //                 height: normalize(50),
-  //               }}
-  //             />
-  //           </View>
-  //         </View>
-  //       </Modal>
-  //     </View>
-  //   </SafeAreaView>
-  // );
 };
 
 const styles = StyleSheet.create({
@@ -682,15 +564,13 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: font.light,
-    fontSize: normalize(14),
+    fontSize: normalize(12),
     color: colors.gray,
   },
   container: {
     flex: 1,
   },
   input: {
-    height: normalize(56),
-    marginVertical: 12,
     padding: 10,
     borderColor: colors.disable,
     borderWidth: 1,
