@@ -1,21 +1,20 @@
-import {
-  Dimensions,
-  ImageBackground,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, {useState} from 'react';
+import {TouchableOpacity, View} from 'react-native';
+import React from 'react';
 import Text from '../../Text';
 import {colors, font, image} from '../../../assets';
 import {Image} from 'react-native';
-import Modal from '../Modal';
 import * as ImagePicker from 'react-native-image-picker';
 
 interface Props {
+  error?: string;
   onPressToSeeDemo: () => void;
   imgController: ImagePicker.ImagePickerResponse | null;
 }
-export default function StepOne({onPressToSeeDemo, imgController}: Props) {
+export default function StepOne({
+  onPressToSeeDemo,
+  imgController,
+  error,
+}: Props) {
   // const [demoModal, setDemoModal] = useState(false);
 
   return (
@@ -23,7 +22,7 @@ export default function StepOne({onPressToSeeDemo, imgController}: Props) {
       style={{
         marginVertical: 16,
       }}>
-      {!imgController && (
+      {/* {!imgController && (
         <>
           <Text
             style={{
@@ -48,7 +47,7 @@ export default function StepOne({onPressToSeeDemo, imgController}: Props) {
             งานเสร็จสิ้นครั้งนี้จากแอปฯ หรือ Controller
           </Text>
         </>
-      )}
+      )} */}
 
       <View
         style={{
@@ -99,6 +98,23 @@ export default function StepOne({onPressToSeeDemo, imgController}: Props) {
           </TouchableOpacity>
         )}
       </View>
+      {error && (
+        <View
+          style={{
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 8,
+          }}>
+          <Text
+            style={{
+              color: colors.decreasePoint,
+              fontFamily: font.medium,
+            }}>
+            {error}
+          </Text>
+        </View>
+      )}
     </View>
   );
 }

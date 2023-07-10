@@ -20,8 +20,11 @@ import {mixpanel} from '../../../mixpanel';
 import ModalTaskDone from '../Modal/ModalTaskDone';
 
 const Tasklists: React.FC<any> = (props: any) => {
+  const [toggleModalUpload, setToggleModalUpload] = useState<boolean>(false);
+
   const d = new Date(props.date);
   const onChangImgFinish = props.onChangImgFinish;
+  const onPressSetTaskId = props.onPressSetTaskId;
 
   d.setHours(d.getHours() - 3);
   const checkdate = new Date(d);
@@ -284,11 +287,15 @@ const Tasklists: React.FC<any> = (props: any) => {
             (props.status === 'WAIT_START' && checkdate >= today) ||
             statusDelay === 'WAIT_APPROVE'
           }
-          onPress={() =>
-            props.status === 'WAIT_START'
-              ? props.setShowModalStartTask()
-              : props.setToggleModalUpload()
-          }
+          onPress={() => {
+            onPressSetTaskId(props.taskId);
+            if (props.status === 'WAIT_START') {
+              props.setShowModalStartTask();
+            } else {
+              props.setToggleModalUpload();
+              setToggleModalUpload(true);
+            }
+          }}
           style={{
             width: normalize(props.status === 'WAIT_START' ? 155 : 127.5),
             height: normalize(49),
@@ -387,10 +394,15 @@ const Tasklists: React.FC<any> = (props: any) => {
         </View>
       </Modal>
       <ModalTaskDone
+        taskId={props.taskId}
         onShowReviewModal={onChangImgFinish}
-        onClose={props.closeFinishModal}
-        visible={props.toggleModalUpload}
-        onOpenModal={props.setToggleModalUpload}
+        onClose={() => {
+          setToggleModalUpload(false);
+        }}
+        visible={toggleModalUpload}
+        onOpenModal={() => {
+          setToggleModalUpload(true);
+        }}
       />
 
       <Modal isVisible={toggleModalReview}>
