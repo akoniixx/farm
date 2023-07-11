@@ -37,6 +37,8 @@
 		D2D981DE0F334CA5987D66DB /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F1C865AEF1074351B752CE88 /* SimpleLineIcons.ttf */; };
 		DB0C1D99B0174AD2A12538DF /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 26E973754BE244C08A903311 /* Feather.ttf */; };
 		FF11CFA2DF534E158972B845 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F4087F42B2843228EE8D8D8 /* Octicons.ttf */; };
+		FF4534952A39885400E7DB64 /* receivetasksuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = FF4534942A39885300E7DB64 /* receivetasksuccess.wav */; };
+		FF4534972A398AA200E7DB64 /* iconkaset.wav in Resources */ = {isa = PBXBuildFile; fileRef = FF4534962A398AA200E7DB64 /* iconkaset.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +93,8 @@
 		F1C865AEF1074351B752CE88 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = ../src/assets/fonts/SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		F42BE3F7CD644E84B362FE49 /* Anuphan-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Anuphan-Bold.otf"; path = "../src/assets/fonts/Anuphan-Bold.otf"; sourceTree = "<group>"; };
 		F74FFD5E50E64D30A149CE0C /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = ../src/assets/fonts/Foundation.ttf; sourceTree = "<group>"; };
+		FF4534942A39885300E7DB64 /* receivetasksuccess.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = receivetasksuccess.wav; path = ../../../Downloads/receivetasksuccess.wav; sourceTree = "<group>"; };
+		FF4534962A398AA200E7DB64 /* iconkaset.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = iconkaset.wav; path = ../../../Downloads/iconkaset.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +197,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				FF4534962A398AA200E7DB64 /* iconkaset.wav */,
+				FF4534942A39885300E7DB64 /* receivetasksuccess.wav */,
 				60F1F01729266B63007549EB /* fonts */,
 				13B07FAE1A68108700A75B9A /* farmer */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -337,6 +343,8 @@
 				306A7BD0E8C74767B59CFA0D /* FontAwesome5_Regular.ttf in Resources */,
 				10279EFD61A64239982BF31F /* FontAwesome5_Solid.ttf in Resources */,
 				990F5E42EB1A4D3485349652 /* Fontisto.ttf in Resources */,
+				FF4534972A398AA200E7DB64 /* iconkaset.wav in Resources */,
+				FF4534952A39885400E7DB64 /* receivetasksuccess.wav in Resources */,
 				7249DA0B3AD847568EF7FF2F /* Foundation.ttf in Resources */,
 				2BC7B07EC9034DAAAB6366B2 /* Ionicons.ttf in Resources */,
 				6E53E75379834B1BA3A7D41E /* MaterialCommunityIcons.ttf in Resources */,
