@@ -2,8 +2,10 @@ import {
   Dimensions,
   FlatList,
   Image,
+  Modal,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
@@ -16,12 +18,17 @@ import CouponCard from '../../components/CouponCard/CouponCard';
 import { MainButton } from '../../components/Button/MainButton';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import SelectDronerCouponModal from '../../components/Modal/SelectDronerCoupon';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ProfileDatasource } from '../../datasource/ProfileDatasource';
+import VerifyStatus from '../../components/Modal/VerifyStatus';
 
 const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [data, setData] = useState<any[]>([]);
   const [modal, setModal] = useState<boolean>(false);
+  const [modalVerify, setModalVerify] = useState<boolean>(false);
+  const [status, setStatus] = useState();
   const getData = (page: number, take: number, used?: boolean) => {
     getMyCoupon(page, take, used).then(res => {
       setCount(res.count);
@@ -30,6 +37,7 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
   };
   useEffect(() => {
     getData(page, 5, true);
+    getProfile();
   }, []);
   const onScrollEnd = () => {
     let pageNow = page;
@@ -39,6 +47,17 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
         setPage(pageNow + 1);
         setData(newData);
       });
+    }
+  };
+  const getProfile = async () => {
+    const value = await AsyncStorage.getItem('token');
+    if (value) {
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      ProfileDatasource.getProfile(farmer_id!)
+        .then(async res => {
+          setStatus(res.status);
+        })
+        .catch(err => console.log(err));
     }
   };
   return (
@@ -147,9 +166,23 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
         <MainButton
           label="จ้างนักบินโดรน"
           color={colors.greenLight}
-          onPress={() => setModal(true)}
+          onPress={() =>
+            status !== 'ACTIVE' ? setModalVerify(true) : setModal(true)
+          }
         />
       </View>
+      <Modal animationType="fade" transparent={true} visible={modalVerify}>
+        <VerifyStatus
+          text={status}
+          show={modalVerify}
+          onClose={() => {
+            setModalVerify(false);
+          }}
+          onMainClick={() => {
+            setModalVerify(false);
+          }}
+        />
+      </Modal>
     </View>
   );
 };

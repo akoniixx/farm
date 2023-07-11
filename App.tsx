@@ -8,8 +8,9 @@ import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-toast-message';
 import { SheetProvider } from 'react-native-actions-sheet';
 import { toastConfig } from './src/config/toast-config';
-import { BackHandler, Platform } from 'react-native';
+import { Alert, BackHandler, Linking, Platform } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
+import VersionCheck from 'react-native-version-check';
 import 'moment/locale/th';
 import {
   firebaseInitialize,
@@ -23,7 +24,47 @@ import { AuthProvider } from './src/contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from './mixpanel';
 import { RecoilRoot } from 'recoil';
+import RNExitApp from 'react-native-kill-app';
+import storeVersion from 'react-native-store-version';
 const App = () => {
+  const checkVersion = async () => {
+    const isIOS = Platform.OS === 'ios';
+    const currentVersion = VersionCheck.getCurrentVersion();
+
+    const storeUrl = await VersionCheck.getAppStoreUrl({
+      appID: '1668317592',
+    });
+
+    const playStoreUrl = await VersionCheck.getPlayStoreUrl({
+      packageName: 'com.iconkaset.farmer',
+    });
+    const { remote } = await storeVersion({
+      version: currentVersion,
+      androidStoreURL: playStoreUrl,
+      iosStoreURL: storeUrl,
+      country: 'TH',
+    });
+
+    const needUpdate = await VersionCheck.needUpdate({
+      currentVersion,
+      latestVersion: remote,
+    });
+    if (needUpdate.isNeeded) {
+      Alert.alert('มีการอัพเดทใหม่', undefined, [
+        {
+          text: 'อัพเดท',
+          onPress: () => {
+            if (isIOS) {
+              Linking.openURL(storeUrl);
+            } else {
+              Linking.openURL(playStoreUrl);
+            }
+            RNExitApp.exitApp();
+          },
+        },
+      ]);
+    }
+  };
   useEffect(() => {
     mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
@@ -38,6 +79,9 @@ const App = () => {
     }
     requestUserPermission();
     getToken();
+    checkVersion();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getToken = async () => {

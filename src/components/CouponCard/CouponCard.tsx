@@ -52,26 +52,34 @@ const CouponCard: React.FC<CouponCardEntities> = ({
   expired,
 }) => {
   const [coupon, setCoupon] = useRecoilState(couponState);
+  const [disabledBtn, setDisabledBtn] = React.useState(false);
   const KeepCoupon = () => {
-    if (promotionType === 'ONLINE') {
-      keepCoupon(id)
-        .then(res => {
-          RootNavigation.navigate('MyCouponScreen', {});
-        })
-        .catch(err => console.log(err));
-    } else {
-      keepCoupon(id, couponOfflineCode![0].couponCode)
-        .then(res => {
-          if (!res.userMessage) {
+    try {
+      setDisabledBtn(true);
+      if (promotionType === 'ONLINE') {
+        keepCoupon(id)
+          .then(res => {
             RootNavigation.navigate('MyCouponScreen', {});
-          } else {
-            setCoupon({
-              ...coupon,
-              err: res.userMessage,
-            });
-          }
-        })
-        .catch(err => console.log(err));
+          })
+          .catch(err => console.log(err));
+      } else {
+        keepCoupon(id, couponOfflineCode![0].couponCode)
+          .then(res => {
+            if (!res.userMessage) {
+              RootNavigation.navigate('MyCouponScreen', {});
+            } else {
+              setCoupon({
+                ...coupon,
+                err: res.userMessage,
+              });
+            }
+          })
+          .catch(err => console.log(err));
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setDisabledBtn(false);
     }
   };
   return (
@@ -260,6 +268,7 @@ const CouponCard: React.FC<CouponCardEntities> = ({
           </View>
           {keepthis ? (
             <TouchableOpacity
+              disabled={disabledBtn}
               onPress={KeepCoupon}
               style={{
                 position: 'absolute',

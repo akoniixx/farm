@@ -14,6 +14,7 @@ export default {
   greenLemon: '#A0D644',
   yellow: '#FFE26F',
   yellowLight: '#FFF2E3',
+  redLight: '#FFF7F4',
   yellowBorder: '#EAC01A',
   yellowBg: '#FFE685',
   darkOrange: '#E85737',

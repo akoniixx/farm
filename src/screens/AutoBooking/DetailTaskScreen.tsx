@@ -287,7 +287,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
 
   const maximumPointCal = useMemo(() => {
     const netPrice = calPrice.priceBefore - calPrice.discountPromotion;
-
     const amounts = campaignDetail.amounts;
     const point = campaignDetail.point;
     const maxPoint =
@@ -1215,7 +1214,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                     fontFamily: fonts.AnuphanMedium,
                   }}>
                   {`${numberWithCommas(
-                    calPrice.netPrice.toString(),
+                    (calPrice.netPrice - couponInfo.discount).toString(),
                     true,
                   )} บาท`}
                 </Text>

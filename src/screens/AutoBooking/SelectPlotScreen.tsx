@@ -41,7 +41,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
 
   const isHaveWaitingApprove = useMemo(() => {
     if (plotList && plotList.length > 0) {
-      return (plotList || []).some((el: any) => el.status !== 'ACTIVE');
+      return (plotList || []).some((el: any) => el.status === 'PENDING');
     }
     return false;
   }, [plotList]);
@@ -73,7 +73,8 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
             plotDisable.find((item: any) => item.plotId === el.id);
           return { ...el, isHaveDroner: find ? find.isHaveDroner : true };
         });
-        setPlotList(newData);
+        const filterPlot = newData.filter((x: any) => x.status !== 'INACTIVE');
+        setPlotList(filterPlot);
         setTimeout(() => setLoading(false), 200);
       })
       .catch(err => console.log(err));

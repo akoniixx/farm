@@ -20,6 +20,7 @@ import { GuruKaset } from '../../datasource/GuruDatasource';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { mixpanel } from '../../../mixpanel';
 
 const AllGuruScreen: React.FC<any> = ({ navigation }) => {
   const isFocused = useIsFocused();
@@ -49,7 +50,10 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
       <CustomHeader
         title="กูรูเกษตร"
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('Tab back from All Guru Screen');
+          navigation.goBack();
+        }}
         image={() => (
           <TouchableOpacity
             onPress={async () => {
@@ -71,6 +75,7 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
                       onPress={async () => {
                         await AsyncStorage.setItem('guruId', `${item.id}`);
                         navigation.push('DetailGuruScreen');
+                        mixpanel.track('Tab detail guru ');
                       }}>
                       <CardGuru
                         key={index}

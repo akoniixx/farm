@@ -31,9 +31,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
   const [showModalCall, setShowModalCall] = useState(false);
-  const [currentTel, setCurrentTel] = useState('');
   const [farmerPlot, setFarmerPlot] = useState<any>([]);
-  const [statusPlot, setStatusPlot] = useState<any>();
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
@@ -79,19 +77,9 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
   };
-  const onPressMobileNumberClick = (number: any) => {
-    let phoneNumber = '';
-    if (Platform.OS === 'android') {
-      phoneNumber = `tel:${number}`;
-    } else {
-      phoneNumber = `telprompt:${number}`;
-    }
-
-    Linking.openURL(phoneNumber);
-  };
 
   const inventory = farmerPlot.map((x: any) => x.status);
-  const result = inventory.find((x: any) => x !== 'ACTIVE');
+  const result = inventory.find((x: any) => x === 'PENDING');
   return (
     <>
       <SafeAreaView style={stylesCentral.container}>
@@ -294,6 +282,8 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                               plantName={item.plantName}
                               status={item.status}
                               locationName={item.locationName}
+                              reason={item.reason}
+                              onClick={() => setShowModalCall(true)}
                             />
                           </TouchableOpacity>
                         ))}
@@ -302,7 +292,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                   </View>
                 </View>
               )}
-              <View style={{ height: 40 }}></View>
+              <View style={{ height: 40 }} />
             </ScrollView>
           </View>
         </View>

@@ -52,7 +52,15 @@ export type PredictionType = {
   terms: Object[];
   types: string[];
 };
-
+interface AreaServiceEntity {
+  area: string;
+  latitude: number;
+  longitude: number;
+  provinceId: number;
+  districtId: number;
+  subdistrictId: number;
+  locationName: string;
+}
 const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const [data, setData] = useState<any>();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -84,6 +92,9 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const mapSheet = useRef<any>();
   const plotArea = useRef<any>();
   const [plotAreas, setPlotAreas] = useState<any>([]);
+  const [page, setPage] = useState<number>(0);
+  const [dataStore, setDataStore] = useState<AreaServiceEntity[]>([]);
+  const [dataRender, setDataRender] = useState<AreaServiceEntity[]>([]);
   const [search, setSearch] = useState<any>({
     term: '',
     fetchPredictions: false,
@@ -123,7 +134,6 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
 
   useEffect(() => {
     getLocation();
-    fetchLocation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -276,45 +286,53 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
       console.log(e);
     }
   };
-  const fetchLocation = async (text?: string) => {
-    await QueryLocation.getSubdistrictIdCreateNewPlot().then(res => {
-      setLocation(res);
+  useEffect(() => {
+    QueryLocation.getSubdistrict(0, '').then(res => {
+      let all = res.map((item: any) => {
+        return {
+          area: `${item.subdistrictName}/${item.districtName}/${item.provinceName}`,
+          latitude: item.lat,
+          longitude: item.long,
+          provinceId: item.provinceId,
+          districtId: item.districtId,
+          subdistrictId: item.subdistrictId,
+        };
+      });
+      setLocation(all);
     });
-  };
+  }, []);
 
   useEffect(() => {
-    const filterBySearchText = () => {
-      if (!!debounceValue && location) {
-        const words: {
-          districtName: string;
-          provinceName: string;
-          subdistrictName: string;
-        }[] = location;
-        const result = words
-          .filter(word => {
-            return (
-              word.districtName.includes(debounceValue) ||
-              word.subdistrictName.includes(debounceValue) ||
-              word.provinceName.includes(debounceValue)
-            );
-          })
-          .slice(0, 10);
-        setPlotAreas(result);
+    setPage(0);
+    let filter = location.filter(str => str.area.includes(searchValue));
+    let arr = [];
+    for (let i = 0; i < 10; i++) {
+      if (!!filter[i]) {
+        arr.push(filter[i]);
       }
-    };
-    filterBySearchText();
-  }, [debounceValue, location]);
+    }
+    setDataStore(filter);
+    setDataRender(arr);
+  }, [searchValue]);
+
+  useEffect(() => {
+    let arr = [];
+    let skip = dataStore.length;
+    for (
+      let i = 10 * page;
+      i < (10 + 10 * page > skip ? skip : 10 + 10 * page);
+      i++
+    ) {
+      arr.push(dataStore[i]);
+    }
+    let newarr = dataRender.concat(arr);
+    setDataRender(newarr);
+  }, [page]);
 
   const searchPlotArea = (value: string) => {
     setSearchValue(value);
   };
-  const deletePlot = (value: any) => {
-    let someArray = plotData;
-    someArray = someArray.filter((x: any) => x != value);
-    setplotData(someArray);
-    setplotDataUI(someArray);
-    deTailPlot.current.hide();
-  };
+
   return (
     <>
       <SafeAreaView style={[stylesCentral.container]}>
@@ -464,11 +482,13 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                           fontFamily: font.SarabunLight,
                           color: colors.fontGrey,
                         }}>
-                        {selectPlot.subdistrictName +
-                          '/' +
-                          selectPlot.districtName +
-                          '/' +
-                          selectPlot.provinceName}
+                        {selectPlot.area !== undefined
+                          ? selectPlot.area
+                          : selectPlot.subdistrictName +
+                            '/' +
+                            selectPlot.districtName +
+                            '/' +
+                            selectPlot.provinceName}
                       </Text>
                     )}
                   </Text>
@@ -575,7 +595,8 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
               <View
                 style={{
                   height: normalize(10),
-                }}></View>
+                }}
+              />
             </ScrollView>
             <View
               style={{
@@ -608,25 +629,48 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 }
                 color={colors.greenLight}
                 onPress={() => {
-                  setLoading(true);
-                  PlotDatasource.updateFarmerPlot(
-                    plotName,
-                    raiAmount,
-                    landmark,
-                    plantName,
-                    position.latitude,
-                    position.longitude,
-                    search.term,
-                    selectPlot.subdistrictId,
-                  )
-                    .then(res => {
-                      setLoading(false);
-                      navigation.navigate('AllPlotScreen');
-                    })
-                    .catch(err => {
-                      setLoading(false);
-                      console.log(err);
-                    });
+                  if (data.status === 'REJECTED') {
+                    setLoading(true);
+                    PlotDatasource.updateFarmerPlot(
+                      plotName,
+                      raiAmount,
+                      landmark,
+                      plantName,
+                      position.latitude,
+                      position.longitude,
+                      search.term,
+                      selectPlot.subdistrictId,
+                      'PENDING',
+                    )
+                      .then(res => {
+                        setLoading(false);
+                        navigation.navigate('AllPlotScreen');
+                      })
+                      .catch(err => {
+                        setLoading(false);
+                        console.log(err);
+                      });
+                  } else {
+                    setLoading(true);
+                    PlotDatasource.updateFarmerPlot(
+                      plotName,
+                      raiAmount,
+                      landmark,
+                      plantName,
+                      position.latitude,
+                      position.longitude,
+                      search.term,
+                      selectPlot.subdistrictId,
+                    )
+                      .then(res => {
+                        setLoading(false);
+                        navigation.navigate('AllPlotScreen');
+                      })
+                      .catch(err => {
+                        setLoading(false);
+                        console.log(err);
+                      });
+                  }
                 }}
               />
             </View>
@@ -770,19 +814,18 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   </TouchableOpacity>
                 ) : null}
               </View>
-              <ScrollView>
-                {plotAreas !== undefined &&
-                  plotAreas.map((v: any, i: any) => (
+              <ScrollView
+                onScrollEndDrag={() => {
+                  if (dataStore.length > dataRender.length) {
+                    setPage(page + 1);
+                  }
+                }}>
+                {dataRender !== undefined &&
+                  dataRender.map((v: any, i: any) => (
                     <TouchableOpacity>
                       <PlantSelect
                         key={i}
-                        label={
-                          v.subdistrictName +
-                          '/' +
-                          v.districtName +
-                          '/' +
-                          v.provinceName
-                        }
+                        label={v.area}
                         id={v}
                         onPress={() => {
                           selectPlotArea(v);

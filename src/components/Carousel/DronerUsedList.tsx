@@ -46,7 +46,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
   callBack,
 }) => {
   return (
-    <View style={{ paddingHorizontal: 5 }}>
+    <View style={{ paddingHorizontal: 8 }}>
       <View style={[styles.cards]}>
         <ImageBackground
           borderTopLeftRadius={10}

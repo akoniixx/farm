@@ -61,6 +61,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [showGetPoint, setShowGetPoint] = useState<boolean>(false);
   const [taskPointDetail, setTaskPointDetail] = useState<Campaign | null>(null);
+  const [disableReview, setDisableReview] = useState<boolean>(true);
   const starImgFilled = icons.starfill;
   const starImgCorner = icons.starCorner;
 
@@ -76,6 +77,13 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
         return 'กลับหน้าหลัก';
     }
   };
+
+  useEffect(() => {
+    if (pilotEtiquette !== 0 && punctuality !== 0 && sprayExpertise !== 0) {
+      setDisableReview(false);
+    }
+  }, [pilotEtiquette, punctuality, sprayExpertise]);
+
   const getReceivePoint = async () => {
     const result: Campaign[] = await MyJobDatasource.getReceivePoint(
       task.task_id,
@@ -88,6 +96,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
     }
   };
   const submitReview = () => {
+    setDisableReview(true);
     setLoading(true);
     MyJobDatasource.submitReview(
       task.task_id,
@@ -142,7 +151,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
       isWaitReview,
     };
   }, [task.status]);
-  console.log(JSON.stringify(task, null, 2));
+
   return (
     <View style={{ flex: 1 }}>
       <CustomHeader
@@ -816,16 +825,16 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      disabled={checkReview()}
+                      disabled={disableReview}
                       style={{
                         justifyContent: 'center',
                         alignItems: 'center',
-                        borderColor: checkReview() ? '#D9DCDF' : '#2EC46D',
+                        borderColor: disableReview ? '#D9DCDF' : '#2EC46D',
                         borderWidth: 0.5,
                         width: '45%',
                         borderRadius: 8,
                         height: normalize(54),
-                        backgroundColor: checkReview() ? '#D9DCDF' : '#2EC46D',
+                        backgroundColor: disableReview ? '#D9DCDF' : '#2EC46D',
                       }}
                       onPress={submitReview}>
                       <Text

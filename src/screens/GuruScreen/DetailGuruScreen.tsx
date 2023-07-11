@@ -20,6 +20,7 @@ import { momentExtend } from '../../utils/moment-buddha-year';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import image from '../../assets/images/image';
+import { mixpanel } from '../../../mixpanel';
 
 const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
   const isFocused = useIsFocused();
@@ -52,7 +53,13 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ backgroundColor: colors.white, flex: 1 }}>
-      <CustomHeader showBackBtn onPressBack={() => navigation.goBack()} />
+      <CustomHeader
+        showBackBtn
+        onPressBack={() => {
+          mixpanel.track('Tab back from Detail Guru Screen');
+          navigation.goBack();
+        }}
+      />
       {data != undefined ? (
         <ScrollView>
           <View>
