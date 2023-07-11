@@ -63,17 +63,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const [campaignImage, setCampaignImage] = useState<string>('');
   const [showCampaign, setShowCampaign] = useState<'flex' | 'none'>('flex');
 
-  const H_MAX_HEIGHT = 280;
-  const H_MIN_HEIGHT = 60;
-  const H_SCROLL_DISTANCE = H_MAX_HEIGHT - H_MIN_HEIGHT;
-
-  const scrollOffsetY = useRef(new Animated.Value(0)).current;
-  const headerScrollHeight = scrollOffsetY.interpolate({
-    inputRange: [0, H_SCROLL_DISTANCE],
-    outputRange: [H_MAX_HEIGHT, H_MIN_HEIGHT],
-    extrapolate: 'clamp',
-  });
-
+  
   useFocusEffect(
     React.useCallback(() => {
       getProfile();
@@ -255,14 +245,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
       <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
         <View style={{flex: 1, backgroundColor: 'white'}}>
-          <Animated.View
-            style={{
-              height: headerScrollHeight,
-              width: '100%',
-              overflow: 'hidden',
-              zIndex: 999,
-              backgroundColor: 'white',
-            }}>
+         
             <View>
               <View style={styles.headCard}>
                 <View>
@@ -561,12 +544,12 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 </View>
               ) : null}
             </View>
-          </Animated.View>
+         
 
           <TaskTapNavigator
             isOpenReceiveTask={profile.isOpenReceiveTask}
             dronerStatus={profile.status}
-            scrollOffsetY={scrollOffsetY}
+           
           />
         </View>
       </View>

@@ -31,12 +31,10 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 
 interface Prop {
   dronerStatus: string;
-  scrollOffsetY: Animated.Value;
 }
 
 const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const dronerStatus = props.dronerStatus;
-  const scrollOffsetY = props.scrollOffsetY;
   const navigation = RootNavigation.navigate;
   const [error, setError] = useState<string>('');
   const [data, setData] = useState<any>([]);
@@ -188,12 +186,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
             keyExtractor={element => element.item.taskNo}
             data={data}
             extraData={data}
-            onScroll={Animated.event(
-              [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
-              {
-                useNativeDriver: false,
-              },
-            )}
+           
             renderItem={({item}: any) => {
               return (
                 <Tasklists
