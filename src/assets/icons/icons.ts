@@ -83,4 +83,5 @@ export default {
   imageStorage: require('./imageStorage.png'),
   cameraGray: require('./cameraGray.png'),
   arrowDropdown: require('./arrowDropdown.png'),
+  checkWhite: require('./checkWhite.png'),
 };

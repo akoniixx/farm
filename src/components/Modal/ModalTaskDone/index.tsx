@@ -11,6 +11,7 @@ import ModalImageExample from './ModalImageExample';
 import ModalUploadImage from '../ModalUploadImage';
 
 import Modal from '../Modal';
+import {PhotoFile} from 'react-native-vision-camera';
 
 interface Props {
   visible: boolean;
@@ -92,7 +93,7 @@ export default function ModalTaskDone({
       maxHeight: 1000,
       maxWidth: 1000,
       cameraType: 'back',
-      quality: Platform.OS === 'ios' ? 1 : 0.8,
+      quality: 0.8,
     });
     if (!result.didCancel) {
       const fileSize = result?.assets?.[0]?.fileSize || 0;
@@ -123,6 +124,35 @@ export default function ModalTaskDone({
       onOpenModal();
     }
   };
+
+  const onFinishedTakePhoto = useCallback(
+    async (v: any) => {
+      const isFileMoreThan20MB = v.fileSize > 20 * 1024 * 1024;
+      if (isFileMoreThan20MB) {
+        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
+        onOpenModal();
+        setStep(() => {
+          if (step === 0) {
+            return 1;
+          }
+          return 0;
+        });
+        return false;
+      }
+
+      if (step === 0) {
+        setImgController(v);
+        setStep(0);
+      } else {
+        setImgFertilizer(v);
+        setStep(1);
+      }
+      setError('');
+      setShowModalSelectImage(false);
+      onOpenModal();
+    },
+    [onOpenModal, step],
+  );
 
   const RenderStep = useMemo(() => {
     if (step === 0) {
@@ -215,7 +245,7 @@ export default function ModalTaskDone({
                     }}>
                     <Text
                       style={{
-                        lineHeight: Platform.OS === 'android' ? 20 : 24,
+                        lineHeight: Platform.OS === 'android' ? 24 : 24,
                         fontFamily: font.semiBold,
                         fontSize: 18,
                         textAlign: 'center',
@@ -431,6 +461,7 @@ export default function ModalTaskDone({
         }}
       />
       <ModalUploadImage
+        onFinishedTakePhoto={onFinishedTakePhoto}
         onCancel={() => {
           setShowModalSelectImage(false);
           onOpenModal();

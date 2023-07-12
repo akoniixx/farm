@@ -6,18 +6,22 @@ import {
   Platform,
   StyleSheet,
   Alert,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import Modal from './Modal';
 import {colors, font, icons} from '../../assets';
 import Text from '../Text';
-import {Camera, useCameraDevices} from 'react-native-vision-camera';
+import {Camera, PhotoFile, useCameraDevices} from 'react-native-vision-camera';
+import {navigate} from '../../navigations/RootNavigation';
+import {Asset} from 'react-native-image-picker';
 
 interface Props {
   visible: boolean;
   onCancel: () => void;
   onPressLibrary: () => void;
   onPressCamera: () => void;
+  onFinishedTakePhoto: (v: any) => void;
 }
 
 export default function ModalUploadImage({
@@ -25,29 +29,61 @@ export default function ModalUploadImage({
   onCancel,
   onPressLibrary,
   onPressCamera,
+  onFinishedTakePhoto,
 }: Props) {
-  const cameraRef = useRef<Camera>(null);
-  const [isCamera, setIsCamera] = React.useState(false);
-  const devices = useCameraDevices();
-  const device = devices.back;
-  console.log('devices', JSON.stringify(devices, null, 2));
-  console.log('show', isCamera);
+  const fetchImage = async (uri: string) => {
+    const imageResponse = await fetch(uri);
+    const imageBlob = await imageResponse.blob();
 
+    return imageBlob;
+  };
+
+  // const blobToBase64 = (blob: any): Promise<string> => {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.onerror = reject;
+  //     reader.onload = () => {
+  //       resolve(String(reader.result));
+  //     };
+  //     reader.readAsDataURL(blob);
+  //   });
+  // };
+
+  const onResultBack = async (value: PhotoFile) => {
+    const blob: any = await fetchImage('file://' + value.path);
+    const {
+      _data: {name: fileName, type, size},
+    } = blob;
+    onFinishedTakePhoto({
+      assets: [
+        {
+          uri: 'file://' + value.path,
+          fileName,
+          type,
+          fileSize: size,
+        },
+      ],
+    });
+    onCancel();
+  };
   const onOpenCamera = async () => {
-    setIsCamera(true);
-
     if (Platform.OS === 'android') {
       const alreadyHasPermission = await Camera.getCameraPermissionStatus();
       if (alreadyHasPermission === 'authorized') {
-        setIsCamera(true);
+        navigate('CameraScreen', {
+          onFinished: onResultBack,
+          onCancel: onCancel,
+        });
         return;
       }
       const requested = await Camera.requestCameraPermission();
       if (requested === 'authorized') {
-        setIsCamera(true);
+        navigate('CameraScreen', {
+          onFinished: onResultBack,
+          onCancel: onCancel,
+        });
       } else {
-        onCancel();
-        Alert.alert('ไม่สามารถเข้าถึงกล้องได้');
+        await Linking.openSettings();
       }
     }
   };
@@ -55,8 +91,7 @@ export default function ModalUploadImage({
     {
       label: 'ถ่ายภาพ',
       onPress: () => {
-        onOpenCamera();
-        // onPressCamera();
+        Platform.OS === 'android' ? onOpenCamera() : onPressCamera();
       },
       icon: icons.cameraGray,
     },
@@ -150,15 +185,6 @@ export default function ModalUploadImage({
           })}
         </View>
       </Modal>
-      {device && devices?.back ? (
-        <Camera
-          ref={cameraRef}
-          style={StyleSheet.absoluteFill}
-          device={device}
-          photo={true}
-          isActive={true}
-        />
-      ) : null}
     </View>
   );
 }
