@@ -1,10 +1,4 @@
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  Platform,
-} from 'react-native';
+import {View, StyleSheet, Image, Platform} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import * as ImagePicker from 'react-native-image-picker';
 import Text from '../../Text';
@@ -15,7 +9,7 @@ import StepTwo from './StepTwo';
 import AsyncButton from '../../Button/AsyncButton';
 import ModalImageExample from './ModalImageExample';
 import ModalUploadImage from '../ModalUploadImage';
-import ReactNativeModal from 'react-native-modal';
+
 import Modal from '../Modal';
 
 interface Props {
@@ -97,6 +91,8 @@ export default function ModalTaskDone({
       mediaType: 'photo',
       maxHeight: 1000,
       maxWidth: 1000,
+      cameraType: 'back',
+      quality: Platform.OS === 'ios' ? 1 : 0.8,
     });
     if (!result.didCancel) {
       const fileSize = result?.assets?.[0]?.fileSize || 0;
