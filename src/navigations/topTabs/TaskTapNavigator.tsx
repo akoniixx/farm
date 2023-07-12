@@ -32,7 +32,7 @@ const renderTabBar = (props: any) => (
 interface Prop {
   isOpenReceiveTask: boolean;
   dronerStatus: string;
-  scrollOffsetY: Animated.Value
+ 
 }
 
 const TaskTapNavigator: React.FC<Prop> = (props: Prop) => {
@@ -46,14 +46,14 @@ const TaskTapNavigator: React.FC<Prop> = (props: Prop) => {
     switch (route.key) {
       case 'task':
         mixpanel.track('tab inprogress task');
-        return <TaskScreen dronerStatus={props.dronerStatus} scrollOffsetY={props.scrollOffsetY}/>;
+        return <TaskScreen dronerStatus={props.dronerStatus} />;
       case 'newTask':
         mixpanel.track('tab new task');
         return (
           <NewTaskScreen
             isOpenReceiveTask={props.isOpenReceiveTask}
             dronerStatus={props.dronerStatus}
-            scrollOffsetY={props.scrollOffsetY}
+           
           />
         );
       default:

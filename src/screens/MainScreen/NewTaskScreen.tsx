@@ -41,12 +41,11 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 interface Prop {
   isOpenReceiveTask: boolean;
   dronerStatus: string;
-  scrollOffsetY: Animated.Value;
+ 
 }
 
 const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   const [unsendTask, setUnsendtask] = useState([]);
-  const scrollOffsetY = props.scrollOffsetY;
   const navigation = RootNavigation.navigate;
   const dronerStatus = props.dronerStatus;
   const {isOpenReceiveTask} = props;
@@ -410,12 +409,6 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
             <FlatList
               keyExtractor={element => element.item.id}
               data={data}
-              onScroll={Animated.event(
-                [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
-                {
-                  useNativeDriver: false,
-                },
-              )}
               renderItem={({item}: any) => (
                 <NewTask
                   taskId={item.item.id}
