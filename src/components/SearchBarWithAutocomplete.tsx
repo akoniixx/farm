@@ -208,7 +208,7 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
             {
               height: 60,
               justifyContent: 'center',
-              lineHeight: 19,
+              lineHeight: 25,
               fontSize: 20,
               flex: 1,
               width: '100%',

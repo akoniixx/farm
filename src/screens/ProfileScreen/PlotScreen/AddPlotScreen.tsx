@@ -482,8 +482,9 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   <Text
                     style={{
                       fontFamily: fonts.AnuphanMedium,
-                      fontSize: normalize(12),
+                      fontSize: normalize(20),
                       color: colors.gray,
+                      lineHeight: 35,
                     }}>
                     {!selectPlot ? (
                       <Text
@@ -528,6 +529,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       fontFamily: fonts.AnuphanMedium,
                       fontSize: normalize(20),
                       color: colors.gray,
+                      lineHeight: 35,
                     }}>
                     {!search.term ? (
                       <Text
@@ -804,7 +806,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       marginLeft: 5,
                       height: 60,
                       justifyContent: 'center',
-                      lineHeight: 19,
+                      lineHeight: 25,
                       fontSize: 19,
                       flex: 1,
                       width: '100%',

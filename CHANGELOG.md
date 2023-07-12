@@ -1,3 +1,7 @@
+## Fix [v1.4.10] 2023-07-12
+
+- fix style add plot screen
+
 ## Fix [v1.4.9] 2023-07-06
 
 - fix search plot area
