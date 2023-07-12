@@ -21,14 +21,14 @@ const staticData = [
     image: imagesLogoDrone.DJILogo,
   },
   {
-    label: 'Air Fast Drone',
-    value: 'airFastDrone',
-    image: imagesLogoDrone.airFastDroneLogo,
-  },
-  {
     label: 'Bug Away',
     value: 'bugAway',
     image: imagesLogoDrone.bugAwayLogo,
+  },
+  {
+    label: 'Air Fast Drone',
+    value: 'airFastDrone',
+    image: imagesLogoDrone.airFastDroneLogo,
   },
 ];
 const mappingImage = {

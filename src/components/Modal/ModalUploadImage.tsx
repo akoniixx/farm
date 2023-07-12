@@ -4,11 +4,14 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
   Platform,
+  StyleSheet,
+  Alert,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import Modal from './Modal';
 import {colors, font, icons} from '../../assets';
 import Text from '../Text';
+import {Camera, useCameraDevices} from 'react-native-vision-camera';
 
 interface Props {
   visible: boolean;
@@ -23,21 +26,37 @@ export default function ModalUploadImage({
   onPressLibrary,
   onPressCamera,
 }: Props) {
-  useEffect(() => {
-    const requestPermission = async () => {
-      const result = await PermissionsAndroid.request(
-        'android.permission.CAMERA',
-      );
-    };
+  const cameraRef = useRef<Camera>(null);
+  const [isCamera, setIsCamera] = React.useState(false);
+  const devices = useCameraDevices();
+  const device = devices.back;
+  console.log('devices', JSON.stringify(devices, null, 2));
+  console.log('show', isCamera);
+
+  const onOpenCamera = async () => {
+    setIsCamera(true);
+
     if (Platform.OS === 'android') {
-      requestPermission();
+      const alreadyHasPermission = await Camera.getCameraPermissionStatus();
+      if (alreadyHasPermission === 'authorized') {
+        setIsCamera(true);
+        return;
+      }
+      const requested = await Camera.requestCameraPermission();
+      if (requested === 'authorized') {
+        setIsCamera(true);
+      } else {
+        onCancel();
+        Alert.alert('ไม่สามารถเข้าถึงกล้องได้');
+      }
     }
-  }, []);
+  };
   const staticSelect = [
     {
       label: 'ถ่ายภาพ',
       onPress: () => {
-        onPressCamera();
+        onOpenCamera();
+        // onPressCamera();
       },
       icon: icons.cameraGray,
     },
@@ -55,6 +74,7 @@ export default function ModalUploadImage({
       },
     },
   ];
+
   return (
     <View>
       <Modal visible={visible}>
@@ -130,6 +150,15 @@ export default function ModalUploadImage({
           })}
         </View>
       </Modal>
+      {device && devices?.back ? (
+        <Camera
+          ref={cameraRef}
+          style={StyleSheet.absoluteFill}
+          device={device}
+          photo={true}
+          isActive={true}
+        />
+      ) : null}
     </View>
   );
 }

@@ -215,9 +215,11 @@ export default function ModalTaskDone({
                     }}>
                     <Text
                       style={{
-                        lineHeight: Platform.OS === 'android' ? 0 : 24,
+                        lineHeight: Platform.OS === 'android' ? 20 : 24,
                         fontFamily: font.semiBold,
                         fontSize: 18,
+                        textAlign: 'center',
+                        textAlignVertical: 'center',
                         color: isActive ? colors.white : colors.grey3,
                       }}>
                       {index + 1}
