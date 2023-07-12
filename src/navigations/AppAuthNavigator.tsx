@@ -15,6 +15,7 @@ import AddIDcardScreen from '../screens/RegisterScreen/AddIDcardScreen';
 import SuccessRegister from '../screens/RegisterScreen/SuccessRegister';
 import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 import SecondFormScreenV2 from '../screens/RegisterScreen/SecondFromScreenV2';
+import CameraScreen from '../screens/CameraScreen';
 
 const Stack = createStackNavigator();
 
@@ -36,6 +37,7 @@ const AppAuthNavigator: React.FC = () => {
       <Stack.Screen name="AddIDCardScreen" component={AddIDcardScreen} />
       <Stack.Screen name="SuccessScreen" component={SuccessRegister} />
       <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
+      <Stack.Screen name="CameraScreen" component={CameraScreen} />
     </Stack.Navigator>
   );
 };

@@ -8,8 +8,9 @@ import {
   KeyboardAvoidingView,
   Platform,
   Button,
+  TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font} from '../../assets';
@@ -27,6 +28,7 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 
 const LoginScreen: React.FC<any> = ({navigation}) => {
   const [value, setValue] = useState<string>('');
+
   const [isError, setIsError] = React.useState(false);
   const [errMessage, setErrMessage] = useState<string>('');
   const [loading, setLoading] = useState(false);

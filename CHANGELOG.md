@@ -1,3 +1,9 @@
+
+## Feature [1.6.5] 2023-07-12
+- android image picker (react native vision camera)
+- change level dropdown drone image
+- change image default drone image
+- fix some text not align
 ## Feature [1.6.4] 2023-07-10
 - fix bug google map in android
 - fix font overflow in android

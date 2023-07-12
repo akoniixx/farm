@@ -1,10 +1,4 @@
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  Platform,
-} from 'react-native';
+import {View, StyleSheet, Image, Platform} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import * as ImagePicker from 'react-native-image-picker';
 import Text from '../../Text';
@@ -15,8 +9,9 @@ import StepTwo from './StepTwo';
 import AsyncButton from '../../Button/AsyncButton';
 import ModalImageExample from './ModalImageExample';
 import ModalUploadImage from '../ModalUploadImage';
-import ReactNativeModal from 'react-native-modal';
+
 import Modal from '../Modal';
+import {PhotoFile} from 'react-native-vision-camera';
 
 interface Props {
   visible: boolean;
@@ -97,6 +92,8 @@ export default function ModalTaskDone({
       mediaType: 'photo',
       maxHeight: 1000,
       maxWidth: 1000,
+      cameraType: 'back',
+      quality: 0.8,
     });
     if (!result.didCancel) {
       const fileSize = result?.assets?.[0]?.fileSize || 0;
@@ -127,6 +124,35 @@ export default function ModalTaskDone({
       onOpenModal();
     }
   };
+
+  const onFinishedTakePhoto = useCallback(
+    async (v: any) => {
+      const isFileMoreThan20MB = v.fileSize > 20 * 1024 * 1024;
+      if (isFileMoreThan20MB) {
+        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
+        onOpenModal();
+        setStep(() => {
+          if (step === 0) {
+            return 1;
+          }
+          return 0;
+        });
+        return false;
+      }
+
+      if (step === 0) {
+        setImgController(v);
+        setStep(0);
+      } else {
+        setImgFertilizer(v);
+        setStep(1);
+      }
+      setError('');
+      setShowModalSelectImage(false);
+      onOpenModal();
+    },
+    [onOpenModal, step],
+  );
 
   const RenderStep = useMemo(() => {
     if (step === 0) {
@@ -219,9 +245,11 @@ export default function ModalTaskDone({
                     }}>
                     <Text
                       style={{
-                        lineHeight: Platform.OS === 'android' ? 0 : 24,
+                        lineHeight: Platform.OS === 'android' ? 24 : 24,
                         fontFamily: font.semiBold,
                         fontSize: 18,
+                        textAlign: 'center',
+                        textAlignVertical: 'center',
                         color: isActive ? colors.white : colors.grey3,
                       }}>
                       {index + 1}
@@ -433,6 +461,7 @@ export default function ModalTaskDone({
         }}
       />
       <ModalUploadImage
+        onFinishedTakePhoto={onFinishedTakePhoto}
         onCancel={() => {
           setShowModalSelectImage(false);
           onOpenModal();

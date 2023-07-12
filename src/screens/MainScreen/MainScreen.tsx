@@ -63,7 +63,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   const [campaignImage, setCampaignImage] = useState<string>('');
   const [showCampaign, setShowCampaign] = useState<'flex' | 'none'>('flex');
 
-  
   useFocusEffect(
     React.useCallback(() => {
       getProfile();
@@ -245,39 +244,37 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
       <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
         <View style={{flex: 1, backgroundColor: 'white'}}>
-         
-            <View>
-              <View style={styles.headCard}>
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: font.bold,
-                      fontSize: normalize(24),
-                      color: colors.fontBlack,
-                    }}>
-                    สวัสดี, {profile.name}
-                  </Text>
-                  <View style={styles.activeContainer}>
-                    <Switch
-                      trackColor={{false: '#767577', true: colors.green}}
-                      thumbColor={
-                        profile.isOpenReceiveTask ? 'white' : '#f4f3f4'
+          <View>
+            <View style={styles.headCard}>
+              <View>
+                <Text
+                  style={{
+                    fontFamily: font.bold,
+                    fontSize: normalize(24),
+                    color: colors.fontBlack,
+                  }}>
+                  สวัสดี, {profile.name}
+                </Text>
+                <View style={styles.activeContainer}>
+                  <Switch
+                    trackColor={{false: '#767577', true: colors.green}}
+                    thumbColor={profile.isOpenReceiveTask ? 'white' : '#f4f3f4'}
+                    value={profile.isOpenReceiveTask}
+                    onValueChange={value => {
+                      openReceiveTask(value);
+                      if (value === true) {
+                        mixpanel.track('click to open recive task status');
+                      } else {
+                        mixpanel.track('click to close recive task status');
                       }
-                      value={profile.isOpenReceiveTask}
-                      onValueChange={value => {
-                        openReceiveTask(value);
-                        if (value === true) {
-                          mixpanel.track('click to open recive task status');
-                        } else {
-                          mixpanel.track('click to close recive task status');
-                        }
-                      }}
-                      disabled={profile.status !== 'ACTIVE'}
-                    />
-                    <Text style={styles.activeFont}>เปิดรับงาน</Text>
-                  </View>
+                    }}
+                    disabled={profile.status !== 'ACTIVE'}
+                  />
+                  <Text style={styles.activeFont}>เปิดรับงาน</Text>
                 </View>
-                {/*  <View>
+              </View>
+
+              {/*  <View>
               <TouchableOpacity
                 style={{
                   width: responsiveWidth(100),
@@ -322,49 +319,49 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 </LinearGradient>
               </TouchableOpacity>
             </View> */}
-                <View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      mixpanel.track('กดดูประวัติการได้รับแต้ม/ใช้แต้ม');
-                      navigation.navigate('PointHistoryScreen');
+              <View>
+                <TouchableOpacity
+                  onPress={() => {
+                    mixpanel.track('กดดูประวัติการได้รับแต้ม/ใช้แต้ม');
+                    navigation.navigate('PointHistoryScreen');
+                  }}>
+                  <LinearGradient
+                    colors={['#FA7052', '#F89132']}
+                    start={{x: 0, y: 0.5}}
+                    end={{x: 1, y: 0.5}}
+                    style={{
+                      paddingHorizontal: normalize(4),
+                      paddingVertical: normalize(4),
+                      borderRadius: 30,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
                     }}>
-                    <LinearGradient
-                      colors={['#FA7052', '#F89132']}
-                      start={{x: 0, y: 0.5}}
-                      end={{x: 1, y: 0.5}}
+                    <Image
+                      source={icons.point}
                       style={{
-                        paddingHorizontal: normalize(4),
-                        paddingVertical: normalize(4),
-                        borderRadius: 30,
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
+                        width: normalize(28),
+                        height: normalize(28),
+                        marginRight: 5,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 18,
+                        fontFamily: font.bold,
+                        textAlign: 'right',
+                        minWidth: normalize(24),
+                        paddingRight: normalize(8),
                       }}>
-                      <Image
-                        source={icons.point}
-                        style={{
-                          width: normalize(28),
-                          height: normalize(28),
-                          marginRight: 5,
-                        }}
-                      />
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 18,
-                          fontFamily: font.bold,
-                          textAlign: 'right',
-                          minWidth: normalize(24),
-                          paddingRight: normalize(8),
-                        }}>
-                        {numberWithCommas(currentPoint.toString(), true)}
-                      </Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
-                </View>
+                      {numberWithCommas(currentPoint.toString(), true)}
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
               </View>
+            </View>
 
-              {/*  <View style={{height: normalize(95)}}>
+            {/*  <View style={{height: normalize(95)}}>
               <ScrollView
                 showsHorizontalScrollIndicator={false}
                 horizontal
@@ -462,94 +459,92 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 </View>
               </ScrollView>
             </View> */}
-              <View
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
+                  fontFamily: font.bold,
+                  fontSize: normalize(14),
+                  color: colors.fontBlack,
+                  paddingHorizontal: 20,
+                }}>
+                กูรูเกษตร
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('AllGuruScreen');
                 }}>
                 <Text
                   style={{
                     fontFamily: font.bold,
                     fontSize: normalize(14),
                     color: colors.fontBlack,
-                    paddingHorizontal: 20,
+
+                    paddingHorizontal: 10,
                   }}>
-                  กูรูเกษตร
+                  ดูทั้งหมด
                 </Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('AllGuruScreen');
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: font.bold,
-                      fontSize: normalize(14),
-                      color: colors.fontBlack,
-
-                      paddingHorizontal: 10,
-                    }}>
-                    ดูทั้งหมด
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              {guruKaset != undefined ? (
-                <View>
-                  <Carousel
-                    autoplay={true}
-                    autoplayInterval={7000}
-                    autoplayDelay={5000}
-                    loop={true}
-                    ref={isCarousel}
-                    data={guruKaset.data}
-                    sliderWidth={screen.width}
-                    itemWidth={screen.width}
-                    onSnapToItem={index => setIndex(index)}
-                    useScrollView={true}
-                    vertical={false}
-                    renderItem={({item}: any) => {
-                      return (
-                        <TouchableOpacity
-                          onPress={async () => {
-                            await AsyncStorage.setItem('guruId', `${item.id}`);
-                            navigation.push('DetailGuruScreen');
-                          }}>
-                          <CardGuruKaset background={item.image_path} />
-                        </TouchableOpacity>
-                      );
-                    }}
-                  />
-
-                  <View
-                    style={{
-                      position: 'absolute',
-                      right: Dimensions.get('window').width / 2 - 72,
-                      top: '60%',
-                    }}>
-                    <Pagination
-                      dotsLength={guruKaset?.data?.length}
-                      activeDotIndex={index}
-                      carouselRef={isCarousel}
-                      dotStyle={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: 5,
-                        marginHorizontal: 0,
-                        backgroundColor: colors.fontBlack,
-                      }}
-                      inactiveDotOpacity={0.4}
-                      inactiveDotScale={0.9}
-                      tappableDots={true}
-                    />
-                  </View>
-                </View>
-              ) : null}
+              </TouchableOpacity>
             </View>
-         
+            {guruKaset != undefined ? (
+              <View>
+                <Carousel
+                  autoplay={true}
+                  autoplayInterval={7000}
+                  autoplayDelay={5000}
+                  loop={true}
+                  ref={isCarousel}
+                  data={guruKaset.data}
+                  sliderWidth={screen.width}
+                  itemWidth={screen.width}
+                  onSnapToItem={index => setIndex(index)}
+                  useScrollView={true}
+                  vertical={false}
+                  renderItem={({item}: any) => {
+                    return (
+                      <TouchableOpacity
+                        onPress={async () => {
+                          await AsyncStorage.setItem('guruId', `${item.id}`);
+                          navigation.push('DetailGuruScreen');
+                        }}>
+                        <CardGuruKaset background={item.image_path} />
+                      </TouchableOpacity>
+                    );
+                  }}
+                />
+
+                <View
+                  style={{
+                    position: 'absolute',
+                    right: Dimensions.get('window').width / 2 - 72,
+                    top: '60%',
+                  }}>
+                  <Pagination
+                    dotsLength={guruKaset?.data?.length}
+                    activeDotIndex={index}
+                    carouselRef={isCarousel}
+                    dotStyle={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: 5,
+                      marginHorizontal: 0,
+                      backgroundColor: colors.fontBlack,
+                    }}
+                    inactiveDotOpacity={0.4}
+                    inactiveDotScale={0.9}
+                    tappableDots={true}
+                  />
+                </View>
+              </View>
+            ) : null}
+          </View>
 
           <TaskTapNavigator
             isOpenReceiveTask={profile.isOpenReceiveTask}
             dronerStatus={profile.status}
-           
           />
         </View>
       </View>
