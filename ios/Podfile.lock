@@ -247,6 +247,8 @@ PODS:
   - nanopb/decode (2.30909.0)
   - nanopb/encode (2.30909.0)
   - OpenSSL-Universal (1.1.1100)
+  - Permission-AppTrackingTransparency (3.8.4):
+    - RNPermissions
   - Permission-Notifications (3.8.4):
     - RNPermissions
   - PromisesObjC (2.2.0)
@@ -692,6 +694,7 @@ DEPENDENCIES:
   - lottie-react-native (from `../node_modules/lottie-react-native`)
   - MixpanelReactNative (from `../node_modules/mixpanel-react-native`)
   - OpenSSL-Universal (= 1.1.1100)
+  - Permission-AppTrackingTransparency (from `../node_modules/react-native-permissions/ios/AppTrackingTransparency`)
   - Permission-Notifications (from `../node_modules/react-native-permissions/ios/Notifications`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -813,6 +816,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/lottie-react-native"
   MixpanelReactNative:
     :path: "../node_modules/mixpanel-react-native"
+  Permission-AppTrackingTransparency:
+    :path: "../node_modules/react-native-permissions/ios/AppTrackingTransparency"
   Permission-Notifications:
     :path: "../node_modules/react-native-permissions/ios/Notifications"
   RCT-Folly:
@@ -971,6 +976,7 @@ SPEC CHECKSUMS:
   MixpanelReactNative: 07c808338a1eb69b0c9077668e3acfb0b2dd6689
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
+  Permission-AppTrackingTransparency: 644f9b7ee1355b34c1b552f87c2fc9f440e03236
   Permission-Notifications: e06c4b115105e9aed6ed8d03c9894c23c1051731
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   RCT-Folly: 0080d0a6ebf2577475bda044aa59e2ca1f909cda
@@ -1033,6 +1039,6 @@ SPEC CHECKSUMS:
   Yoga: 1f02ef4ce4469aefc36167138441b27d988282b1
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 03cd7f78b2a54d2652c59368d0a69ab5d0c98402
+PODFILE CHECKSUM: 0b6d780b6e265ef7ce94f970b9add536fb2afbb2
 
 COCOAPODS: 1.11.3

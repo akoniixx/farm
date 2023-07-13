@@ -795,7 +795,7 @@ export const toastConfig = {
               paddingLeft: normalize(12),
             }}>
             <Text style={styles.info}>คุณได้รับ {text1} แต้ม</Text>
-            <Text style={styles.info}>จากการจ้างโดรนกษตร</Text>
+            <Text style={styles.info}>จากการจ้างโดรนเกษตร</Text>
           </View>
         </View>
         <View style={styles.closePosition}>

@@ -53,13 +53,12 @@ const App = () => {
     const trackingStatus = await check(
       'ios.permission.APP_TRACKING_TRANSPARENCY',
     );
-    console.log('trackingStatus', status);
-
+    console.log('status', status);
+    console.log('trackingStatus', trackingStatus);
     if (trackingStatus === 'granted') {
       Settings.setAdvertiserTrackingEnabled(true);
       return;
     }
-
     if (status === 'granted') {
       Settings.setAdvertiserTrackingEnabled(true);
     } else {
@@ -69,15 +68,11 @@ const App = () => {
 
   useEffect(() => {
     const checkPermission = () => {
-      checkNotifications()
-        .then(async ({status}) => {
-          if (status === 'denied' || status === 'blocked') {
-            requestUserPermission();
-          }
-        })
-        .then(() => {
-          requestTracking();
-        });
+      checkNotifications().then(async ({status}) => {
+        if (status === 'denied' || status === 'blocked') {
+          requestUserPermission();
+        }
+      });
     };
 
     mixpanel.track('App open');
@@ -98,6 +93,9 @@ const App = () => {
     getToken();
     // checkVersion();
   }, []);
+  useEffect(() => {
+    requestTracking();
+  });
 
   return (
     <>

@@ -2,6 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key> 
+	<string>IconKaset Droner would like to use access camera to take your photo for your profile.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>IconKaset Droner would like access to your photo gallery, so you can use it as your profile.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>$(PRODUCT_NAME) requires your permission to track in order to show you more relevant ads.</string>
 	<key>AdvertiserTrackingEnabled</key>
 	<string>true</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -61,18 +73,7 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>IconKaset Droner would like to use access camera to take your photo for your profile.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>IconKaset Droner would like access to your photo gallery, so you can use it as your profile.</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>$(PRODUCT_NAME) requires your permission to track in order to show you more relevant ads.</string>
+	
 	<key>UIAppFonts</key>
 	<array>
 		<string>Anuphan-Bold.otf</string>
