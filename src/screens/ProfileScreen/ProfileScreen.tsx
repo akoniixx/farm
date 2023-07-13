@@ -152,6 +152,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
     FCMtokenDatasource.deleteFCMtoken(fcmToken)
       .then(async res => await Authentication.logout())
       .catch(err => console.log(err));
+      await AsyncStorage.clear()
   };
 
   useEffect(() => {

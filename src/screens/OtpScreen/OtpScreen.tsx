@@ -149,7 +149,7 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
               setErrOTP(false);
               await AsyncStorage.setItem('token', result.accessToken);
               await AsyncStorage.setItem('droner_id', result.data.id);
-              getFCMToken();
+              await getFCMToken();
               const fcmtoken = await AsyncStorage.getItem('fcmtoken');
               FCMtokenDatasource.saveFCMtoken(fcmtoken!)
                 .then(res => {
