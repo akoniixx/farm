@@ -11,7 +11,6 @@ import ModalImageExample from './ModalImageExample';
 import ModalUploadImage from '../ModalUploadImage';
 
 import Modal from '../Modal';
-import {PhotoFile} from 'react-native-vision-camera';
 
 interface Props {
   visible: boolean;
@@ -461,6 +460,9 @@ export default function ModalTaskDone({
         }}
       />
       <ModalUploadImage
+        onCloseModalSelect={() => {
+          setShowModalSelectImage(false);
+        }}
         onFinishedTakePhoto={onFinishedTakePhoto}
         onCancel={() => {
           setShowModalSelectImage(false);

@@ -1,13 +1,4 @@
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  PermissionsAndroid,
-  Platform,
-  StyleSheet,
-  Alert,
-  Linking,
-} from 'react-native';
+import {View, Image, TouchableOpacity, Platform, Linking} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import Modal from './Modal';
 import {colors, font, icons} from '../../assets';
@@ -22,6 +13,7 @@ interface Props {
   onPressLibrary: () => void;
   onPressCamera: () => void;
   onFinishedTakePhoto: (v: any) => void;
+  onCloseModalSelect: () => void;
 }
 
 export default function ModalUploadImage({
@@ -30,6 +22,7 @@ export default function ModalUploadImage({
   onPressLibrary,
   onPressCamera,
   onFinishedTakePhoto,
+  onCloseModalSelect,
 }: Props) {
   const fetchImage = async (uri: string) => {
     const imageResponse = await fetch(uri);
@@ -74,6 +67,8 @@ export default function ModalUploadImage({
           onFinished: onResultBack,
           onCancel: onCancel,
         });
+        onCloseModalSelect();
+
         return;
       }
       const requested = await Camera.requestCameraPermission();
@@ -82,6 +77,7 @@ export default function ModalUploadImage({
           onFinished: onResultBack,
           onCancel: onCancel,
         });
+        onCloseModalSelect();
       } else {
         await Linking.openSettings();
       }
