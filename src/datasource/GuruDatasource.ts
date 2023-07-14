@@ -9,6 +9,8 @@ export class GuruKaset {
     sortDirection?: string,
     limit?: number,
     offset?: number,
+    pageType?: string
+
   ): Promise<any> {
     return axios
       .post(BASE_URL + `/promotion/news/find-all-news`, {
@@ -18,6 +20,27 @@ export class GuruKaset {
         sortDirection: sortDirection,
         limit: limit,
         offset: offset,
+        pageType: pageType
+      })
+      .then(res => {
+        return res.data;
+      });
+  }
+  static async findAllNewsPin(
+    status: string,
+    application: string,
+    limit?: number,
+    offset?: number,
+    pageType?: string
+
+  ): Promise<any> {
+    return axios
+      .post(BASE_URL + `/promotion/news/find-all-news`, {
+        status: status,
+        application: application,
+        limit: limit,
+        offset: offset,
+        pageType: pageType
       })
       .then(res => {
         return res.data;
@@ -29,6 +52,11 @@ export class GuruKaset {
     });
   }
   static async updateId(id: string, read: number): Promise<any> {
+    // const params = {
+    //   read: read,
+    //   pinAll: pinAll,
+    //   pinMain: pinMain,
+    // };
     return axios
       .post(BASE_URL + `/promotion/news/update/` + id, { read })
       .then(res => {

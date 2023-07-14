@@ -12,7 +12,7 @@ import ActionSheet from 'react-native-actions-sheet';
 import colors from '../../assets/colors/colors';
 import icons from '../../assets/icons/icons';
 import CustomHeader from '../../components/CustomHeader';
-import { CardGuru } from '../../components/Guru/CardGuru';
+import { CardGuru, CardPinGuru } from '../../components/Guru/CardGuru';
 import { normalize } from '../../functions/Normalize';
 import { font } from '../../assets/index';
 import { useIsFocused } from '@react-navigation/native';
@@ -21,6 +21,8 @@ import { momentExtend } from '../../utils/moment-buddha-year';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from '../../../mixpanel';
+import { Carousel, Pagination } from 'react-native-snap-carousel';
+import { CardGuruKaset } from '../../components/Carousel/GuruKaset';
 
 const AllGuruScreen: React.FC<any> = ({ navigation }) => {
   const isFocused = useIsFocused();
@@ -29,6 +31,12 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const [data, setData] = useState<any>();
+  const [pinAll, setPinAll] = useState<any>();
+
+  const [index, setIndex] = React.useState(0);
+  const screen = Dimensions.get('window');
+
+  const isCarousel = React.useRef(null);
 
   useEffect(() => {
     findAllNews();
@@ -38,6 +46,8 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
     GuruKaset.findAllNews('ACTIVE', 'FARMER', 'created_at', 'DESC')
       .then(res => {
         if (res) {
+          const filterPin = res.data.filter((x: any) => x.pin_all === true);
+          setPinAll(filterPin);
           setData(res);
         }
       })
@@ -65,6 +75,103 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
       />
       <ScrollView style={{ backgroundColor: '#F8F9FA' }}>
         <View style={{ paddingVertical: 10 }}>
+          {pinAll !== undefined && pinAll.length > 1 ? (
+            <>
+              <Carousel
+                autoplay={true}
+                autoplayInterval={7000}
+                autoplayDelay={5000}
+                loop={true}
+                ref={isCarousel}
+                data={pinAll}
+                sliderWidth={screen.width}
+                itemWidth={screen.width}
+                onSnapToItem={index => setIndex(index)}
+                useScrollView={true}
+                vertical={false}
+                renderItem={({ item }: any) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={async () => {
+                        await AsyncStorage.setItem('guruId', `${item.id}`);
+                        await AsyncStorage.setItem('pinAll', `${item.pin_all}`);
+                        navigation.push('DetailGuruScreen');
+                      }}>
+                      <CardPinGuru
+                        key={index}
+                        index={item.index}
+                        background={item.image_path}
+                        title={item.title}
+                        date={momentExtend.toBuddhistYear(
+                          item.created_at,
+                          'DD MMM YY',
+                        )}
+                        read={item.read}
+                        pin={item.pin_all}
+                      />
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+              <View
+                style={{
+                  alignItems: 'center',
+                  top: -15,
+                  marginVertical: -10,
+                }}>
+                <Pagination
+                  dotsLength={pinAll.length}
+                  activeDotIndex={index}
+                  carouselRef={isCarousel}
+                  dotStyle={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: 5,
+                    backgroundColor: colors.fontGrey,
+                  }}
+                  inactiveDotOpacity={0.4}
+                  inactiveDotScale={0.9}
+                  tappableDots={true}
+                />
+              </View>
+            </>
+          ) : (
+            pinAll != undefined &&
+            pinAll.map((item: any, index: any) => (
+              <TouchableOpacity
+                key={index}
+                onPress={async () => {
+                  await AsyncStorage.setItem('guruId', `${item.id}`);
+                  navigation.push('DetailGuruScreen');
+                  mixpanel.track('Tab detail guru ');
+                }}>
+                <CardPinGuru
+                  key={index}
+                  index={item.index}
+                  background={item.image_path}
+                  title={item.title}
+                  date={momentExtend.toBuddhistYear(
+                    item.created_at,
+                    'DD MMM YY',
+                  )}
+                  read={item.read}
+                  pin={item.pin_all}
+                />
+
+                <View
+                  style={{
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    backgroundColor: colors.gray,
+                    borderRadius: 20,
+                    height: 8,
+                    width: 8,
+                  }}
+                />
+              </TouchableOpacity>
+            ))
+          )}
+
           {data != undefined ? (
             <View>
               <ScrollView>
@@ -206,7 +313,8 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
                   borderColor: colors.disable,
                   width: Dimensions.get('screen').width * 0.9,
                   alignSelf: 'center',
-                }}></View>
+                }}
+              />
             </View>
           </View>
         </View>
