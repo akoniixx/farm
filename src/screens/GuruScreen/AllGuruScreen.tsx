@@ -32,6 +32,7 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
   const windowHeight = Dimensions.get('window').height;
   const [data, setData] = useState<any>();
   const [pinAll, setPinAll] = useState<any>();
+  const [refresh, setRefresh] = useState<boolean>(false);
 
   const [index, setIndex] = React.useState(0);
   const screen = Dimensions.get('window');
@@ -39,11 +40,12 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
 
   useEffect(() => {
     findAllNews();
-  }, [isFocused]);
+  }, [isFocused, refresh]);
   const findAllNews = async () => {
     setLoading(true);
     GuruKaset.findAllNews('ACTIVE', 'FARMER', 'created_at', 'DESC')
       .then(res => {
+        setRefresh(!refresh);
         if (res) {
           const filterPin = res.data.filter((x: any) => x.pin_all === true);
           setPinAll(filterPin);
