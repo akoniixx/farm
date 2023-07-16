@@ -35,7 +35,6 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
 
   const [index, setIndex] = React.useState(0);
   const screen = Dimensions.get('window');
-
   const isCarousel = React.useRef(null);
 
   useEffect(() => {
@@ -94,7 +93,6 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
                     <TouchableOpacity
                       onPress={async () => {
                         await AsyncStorage.setItem('guruId', `${item.id}`);
-                        await AsyncStorage.setItem('pinAll', `${item.pin_all}`);
                         navigation.push('DetailGuruScreen');
                       }}>
                       <CardPinGuru

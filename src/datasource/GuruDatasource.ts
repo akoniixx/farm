@@ -54,8 +54,8 @@ export class GuruKaset {
   static async updateId(id: string, read: number): Promise<any> {
     // const params = {
     //   read: read,
-    //   pinAll: pinAll,
     //   pinMain: pinMain,
+    //   pinAll: pinAll,
     // };
     return axios
       .post(BASE_URL + `/promotion/news/update/` + id, { read })
