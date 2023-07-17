@@ -1,3 +1,11 @@
+
+## Improved [v1.4.12] 2023-07-17
+- resolve bug in add plot screen
+- ui force update
+## Enhance [v1.4.11] 2023-07-17
+
+- pin news
+
 ## Fix [v1.4.10] 2023-07-12
 
 - fix style add plot screen
