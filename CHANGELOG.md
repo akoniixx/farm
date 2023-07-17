@@ -1,3 +1,7 @@
+## Enhance [v1.4.11] 2023-07-17
+
+- pin news
+
 ## Fix [v1.4.10] 2023-07-12
 
 - fix style add plot screen

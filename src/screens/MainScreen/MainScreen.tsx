@@ -264,7 +264,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   };
 
   const findAllNews = async () => {
-    GuruKaset.findAllNews('ACTIVE', 'FARMER', 'created_at', 'DESC', 5, 0)
+    GuruKaset.findAllNewsPin('ACTIVE', 'FARMER', 5, 0, 'MAIN')
       .then(res => {
         setGuruKaset(res);
       })

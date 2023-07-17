@@ -109,4 +109,5 @@ export default {
   plant_inactive: require('./plant_inactive.png'),
   location_inactive: require('./location_inactive.png'),
   plot_inactive: require('./plot_inactive.png'),
+  pin: require('./pin.png'),
 };

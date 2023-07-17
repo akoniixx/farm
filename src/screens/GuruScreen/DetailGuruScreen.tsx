@@ -26,10 +26,13 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>();
+  const [pinAll, setPinAll] = useState<boolean>(false);
+  const [pinMain, setPinMain] = useState<boolean>(false);
 
   useEffect(() => {
     getGuruById();
   }, [isFocused]);
+
   const getGuruById = async () => {
     setLoading(true);
     const guruId = await AsyncStorage.getItem('guruId');
@@ -37,27 +40,24 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
       .then(res => {
         if (res) {
           setData(res);
+          setPinAll(res.pinAll);
+          setPinMain(res.pinMain);
         }
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => {
-    const getReadGuru = async () => {
-      const guruId = await AsyncStorage.getItem('guruId');
-      await GuruKaset.updateId(guruId!, 1);
-    };
-    getReadGuru();
-  }, []);
-
   return (
     <SafeAreaView style={{ backgroundColor: colors.white, flex: 1 }}>
       <CustomHeader
         showBackBtn
-        onPressBack={() => {
+        onPressBack={async () => {
           mixpanel.track('Tab back from Detail Guru Screen');
           navigation.goBack();
+
+          const guruId = await AsyncStorage.getItem('guruId');
+          await GuruKaset.updateId(guruId!, 1, pinAll, pinMain);
         }}
       />
       {data != undefined ? (
@@ -93,7 +93,8 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
                   borderColor: colors.disable,
                   width: Dimensions.get('screen').width * 0.9,
                   alignSelf: 'center',
-                }}></View>
+                }}
+              />
               <View
                 style={{
                   flexDirection: 'row',
