@@ -260,7 +260,6 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                           <TouchableOpacity
                             key={index}
                             onPress={async () => {
-                              console.log(item);
                               await AsyncStorage.setItem(
                                 'plot_id',
                                 `${item.id}`,

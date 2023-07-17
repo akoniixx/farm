@@ -1,4 +1,13 @@
+## Fix [v1.4.10] 2023-07-12
+
+- fix style add plot screen
+
+## Fix [v1.4.9] 2023-07-06
+
+- fix search plot area
+
 ## Fix [v1.4.8] 2023-06-29
+
 - disable button when fire api
 
 ## Fix [v1.4.7] 2023-06-29
