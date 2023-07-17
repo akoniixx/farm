@@ -1,9 +1,14 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { navigate } from './RootNavigation';
+import VersionCheck from 'react-native-version-check';
+import storeVersion from 'react-native-store-version';
+import { isForceUpdate } from '../functions/checkForceUpdate';
+import { useFocusEffect } from '@react-navigation/native';
 
-const LoadingNavigator: React.FC<any> = ({ navigation }) => {
-  useEffect(() => {
+const LoadingNavigator: React.FC<any> = ({ navigation, route }) => {
+  useFocusEffect(() => {
     const getData = async () => {
       try {
         const value = await AsyncStorage.getItem('token');
@@ -16,8 +21,58 @@ const LoadingNavigator: React.FC<any> = ({ navigation }) => {
         console.log(e, 'get async token');
       }
     };
-    getData();
-  }, []);
+
+    const checkVersion = async () => {
+      const isDevMode = route.params?.isDevMode;
+      if (isDevMode) {
+        return getData();
+      }
+
+      const currentVersion = VersionCheck.getCurrentVersion();
+
+      const storeUrl = await VersionCheck.getAppStoreUrl({
+        appID: '6443516628',
+      });
+
+      const playStoreUrl = await VersionCheck.getPlayStoreUrl({
+        packageName: 'com.iconkaset.droner',
+      });
+
+      const { remote } = await storeVersion({
+        version: currentVersion,
+        androidStoreURL: playStoreUrl,
+        iosStoreURL: storeUrl,
+        country: 'TH',
+      });
+
+      const needUpdate = await VersionCheck.needUpdate({
+        currentVersion: '1.0.0',
+        // currentVersion,
+        latestVersion: remote,
+      });
+
+      const isForce = isForceUpdate({
+        currentVersion,
+        latestVersion: remote,
+      });
+      const updateLater = await AsyncStorage.getItem('updateLater');
+      const isDev = true;
+
+      if (needUpdate.isNeeded) {
+        // if (isDev) {
+        if (updateLater === 'true' && !isForce) {
+          return getData();
+        }
+        navigate('ForceUpdate', {
+          isForce,
+          isDev,
+        });
+      } else {
+        getData();
+      }
+    };
+    checkVersion();
+  });
 
   return (
     <View style={styles.scaffold}>
