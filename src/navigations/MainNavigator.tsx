@@ -1,4 +1,10 @@
-import React, { createContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import MainScreen from '../screens/MainScreen/MainScreen';
@@ -36,15 +42,22 @@ import {
   MaintenanceSystem_INIT,
 } from '../entites/MaintenanceApp';
 import { SystemMaintenance } from '../datasource/SystemMaintenanceDatasource';
-import moment from 'moment';
 import MaintenanceScreen from '../screens/MaintenanceScreen/MaintenanceScreen';
-import PopUpMaintenance from '../components/Modal/MaintenanceApp/PopUpMaintenance';
 import SearchCouponScreen from '../screens/PromotionScreen/SearchCouponScreen';
 import UseCouponScreen from '../screens/PromotionScreen/UseCouponScreen';
 import AllCouponScreen from '../screens/PromotionScreen/AllCouponScreen';
 import AllGuruScreen from '../screens/GuruScreen/AllGuruScreen';
 import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
 import DetailPointScreen from '../screens/PointScreen/DetailPointScreen';
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
+import PagerView from 'react-native-pager-view';
+
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -119,6 +132,7 @@ const MainNavigator: React.FC = () => {
   //  useEffect(() => {
   //   Maintenance();
   // }, [reload]);
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {checkDateNoti === true ? (
@@ -143,6 +157,7 @@ const MainNavigator: React.FC = () => {
 
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="AllPlotScreen" component={AllPlotScreen} />
+      <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
       <Stack.Screen name="SelectDateScreen" component={SelectDateScreen} />
       <Stack.Screen name="SelectPlotScreen" component={SelectPlotScreen} />
       <Stack.Screen name="SelectTarget" component={SelectTarget} />
@@ -169,7 +184,6 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
       <Stack.Screen name="DeleteProfileScreen" component={DeleteProfile} />
       <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
-      <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
       <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
       <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
       <Stack.Screen name="CouponDetail" component={CouponDetailScreen} />

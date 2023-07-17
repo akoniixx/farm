@@ -1,10 +1,9 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import {
   Image,
   View,
   StyleSheet,
   Text,
-  FlatList,
   Modal,
   Linking,
   Platform,
@@ -14,35 +13,30 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../../assets';
-import { MainButton } from '../../../components/Button/MainButton';
-import CustomHeader from '../../../components/CustomHeader';
+
 import { normalize } from '../../../functions/Normalize';
 import { initProfileState, profileReducer } from '../../../hook/profilefield';
 import { stylesCentral } from '../../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
-import PlotInProfile from '../../../components/Plots/PlotsInProfile';
-import PlotsItem from '../../../components/Plots/Plots';
+
 import PlotsItemEdit from '../../../components/Plots/PlotsItemEdit';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { callcenterNumber } from '../../../definitions/callCenterNumber';
+import { TextInput } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 const AllPlotScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
   const [showModalCall, setShowModalCall] = useState(false);
   const [farmerPlot, setFarmerPlot] = useState<any>([]);
-  const [reload, setReload] = useState(false);
-
-  useEffect(() => {
-    getProfile();
-  }, [reload]);
-  const getProfile = async () => {
+  const [firstRender, setFirstRender] = useState(true);
+  const getProfile = useCallback(async () => {
     setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-    ProfileDatasource.getProfile(farmer_id!)
+    await ProfileDatasource.getProfile(farmer_id!)
       .then(async res => {
-        setReload(!reload);
         setFarmerPlot(res.farmerPlot);
         const imgPath = res.file.filter((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
@@ -59,24 +53,32 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
             status: res.status,
           });
         } else {
-          ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
-            .then(resImg => {
-              dispatch({
-                type: 'InitProfile',
-                name: `${res.firstname} ${res.lastname}`,
-                id: res.farmerCode,
-                image: resImg.url,
-                plotItem: res.farmerPlot,
-                status: res.status,
-              });
-            })
-            .catch(err => console.log(err))
-            .finally(() => setLoading(false));
+          ProfileDatasource.getImgePathProfile(
+            farmer_id!,
+            imgPath[0].path,
+          ).then(resImg => {
+            dispatch({
+              type: 'InitProfile',
+              name: `${res.firstname} ${res.lastname}`,
+              id: res.farmerCode,
+              image: resImg.url,
+              plotItem: res.farmerPlot,
+              status: res.status,
+            });
+          });
         }
       })
       .catch(err => console.log(err))
-      .finally(() => setLoading(false));
-  };
+      .finally(() => {
+        setLoading(false);
+        setFirstRender(false);
+      });
+  }, []);
+  useFocusEffect(() => {
+    if (firstRender) {
+      getProfile();
+    }
+  });
 
   const inventory = farmerPlot.map((x: any) => x.status);
   const result = inventory.find((x: any) => x === 'PENDING');
