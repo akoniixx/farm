@@ -43,7 +43,6 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
   const [minute, setMinute] = useState(0);
 
   useEffect(() => {
-    console.log(profile);
     if (taskData.dateAppointment) {
       const dateAppointment = new Date(taskData.dateAppointment);
       setDate(dateAppointment);
