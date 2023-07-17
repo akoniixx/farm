@@ -23,7 +23,6 @@ import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
 import PlotsItemEdit from '../../../components/Plots/PlotsItemEdit';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { callcenterNumber } from '../../../definitions/callCenterNumber';
-import { TextInput } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
 const AllPlotScreen: React.FC<any> = ({ navigation }) => {
@@ -127,7 +126,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
         </ImageBackground>
         <View style={styles.inner}>
           <View style={styles.container}>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
               {result ? (
                 <View
                   style={{
@@ -221,6 +220,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
  กดเพิ่มแปลงเกษตรได้เลย!`}</Text>
                   <TouchableOpacity
                     onPress={() => {
+                      setFirstRender(true);
                       navigation.navigate('AddPlotScreen');
                     }}>
                     <View style={[styles.buttonAdd]}>
@@ -239,6 +239,8 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                     <View>
                       <TouchableOpacity
                         onPress={() => {
+                          setFirstRender(true);
+
                           navigation.navigate('AddPlotScreen');
                         }}>
                         <View

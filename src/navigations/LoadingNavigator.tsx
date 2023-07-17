@@ -46,8 +46,8 @@ const LoadingNavigator: React.FC<any> = ({ navigation, route }) => {
       });
 
       const needUpdate = await VersionCheck.needUpdate({
-        currentVersion: '1.0.0',
-        // currentVersion,
+        // currentVersion: '1.0.0',
+        currentVersion,
         latestVersion: remote,
       });
 
