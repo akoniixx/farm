@@ -84,4 +84,6 @@ export default {
   cameraGray: require('./cameraGray.png'),
   arrowDropdown: require('./arrowDropdown.png'),
   checkWhite: require('./checkWhite.png'),
+  pin: require('./Pin.png'),
+  checkFillOrange: require('./checkFillOrange.png'),
 };
