@@ -11,6 +11,7 @@ import ModalImageExample from './ModalImageExample';
 import ModalUploadImage from '../ModalUploadImage';
 
 import Modal from '../Modal';
+import {ResizeImage} from '../../../function/Resizing';
 
 interface Props {
   visible: boolean;
@@ -61,6 +62,9 @@ export default function ModalTaskDone({
     if (!result.didCancel) {
       const fileSize = result?.assets?.[0]?.fileSize || 0;
       const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
+      const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
+      let newResult: any = result;
+
       if (isFileMoreThan20MB) {
         setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
         onOpenModal();
@@ -72,11 +76,17 @@ export default function ModalTaskDone({
         });
         return false;
       }
+      if (isFileMoreThan3MB) {
+        newResult = await ResizeImage({
+          uri: result?.assets ? result?.assets?.[0].uri : '',
+        });
+      }
+
       if (step === 0) {
-        setImgController(result);
+        setImgController(newResult);
         setStep(0);
       } else {
-        setImgFertilizer(result);
+        setImgFertilizer(newResult);
         setStep(1);
       }
       setError('');
@@ -89,14 +99,17 @@ export default function ModalTaskDone({
   const onTakeImageController = async () => {
     const result = await ImagePicker.launchCamera({
       mediaType: 'photo',
-      maxHeight: 1000,
-      maxWidth: 1000,
+      maxHeight: 800,
+      maxWidth: 800,
       cameraType: 'back',
       quality: 0.8,
     });
+
     if (!result.didCancel) {
       const fileSize = result?.assets?.[0]?.fileSize || 0;
       const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
+      const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
+      let newResult: any = result;
 
       if (isFileMoreThan20MB) {
         setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
@@ -110,12 +123,17 @@ export default function ModalTaskDone({
 
         return false;
       }
+      if (isFileMoreThan3MB) {
+        newResult = await ResizeImage({
+          uri: result?.assets ? result?.assets?.[0].uri : '',
+        });
+      }
 
       if (step === 0) {
-        setImgController(result);
+        setImgController(newResult);
         setStep(0);
       } else {
-        setImgFertilizer(result);
+        setImgFertilizer(newResult);
         setStep(1);
       }
       setError('');
@@ -126,9 +144,9 @@ export default function ModalTaskDone({
 
   const onFinishedTakePhoto = useCallback(
     async (v: any) => {
-      const isFileMoreThan20MB = v.fileSize > 20 * 1024 * 1024;
-      if (isFileMoreThan20MB) {
-        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
+      const isFileMoreThan5MB = v.assets[0].fileSize > 5 * 1024 * 1024;
+      if (isFileMoreThan5MB) {
+        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 5 MB');
         onOpenModal();
         setStep(() => {
           if (step === 0) {

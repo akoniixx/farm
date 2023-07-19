@@ -505,6 +505,8 @@ PODS:
     - React-Core
   - react-native-image-picker (4.10.3):
     - React-Core
+  - react-native-image-resizer (3.0.5):
+    - React-Core
   - react-native-kill-app (1.0.4):
     - React
   - react-native-maps (1.7.1):
@@ -719,6 +721,7 @@ DEPENDENCIES:
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - "react-native-image-resizer (from `../node_modules/@bam.tech/react-native-image-resizer`)"
   - react-native-kill-app (from `../node_modules/react-native-kill-app`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
@@ -862,6 +865,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-image-resizer:
+    :path: "../node_modules/@bam.tech/react-native-image-resizer"
   react-native-kill-app:
     :path: "../node_modules/react-native-kill-app"
   react-native-maps:
@@ -1000,6 +1005,7 @@ SPEC CHECKSUMS:
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
   react-native-google-maps: dd12cdd86b8e3fedbbb671676aedaa2f656e2ccd
   react-native-image-picker: 60f4246eb5bb7187fc15638a8c1f13abd3820695
+  react-native-image-resizer: 00ceb0e05586c7aadf061eea676957a6c2ec60fa
   react-native-kill-app: ccfc7722345b53a3c6abf8e78c800b79a387135d
   react-native-maps: 667f9b975549c6fa9b1631bf859440f68ebd3b8f
   react-native-pager-view: da490aa1f902c9a5aeecf0909cc975ad0e92e53e

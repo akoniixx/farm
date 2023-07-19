@@ -80,6 +80,7 @@ const App = () => {
     const getToken = async () => {
       const token = await AsyncStorage.getItem('token');
       const dronerId = await AsyncStorage.getItem('droner_id');
+
       console.log('token', token);
       console.log('dronerId', dronerId);
     };
@@ -88,8 +89,8 @@ const App = () => {
     }
     requestUserPermission();
     checkPermission();
-
     getToken();
+
     // checkVersion();
   }, []);
   useEffect(() => {

@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {normalize} from '@rneui/themed';
 import fonts from '../../assets/fonts';
 import {colors, image, icons, font} from '../../assets';
-import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {
   getStatusToText,
   momentExtend,
@@ -10,227 +10,281 @@ import {
 } from '../../function/utility';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {SheetManager} from 'react-native-actions-sheet';
+import Text from '../Text';
+import {useAuth} from '../../contexts/AuthContext';
 
 const MainTasklists: React.FC<any> = (props: any) => {
-  const date = new Date(props.date);
-  const today = new Date();
   const ratting = [1, 2, 3, 4, 5];
   const finishDate = new Date(
     props.finishTime?.length ? props.finishTime[0].createdAt : null,
   );
+  const {
+    state: {isDoneAuth},
+  } = useAuth();
+  const isUseDiscount = useMemo(() => {
+    const isUseDiscount =
+      +props.discountCoupon > 0 || +props.discountCampaignPoint > 0;
+    return isUseDiscount && !isDoneAuth;
+  }, [props.discountCampaignPoint, props.discountCoupon, isDoneAuth]);
 
   return (
-    <View style={styles.taskMenu}>
-      <View style={styles.listTile}>
-        <Text
-          style={{
-            fontFamily: fonts.medium,
-            fontSize: normalize(14),
-            color: '#9BA1A8',
-          }}>
-          #{props.id}
-        </Text>
+    <>
+      <View style={[styles.taskMenu]}>
         <View
           style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: getStatusToText(props.status)?.bgcolor,
-            paddingHorizontal: normalize(12),
-            paddingVertical: normalize(5),
-            borderRadius: normalize(12),
+            padding: 16,
           }}>
-          <Text
-            style={{
-              fontFamily: fonts.medium,
-              color: getStatusToText(props.status)?.color,
-              fontSize: normalize(12),
-            }}>
-            {getStatusToText(props.status)?.label}
-          </Text>
-        </View>
-      </View>
-
-      <TouchableOpacity
-        onPress={() =>
-          RootNavigation.navigate('Main', {
-            screen: 'TaskDetailScreen',
-            params: {taskId: props.taskId},
-          })
-        }>
-        <View style={styles.listTile}>
-          <Text
-            style={{
-              color: colors.fontBlack,
-              fontFamily: fonts.medium,
-              fontSize: normalize(19),
-            }}>
-            {`${props.title} | ${props.farmArea} ไร่`}
-          </Text>
-          <Text
-            style={{
-              fontFamily: fonts.medium,
-              color: '#2EC66E',
-              fontSize: normalize(17),
-            }}>
-            ฿ {props.price ? numberWithCommas(props.price) : null}
-          </Text>
-        </View>
-        <View
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            flexDirection: 'row',
-            paddingVertical: normalize(5),
-          }}>
-          <Image
-            source={icons.jobCard}
-            style={{
-              width: normalize(20),
-              height: normalize(20),
-            }}
-          />
-          <Text
-            style={{
-              fontFamily: fonts.medium,
-              paddingLeft: normalize(8),
-              fontSize: normalize(14),
-              color: colors.fontBlack,
-            }}>{`${momentExtend.toBuddhistYear(
-            props.date,
-            'DD MMM YYYY HH:mm',
-          )} น.`}</Text>
-        </View>
-
-        {props.status === 'WAIT_REVIEW' || props.status === 'DONE' ? (
-          <View
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              flexDirection: 'row',
-              paddingVertical: normalize(5),
-            }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text
-                style={{
-                  fontFamily: font.medium,
-                  fontSize: normalize(12),
-                  color: '#3EBD93',
-                }}>
-                งานเสร็จเมื่อ
-              </Text>
-              <Text
-                style={{
-                  fontFamily: font.light,
-                  fontSize: normalize(12),
-                  color: 'black',
-                }}>{`${momentExtend.toBuddhistYear(
-                finishDate,
-                'DD MMM YYYY HH:mm',
-              )} น.`}</Text>
-            </View>
-          </View>
-        ) : (
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              paddingVertical: normalize(5),
-            }}>
-            <Image
-              source={icons.jobDistance}
+          <View style={styles.listTile}>
+            <Text
               style={{
-                width: normalize(20),
-                height: normalize(20),
-              }}
-            />
+                fontFamily: fonts.medium,
+                fontSize: normalize(14),
+                color: '#9BA1A8',
+              }}>
+              #{props.id}
+            </Text>
             <View
               style={{
-                paddingLeft: normalize(8),
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: getStatusToText(props.status)?.bgcolor,
+                paddingHorizontal: normalize(12),
+                paddingVertical: normalize(5),
+                borderRadius: normalize(12),
               }}>
               <Text
                 style={{
                   fontFamily: fonts.medium,
-                  color: colors.fontBlack,
-                  fontSize: normalize(14),
+                  color: getStatusToText(props.status)?.color,
+                  fontSize: normalize(12),
                 }}>
-                {props.address}
+                {getStatusToText(props.status)?.label}
+              </Text>
+            </View>
+          </View>
+
+          <TouchableOpacity
+            onPress={() =>
+              RootNavigation.navigate('Main', {
+                screen: 'TaskDetailScreen',
+                params: {taskId: props.taskId},
+              })
+            }>
+            <View style={styles.listTile}>
+              <Text
+                style={{
+                  color: colors.fontBlack,
+                  fontFamily: fonts.medium,
+                  fontSize: normalize(19),
+                }}>
+                {`${props.title} | ${props.farmArea} ไร่`}
               </Text>
               <Text
                 style={{
                   fontFamily: fonts.medium,
-                  color: '#9BA1A8',
-                  fontSize: normalize(13),
+                  color: '#2EC66E',
+                  fontSize: normalize(17),
                 }}>
-                ระยะทาง {props.distance} กม.
+                ฿ {props.price ? numberWithCommas(props.price) : null}
               </Text>
             </View>
-          </View>
-        )}
-
-        <View
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            flexDirection: 'row',
-            paddingVertical: normalize(5),
-          }}>
-          <Image
-            source={
-              typeof props.img !== 'string' ? icons.account : {uri: props.img}
-            }
-            style={{
-              width: normalize(22),
-              height: normalize(22),
-              borderRadius: 99,
-            }}
-          />
-          <Text
-            style={{
-              color: colors.fontBlack,
-              fontFamily: fonts.medium,
-              paddingLeft: normalize(8),
-              fontSize: normalize(14),
-            }}>
-            {props.user}
-          </Text>
-        </View>
-      </TouchableOpacity>
-
-      {props.status === 'WAIT_REVIEW' ? (
-        <View style={styles.borderReview}>
-          <Text
-            style={{
-              fontFamily: fonts.medium,
-              fontSize: normalize(14),
-              color: 'black',
-            }}>
-            รอเกษตรกรรีวิว
-          </Text>
-          <View style={{flexDirection: 'row'}}>
-            {ratting.map(i => (
+            <View
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: 'row',
+                paddingVertical: normalize(5),
+              }}>
               <Image
-                key={i}
-                source={icons.starBorder}
+                source={icons.jobCard}
                 style={{
-                  width: normalize(15),
-                  height: 15,
-                  marginHorizontal: normalize(2),
+                  width: normalize(20),
+                  height: normalize(20),
                 }}
               />
-            ))}
-          </View>
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  paddingLeft: normalize(8),
+                  fontSize: normalize(14),
+                  color: colors.fontBlack,
+                }}>{`${momentExtend.toBuddhistYear(
+                props.date,
+                'DD MMM YYYY HH:mm',
+              )} น.`}</Text>
+            </View>
+
+            {props.status === 'WAIT_REVIEW' || props.status === 'DONE' ? (
+              <View
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  paddingVertical: normalize(5),
+                }}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      fontFamily: font.medium,
+                      fontSize: normalize(12),
+                      color: '#3EBD93',
+                    }}>
+                    งานเสร็จเมื่อ
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: font.light,
+                      fontSize: normalize(12),
+                      color: 'black',
+                    }}>{`${momentExtend.toBuddhistYear(
+                    finishDate,
+                    'DD MMM YYYY HH:mm',
+                  )} น.`}</Text>
+                </View>
+              </View>
+            ) : (
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  paddingVertical: normalize(5),
+                }}>
+                <Image
+                  source={icons.jobDistance}
+                  style={{
+                    width: normalize(20),
+                    height: normalize(20),
+                  }}
+                />
+                <View
+                  style={{
+                    paddingLeft: normalize(8),
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      color: colors.fontBlack,
+                      fontSize: normalize(14),
+                    }}>
+                    {props.address}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      color: '#9BA1A8',
+                      fontSize: normalize(13),
+                    }}>
+                    ระยะทาง {props.distance} กม.
+                  </Text>
+                </View>
+              </View>
+            )}
+
+            <View
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: 'row',
+                paddingVertical: normalize(5),
+              }}>
+              <Image
+                source={
+                  typeof props.img !== 'string'
+                    ? icons.account
+                    : {uri: props.img}
+                }
+                style={{
+                  width: normalize(22),
+                  height: normalize(22),
+                  borderRadius: 99,
+                }}
+              />
+              <Text
+                style={{
+                  color: colors.fontBlack,
+                  fontFamily: fonts.medium,
+                  paddingLeft: normalize(8),
+                  fontSize: normalize(14),
+                }}>
+                {props.user}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          {props.status === 'WAIT_REVIEW' ? (
+            <View style={styles.borderReview}>
+              <Text
+                style={{
+                  fontFamily: fonts.medium,
+                  fontSize: normalize(14),
+                  color: 'black',
+                }}>
+                รอเกษตรกรรีวิว
+              </Text>
+              <View style={{flexDirection: 'row'}}>
+                {ratting.map(i => (
+                  <Image
+                    key={i}
+                    source={icons.starBorder}
+                    style={{
+                      width: normalize(15),
+                      height: 15,
+                      marginHorizontal: normalize(2),
+                    }}
+                  />
+                ))}
+              </View>
+            </View>
+          ) : null}
         </View>
-      ) : null}
-    </View>
+        {isUseDiscount && (
+          <View
+            style={{
+              borderTopWidth: 1,
+              borderTopColor: colors.disable,
+              width: '100%',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 8,
+            }}>
+            <Image
+              source={icons.requireBankBook}
+              style={{
+                width: 24,
+                height: 24,
+                marginRight: 8,
+              }}
+            />
+            <Text
+              style={{
+                fontSize: 14,
+              }}>
+              งานนี้จำเป็นต้องใช้ “ภาพถ่ายคู่บัตร” และ “บัญชีธนาคาร”
+            </Text>
+          </View>
+        )}
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   taskMenu: {
     backgroundColor: '#fff',
-    padding: normalize(15),
-    marginVertical: normalize(5),
+    marginHorizontal: 1,
+    marginTop: 1,
+    marginBottom: 10,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    borderRadius: 8,
+    elevation: 2,
+    shadowOpacity: 0.25,
   },
   listTile: {
     display: 'flex',

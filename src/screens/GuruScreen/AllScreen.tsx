@@ -66,7 +66,7 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
   const [limit, setLimit] = useState(initialLimit);
 
   const [refreshing, setRefreshing] = useState(false);
-  console.log('data', JSON.stringify(data.data.length, null, 2));
+
   const findAllNews = useCallback(async () => {
     setLoading(true);
     GuruKaset.findAllNews({

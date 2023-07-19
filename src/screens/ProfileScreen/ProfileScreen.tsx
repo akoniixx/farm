@@ -27,25 +27,25 @@ import DroneBrandingItem, {
 } from '../../components/Drone/DroneBranding';
 import * as ImagePicker from 'react-native-image-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
-import ActionSheet, {ActionSheetRef} from 'react-native-actions-sheet';
+import ActionSheet from 'react-native-actions-sheet';
 import Lottie from 'lottie-react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
 import {useAuth} from '../../contexts/AuthContext';
-import {decimalConvert, numberWithCommas, socket} from '../../function/utility';
+import {numberWithCommas, socket} from '../../function/utility';
 import {useFocusEffect} from '@react-navigation/native';
-import RegisterNotification from '../../components/Modal/RegisterNotification';
 import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import Geolocation from 'react-native-geolocation-service';
 import Text from '../../components/Text';
-import CustomHeader from '../../components/CustomHeader';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const {
     authContext: {getProfileAuth},
+    state: {isDoneAuth},
   } = useAuth();
+
   const backbotton = !route.params ? true : route.params.navbar;
   const windowWidth = Dimensions.get('screen').width;
   const windowHeight = Dimensions.get('screen').height;
@@ -66,6 +66,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [fcmToken, setFcmToken] = useState('');
   const [notidata, setnotidata] = useState(0);
+  const [loadingProfile, setLoadingProfile] = useState(false);
 
   const showActionSheet = () => {
     actionSheet.current.show();
@@ -152,7 +153,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
     FCMtokenDatasource.deleteFCMtoken(fcmToken)
       .then(async res => await Authentication.logout())
       .catch(err => console.log(err));
-      await AsyncStorage.clear()
+    await AsyncStorage.clear();
   };
 
   useEffect(() => {
@@ -213,6 +214,8 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
 
   const getProfile = async () => {
     const droner_id = (await AsyncStorage.getItem('droner_id')) || '';
+    setLoadingProfile(true);
+
     getProfileAuth()
       .then(res => {
         const imgPath = res?.file?.filter((item: any) => {
@@ -260,7 +263,10 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
             .catch(err => console.log(err));
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => {
+        setLoadingProfile(false);
+      });
   };
   return (
     <SafeAreaView style={[stylesCentral.container]}>
@@ -278,7 +284,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
         </View>
       )}
       <View style={[styles.body]}>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.profile}>
             <View style={styles.profileDescription}>
               <Avatar
@@ -450,21 +456,58 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('ProfileDocument', {
-                profile: profilestate,
-              });
+              navigation.navigate('AdditionDocumentScreen');
             }}>
-            <View style={styles.listTile}>
+            <View style={[styles.listTile, {alignItems: 'flex-start'}]}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'flex-start',
+                }}>
+                <Image source={icons.doc} style={styles.listTileIcon} />
+                <View>
+                  <Text style={styles.listTileTitle}>ส่งเอกสารเพิ่มเติม</Text>
+                  <Text
+                    style={[
+                      styles.listTileTitle,
+                      {
+                        fontFamily: font.light,
+                        fontSize: 12,
+                        color: colors.gray,
+                      },
+                    ]}>
+                    เพิ่มเอกสารเพื่อรับของรางวัล
+                  </Text>
+                  <Text
+                    style={[
+                      styles.listTileTitle,
+                      {
+                        fontFamily: font.light,
+                        fontSize: 12,
+                        color: colors.gray,
+                      },
+                    ]}>
+                    และสิทธิประโยชน์พิเศษจากบริษัท
+                  </Text>
+                </View>
+              </View>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <Image source={icons.doc} style={styles.listTileIcon} />
-                <Text style={styles.listTileTitle}>ส่งเอกสารเพิ่มเติม</Text>
+                {!isDoneAuth && (
+                  <Image
+                    source={icons.warningFillError}
+                    style={{
+                      width: responsiveWidth(24),
+                      height: responsiveHeigth(24),
+                      marginRight: 16,
+                    }}
+                  />
+                )}
+                <Image source={icons.arrowRight} style={styles.listTileIcon} />
               </View>
-
-              <Image source={icons.arrowRight} style={styles.listTileIcon} />
             </View>
           </TouchableOpacity>
 
@@ -997,6 +1040,11 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
           </View>
         </Modal>
       </ActionSheet>
+      <Spinner
+        visible={loadingProfile}
+        textContent={'Loading...'}
+        textStyle={{color: '#FFF'}}
+      />
     </SafeAreaView>
   );
 };

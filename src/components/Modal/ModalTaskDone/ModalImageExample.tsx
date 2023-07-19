@@ -37,7 +37,7 @@ const mappingImage = {
   bugAway: imagesControllerDrone.bugAway,
 };
 
-export default function ModalImageExample({visible, onPressBack}: Props) {
+export default function Example({visible, onPressBack}: Props) {
   const [selected, setSelected] = useState<{
     label: string;
     value: string;

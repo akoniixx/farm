@@ -100,6 +100,7 @@ export default function GuruKasetCarousel({
               paddingVertical: 0,
               marginBottom: 16,
             }}
+            animatedDuration={100}
             dotsLength={guruKaset?.data?.length}
             activeDotIndex={index}
             carouselRef={isCarousel}

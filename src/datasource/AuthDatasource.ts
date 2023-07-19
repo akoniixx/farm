@@ -58,6 +58,16 @@ export class Authentication {
         throw err;
       });
   }
+  static async getImageUrl(path: string) {
+    return httpClient
+      .get(BASE_URL + '/file/geturl?path=' + path)
+      .then(res => {
+        return res.data;
+      })
+      .catch(err => {
+        throw err;
+      });
+  }
   static async generateOtpRegister(telNumber: String): Promise<any> {
     return axios
       .post(BASE_URL + '/auth/droner/request-register-otp', {
@@ -71,12 +81,17 @@ export class Authentication {
         throw err;
       });
   }
-  static login(
-    telephoneNo: string,
-    otpCode: string,
-    token: string,
-    refCode: string,
-  ): Promise<any> {
+  static login({
+    telephoneNo,
+    otpCode,
+    token,
+    refCode,
+  }: {
+    telephoneNo: string;
+    otpCode: string;
+    token: string;
+    refCode: string;
+  }): Promise<any> {
     return axios
       .post(BASE_URL + '/auth/droner/verify-otp', {
         telephoneNo: telephoneNo,
@@ -103,6 +118,26 @@ export class Authentication {
         return res.data;
       })
       .catch(err => console.log(err));
+  }
+  static async uploadDronerIDCard(file: any): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    const data = new FormData();
+    data.append('file', {
+      uri: file.uri,
+      name: file.fileName,
+      type: file.type,
+    });
+    data.append('resourceId', droner_id);
+    data.append('resource', 'DRONER');
+    data.append('category', 'ID_CARD_IMAGE');
+    return uploadFileClient
+      .post(BASE_URL + '/file/upload', data)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   static async uploadBankImage(file: any): Promise<any> {
@@ -149,6 +184,12 @@ export class Authentication {
       .catch(error => {
         console.log(error);
       });
+  }
+  static async updateIDCardNumber(idNumber: string): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    return httpClient.patch(BASE_URL + `/droner/${droner_id}`, {
+      idNo: idNumber,
+    });
   }
 }
 
@@ -471,29 +512,29 @@ export class Register {
     const droner_id = await AsyncStorage.getItem('droner_id');
     if (!droner_id) {
       return registerClient
-      .post(BASE_URL + '/auth/droner/register',{
-        firstname: firstname,
-        lastname: lastname,
-        telephoneNo: telephoneNo,
-        status: 'OPEN',
-        address : {
-          address1 : "-",
-          address2 : "-",
-          provinceId: 0,
-          districtId: 0,
-          subdistrictId: 0,
-          postcode: "-",
-        },
-        percentSuccess : 25
-      }).then(async response => {
-        await AsyncStorage.setItem('droner_id',response.data.id);
-        return response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    }
-    else{
+        .post(BASE_URL + '/auth/droner/register', {
+          firstname: firstname,
+          lastname: lastname,
+          telephoneNo: telephoneNo,
+          status: 'OPEN',
+          address: {
+            address1: '-',
+            address2: '-',
+            provinceId: 0,
+            districtId: 0,
+            subdistrictId: 0,
+            postcode: '-',
+          },
+          percentSuccess: 25,
+        })
+        .then(async response => {
+          await AsyncStorage.setItem('droner_id', response.data.id);
+          return response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    } else {
       return registerClient
         .post(BASE_URL + '/auth/droner/register', {
           id: droner_id,
@@ -501,13 +542,13 @@ export class Register {
           lastname: lastname,
           telephoneNo: telephoneNo,
           status: 'OPEN',
-          address : {
-            address1 : "-",
-            address2 : "-",
+          address: {
+            address1: '-',
+            address2: '-',
             provinceId: 0,
             districtId: 0,
             subdistrictId: 0,
-            postcode: "-",
+            postcode: '-',
           },
           percentSuccess: 25,
         })

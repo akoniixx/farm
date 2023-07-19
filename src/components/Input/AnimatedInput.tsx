@@ -1,18 +1,30 @@
 import React, {useEffect, useState} from 'react';
-import {View, TextInput, Animated, StyleSheet} from 'react-native';
+import {
+  View,
+  TextInput,
+  Animated,
+  StyleSheet,
+  ViewStyle,
+  TextInputProps,
+} from 'react-native';
 import {colors, font} from '../../assets';
 
-interface Props {
+interface Props extends TextInputProps {
   label: string;
   onChangeText?: (text: string) => void;
   value: string;
   editable?: boolean;
+  style?: ViewStyle;
+  stylesInput?: TextInputProps['style'];
 }
 const AnimatedInput = ({
   label,
   onChangeText,
   value,
   editable = true,
+  style,
+  stylesInput,
+  ...props
 }: Props) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -55,7 +67,7 @@ const AnimatedInput = ({
   };
 
   return (
-    <View style={styles(isFocused).container}>
+    <View style={[styles(isFocused).container, style]}>
       <Animated.Text
         style={[
           styles(isFocused || value.length > 0).label,
@@ -67,16 +79,18 @@ const AnimatedInput = ({
       </Animated.Text>
       <TextInput
         editable={editable}
-        style={styles(isFocused).input}
+        style={[styles(isFocused).input, stylesInput]}
         value={value}
         focusable={isFocused}
         returnKeyType="done"
         onSubmitEditing={() => {
           handleBlur();
         }}
+        scrollEnabled={false}
         onChangeText={onChangeText}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        {...props}
       />
     </View>
   );
@@ -99,7 +113,7 @@ const styles = (isFocused?: boolean) =>
     input: {
       borderWidth: 1,
       borderColor: colors.grey3,
-      borderRadius: 5,
+      borderRadius: 6,
       paddingBottom: 8,
       paddingTop: 24,
       paddingHorizontal: 16,

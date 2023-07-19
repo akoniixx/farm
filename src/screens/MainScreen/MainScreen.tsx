@@ -57,9 +57,9 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      getProfile();
       openSocket();
       getCurrentPoint();
+      getProfile();
     }, []),
   );
 
@@ -80,7 +80,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
       pageType: 'MAIN',
     })
       .then(res => {
-        console.log(JSON.stringify(res, null, 2));
         setGuruKaset(res);
       })
       .catch(err => console.log(err))
@@ -110,7 +109,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   const fecthImage = async () => {
-    const dronerId = await AsyncStorage.getItem('droner_id');
     await Campaign.getImage('DRONER', 'QUATA', 'ACTIVE')
       .then(res => {
         setLoading(true);
@@ -495,6 +493,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           <TaskTapNavigator
             isOpenReceiveTask={profile.isOpenReceiveTask}
             dronerStatus={profile.status}
+            navigation={navigation}
           />
         </View>
       </View>

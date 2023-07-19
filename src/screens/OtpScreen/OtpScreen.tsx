@@ -2,12 +2,10 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Button,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -29,6 +27,7 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
 import {getFCMToken} from '../../firebase/notification';
 import {mixpanel} from '../../../mixpanel';
+import {useAuth} from '../../contexts/AuthContext';
 
 const CELL_COUNT = 6;
 
@@ -44,6 +43,9 @@ interface props {
 
 const OtpScreen: React.FC<any> = ({navigation, route}) => {
   const [value, setValue] = useState<string>('');
+  const {
+    authContext: {login},
+  } = useAuth();
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
   const [isError, setIsError] = useState(false);
   const [otpCalling, setOtpCalling] = useState(false);
@@ -117,8 +119,14 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
       setValue(value);
       if (value.length >= CELL_COUNT) {
         setLoading(true);
+
         try {
-          Authentication.login(route.params.telNumber, value, tokenOtp, codeRef)
+          login({
+            codeRef: codeRef,
+            value: value,
+            tokenOtp: tokenOtp,
+            telNumber: route.params.telNumber,
+          })
             .then(async result => {
               setLoading(false);
               setErrOTP(false);
@@ -143,7 +151,12 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
       if (value.length >= CELL_COUNT) {
         setLoading(true);
         try {
-          Authentication.login(route.params.telNumber, value, tokenOtp, codeRef)
+          login({
+            codeRef: codeRef,
+            value: value,
+            tokenOtp: tokenOtp,
+            telNumber: route.params.telNumber,
+          })
             .then(async result => {
               setLoading(false);
               setErrOTP(false);

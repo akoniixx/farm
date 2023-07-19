@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {normalize} from '@rneui/themed';
 import fonts from '../../assets/fonts';
 import {colors, image, icons} from '../../assets';
@@ -6,6 +6,7 @@ import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {momentExtend, numberWithCommas} from '../../function/utility';
 import {useNavigation} from '@react-navigation/native';
 import {mixpanel} from '../../../mixpanel';
+import {useAuth} from '../../contexts/AuthContext';
 
 const NewTask: React.FC<any> = (props: any) => {
   const date = new Date(props.date);
@@ -13,6 +14,14 @@ const NewTask: React.FC<any> = (props: any) => {
   const onPressviewDetails = props.viewDetails;
   const navigation = useNavigation<any>();
   const {taskId, fetchData} = props;
+  const {
+    state: {isDoneAuth},
+  } = useAuth();
+  const isUseDiscount = useMemo(() => {
+    const isUseDiscount =
+      +props.discountCoupon > 0 || +props.discountCampaignPoint > 0;
+    return isUseDiscount && !isDoneAuth;
+  }, [props.discountCampaignPoint, props.discountCoupon, isDoneAuth]);
 
   const expire = new Date(new Date(props.updatedAt).getTime() + 30 * 60 * 1000);
   const now = new Date();
@@ -41,11 +50,16 @@ const NewTask: React.FC<any> = (props: any) => {
 
   return (
     <TouchableOpacity
+      style={styles.taskMenu}
+      activeOpacity={1}
       onPress={() => {
         mixpanel.track('View detail task from new task list');
         navigation.navigate('TaskDetailScreen', {taskId});
       }}>
-      <View style={styles.taskMenu}>
+      <View
+        style={{
+          padding: 16,
+        }}>
         <View style={styles.listTile}>
           <Text
             style={{
@@ -321,6 +335,33 @@ const NewTask: React.FC<any> = (props: any) => {
           </View>
         </View>
       </View>
+      {isUseDiscount && (
+        <View
+          style={{
+            borderTopWidth: 1,
+            borderTopColor: colors.disable,
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 8,
+          }}>
+          <Image
+            source={icons.requireBankBook}
+            style={{
+              width: 24,
+              height: 24,
+              marginRight: 8,
+            }}
+          />
+          <Text
+            style={{
+              fontSize: 14,
+            }}>
+            งานนี้จำเป็นต้องใช้ “ภาพถ่ายคู่บัตร” และ “บัญชีธนาคาร”
+          </Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 };
@@ -328,8 +369,18 @@ const NewTask: React.FC<any> = (props: any) => {
 const styles = StyleSheet.create({
   taskMenu: {
     backgroundColor: '#fff',
-    padding: normalize(15),
-    marginVertical: normalize(5),
+    marginHorizontal: 1,
+    marginTop: 1,
+    marginBottom: 10,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    borderRadius: 8,
+    elevation: 2,
+    shadowOpacity: 0.25,
   },
   listTile: {
     display: 'flex',

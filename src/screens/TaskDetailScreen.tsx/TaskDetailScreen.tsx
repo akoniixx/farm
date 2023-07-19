@@ -44,6 +44,8 @@ import StatusExtend from './StatusExtend';
 import {mixpanel} from '../../../mixpanel';
 import Banner from '../../components/Banner/GetPointBanner';
 import ModalTaskDone from '../../components/Modal/ModalTaskDone';
+import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
+import {useAuth} from '../../contexts/AuthContext';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
@@ -59,6 +61,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
   var todate = new Date();
   const width = Dimensions.get('window').width;
+  const {
+    state: {isDoneAuth},
+  } = useAuth();
   const [togleModalUpload, setTogleModalUpload] = useState<boolean>(false);
   const [togleModalReview, setTogleModalReview] = useState<boolean>(false);
   const [togleModalSuccess, setTogleModalSuccess] = useState<boolean>(false);
@@ -692,6 +697,14 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   </Text>
                 </View>
               ) : null}
+              {!isDoneAuth && (
+                <WarningDocumentBox
+                  style={{
+                    marginTop: 16,
+                  }}
+                  screen="TASK_DETAIL"
+                />
+              )}
             </View>
             {data?.statusDelay && data.statusDelay === 'APPROVED' ? (
               <View

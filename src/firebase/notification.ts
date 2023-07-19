@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import firebase from '@react-native-firebase/app';
-import {Platform} from 'react-native';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const credentials = {
@@ -15,7 +15,11 @@ const credentials = {
 };
 
 export const firebaseInitialize = async () => {
-  await firebase.initializeApp(credentials);
+  if (!firebase.apps.length) {
+    await firebase.initializeApp(credentials);
+  } else {
+    firebase.app();
+  }
 };
 
 export async function requestUserPermission() {
