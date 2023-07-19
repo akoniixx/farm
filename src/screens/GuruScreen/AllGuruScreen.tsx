@@ -32,20 +32,19 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
   const windowHeight = Dimensions.get('window').height;
   const [data, setData] = useState<any>();
   const [pinAll, setPinAll] = useState<any>();
-  const [refresh, setRefresh] = useState<boolean>(false);
-
   const [index, setIndex] = React.useState(0);
   const screen = Dimensions.get('window');
   const isCarousel = React.useRef(null);
+  const [check, setCheck] = useState<number>(0);
 
   useEffect(() => {
     findAllNews();
-  }, [isFocused, refresh]);
+  }, [isFocused]);
+
   const findAllNews = async () => {
     setLoading(true);
     GuruKaset.findAllNews('ACTIVE', 'FARMER', 'created_at', 'DESC')
       .then(res => {
-        setRefresh(!refresh);
         if (res) {
           const filterPin = res.data.filter((x: any) => x.pin_all === true);
           setPinAll(filterPin);
@@ -116,8 +115,8 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
               <View
                 style={{
                   alignItems: 'center',
-                  top: -15,
-                  marginVertical: -10,
+                  top: -5,
+                  marginVertical: -20,
                 }}>
                 <Pagination
                   dotsLength={pinAll.length}
@@ -242,6 +241,7 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
             <View style={{ paddingVertical: 20 }}>
               <TouchableOpacity
                 onPress={async () => {
+                  setCheck(1);
                   filterNews.current.hide();
                   await GuruKaset.findAllNews(
                     'ACTIVE',
@@ -266,6 +266,15 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
                     }}>
                     ล่าสุด
                   </Text>
+                  {check === 1 && (
+                    <Image
+                      source={icons.correct}
+                      style={{
+                        width: 28,
+                        height: 28,
+                      }}
+                    />
+                  )}
                 </View>
               </TouchableOpacity>
               <View
@@ -275,11 +284,13 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
                   borderColor: colors.disable,
                   width: Dimensions.get('screen').width * 0.9,
                   alignSelf: 'center',
-                }}></View>
+                }}
+              />
             </View>
             <View style={{ paddingVertical: 5 }}>
               <TouchableOpacity
                 onPress={async () => {
+                  setCheck(2);
                   filterNews.current.hide();
                   await GuruKaset.findAllNews(
                     'ACTIVE',
@@ -304,6 +315,15 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
                     }}>
                     นิยมมากสุด
                   </Text>
+                  {check === 2 && (
+                    <Image
+                      source={icons.correct}
+                      style={{
+                        width: 28,
+                        height: 28,
+                      }}
+                    />
+                  )}
                 </View>
               </TouchableOpacity>
               <View
