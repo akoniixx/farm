@@ -1,3 +1,7 @@
+## Fix [v1.4.12] 2023-07-19
+
+- fixed filter news
+
 ## Enhance [v1.4.11] 2023-07-17
 
 - pin news
