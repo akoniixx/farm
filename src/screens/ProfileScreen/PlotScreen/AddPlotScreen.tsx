@@ -24,7 +24,6 @@ import { initProfileState, profileReducer } from '../../../hook/profilefield';
 import { stylesCentral } from '../../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
-import { useDebounceValue } from '../../../hook/useDebounceValue';
 import { plant } from '../../../definitions/plants';
 import PredictionType from '../../RegisterScreen/ThirdFormScreen';
 import fonts from '../../../assets/fonts';
@@ -273,6 +272,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
     }
   };
   useDebounce(onChangeText, 0, [search.term]);
+
   const onPredictionTapped = async (placeId: string, description: string) => {
     const apiUrl = `${GOOGLE_PACES_API_BASE_URL}/details/json?key=${API_KEY}&place_id=${placeId}`;
     try {
@@ -331,7 +331,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
     }
     setDataStore(filter);
     setDataRender(arr);
-  }, [searchValue]);
+  }, [searchValue, location]);
 
   useEffect(() => {
     let arr = [];
@@ -606,7 +606,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 placeholder={'ระบุจุดสังเกต'}
                 placeholderTextColor={colors.disable}
               />
-              <View style={{ height: normalize(10) }}></View>
+              <View style={{ height: normalize(10) }} />
             </ScrollView>
             <View
               style={{
@@ -1000,7 +1000,7 @@ const styles = StyleSheet.create({
     width: normalize(160),
   },
   inner: {
-    paddingHorizontal: normalize(15),
+    paddingHorizontal: 16,
     flex: 1,
     justifyContent: 'space-around',
   },

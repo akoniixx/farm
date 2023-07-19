@@ -6,6 +6,7 @@ import MainNavigator from './MainNavigator';
 import { SystemMaintenance } from '../datasource/SystemMaintenanceDatasource';
 import MaintenanceScreen from '../screens/MaintenanceScreen/MaintenanceScreen';
 import { momentExtend } from '../utils/moment-buddha-year';
+import ForceUpdateScreen from '../screens/ForceUpdateScreen';
 
 const Stack = createStackNavigator();
 const AppNavigator: React.FC = () => {
@@ -23,6 +24,7 @@ const AppNavigator: React.FC = () => {
       <>
         <Stack.Screen name="Auth" component={AppAuthNavigator} />
         <Stack.Screen name="Main" component={MainNavigator} />
+        <Stack.Screen name="ForceUpdate" component={ForceUpdateScreen} />
       </>
     </Stack.Navigator>
   );
