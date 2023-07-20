@@ -1,4 +1,7 @@
 
+## Feature [1.6.6] 2023-07-20 
+- fix some ui 
+- add new screen for addition document 
 ## Feature [1.6.5] 2023-07-12
 - android image picker (react native vision camera)
 - change level dropdown drone image
