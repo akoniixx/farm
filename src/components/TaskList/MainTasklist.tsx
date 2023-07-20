@@ -12,6 +12,7 @@ import * as RootNavigation from '../../navigations/RootNavigation';
 import {SheetManager} from 'react-native-actions-sheet';
 import Text from '../Text';
 import {useAuth} from '../../contexts/AuthContext';
+import BadgeStatus from '../BadgeStatus/BadgeStatus';
 
 const MainTasklists: React.FC<any> = (props: any) => {
   const ratting = [1, 2, 3, 4, 5];
@@ -45,22 +46,35 @@ const MainTasklists: React.FC<any> = (props: any) => {
             </Text>
             <View
               style={{
-                display: 'flex',
-                justifyContent: 'center',
+                flexDirection: 'row',
                 alignItems: 'center',
-                backgroundColor: getStatusToText(props.status)?.bgcolor,
-                paddingHorizontal: normalize(12),
-                paddingVertical: normalize(5),
-                borderRadius: normalize(12),
               }}>
-              <Text
+              <View
                 style={{
-                  fontFamily: fonts.medium,
-                  color: getStatusToText(props.status)?.color,
-                  fontSize: normalize(12),
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: getStatusToText(props.status)?.bgcolor,
+                  paddingHorizontal: normalize(12),
+                  paddingVertical: normalize(5),
+                  borderRadius: normalize(12),
                 }}>
-                {getStatusToText(props.status)?.label}
-              </Text>
+                <Text
+                  style={{
+                    fontFamily: fonts.medium,
+                    color: getStatusToText(props.status)?.color,
+                    fontSize: normalize(12),
+                  }}>
+                  {getStatusToText(props.status)?.label}
+                </Text>
+              </View>
+              <BadgeStatus
+                status={props.status}
+                statusPayment={props.statusPayment}
+                style={{
+                  marginLeft: 8,
+                }}
+              />
             </View>
           </View>
 

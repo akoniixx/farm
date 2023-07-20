@@ -27,7 +27,7 @@ export const getStatusToText = (status: string) => {
     case 'IN_PROGRESS':
       return {label: 'กำลังดำเนินการ', bgcolor: '#FCE588', color: '#B16F05'};
     case 'WAIT_REVIEW':
-      return {label: 'งานเสร็จสิ้น', bgcolor: '#9BF9D3', color: '#014D40'};
+      return {label: 'รอรีวิว', bgcolor: '#FAF682', color: '#4D4B23'};
     case 'CANCELED':
       return {label: 'ถูกยกเลิก', bgcolor: '#FFD7D7', color: '#AB091E'};
     case 'DONE':
@@ -95,7 +95,7 @@ export const momentExtend = {
   },
 };
 
-export const thaiLongDate = (dateString:string) => {
+export const thaiLongDate = (dateString: string) => {
   const format = 'YYYY-MM-DD';
   const gregorianDate = moment(dateString, format);
   const thaiDate = gregorianDate.add(543, 'years').locale('th');
@@ -104,5 +104,4 @@ export const thaiLongDate = (dateString:string) => {
   const thaiYear = thaiDate.format('YYYY');
 
   return `${day} ${thaiMonthName} ${thaiYear}`;
-
-}
+};

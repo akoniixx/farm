@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   Image,
@@ -26,7 +25,6 @@ import {
   numberWithCommas,
   openGps,
 } from '../../function/utility';
-import Icon from 'react-native-vector-icons/AntDesign';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {WaitStartFooter} from '../../components/Footer/WaitStartFooter';
 import {InprogressFooter} from '../../components/Footer/InprogressFooter';
@@ -46,6 +44,8 @@ import Banner from '../../components/Banner/GetPointBanner';
 import ModalTaskDone from '../../components/Modal/ModalTaskDone';
 import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
 import {useAuth} from '../../contexts/AuthContext';
+import Text from '../../components/Text';
+import BadgeStatus from '../../components/BadgeStatus/BadgeStatus';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
@@ -317,22 +317,35 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 </Text>
                 <View
                   style={{
-                    display: 'flex',
-                    justifyContent: 'center',
+                    flexDirection: 'row',
                     alignItems: 'center',
-                    backgroundColor: getStatusToText(data.status)?.bgcolor,
-                    paddingHorizontal: normalize(12),
-                    paddingVertical: normalize(5),
-                    borderRadius: normalize(12),
                   }}>
-                  <Text
+                  <View
                     style={{
-                      fontFamily: fonts.medium,
-                      color: getStatusToText(data.status)?.color,
-                      fontSize: normalize(12),
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: getStatusToText(data.status)?.bgcolor,
+                      paddingHorizontal: normalize(12),
+                      paddingVertical: normalize(5),
+                      borderRadius: normalize(12),
                     }}>
-                    {getStatusToText(data.status)?.label}
-                  </Text>
+                    <Text
+                      style={{
+                        fontFamily: fonts.medium,
+                        color: getStatusToText(data.status)?.color,
+                        fontSize: normalize(12),
+                      }}>
+                      {getStatusToText(data.status)?.label}
+                    </Text>
+                  </View>
+                  <BadgeStatus
+                    style={{
+                      marginLeft: 8,
+                    }}
+                    status={data.status}
+                    statusPayment={data.statusPayment}
+                  />
                 </View>
               </View>
               <View style={styles.listTile}>
@@ -608,48 +621,98 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 style={{
                   padding: normalize(10),
                   backgroundColor: '#FAFAFB',
-                  marginTop: normalize(17),
+                  marginTop: 16,
+                  borderWidth: 1,
+                  borderColor: colors.disable,
+                  borderRadius: 8,
                 }}>
                 <Text style={styles.fontIncomeDetail}>รายละเอียดเพิ่มเติม</Text>
                 <View
                   style={{
                     borderWidth: StyleSheet.hairlineWidth,
                     marginTop: normalize(8),
-                    borderColor: 'grey',
+                    borderColor: colors.disable,
                   }}
                 />
-                <View style={{marginTop: normalize(17)}}>
+                <View style={{marginTop: 16}}>
                   <View
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
                       alignItems: 'center',
                     }}>
-                    <Text>จากเกตรกร</Text>
-                    <Text>
+                    <Text
+                      style={{
+                        fontFamily: font.medium,
+                      }}>
+                      จากเกตรกร
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: font.semiBold,
+                        color: colors.gray,
+                      }}>
                       {data.totalPrice === '0'
                         ? '-'
-                        : numberWithCommas(data.totalPrice) + '฿'}{' '}
+                        : numberWithCommas(data.totalPrice) + ' ' + '฿'}
                     </Text>
                   </View>
 
                   {data.totalPrice === '0' ? (
                     <Text>รายการนี้ไม่มีเก็บเงินสดจากเกษตรกร</Text>
                   ) : (
-                    <View style={{borderColor: colors.orange}}>
-                      <Text>เงินสด</Text>
+                    <View
+                      style={{
+                        borderColor: colors.orange,
+                        borderWidth: 1,
+                        alignSelf: 'flex-start',
+                        paddingVertical: 2,
+                        paddingHorizontal: 4,
+                        borderRadius: 6,
+                        marginTop: 4,
+                        backgroundColor: colors.white,
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: font.medium,
+                          color: colors.orange,
+                        }}>
+                        เงินสด
+                      </Text>
                     </View>
                   )}
                 </View>
-                <View style={{marginTop: normalize(17)}}>
+                <View style={{marginTop: 16}}>
                   <View
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
-                      alignItems: 'center',
+                      alignItems: 'flex-start',
                     }}>
-                    <Text>จากบริษัท</Text>
-                    <Text>
+                    <View
+                      style={{
+                        flex: 0.7,
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: font.medium,
+                        }}>
+                        จากบริษัท
+                      </Text>
+                      <Text
+                        style={{
+                          color: colors.greenSoft,
+                          lineHeight: 20,
+                          fontSize: 14,
+                        }}>
+                        หลังจากงานเสร็จสิ้น ท่านจะได้รับเงิน ภายใน 1-2 วันทำการ
+                      </Text>
+                    </View>
+                    <Text
+                      style={{
+                        fontFamily: font.semiBold,
+                        color: colors.gray,
+                      }}>
                       {numberWithCommas(
                         calTotalPromotion(
                           data?.discountCoupon,
@@ -660,12 +723,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                       )}{' '}
                       ฿
                     </Text>
-                  </View>
-                  <View style={{width: '70%'}}>
-                    <Text>
-                      หลังจากงานเสร็จสิ้น ท่านจะได้รับเงิน ภายใน 1-2 วันทำการ
-                    </Text>
-                    <View></View>
                   </View>
                 </View>
               </View>
@@ -1151,7 +1208,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   fontIncomeDetail: {
-    fontFamily: font.light,
+    fontFamily: font.medium,
     fontSize: normalize(15),
     color: 'black',
   },
