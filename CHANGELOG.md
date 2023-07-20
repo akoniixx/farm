@@ -1,7 +1,12 @@
+## Fix [v1.4.13] 2023-07-19
+
+- fixed filter news
 
 ## Improved [v1.4.12] 2023-07-17
+
 - resolve bug in add plot screen
 - ui force update
+
 ## Enhance [v1.4.11] 2023-07-17
 
 - pin news
