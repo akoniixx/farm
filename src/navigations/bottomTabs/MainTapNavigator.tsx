@@ -32,6 +32,7 @@ import {Campaign} from '../../datasource/CampaignDatasource';
 import MyProfileScreen from '../../screens/ProfileVerifyScreen/MyProfileScreen';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
+import {useAuth} from '../../contexts/AuthContext';
 
 export type TabNavigatorParamList = {
   mission: undefined;
@@ -45,6 +46,10 @@ const Tab = createBottomTabNavigator();
 
 const MainTapNavigator: React.FC<any> = ({navigation}) => {
   const [loading, setLoading] = useState(true);
+  const {
+    state: {isDoneAuth},
+  } = useAuth();
+  console.log('isDoneAuth :>> ', isDoneAuth);
   const width = useWindowDimensions().width;
   const belowMedium = width < 400;
   const [registerNoti, setRegisterNoti] = useState(false);
@@ -98,8 +103,10 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
       name: 'profile',
       title: 'โปรไฟล์',
       component: status === 'OPEN' ? MyProfileScreen : ProfileScreen,
-      activeIcon: icons.profileActive,
-      inactiveIcon: icons.profile,
+      activeIcon: isDoneAuth
+        ? icons.profileActive
+        : icons.profileActiveNotDoneDoc,
+      inactiveIcon: isDoneAuth ? icons.profile : icons.profileNotDoneDoc,
     },
   ];
 
@@ -518,6 +525,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                 lazy: true,
                 tabBarButton(props) {
                   const isFocused = props.accessibilityState?.selected;
+                  const isProfileDone = item.name === 'profile' && isDoneAuth;
                   return (
                     <TouchableOpacity
                       {...props}
@@ -538,9 +546,14 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                           source={
                             isFocused ? item.activeIcon : item.inactiveIcon
                           }
+                          resizeMode="contain"
                           style={
-                            item.name === 'profile'
-                              ? {width: 16, height: 20, marginTop: 3.5}
+                            isProfileDone
+                              ? {
+                                  width: 22,
+                                  height: 22,
+                                  marginTop: 1.5,
+                                }
                               : {width: 25, height: 25}
                           }
                         />
@@ -555,7 +568,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                                 ? normalize(12)
                                 : normalize(14),
                             color: isFocused ? colors.orange : colors.gray,
-                            marginTop: item.name === 'profile' ? 4 : 2,
+                            marginTop: isProfileDone ? 4 : 2,
                           }}>
                           {item.title}
                         </Text>

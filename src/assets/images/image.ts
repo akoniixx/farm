@@ -49,4 +49,9 @@ export default {
   bgSelectControllerImage: require('./bgSelectControllerImage.png'),
   defaultImageController: require('./defaultImageController.png'),
   defaultImageFertilizer: require('./defaultImageFertilizer.png'),
+  warningDocumentImage: require('./warningDocumentImage.png'),
+  idCardExample: require('./idCardExample.png'),
+  imageUploadIDCardDone: require('./imageUploadIDCardDone.png'),
+  imageUploadBookBank: require('./imageUploadBookBank.png'),
+  loaderImage: require('./loaderImage.png'),
 };

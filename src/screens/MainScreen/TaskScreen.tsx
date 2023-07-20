@@ -1,12 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {normalize} from '@rneui/themed';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   Animated,
   Image,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -28,13 +27,21 @@ import {callcenterNumber} from '../../definitions/callCenterNumber';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import MyProfileScreen from '../ProfileVerifyScreen/MyProfileScreen';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import {useAuth} from '../../contexts/AuthContext';
+import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
+import Text from '../../components/Text';
 
 interface Prop {
+  navigation: any;
   dronerStatus: string;
 }
 
 const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const dronerStatus = props.dronerStatus;
+  const {
+    state: {isDoneAuth},
+  } = useAuth();
+
   const navigation = RootNavigation.navigate;
   const [error, setError] = useState<string>('');
   const [data, setData] = useState<any>([]);
@@ -180,13 +187,22 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   };
   return (
     <>
+      {!isDoneAuth && (
+        <View
+          style={{
+            paddingHorizontal: 8,
+          }}>
+          <WarningDocumentBox navigation={props.navigation} />
+        </View>
+      )}
       {data.length !== 0 && checkResIsComplete ? (
-        <View style={[{flex: 1, backgroundColor: colors.grayBg, padding: 8}]}>
+        <View style={[{flex: 1}]}>
           <FlatList
+            contentContainerStyle={{paddingHorizontal: 8}}
+            ListFooterComponent={<View style={{height: 40}} />}
             keyExtractor={element => element.item.taskNo}
             data={data}
             extraData={data}
-           
             renderItem={({item}: any) => {
               return (
                 <Tasklists

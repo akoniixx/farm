@@ -10,9 +10,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {calTotalPrice} from '../../function/utility';
+import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
+import {useAuth} from '../../contexts/AuthContext';
 const WaitStartTask: React.FC = () => {
   const [data, setData] = useState<any>([]);
   const [page, setPage] = useState(1);
+  const {
+    state: {isDoneAuth},
+  } = useAuth();
   const [loading, setLoading] = useState(false);
   const [checkResIsComplete, setCheckResIsComplete] = useState(false);
 
@@ -42,13 +47,25 @@ const WaitStartTask: React.FC = () => {
   return (
     <>
       {data.length !== 0 && checkResIsComplete ? (
-        <View style={[{flex: 1, backgroundColor: colors.grayBg, padding: 8}]}>
+        <View style={[{flex: 1}]}>
+          {!isDoneAuth && (
+            <View
+              style={{
+                padding: 8,
+              }}>
+              <WarningDocumentBox screen="TASK" />
+            </View>
+          )}
+
           <FlatList
             keyExtractor={element => element.item.taskNo}
             data={data}
             extraData={data}
+            contentContainerStyle={{paddingHorizontal: 8}}
+            ListFooterComponent={<View style={{height: 40}} />}
             renderItem={({item}: any) => (
               <MainTasklist
+                {...item.item}
                 id={item.item.taskNo}
                 status={item.item.status}
                 title={item.item.farmerPlot.plantName}

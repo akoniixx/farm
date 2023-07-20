@@ -1,7 +1,7 @@
 import React, {createContext, useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AppNavigator from './src/navigations/AppNavigator';
-import {navigate, navigationRef} from './src/navigations/RootNavigation';
+import {navigationRef} from './src/navigations/RootNavigation';
 import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-toast-message';
 import {SheetProvider} from 'react-native-actions-sheet';
@@ -53,8 +53,7 @@ const App = () => {
     const trackingStatus = await check(
       'ios.permission.APP_TRACKING_TRANSPARENCY',
     );
-    console.log('status', status);
-    console.log('trackingStatus', trackingStatus);
+
     if (trackingStatus === 'granted') {
       Settings.setAdvertiserTrackingEnabled(true);
       return;
@@ -81,6 +80,7 @@ const App = () => {
     const getToken = async () => {
       const token = await AsyncStorage.getItem('token');
       const dronerId = await AsyncStorage.getItem('droner_id');
+
       console.log('token', token);
       console.log('dronerId', dronerId);
     };
@@ -89,13 +89,13 @@ const App = () => {
     }
     requestUserPermission();
     checkPermission();
-
     getToken();
+
     // checkVersion();
   }, []);
   useEffect(() => {
     requestTracking();
-  });
+  }, []);
 
   return (
     <>

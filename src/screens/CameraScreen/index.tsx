@@ -11,6 +11,7 @@ import Text from '../../components/Text';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {colors, font, icons} from '../../assets';
+import {ResizeImage} from '../../function/Resizing';
 
 export default function CameraScreen({
   navigation,
@@ -36,7 +37,19 @@ export default function CameraScreen({
       return;
     }
 
-    setCurrentImage(photo);
+    const newResult = await ResizeImage({
+      uri: photo.path,
+      width: 2000,
+      height: 2000,
+    });
+
+    setCurrentImage({
+      height: newResult.height,
+      width: newResult.width,
+      path: newResult.uri,
+      isRawPhoto: photo.isRawPhoto,
+      metadata: photo.metadata,
+    });
   };
   const device = devices.back;
   if (!device) {

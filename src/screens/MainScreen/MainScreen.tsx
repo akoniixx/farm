@@ -26,15 +26,12 @@ import RegisterNotification from '../../components/Modal/RegisterNotification';
 import Toast from 'react-native-toast-message';
 import fonts from '../../assets/fonts';
 import {mixpanel, mixpanel_token} from '../../../mixpanel';
-import Carousel, {Pagination} from 'react-native-snap-carousel';
-import {CardGuruKaset} from '../../components/Carousel/CardGuruKaset';
 import {GuruKaset} from '../../datasource/GuruDatasource';
 import LinearGradient from 'react-native-linear-gradient';
 import {usePoint} from '../../contexts/PointContext';
-import image from '../../assets/images/image';
+
 import {Campaign} from '../../datasource/CampaignDatasource';
-import Draggable from 'react-native-draggable';
-import AsyncButton from '../../components/Button/AsyncButton';
+import GuruKasetCarousel from '../../components/GuruKasetCarousel/GuruKasetCarousel';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -52,22 +49,17 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   });
   const {getCurrentPoint, currentPoint} = usePoint();
   const [openNoti, setOpenNoti] = useState(false);
-  const [guruKaset, setGuruKaset] = useState<any>();
-  const isCarousel = React.useRef(null);
-  const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
-  const imageWidth = screenWidth / 2;
-  const screen = Dimensions.get('window');
-  const [index, setIndex] = React.useState(0);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
   const [campaignImage, setCampaignImage] = useState<string>('');
   const [showCampaign, setShowCampaign] = useState<'flex' | 'none'>('flex');
+  const [guruKaset, setGuruKaset] = useState<any>();
 
   useFocusEffect(
     React.useCallback(() => {
-      getProfile();
       openSocket();
       getCurrentPoint();
+      getProfile();
     }, []),
   );
 
@@ -76,15 +68,17 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   }, [isFocused]);
   const findAllNews = async () => {
     setLoading(true);
-    GuruKaset.findAllNews(
-      'ACTIVE',
-      'DRONER',
-      'NEWS',
-      'created_at',
-      'DESC',
-      5,
-      0,
-    )
+
+    GuruKaset.findAllNews({
+      status: 'ACTIVE',
+      application: 'DRONER',
+      categoryNews: 'NEWS',
+      sortField: 'created_at',
+      sortDirection: 'DESC',
+      limit: 5,
+      offset: 0,
+      pageType: 'MAIN',
+    })
       .then(res => {
         setGuruKaset(res);
       })
@@ -115,7 +109,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   const fecthImage = async () => {
-    const dronerId = await AsyncStorage.getItem('droner_id');
     await Campaign.getImage('DRONER', 'QUATA', 'ACTIVE')
       .then(res => {
         setLoading(true);
@@ -214,7 +207,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
             1,
             999,
           )
-            .then(res => {
+            .then((res: any) => {
               if (res.length != 0) {
                 Toast.show({
                   type: 'taskWarningBeforeClose',
@@ -490,61 +483,17 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
               </TouchableOpacity>
             </View>
             {guruKaset != undefined ? (
-              <View>
-                <Carousel
-                  autoplay={true}
-                  autoplayInterval={7000}
-                  autoplayDelay={5000}
-                  loop={true}
-                  ref={isCarousel}
-                  data={guruKaset.data}
-                  sliderWidth={screen.width}
-                  itemWidth={screen.width}
-                  onSnapToItem={index => setIndex(index)}
-                  useScrollView={true}
-                  vertical={false}
-                  renderItem={({item}: any) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={async () => {
-                          await AsyncStorage.setItem('guruId', `${item.id}`);
-                          navigation.push('DetailGuruScreen');
-                        }}>
-                        <CardGuruKaset background={item.image_path} />
-                      </TouchableOpacity>
-                    );
-                  }}
-                />
-
-                <View
-                  style={{
-                    position: 'absolute',
-                    right: Dimensions.get('window').width / 2 - 72,
-                    top: '60%',
-                  }}>
-                  <Pagination
-                    dotsLength={guruKaset?.data?.length}
-                    activeDotIndex={index}
-                    carouselRef={isCarousel}
-                    dotStyle={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: 5,
-                      marginHorizontal: 0,
-                      backgroundColor: colors.fontBlack,
-                    }}
-                    inactiveDotOpacity={0.4}
-                    inactiveDotScale={0.9}
-                    tappableDots={true}
-                  />
-                </View>
-              </View>
+              <GuruKasetCarousel
+                guruKaset={guruKaset}
+                navigation={navigation}
+              />
             ) : null}
           </View>
 
           <TaskTapNavigator
             isOpenReceiveTask={profile.isOpenReceiveTask}
             dronerStatus={profile.status}
+            navigation={navigation}
           />
         </View>
       </View>

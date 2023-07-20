@@ -3,7 +3,7 @@ import * as React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AppState} from 'react-native';
 import {ProfileDatasource} from '../datasource/ProfileDatasource';
-
+import {Authentication} from '../datasource/AuthDatasource';
 interface Address {
   id: string;
   address1: string;
@@ -96,6 +96,8 @@ interface Droner {
   bankAccountName: string | null;
   accountNumber: string | null;
   isConsentBookBank: boolean;
+  isIdCard: boolean;
+  documentComplete: boolean;
 }
 
 interface Props {
@@ -104,18 +106,26 @@ interface Props {
 
 interface State {
   isLoading: boolean;
-
+  isDoneAuth: boolean;
   user: null | Droner;
 }
 
 interface Action {
   type: string;
   user?: any;
+  isDoneAuth?: boolean;
+}
+interface LoginPayload {
+  telNumber: string;
+  value: string;
+  tokenOtp: string;
+  codeRef: string;
 }
 
 interface Context {
   authContext: {
     getProfileAuth: () => Promise<any>;
+    login: (v: LoginPayload) => Promise<any>;
   };
   state: State;
 }
@@ -123,11 +133,13 @@ interface Context {
 const initialState = {
   user: null,
   isLoading: true,
+  isDoneAuth: true,
 };
 
 const AuthContext = React.createContext<Context>({
   authContext: {
     getProfileAuth: Promise.resolve,
+    login: Promise.resolve,
   },
   state: initialState,
 });
@@ -140,6 +152,17 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
           ...prevState,
           user: action.user,
         };
+      case 'CHECK_AUTH':
+        return {
+          ...prevState,
+          isDoneAuth: action.isDoneAuth ? action.isDoneAuth : false,
+        };
+      case 'LOGIN': {
+        return {
+          ...prevState,
+          user: action.user,
+        };
+      }
 
       default:
         return prevState;
@@ -149,19 +172,48 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
     reducer,
     initialState,
   );
-
+  console.log(
+    'currentState: ',
+    JSON.stringify(
+      {
+        documentComplete: state.user?.documentComplete,
+        isBookBank: state.user?.isBookBank,
+        isIdCard: state.user?.isIdCard,
+      },
+      null,
+      2,
+    ),
+  );
   const authContext = React.useMemo(
     () => ({
       getProfileAuth: async () => {
         try {
           const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
-
           const data = await ProfileDatasource.getProfile(dronerId);
-          dispatch({type: 'GET_ME', user: data});
+
+          if (data) {
+            dispatch({type: 'GET_ME', user: data});
+            const isDoneAuth =
+              data.status === 'ACTIVE' && data.documentComplete;
+            dispatch({
+              type: 'CHECK_AUTH',
+              isDoneAuth,
+            });
+          }
           return data;
         } catch (e: any) {
           console.log(e);
         }
+      },
+      login: async (payload: LoginPayload) => {
+        const result = await Authentication.login({
+          telephoneNo: payload.telNumber,
+          otpCode: payload.value,
+          token: payload.tokenOtp,
+          refCode: payload.codeRef,
+        });
+        dispatch({type: 'LOGIN', user: result.data});
+        return result;
       },
     }),
     [],
@@ -169,7 +221,9 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
 
   React.useEffect(() => {
     if (!state.user) {
-      authContext.getProfileAuth();
+      AsyncStorage.getItem('droner_id').then(dronerId => {
+        authContext.getProfileAuth();
+      });
     }
   }, [authContext, state.user]);
 

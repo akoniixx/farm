@@ -1,6 +1,6 @@
 import React from 'react';
 import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
-import {font, image} from '../../assets';
+import {font, icons, image} from '../../assets';
 import colors from '../../assets/colors/colors';
 import {normalize} from '../../function/Normalize';
 
@@ -10,6 +10,7 @@ interface guruData {
   title: any;
   date: any;
   read: any;
+  isPinned?: boolean;
 }
 export const CardGuru: React.FC<guruData> = ({
   index,
@@ -17,6 +18,7 @@ export const CardGuru: React.FC<guruData> = ({
   title,
   date,
   read,
+  isPinned = false,
 }) => {
   return (
     <View
@@ -41,14 +43,32 @@ export const CardGuru: React.FC<guruData> = ({
           style={{
             flexDirection: 'row',
             paddingVertical: 20,
-            paddingHorizontal: 15,
+            paddingHorizontal: 16,
+            width: '100%',
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}>
-          <Text style={styles.textDate} numberOfLines={1}>
-            {date}
-          </Text>
-          <Text style={[styles.textDate, {left: 15}]} numberOfLines={1}>
-            {`อ่านแล้ว ` + read + ` ครั้ง`}
-          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Text style={styles.textDate} numberOfLines={1}>
+              {date}
+            </Text>
+            <Text style={[styles.textDate, {left: 15}]} numberOfLines={1}>
+              {`อ่านแล้ว ` + read + ` ครั้ง`}
+            </Text>
+          </View>
+          {isPinned && (
+            <Image
+              style={{
+                width: 16,
+                height: 16,
+              }}
+              source={icons.pin}
+            />
+          )}
         </View>
       </View>
     </View>
