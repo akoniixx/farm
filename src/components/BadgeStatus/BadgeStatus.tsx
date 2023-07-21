@@ -4,17 +4,17 @@ import Text from '../Text';
 import {font} from '../../assets';
 import {normalize} from '../../function/Normalize';
 const mappingText = {
-  DONE_PAYMENT: 'รับเงินแล้ว',
+  SUCCESS: 'รับเงินแล้ว',
   WAIT_PAYMENT: 'รอรับเงิน',
   WAIT_REVIEW: 'รอริวิว',
 };
 const mappingTextColor = {
-  DONE_PAYMENT: '#014D40',
+  SUCCESS: '#014D40',
   WAIT_PAYMENT: '#014D40',
   WAIT_REVIEW: '#4D4B23',
 };
 const mappingBgColor = {
-  DONE_PAYMENT: '#CCFF66',
+  SUCCESS: '#CCFF66',
   WAIT_PAYMENT: '#EFFACD',
   WAIT_REVIEW: '#FAF682',
 };
@@ -56,7 +56,7 @@ export default function BadgeStatus({
 const styles = StyleSheet.create({
   badge: {
     alignSelf: 'flex-start',
-    paddingHorizontal: normalize(12),
+    paddingHorizontal: normalize(8),
     paddingVertical: normalize(5),
     borderRadius: normalize(12),
     justifyContent: 'center',

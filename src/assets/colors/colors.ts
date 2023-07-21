@@ -30,5 +30,6 @@ export default {
   fontGrey: '#4A5158',
   Surface: '#F6F7F9',
   redPrice: '#EF4E4E',
+  redMedium: '#D6432E',
   blown: '#523A19',
 };

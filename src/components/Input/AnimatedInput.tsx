@@ -48,7 +48,7 @@ const AnimatedInput = ({
   };
 
   useEffect(() => {
-    if (value.trim() !== '') {
+    if (value && value.trim() !== '') {
       animateLabel(-10, 1);
     }
   }, [value, animateLabel]);
@@ -61,7 +61,7 @@ const AnimatedInput = ({
   const handleBlur = () => {
     setIsFocused(false);
 
-    if (value.trim() === '') {
+    if (value?.trim() === '') {
       animateLabel(0, 1);
     }
   };
@@ -70,7 +70,7 @@ const AnimatedInput = ({
     <View style={[styles(isFocused).container, style]}>
       <Animated.Text
         style={[
-          styles(isFocused || value.length > 0).label,
+          styles(isFocused || value?.length > 0).label,
           {
             transform: [{translateY: labelPosition}, {scale: labelScale}],
           },

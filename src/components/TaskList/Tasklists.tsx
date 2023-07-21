@@ -536,6 +536,7 @@ const Tasklists: React.FC<any> = (props: any) => {
           <Text
             style={{
               fontSize: 14,
+              color: colors.redMedium,
             }}>
             งานนี้จำเป็นต้องใช้ “ภาพถ่ายคู่บัตร” และ “บัญชีธนาคาร”
           </Text>

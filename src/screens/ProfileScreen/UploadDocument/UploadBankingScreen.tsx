@@ -190,12 +190,14 @@ const UploadBankingScreen: React.FC<PropsParams> = ({navigation, route}) => {
             style={{
               marginVertical: 10,
               backgroundColor: colors.white,
-              borderColor: colors.disable,
+              borderColor: colors.grey3,
               height: 56,
             }}
             placeholder="เลือกธนาคาร"
             placeholderStyle={{
-              color: colors.disable,
+              color: colors.grey3,
+              fontFamily: font.light,
+              fontSize: 16,
             }}
             open={openBankDropdown}
             value={bankValue}
@@ -398,10 +400,22 @@ const UploadBankingScreen: React.FC<PropsParams> = ({navigation, route}) => {
                 style={{
                   width: 24,
                 }}>
-                <Image
-                  source={checked1 ? icons.checked : icons.check}
-                  style={{width: 24, height: 24}}
-                />
+                {checked1 ? (
+                  <Image
+                    resizeMode="contain"
+                    source={icons.checked}
+                    style={{
+                      width: 24,
+                      height: 24,
+                    }}
+                  />
+                ) : (
+                  <Image
+                    source={icons.check}
+                    style={{width: 20, height: 20}}
+                    resizeMode="contain"
+                  />
+                )}
               </View>
 
               <View
@@ -429,12 +443,16 @@ const UploadBankingScreen: React.FC<PropsParams> = ({navigation, route}) => {
             viewInside={condition}
             title={'หมายเหตุ กรณียื่นบัญชีธนาคารเป็นบุคคลอื่น'}
             titleStyle={{
-              fontFamily: font.medium,
+              fontFamily: font.light,
               fontSize: 14,
               color: '#B26003',
             }}
-            bannerStyle={{backgroundColor: '#FAFAFB'}}
-            viewContainerStyle={{backgroundColor: '#FAFAFB', shadowOpacity: 0}}
+            bannerStyle={{backgroundColor: '#FAFAFB', borderRadius: 8}}
+            viewContainerStyle={{
+              backgroundColor: '#FAFAFB',
+              shadowOpacity: 0,
+              borderRadius: 8,
+            }}
           />
         </View>
       </ScrollView>

@@ -222,6 +222,9 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
   React.useEffect(() => {
     if (!state.user) {
       AsyncStorage.getItem('droner_id').then(dronerId => {
+        if (!dronerId) {
+          return;
+        }
         authContext.getProfileAuth();
       });
     }
