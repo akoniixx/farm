@@ -1,4 +1,8 @@
 
+## Changes [1.6.7] 2023-07-21
+- fix some ui
+- change color text footer card task
+- solved when landing app double re-render
 ## Feature [1.6.6] 2023-07-20 
 - fix some ui 
 - add new screen for addition document 
