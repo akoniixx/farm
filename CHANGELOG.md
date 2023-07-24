@@ -1,5 +1,6 @@
 ## Fix [1.6.8] 2023-07-24
 - fix carousel data not match with bo
+- change color footer text card task
 ## Changes [1.6.7] 2023-07-21
 - fix some ui
 - change color text footer card task
