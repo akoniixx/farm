@@ -9,9 +9,8 @@ import {mixpanel} from '../../../mixpanel';
 import {useAuth} from '../../contexts/AuthContext';
 
 const NewTask: React.FC<any> = (props: any) => {
-  const date = new Date(props.date);
   const onPressReceiveTask = props.receiveTask;
-  const onPressviewDetails = props.viewDetails;
+
   const navigation = useNavigation<any>();
   const {taskId, fetchData} = props;
   const {
@@ -357,6 +356,7 @@ const NewTask: React.FC<any> = (props: any) => {
           <Text
             style={{
               fontSize: 14,
+              color: colors.redMedium,
             }}>
             งานนี้จำเป็นต้องใช้ “ภาพถ่ายคู่บัตร” และ “บัญชีธนาคาร”
           </Text>

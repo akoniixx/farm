@@ -430,6 +430,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
               data={data}
               renderItem={({item}: any) => (
                 <NewTask
+                  {...item.item}
                   taskId={item.item.id}
                   taskNo={item.item.taskNo}
                   status={item.item.status}
