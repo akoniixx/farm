@@ -40,6 +40,7 @@ import { LAT_LNG_BANGKOK } from '../../../definitions/location';
 import { PlotDatasource } from '../../../datasource/PlotDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { CropDatasource } from '../../../datasource/CropDatasource';
 
 export type PredictionType = {
   description: string;
@@ -77,7 +78,9 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const [selectPlot, setSelectPlot] = useState<any>();
   const [plantName, setPlantName] = useState<any>();
   const [raiAmount, setraiAmount] = useState<any>();
-  const [plantListSelect, setPlantListSelect] = useState(plant);
+  const [plantListSelect, setPlantListSelect] = useState<
+    { id: string; cropName: string }[]
+  >([]);
   const [landmark, setlandmark] = useState<any>('');
   const [lat, setlat] = useState<any>();
   const [long, setlong] = useState<any>();
@@ -149,8 +152,18 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
   };
+  const getAllCropName = async () => {
+    try {
+      const result = await CropDatasource.getAllCrop();
+      setPlantListSelect(result);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
     getLocation();
+    getAllCropName();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -304,6 +317,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
       console.log(e);
     }
   };
+
   useEffect(() => {
     QueryLocation.getSubdistrict(0, '').then(res => {
       let all = res.map((item: any) => {
@@ -725,9 +739,9 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   <TouchableOpacity>
                     <PlantSelect
                       key={i}
-                      label={v}
-                      id={v}
-                      onPress={() => selectPlants(v)}
+                      label={v.cropName}
+                      id={v.id}
+                      onPress={() => selectPlants(v.cropName)}
                     />
                   </TouchableOpacity>
                 ))}

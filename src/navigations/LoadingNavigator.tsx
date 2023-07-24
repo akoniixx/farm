@@ -31,11 +31,11 @@ const LoadingNavigator: React.FC<any> = ({ navigation, route }) => {
       const currentVersion = VersionCheck.getCurrentVersion();
 
       const storeUrl = await VersionCheck.getAppStoreUrl({
-        appID: '6443516628',
+        appID: '1668317592',
       });
 
       const playStoreUrl = await VersionCheck.getPlayStoreUrl({
-        packageName: 'com.iconkaset.droner',
+        packageName: 'com.iconkaset.farmer',
       });
 
       const { remote } = await storeVersion({
@@ -56,7 +56,7 @@ const LoadingNavigator: React.FC<any> = ({ navigation, route }) => {
         latestVersion: remote,
       });
       const updateLater = await AsyncStorage.getItem('updateLater');
-      const isDev = true;
+      const isDev = false;
 
       if (needUpdate.isNeeded) {
         // if (isDev) {

@@ -3,15 +3,14 @@ import AppAuthNavigator from './AppAuthNavigator';
 import LoadingNavigator from './LoadingNavigator';
 import { createStackNavigator } from '@react-navigation/stack';
 import MainNavigator from './MainNavigator';
-import { SystemMaintenance } from '../datasource/SystemMaintenanceDatasource';
-import MaintenanceScreen from '../screens/MaintenanceScreen/MaintenanceScreen';
-import { momentExtend } from '../utils/moment-buddha-year';
+
 import ForceUpdateScreen from '../screens/ForceUpdateScreen';
 
 const Stack = createStackNavigator();
 const AppNavigator: React.FC = () => {
   return (
     <Stack.Navigator
+      initialRouteName="initPage"
       screenOptions={{ headerShown: false, gestureEnabled: false }}>
       <Stack.Screen
         name="initPage"
