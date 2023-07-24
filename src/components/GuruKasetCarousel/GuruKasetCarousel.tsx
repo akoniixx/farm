@@ -33,7 +33,7 @@ export default function GuruKasetCarousel({
           loop={true}
           hasParallaxImages
           ref={isCarousel}
-          data={guruKaset.data}
+          data={guruKaset.data.filter(el => el.pin_all)}
           sliderWidth={screen.width}
           itemWidth={screen.width - 48}
           onSnapToItem={(idx: number) => setIndex(idx)}
@@ -74,7 +74,7 @@ export default function GuruKasetCarousel({
           autoplayDelay={5000}
           loop={true}
           ref={isCarousel}
-          data={guruKaset.data}
+          data={guruKaset.data.filter(el => el.pin_main)}
           sliderWidth={screen.width}
           itemWidth={screen.width}
           onSnapToItem={(idx: number) => setIndex(idx)}
@@ -101,7 +101,7 @@ export default function GuruKasetCarousel({
               marginBottom: 16,
             }}
             animatedDuration={100}
-            dotsLength={guruKaset?.data?.length}
+            dotsLength={guruKaset.data.filter(el => el.pin_all).length}
             activeDotIndex={index}
             carouselRef={isCarousel}
             dotStyle={{
@@ -124,7 +124,7 @@ export default function GuruKasetCarousel({
             top: '60%',
           }}>
           <Pagination
-            dotsLength={guruKaset?.data?.length}
+            dotsLength={guruKaset.data.filter(el => el.pin_main).length}
             activeDotIndex={index}
             carouselRef={isCarousel}
             dotStyle={{

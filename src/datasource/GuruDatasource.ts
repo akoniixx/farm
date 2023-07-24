@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {BASE_URL, httpClient} from '../config/develop-config';
+import {BASE_URL} from '../config/develop-config';
 
 export class GuruKaset {
   static async findAllNews({
