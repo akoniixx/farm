@@ -1,7 +1,13 @@
-
+## Fix [1.6.8] 2023-07-24
+- fix carousel data not match with bo
+## Changes [1.6.7] 2023-07-21
+- fix some ui
+- change color text footer card task
+- solved when landing app double re-render
 ## Feature [1.6.6] 2023-07-20 
 - fix some ui 
 - add new screen for addition document 
+- badge status payment
 ## Feature [1.6.5] 2023-07-12
 - android image picker (react native vision camera)
 - change level dropdown drone image

@@ -74,7 +74,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
       application: 'DRONER',
       categoryNews: 'NEWS',
       sortField: 'created_at',
-      sortDirection: 'DESC',
       limit: 5,
       offset: 0,
       pageType: 'MAIN',
@@ -511,7 +510,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
               mixpanel.track('กดปิดแคมเปญทอง');
               setShowCampaign('none');
             }}>
-            <Image source={icons.x} style={{width: 10, height: 10}} />
+            <Image source={icons.closeBlack} style={{width: 10, height: 10}} />
           </TouchableOpacity>
         </View>
 

@@ -48,6 +48,7 @@ const MainTasklists: React.FC<any> = (props: any) => {
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
+                marginLeft: 4,
               }}>
               <View
                 style={{
@@ -55,7 +56,8 @@ const MainTasklists: React.FC<any> = (props: any) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   backgroundColor: getStatusToText(props.status)?.bgcolor,
-                  paddingHorizontal: normalize(12),
+                  paddingHorizontal: normalize(8),
+
                   paddingVertical: normalize(5),
                   borderRadius: normalize(12),
                 }}>
@@ -72,7 +74,7 @@ const MainTasklists: React.FC<any> = (props: any) => {
                 status={props.status}
                 statusPayment={props.statusPayment}
                 style={{
-                  marginLeft: 8,
+                  marginLeft: 4,
                 }}
               />
             </View>

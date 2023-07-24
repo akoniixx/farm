@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -22,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProgressBarAnimated from '../../components/ProgressBarAnimated/ProgressBarAnimated';
 import {momentExtend, thaiLongDate} from '../../function/utility';
 import {mixpanel} from '../../../mixpanel';
+import Text from '../../components/Text';
 
 const CampaignScreen: React.FC<any> = ({navigation, route}) => {
   const [campaign, setCampaign] = useState<CampaignEntitie>(init_campaign);
@@ -118,9 +118,12 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                     }}>
                     จับรางวัลครั้งถัดไป
                   </Text>
-                  <Text style={[styles.rewardFont,{fontFamily:font.bold,marginTop:5}]}>
-                
-                  {thaiLongDate(campaign?.awardDate)}
+                  <Text
+                    style={[
+                      styles.rewardFont,
+                      {fontFamily: font.bold, marginTop: 5},
+                    ]}>
+                    {thaiLongDate(campaign?.awardDate)}
                   </Text>
                 </View>
               </View>
@@ -134,15 +137,17 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                   alignItems: 'center',
                 }}>
                 <Text style={styles.rewardFont}>จำนวนไร่สะสม </Text>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
                   <Text
                     style={[
                       styles.rewardFont,
                       {fontSize: normalize(28), marginRight: 20},
                     ]}>
-                    {afterRai? afterRai:0}
+                    {afterRai ? afterRai : 0}
                   </Text>
-                  <Text style={styles.rewardFont}>ไร่</Text>
+                  <Text style={[styles.rewardFont, {marginBottom: 2}]}>
+                    ไร่
+                  </Text>
                 </View>
               </View>
               <ProgressBarAnimated
@@ -156,7 +161,12 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                   }}>
-                  <Text>เริ่มนับจำนวนไร่สะสม </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                    }}>
+                    เริ่มนับจำนวนไร่สะสม{' '}
+                  </Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text
                       style={{
@@ -171,7 +181,10 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                     </Text>
                   </View>
                 </View>
-                <Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                  }}>
                   ตั้งแต่{' '}
                   {momentExtend.toBuddhistYear(campaign.startDate, 'DD MMM YY')}{' '}
                   ถึง{' '}

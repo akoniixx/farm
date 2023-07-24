@@ -94,11 +94,11 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
       application: 'DRONER',
       categoryNews: 'NEWS',
       sortField: 'created_at',
-      sortDirection: 'DESC',
       offset: 0,
       limit: 5,
       pageType: 'ALL',
     });
+    console.log('result', JSON.stringify(result, null, 2));
     if (result) {
       setPinNews(result);
     }
@@ -137,6 +137,11 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
   };
 
   const GuruKasetHeader = useMemo(() => {
+    const filterNews = pinNews?.data.filter((el: any) => el.pin_all);
+    if (filterNews.length < 1) {
+      return <View />;
+    }
+
     return (
       <>
         <GuruKasetCarousel

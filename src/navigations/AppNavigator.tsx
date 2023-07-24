@@ -10,6 +10,7 @@ const Stack = createStackNavigator();
 const AppNavigator: React.FC = () => {
   return (
     <Stack.Navigator
+      initialRouteName="initPage"
       screenOptions={{headerShown: false, gestureEnabled: false}}>
       <Stack.Screen
         name="initPage"

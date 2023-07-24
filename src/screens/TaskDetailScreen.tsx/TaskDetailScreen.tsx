@@ -341,7 +341,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   </View>
                   <BadgeStatus
                     style={{
-                      marginLeft: 8,
+                      marginLeft: 4,
                     }}
                     status={data.status}
                     statusPayment={data.statusPayment}
