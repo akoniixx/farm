@@ -1,3 +1,5 @@
+## Fix [1.6.9] 2023-07-25
+- fix requirement by business and UI Figma
 ## Fix [1.6.8] 2023-07-24
 - fix carousel data not match with bo
 - change color footer text card task
