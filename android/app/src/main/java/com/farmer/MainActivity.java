@@ -7,6 +7,11 @@ import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 
 public class MainActivity extends ReactActivity {
+  @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        SplashScreen.show(this);  // here
+        super.onCreate(null); // set null for oppo
+    }
 
    @Override
     protected void onCreate(Bundle savedInstanceState) {
