@@ -1,3 +1,6 @@
+## Fix [1.6.10] 2023-07-26
+- fix ui footer and text align card
+- add new api cropName to dynamic value
 ## Fix [1.6.9] 2023-07-25
 - fix requirement by business and UI Figma
 ## Fix [1.6.8] 2023-07-24

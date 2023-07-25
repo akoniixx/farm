@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  useWindowDimensions,
-} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
 
 import {normalize} from '@rneui/themed';
 import colors from '../assets/colors/colors';
@@ -24,18 +18,18 @@ export const PlantSelect: React.FC<PrantSelectProps> = ({
 }) => {
   const width = Dimensions.get('window').width;
   return (
-    <View
-      style={{
-        marginRight: (width - normalize(40) - 3 * normalize(103)) / 3,
-        marginBottom: (width - normalize(40) - 3 * normalize(103)) / 3,
-        width: normalize(103),
-        height: normalize(37),
-        borderRadius: normalize(6),
-        backgroundColor: active ? '#2BB0ED' : colors.greyWhite,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress}>
+      <View
+        style={{
+          marginRight: (width - normalize(40) - 3 * normalize(103)) / 3,
+          marginBottom: (width - normalize(40) - 3 * normalize(103)) / 3,
+          width: normalize(103),
+          height: normalize(37),
+          borderRadius: normalize(6),
+          backgroundColor: active ? '#2BB0ED' : colors.greyWhite,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
         <Text
           style={{
             color: active ? colors.white : colors.fontBlack,
@@ -44,8 +38,8 @@ export const PlantSelect: React.FC<PrantSelectProps> = ({
           }}>
           {label}
         </Text>
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 

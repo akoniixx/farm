@@ -1,35 +1,35 @@
 import {
   View,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
-  Image,
   TextInput,
   Modal,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
   Text,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 import {stylesCentral} from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {normalize} from '@rneui/themed';
 import colors from '../../assets/colors/colors';
-import {font, icons, image, image as img} from '../../assets';
+import {font, image} from '../../assets';
 import {PlantSelect} from '../../components/PlantSelect';
-import {plantList} from '../../definitions/plants';
 import {MainButton} from '../../components/Button/MainButton';
 import Lottie from 'lottie-react-native';
 import {Register} from '../../datasource/AuthDatasource';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {cropDatasource} from '../../datasource/CropDatasource';
 
 const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
-  const [plantListSelect, setPlantListSelect] = useState(plantList);
+  const [plantListSelect, setPlantListSelect] = useState<
+    {
+      active: boolean;
+      value: string;
+    }[]
+  >([]);
   const [addPlant, setAddPlant] = useState<string>('');
   const [result, setResult] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -38,27 +38,25 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
   useEffect(() => {
     const getProfile = async () => {
       const droner_id = await AsyncStorage.getItem('droner_id');
-      await ProfileDatasource.getProfile(droner_id!).then(res => {
+      await ProfileDatasource.getProfile(droner_id!).then(async res => {
         setPercentSuccess(res.percentSuccess);
-        let mapPlants = plantListSelect.map(x => {
-          if (res.expPlant.includes(x.value)) {
+        const result = await cropDatasource.getAllCropName();
+        const formatPlant = result.map((item: any) => {
+          const isInclude = (res?.expPlant || []).includes(item.cropName);
+          if (isInclude) {
             return {
-              ...x,
+              value: item.cropName,
               active: true,
             };
-          } else {
-            return {...x};
           }
+
+          return {
+            value: item.cropName,
+            active: false,
+          };
         });
-        res.expPlant.map((x: any) => {
-          if (!mapPlants.some(val => val.value === x)) {
-            mapPlants.push({
-              value: x,
-              active: true,
-            });
-          }
-        });
-        setPlantListSelect(mapPlants);
+
+        setPlantListSelect(formatPlant);
       });
     };
     getProfile();
@@ -218,7 +216,7 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
             Register.registerUpPlants(plant, Number(percentSuccess) + 25)
               .then(res => {
                 setLoading(false);
-                navigation.goBack()
+                navigation.goBack();
               })
               .catch(err => {
                 console.log(err);

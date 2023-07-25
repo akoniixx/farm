@@ -14,8 +14,8 @@ const mappingTextColor = {
   WAIT_REVIEW: '#4D4B23',
 };
 const mappingBgColor = {
-  SUCCESS: '#CCFF66',
-  WAIT_PAYMENT: '#EFFACD',
+  SUCCESS: '#9BF9D3',
+  WAIT_PAYMENT: '#F1FAC3',
   WAIT_REVIEW: '#FAF682',
 };
 export default function BadgeStatus({
