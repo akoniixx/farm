@@ -1,10 +1,16 @@
-import React, {useEffect, useReducer, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import {
   Dimensions,
+  FlatList,
   Image,
   SafeAreaView,
-  ScrollView,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -23,29 +29,129 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {normalize} from '../../function/Normalize';
 import {momentExtend} from '../../function/utility';
 import {mixpanel} from '../../../mixpanel';
+import {RefreshControl} from 'react-native-gesture-handler';
+import GuruKasetCarousel from '../../components/GuruKasetCarousel/GuruKasetCarousel';
+import Text from '../../components/Text';
+const initialLimit = 6;
+const filterListSelect = [
+  {
+    id: 1,
+    title: 'ล่าสุด',
+    value: 'created_at',
+    mixpanel: 'เลือกฟิลเตอร์กูรูเกษตรล่าสุด',
+  },
+  {
+    id: 2,
+    title: 'นิยมมากสุด',
+    value: 'read',
+    mixpanel: 'เลือกฟิลเตอร์กูรูเกษตรนิยมมากสุด',
+  },
+];
 
 const AllGuruScreen: React.FC<any> = ({navigation}) => {
   const isFocused = useIsFocused();
+  const [sortBy, setSortBy] = useState<string>('created_at');
   const [loading, setLoading] = useState(false);
   const filterNews = useRef<any>();
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<any>({
+    data: [],
+    count: 0,
+  });
+  const [pinNews, setPinNews] = useState<any>({
+    data: [],
+    count: 0,
+  } as any);
+  const [limit, setLimit] = useState(initialLimit);
 
-  useEffect(() => {
-    findAllNews();
-  }, [isFocused]);
-  const findAllNews = async () => {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const findAllNews = useCallback(async () => {
     setLoading(true);
-    GuruKaset.findAllNews('ACTIVE', 'DRONER', 'NEWS', 'created_at', 'DESC')
+    GuruKaset.findAllNews({
+      status: 'ACTIVE',
+      application: 'DRONER',
+      categoryNews: 'NEWS',
+      sortField: sortBy,
+      sortDirection: 'DESC',
+      offset: 0,
+      limit: initialLimit,
+    })
       .then(res => {
         if (res) {
           setData(res);
+          setLimit(initialLimit);
         }
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
+  }, [sortBy]);
+
+  const getNewsPinned = useCallback(async () => {
+    const result = await GuruKaset.findAllNews({
+      status: 'ACTIVE',
+      application: 'DRONER',
+      categoryNews: 'NEWS',
+      sortField: 'created_at',
+      offset: 0,
+      limit: 5,
+      pageType: 'ALL',
+    });
+    console.log('result', JSON.stringify(result, null, 2));
+    if (result) {
+      setPinNews(result);
+    }
+  }, []);
+
+  useEffect(() => {
+    getNewsPinned();
+  }, []);
+  useEffect(() => {
+    findAllNews();
+  }, [isFocused, findAllNews, sortBy]);
+
+  const onLoadMore = async () => {
+    if (data.count > data.data.length) {
+      setLoading(true);
+      const res = await GuruKaset.findAllNews({
+        status: 'ACTIVE',
+        application: 'DRONER',
+        categoryNews: 'NEWS',
+        sortField: 'created_at',
+        sortDirection: 'DESC',
+        offset: 0,
+        limit: limit,
+      });
+      setLimit(limit + initialLimit);
+      if (res) {
+        setData({
+          data: [...data.data, ...res.data],
+          count: res.count,
+        });
+      }
+      setLoading(false);
+    } else {
+      console.log('no more data');
+    }
   };
+
+  const GuruKasetHeader = useMemo(() => {
+    const filterNews = pinNews?.data.filter((el: any) => el.pin_all);
+    if (filterNews.length < 1) {
+      return <View />;
+    }
+
+    return (
+      <>
+        <GuruKasetCarousel
+          guruKaset={pinNews}
+          navigation={navigation}
+          allScreen
+        />
+      </>
+    );
+  }, [pinNews, navigation]);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
@@ -66,38 +172,47 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
           </TouchableOpacity>
         )}
       />
-      <ScrollView style={{backgroundColor: '#F8F9FA'}}>
-        <View style={{paddingVertical: 10}}>
-          {data != undefined ? (
-            <View>
-              <ScrollView>
-                {data != undefined &&
-                  data.data.map((item: any, index: any) => (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={async () => {
-                        mixpanel.track('กดอ่านกูรูเกษตรในหน้ารวมข่าวสาร');
-                        await AsyncStorage.setItem('guruId', `${item.id}`);
-                        navigation.push('DetailGuruScreen');
-                      }}>
-                      <CardGuru
-                        key={index}
-                        index={item.index}
-                        background={item.image_path}
-                        title={item.title}
-                        date={momentExtend.toBuddhistYear(
-                          item.created_at,
-                          'DD MMM YY',
-                        )}
-                        read={item.read}
-                      />
-                    </TouchableOpacity>
-                  ))}
-              </ScrollView>
-            </View>
-          ) : null}
-        </View>
-      </ScrollView>
+      <FlatList
+        ListHeaderComponent={GuruKasetHeader}
+        onEndReached={onLoadMore}
+        keyExtractor={(item, index) => index.toString()}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={async () => {
+              try {
+                setRefreshing(true);
+                await findAllNews();
+              } catch (err) {
+                console.log(err);
+              } finally {
+                setRefreshing(false);
+              }
+            }}
+          />
+        }
+        data={data.data}
+        renderItem={({item, index}) => {
+          return (
+            <TouchableOpacity
+              key={index}
+              onPress={async () => {
+                mixpanel.track('กดอ่านกูรูเกษตรในหน้ารวมข่าวสาร');
+                await AsyncStorage.setItem('guruId', `${item.id}`);
+                navigation.push('DetailGuruScreen');
+              }}>
+              <CardGuru
+                key={index}
+                index={item.index}
+                background={item.image_path}
+                title={item.title}
+                date={momentExtend.toBuddhistYear(item.created_at, 'DD MMM YY')}
+                read={item.read}
+              />
+            </TouchableOpacity>
+          );
+        }}
+      />
       <ActionSheet ref={filterNews}>
         <View
           style={{
@@ -110,112 +225,92 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
           <View
             style={{
               flexDirection: 'row',
+              alignItems: 'center',
               justifyContent: 'space-between',
               paddingHorizontal: normalize(20),
             }}>
             <Text style={{fontSize: 22, fontFamily: font.medium}}>
               เรียงลำดับบทความ
             </Text>
-            <Text
-              style={{
-                color: colors.green,
-                fontFamily: font.medium,
-                fontSize: normalize(16),
-              }}
+            <TouchableOpacity
               onPress={() => {
                 mixpanel.track('กดยกเลิกฟิลเตอร์ กูรูเกษตร');
                 filterNews.current.hide();
               }}>
-              ยกเลิก
-            </Text>
+              <Text
+                style={{
+                  color: colors.orange,
+                  fontFamily: font.medium,
+                  fontSize: normalize(16),
+                }}>
+                ยกเลิก
+              </Text>
+            </TouchableOpacity>
           </View>
           <View
             style={{
               borderBottomWidth: 0.3,
               paddingVertical: 5,
               borderColor: colors.disable,
-            }}></View>
+            }}
+          />
           <View style={{flex: 1}}>
-            <View style={{paddingVertical: 20}}>
-              <TouchableOpacity
-                onPress={async () => {
-                  mixpanel.track('เลือกฟิลเตอร์กูรูเกษตรล่าสุด');
-                  filterNews.current.hide();
-                  await GuruKaset.findAllNews(
-                    'ACTIVE',
-                    'DRONER',
-                    'NEWS',
-                    'created_at',
-                    'DESC',
-                  ).then(res => {
-                    setData(res);
-                  });
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    paddingHorizontal: normalize(30),
-                  }}>
-                  <Text
+            {filterListSelect.map((el, idx) => {
+              const isFocus = sortBy === el.value;
+              return (
+                <>
+                  <TouchableOpacity
+                    onPress={async () => {
+                      mixpanel.track(el.mixpanel);
+                      filterNews.current.hide();
+                      setSortBy(el.value);
+                    }}
+                    key={idx}
                     style={{
-                      fontSize: 20,
-                      fontFamily: font.light,
-                      color: colors.fontBlack,
+                      height: 60,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      paddingRight: 16,
                     }}>
-                    ล่าสุด
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              <View
-                style={{
-                  borderBottomWidth: 0.3,
-                  paddingVertical: 10,
-                  borderColor: colors.disable,
-                  width: Dimensions.get('screen').width * 0.9,
-                  alignSelf: 'center',
-                }}></View>
-            </View>
-            <View style={{paddingVertical: 5}}>
-              <TouchableOpacity
-                onPress={async () => {
-                  mixpanel.track('เลือกฟิลเตอร์กูรูเกษตรนิยมมากสุด');
-                  filterNews.current.hide();
-                  await GuruKaset.findAllNews(
-                    'ACTIVE',
-                    'DRONER',
-                    'NEWS',
-                    'read',
-                    'DESC',
-                  ).then(res => {
-                    setData(res);
-                  });
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    paddingHorizontal: normalize(30),
-                  }}>
-                  <Text
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        paddingHorizontal: normalize(30),
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          fontFamily: font.light,
+                          color: colors.fontBlack,
+                        }}>
+                        {el.title}
+                      </Text>
+                    </View>
+
+                    {isFocus && (
+                      <Image
+                        source={icons.checkFillOrange}
+                        style={{
+                          width: 32,
+                          height: 32,
+                        }}
+                      />
+                    )}
+                  </TouchableOpacity>
+                  <View
                     style={{
-                      fontSize: 20,
-                      fontFamily: font.light,
-                      color: colors.fontBlack,
-                    }}>
-                    นิยมมากสุด
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              <View
-                style={{
-                  borderBottomWidth: 0.3,
-                  paddingVertical: 10,
-                  borderColor: colors.disable,
-                  width: Dimensions.get('screen').width * 0.9,
-                  alignSelf: 'center',
-                }}></View>
-            </View>
+                      borderBottomWidth: 0.3,
+
+                      borderColor: colors.disable,
+                      width: Dimensions.get('screen').width * 0.9,
+                      alignSelf: 'center',
+                    }}
+                  />
+                </>
+              );
+            })}
           </View>
         </View>
       </ActionSheet>

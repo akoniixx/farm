@@ -9,6 +9,7 @@ target 'Droner' do
 
   permissions_path = '../node_modules/react-native-permissions/ios'
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
+  pod 'Permission-AppTrackingTransparency', :path => "#{permissions_path}/AppTrackingTransparency"
 
 # React Native Maps dependencies
 rn_maps_path = '../node_modules/react-native-maps'

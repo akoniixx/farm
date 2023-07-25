@@ -1,7 +1,7 @@
 import React, {createContext, useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AppNavigator from './src/navigations/AppNavigator';
-import {navigate, navigationRef} from './src/navigations/RootNavigation';
+import {navigationRef} from './src/navigations/RootNavigation';
 import SplashScreen from 'react-native-splash-screen';
 import Toast from 'react-native-toast-message';
 import {SheetProvider} from 'react-native-actions-sheet';
@@ -12,7 +12,7 @@ import buddhaEra from 'dayjs/plugin/buddhistEra';
 import dayjs from 'dayjs';
 import {AuthProvider} from './src/contexts/AuthContext';
 import {Settings} from 'react-native-fbsdk-next';
-
+import {check, request} from 'react-native-permissions';
 dayjs.extend(buddhaEra);
 import {
   firebaseInitialize,
@@ -20,7 +20,7 @@ import {
 } from './src/firebase/notification';
 import {Platform} from 'react-native';
 import {mixpanel} from './mixpanel';
-import {requestTrackingPermission} from 'react-native-tracking-transparency';
+
 import {checkNotifications} from 'react-native-permissions';
 import 'moment/locale/th';
 import './src/components/Sheet';
@@ -49,13 +49,16 @@ const ActionContext = createContext<ActionContextType>(ActionContextState);
 const App = () => {
   const [actiontaskId, setActiontaskId] = useState<string | null>('');
   const requestTracking = async () => {
-    const currentStatus = await Settings.getAdvertiserTrackingEnabled();
-    if (currentStatus) {
+    const status = await request('ios.permission.APP_TRACKING_TRANSPARENCY');
+    const trackingStatus = await check(
+      'ios.permission.APP_TRACKING_TRANSPARENCY',
+    );
+
+    if (trackingStatus === 'granted') {
+      Settings.setAdvertiserTrackingEnabled(true);
       return;
     }
-    const status = await requestTrackingPermission();
-
-    if (status === 'authorized') {
+    if (status === 'granted') {
       Settings.setAdvertiserTrackingEnabled(true);
     } else {
       Settings.setAdvertiserTrackingEnabled(false);
@@ -63,12 +66,21 @@ const App = () => {
   };
 
   useEffect(() => {
+    const checkPermission = () => {
+      checkNotifications().then(async ({status}) => {
+        if (status === 'denied' || status === 'blocked') {
+          requestUserPermission();
+        }
+      });
+    };
+
     mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
     const getToken = async () => {
       const token = await AsyncStorage.getItem('token');
       const dronerId = await AsyncStorage.getItem('droner_id');
+
       console.log('token', token);
       console.log('dronerId', dronerId);
     };
@@ -77,18 +89,13 @@ const App = () => {
     }
     requestUserPermission();
     checkPermission();
-    requestTracking();
     getToken();
+
     // checkVersion();
   }, []);
-
-  const checkPermission = () => {
-    checkNotifications().then(async ({status, settings}) => {
-      if (status === 'denied' || status === 'blocked') {
-        requestUserPermission();
-      }
-    });
-  };
+  useEffect(() => {
+    requestTracking();
+  }, []);
 
   return (
     <>

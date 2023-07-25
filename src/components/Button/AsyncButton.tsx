@@ -70,25 +70,44 @@ export default function AsyncButton({
     </TouchableOpacity>
   );
 }
+const disable = StyleSheet.create({
+  button: {
+    width: '100%',
+    backgroundColor: colors.disable,
+    borderRadius: 12,
+    height: 54,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: colors.disable,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+  },
+});
 
 const styles = (props: {noBorder: boolean; disabled?: boolean}) =>
   StyleSheet.create({
-    primary: {
-      backgroundColor: colors.orange,
-      minHeight: 54,
-      width: '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
-      flexDirection: 'row',
-      borderRadius: 8,
-      shadowColor: props.disabled ? '#fff' : '#F86820',
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-      shadowOpacity: 0.2,
-      shadowRadius: 16,
-    },
+    primary: props.disabled
+      ? disable.button
+      : {
+          backgroundColor: colors.orange,
+          minHeight: 54,
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'row',
+          borderRadius: 8,
+          shadowColor: props.disabled ? '#fff' : '#F86820',
+          shadowOffset: {
+            width: 0,
+            height: 4,
+          },
+          shadowOpacity: 0.2,
+          shadowRadius: 16,
+        },
     primaryText: {
       color: colors.white,
       fontFamily: font.bold,
@@ -110,20 +129,5 @@ const styles = (props: {noBorder: boolean; disabled?: boolean}) =>
       borderRadius: 8,
       borderWidth: props.noBorder ? 0 : 1,
       borderColor: colors.disable,
-    },
-    disableButton: {
-      width: '100%',
-      backgroundColor: colors.disable,
-      borderRadius: 12,
-      height: 54,
-      alignItems: 'center',
-      justifyContent: 'center',
-      shadowColor: colors.disable,
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-      shadowOpacity: 0.2,
-      shadowRadius: 16,
     },
   });

@@ -7,7 +7,7 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from 'react-native';
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {colors, image} from '../../assets';
 import fonts from '../../assets/fonts';
 import {momentExtend} from '../../function/utility';
@@ -54,11 +54,9 @@ export default function ReadyToUseTab({navigation}: {navigation: any}) {
     }
   }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getHistoryRewardReadyToUse();
-    }, [getHistoryRewardReadyToUse]),
-  );
+  useEffect(() => {
+    getHistoryRewardReadyToUse();
+  }, []);
 
   const onNavigation = async (item: RedemptionTransaction) => {
     try {

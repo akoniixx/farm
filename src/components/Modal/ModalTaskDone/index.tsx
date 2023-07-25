@@ -1,10 +1,4 @@
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  Platform,
-} from 'react-native';
+import {View, StyleSheet, Image, Platform} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import * as ImagePicker from 'react-native-image-picker';
 import Text from '../../Text';
@@ -15,8 +9,9 @@ import StepTwo from './StepTwo';
 import AsyncButton from '../../Button/AsyncButton';
 import ModalImageExample from './ModalImageExample';
 import ModalUploadImage from '../ModalUploadImage';
-import ReactNativeModal from 'react-native-modal';
+
 import Modal from '../Modal';
+import {ResizeImage} from '../../../function/Resizing';
 
 interface Props {
   visible: boolean;
@@ -67,6 +62,9 @@ export default function ModalTaskDone({
     if (!result.didCancel) {
       const fileSize = result?.assets?.[0]?.fileSize || 0;
       const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
+      const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
+      let newResult: any = result;
+
       if (isFileMoreThan20MB) {
         setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
         onOpenModal();
@@ -78,11 +76,17 @@ export default function ModalTaskDone({
         });
         return false;
       }
+      if (isFileMoreThan3MB) {
+        newResult = await ResizeImage({
+          uri: result?.assets ? result?.assets?.[0].uri : '',
+        });
+      }
+
       if (step === 0) {
-        setImgController(result);
+        setImgController(newResult);
         setStep(0);
       } else {
-        setImgFertilizer(result);
+        setImgFertilizer(newResult);
         setStep(1);
       }
       setError('');
@@ -95,12 +99,17 @@ export default function ModalTaskDone({
   const onTakeImageController = async () => {
     const result = await ImagePicker.launchCamera({
       mediaType: 'photo',
-      maxHeight: 1000,
-      maxWidth: 1000,
+      maxHeight: 800,
+      maxWidth: 800,
+      cameraType: 'back',
+      quality: 0.8,
     });
+
     if (!result.didCancel) {
       const fileSize = result?.assets?.[0]?.fileSize || 0;
       const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
+      const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
+      let newResult: any = result;
 
       if (isFileMoreThan20MB) {
         setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
@@ -114,12 +123,17 @@ export default function ModalTaskDone({
 
         return false;
       }
+      if (isFileMoreThan3MB) {
+        newResult = await ResizeImage({
+          uri: result?.assets ? result?.assets?.[0].uri : '',
+        });
+      }
 
       if (step === 0) {
-        setImgController(result);
+        setImgController(newResult);
         setStep(0);
       } else {
-        setImgFertilizer(result);
+        setImgFertilizer(newResult);
         setStep(1);
       }
       setError('');
@@ -127,6 +141,35 @@ export default function ModalTaskDone({
       onOpenModal();
     }
   };
+
+  const onFinishedTakePhoto = useCallback(
+    async (v: any) => {
+      const isFileMoreThan5MB = v.assets[0].fileSize > 5 * 1024 * 1024;
+      if (isFileMoreThan5MB) {
+        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 5 MB');
+        onOpenModal();
+        setStep(() => {
+          if (step === 0) {
+            return 1;
+          }
+          return 0;
+        });
+        return false;
+      }
+
+      if (step === 0) {
+        setImgController(v);
+        setStep(0);
+      } else {
+        setImgFertilizer(v);
+        setStep(1);
+      }
+      setError('');
+      setShowModalSelectImage(false);
+      onOpenModal();
+    },
+    [onOpenModal, step],
+  );
 
   const RenderStep = useMemo(() => {
     if (step === 0) {
@@ -219,9 +262,11 @@ export default function ModalTaskDone({
                     }}>
                     <Text
                       style={{
-                        lineHeight: Platform.OS === 'android' ? 0 : 24,
+                        lineHeight: Platform.OS === 'android' ? 24 : 24,
                         fontFamily: font.semiBold,
                         fontSize: 18,
+                        textAlign: 'center',
+                        textAlignVertical: 'center',
                         color: isActive ? colors.white : colors.grey3,
                       }}>
                       {index + 1}
@@ -433,6 +478,10 @@ export default function ModalTaskDone({
         }}
       />
       <ModalUploadImage
+        onCloseModalSelect={() => {
+          setShowModalSelectImage(false);
+        }}
+        onFinishedTakePhoto={onFinishedTakePhoto}
         onCancel={() => {
           setShowModalSelectImage(false);
           onOpenModal();

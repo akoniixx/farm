@@ -1,7 +1,13 @@
 import {normalize} from '@rneui/themed';
 import React from 'react';
 import {useState} from 'react';
-import {View, useWindowDimensions, Text, StyleSheet, Animated} from 'react-native';
+import {
+  View,
+  useWindowDimensions,
+  Text,
+  StyleSheet,
+  Animated,
+} from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import fonts from '../../assets/fonts';
 // import font from "../../../android/app/build/intermediates/assets/debug/mergeDebugAssets/fonts/font";
@@ -32,7 +38,7 @@ const renderTabBar = (props: any) => (
 interface Prop {
   isOpenReceiveTask: boolean;
   dronerStatus: string;
-  scrollOffsetY: Animated.Value
+  navigation: any;
 }
 
 const TaskTapNavigator: React.FC<Prop> = (props: Prop) => {
@@ -46,14 +52,19 @@ const TaskTapNavigator: React.FC<Prop> = (props: Prop) => {
     switch (route.key) {
       case 'task':
         mixpanel.track('tab inprogress task');
-        return <TaskScreen dronerStatus={props.dronerStatus} scrollOffsetY={props.scrollOffsetY}/>;
+        return (
+          <TaskScreen
+            dronerStatus={props.dronerStatus}
+            navigation={props.navigation}
+          />
+        );
       case 'newTask':
         mixpanel.track('tab new task');
         return (
           <NewTaskScreen
+            navigation={props.navigation}
             isOpenReceiveTask={props.isOpenReceiveTask}
             dronerStatus={props.dronerStatus}
-            scrollOffsetY={props.scrollOffsetY}
           />
         );
       default:
@@ -70,7 +81,6 @@ const TaskTapNavigator: React.FC<Prop> = (props: Prop) => {
       onIndexChange={setIndex}
       initialLayout={{width: layout.width}}
       lazy
-
     />
   );
 };

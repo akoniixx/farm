@@ -1,6 +1,6 @@
 {
   "name": "droner",
-  "version": "1.6.4",
+  "version": "1.6.8",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -12,6 +12,7 @@
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc.js"
   },
   "dependencies": {
+    "@bam.tech/react-native-image-resizer": "^3.0.5",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-native-fontawesome": "^0.3.0",
@@ -63,7 +64,7 @@
     "react-native-modal": "^13.0.1",
     "react-native-modal-datetime-picker": "^14.0.0",
     "react-native-pager-view": "^5.4.25",
-    "react-native-permissions": "^3.6.1",
+    "react-native-permissions": "^3.8.4",
     "react-native-reanimated": "^2.12.0",
     "react-native-reanimated-carousel": "^3.0.3",
     "react-native-render-html": "^6.3.4",
@@ -77,9 +78,9 @@
     "react-native-swipe-list-view": "^3.2.9",
     "react-native-tab-view": "^3.1.1",
     "react-native-toast-message": "^2.1.5",
-    "react-native-tracking-transparency": "^0.1.2",
     "react-native-vector-icons": "^9.2.0",
     "react-native-version-check": "^3.4.7",
+    "react-native-vision-camera": "^2.15.4",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "socket.io-client": "^4.5.2",
     "yarn": "^1.22.19",

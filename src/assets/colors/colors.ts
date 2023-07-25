@@ -17,6 +17,7 @@ export default {
   transSubOrange: '#FFFBF6',
   green: '#2EC66E',
   greenDark: '#014D40',
+  greenSoft: '#3AB46D',
   white: '#FFFFFF',
   grayBg: '#FAFAFB',
   greyWhite: '#F2F2F2',
@@ -29,5 +30,6 @@ export default {
   fontGrey: '#4A5158',
   Surface: '#F6F7F9',
   redPrice: '#EF4E4E',
+  redMedium: '#D6432E',
   blown: '#523A19',
 };

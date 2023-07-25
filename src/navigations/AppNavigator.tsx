@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import AppAuthNavigator from './AppAuthNavigator';
 import MainNavigator from './MainNavigator';
@@ -10,6 +10,7 @@ const Stack = createStackNavigator();
 const AppNavigator: React.FC = () => {
   return (
     <Stack.Navigator
+      initialRouteName="initPage"
       screenOptions={{headerShown: false, gestureEnabled: false}}>
       <Stack.Screen
         name="initPage"

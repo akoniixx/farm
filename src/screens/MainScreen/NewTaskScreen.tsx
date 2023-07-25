@@ -37,39 +37,45 @@ import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import MyProfileScreen from '../ProfileVerifyScreen/MyProfileScreen';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import {useAuth} from '../../contexts/AuthContext';
+import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
 
 interface Prop {
   isOpenReceiveTask: boolean;
   dronerStatus: string;
-  scrollOffsetY: Animated.Value;
+  navigation: any;
 }
+const initialPage = 1;
 
 const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   const [unsendTask, setUnsendtask] = useState([]);
-  const scrollOffsetY = props.scrollOffsetY;
+
+  const {
+    state: {isDoneAuth},
+  } = useAuth();
   const navigation = RootNavigation.navigate;
   const dronerStatus = props.dronerStatus;
   const {isOpenReceiveTask} = props;
   const [data, setData] = useState<any>([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(initialPage);
   const [loading, setLoading] = useState(false);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const [checkResIsComplete, setCheckResIsComplete] = useState(false);
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
-  const snapPoints = useMemo(() => ['25%', '25%'], []);
+
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const width = Dimensions.get('window').width;
   const [selectedTaskId, setSelectedTaskId] = useState<string>('');
   const [dronerId, setDronerId] = useState<string>('');
   const {actiontaskId, setActiontaskId} = useContext(ActionContext);
   const [percentSuccess, setPercentSuccess] = useState<number>(0);
-
+  const limit = 999;
   const getData = async () => {
     setLoading(true);
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
-    TaskDatasource.getTaskById(dronerId, ['WAIT_RECEIVE'], 1, 999)
+    TaskDatasource.getTaskById(dronerId, ['WAIT_RECEIVE'], initialPage, limit)
       .then(res => {
         if (res !== undefined) {
           setData(res);
@@ -178,7 +184,15 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
 
   return (
     <>
-      <View style={[{flex: 1, backgroundColor: colors.grayBg, padding: 8}]}>
+      {!isDoneAuth && (
+        <View
+          style={{
+            paddingHorizontal: 8,
+          }}>
+          <WarningDocumentBox navigation={props.navigation} />
+        </View>
+      )}
+      <View style={[{flex: 1}]}>
         {data.length == 0 && !isOpenReceiveTask && dronerStatus === 'ACTIVE' ? (
           <View
             style={[
@@ -406,16 +420,14 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
           </View>
         ) : null}
         {data.length > 0 && (
-          <View>
+          <View
+            style={{
+              paddingTop: 8,
+            }}>
             <FlatList
+              contentContainerStyle={{paddingHorizontal: 8, marginBottom: 8}}
               keyExtractor={element => element.item.id}
               data={data}
-              onScroll={Animated.event(
-                [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
-                {
-                  useNativeDriver: false,
-                },
-              )}
               renderItem={({item}: any) => (
                 <NewTask
                   taskId={item.item.id}

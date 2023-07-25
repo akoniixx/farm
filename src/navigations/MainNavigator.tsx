@@ -41,6 +41,9 @@ import MyProfileScreen from '../screens/ProfileVerifyScreen/MyProfileScreen';
 import IDCardScreen from '../screens/ProfileVerifyScreen/IDCardScreen';
 import AddDroneScreen from '../screens/ProfileVerifyScreen/AddDroneScreen';
 import AddPlantsScreen from '../screens/ProfileVerifyScreen/AddPlantsScreen';
+import CameraScreen from '../screens/CameraScreen';
+import AdditionDocumentScreen from '../screens/AdditionDocumentScreen';
+import NewAddIDCardScreen from '../screens/NewAddIDCardScreen';
 
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
@@ -60,7 +63,10 @@ export type StackParamList = {
   AddIDCardScreen: any;
   NotificationList: any;
   UploadDronerLicenseScreen: any;
-  UploadBankingScreen: any;
+  UploadBankingScreen: {
+    bookBank: any;
+    profile: any;
+  };
   ServiceArea: any;
   AllGuruScreen: any;
   DetailGuruScreen: any;
@@ -123,6 +129,10 @@ export type StackParamList = {
   IDCardScreen: any;
   AddPlantsScreen: any;
   AddDroneScreen: any;
+  CameraScreen: any;
+  AdditionDocumentScreen: any;
+  NewAddIDCardScreen: any;
+  AddBookBankScreen: any;
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
   // };
@@ -214,6 +224,12 @@ const MainNavigator: React.FC = () => {
       <Stack.Screen name="IDCardScreen" component={IDCardScreen} />
       <Stack.Screen name="AddDroneScreen" component={AddDroneScreen} />
       <Stack.Screen name="AddPlantsScreen" component={AddPlantsScreen} />
+      <Stack.Screen name="CameraScreen" component={CameraScreen} />
+      <Stack.Screen
+        name="AdditionDocumentScreen"
+        component={AdditionDocumentScreen}
+      />
+      <Stack.Screen name="NewAddIDCardScreen" component={NewAddIDCardScreen} />
     </Stack.Navigator>
   );
 };

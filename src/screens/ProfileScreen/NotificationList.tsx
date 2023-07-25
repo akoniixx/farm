@@ -390,6 +390,7 @@ const NotificationList: React.FC<any> = ({navigation, route}) => {
         ) : data.length != 0 ? (
           <SwipeListView
             data={data}
+            showsVerticalScrollIndicator={false}
             rightOpenValue={-75}
             renderItem={({item}: any) => (
               <NotificationListTile

@@ -37,7 +37,9 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
     );
   }; */
   return (
-    <SafeAreaView style={stylesCentral.container}>
+    <SafeAreaView
+      style={stylesCentral.container}
+      edges={['right', 'top', 'left']}>
       <CustomHeader
         title="ลงทะเบียนนักบินโดรน"
         showBackBtn
