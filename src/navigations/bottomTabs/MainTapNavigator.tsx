@@ -195,6 +195,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                 screen: 'receivePoint',
               });
               break;
+            case 'MISSION_REWARD_DIGITAL' :
+              RootNavigation.navigate('Main', {
+                screen: 'MyRewardScreen',
+              });
+              break;
             default:
               break;
           }
@@ -265,6 +270,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
         case 'RECEIVE_POINT':
           RootNavigation.navigate('Main', {
             screen: 'receivePoint',
+          });
+          break;
+        case 'MISSION_REWARD_DIGITAL' :
+          RootNavigation.navigate('Main', {
+            screen: 'MyRewardScreen',
           });
           break;
         default:
