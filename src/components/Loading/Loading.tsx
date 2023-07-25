@@ -23,7 +23,7 @@ const Loading = ({ color, spinnerSize = 27, style }: Props) => {
       Animated.timing(rotateAnim, {
         toValue: 1,
         duration: 800,
-        useNativeDriver: true, // Changed here
+        useNativeDriver: false, // Changed here
       }),
     ).start();
   }, [rotateAnim]);
