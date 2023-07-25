@@ -342,7 +342,7 @@ const NewTask: React.FC<any> = (props: any) => {
             width: '100%',
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
             padding: 8,
           }}>
           <Image
@@ -373,14 +373,14 @@ const styles = StyleSheet.create({
     marginTop: 1,
     marginBottom: 10,
 
-    shadowColor: '#000',
+    shadowColor: '#242D3A',
     shadowOffset: {
       width: 0,
       height: 2,
     },
     borderRadius: 8,
     elevation: 2,
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.1,
   },
   listTile: {
     display: 'flex',

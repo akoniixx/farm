@@ -35,22 +35,29 @@ export default function WarningDocumentBox({
           bottom: 1,
         }}
       />
-      {screen === 'TASK' || screen === 'TASK_DETAIL' ? (
-        <View>
-          <>
-            <Text style={styles.text}>กรุณาเพิ่ม “ภาพถ่ายคู่บัตร” และ</Text>
-            <Text style={styles.text}>“บัญชีธนาคาร” เพื่อรับรายได้บริษัท</Text>
-          </>
-        </View>
-      ) : (
-        <View
-          style={{
-            marginRight: 16,
-          }}>
-          <Text style={styles.text}>เพิ่มเอกสารเพื่อรับของรางวัล</Text>
-          <Text style={styles.text}>และสิทธิพิเศษจากบริษัท</Text>
-        </View>
-      )}
+      <View
+        style={{
+          marginLeft: 60,
+        }}>
+        {screen === 'TASK' || screen === 'TASK_DETAIL' ? (
+          <View>
+            <>
+              <Text style={styles.text}>กรุณาเพิ่ม “ภาพถ่ายคู่บัตร” และ</Text>
+              <Text style={styles.text}>
+                “บัญชีธนาคาร” เพื่อรับรายได้บริษัท
+              </Text>
+            </>
+          </View>
+        ) : (
+          <View
+            style={{
+              marginRight: 16,
+            }}>
+            <Text style={styles.text}>เพิ่มเอกสารเพื่อรับของรางวัล</Text>
+            <Text style={styles.text}>และสิทธิพิเศษจากบริษัท</Text>
+          </View>
+        )}
+      </View>
 
       <AsyncButton
         onPress={() => {
@@ -85,7 +92,7 @@ const styles = StyleSheet.create({
     padding: 8,
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   text: {

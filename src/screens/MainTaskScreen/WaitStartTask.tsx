@@ -1,5 +1,5 @@
 import {normalize} from '@rneui/themed';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {FlatList, Image, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, image} from '../../assets';
@@ -43,21 +43,50 @@ const WaitStartTask: React.FC = () => {
         console.log(err);
       });
   };
+  const RenderWarningDoc = useMemo(() => {
+    if (!isDoneAuth) {
+      return (
+        <View
+          style={{
+            paddingBottom: 8,
+          }}>
+          <WarningDocumentBox />
+        </View>
+      );
+    } else {
+      return (
+        <View
+          style={{
+            paddingBottom: 8,
+          }}
+        />
+      );
+    }
+  }, [isDoneAuth]);
+
+  const RenderWarningDocEmpty = useMemo(() => {
+    if (!isDoneAuth && data.length < 1) {
+      return () => (
+        <View
+          style={{
+            paddingBottom: 8,
+            paddingHorizontal: 8,
+          }}>
+          <WarningDocumentBox />
+        </View>
+      );
+    } else {
+      return () => <View />;
+    }
+  }, [isDoneAuth, data]);
 
   return (
     <>
+      <RenderWarningDocEmpty />
       {data.length !== 0 && checkResIsComplete ? (
         <View style={[{flex: 1}]}>
-          {!isDoneAuth && (
-            <View
-              style={{
-                padding: 8,
-              }}>
-              <WarningDocumentBox screen="TASK" />
-            </View>
-          )}
-
           <FlatList
+            ListHeaderComponent={RenderWarningDoc}
             keyExtractor={element => element.item.taskNo}
             data={data}
             extraData={data}
