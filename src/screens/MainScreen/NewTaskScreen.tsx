@@ -181,17 +181,45 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     socket.removeAllListeners(`unsend-task-${dronerId!}`);
   };
-
-  return (
-    <>
-      {!isDoneAuth && (
+  const RenderWarningDoc = useMemo(() => {
+    if (!isDoneAuth) {
+      return (
         <View
           style={{
-            paddingHorizontal: 8,
+            paddingBottom: 8,
           }}>
           <WarningDocumentBox navigation={props.navigation} />
         </View>
-      )}
+      );
+    } else {
+      return (
+        <View
+          style={{
+            paddingBottom: 8,
+          }}
+        />
+      );
+    }
+  }, [isDoneAuth, props.navigation]);
+  const RenderWarningDocEmpty = useMemo(() => {
+    if (!isDoneAuth && data.length < 1) {
+      return () => (
+        <View
+          style={{
+            paddingHorizontal: 8,
+            paddingBottom: 8,
+          }}>
+          <WarningDocumentBox navigation={props.navigation} />
+        </View>
+      );
+    } else {
+      return () => <View />;
+    }
+  }, [isDoneAuth, props.navigation, data]);
+
+  return (
+    <>
+      <RenderWarningDocEmpty />
       <View style={[{flex: 1}]}>
         {data.length == 0 && !isOpenReceiveTask && dronerStatus === 'ACTIVE' ? (
           <View
@@ -425,11 +453,17 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
               paddingTop: 8,
             }}>
             <FlatList
-              contentContainerStyle={{paddingHorizontal: 8, marginBottom: 8}}
+              ListHeaderComponent={RenderWarningDoc}
+              contentContainerStyle={{
+                paddingHorizontal: 8,
+                paddingTop: 8,
+                marginBottom: 8,
+              }}
               keyExtractor={element => element.item.id}
               data={data}
               renderItem={({item}: any) => (
                 <NewTask
+                  {...item.item}
                   taskId={item.item.id}
                   taskNo={item.item.taskNo}
                   status={item.item.status}

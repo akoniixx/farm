@@ -48,12 +48,12 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
   const [provinceId, setProvinceId] = useState<any>(null);
   const [districtId, setDistrictId] = useState<any>(null);
   const [subdistrictId, setSubdistrictId] = useState<any>(null);
-  const [edit,setEdit] = useState<boolean>(false)
+  const [edit, setEdit] = useState<boolean>(false);
   const [data, setData] = useState<AreaServiceEntity[]>([]);
   const [dataStore, setDataStore] = useState<AreaServiceEntity[]>([]);
   const [dataRender, setDataRender] = useState<AreaServiceEntity[]>([]);
   const [page, setPage] = useState<number>(0);
-  const [searchResult, setSearchResult] = useState<string>("");
+  const [searchResult, setSearchResult] = useState<string>('');
   const [position, setPosition] = useState({
     latitude: route.params.latitude,
     longitude: route.params.longitude,
@@ -62,23 +62,23 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
   });
 
   const [positionForm, setPositionForm] = useState<AreaServiceEntity>({
-    area: "",
+    area: '',
     latitude: route.params.latitude,
     longitude: route.params.longitude,
     provinceId: 0,
     districtId: 0,
     subdistrictId: 0,
-    locationName: "",
+    locationName: '',
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     setPosition({
       latitude: route.params.latitude,
       longitude: route.params.longitude,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     });
-  },[])
+  }, []);
 
   useEffect(() => {
     // getNameFormLat();
@@ -97,7 +97,7 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
         };
       });
       setData(all);
-    })
+    });
   }, []);
 
   const onChangeText = (text: string) => {
@@ -146,7 +146,6 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
 
     return false;
   };
-
 
   const hasLocationPermission = async () => {
     if (Platform.OS === 'ios') {
@@ -300,243 +299,255 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
         onPressBack={() => navigation.goBack()}
       />
       <View style={styles.first}>
-         <View style={styles.inner}>
-            <View style={styles.container}>
-              <View style={{marginBottom: normalize(10)}}>
-                  <ProgressBarV2 index={2} />
-               </View>
-               <Text style={styles.label}>ขั้นตอนที่ 2 จาก 2</Text>
-               <Text style={styles.h1}>กรอกข้อมูลการบินโดรน</Text>
-               {edit ? (
-              <View
-              style={{
-                flex: 1,
-                // paddingTop: normalize(10),
-              }}>
-              <View style={{}}>
-                <Text
-                  style={{
-                    fontFamily: fonts.medium,
-                    fontSize: normalize(16),
-                    color: colors.fontBlack,
-                  }}>
-                  ค้นหาพื้นที่ให้บริการของคุณด้วยชื่อ ตำบล /อำเภอ /จังหวัด
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: fonts.medium,
-                    fontSize: normalize(16),
-                    color: colors.darkOrange,
-                  }}>
-                  โดยไม่ต้องพิมพ์คำนำหน้าด้วยคำว่า ต., ตำบล, อ., อำเภอ, จ.,
-                  จังหวัด
-                </Text>
-                <TextInput
-                  clearButtonMode={'always'}
-                  style={[
-                    styles.inputvalue,
-                    {
-                      marginTop: normalize(20),
-                      borderWidth: normalize(1),
-                      paddingVertical: normalize(15),
-                      paddingHorizontal: normalize(10),
-                      borderColor: colors.gray,
-                      borderRadius: normalize(12),
-                    },
-                  ]}
-                  value={searchActive}
-                  onChangeText={val => onChangeText(val)}
-                  placeholder="ระบุชื่อตำบล หรือ ชื่ออำเภอ หรือ ชื่อจังหวัด"
-                  placeholderTextColor={colors.gray}
-                />
-              </View>
-              {searchActive.length != 0 ? (
-                <View
-                  style={{
-                    height: '70%',
-                  }}>
-                  {dataRender.length != 0 ? (
-                    <FlatList
-                      onScrollEndDrag={() => {
-                        if (dataStore.length > dataRender.length) {
-                          setPage(page + 1);
-                        }
-                      }}
-                      data={dataRender}
-                      renderItem={({item}) => (
-                        <Pressable
-                          onPress={() => {
-                            setEdit(false);
-                            setPage(0);
-                            setSearchResult(item.area);
-                            setSearchActive('');
-                            setPosition({
-                              ...position,
-                              latitude: parseFloat(item.latitude.toString()),
-                              longitude: parseFloat(item.longitude.toString()),
-                            });
-                            setPositionForm({
-                              ...positionForm,
-                              area: item.area,
-                              latitude: parseFloat(item.latitude.toString()),
-                              longitude: parseFloat(item.longitude.toString()),
-                              provinceId: item.provinceId,
-                              districtId: item.districtId,
-                              subdistrictId: item.subdistrictId,
-                            });
-                          }}>
-                          <View
-                            style={{
-                              padding: normalize(15),
-                              borderBottomColor: colors.disable,
-                              borderBottomWidth: normalize(0.5),
-                            }}>
-                            <Text
-                              style={{
-                                fontFamily: fonts.medium,
-                                fontSize: normalize(16),
-                                color : colors.fontBlack
-                              }}>
-                              {item.area}
-                            </Text>
-                          </View>
-                        </Pressable>
-                      )}
-                      keyExtractor={item => item.area}
-                    />
-                  ) : (
-                    <View
-                      style={{
-                        flex: 7,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <Image
-                        source={image.emptyareaservice}
-                        style={{
-                          width: normalize(137),
-                          height: normalize(119),
-                          marginBottom: normalize(20),
-                        }}
-                      />
-                      <Text style={styles.inputvalue}>
-                        ไม่พบพื้นที่ดังกล่าว
-                      </Text>
-                    </View>
-                  )}
-                </View>
-              ) : (
-                <View
-                  style={{
-                    height: '60%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={image.emptyareaservice}
-                    style={{
-                      width: normalize(137),
-                      height: normalize(119),
-                      marginBottom: normalize(20),
-                    }}
-                  />
-                  <Text style={styles.inputvalue}>
-                    กรุณาค้นหาพื้นที่ให้บริการหลัก
-                  </Text>
-                </View>
-              )}
+        <View style={styles.inner}>
+          <View style={styles.container}>
+            <View style={{marginBottom: normalize(10)}}>
+              <ProgressBarV2 index={2} />
             </View>
-          ) : (
-            <View style={{}}>
+            <Text style={styles.label}>ขั้นตอนที่ 2 จาก 2</Text>
+            <Text style={styles.h1}>กรอกข้อมูลการบินโดรน</Text>
+            {edit ? (
               <View
                 style={{
-                  marginTop : normalize(20)
-                  // padding: normalize(17),
+                  flex: 1,
+                  // paddingTop: normalize(10),
                 }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={icons.servicearea}
-                    style={{
-                      width: normalize(24),
-                      height: normalize(24),
-                    }}
-                  />
+                <View style={{}}>
                   <Text
                     style={{
-                      paddingLeft: normalize(10),
-                      fontFamily: font.medium,
+                      fontFamily: fonts.medium,
                       fontSize: normalize(16),
-                      color : colors.fontBlack
+                      color: colors.fontBlack,
                     }}>
-                    พื้นที่ให้บริการหลัก
+                    ค้นหาพื้นที่ให้บริการของคุณด้วยชื่อ ตำบล /อำเภอ /จังหวัด
                   </Text>
-                </View>
-                <Pressable onPress={() => setEdit(true)}>
-                  <View style={[styles.input,{marginVertical : normalize(20)}]}>
-                    <Text style={styles.label}>ตำบล/ อำเภอ/ จังหวัด</Text>
-                    <Text style={styles.inputvalue}>{searchResult}</Text>
-                  </View>
-                </Pressable>
-                <Text style={styles.inputvalue}>
-                  ระยะทางพื้นที่ให้บริการหลักระหว่าง 50-100 กม.
-                </Text>
-                <View style={{position: 'relative'}}>
-                  <MapView.Animated
-                    minZoomLevel={14}
-                    mapType={'satellite'}
-                    style={styles.map}
-                    provider={PROVIDER_GOOGLE}
-                    region={position}
-                    showsUserLocation={true}
-                    onRegionChangeComplete={region => {
-                      setPosition(region);
-                      setPositionForm({
-                        ...positionForm,
-                        latitude: parseFloat(region.latitude.toString()),
-                        longitude: parseFloat(region.longitude.toString()),
-                      });
-                    }}
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontSize: normalize(16),
+                      color: colors.darkOrange,
+                    }}>
+                    โดยไม่ต้องพิมพ์คำนำหน้าด้วยคำว่า ต., ตำบล, อ., อำเภอ, จ.,
+                    จังหวัด
+                  </Text>
+                  <TextInput
+                    clearButtonMode={'always'}
+                    style={[
+                      styles.inputvalue,
+                      {
+                        marginTop: normalize(20),
+                        borderWidth: normalize(1),
+                        paddingVertical: normalize(15),
+                        paddingHorizontal: normalize(10),
+                        borderColor: colors.gray,
+                        borderRadius: normalize(12),
+                      },
+                    ]}
+                    value={searchActive}
+                    onChangeText={val => onChangeText(val)}
+                    placeholder="ระบุชื่อตำบล หรือ ชื่ออำเภอ หรือ ชื่อจังหวัด"
+                    placeholderTextColor={colors.gray}
                   />
-                  <View style={styles.markerFixed}>
-                    <Image style={styles.marker} source={image.marker} />
+                </View>
+                {searchActive.length != 0 ? (
+                  <View
+                    style={{
+                      height: '70%',
+                    }}>
+                    {dataRender.length != 0 ? (
+                      <FlatList
+                        onScrollEndDrag={() => {
+                          if (dataStore.length > dataRender.length) {
+                            setPage(page + 1);
+                          }
+                        }}
+                        data={dataRender}
+                        renderItem={({item}) => (
+                          <Pressable
+                            onPress={() => {
+                              console.log({
+                                lat: item.latitude,
+                                lng: item.longitude,
+                              });
+                              setEdit(false);
+                              setPage(0);
+                              setSearchResult(item.area);
+                              setSearchActive('');
+                              setPosition({
+                                ...position,
+                                latitude: parseFloat(item.latitude.toString()),
+                                longitude: parseFloat(
+                                  item.longitude.toString(),
+                                ),
+                              });
+                              setPositionForm({
+                                ...positionForm,
+                                area: item.area,
+                                latitude: parseFloat(item.latitude.toString()),
+                                longitude: parseFloat(
+                                  item.longitude.toString(),
+                                ),
+                                provinceId: item.provinceId,
+                                districtId: item.districtId,
+                                subdistrictId: item.subdistrictId,
+                              });
+                            }}>
+                            <View
+                              style={{
+                                padding: normalize(15),
+                                borderBottomColor: colors.disable,
+                                borderBottomWidth: normalize(0.5),
+                              }}>
+                              <Text
+                                style={{
+                                  fontFamily: fonts.medium,
+                                  fontSize: normalize(16),
+                                  color: colors.fontBlack,
+                                }}>
+                                {item.area}
+                              </Text>
+                            </View>
+                          </Pressable>
+                        )}
+                        keyExtractor={item => item.area}
+                      />
+                    ) : (
+                      <View
+                        style={{
+                          flex: 7,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Image
+                          source={image.emptyareaservice}
+                          style={{
+                            width: normalize(137),
+                            height: normalize(119),
+                            marginBottom: normalize(20),
+                          }}
+                        />
+                        <Text style={styles.inputvalue}>
+                          ไม่พบพื้นที่ดังกล่าว
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                ) : (
+                  <View
+                    style={{
+                      height: '60%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Image
+                      source={image.emptyareaservice}
+                      style={{
+                        width: normalize(137),
+                        height: normalize(119),
+                        marginBottom: normalize(20),
+                      }}
+                    />
+                    <Text style={styles.inputvalue}>
+                      กรุณาค้นหาพื้นที่ให้บริการหลัก
+                    </Text>
+                  </View>
+                )}
+              </View>
+            ) : (
+              <View style={{}}>
+                <View
+                  style={{
+                    marginTop: normalize(20),
+                    // padding: normalize(17),
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Image
+                      source={icons.servicearea}
+                      style={{
+                        width: normalize(24),
+                        height: normalize(24),
+                      }}
+                    />
+                    <Text
+                      style={{
+                        paddingLeft: normalize(10),
+                        fontFamily: font.medium,
+                        fontSize: normalize(16),
+                        color: colors.fontBlack,
+                      }}>
+                      พื้นที่ให้บริการหลัก
+                    </Text>
+                  </View>
+                  <Pressable onPress={() => setEdit(true)}>
+                    <View
+                      style={[styles.input, {marginVertical: normalize(20)}]}>
+                      <Text style={styles.label}>ตำบล/ อำเภอ/ จังหวัด</Text>
+                      <Text style={styles.inputvalue}>{searchResult}</Text>
+                    </View>
+                  </Pressable>
+                  <Text style={styles.inputvalue}>
+                    ระยะทางพื้นที่ให้บริการหลักระหว่าง 50-100 กม.
+                  </Text>
+                  <View style={{position: 'relative'}}>
+                    <MapView.Animated
+                      minZoomLevel={14}
+                      mapType={'satellite'}
+                      style={styles.map}
+                      provider={PROVIDER_GOOGLE}
+                      region={position}
+                      showsUserLocation={true}
+                      onRegionChangeComplete={region => {
+                        setPosition(region);
+                        setPositionForm({
+                          ...positionForm,
+                          latitude: parseFloat(region.latitude.toString()),
+                          longitude: parseFloat(region.longitude.toString()),
+                        });
+                      }}
+                    />
+                    <View style={styles.markerFixed}>
+                      <Image style={styles.marker} source={image.marker} />
+                    </View>
                   </View>
                 </View>
               </View>
-            </View>
-          )}
-              </View>
-              {
-                edit ? <></>:
-                <View style={{
-                  marginBottom : normalize(20)
-                }}>
-                <MainButton
-                  disable={positionForm.provinceId === 0}
-                  onPress={() => {
-                    Register.registerStep2V2(
-                      positionForm.latitude.toString(),
-                      positionForm.longitude.toString(),
-                      positionForm.provinceId,
-                      positionForm.districtId,
-                      positionForm.subdistrictId
-                    ).then(res =>
+            )}
+          </View>
+          {edit ? (
+            <></>
+          ) : (
+            <View
+              style={{
+                marginBottom: normalize(20),
+              }}>
+              <MainButton
+                disable={positionForm.provinceId === 0}
+                onPress={() => {
+                  Register.registerStep2V2(
+                    positionForm.latitude.toString(),
+                    positionForm.longitude.toString(),
+                    positionForm.provinceId,
+                    positionForm.districtId,
+                    positionForm.subdistrictId,
+                  )
+                    .then(res =>
                       navigation.navigate('SuccessScreen', {
                         tele: route.params.telNumber,
                       }),
                     )
                     .catch(err => console.log(err));
-                  }}
-                  label="ถัดไป"
-                  color={colors.orange}
-                />
-              </View>
-              }
-          </View>
+                }}
+                label="ถัดไป"
+                color={colors.orange}
+              />
+            </View>
+          )}
         </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -578,7 +589,7 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
   },
   map: {
-    width: "100%",
+    width: '100%',
     height: normalize(190),
   },
   markerFixed: {

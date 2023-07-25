@@ -120,7 +120,6 @@ export default function NewAddIDCardScreen({navigation}: Props) {
   };
 
   const onFinishedTakePhoto = useCallback(async (v: any) => {
-    console.log('v', JSON.stringify(v, null, 2));
     const isFileMoreThan20MB = v.fileSize > 20 * 1024 * 1024;
     if (isFileMoreThan20MB) {
       setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
@@ -371,7 +370,7 @@ export default function NewAddIDCardScreen({navigation}: Props) {
               fontSize: 20,
               marginVertical: 16,
             }}>
-            เพิ่มรูปถ่ายคู่บัตรประชาชนเรียบร้อย
+            เพิ่มรูปถ่ายคู่บัตรประชาชนสำเร็จ
           </Text>
           <AsyncButton
             title="ตกลง"

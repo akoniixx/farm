@@ -9,9 +9,8 @@ import {mixpanel} from '../../../mixpanel';
 import {useAuth} from '../../contexts/AuthContext';
 
 const NewTask: React.FC<any> = (props: any) => {
-  const date = new Date(props.date);
   const onPressReceiveTask = props.receiveTask;
-  const onPressviewDetails = props.viewDetails;
+
   const navigation = useNavigation<any>();
   const {taskId, fetchData} = props;
   const {
@@ -343,7 +342,7 @@ const NewTask: React.FC<any> = (props: any) => {
             width: '100%',
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
             padding: 8,
           }}>
           <Image
@@ -357,6 +356,7 @@ const NewTask: React.FC<any> = (props: any) => {
           <Text
             style={{
               fontSize: 14,
+              color: colors.redMedium,
             }}>
             งานนี้จำเป็นต้องใช้ “ภาพถ่ายคู่บัตร” และ “บัญชีธนาคาร”
           </Text>
@@ -373,14 +373,14 @@ const styles = StyleSheet.create({
     marginTop: 1,
     marginBottom: 10,
 
-    shadowColor: '#000',
+    shadowColor: '#242D3A',
     shadowOffset: {
       width: 0,
       height: 2,
     },
     borderRadius: 8,
     elevation: 2,
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.1,
   },
   listTile: {
     display: 'flex',

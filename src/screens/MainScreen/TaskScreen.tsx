@@ -185,19 +185,49 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     setToggleModalSuccess(false);
     setTimeout(() => navigation('TaskDetailScreen', {taskId: idUpload}), 500);
   };
-  return (
-    <>
-      {!isDoneAuth && (
+  const RenderWarningDoc = useMemo(() => {
+    if (!isDoneAuth) {
+      return (
         <View
           style={{
+            paddingBottom: 8,
+          }}>
+          <WarningDocumentBox navigation={props.navigation} />
+        </View>
+      );
+    } else {
+      return (
+        <View
+          style={{
+            paddingBottom: 8,
+          }}
+        />
+      );
+    }
+  }, [isDoneAuth, props.navigation]);
+
+  const RenderWarningDocEmpty = useMemo(() => {
+    if (!isDoneAuth && data.length < 1) {
+      return () => (
+        <View
+          style={{
+            paddingBottom: 8,
             paddingHorizontal: 8,
           }}>
           <WarningDocumentBox navigation={props.navigation} />
         </View>
-      )}
+      );
+    } else {
+      return () => <View />;
+    }
+  }, [isDoneAuth, props.navigation, data]);
+  return (
+    <>
+      <RenderWarningDocEmpty />
       {data.length !== 0 && checkResIsComplete ? (
         <View style={[{flex: 1}]}>
           <FlatList
+            ListHeaderComponent={RenderWarningDoc}
             contentContainerStyle={{paddingHorizontal: 8}}
             ListFooterComponent={<View style={{height: 40}} />}
             keyExtractor={element => element.item.taskNo}

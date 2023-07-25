@@ -172,18 +172,7 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
     reducer,
     initialState,
   );
-  console.log(
-    'currentState: ',
-    JSON.stringify(
-      {
-        documentComplete: state.user?.documentComplete,
-        isBookBank: state.user?.isBookBank,
-        isIdCard: state.user?.isIdCard,
-      },
-      null,
-      2,
-    ),
-  );
+
   const authContext = React.useMemo(
     () => ({
       getProfileAuth: async () => {
