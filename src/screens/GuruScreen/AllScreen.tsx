@@ -119,7 +119,7 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
         categoryNews: 'NEWS',
         sortField: sortBy,
         sortDirection: 'DESC',
-        offset: 0,
+        offset: 1,
         limit: limit + initialLimit,
       });
       setLimit(limit + initialLimit);

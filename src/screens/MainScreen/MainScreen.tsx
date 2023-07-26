@@ -73,7 +73,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
       status: 'ACTIVE',
       application: 'DRONER',
       categoryNews: 'NEWS',
-
       limit: 5,
       offset: 0,
       pageType: 'MAIN',
