@@ -43,6 +43,7 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
       mediaType: 'photo',
     });
     if (!result.didCancel) {
+      console.log(result)
       setImage(result);
     }
   }, [image]);
