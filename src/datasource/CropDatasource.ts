@@ -11,4 +11,14 @@ export class CropDatasource {
         console.log(err, 'err getCropByName');
       });
   }
+  static getAllCrop(): Promise<any> {
+    return httpClient
+      .get(BASE_URL + '/tasks/crop/crop-name-all')
+      .then(response => {
+        return response.data;
+      })
+      .catch(err => {
+        console.log(err, 'err getAllCrop');
+      });
+  }
 }

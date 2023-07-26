@@ -42,6 +42,7 @@ import { QueryLocation } from '../../../datasource/LocationDatasource';
 import { LAT_LNG_BANGKOK } from '../../../definitions/location';
 import { PlotDatasource } from '../../../datasource/PlotDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import { CropDatasource } from '../../../datasource/CropDatasource';
 
 export type PredictionType = {
   description: string;
@@ -80,7 +81,9 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const [selectPlot, setSelectPlot] = useState<any>();
   const [plantName, setPlantName] = useState<any>();
   const [raiAmount, setraiAmount] = useState<any>();
-  const [plantListSelect, setPlantListSelect] = useState(plant);
+  const [plantListSelect, setPlantListSelect] = useState<
+    { id: string; cropName: string }[]
+  >([]);
   const [landmark, setlandmark] = useState<any>('');
   const [plotDataUI, setplotDataUI] = useState<any>([]);
   const [plotData, setplotData] = useState<any>([]);
@@ -93,6 +96,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const plotArea = useRef<any>();
   const [plotAreas, setPlotAreas] = useState<any>([]);
   const [page, setPage] = useState<number>(0);
+
   const [dataStore, setDataStore] = useState<AreaServiceEntity[]>([]);
   const [dataRender, setDataRender] = useState<AreaServiceEntity[]>([]);
   const [search, setSearch] = useState<any>({
@@ -105,8 +109,17 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
     'https://maps.googleapis.com/maps/api/place';
   const API_KEY = 'AIzaSyAymsbEe0NVhDL8iHd8oabbr5xG0TFn8Jc';
 
+  const getAllCropName = async () => {
+    try {
+      const result = await CropDatasource.getAllCrop();
+      setPlantListSelect(result);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
     getFarmerPlot();
+    getAllCropName();
   }, []);
   const getFarmerPlot = async () => {
     setLoading(true);
@@ -712,9 +725,9 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   <TouchableOpacity>
                     <PlantSelect
                       key={i}
-                      label={v}
-                      id={v}
-                      onPress={() => selectPlants(v)}
+                      label={v.cropName}
+                      id={v.id}
+                      onPress={() => selectPlants(v.cropName)}
                     />
                   </TouchableOpacity>
                 ))}

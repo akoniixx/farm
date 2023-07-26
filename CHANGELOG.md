@@ -1,3 +1,5 @@
+## Change [v1.4.14] 2023-07-24
+- change static value to dynamic value with api
 ## Fix [v1.4.13] 2023-07-19
 
 - fixed filter news
