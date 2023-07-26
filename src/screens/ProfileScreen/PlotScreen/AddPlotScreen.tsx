@@ -24,7 +24,6 @@ import { initProfileState, profileReducer } from '../../../hook/profilefield';
 import { stylesCentral } from '../../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
-import { useDebounceValue } from '../../../hook/useDebounceValue';
 import { plant } from '../../../definitions/plants';
 import PredictionType from '../../RegisterScreen/ThirdFormScreen';
 import fonts from '../../../assets/fonts';
@@ -41,6 +40,7 @@ import { LAT_LNG_BANGKOK } from '../../../definitions/location';
 import { PlotDatasource } from '../../../datasource/PlotDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { CropDatasource } from '../../../datasource/CropDatasource';
 
 export type PredictionType = {
   description: string;
@@ -78,7 +78,9 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const [selectPlot, setSelectPlot] = useState<any>();
   const [plantName, setPlantName] = useState<any>();
   const [raiAmount, setraiAmount] = useState<any>();
-  const [plantListSelect, setPlantListSelect] = useState(plant);
+  const [plantListSelect, setPlantListSelect] = useState<
+    { id: string; cropName: string }[]
+  >([]);
   const [landmark, setlandmark] = useState<any>('');
   const [lat, setlat] = useState<any>();
   const [long, setlong] = useState<any>();
@@ -150,8 +152,18 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
   };
+  const getAllCropName = async () => {
+    try {
+      const result = await CropDatasource.getAllCrop();
+      setPlantListSelect(result);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
     getLocation();
+    getAllCropName();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -273,6 +285,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
     }
   };
   useDebounce(onChangeText, 0, [search.term]);
+
   const onPredictionTapped = async (placeId: string, description: string) => {
     const apiUrl = `${GOOGLE_PACES_API_BASE_URL}/details/json?key=${API_KEY}&place_id=${placeId}`;
     try {
@@ -304,6 +317,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
       console.log(e);
     }
   };
+
   useEffect(() => {
     QueryLocation.getSubdistrict(0, '').then(res => {
       let all = res.map((item: any) => {
@@ -331,7 +345,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
     }
     setDataStore(filter);
     setDataRender(arr);
-  }, [searchValue]);
+  }, [searchValue, location]);
 
   useEffect(() => {
     let arr = [];
@@ -482,8 +496,9 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   <Text
                     style={{
                       fontFamily: fonts.AnuphanMedium,
-                      fontSize: normalize(12),
+                      fontSize: normalize(20),
                       color: colors.gray,
+                      lineHeight: 35,
                     }}>
                     {!selectPlot ? (
                       <Text
@@ -528,6 +543,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       fontFamily: fonts.AnuphanMedium,
                       fontSize: normalize(20),
                       color: colors.gray,
+                      lineHeight: 35,
                     }}>
                     {!search.term ? (
                       <Text
@@ -604,7 +620,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 placeholder={'ระบุจุดสังเกต'}
                 placeholderTextColor={colors.disable}
               />
-              <View style={{ height: normalize(10) }}></View>
+              <View style={{ height: normalize(10) }} />
             </ScrollView>
             <View
               style={{
@@ -723,9 +739,9 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   <TouchableOpacity>
                     <PlantSelect
                       key={i}
-                      label={v}
-                      id={v}
-                      onPress={() => selectPlants(v)}
+                      label={v.cropName}
+                      id={v.id}
+                      onPress={() => selectPlants(v.cropName)}
                     />
                   </TouchableOpacity>
                 ))}
@@ -804,7 +820,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       marginLeft: 5,
                       height: 60,
                       justifyContent: 'center',
-                      lineHeight: 19,
+                      lineHeight: 25,
                       fontSize: 19,
                       flex: 1,
                       width: '100%',
@@ -998,7 +1014,7 @@ const styles = StyleSheet.create({
     width: normalize(160),
   },
   inner: {
-    paddingHorizontal: normalize(15),
+    paddingHorizontal: 16,
     flex: 1,
     justifyContent: 'space-around',
   },

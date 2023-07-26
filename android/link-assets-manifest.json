@@ -88,6 +88,14 @@
     {
       "path": "src/assets/fonts/Zocial.ttf",
       "sha1": "6a48a962b06cc3acbdfd61df0d9a34744eea5e8d"
+    },
+    {
+      "path": "src/assets/sound/iconkaset.wav",
+      "sha1": "436daecb78f51087fa31883b032a962e89323968"
+    },
+    {
+      "path": "src/assets/sound/receivetasksuccess.wav",
+      "sha1": "dfd8a1b6b625aeec5eb6363d7e8612fc42ef1972"
     }
   ]
 }

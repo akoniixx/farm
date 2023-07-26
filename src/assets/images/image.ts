@@ -49,4 +49,5 @@ export default {
   bgDone: require('./bgDone.png'),
   bgWaitReview: require('./bgWaitReview.png'),
   getPoint: require('./getPoint.png'),
+  updateApp: require('./updateApp.png'),
 };

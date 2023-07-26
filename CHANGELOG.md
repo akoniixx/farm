@@ -1,3 +1,22 @@
+## Change [v1.4.14] 2023-07-24
+- change static value to dynamic value with api
+## Fix [v1.4.13] 2023-07-19
+
+- fixed filter news
+
+## Improved [v1.4.12] 2023-07-17
+
+- resolve bug in add plot screen
+- ui force update
+
+## Enhance [v1.4.11] 2023-07-17
+
+- pin news
+
+## Fix [v1.4.10] 2023-07-12
+
+- fix style add plot screen
+
 ## Fix [v1.4.9] 2023-07-06
 
 - fix search plot area
