@@ -6,6 +6,7 @@
 #import <GoogleMaps/GoogleMaps.h>
 
 #import <React/RCTAppSetupUtils.h>
+#import <React/RCTRootView.h>
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -42,6 +43,9 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
           [[UIApplication sharedApplication] registerForRemoteNotifications];
       }
   }];
+  UNNotificationCategory *category = [UNNotificationCategory categoryWithIdentifier:@"yourCategory" actions:@[] intentIdentifiers:@[] options:UNNotificationCategoryOptionNone];
+  NSSet *categories = [NSSet setWithObjects:category, nil];
+  [center setNotificationCategories:categories];
 
     [GMSServices provideAPIKey:@"AIzaSyAymsbEe0NVhDL8iHd8oabbr5xG0TFn8Jc"];
   RCTAppSetupPrepareApp(application);

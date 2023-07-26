@@ -40,6 +40,9 @@ export const getFCMToken = async () => {
   try {
     const token = await messaging().getToken();
     await AsyncStorage.setItem('fcmtoken', token);
+    messaging().setBackgroundMessageHandler(async remote=>{
+      console.log(remote)
+    })
   } catch (err) {
     console.log(err);
   }
