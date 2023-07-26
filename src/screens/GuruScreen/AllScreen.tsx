@@ -98,7 +98,6 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
       limit: 5,
       pageType: 'ALL',
     });
-    console.log('result', JSON.stringify(result, null, 2));
     if (result) {
       setPinNews(result);
     }

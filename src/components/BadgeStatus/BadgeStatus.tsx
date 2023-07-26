@@ -4,17 +4,17 @@ import Text from '../Text';
 import {font} from '../../assets';
 import {normalize} from '../../function/Normalize';
 const mappingText = {
-  SUCCESS: 'รับเงินแล้ว',
+  DONE_PAYMENT: 'รับเงินแล้ว',
   WAIT_PAYMENT: 'รอรับเงิน',
   WAIT_REVIEW: 'รอริวิว',
 };
 const mappingTextColor = {
-  SUCCESS: '#014D40',
+  DONE_PAYMENT: '#014D40',
   WAIT_PAYMENT: '#014D40',
   WAIT_REVIEW: '#4D4B23',
 };
 const mappingBgColor = {
-  SUCCESS: '#9BF9D3',
+  DONE_PAYMENT: '#9BF9D3',
   WAIT_PAYMENT: '#F1FAC3',
   WAIT_REVIEW: '#FAF682',
 };

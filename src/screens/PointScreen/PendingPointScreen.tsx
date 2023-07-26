@@ -25,8 +25,6 @@ const PendingPointScreen: React.FC<any> = ({navigation, route}) => {
   const [current, setCurrent] = useState(1);
   const [total, setTotal] = useState(0);
   useEffect(() => {
-    console.log('PendingPointScreen');
-
     getPendingPoint();
   }, []);
 

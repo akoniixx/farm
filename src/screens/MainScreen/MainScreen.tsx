@@ -80,7 +80,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     })
       .then(res => {
         setGuruKaset(res);
-        console.log(JSON.stringify(res, null, 2));
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));

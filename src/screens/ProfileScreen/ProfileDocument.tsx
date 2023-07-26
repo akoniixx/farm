@@ -62,7 +62,6 @@ const ProfileDocument: React.FC<any> = ({navigation, route}) => {
       res?.file?.filter(async (item: any) => {
         if (item.category === 'ID_CARD_IMAGE') {
           setIdCard(item);
-          console.log(item.category);
           const droner_id = await AsyncStorage.getItem('droner_id');
           ProfileDatasource.getImgePath(droner_id!, item.path).then(res => {
             setImageURL(res.url);

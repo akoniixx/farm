@@ -7,7 +7,7 @@ import Toast from 'react-native-toast-message';
 import {SheetProvider} from 'react-native-actions-sheet';
 import './src/sheet/Sheets';
 import {toastConfig} from './src/config/toast-config';
-import {BackHandler} from 'react-native';
+import {ActivityIndicator, BackHandler} from 'react-native';
 import buddhaEra from 'dayjs/plugin/buddhistEra';
 import dayjs from 'dayjs';
 import {AuthProvider} from './src/contexts/AuthContext';
@@ -28,6 +28,7 @@ import {PointProvider} from './src/contexts/PointContext';
 import moment from 'moment';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {colors} from './src/assets';
 
 moment.updateLocale('th', {
   relativeTime: {
@@ -47,6 +48,9 @@ const ActionContextState = {
 const ActionContext = createContext<ActionContextType>(ActionContextState);
 
 const App = () => {
+  const linking = {
+    prefixes: ['dronerapp://'],
+  };
   const [actiontaskId, setActiontaskId] = useState<string | null>('');
   const requestTracking = async () => {
     const status = await request('ios.permission.APP_TRACKING_TRANSPARENCY');
@@ -100,7 +104,12 @@ const App = () => {
   return (
     <>
       <ActionContext.Provider value={{actiontaskId, setActiontaskId}}>
-        <NavigationContainer ref={navigationRef}>
+        <NavigationContainer
+          ref={navigationRef}
+          linking={linking}
+          fallback={
+            <ActivityIndicator color={colors.orangeSoft} size="large" />
+          }>
           <AuthProvider>
             <>
               <PointProvider>

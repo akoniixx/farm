@@ -1,6 +1,7 @@
 ## Fix [1.6.11] 2023-07-27
 - noti sound 
 - fix carousel main screen
+- fix badge not show
 ## Fix [1.6.10] 2023-07-26
 - fix ui footer and text align card
 - add new api cropName to dynamic value
