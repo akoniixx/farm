@@ -74,7 +74,7 @@ export default function GuruKasetCarousel({
           autoplayDelay={5000}
           loop={true}
           ref={isCarousel}
-          data={guruKaset.data.filter(el => el.pin_main)}
+          data={guruKaset.data}
           sliderWidth={screen.width}
           itemWidth={screen.width}
           onSnapToItem={(idx: number) => setIndex(idx)}
@@ -124,7 +124,7 @@ export default function GuruKasetCarousel({
             top: '60%',
           }}>
           <Pagination
-            dotsLength={guruKaset.data.filter(el => el.pin_main).length}
+            dotsLength={guruKaset.data.length}
             activeDotIndex={index}
             carouselRef={isCarousel}
             dotStyle={{
