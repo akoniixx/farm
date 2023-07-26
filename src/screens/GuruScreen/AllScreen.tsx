@@ -75,8 +75,9 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
       categoryNews: 'NEWS',
       sortField: sortBy,
       sortDirection: 'DESC',
-      offset: 0,
+      offset: 1,
       limit: initialLimit,
+      pageType: 'ALL',
     })
       .then(res => {
         if (res) {
@@ -93,12 +94,10 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
       status: 'ACTIVE',
       application: 'DRONER',
       categoryNews: 'NEWS',
-      sortField: 'created_at',
-      offset: 0,
+      offset: 1,
       limit: 5,
       pageType: 'ALL',
     });
-    console.log('result', JSON.stringify(result, null, 2));
     if (result) {
       setPinNews(result);
     }
@@ -118,15 +117,15 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
         status: 'ACTIVE',
         application: 'DRONER',
         categoryNews: 'NEWS',
-        sortField: 'created_at',
+        sortField: sortBy,
         sortDirection: 'DESC',
-        offset: 0,
-        limit: limit,
+        offset: 1,
+        limit: limit + initialLimit,
       });
       setLimit(limit + initialLimit);
       if (res) {
         setData({
-          data: [...data.data, ...res.data],
+          data: [...res.data],
           count: res.count,
         });
       }
@@ -138,6 +137,7 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
 
   const GuruKasetHeader = useMemo(() => {
     const filterNews = pinNews?.data.filter((el: any) => el.pin_all);
+    console.log(JSON.stringify(filterNews, null, 2));
     if (filterNews.length < 1) {
       return <View />;
     }

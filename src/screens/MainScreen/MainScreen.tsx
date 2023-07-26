@@ -73,14 +73,12 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
       status: 'ACTIVE',
       application: 'DRONER',
       categoryNews: 'NEWS',
-      sortField: 'created_at',
       limit: 5,
       offset: 0,
       pageType: 'MAIN',
     })
       .then(res => {
         setGuruKaset(res);
-        console.log(JSON.stringify(res, null, 2));
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));

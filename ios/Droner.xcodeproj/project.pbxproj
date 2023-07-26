@@ -14,7 +14,8 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		15B5C69CB9394B9689A6AE7A /* Anuphan-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 772F96D02BEA4F9FB73501EB /* Anuphan-SemiBold.ttf */; };
 		163B2C8FA3D0CC77B91F89D1 /* libPods-Droner-DronerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 465A5C9678C9127BA3FEFB9F /* libPods-Droner-DronerTests.a */; };
-		2D461767E99A9A1A3C4DE70E /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		2D461767E99A9A1A3C4DE70E /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		4B38A4CB68704964A3F5B7F0 /* newtaskcoming.wav in Resources */ = {isa = PBXBuildFile; fileRef = 85014E51942745C88FFA147C /* newtaskcoming.wav */; };
 		60DC076C28AB7E5E000756CF /* geolocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DC076B28AB7E5E000756CF /* geolocation.swift */; };
 		60F03EE22883795100CFC2C7 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE12883795100CFC2C7 /* fonts */; };
 		60F03EE4288380D400CFC2C7 /* Anuphan-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE3288380D400CFC2C7 /* Anuphan-Bold.otf */; };
@@ -22,11 +23,10 @@
 		60F03EE8288380FA00CFC2C7 /* Anuphan-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE7288380FA00CFC2C7 /* Anuphan-Medium.otf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8C529319F80D993BF9E93590 /* libPods-Droner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7780ED7F6A708230715A2EFA /* libPods-Droner.a */; };
-		E1330D792A21F45700857A41 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1330D782A21F45700857A41 /* File.swift */; };
-		FF712D512A5D087900183564 /* iconkaset.wav in Resources */ = {isa = PBXBuildFile; fileRef = FF712D4F2A5D087800183564 /* iconkaset.wav */; };
-		FF712D522A5D087900183564 /* newtaskcoming.wav in Resources */ = {isa = PBXBuildFile; fileRef = FF712D502A5D087800183564 /* newtaskcoming.wav */; };
 		918909FD190F4924955FC49B /* iconkaset.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3AC8316315F741419A8CA58B /* iconkaset.wav */; };
-		4B38A4CB68704964A3F5B7F0 /* newtaskcoming.wav in Resources */ = {isa = PBXBuildFile; fileRef = 85014E51942745C88FFA147C /* newtaskcoming.wav */; };
+		E1330D792A21F45700857A41 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1330D782A21F45700857A41 /* File.swift */; };
+		E138B9A62A70D2F7000A08B8 /* iconkaset.wav in Resources */ = {isa = PBXBuildFile; fileRef = E138B9A52A70D2F7000A08B8 /* iconkaset.wav */; };
+		E138B9A82A70D31B000A08B8 /* newtaskcoming.wav in Resources */ = {isa = PBXBuildFile; fileRef = E138B9A72A70D31B000A08B8 /* newtaskcoming.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +51,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Droner/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Droner/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Droner/main.m; sourceTree = "<group>"; };
+		3AC8316315F741419A8CA58B /* iconkaset.wav */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = iconkaset.wav; path = ../src/assets/sound/iconkaset.wav; sourceTree = "<group>"; };
 		465A5C9678C9127BA3FEFB9F /* libPods-Droner-DronerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Droner-DronerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CDB0555D77D28556123741F /* Pods-Droner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner.release.xcconfig"; path = "Target Support Files/Pods-Droner/Pods-Droner.release.xcconfig"; sourceTree = "<group>"; };
 		602C8F7028A261A5007D6E25 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
@@ -66,14 +67,13 @@
 		772F96D02BEA4F9FB73501EB /* Anuphan-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Anuphan-SemiBold.ttf"; path = "../src/assets/fonts/Anuphan-SemiBold.ttf"; sourceTree = "<group>"; };
 		7780ED7F6A708230715A2EFA /* libPods-Droner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Droner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Droner/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		85014E51942745C88FFA147C /* newtaskcoming.wav */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = newtaskcoming.wav; path = ../src/assets/sound/newtaskcoming.wav; sourceTree = "<group>"; };
 		9D98FEDB0DCE4BE3AB851B5B /* Pods-Droner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner.debug.xcconfig"; path = "Target Support Files/Pods-Droner/Pods-Droner.debug.xcconfig"; sourceTree = "<group>"; };
 		AEA2C1A1EC27F59AE3028808 /* Pods-Droner-DronerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Droner-DronerTests.debug.xcconfig"; path = "Target Support Files/Pods-Droner-DronerTests/Pods-Droner-DronerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E1330D782A21F45700857A41 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		E138B9A52A70D2F7000A08B8 /* iconkaset.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = iconkaset.wav; path = ../src/assets/sound/iconkaset.wav; sourceTree = "<group>"; };
+		E138B9A72A70D31B000A08B8 /* newtaskcoming.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = newtaskcoming.wav; path = ../src/assets/sound/newtaskcoming.wav; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		FF712D4F2A5D087800183564 /* iconkaset.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = iconkaset.wav; path = ../../../Downloads/iconkaset.wav; sourceTree = "<group>"; };
-		FF712D502A5D087800183564 /* newtaskcoming.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = newtaskcoming.wav; path = ../../../Downloads/newtaskcoming.wav; sourceTree = "<group>"; };
-		3AC8316315F741419A8CA58B /* iconkaset.wav */ = {isa = PBXFileReference; name = "iconkaset.wav"; path = "../src/assets/sound/iconkaset.wav"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		85014E51942745C88FFA147C /* newtaskcoming.wav */ = {isa = PBXFileReference; name = "newtaskcoming.wav"; path = "../src/assets/sound/newtaskcoming.wav"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,7 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D461767E99A9A1A3C4DE70E /* BuildFile in Frameworks */,
+				2D461767E99A9A1A3C4DE70E /* (null) in Frameworks */,
 				163B2C8FA3D0CC77B91F89D1 /* libPods-Droner-DronerTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -160,8 +160,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				FF712D4F2A5D087800183564 /* iconkaset.wav */,
-				FF712D502A5D087800183564 /* newtaskcoming.wav */,
+				E138B9A52A70D2F7000A08B8 /* iconkaset.wav */,
+				E138B9A72A70D31B000A08B8 /* newtaskcoming.wav */,
 				60DC076B28AB7E5E000756CF /* geolocation.swift */,
 				602C8F7028A261A5007D6E25 /* FontAwesome.ttf */,
 				60F03EEB2883813700CFC2C7 /* Anuphan-Medium.otf */,
@@ -300,13 +300,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				60F03EE8288380FA00CFC2C7 /* Anuphan-Medium.otf in Resources */,
-				FF712D512A5D087900183564 /* iconkaset.wav in Resources */,
 				60F03EE6288380E700CFC2C7 /* Anuphan-Light.otf in Resources */,
 				60F03EE4288380D400CFC2C7 /* Anuphan-Bold.otf in Resources */,
-				FF712D522A5D087900183564 /* newtaskcoming.wav in Resources */,
 				60F03EE22883795100CFC2C7 /* fonts in Resources */,
+				E138B9A62A70D2F7000A08B8 /* iconkaset.wav in Resources */,
 				0FF9C0EC2910DB3E007F4EEE /* main.jsbundle.xib in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				E138B9A82A70D31B000A08B8 /* newtaskcoming.wav in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				15B5C69CB9394B9689A6AE7A /* Anuphan-SemiBold.ttf in Resources */,
 				918909FD190F4924955FC49B /* iconkaset.wav in Resources */,

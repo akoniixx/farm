@@ -49,7 +49,6 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   const {
     state: {isDoneAuth},
   } = useAuth();
-  console.log('isDoneAuth :>> ', isDoneAuth);
   const width = useWindowDimensions().width;
   const belowMedium = width < 400;
   const [registerNoti, setRegisterNoti] = useState(false);
@@ -202,7 +201,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                 screen: 'receivePoint',
               });
               break;
-            case 'MISSION_REWARD_DIGITAL' :
+            case 'MISSION_REWARD_DIGITAL':
               RootNavigation.navigate('Main', {
                 screen: 'MyRewardScreen',
               });
@@ -279,7 +278,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
             screen: 'receivePoint',
           });
           break;
-        case 'MISSION_REWARD_DIGITAL' :
+        case 'MISSION_REWARD_DIGITAL':
           RootNavigation.navigate('Main', {
             screen: 'MyRewardScreen',
           });

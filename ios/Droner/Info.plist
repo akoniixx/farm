@@ -1,101 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>AdvertiserTrackingEnabled</key>
-	<string>true</string>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
-	<key>CFBundleDisplayName</key>
-	<string>นักบินโดรน</string>
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$(MARKETING_VERSION)</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>fb181756618165362</string>
-			</array>
-		</dict>
-	</array>
-	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
-	<key>FacebookAppID</key>
-	<string>181756618165362</string>
-	<key>FacebookAutoLogAppEventsEnabled</key>
-	<string>
- isAdvertiserTrackingEnabled</string>
-	<key>FacebookClientToken</key>
-	<string>8a0ce86f62551714f3c4463f9482fbac</string>
-	<key>FacebookDisplayName</key>
-	<string>นักบินโดรน</string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>http</string>
-		<string>https</string>
-		<string>comgooglemaps</string>
-	</array>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>localhost</key>
+		<key>AdvertiserTrackingEnabled</key>
+		<string>true</string>
+		<key>CFBundleDevelopmentRegion</key>
+		<string>en</string>
+		<key>CFBundleDisplayName</key>
+		<string>นักบินโดรน</string>
+		<key>CFBundleExecutable</key>
+		<string>$(EXECUTABLE_NAME)</string>
+		<key>CFBundleIdentifier</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleInfoDictionaryVersion</key>
+		<string>6.0</string>
+		<key>CFBundleName</key>
+		<string>$(PRODUCT_NAME)</string>
+		<key>CFBundlePackageType</key>
+		<string>APPL</string>
+		<key>CFBundleShortVersionString</key>
+		<string>$(MARKETING_VERSION)</string>
+		<key>CFBundleSignature</key>
+		<string>????</string>
+		<key>CFBundleURLTypes</key>
+		<array>
 			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>fb181756618165362</string>
+				</array>
+			</dict>
+			<dict>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>dronerapp</string>
+				</array>
+			</dict>
+		</array>
+		<key>CFBundleVersion</key>
+		<string>$(CURRENT_PROJECT_VERSION)</string>
+		<key>FacebookAppID</key>
+		<string>181756618165362</string>
+		<key>FacebookAutoLogAppEventsEnabled</key>
+		<string>
+ isAdvertiserTrackingEnabled</string>
+		<key>FacebookClientToken</key>
+		<string>8a0ce86f62551714f3c4463f9482fbac</string>
+		<key>FacebookDisplayName</key>
+		<string>นักบินโดรน</string>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>http</string>
+			<string>https</string>
+			<string>comgooglemaps</string>
+		</array>
+		<key>LSRequiresIPhoneOS</key>
+		<true/>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSExceptionDomains</key>
+			<dict>
+				<key>localhost</key>
+				<dict>
+					<key>NSExceptionAllowsInsecureHTTPLoads</key>
+					<true/>
+				</dict>
 			</dict>
 		</dict>
+		<key>NSCameraUsageDescription</key>
+		<string>IconKaset Droner would like to use access camera to take your photo for your profile.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>IconKaset Droner would like access to your photo gallery, so you can use it as your profile.</string>
+		<key>NSUserTrackingUsageDescription</key>
+		<string>$(PRODUCT_NAME) requires your permission to track in order to show you more relevant ads.</string>
+		<key>UIAppFonts</key>
+		<array>
+			<string>Anuphan-Bold.otf</string>
+			<string>Anuphan-Light.otf</string>
+			<string>Anuphan-Medium.otf</string>
+			<string>Anuphan-SemiBold.ttf</string>
+		</array>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>fetch</string>
+			<string>remote-notification</string>
+		</array>
+		<key>UILaunchStoryboardName</key>
+		<string>LaunchScreen</string>
+		<key>UIRequiredDeviceCapabilities</key>
+		<array>
+			<string>armv7</string>
+		</array>
+		<key>UISupportedInterfaceOrientations</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+		</array>
+		<key>UIViewControllerBasedStatusBarAppearance</key>
+		<false/>
 	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>IconKaset Droner would like to use access camera to take your photo for your profile.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>IconKaset Droner ขออนุญาติเข้าถึงโลเคชั่นเพื่อค้นหาเกษตรกรที่อยู่ใกล้คุณ</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>IconKaset Droner would like access to your photo gallery, so you can use it as your profile.</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>$(PRODUCT_NAME) requires your permission to track in order to show you more relevant ads.</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Anuphan-Bold.otf</string>
-		<string>Anuphan-Light.otf</string>
-		<string>Anuphan-Medium.otf</string>
-		<string>Anuphan-SemiBold.ttf</string>
-	</array>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>remote-notification</string>
-	</array>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-</dict>
 </plist>
