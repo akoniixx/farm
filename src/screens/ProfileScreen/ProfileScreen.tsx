@@ -55,7 +55,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
     if (index > -1) {
       sttPlot.splice(index);
     }
-    console.log(sttPlot);
+
     setCountPlot(sttPlot.length);
     const findPlot = profilestate.plotItem.filter(
       (x: any) => x.status !== 'INACTIVE',

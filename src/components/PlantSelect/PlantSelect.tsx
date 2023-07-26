@@ -26,7 +26,7 @@ export const PlantSelect: React.FC<PrantSelectProps> = ({
     <View
       style={{
         marginRight: (width - normalize(40) - 3 * normalize(103)) / 3,
-        marginBottom: (width - normalize(40) - 3 * normalize(103)) / 3,
+        marginBottom: 8,
         width: '100%',
         height: normalize(60),
         borderBottomWidth: 0.2,

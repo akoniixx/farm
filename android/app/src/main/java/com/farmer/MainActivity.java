@@ -15,8 +15,7 @@ import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 
 public class MainActivity extends ReactActivity {
-
-   @Override
+  @Override
     protected void onCreate(Bundle savedInstanceState) {
      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
        NotificationChannel notificationChannel = new NotificationChannel("iconkaset", "farmer", NotificationManager.IMPORTANCE_HIGH);
@@ -50,8 +49,14 @@ public class MainActivity extends ReactActivity {
      }
 
         SplashScreen.show(this);  // here
-        super.onCreate(savedInstanceState);
+        super.onCreate(null); // set null for oppo
     }
+
+  //  @Override
+  //   protected void onCreate(Bundle savedInstanceState) {
+  //       SplashScreen.show(this);  // here
+  //       super.onCreate(savedInstanceState);
+  //   }
 
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
