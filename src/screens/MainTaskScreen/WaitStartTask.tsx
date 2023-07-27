@@ -83,7 +83,6 @@ const WaitStartTask: React.FC = () => {
   return (
     <>
       <RenderWarningDocEmpty />
-
       {data.length !== 0 && checkResIsComplete ? (
         <View style={[{flex: 1}]}>
           <FlatList
