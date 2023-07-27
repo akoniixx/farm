@@ -3,11 +3,11 @@ import {Options} from '@bam.tech/react-native-image-resizer/lib/typescript/src/t
 
 const ResizeImage = async ({
   uri,
-  width = 800,
-  height = 800,
+  width = 1000,
+  height = 1000,
   format = 'PNG',
-  quality = 90,
-  rotation = 90,
+  quality = 95,
+  rotation = 0,
   outputPath,
 }: {
   uri: any;

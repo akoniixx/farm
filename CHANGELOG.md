@@ -1,5 +1,6 @@
 ## Fix [1.6.12] 2023-07-27
 - remove margin left
+- fix bug when click select photo
 ## Fix [1.6.11] 2023-07-27
 - noti sound 
 - fix carousel main screen & all screen

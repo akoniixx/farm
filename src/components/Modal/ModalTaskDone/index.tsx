@@ -77,11 +77,13 @@ export default function ModalTaskDone({
         return false;
       }
       if (isFileMoreThan3MB) {
-        newResult = await ResizeImage({
+        const newImage: any = await ResizeImage({
           uri: result?.assets ? result?.assets?.[0].uri : '',
         });
+        newResult = {
+          assets: [newImage],
+        };
       }
-
       if (step === 0) {
         setImgController(newResult);
         setStep(0);
@@ -145,6 +147,7 @@ export default function ModalTaskDone({
   const onFinishedTakePhoto = useCallback(
     async (v: any) => {
       const isFileMoreThan5MB = v.assets[0].fileSize > 5 * 1024 * 1024;
+      console.log(JSON.stringify(v, null, 2));
       if (isFileMoreThan5MB) {
         setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 5 MB');
         onOpenModal();
