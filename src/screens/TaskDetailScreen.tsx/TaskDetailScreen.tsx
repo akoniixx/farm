@@ -120,7 +120,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
       updateBy: `${data.droner.firstname} ${data.droner.lastname}`,
       reviewFarmerComment: comment,
       reviewFarmerScore: defaulRating,
-      file: imageFile.file,
+      file: imageFile?.file,
       fileDrug: imageFile.fileDrug,
     };
 
