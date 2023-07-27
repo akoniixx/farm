@@ -145,10 +145,15 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
         setDefaultRating(0);
       })
       .catch(err => {
+        console.log(err.response);
         Toast.show({
           type: 'error',
           text1: 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
         });
+        setLoading(false);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
