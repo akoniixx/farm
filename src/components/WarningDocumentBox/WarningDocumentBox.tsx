@@ -25,34 +25,42 @@ export default function WarningDocumentBox({
 
   return (
     <View style={[styles.container, style]}>
-      <Image
-        source={image.warningDocumentImage}
-        style={{
-          width: 60,
-          height: 60,
-          position: 'absolute',
-          left: 1,
-          bottom: 1,
-        }}
-      />
       <View
         style={{
-          marginLeft: 60,
+          flexDirection: 'row',
+          alignItems: 'center',
+          flex: 1,
         }}>
+        <View
+          style={{
+            height: '100%',
+
+            justifyContent: 'flex-end',
+            marginRight: 8,
+          }}>
+          <Image
+            source={image.warningDocumentImage}
+            style={{
+              width: 60,
+              height: 60,
+            }}
+          />
+        </View>
         {screen === 'TASK' || screen === 'TASK_DETAIL' ? (
-          <View>
+          <View
+            style={{
+              paddingRight: 8,
+              flex: 1,
+            }}>
             <>
-              <Text style={styles.text}>กรุณาเพิ่ม “ภาพถ่ายคู่บัตร” และ</Text>
+              <Text style={styles.text}>กรุณาเพิ่ม “ภาพถ่ายคู่บัตร” และ </Text>
               <Text style={styles.text}>
                 “บัญชีธนาคาร” เพื่อรับรายได้บริษัท
               </Text>
             </>
           </View>
         ) : (
-          <View
-            style={{
-              marginRight: 16,
-            }}>
+          <View>
             <Text style={styles.text}>เพิ่มเอกสารเพื่อรับของรางวัล</Text>
             <Text style={styles.text}>และสิทธิพิเศษจากบริษัท</Text>
           </View>
@@ -86,13 +94,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#BCEBAE',
-    height: 60,
+    minHeight: 60,
     marginTop: 8,
-    padding: 8,
+    paddingRight: 8,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    flex: 1,
   },
   text: {
     fontFamily: font.semiBold,
