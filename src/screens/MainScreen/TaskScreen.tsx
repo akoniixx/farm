@@ -146,11 +146,12 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
       })
       .catch(err => {
         console.log(err.response);
+
+        setLoading(false);
         Toast.show({
           type: 'error',
           text1: 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
         });
-        setLoading(false);
       })
       .finally(() => {
         setLoading(false);

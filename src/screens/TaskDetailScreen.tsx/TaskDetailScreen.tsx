@@ -123,7 +123,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
       file: imageFile?.file,
       fileDrug: imageFile.fileDrug,
     };
-
     TaskDatasource.finishTask(payload)
       .then(() => {
         setLoading(false);

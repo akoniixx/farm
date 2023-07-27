@@ -182,8 +182,10 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
 
           if (data) {
             dispatch({type: 'GET_ME', user: data});
+
             const isDoneAuth =
               data.status === 'ACTIVE' && data.documentComplete;
+
             dispatch({
               type: 'CHECK_AUTH',
               isDoneAuth,

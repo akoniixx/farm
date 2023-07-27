@@ -11,14 +11,19 @@ interface Props {
   screen?: 'MAIN' | 'TASK' | 'TASK_DETAIL';
   navigation?: any;
 }
+const listStatus = ['INACTIVE', 'REJECT', 'OPEN', 'PENDING'];
+
 export default function WarningDocumentBox({
   style,
   screen = 'MAIN',
   navigation,
 }: Props) {
   const {
-    state: {isDoneAuth},
+    state: {isDoneAuth, user},
   } = useAuth();
+  if (user && listStatus.includes(user?.status)) {
+    return null;
+  }
   if (isDoneAuth) {
     return null;
   }
