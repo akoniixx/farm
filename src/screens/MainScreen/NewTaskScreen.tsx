@@ -208,6 +208,8 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
           style={{
             paddingHorizontal: 8,
             paddingBottom: 8,
+            height : normalize(80),
+            backgroundColor : colors.grayBg
           }}>
           <WarningDocumentBox navigation={props.navigation} />
         </View>
