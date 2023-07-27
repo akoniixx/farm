@@ -59,7 +59,6 @@ export default function ModalTaskDone({
     const result = await ImagePicker.launchImageLibrary({
       mediaType: 'photo',
     });
-    console.log('result', JSON.stringify(result, null, 2));
     if (!result.didCancel) {
       const fileSize = result?.assets?.[0]?.fileSize || 0;
       const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
@@ -85,7 +84,6 @@ export default function ModalTaskDone({
           assets: [newImage],
         };
       }
-
       if (step === 0) {
         setImgController(newResult);
         setStep(0);
