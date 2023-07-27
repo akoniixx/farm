@@ -11,7 +11,7 @@ interface Props {
   screen?: 'MAIN' | 'TASK' | 'TASK_DETAIL';
   navigation?: any;
 }
-const listStatus = ['INACTIVE', 'REJECT', 'OPEN', 'PENDING'];
+const listStatus = ['INACTIVE', 'REJECTED', 'OPEN', 'PENDING'];
 
 export default function WarningDocumentBox({
   style,
