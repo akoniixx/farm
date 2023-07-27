@@ -71,7 +71,6 @@ export default function WarningDocumentBox({
           minHeight: 38,
           paddingHorizontal: 16,
           borderRadius: 20,
-          marginLeft: 16,
         }}
         styleText={{
           fontSize: 14,
