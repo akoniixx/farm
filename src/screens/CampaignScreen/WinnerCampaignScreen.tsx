@@ -33,7 +33,14 @@ const WinnerCampaignScreen: React.FC<any> = ({navigation, route}) => {
   }, [isFocused]);
   const findAllNews = async () => {
     setLoading(true);
-    GuruKaset.findAllNews('ACTIVE', 'DRONER', 'CHALLENGE', 'created_at', 'DESC')
+    GuruKaset.findAllNews({
+      application: 'DRONER',
+      status: 'ACTIVE',
+      categoryNews: 'CHALLENGE',
+      sortField: 'created_at',
+      sortDirection: 'DESC',
+      limit: 99,
+    })
       .then(res => {
         if (res) {
           setData(res);

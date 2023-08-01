@@ -1,3 +1,6 @@
+## Fix [1.6.13] 2023-08-01
+- fix bug display challenge news
+
 ## Fix [1.6.12] 2023-07-27
 - remove margin left
 - fix bug when click select photo
