@@ -16,7 +16,7 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {ScrollView} from 'react-native-gesture-handler';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 
-const ViewProfile: React.FC<any> = ({navigation, route}) => {
+const ViewProfile: React.FC<any> = ({navigation}) => {
   const [initProfile, setInitProfile] = useState({
     firstname: '',
     lastname: '',

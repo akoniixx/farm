@@ -4,31 +4,21 @@ import {
   Text,
   View,
   TouchableOpacity,
-  FlatList,
   Modal,
   Pressable,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font, icons, image} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
-import Animated, {
-  useAnimatedGestureHandler,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
 import fonts from '../../assets/fonts';
 import {MainButton} from '../../components/Button/MainButton';
 import {useFocusEffect} from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler';
 import {SwipeListView} from 'react-native-swipe-list-view';
 
 interface NotificationListTileParams {
@@ -70,7 +60,7 @@ const generateNotiTime = (date: string, time: string) => {
 
 const readIt = (id: string) => {
   FCMtokenDatasource.readNotification(id)
-    .then(res => {
+    .then(() => {
       RootNavigation.navigate('Main', {
         screen: 'MainScreen',
       });
@@ -80,7 +70,7 @@ const readIt = (id: string) => {
 
 const readItTask = (id: string, data: string) => {
   FCMtokenDatasource.readNotification(id)
-    .then(res => {
+    .then(() => {
       RootNavigation.navigate('Main', {
         screen: 'TaskDetailScreen',
         params: {taskId: data},
@@ -99,22 +89,6 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
 }) => {
   const currentdate = date.split('T')[0];
   const currentTime = date.split('T')[1];
-  const translateX = useSharedValue(0);
-
-  const rStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateX: translateX.value,
-      },
-    ],
-  }));
-
-  const panGesture = useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
-    onActive: event => {
-      translateX.value = event.translationX;
-    },
-    onEnd: () => {},
-  });
 
   if (
     type === 'APPROVE_DRONER_SUCCESS' ||
@@ -171,7 +145,8 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
                 width: normalize(8),
                 height: normalize(8),
                 marginBottom: normalize(10),
-              }}></View>
+              }}
+            />
           ) : (
             <Image
               source={icons.unread}
@@ -276,7 +251,7 @@ const NotificationListTile: React.FC<NotificationListTileParams> = ({
   }
 };
 
-const NotificationList: React.FC<any> = ({navigation, route}) => {
+const NotificationList: React.FC<any> = ({navigation}) => {
   const [data, setData] = useState([]);
   const [reload, setReload] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -284,7 +259,7 @@ const NotificationList: React.FC<any> = ({navigation, route}) => {
 
   const deleteItem = (id: string) => {
     FCMtokenDatasource.deleteNotiItem(id)
-      .then(res => {
+      .then(() => {
         setReload(!reload);
       })
       .catch(err => console.log(err));
@@ -299,7 +274,7 @@ const NotificationList: React.FC<any> = ({navigation, route}) => {
   };
   const deleteAllItem = () => {
     FCMtokenDatasource.deleteNotiAllItem()
-      .then(res => {
+      .then(() => {
         setDeleteall(false);
         RootNavigation.navigate('Main', {
           screen: 'MainScreen',
@@ -402,7 +377,7 @@ const NotificationList: React.FC<any> = ({navigation, route}) => {
                 data={item.data}
               />
             )}
-            renderHiddenItem={(item: any, rowMap: any) => (
+            renderHiddenItem={(item: any) => (
               <Pressable
                 onPress={() => {
                   deleteItem(item.item.id);

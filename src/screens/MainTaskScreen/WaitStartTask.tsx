@@ -71,8 +71,8 @@ const WaitStartTask: React.FC = () => {
           style={{
             paddingBottom: 8,
             paddingHorizontal: 8,
-            height : normalize(80),
-            backgroundColor : colors.grayBg
+            height: normalize(80),
+            backgroundColor: colors.grayBg,
           }}>
           <WarningDocumentBox />
         </View>

@@ -9,13 +9,13 @@ import {
 } from 'react-native';
 import React, {useEffect, useMemo} from 'react';
 import {colors, font, icons} from '../../assets';
-import FastImage from 'react-native-fast-image';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
 import {RedeemDetail} from '.';
 import {momentExtend, numberWithCommas} from '../../function/utility';
 import Clipboard from '@react-native-community/clipboard';
 import PopUp from '../../components/PopUp';
 import Text from '../../components/Text';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 
 interface Props {
   redeemDetail: RedeemDetail;
@@ -64,7 +64,7 @@ export default function Content({redeemDetail}: Props) {
           style={{
             flex: 0.2,
           }}>
-          <FastImage
+          <ProgressiveImage
             source={{uri: redeemDetail?.reward?.imagePath}}
             style={{
               width: 80,

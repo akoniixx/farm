@@ -8,7 +8,7 @@ export class Campaign {
     status: string,
   ): Promise<any> {
     return axios
-      .get(BASE_URL + `/promotion/campaign/find-all-campaign`, {
+      .get(BASE_URL + '/promotion/campaign/find-all-campaign', {
         params: {
           application: application,
           campaignType: campaignType,
@@ -26,7 +26,7 @@ export class Campaign {
     dronerId: string | null,
   ): Promise<any> {
     return axios
-      .post(BASE_URL + `/promotion/historypoint-quota/get-latest-quota`, {
+      .post(BASE_URL + '/promotion/historypoint-quota/get-latest-quota', {
         campaignId: campaignId,
         dronerId: dronerId,
       })

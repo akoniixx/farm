@@ -5,19 +5,19 @@ import {normalize} from '@rneui/themed';
 import {font, icons} from '../../assets';
 import {stylesCentral} from '../../styles/StylesCentral';
 import colors from '../../assets/colors/colors';
-import {MainButton} from '../../components/Button/MainButton';
 import {StatusObject} from '../../components/Drone/DroneBranding';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'react-native-image-picker';
-import {width} from '../../function/Normalize';
 import {useFocusEffect} from '@react-navigation/native';
 import Text from '../../components/Text';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const ProfileDocument: React.FC<any> = ({navigation, route}) => {
   const profilestate = route.params.profile;
-  const [idCard, setIdCard] = useState();
+  const [idCard, setIdCard] = useState({
+    fileName: '',
+  });
   const [dronerLicense, setDronerLicense] = useState();
   const [bookBank, setBookBank] = useState();
   const [image, setImage] = useState<any>(null);
@@ -43,7 +43,7 @@ const ProfileDocument: React.FC<any> = ({navigation, route}) => {
         });
       setImage(result);
     }
-  }, [image]);
+  }, []);
 
   useFocusEffect(
     React.useCallback(() => {

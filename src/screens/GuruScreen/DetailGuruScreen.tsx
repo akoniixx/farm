@@ -83,7 +83,7 @@ const DetailGuruScreen: React.FC<any> = ({navigation}) => {
                   {momentExtend.toBuddhistYear(data.createAt, 'DD MMM YY')}
                 </Text>
                 <Text style={[styles.textDate, {left: 15}]} numberOfLines={1}>
-                  {`อ่านแล้ว ` + data.read + ` ครั้ง`}
+                  {'อ่านแล้ว ' + data.read + ' ครั้ง'}
                 </Text>
               </View>
               <View
@@ -92,7 +92,8 @@ const DetailGuruScreen: React.FC<any> = ({navigation}) => {
                   borderColor: colors.disable,
                   width: Dimensions.get('screen').width * 0.9,
                   alignSelf: 'center',
-                }}></View>
+                }}
+              />
               <View
                 style={{
                   flexDirection: 'row',

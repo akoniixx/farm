@@ -16,7 +16,7 @@ export default function InProgressTab() {
       data.push({
         id: 123456789 + i,
         title: `รับงานบินโดรนเกษตร ${i + 1}`,
-        description: `ระบบกำลังคำนวณคะแนนที่จะได้รับ`,
+        description: 'ระบบกำลังคำนวณคะแนนที่จะได้รับ',
         date: moment().subtract(i, 'days').subtract(i, 'hours').toISOString(),
       });
     }

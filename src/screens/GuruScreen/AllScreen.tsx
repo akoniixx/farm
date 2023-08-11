@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -137,7 +130,6 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
 
   const GuruKasetHeader = useMemo(() => {
     const filterNews = pinNews?.data.filter((el: any) => el.pin_all);
-    console.log(JSON.stringify(filterNews, null, 2));
     if (filterNews.length < 1) {
       return <View />;
     }
@@ -258,7 +250,7 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
             {filterListSelect.map((el, idx) => {
               const isFocus = sortBy === el.value;
               return (
-                <>
+                <View key={idx}>
                   <TouchableOpacity
                     onPress={async () => {
                       mixpanel.track(el.mixpanel);
@@ -308,7 +300,7 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
                       alignSelf: 'center',
                     }}
                   />
-                </>
+                </View>
               );
             })}
           </View>

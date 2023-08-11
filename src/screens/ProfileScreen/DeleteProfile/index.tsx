@@ -1,41 +1,25 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../../styles/StylesCentral';
-import {colors, font, icons, image as img} from '../../../assets';
+import {colors, font, icons} from '../../../assets';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ScrollView} from 'react-native-gesture-handler';
 import Modal from 'react-native-modal/dist/modal';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import {
-  callCenterDash,
-  callcenterNumber,
-} from '../../../definitions/callCenterNumber';
+import {callCenterDash} from '../../../definitions/callCenterNumber';
 import fonts from '../../../assets/fonts';
 import {normalize} from '../../../function/Normalize';
 import CustomHeader from '../../../components/CustomHeader';
 import {TaskDatasource} from '../../../datasource/TaskDatasource';
 import {Authentication} from '../../../datasource/AuthDatasource';
 import {MainButton} from '../../../components/Button/MainButton';
-import * as RootNavigation from '../../../navigations/RootNavigation';
-import Toast from 'react-native-toast-message';
 import {StackNativeScreenProps} from '../../../navigations/MainNavigator';
 import {useAuth} from '../../../contexts/AuthContext';
 
 type DeleteProfileScreenProps = StackNativeScreenProps<'DeleteProfileScreen'>;
 
-const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
-  navigation,
-  route,
-}) => {
-  const windowWidth = Dimensions.get('window').width;
+const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({navigation}) => {
   const [toggleModal, setToggleModal] = useState<boolean>(false);
   const [task, setTask] = useState([]);
 
@@ -70,7 +54,9 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({
   const requestOtp = async () => {
     setToggleModal(false);
     try {
-      const data = await Authentication.genOtpDeleteAccount(user?.telephoneNo);
+      const data = await Authentication.genOtpDeleteAccount(
+        user?.telephoneNo || '',
+      );
       navigation.navigate('VerifyOTP', {
         telNumber: user?.telephoneNo,
         ...data.result,

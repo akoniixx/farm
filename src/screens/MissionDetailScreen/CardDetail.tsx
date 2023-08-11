@@ -1,6 +1,6 @@
 import {View, StyleSheet, Image} from 'react-native';
 import React, {useMemo} from 'react';
-import {colors, image} from '../../assets';
+import {colors} from '../../assets';
 import Text from '../../components/Text';
 import fonts from '../../assets/fonts';
 import ProgressBarAnimated from '../../components/ProgressBarAnimated/ProgressBarAnimated';
@@ -8,7 +8,7 @@ import moment from 'moment';
 import {momentExtend} from '../../function/utility';
 import icons from '../../assets/icons/icons';
 import {Grayscale} from 'react-native-color-matrix-image-filters';
-import FastImage from 'react-native-fast-image';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 
 interface Props {
   disabled?: boolean;
@@ -43,7 +43,7 @@ export default function CardDetail({
       <View style={styles.row}>
         {disabled ? (
           <Grayscale>
-            <Image
+            <ProgressiveImage
               source={{
                 uri: imagePath,
               }}
@@ -55,7 +55,7 @@ export default function CardDetail({
             />
           </Grayscale>
         ) : (
-          <FastImage
+          <ProgressiveImage
             source={{
               uri: imagePath,
             }}

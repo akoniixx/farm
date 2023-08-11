@@ -7,7 +7,7 @@ import {
   Dimensions,
   TextInput,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font, icons, image} from '../../assets';
 import {normalize} from '../../function/Normalize';
@@ -80,7 +80,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const [defaulRating, setDefaulRating] = useState<number>(0);
   const [isVisibleExtendModal, setIsVisibleExtendModal] =
     useState<boolean>(false);
-  const [maxRatting, setMaxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
+  const [maxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
   const [comment, setComment] = useState<string>('');
   const starImgFilled = icons.starfill;
   const starImgCorner = icons.starCorner;
@@ -110,6 +110,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   useEffect(() => {
     getDronerId();
     getTaskDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onFinishTask = () => {

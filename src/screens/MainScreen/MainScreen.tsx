@@ -85,7 +85,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    fecthImage();
+    fetchImage();
     getProfile();
     openSocket();
     getCurrentPoint();
@@ -106,7 +106,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     });
   };
 
-  const fecthImage = async () => {
+  const fetchImage = async () => {
     await Campaign.getImage('DRONER', 'QUATA', 'ACTIVE')
       .then(res => {
         setLoading(true);
@@ -265,51 +265,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 </View>
               </View>
 
-              {/*  <View>
-              <TouchableOpacity
-                style={{
-                  width: responsiveWidth(100),
-                }}
-                onPress={() => navigation.navigate('HistoryRewardScreen')}>
-                <LinearGradient
-                  colors={['#FA7052', '#F89132']}
-                  start={{x: 0, y: 0}}
-                  end={{x: 0.8, y: 1}}
-                  style={{
-                    flexDirection: 'row',
-                    borderRadius: 20,
-                    alignItems: 'center',
-                    padding: 2,
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}>
-                    <Image
-                      source={icons.ICKDronerPoint}
-                      style={{
-                        width: 32,
-                        height: 32,
-                        marginRight: 8,
-                      }}
-                    />
-                    <View>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontFamily: font.bold,
-                          color: colors.white,
-                          lineHeight: 30,
-                        }}>
-                        {numberWithCommas(currentPoint.toString(), true)}
-                      </Text>
-                    </View>
-                  </View>
-                </LinearGradient>
-              </TouchableOpacity>
-            </View> */}
               <View>
                 <TouchableOpacity
                   onPress={() => {
@@ -352,104 +307,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
               </View>
             </View>
 
-            {/*  <View style={{height: normalize(95)}}>
-              <ScrollView
-                showsHorizontalScrollIndicator={false}
-                horizontal
-                contentContainerStyle={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <View
-                  style={{
-                    backgroundColor: colors.orange,
-                    marginHorizontal: 5,
-                    paddingHorizontal: 10,
-                    paddingVertical: normalize(10),
-                    justifyContent: 'space-between',
-                    width: 160,
-                    height: 75,
-                    borderRadius: 16,
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <Image source={icons.income} style={styles.iconsTask} />
-                    <Text style={styles.font}>รายได้วันนี้</Text>
-                  </View>
-                  <Text style={styles.font}>{`฿${numberWithCommas(
-                    profile.totalRevenueToday,
-                  )}`}</Text>
-                </View>
-                <View
-                  style={{
-                    backgroundColor: '#6B7580',
-                    marginHorizontal: 5,
-                    paddingHorizontal: 10,
-                    paddingVertical: normalize(10),
-                    justifyContent: 'space-between',
-                    width: 160,
-                    height: 75,
-                    borderRadius: 16,
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <Image source={icons.income} style={styles.iconsTask} />
-                    <Text style={styles.font}>รายได้ทั้งหมด</Text>
-                  </View>
-                  <Text style={styles.font}>{`฿${numberWithCommas(
-                    profile.totalRevenue,
-                  )}`}</Text>
-                </View>
-                <View
-                  style={{
-                    backgroundColor: '#37ABFF',
-                    marginHorizontal: 5,
-                    paddingHorizontal: 10,
-                    paddingVertical: normalize(10),
-                    justifyContent: 'space-between',
-                    width: 160,
-                    height: 75,
-                    borderRadius: 16,
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <Image source={icons.farm} style={styles.iconsTask} />
-                    <Text style={styles.font}>ไร่สะสม</Text>
-                  </View>
-                  <Text style={styles.font}>{`${profile.totalArea} ไร่`}</Text>
-                </View>
-                <View
-                  style={{
-                    backgroundColor: '#3EBD93',
-                    marginHorizontal: 5,
-                    paddingHorizontal: 10,
-                    paddingVertical: normalize(10),
-                    justifyContent: 'space-between',
-                    width: 160,
-                    height: 75,
-                    borderRadius: 16,
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <Image source={icons.dronejob} style={styles.iconsTask} />
-                    <Text style={styles.font}>งานที่บินเสร็จ</Text>
-                  </View>
-                  <Text style={styles.font}>{`${profile.totalTask} งาน`}</Text>
-                </View>
-              </ScrollView>
-            </View> */}
             <View
               style={{
                 flexDirection: 'row',
@@ -480,7 +337,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 </Text>
               </TouchableOpacity>
             </View>
-            {guruKaset != undefined ? (
+            {guruKaset !== undefined ? (
               <GuruKasetCarousel
                 guruKaset={guruKaset}
                 navigation={navigation}

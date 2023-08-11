@@ -208,8 +208,8 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
           style={{
             paddingHorizontal: 8,
             paddingBottom: 8,
-            height : normalize(80),
-            backgroundColor : colors.grayBg
+            height: normalize(80),
+            backgroundColor: colors.grayBg,
           }}>
           <WarningDocumentBox navigation={props.navigation} />
         </View>
@@ -245,7 +245,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
             </View>
           </View>
         ) : (
-          dronerStatus === 'ACTIVE' && <View></View>
+          dronerStatus === 'ACTIVE' && <View />
         )}
         {data.length == 0 && isOpenReceiveTask && dronerStatus === 'ACTIVE' && (
           <View

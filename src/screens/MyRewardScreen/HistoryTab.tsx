@@ -7,18 +7,18 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {colors, image} from '../../assets';
 import fonts from '../../assets/fonts';
 import {momentExtend} from '../../function/utility';
-import {useFocusEffect} from '@react-navigation/native';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import FastImage from 'react-native-fast-image';
+
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
 import {Image} from 'react-native';
 import {RedemptionTransaction} from '../../types/MyRewardType';
 import Text from '../../components/Text';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 
 const mappingStatusText = {
   REQUEST: 'คำร้องขอแลก',
@@ -86,11 +86,10 @@ export default function HistoryTab({navigation}: {navigation: any}) {
     await getHistoryReward();
     setRefreshing(false);
   }, [getHistoryReward]);
-  useFocusEffect(
-    React.useCallback(() => {
-      getHistoryReward();
-    }, [getHistoryReward]),
-  );
+  useEffect(() => {
+    getHistoryReward();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const historyData = useMemo(() => {
     const sectionData = [];
@@ -188,7 +187,7 @@ export default function HistoryTab({navigation}: {navigation: any}) {
       stickySectionHeadersEnabled={false}
       keyExtractor={(item, index) => `-${index}`}
       sections={historyData || []}
-      renderSectionHeader={({section: {title, data}}) => {
+      renderSectionHeader={({section: {title}}) => {
         return (
           <Text
             style={{
@@ -202,7 +201,7 @@ export default function HistoryTab({navigation}: {navigation: any}) {
         );
       }}
       ListEmptyComponent={EmptyState()}
-      renderItem={({item, section}) => {
+      renderItem={({item}) => {
         const statusRedeem = item.redeemDetail.redeemStatus;
         const isMission = item.rewardExchange !== 'SCORE';
         const isDigital = item.rewardType === 'DIGITAL';
@@ -217,10 +216,9 @@ export default function HistoryTab({navigation}: {navigation: any}) {
                 : onPressItem(item.dronerTransactionsId);
             }}
             style={styles({type: statusRedeem}).card}>
-            <FastImage
+            <ProgressiveImage
               source={{
                 uri: item.imagePath,
-                cache: FastImage.cacheControl.immutable,
               }}
               style={{
                 borderRadius: 10,

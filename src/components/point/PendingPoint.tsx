@@ -38,7 +38,7 @@ export const PendingPoint: React.FC<guruData> = ({
         <View>
           <Text style={styles.positive}>{`≈ ${numberWithCommas(point)} `}</Text>
           <Text style={styles.textDate}>
-            {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm น.`)}
+            {momentExtend.toBuddhistYear(date, 'DD MMM YY HH:mm น.')}
           </Text>
         </View>
       </View>

@@ -219,8 +219,8 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
           style={{
             paddingBottom: 8,
             paddingHorizontal: 8,
-            height : normalize(80),
-            backgroundColor : colors.grayBg
+            height: normalize(80),
+            backgroundColor: colors.grayBg,
           }}>
           <WarningDocumentBox navigation={props.navigation} />
         </View>
@@ -321,7 +321,8 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
               style={[
                 stylesCentral.center,
                 {flex: 1, backgroundColor: colors.grayBg, padding: 8},
-              ]}></View>
+              ]}
+            />
           )}
           {dronerStatus == 'PENDING' ? (
             <View style={{backgroundColor: colors.grayBg}}>

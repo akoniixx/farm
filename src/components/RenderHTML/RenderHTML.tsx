@@ -13,6 +13,7 @@ export default function RenderHTML(props: Props) {
       },
     };
   }, [props.tagsStyles]);
+
   return (
     <RHTML
       {...props}

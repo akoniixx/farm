@@ -21,6 +21,7 @@
     "@react-native-community/art": "^1.2.0",
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/datetimepicker": "^6.5.2",
+    "@react-native-community/netinfo": "^9.4.1",
     "@react-native-firebase/app": "^16.4.0",
     "@react-native-firebase/messaging": "^16.4.0",
     "@react-native-picker/picker": "^2.4.4",

@@ -55,5 +55,5 @@ export const init_campaign: CampaignEntitie = {
   countSubMission: 0,
   rulesCampaign: '',
   condition: [],
-  awardDate:''
+  awardDate: '',
 };

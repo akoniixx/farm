@@ -23,7 +23,7 @@ import {Register} from '../../datasource/AuthDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Lottie from 'lottie-react-native';
 
-const IDCardScreen: React.FC<any> = ({navigation, route}) => {
+const IDCardScreen: React.FC<any> = ({navigation}) => {
   const [telNo, setTelNo] = useState<any>(null);
   const width = Dimensions.get('window').width;
   const [image, setImage] = useState<any>(null);
@@ -31,14 +31,12 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
   const [imgCard, setImgCard] = useState<any>('');
   const [idNo, setId] = useState<any>();
   const [loading, setLoading] = useState(false);
-  const [profile, setProfile] = useState<any>();
   const [percentSuccess, setPercentSuccess] = useState<any>();
 
   useEffect(() => {
     const getProfile = async () => {
       const droner_id = await AsyncStorage.getItem('droner_id');
       ProfileDatasource.getProfile(droner_id!).then(res => {
-        setProfile(res);
         setTelNo(res.telephoneNo);
         setPercentSuccess(res.percentSuccess);
         setId(res.idNo);
@@ -60,7 +58,7 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
     if (!result.didCancel) {
       setImage(result);
     }
-  }, [image]);
+  }, []);
 
   return (
     <View style={{flex: 1, backgroundColor: colors.white}}>
@@ -222,9 +220,9 @@ const IDCardScreen: React.FC<any> = ({navigation, route}) => {
                       idcard,
                       Number(percentSuccess) + 20,
                     )
-                      .then(res => {
+                      .then(() => {
                         ProfileDatasource.uploadDronerIDCard(image)
-                          .then(res => {
+                          .then(() => {
                             setLoading(false);
                             navigation.navigate('MyProfileScreen');
                           })

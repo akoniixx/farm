@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   CodeField,
   Cursor,
@@ -40,7 +40,6 @@ const VerifyOTP: React.FC<any> = ({navigation, route}) => {
   const params = route.params;
   const [value, setValue] = useState<string>('');
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
-  const [isError, setIsError] = useState(false);
   const [resentTime, setResentTime] = useState('02:00');
   const [resentNumber, setResentNumber] = useState(120);
   const [otpCalling, setOtpCalling] = useState(false);
@@ -50,7 +49,9 @@ const VerifyOTP: React.FC<any> = ({navigation, route}) => {
   } = useAuth();
   const onResendOtp = async () => {
     try {
-      const data = await Authentication.genOtpDeleteAccount(user?.telephoneNo);
+      const data = await Authentication.genOtpDeleteAccount(
+        user?.telephoneNo || '',
+      );
       setRefCode(data?.result?.refCode);
     } catch (e) {
       console.log(e);
@@ -120,7 +121,7 @@ const VerifyOTP: React.FC<any> = ({navigation, route}) => {
       <Text
         key={index}
         style={[
-          !isError ? styles.cell : styles.cellError,
+          styles.cell,
           isFocused || symbol ? styles.focusCell : null,
           {
             color: colors.fontBlack,
@@ -151,7 +152,7 @@ const VerifyOTP: React.FC<any> = ({navigation, route}) => {
               setLoading(false);
               const fcmtoken = await AsyncStorage.getItem('fcmtoken');
               FCMtokenDatasource.deleteFCMtoken(fcmtoken!)
-                .then(res => {
+                .then(() => {
                   onLogout();
                   RootNavigation.navigate('Auth', {
                     screen: 'DeleteSuccess',

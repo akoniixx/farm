@@ -21,7 +21,6 @@ import {Authentication} from '../../datasource/AuthDatasource';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Modal from '../../components/Modal/Modal';
 import {useAuth} from '../../contexts/AuthContext';
-import Loading from '../../components/Loading/Loading';
 
 interface Props {
   navigation: any;
@@ -31,7 +30,6 @@ export default function NewAddIDCardScreen({navigation}: Props) {
     state: {user},
     authContext: {getProfileAuth},
   } = useAuth();
-  const [loadingImage, setLoadingImage] = React.useState(false);
   const [showModalSelectImage, setShowModalSelectImage] = React.useState(false);
   const [error, setError] = React.useState('');
   const [images, setImages] = React.useState<any>(null);

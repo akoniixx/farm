@@ -9,13 +9,13 @@ import {
 
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import moment from 'moment';
-import FastImage from 'react-native-fast-image';
 import {colors, font} from '../../assets';
 import {numberWithCommas} from '../../function/utility';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
 import Text from '../../components/Text';
 import {mixpanel} from '../../../mixpanel';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 
 export interface RewardListType {
   id: string;
@@ -120,7 +120,7 @@ export default function ListReward({
                 isDigital: item.rewardType === 'DIGITAL',
               });
             }}>
-            <FastImage
+            <ProgressiveImage
               style={{
                 width: widthImg,
                 height: widthImg,
@@ -176,7 +176,7 @@ export default function ListReward({
         </>
       );
     };
-  }, [navigation]);
+  }, [navigation, widthImg]);
   return (
     <FlatList
       refreshControl={

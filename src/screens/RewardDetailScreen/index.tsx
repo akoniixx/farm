@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import {
   View,
   SafeAreaView,
@@ -10,7 +9,7 @@ import {
 } from 'react-native';
 
 import React, {useEffect, useMemo} from 'react';
-import {colors, font, icons, image} from '../../assets';
+import {colors, font, icons} from '../../assets';
 import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
@@ -24,13 +23,13 @@ import {RewardListType} from '../RewardScreen/ListReward';
 import {usePoint} from '../../contexts/PointContext';
 
 import moment from 'moment';
-import FastImage from 'react-native-fast-image';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
 import Text from '../../components/Text';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuth} from '../../contexts/AuthContext';
 import {DigitalRewardType} from '../../types/TypeRewardDigital';
 import {mixpanel} from '../../../mixpanel';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 interface Props {
   navigation: StackNavigationHelpers;
   route: RouteProp<StackParamList, 'RewardDetailScreen'>;
@@ -190,7 +189,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
           style={{
             paddingHorizontal: 16,
           }}>
-          <FastImage
+          <ProgressiveImage
             source={{
               uri: rewardDetail.imagePath,
             }}

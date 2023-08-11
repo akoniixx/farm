@@ -4,13 +4,12 @@ import {
   Image,
   ScrollView,
   Dimensions,
-  TextInput,
   Modal,
   TouchableOpacity,
   Platform,
   PermissionsAndroid,
 } from 'react-native';
-import React, {useEffect, useMemo, useReducer, useRef, useState} from 'react';
+import React, {useEffect, useReducer, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {MainButton} from '../../components/Button/MainButton';
@@ -116,6 +115,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
         setItems(data);
       })
       .catch(err => console.log(err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reload]);
 
   useFocusEffect(
@@ -142,6 +142,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
           setItems(data);
         })
         .catch(err => console.log(err));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );
 
@@ -149,9 +150,8 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     socket.removeAllListeners(`send-task-${dronerId!}`);
     socket.close();
-    const fcmtoken = await AsyncStorage.getItem('fcmtoken');
     FCMtokenDatasource.deleteFCMtoken(fcmToken)
-      .then(async res => await Authentication.logout())
+      .then(async () => await Authentication.logout())
       .catch(err => console.log(err));
     await AsyncStorage.clear();
   };
@@ -196,7 +196,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
     };
     setLoading(true);
     ProfileDatasource.addDronerDrone(newDrone)
-      .then(res => {
+      .then(() => {
         setImage1(null);
         setImage2(null);
         setBrand(null);

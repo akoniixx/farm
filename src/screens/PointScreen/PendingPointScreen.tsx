@@ -17,13 +17,13 @@ import {normalize} from '../../function/Normalize';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {PendingPoint} from '../../components/point/PendingPoint';
 
-const PendingPointScreen: React.FC<any> = ({navigation, route}) => {
+const PendingPointScreen: React.FC<any> = () => {
   const [dataAllPoint, setDataAllPoint] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [row, setRow] = useState(10);
+  const [row] = useState(10);
   const [current, setCurrent] = useState(1);
-  const [total, setTotal] = useState(0);
+  const [total] = useState(0);
   useEffect(() => {
     getPendingPoint();
   }, []);

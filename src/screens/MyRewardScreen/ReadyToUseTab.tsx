@@ -6,6 +6,7 @@ import {
   Dimensions,
   RefreshControl,
   TouchableOpacity,
+  LogBox,
 } from 'react-native';
 import React, {useCallback, useEffect} from 'react';
 import {colors, image} from '../../assets';
@@ -14,10 +15,10 @@ import {momentExtend} from '../../function/utility';
 import Text from '../../components/Text';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
-import {useFocusEffect} from '@react-navigation/native';
 import {RedemptionTransaction} from '../../types/MyRewardType';
-import FastImage from 'react-native-fast-image';
+
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 const mappingStatusText = {
   REQUEST: 'พร้อมใช้',
   PREPARE: 'เตรียมจัดส่ง',
@@ -56,6 +57,9 @@ export default function ReadyToUseTab({navigation}: {navigation: any}) {
 
   useEffect(() => {
     getHistoryRewardReadyToUse();
+    LogBox.ignoreLogs([]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onNavigation = async (item: RedemptionTransaction) => {
@@ -118,7 +122,7 @@ export default function ReadyToUseTab({navigation}: {navigation: any}) {
           <TouchableOpacity
             style={styles.card}
             onPress={() => onNavigation(item)}>
-            <FastImage
+            <ProgressiveImage
               source={{
                 uri: item.imagePath,
               }}

@@ -14,15 +14,16 @@ import {normalize} from '../../function/Normalize';
 import {HistoryPoint} from '../../components/point/HistoryPoint';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 
-const UsedPointScreen: React.FC<any> = ({navigation, route}) => {
+const UsedPointScreen: React.FC<any> = () => {
   const [dataAllPoint, setDataAllPoint] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [row, setRow] = useState(10);
+  const [row] = useState(10);
   const [current, setCurrent] = useState(1);
   const [total, setTotal] = useState(0);
   useEffect(() => {
     getHistoryPoint();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const getHistoryPoint = async () => {
     setLoading(true);
@@ -41,6 +42,7 @@ const UsedPointScreen: React.FC<any> = ({navigation, route}) => {
     setTimeout(() => {
       setRefreshing(false);
     }, 1000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadMoreData = async () => {

@@ -1,18 +1,11 @@
 import {
-  Alert,
   FlatList,
   Image,
-  Linking,
-  Modal,
-  PermissionsAndroid,
-  Platform,
   Pressable,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  ToastAndroid,
   View,
 } from 'react-native';
 import {stylesCentral} from '../../styles/StylesCentral';
@@ -26,8 +19,6 @@ import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import {MainButton} from '../../components/Button/MainButton';
 import {Register} from '../../datasource/AuthDatasource';
-import Lottie from 'lottie-react-native';
-import Geolocation from 'react-native-geolocation-service';
 
 interface AreaServiceEntity {
   area: string;
@@ -40,14 +31,8 @@ interface AreaServiceEntity {
 }
 
 const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
-  const [address, setAddress] = useState('');
   const [searchActive, setSearchActive] = useState<string>('');
-  const [loading, setLoading] = useState(false);
-  const [lat, setlat] = useState<any>(null);
-  const [long, setlong] = useState<any>(null);
-  const [provinceId, setProvinceId] = useState<any>(null);
-  const [districtId, setDistrictId] = useState<any>(null);
-  const [subdistrictId, setSubdistrictId] = useState<any>(null);
+
   const [edit, setEdit] = useState<boolean>(false);
   const [data, setData] = useState<AreaServiceEntity[]>([]);
   const [dataStore, setDataStore] = useState<AreaServiceEntity[]>([]);
@@ -78,7 +63,7 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     });
-  }, []);
+  }, [route.params.latitude, route.params.longitude]);
 
   useEffect(() => {
     // getNameFormLat();
@@ -109,188 +94,188 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
     let filter = data.filter(str => str.area.includes(searchActive));
     let arr = [];
     for (let i = 0; i < 20; i++) {
-      if (!!filter[i]) {
+      if (filter[i]) {
         arr.push(filter[i]);
       }
     }
     setDataStore(filter);
     setDataRender(arr);
-  }, [searchActive]);
+  }, [data, searchActive]);
 
-  const hasPermissionIOS = async () => {
-    const openSetting = () => {
-      Linking.openSettings().catch(() => {
-        Alert.alert('Unable to open settings');
-      });
-    };
-    const status = await Geolocation.requestAuthorization('whenInUse');
+  // const hasPermissionIOS = async () => {
+  //   const openSetting = () => {
+  //     Linking.openSettings().catch(() => {
+  //       Alert.alert('Unable to open settings');
+  //     });
+  //   };
+  //   const status = await Geolocation.requestAuthorization('whenInUse');
 
-    if (status === 'granted') {
-      return true;
-    }
+  //   if (status === 'granted') {
+  //     return true;
+  //   }
 
-    if (status === 'denied') {
-      Alert.alert('Location permission denied');
-    }
+  //   if (status === 'denied') {
+  //     Alert.alert('Location permission denied');
+  //   }
 
-    if (status === 'disabled') {
-      Alert.alert(
-        'Turn on Location Services to allow  to determine your location.',
-        '',
-        [
-          {text: 'Go to Settings', onPress: openSetting},
-          {text: "Don't Use Location", onPress: () => {}},
-        ],
-      );
-    }
+  //   if (status === 'disabled') {
+  //     Alert.alert(
+  //       'Turn on Location Services to allow  to determine your location.',
+  //       '',
+  //       [
+  //         {text: 'Go to Settings', onPress: openSetting},
+  //         {text: "Don't Use Location", onPress: () => {}},
+  //       ],
+  //     );
+  //   }
 
-    return false;
-  };
+  //   return false;
+  // };
 
-  const hasLocationPermission = async () => {
-    if (Platform.OS === 'ios') {
-      const hasPermission = await hasPermissionIOS();
-      return hasPermission;
-    }
+  // const hasLocationPermission = async () => {
+  //   if (Platform.OS === 'ios') {
+  //     const hasPermission = await hasPermissionIOS();
+  //     return hasPermission;
+  //   }
 
-    if (Platform.OS === 'android' && Platform.Version < 23) {
-      return true;
-    }
+  //   if (Platform.OS === 'android' && Platform.Version < 23) {
+  //     return true;
+  //   }
 
-    const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
+  //   const hasPermission = await PermissionsAndroid.check(
+  //     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  //   );
 
-    if (hasPermission) {
-      return true;
-    }
+  //   if (hasPermission) {
+  //     return true;
+  //   }
 
-    const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
+  //   const status = await PermissionsAndroid.request(
+  //     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  //   );
 
-    if (status === PermissionsAndroid.RESULTS.GRANTED) {
-      return true;
-    }
+  //   if (status === PermissionsAndroid.RESULTS.GRANTED) {
+  //     return true;
+  //   }
 
-    if (status === PermissionsAndroid.RESULTS.DENIED) {
-      ToastAndroid.show(
-        'Location permission denied by user.',
-        ToastAndroid.LONG,
-      );
-    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-      ToastAndroid.show(
-        'Location permission revoked by user.',
-        ToastAndroid.LONG,
-      );
-    }
+  //   if (status === PermissionsAndroid.RESULTS.DENIED) {
+  //     ToastAndroid.show(
+  //       'Location permission denied by user.',
+  //       ToastAndroid.LONG,
+  //     );
+  //   } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+  //     ToastAndroid.show(
+  //       'Location permission revoked by user.',
+  //       ToastAndroid.LONG,
+  //     );
+  //   }
 
-    return false;
-  };
+  //   return false;
+  // };
 
-  const getLocation = async () => {
-    const hasPermission = await hasLocationPermission();
-    if (hasPermission) {
-      Geolocation.getCurrentPosition(
-        pos => {
-          setPosition({
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          });
-        },
-        error => {
-          // See error code charts below.
-          console.log(error.code, error.message);
-        },
-        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-      );
-    }
-  };
+  // const getLocation = async () => {
+  //   const hasPermission = await hasLocationPermission();
+  //   if (hasPermission) {
+  //     Geolocation.getCurrentPosition(
+  //       pos => {
+  //         setPosition({
+  //           latitude: pos.coords.latitude,
+  //           longitude: pos.coords.longitude,
+  //           latitudeDelta: 0.0922,
+  //           longitudeDelta: 0.0421,
+  //         });
+  //       },
+  //       error => {
+  //         // See error code charts below.
+  //         console.log(error.code, error.message);
+  //       },
+  //       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+  //     );
+  //   }
+  // };
 
-  const getNameFormLat = () => {
-    let myApiKey = 'AIzaSyDg4BI3Opn-Bo2Pnr40Z7PKlC6MOv8T598';
-    let myLat = position.latitude;
-    let myLon = position.longitude;
-    fetch(
-      'https://maps.googleapis.com/maps/api/geocode/json?address=' +
-        myLat +
-        ',' +
-        myLon +
-        '&key=' +
-        myApiKey,
-    )
-      .then(response => response.json())
-      .then(responseJson => {
-        setlat(responseJson.results[0].geometry.location.lat);
-        setlong(responseJson.results[0].geometry.location.lng);
-        setAddress(
-          responseJson.results[0].address_components[0].long_name +
-            ' ' +
-            responseJson.results[0].address_components[2].long_name +
-            ' ' +
-            responseJson.results[0].address_components[3].long_name +
-            ' ' +
-            responseJson.results[0].address_components[4].long_name,
-        );
-        QueryLocation.QueryProvince()
-          .then(item => {
-            item.map((Province: any) => {
-              if (
-                Province.provinceName ==
-                `จังหวัด${responseJson.results[0].address_components[3].long_name}`
-              ) {
-                setProvinceId(Province.provinceId);
-                QueryLocation.QueryDistrict(Province.provinceId)
-                  .then((itemDistrict: any) => {
-                    itemDistrict.map((District: any) => {
-                      if (
-                        District.districtName ===
-                        `${
-                          responseJson.results[0].address_components[2].long_name.split(
-                            ' ',
-                          )[0]
-                        }${
-                          responseJson.results[0].address_components[2].long_name.split(
-                            ' ',
-                          )[1]
-                        }`
-                      ) {
-                        setDistrictId(District.districtId);
-                        QueryLocation.QuerySubDistrict(
-                          District.districtId,
-                          District.districtName,
-                        )
-                          .then(itemSubDistrict => {
-                            itemSubDistrict.map((SubDistrict: any) => {
-                              if (
-                                SubDistrict.districtName ===
-                                `${
-                                  responseJson.results[0].address_components[2].long_name.split(
-                                    ' ',
-                                  )[0]
-                                }${
-                                  responseJson.results[0].address_components[2].long_name.split(
-                                    ' ',
-                                  )[1]
-                                }`
-                              ) {
-                                setSubdistrictId(SubDistrict.subdistrictId);
-                              }
-                            });
-                          })
-                          .catch(err => console.log(err));
-                      }
-                    });
-                  })
-                  .catch(err => console.log(err));
-              }
-            });
-          })
-          .catch(err => console.log(err));
-      });
-  };
+  // const getNameFormLat = () => {
+  //   let myApiKey = 'AIzaSyDg4BI3Opn-Bo2Pnr40Z7PKlC6MOv8T598';
+  //   let myLat = position.latitude;
+  //   let myLon = position.longitude;
+  //   fetch(
+  //     'https://maps.googleapis.com/maps/api/geocode/json?address=' +
+  //       myLat +
+  //       ',' +
+  //       myLon +
+  //       '&key=' +
+  //       myApiKey,
+  //   )
+  //     .then(response => response.json())
+  //     .then(responseJson => {
+  //       setlat(responseJson.results[0].geometry.location.lat);
+  //       setlong(responseJson.results[0].geometry.location.lng);
+  //       setAddress(
+  //         responseJson.results[0].address_components[0].long_name +
+  //           ' ' +
+  //           responseJson.results[0].address_components[2].long_name +
+  //           ' ' +
+  //           responseJson.results[0].address_components[3].long_name +
+  //           ' ' +
+  //           responseJson.results[0].address_components[4].long_name,
+  //       );
+  //       QueryLocation.QueryProvince()
+  //         .then(item => {
+  //           item.map((Province: any) => {
+  //             if (
+  //               Province.provinceName ==
+  //               `จังหวัด${responseJson.results[0].address_components[3].long_name}`
+  //             ) {
+  //               setProvinceId(Province.provinceId);
+  //               QueryLocation.QueryDistrict(Province.provinceId)
+  //                 .then((itemDistrict: any) => {
+  //                   itemDistrict.map((District: any) => {
+  //                     if (
+  //                       District.districtName ===
+  //                       `${
+  //                         responseJson.results[0].address_components[2].long_name.split(
+  //                           ' ',
+  //                         )[0]
+  //                       }${
+  //                         responseJson.results[0].address_components[2].long_name.split(
+  //                           ' ',
+  //                         )[1]
+  //                       }`
+  //                     ) {
+  //                       setDistrictId(District.districtId);
+  //                       QueryLocation.QuerySubDistrict(
+  //                         District.districtId,
+  //                         District.districtName,
+  //                       )
+  //                         .then(itemSubDistrict => {
+  //                           itemSubDistrict.map((SubDistrict: any) => {
+  //                             if (
+  //                               SubDistrict.districtName ===
+  //                               `${
+  //                                 responseJson.results[0].address_components[2].long_name.split(
+  //                                   ' ',
+  //                                 )[0]
+  //                               }${
+  //                                 responseJson.results[0].address_components[2].long_name.split(
+  //                                   ' ',
+  //                                 )[1]
+  //                               }`
+  //                             ) {
+  //                               setSubdistrictId(SubDistrict.subdistrictId);
+  //                             }
+  //                           });
+  //                         })
+  //                         .catch(err => console.log(err));
+  //                     }
+  //                   });
+  //                 })
+  //                 .catch(err => console.log(err));
+  //             }
+  //           });
+  //         })
+  //         .catch(err => console.log(err));
+  //     });
+  // };
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -534,7 +519,7 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
                     positionForm.districtId,
                     positionForm.subdistrictId,
                   )
-                    .then(res =>
+                    .then(() =>
                       navigation.navigate('SuccessScreen', {
                         tele: route.params.telNumber,
                       }),

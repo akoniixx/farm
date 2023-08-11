@@ -22,7 +22,7 @@ export class GuruKaset {
     pageType?: 'ALL' | 'MAIN';
   }): Promise<any> {
     return axios
-      .post(BASE_URL + `/promotion/news/find-all-news`, {
+      .post(BASE_URL + '/promotion/news/find-all-news', {
         status: status,
         application: application,
         categoryNews: categoryNews,
@@ -37,13 +37,13 @@ export class GuruKaset {
       });
   }
   static async getById(id: string): Promise<any> {
-    return axios.get(BASE_URL + `/promotion/news/` + id).then(res => {
+    return axios.get(BASE_URL + '/promotion/news/' + id).then(res => {
       return res.data;
     });
   }
   static async updateId(id: string, read: number): Promise<any> {
     return axios
-      .post(BASE_URL + `/promotion/news/update/` + id, {read})
+      .post(BASE_URL + '/promotion/news/update/' + id, {read})
       .then(res => {
         return res.data;
       });
