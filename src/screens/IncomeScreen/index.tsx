@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors} from '../../assets';
 import fonts from '../../assets/fonts';
 import CardIncomeList from '../../components/CardIncomeList/CardIncomeList';

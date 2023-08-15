@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {ScrollView} from 'react-native-gesture-handler';
 import {QueryLocation} from '../../datasource/LocationDatasource';
+import {momentExtend} from '../../function/utility';
 
 const ViewProfile: React.FC<any> = ({navigation}) => {
   const [initProfile, setInitProfile] = useState({
@@ -70,9 +71,7 @@ const ViewProfile: React.FC<any> = ({navigation}) => {
                 setInitProfile({
                   firstname: res.firstname,
                   lastname: res.lastname,
-                  birthDate: `${date.split('-')[2]}/${date.split('-')[1]}/${
-                    parseInt(date.split('-')[0]) + 543
-                  }`,
+                  birthDate: momentExtend.toBuddhistYear(date, 'DD MMM YYYY'),
                   telephone: res.telephoneNo,
                   image: '',
                   address1: res.address.address1,
@@ -116,9 +115,7 @@ const ViewProfile: React.FC<any> = ({navigation}) => {
                   setInitProfile({
                     firstname: res.firstname,
                     lastname: res.lastname,
-                    birthDate: `${date.split('-')[2]}/${date.split('-')[1]}/${
-                      parseInt(date.split('-')[0]) + 543
-                    }`,
+                    birthDate: momentExtend.toBuddhistYear(date, 'DD MMM YYYY'),
                     telephone: res.telephoneNo,
                     image: resImg.url,
                     address1: res.address.address1,

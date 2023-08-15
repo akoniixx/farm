@@ -1,19 +1,12 @@
 import {Switch} from '@rneui/themed';
-import React, {useEffect, useRef, useState} from 'react';
-import {
-  Animated,
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
@@ -24,7 +17,6 @@ import {numberWithCommas, socket} from '../../function/utility';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
 import Toast from 'react-native-toast-message';
-import fonts from '../../assets/fonts';
 import {mixpanel, mixpanel_token} from '../../../mixpanel';
 import {GuruKaset} from '../../datasource/GuruDatasource';
 import LinearGradient from 'react-native-linear-gradient';
@@ -32,6 +24,7 @@ import {usePoint} from '../../contexts/PointContext';
 
 import {Campaign} from '../../datasource/CampaignDatasource';
 import GuruKasetCarousel from '../../components/GuruKasetCarousel/GuruKasetCarousel';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -375,10 +368,12 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
             mixpanel.track('กดแคมเปญทองจากหน้าแรก');
             navigation.navigate('CampaignScreen');
           }}>
-          <Image
-            source={{uri: campaignImage}}
-            style={{width: 150, height: 60}}
+          <ProgressiveImage
+            source={{
+              uri: campaignImage,
+            }}
             resizeMode="contain"
+            style={{width: 150, height: 60}}
           />
         </TouchableOpacity>
       </View>

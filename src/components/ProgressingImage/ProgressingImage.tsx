@@ -1,17 +1,23 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, ImageProps, Animated} from 'react-native';
+import {StyleSheet, View, ImageProps, Animated, ImageStyle} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {useNetwork} from '../../contexts/NetworkContext';
+import {image} from '../../assets';
 
-interface ProgressiveImageProps {
+interface ProgressiveImageProps extends ImageProps {
   source: ImageProps['source'];
-  style?: object;
+  style?: ImageStyle;
+  resizeMode?: ImageProps['resizeMode'];
 }
 
 const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   source,
   style = {},
+  resizeMode,
+  ...props
 }) => {
   const [highResImageLoaded, setHighResImageLoaded] = useState(false);
+  const {isConnected} = useNetwork();
   const [opacity] = useState(new Animated.Value(0));
 
   // Skeleton animation setup
@@ -58,7 +64,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
         />
       )}
       <Animated.Image
-        source={source}
+        source={isConnected ? source : image.loaderImage}
         style={[
           styles.imageOverlay,
           {
@@ -66,8 +72,9 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
             opacity,
           },
         ]}
-        resizeMode={FastImage.resizeMode.cover}
+        resizeMode={resizeMode || FastImage.resizeMode.cover}
         onLoad={onLoadHighResImage}
+        {...props}
       />
     </View>
   );

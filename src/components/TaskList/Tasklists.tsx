@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {normalize} from '@rneui/themed';
 import fonts from '../../assets/fonts';
 import {colors, image, icons, font} from '../../assets';
@@ -19,12 +19,30 @@ import {mixpanel} from '../../../mixpanel';
 import ModalTaskDone from '../Modal/ModalTaskDone';
 import Text from '../Text';
 import {useAuth} from '../../contexts/AuthContext';
+import {Task} from '../../types/TaskType';
+import AsyncButton from '../Button/AsyncButton';
 
-const Tasklists: React.FC<any> = (props: any) => {
+interface Props extends Task {
+  onPressSetTaskId: (taskId: string) => void;
+  onChangeImgFinish: (payload: any) => void;
+  setDefaultRating: React.Dispatch<React.SetStateAction<number>>;
+  onFinishTask: () => Promise<void>;
+  onCloseSuccessModal: () => void;
+  fetchTask: () => Promise<void>;
+  setComment: React.Dispatch<React.SetStateAction<string>>;
+  startTask: () => void;
+  setShowModalStartTask: () => void;
+  openModalUpload: () => void;
+}
+const Tasklists: React.FC<any> = (props: Props) => {
   const [toggleModalUpload, setToggleModalUpload] = useState<boolean>(false);
-
+  const [toggleModalSuccess, setToggleModalSuccess] = useState<boolean>(false);
+  const [toggleModalReview, setToggleModalReview] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [toggleModalStartTask, setToggleModalStartTask] =
+    useState<boolean>(false);
   const d = new Date(props.date);
-  const onChangImgFinish = props.onChangImgFinish;
+  const onChangeImgFinish = props.onChangeImgFinish;
   const onPressSetTaskId = props.onPressSetTaskId;
   const {
     state: {isDoneAuth},
@@ -42,8 +60,6 @@ const Tasklists: React.FC<any> = (props: any) => {
   const starImgFilled = props.starImgFilled;
   const starImgCorner = props.starImgCorner;
 
-  const toggleModalReview = props.toggleModalReview;
-  const toggleModalSuccess = props.toggleModalSuccess;
   const taskId = props.taskId;
   const statusDelay = props.statusDelay;
   const isProblem = props.isProblem;
@@ -57,7 +73,7 @@ const Tasklists: React.FC<any> = (props: any) => {
           return (
             <TouchableOpacity
               activeOpacity={0.9}
-              key={item}
+              key={key}
               onPress={() => props.setDefaultRating(item)}>
               <Image
                 style={styles.star}
@@ -128,7 +144,10 @@ const Tasklists: React.FC<any> = (props: any) => {
                 color: '#2EC66E',
                 fontSize: normalize(17),
               }}>
-              ฿ {props.price ? numberWithCommas(props.price) : null}
+              ฿{' '}
+              {props.price
+                ? numberWithCommas(props.price.toString() || '')
+                : null}
             </Text>
           </View>
           <View
@@ -275,7 +294,6 @@ const Tasklists: React.FC<any> = (props: any) => {
                 width: normalize(127.5),
                 height: normalize(49),
                 borderRadius: normalize(8),
-                // eslint-disable-next-line no-extra-boolean-cast
                 backgroundColor:
                   !!statusDelay || isProblem ? colors.disable : colors.orange,
                 display: 'flex',
@@ -303,8 +321,9 @@ const Tasklists: React.FC<any> = (props: any) => {
               onPressSetTaskId(props.taskId);
               if (props.status === 'WAIT_START') {
                 props.setShowModalStartTask();
+                setToggleModalStartTask(true);
               } else {
-                props.setToggleModalUpload();
+                props.openModalUpload();
                 setToggleModalUpload(true);
               }
             }}
@@ -361,7 +380,7 @@ const Tasklists: React.FC<any> = (props: any) => {
             </Text>
           </View>
         </View>
-        <Modal isVisible={props.toggleModalStartTask} backdropOpacity={0.2}>
+        <Modal isVisible={toggleModalStartTask} backdropOpacity={0.2}>
           <View
             style={{
               backgroundColor: 'white',
@@ -394,20 +413,26 @@ const Tasklists: React.FC<any> = (props: any) => {
               color={colors.orange}
               borderColor={colors.orange}
               fontColor="white"
-              onPress={props.startTask}
+              onPress={() => {
+                setToggleModalStartTask(false);
+                props.startTask();
+              }}
             />
             <MainButton
               label="ยังไม่เริ่มงาน"
               color="white"
               borderColor={colors.gray}
               fontColor="black"
-              onPress={() => props.setToggleModalStartTask(false)}
+              onPress={() => setToggleModalStartTask(false)}
             />
           </View>
         </Modal>
         <ModalTaskDone
           taskId={props.taskId}
-          onShowReviewModal={onChangImgFinish}
+          onShowReviewModal={payload => {
+            onChangeImgFinish(payload);
+            setToggleModalReview(true);
+          }}
           onClose={() => {
             setToggleModalUpload(false);
           }}
@@ -466,13 +491,20 @@ const Tasklists: React.FC<any> = (props: any) => {
               onChangeText={props.setComment}
               value={props.comment}
             />
-            <MainButton
-              label="ยืนยัน"
-              color={colors.orange}
-              disable={defaultRating == 0}
-              onPress={() => {
+            <AsyncButton
+              title="ยืนยัน"
+              isLoading={loading}
+              disabled={defaultRating == 0 || loading}
+              onPress={async () => {
                 mixpanel.track('Task success');
-                props.onFinishTask(taskId);
+                setLoading(true);
+                await props.onFinishTask().finally(() => {
+                  setLoading(false);
+                  setToggleModalReview(false);
+                  setTimeout(() => {
+                    setToggleModalSuccess(true);
+                  }, 500);
+                });
               }}
             />
           </View>
@@ -503,7 +535,10 @@ const Tasklists: React.FC<any> = (props: any) => {
             <MainButton
               label="ตกลง"
               color={colors.orange}
-              onPress={props.onCloseSuccessModal}
+              onPress={() => {
+                setToggleModalSuccess(false);
+                props.onCloseSuccessModal();
+              }}
             />
           </View>
         </Modal>

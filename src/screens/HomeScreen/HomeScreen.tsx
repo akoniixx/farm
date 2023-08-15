@@ -1,10 +1,10 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import HomeCarousel from '../../components/Carousel/HomeCarousel';
 import {MainButton} from '../../components/Button/MainButton';
-import {colors, font} from '../../assets';
+import {colors} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import {mixpanel} from '../../../mixpanel';
 

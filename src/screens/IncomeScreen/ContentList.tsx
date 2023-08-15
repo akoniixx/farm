@@ -14,7 +14,11 @@ import {normalize} from '../../function/Normalize';
 import colors from '../../assets/colors/colors';
 import dayjs from 'dayjs';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
-import {calTotalPrice, numberWithCommas} from '../../function/utility';
+import {
+  calTotalPrice,
+  momentExtend,
+  numberWithCommas,
+} from '../../function/utility';
 import Divider from '../../components/Divider';
 import image from '../../assets/images/image';
 import {stylesCentral} from '../../styles/StylesCentral';
@@ -141,7 +145,10 @@ export default function ContentList({
                   paddingHorizontal: 16,
                 }}>
                 <Text style={styles({}).textTitle}>
-                  {dayjs(item.dateAppointment).format('DD/MM/BBBB')}
+                  {`${momentExtend.toBuddhistYear(
+                    item.dateAppointment,
+                    'DD MMM YYYY',
+                  )}`}
                 </Text>
 
                 <View style={{paddingVertical: 8}}>

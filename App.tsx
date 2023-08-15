@@ -29,6 +29,7 @@ import moment from 'moment';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {colors} from './src/assets';
+import {NetworkProvider} from './src/contexts/NetworkContext';
 
 moment.updateLocale('th', {
   relativeTime: {
@@ -103,25 +104,27 @@ const App = () => {
 
   return (
     <>
-      <ActionContext.Provider value={{actiontaskId, setActiontaskId}}>
-        <NavigationContainer
-          ref={navigationRef}
-          linking={linking}
-          fallback={
-            <ActivityIndicator color={colors.orangeSoft} size="large" />
-          }>
-          <AuthProvider>
-            <>
-              <PointProvider>
-                <SheetProvider>
-                  <AppNavigator />
-                </SheetProvider>
-              </PointProvider>
-              <Toast config={toastConfig} />
-            </>
-          </AuthProvider>
-        </NavigationContainer>
-      </ActionContext.Provider>
+      <NetworkProvider>
+        <ActionContext.Provider value={{actiontaskId, setActiontaskId}}>
+          <NavigationContainer
+            ref={navigationRef}
+            linking={linking}
+            fallback={
+              <ActivityIndicator color={colors.orangeSoft} size="large" />
+            }>
+            <AuthProvider>
+              <>
+                <PointProvider>
+                  <SheetProvider>
+                    <AppNavigator />
+                  </SheetProvider>
+                </PointProvider>
+                <Toast config={toastConfig} />
+              </>
+            </AuthProvider>
+          </NavigationContainer>
+        </ActionContext.Provider>
+      </NetworkProvider>
     </>
   );
 };
