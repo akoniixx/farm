@@ -216,7 +216,6 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
       return () => <View />;
     }
   }, [isDoneAuth, props.navigation, data]);
-  console.log('loading', loading);
   return (
     <>
       <RenderWarningDocEmpty />

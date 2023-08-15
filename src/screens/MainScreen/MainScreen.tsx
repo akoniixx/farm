@@ -182,7 +182,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
     fetch('https://api.mixpanel.com/engage#profile-set', options)
       .then(response => response.json())
-      .then(response => console.log(response))
       .catch(err => console.error(err));
   };
 
