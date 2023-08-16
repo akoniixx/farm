@@ -11,7 +11,6 @@ import {
 import HTML from 'react-native-render-html';
 import colors from '../../assets/colors/colors';
 import CustomHeader from '../../components/CustomHeader';
-import {CardGuru} from '../../components/Guru/CardGuru';
 
 import {font} from '../../assets/index';
 import {useIsFocused} from '@react-navigation/native';

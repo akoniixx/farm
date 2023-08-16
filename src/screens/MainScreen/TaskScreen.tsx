@@ -2,7 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {normalize} from '@rneui/themed';
 import React, {useEffect, useMemo, useState} from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import {FlatList} from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -22,23 +28,34 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {useAuth} from '../../contexts/AuthContext';
 import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
 import Text from '../../components/Text';
+import {RefreshControl} from 'react-native';
+import Loading from '../../components/Loading/Loading';
 
 interface Prop {
   navigation: any;
   dronerStatus: string;
 }
 
+const initialPage = 1;
+const limit = 10;
 const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const dronerStatus = props.dronerStatus;
   const {
     state: {isDoneAuth},
   } = useAuth();
-
+  const [page, setPage] = useState<number>(initialPage);
   const navigation = RootNavigation.navigate;
   const [error] = useState<string>('');
-  const [data, setData] = useState<any>([]);
+  const [data, setData] = useState<{
+    data: any;
+    count: number;
+  }>({
+    data: [],
+    count: 0,
+  });
   const [loading, setLoading] = useState<boolean>(false);
   const [checkResIsComplete, setCheckResIsComplete] = useState<boolean>(false);
+
   // const [toggleModalStartTask, setToggleModalStartTask] =
   //   useState<boolean>(false);
 
@@ -48,10 +65,12 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const [defaultRating, setDefaultRating] = useState<number>(0);
   const [maxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
   const [comment, setComment] = useState<string>('');
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [imageFile, setImageFile] = useState<{
     file: any;
     fileDrug: any;
   }>();
+  const [loadingInfinite, setLoadingInfinite] = useState<boolean>(false);
   const [idUpload, setIdUpload] = useState<string>('');
   const [updateBy, setUpdateBy] = useState<string>('');
   const [percentSuccess, setPercentSuccess] = useState<number>(0);
@@ -70,11 +89,39 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
       getData();
     }, []),
   );
-
-  useEffect(() => {
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
     getData();
+    setRefreshing(false);
   }, []);
-
+  const onEndReached = async () => {
+    if (data.data.length < data.count) {
+      setLoadingInfinite(true);
+      setPage(page + 1);
+      const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
+      TaskDatasource.getTaskById(
+        droner_id,
+        ['WAIT_START', 'IN_PROGRESS'],
+        page + 1,
+        limit,
+      )
+        .then(res => {
+          if (res !== undefined) {
+            setData({
+              data: [...data.data, ...res.data],
+              count: res.count,
+            });
+            setCheckResIsComplete(true);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoadingInfinite(false);
+        });
+    }
+  };
   const startTask = () => {
     setLoading(true);
     // setToggleModalStartTask(false);
@@ -84,7 +131,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
       'IN_PROGRESS',
       dataUpdateStatus.updateBy,
     )
-      .then(res => {
+      .then(() => {
         Toast.show({
           type: 'success',
           text1: `งาน #${dataUpdateStatus.taskNo}`,
@@ -150,7 +197,12 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const getData = async () => {
     setLoading(true);
     const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
-    TaskDatasource.getTaskById(droner_id, ['WAIT_START', 'IN_PROGRESS'], 1, 999)
+    TaskDatasource.getTaskById(
+      droner_id,
+      ['WAIT_START', 'IN_PROGRESS'],
+      initialPage,
+      limit,
+    )
       .then(res => {
         if (res !== undefined) {
           setData(res);
@@ -200,7 +252,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   }, [isDoneAuth, props.navigation]);
 
   const RenderWarningDocEmpty = useMemo(() => {
-    if (!isDoneAuth && data.length < 1) {
+    if (!isDoneAuth && data.data.length < 1) {
       return () => (
         <View
           style={{
@@ -219,14 +271,29 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   return (
     <>
       <RenderWarningDocEmpty />
-      {data.length !== 0 && checkResIsComplete ? (
+      {data.data.length !== 0 && checkResIsComplete ? (
         <View style={[{flex: 1}]}>
           <FlatList
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            onEndReached={onEndReached}
             ListHeaderComponent={RenderWarningDoc}
             contentContainerStyle={{paddingHorizontal: 8}}
-            ListFooterComponent={<View style={{height: 40}} />}
+            ListFooterComponent={
+              loadingInfinite ? (
+                <View
+                  style={{
+                    padding: 16,
+                  }}>
+                  <Loading spinnerSize={40} />
+                </View>
+              ) : (
+                <View style={{height: 40}} />
+              )
+            }
             keyExtractor={element => element.item.taskNo}
-            data={data}
+            data={data.data}
             extraData={data}
             renderItem={({item}: any) => {
               return (

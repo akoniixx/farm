@@ -25,6 +25,7 @@ import {usePoint} from '../../contexts/PointContext';
 import {Campaign} from '../../datasource/CampaignDatasource';
 import GuruKasetCarousel from '../../components/GuruKasetCarousel/GuruKasetCarousel';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 
 const MainScreen: React.FC<any> = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
@@ -182,6 +183,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
     fetch('https://api.mixpanel.com/engage#profile-set', options)
       .then(response => response.json())
+      .then(response => console.log(response))
       .catch(err => console.error(err));
   };
 
@@ -352,6 +354,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           right: 10,
           zIndex: 1,
         }}>
+        {/* <NetworkLost /> */}
         <View style={{width: 10, marginLeft: 20}}>
           <TouchableOpacity
             onPress={() => {
@@ -372,7 +375,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
               uri: campaignImage,
             }}
             resizeMode="contain"
-            style={{width: 150, height: 60}}
+            style={{width: 140, height: 60}}
           />
         </TouchableOpacity>
       </View>

@@ -1,7 +1,6 @@
 import {normalize} from '@rneui/themed';
-import React, {useEffect, useMemo, useState} from 'react';
-import {FlatList, Image, Text, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import React, {useMemo, useState} from 'react';
+import {FlatList, Image, RefreshControl, Text, View} from 'react-native';
 import {colors, image} from '../../assets';
 import MainTasklist from '../../components/TaskList/MainTasklist';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
@@ -12,32 +11,33 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {calTotalPrice} from '../../function/utility';
 import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
 import {useAuth} from '../../contexts/AuthContext';
+import Loading from '../../components/Loading/Loading';
+const initialPage = 1;
+const limit = 10;
 const FinishTask: React.FC = () => {
-  const [data, setData] = useState<any>([]);
+  const [data, setData] = useState<{
+    data: any[];
+    count: number;
+  }>({
+    data: [],
+    count: 0,
+  });
   const {
     state: {isDoneAuth},
   } = useAuth();
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [checkResIsComplete, setCheckResIsComplete] = useState(false);
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      getData();
-    }, []),
-  );
+  const [loadingInfinite, setLoadingInfinite] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const getData = async () => {
     setLoading(true);
     const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.getTaskById(
       droner_id,
       ['DONE', 'WAIT_REVIEW', 'CANCELED'],
-      page,
-      99,
+      initialPage,
+      limit,
     )
       .then(res => {
         setData(res);
@@ -49,6 +49,41 @@ const FinishTask: React.FC = () => {
         console.log(err);
       });
   };
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, []),
+  );
+  const onRefresh = async () => {
+    setRefreshing(true);
+    getData();
+    setRefreshing(false);
+  };
+  const onEndReached = async () => {
+    if (data.data.length < data.count) {
+      setLoadingInfinite(true);
+      const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
+      TaskDatasource.getTaskById(
+        droner_id,
+        ['DONE', 'WAIT_REVIEW', 'CANCELED'],
+        page + 1,
+        limit,
+      )
+        .then(res => {
+          setData({
+            data: [...data.data, ...res.data],
+            count: res.count,
+          });
+          setPage(page + 1);
+          setTimeout(() => setLoadingInfinite(false), 200);
+        })
+        .catch(err => {
+          setLoadingInfinite(false);
+          console.log(err);
+        });
+    }
+  };
+
   const RenderWarningDoc = useMemo(() => {
     if (!isDoneAuth) {
       return (
@@ -71,7 +106,7 @@ const FinishTask: React.FC = () => {
   }, [isDoneAuth]);
 
   const RenderWarningDocEmpty = useMemo(() => {
-    if (!isDoneAuth && data.length < 1) {
+    if (!isDoneAuth && data.data.length < 1) {
       return () => (
         <View
           style={{
@@ -91,14 +126,29 @@ const FinishTask: React.FC = () => {
   return (
     <>
       <RenderWarningDocEmpty />
-      {data.length !== 0 && checkResIsComplete ? (
+      {data.data.length !== 0 && checkResIsComplete ? (
         <View style={[{flex: 1}]}>
           <FlatList
             keyExtractor={element => element.item.taskNo}
-            data={data}
+            data={data.data}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            onEndReached={onEndReached}
             ListHeaderComponent={RenderWarningDoc}
             contentContainerStyle={{paddingHorizontal: 8}}
-            ListFooterComponent={<View style={{height: 40}} />}
+            ListFooterComponent={
+              loadingInfinite ? (
+                <View
+                  style={{
+                    padding: 16,
+                  }}>
+                  <Loading spinnerSize={40} />
+                </View>
+              ) : (
+                <View style={{height: 40}} />
+              )
+            }
             extraData={data}
             renderItem={({item}: any) => (
               <MainTasklist
