@@ -5,10 +5,10 @@ import {
   Image,
   Dimensions,
   NativeScrollEvent,
-  TouchableOpacity,
   RefreshControl,
+  Platform,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import CollapseItem from './CollapseItem';
 import Text from '../../components/Text';
@@ -17,10 +17,8 @@ import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {TabNavigatorParamList} from '../../navigations/bottomTabs/MainTapNavigator';
 import {missionDatasource} from '../../datasource/MissionDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useFocusEffect} from '@react-navigation/native';
-import {Campaign} from '../../datasource/CampaignDatasource';
-import Spinner from 'react-native-loading-spinner-overlay';
-import {mixpanel} from '../../../mixpanel';
+import SkeletonLoading from '../../components/SkeletonLoading/SkeletonLoading';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 
 interface Props {
   navigation: BottomTabNavigationProp<TabNavigatorParamList, 'mission'>;
@@ -95,6 +93,7 @@ interface Reward {
 }
 
 export default function Body({navigation}: Props) {
+  const height = Dimensions.get('window').height;
   const [missionList, setMissionList] = React.useState<{
     count: number;
     mission: Mission[];
@@ -102,26 +101,35 @@ export default function Body({navigation}: Props) {
     count: 0,
     mission: [],
   });
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const getAllMission = async () => {
-        try {
-          const dronerId = await AsyncStorage.getItem('droner_id');
-          const payload = {
-            page: 1,
-            take: 10,
-            dronerId: dronerId || '',
-          };
-          const res = await missionDatasource.getListMissions(payload);
-          setMissionList(res);
-        } catch (err) {
-          console.log(err);
-        }
+  const getAllMission = async () => {
+    try {
+      setLoading(true);
+      const dronerId = await AsyncStorage.getItem('droner_id');
+      const payload = {
+        page: 1,
+        take: 10,
+        dronerId: dronerId || '',
       };
-      getAllMission();
-    }, []),
-  );
+      const res = await missionDatasource.getListMissions(payload);
+      setMissionList(res);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    getAllMission();
+  }, []);
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await getAllMission();
+    setRefreshing(false);
+  }, []);
   const isCloseToBottom = ({
     layoutMeasurement,
     contentOffset,
@@ -136,6 +144,7 @@ export default function Body({navigation}: Props) {
   const onLoadMore = async () => {
     try {
       if (missionList.count > missionList.mission.length) {
+        setLoading(true);
         const dronerId = await AsyncStorage.getItem('droner_id');
         const payload = {
           page: Math.ceil(missionList.mission.length / 10) + 1,
@@ -148,8 +157,11 @@ export default function Body({navigation}: Props) {
           mission: [...missionList.mission, ...res.mission],
         });
       }
+      setLoading(false);
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -189,41 +201,62 @@ export default function Body({navigation}: Props) {
       </View>
     );
   };
+  if (loading) {
+    return (
+      <View
+        style={{
+          padding: 16,
+        }}>
+        <SkeletonLoading
+          rows={3}
+          style={{
+            height: 120,
+            marginBottom: 16,
+          }}
+        />
+      </View>
+    );
+  }
 
   return (
-    <View>
-      {missionList.mission.length > 0 ? (
-        <ScrollView
-          scrollEventThrottle={16}
-          style={styles.container}
-          onScroll={({nativeEvent}) => {
-            if (isCloseToBottom(nativeEvent)) {
-              onLoadMore();
+    <NetworkLost onPress={onRefresh} height={height - 200}>
+      <View>
+        {missionList.mission.length > 0 ? (
+          <ScrollView
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
-          }}>
-          {missionList.mission.map((item, index) => {
-            return (
-              <CollapseItem
-                key={index}
-                navigation={navigation}
-                mission={item}
-              />
-            );
-          })}
+            scrollEventThrottle={16}
+            style={styles.container}
+            onScroll={({nativeEvent}) => {
+              if (isCloseToBottom(nativeEvent)) {
+                onLoadMore();
+              }
+            }}>
+            {missionList.mission.map((item, index) => {
+              return (
+                <CollapseItem
+                  key={index}
+                  navigation={navigation}
+                  mission={item}
+                />
+              );
+            })}
 
-          <View style={{height: 200}} />
-        </ScrollView>
-      ) : (
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: Dimensions.get('window').height - 300,
-          }}>
-          <EmptyContent />
-        </View>
-      )}
-    </View>
+            <View style={{height: 200}} />
+          </ScrollView>
+        ) : (
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: Dimensions.get('window').height - 300,
+            }}>
+            <EmptyContent />
+          </View>
+        )}
+      </View>
+    </NetworkLost>
   );
 }
 

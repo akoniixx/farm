@@ -3,7 +3,6 @@ import {View, StyleSheet} from 'react-native';
 
 import {normalize} from '@rneui/themed';
 import colors from '../assets/colors/colors';
-import {Text} from '@rneui/base';
 import {width} from '../function/Normalize';
 
 interface ProgressBarProps {
@@ -32,9 +31,3 @@ export const ProgressBarV2: React.FC<ProgressBarProps> = ({index}) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-  },
-});

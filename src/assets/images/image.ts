@@ -55,4 +55,5 @@ export default {
   imageUploadBookBank: require('./imageUploadBookBank.png'),
   loaderImage: require('./loaderImage.png'),
   lostNetwork: require('./lostNetwork.png'),
+  refresh: require('./refresh.png'),
 };

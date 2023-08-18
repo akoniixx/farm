@@ -15,7 +15,7 @@ const DetailPointScreen: React.FC<any> = ({navigation}) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: colors.white,
+        backgroundColor: colors.grayBg,
       }}>
       <View>
         <CustomHeader

@@ -30,6 +30,7 @@ import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocum
 import Text from '../../components/Text';
 import {RefreshControl} from 'react-native';
 import Loading from '../../components/Loading/Loading';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 
 interface Prop {
   navigation: any;
@@ -269,7 +270,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     }
   }, [isDoneAuth, props.navigation, data]);
   return (
-    <>
+    <NetworkLost onPress={onRefresh}>
       <RenderWarningDocEmpty />
       {data.data.length !== 0 && checkResIsComplete ? (
         <View style={[{flex: 1}]}>
@@ -553,7 +554,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
         textContent={'Loading...'}
         textStyle={{color: '#FFF'}}
       />
-    </>
+    </NetworkLost>
   );
 };
 export default TaskScreen;

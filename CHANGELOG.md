@@ -1,3 +1,9 @@
+## Improved [1.7.0] 2023-08-18
+- pagination 
+- network disconnect 
+- pull to refresh 
+- cache storage
+
 ## Fix [1.6.13] 2023-08-01
 - fix bug display challenge news
 

@@ -1,4 +1,10 @@
-import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
 import React, {useEffect, useMemo} from 'react';
 import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';
@@ -26,27 +32,28 @@ const mappingStatusColor = {
   DONE: colors.green,
 };
 
-const mappingDigitalStatusText = {
-  REQUEST: 'พร้อมใช้',
-};
-const mappingDigitalStatusColor = {
-  REQUEST: colors.orange,
-};
+// const mappingDigitalStatusText = {
+//   REQUEST: 'พร้อมใช้',
+// };
+// const mappingDigitalStatusColor = {
+//   REQUEST: colors.orange,
+// };
 
 export default function MissionDetailScreen({navigation, route}: Props) {
   const {data} = route.params;
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const [currentStatus, setCurrentStatus] = React.useState<string>('');
   const [dronerTransactionId, setDronerTransactionId] =
     React.useState<string>('');
 
-  const {isDigital, isNotProgress} = useMemo(() => {
-    return {
-      isDigital: data.reward.rewardType === 'DIGITAL',
-      isNotProgress:
-        data.reward.rewardType === 'DIGITAL' && data.status !== 'INPROGRESS',
-    };
-  }, [data.reward, data.status]);
+  // const {isDigital, isNotProgress} = useMemo(() => {
+  //   return {
+  //     isDigital: data.reward.rewardType === 'DIGITAL',
+  //     isNotProgress:
+  //       data.reward.rewardType === 'DIGITAL' && data.status !== 'INPROGRESS',
+  //   };
+  // }, [data.reward, data.status]);
 
   const onPress = () => {
     navigation.navigate('RedeemAddressScreen', {
@@ -62,25 +69,26 @@ export default function MissionDetailScreen({navigation, route}: Props) {
     });
   };
 
-  useEffect(() => {
-    const getStatusRewardMission = async () => {
-      try {
-        const dronerId = await AsyncStorage.getItem('droner_id');
-        const result = await rewardDatasource.getRewardStatus({
-          missionId: data.missionId,
-          rewardId: data.reward.id,
-          dronerId: dronerId || '',
-        });
+  const getStatusRewardMission = async () => {
+    try {
+      const dronerId = await AsyncStorage.getItem('droner_id');
+      const result = await rewardDatasource.getRewardStatus({
+        missionId: data.missionId,
+        rewardId: data.reward.id,
+        dronerId: dronerId || '',
+      });
 
-        if (result) {
-          setCurrentStatus(result.status);
-          setDronerTransactionId(result.dronerTransactionId);
-        }
-      } catch (e) {
-        console.log(e);
+      if (result) {
+        setCurrentStatus(result.status);
+        setDronerTransactionId(result.dronerTransactionId);
       }
-    };
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
     getStatusRewardMission();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.missionId, data.reward.id]);
 
   const isWaitRequest = useMemo(() => {
@@ -112,6 +120,16 @@ export default function MissionDetailScreen({navigation, route}: Props) {
         onPressBack={() => navigation.goBack()}
       />
       <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={async () => {
+              setRefreshing(true);
+              await getStatusRewardMission();
+              setRefreshing(false);
+            }}
+          />
+        }
         style={styles.content}
         contentContainerStyle={{
           flexGrow: 1,

@@ -12,6 +12,7 @@ import {calTotalPrice} from '../../function/utility';
 import {useAuth} from '../../contexts/AuthContext';
 import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
 import Loading from '../../components/Loading/Loading';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 
 const initialPage = 1;
 const limit = 10;
@@ -117,7 +118,7 @@ const InprogressTask: React.FC = () => {
   }, [isDoneAuth, data]);
 
   return (
-    <>
+    <NetworkLost onPress={onRefresh}>
       <RenderWarningDocEmpty />
       {data.data.length !== 0 && checkResIsComplete ? (
         <View style={[{flex: 1}]}>
@@ -186,7 +187,7 @@ const InprogressTask: React.FC = () => {
         textContent={'Loading...'}
         textStyle={{color: '#FFF'}}
       />
-    </>
+    </NetworkLost>
   );
 };
 export default InprogressTask;

@@ -30,6 +30,7 @@ import * as RootNavigation from '../../navigations/RootNavigation';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {useAuth} from '../../contexts/AuthContext';
 import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 
 interface Prop {
   isOpenReceiveTask: boolean;
@@ -235,7 +236,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   }, [isDoneAuth, props.navigation, data]);
 
   return (
-    <>
+    <NetworkLost onPress={onRefresh}>
       <RenderWarningDocEmpty />
       <View style={[{flex: 1}]}>
         {data?.data?.length == 0 &&
@@ -634,7 +635,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
         textContent={'Loading...'}
         textStyle={{color: '#FFF'}}
       />
-    </>
+    </NetworkLost>
   );
 };
 export default NewTaskScreen;

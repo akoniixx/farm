@@ -3,6 +3,7 @@ import NetInfo from '@react-native-community/netinfo';
 
 type NetworkContextType = {
   isConnected: boolean;
+  onReconnect: () => Promise<void>;
 };
 
 const NetworkContext = createContext<NetworkContextType | undefined>(undefined);
@@ -11,6 +12,11 @@ export const NetworkProvider: React.FC<{
   children: React.ReactNode;
 }> = ({children}) => {
   const [isConnected, setIsConnected] = useState(false);
+  const onReconnect = async () => {
+    await NetInfo.fetch().then(state => {
+      setIsConnected(!!state.isConnected);
+    });
+  };
 
   useEffect(() => {
     // Subscribe to network state updates
@@ -28,7 +34,7 @@ export const NetworkProvider: React.FC<{
   }, []);
 
   return (
-    <NetworkContext.Provider value={{isConnected}}>
+    <NetworkContext.Provider value={{isConnected, onReconnect}}>
       {children}
     </NetworkContext.Provider>
   );

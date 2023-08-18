@@ -6,6 +6,7 @@ import {
   useWindowDimensions,
   ScrollView,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
 
 import React, {useEffect, useMemo} from 'react';
@@ -30,6 +31,7 @@ import {useAuth} from '../../contexts/AuthContext';
 import {DigitalRewardType} from '../../types/TypeRewardDigital';
 import {mixpanel} from '../../../mixpanel';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 interface Props {
   navigation: StackNavigationHelpers;
   route: RouteProp<StackParamList, 'RewardDetailScreen'>;
@@ -47,7 +49,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
 
   const width = useWindowDimensions().width - 32;
   const [counter, setCounter] = React.useState(1);
-
+  const [refreshing, setRefreshing] = React.useState(false);
   const {currentPoint} = usePoint();
   const [isConfirm, setIsConfirm] = React.useState(false);
   const [showSuccessExchangeModal, setShowSuccessExchangeModal] =
@@ -55,6 +57,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
   const [rewardDetail, setRewardDetail] = React.useState<RewardListType>(
     {} as RewardListType,
   );
+
   const [disableExchange, setDisableExchange] = React.useState(false);
   const [cantExchange, setCantExchange] = React.useState(false);
   const isExpired =
@@ -66,22 +69,27 @@ export default function RewardDetailScreen({navigation, route}: Props) {
     }
     return +rewardDetail.score;
   }, [rewardDetail]);
-  useEffect(() => {
-    const getRewardById = async () => {
-      try {
-        const result = await rewardDatasource.getRewardDetail(id);
-        const resultData: RewardListType = {
-          ...result,
-        };
-        if (resultData.score && +resultData.score > currentPoint) {
-          setCounter(1);
-          setCantExchange(true);
-        }
-        setRewardDetail(resultData);
-      } catch (e) {
-        console.log(e);
+  const getRewardById = async () => {
+    try {
+      const result = await rewardDatasource.getRewardDetail(id);
+      const resultData: RewardListType = {
+        ...result,
+      };
+      if (resultData.score && +resultData.score > currentPoint) {
+        setCounter(1);
+        setCantExchange(true);
       }
-    };
+      setRewardDetail(resultData);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getRewardById();
+    setRefreshing(false);
+  };
+  useEffect(() => {
     if (id) {
       getRewardById();
     }
@@ -183,77 +191,80 @@ export default function RewardDetailScreen({navigation, route}: Props) {
           </View>
         }
       />
-
-      <ScrollView>
-        <View
-          style={{
-            paddingHorizontal: 16,
-          }}>
-          <ProgressiveImage
-            source={{
-              uri: rewardDetail.imagePath,
-            }}
-            style={{
-              height: width,
-              width: width,
-              borderRadius: 12,
-            }}
-          />
-        </View>
-
-        <View style={styles({disable: disableButton}).container}>
-          <RenderHTML
-            tagsStyles={{
-              body: {
-                fontSize: 24,
-                fontFamily: font.bold,
-                color: colors.fontBlack,
-              },
-            }}
-            contentWidth={width}
-            source={{
-              html: rewardDetail?.rewardName || '',
-            }}
-          />
+      <NetworkLost onPress={onRefresh}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
           <View
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
+              paddingHorizontal: 16,
             }}>
-            <View>
+            <ProgressiveImage
+              source={{
+                uri: rewardDetail.imagePath,
+              }}
+              style={{
+                height: width,
+                width: width,
+                borderRadius: 12,
+              }}
+            />
+          </View>
+
+          <View style={styles({disable: disableButton}).container}>
+            <RenderHTML
+              tagsStyles={{
+                body: {
+                  fontSize: 24,
+                  fontFamily: font.bold,
+                  color: colors.fontBlack,
+                },
+              }}
+              contentWidth={width}
+              source={{
+                html: rewardDetail?.rewardName || '',
+              }}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    marginTop: 8,
+                    fontFamily: font.medium,
+                  }}>
+                  ใช้แต้ม {numberWithCommas(requirePoint.toString(), true)} แต้ม
+                </Text>
+              </View>
+
+              {!isDigital && (
+                <Counter
+                  remaining={rewardDetail.remain}
+                  count={counter}
+                  isDisableMinus={isDisableMinus}
+                  isDisablePlus={isDisablePlus}
+                  setCount={count => setCounter(count)}
+                  isLimit={isLimit}
+                />
+              )}
+            </View>
+            {cantExchange && (
               <Text
                 style={{
-                  fontSize: 20,
-                  marginTop: 8,
+                  fontSize: 16,
                   fontFamily: font.medium,
+                  color: colors.decreasePoint,
                 }}>
-                ใช้แต้ม {numberWithCommas(requirePoint.toString(), true)} แต้ม
+                แต้มสะสมของคุณไม่ถึงจำนวนที่แลกได้
               </Text>
-            </View>
-
-            {!isDigital && (
-              <Counter
-                remaining={rewardDetail.remain}
-                count={counter}
-                isDisableMinus={isDisableMinus}
-                isDisablePlus={isDisablePlus}
-                setCount={count => setCounter(count)}
-                isLimit={isLimit}
-              />
             )}
-          </View>
-          {cantExchange && (
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: font.medium,
-                color: colors.decreasePoint,
-              }}>
-              แต้มสะสมของคุณไม่ถึงจำนวนที่แลกได้
-            </Text>
-          )}
-          {/* <View style={styles({disable: disableButton}).amountContainer}>
+            {/* <View style={styles({disable: disableButton}).amountContainer}>
             <Text
               style={{
                 fontSize: 16,
@@ -271,121 +282,122 @@ export default function RewardDetailScreen({navigation, route}: Props) {
               {amount}
             </Text>
           </View> */}
-          {isDigital && isExpired && (
+            {isDigital && isExpired && (
+              <View
+                style={{
+                  borderRadius: 10,
+                  padding: 10,
+                  minHeight: 62,
+                  marginTop: 16,
+                  backgroundColor: colors.skySoft,
+                  minWidth: 180,
+                  maxWidth: 200,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: font.medium,
+                    color: colors.skyDark,
+                  }}>
+                  หมดอายุอีก {moment(rewardDetail.expiredUsedDate).fromNow()}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontFamily: font.bold,
+                    color: colors.fontBlack,
+                  }}>
+                  {momentExtend.toBuddhistYear(
+                    rewardDetail?.expiredUsedDate?.toString() || '',
+                    'DD MMM YYYY',
+                  )}
+                </Text>
+              </View>
+            )}
+
             <View
               style={{
-                borderRadius: 10,
-                padding: 10,
-                minHeight: 62,
                 marginTop: 16,
-                backgroundColor: colors.skySoft,
-                minWidth: 180,
-                maxWidth: 200,
               }}>
               <Text
                 style={{
-                  fontSize: 16,
-                  fontFamily: font.medium,
-                  color: colors.skyDark,
-                }}>
-                หมดอายุอีก {moment(rewardDetail.expiredUsedDate).fromNow()}
-              </Text>
-              <Text
-                style={{
                   fontSize: 18,
-                  fontFamily: font.bold,
+                  fontFamily: font.medium,
                   color: colors.fontBlack,
                 }}>
-                {momentExtend.toBuddhistYear(
-                  rewardDetail?.expiredUsedDate?.toString() || '',
-                  'DD MMM YYYY',
-                )}
+                รายละเอียด
               </Text>
+              <RenderHTML
+                source={{
+                  html: rewardDetail.description || '',
+                }}
+                contentWidth={width}
+                tagsStyles={{
+                  body: {
+                    fontSize: 18,
+                    fontFamily: font.light,
+                    color: colors.gray,
+                    lineHeight: 28,
+                  },
+                }}
+              />
             </View>
-          )}
-
-          <View
-            style={{
-              marginTop: 16,
-            }}>
-            <Text
+            <View
               style={{
-                fontSize: 18,
-                fontFamily: font.medium,
-                color: colors.fontBlack,
+                marginTop: 16,
               }}>
-              รายละเอียด
-            </Text>
-            <RenderHTML
-              source={{
-                html: rewardDetail.description || '',
-              }}
-              contentWidth={width}
-              tagsStyles={{
-                body: {
+              <Text
+                style={{
                   fontSize: 18,
-                  fontFamily: font.light,
-                  color: colors.gray,
-                  lineHeight: 28,
-                },
+                  fontFamily: font.medium,
+                  color: colors.fontBlack,
+                }}>
+                เงื่อนไข
+              </Text>
+              <RenderHTML
+                source={{
+                  html: rewardDetail.condition || '',
+                }}
+                contentWidth={width}
+                tagsStyles={{
+                  body: {
+                    fontSize: 18,
+                    fontFamily: font.light,
+                    color: colors.gray,
+                    lineHeight: 28,
+                  },
+                }}
+              />
+            </View>
+
+            <View
+              style={{
+                height: 40,
               }}
             />
           </View>
-          <View
-            style={{
-              marginTop: 16,
-            }}>
-            <Text
-              style={{
-                fontSize: 18,
-                fontFamily: font.medium,
-                color: colors.fontBlack,
-              }}>
-              เงื่อนไข
+        </ScrollView>
+        <View style={styles({disable: disableButton}).footer}>
+          <TouchableOpacity
+            disabled={disableButton || isOverRemain}
+            style={styles({disable: disableButton || isOverRemain}).button}
+            onPress={
+              isDigital
+                ? () => {
+                    mixpanel.track('กดแลกแต้มแบบdigital');
+                    setIsConfirm(true);
+                  }
+                : () => {
+                    mixpanel.track('กดแลกแต้มแบบphysical');
+                    onPressExchange();
+                  }
+            }>
+            <Text style={styles({disable: disableButton}).textButton}>
+              แลกแต้ม
             </Text>
-            <RenderHTML
-              source={{
-                html: rewardDetail.condition || '',
-              }}
-              contentWidth={width}
-              tagsStyles={{
-                body: {
-                  fontSize: 18,
-                  fontFamily: font.light,
-                  color: colors.gray,
-                  lineHeight: 28,
-                },
-              }}
-            />
-          </View>
-
-          <View
-            style={{
-              height: 40,
-            }}
-          />
+          </TouchableOpacity>
         </View>
-      </ScrollView>
-      <View style={styles({disable: disableButton}).footer}>
-        <TouchableOpacity
-          disabled={disableButton || isOverRemain}
-          style={styles({disable: disableButton || isOverRemain}).button}
-          onPress={
-            isDigital
-              ? () => {
-                  mixpanel.track('กดแลกแต้มแบบdigital');
-                  setIsConfirm(true);
-                }
-              : () => {
-                  mixpanel.track('กดแลกแต้มแบบphysical');
-                  onPressExchange();
-                }
-          }>
-          <Text style={styles({disable: disableButton}).textButton}>
-            แลกแต้ม
-          </Text>
-        </TouchableOpacity>
-      </View>
+      </NetworkLost>
 
       <Modal
         visible={isConfirm}

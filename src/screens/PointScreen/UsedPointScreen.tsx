@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
+  Dimensions,
   FlatList,
   Image,
   RefreshControl,
@@ -13,6 +14,7 @@ import {colors, font, image} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import {HistoryPoint} from '../../components/point/HistoryPoint';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 
 const UsedPointScreen: React.FC<any> = () => {
   const [dataAllPoint, setDataAllPoint] = useState<any>();
@@ -67,66 +69,70 @@ const UsedPointScreen: React.FC<any> = () => {
   };
   return (
     <View>
-      {dataAllPoint ? (
-        <View
-          style={{
-            backgroundColor: colors.white,
-          }}>
-          <FlatList
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-            onEndReached={loadMoreData}
-            keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={
-              <View
-                style={{
-                  alignSelf: 'center',
-                  paddingVertical: normalize(150),
-                  height: '100%',
-                }}>
-                <Image
-                  source={image.pointEmpty}
-                  style={{width: normalize(130), height: normalize(120)}}
-                />
-                <View style={{top: normalize(20)}}>
-                  <Text style={styles.textEmpty}>ไม่มีคะแนนที่ได้รับ</Text>
-                  <Text style={styles.textEmpty}>และการที่ใช้คะแนน</Text>
+      <NetworkLost
+        onPress={onRefresh}
+        height={Dimensions.get('window').height - 300}>
+        {dataAllPoint ? (
+          <View
+            style={{
+              backgroundColor: colors.white,
+            }}>
+            <FlatList
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              onEndReached={loadMoreData}
+              keyExtractor={(item, index) => index.toString()}
+              ListEmptyComponent={
+                <View
+                  style={{
+                    alignSelf: 'center',
+                    paddingVertical: normalize(150),
+                    height: '100%',
+                  }}>
+                  <Image
+                    source={image.pointEmpty}
+                    style={{width: normalize(130), height: normalize(120)}}
+                  />
+                  <View style={{top: normalize(20)}}>
+                    <Text style={styles.textEmpty}>ไม่มีคะแนนที่ได้รับ</Text>
+                    <Text style={styles.textEmpty}>และการที่ใช้คะแนน</Text>
+                  </View>
                 </View>
-              </View>
-            }
-            data={dataAllPoint}
-            renderItem={({item, index}) => (
-              <HistoryPoint
-                {...item}
-                index={index}
-                date={item.createAt}
-                point={item.amountValue}
-                action={item.action}
-                campaignName={item.campaignName}
-                taskId={item.taskId}
-                taskNo={item.taskNo != null ? item.taskNo : ''}
-              />
-            )}
-          />
-        </View>
-      ) : (
-        <View
-          style={{
-            alignSelf: 'center',
-            paddingVertical: normalize(150),
-            height: '100%',
-          }}>
-          <Image
-            source={image.pointEmpty}
-            style={{width: normalize(130), height: normalize(120)}}
-          />
-          <View style={{top: normalize(20)}}>
-            <Text style={styles.textEmpty}>ไม่มีคะแนนที่ได้รับ</Text>
-            <Text style={styles.textEmpty}>และการที่ใช้คะแนน</Text>
+              }
+              data={dataAllPoint}
+              renderItem={({item, index}) => (
+                <HistoryPoint
+                  {...item}
+                  index={index}
+                  date={item.createAt}
+                  point={item.amountValue}
+                  action={item.action}
+                  campaignName={item.campaignName}
+                  taskId={item.taskId}
+                  taskNo={item.taskNo != null ? item.taskNo : ''}
+                />
+              )}
+            />
           </View>
-        </View>
-      )}
+        ) : (
+          <View
+            style={{
+              alignSelf: 'center',
+              paddingVertical: normalize(150),
+              height: '100%',
+            }}>
+            <Image
+              source={image.pointEmpty}
+              style={{width: normalize(130), height: normalize(120)}}
+            />
+            <View style={{top: normalize(20)}}>
+              <Text style={styles.textEmpty}>ไม่มีคะแนนที่ได้รับ</Text>
+              <Text style={styles.textEmpty}>และการที่ใช้คะแนน</Text>
+            </View>
+          </View>
+        )}
+      </NetworkLost>
 
       <Spinner
         visible={loading}

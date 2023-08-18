@@ -38,7 +38,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   ).start();
   const skeletonBackgroundColor = skeletonAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: ['#E0E0E0', '#F5F5F5'],
+    outputRange: ['#E0E0E0', '#E3E3E3'],
   });
 
   const onLoadHighResImage = () => {

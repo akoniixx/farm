@@ -37,6 +37,8 @@ import {QueryLocation} from '../../datasource/LocationDatasource';
 import Geolocation from 'react-native-geolocation-service';
 import Text from '../../components/Text';
 import Spinner from 'react-native-loading-spinner-overlay';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
+import {RefreshControl} from 'react-native';
 
 const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -66,6 +68,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [fcmToken, setFcmToken] = useState('');
   const [notidata, setnotidata] = useState(0);
   const [loadingProfile, setLoadingProfile] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const showActionSheet = () => {
     actionSheet.current.show();
@@ -84,43 +87,12 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
       .catch(err => console.log(err));
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getNotiList();
-    }, []),
-  );
-
-  useEffect(() => {
-    getNotiList();
-    getToken();
-    getProfile();
-    ProfileDatasource.getDroneBrand(1, 14)
-      .then(result => {
-        const data = result.data.map((item: any) => {
-          return {
-            label: item.name,
-            value: item.id,
-            image: item.logoImagePath,
-            icon: () =>
-              item.logoImagePath != null ? (
-                <Image
-                  source={{uri: item.logoImagePath}}
-                  style={{width: 30, height: 30, borderRadius: 15}}
-                />
-              ) : (
-                <></>
-              ),
-          };
-        });
-        setItems(data);
-      })
-      .catch(err => console.log(err));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reload]);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      getProfile();
+  const getInitialData = async () => {
+    setLoadingProfile(true);
+    await Promise.all([
+      getProfile(),
+      getToken(),
+      getNotiList(),
       ProfileDatasource.getDroneBrand(1, 14)
         .then(result => {
           const data = result.data.map((item: any) => {
@@ -141,10 +113,20 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
           });
           setItems(data);
         })
-        .catch(err => console.log(err));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []),
-  );
+        .catch(err => console.log(err)),
+    ]).finally(() => setLoadingProfile(false));
+  };
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getInitialData();
+    setRefreshing(false);
+  };
+
+  useEffect(() => {
+    getInitialData();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reload]);
 
   const onLogout = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
@@ -214,7 +196,6 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
 
   const getProfile = async () => {
     const droner_id = (await AsyncStorage.getItem('droner_id')) || '';
-    setLoadingProfile(true);
 
     getProfileAuth()
       .then(res => {
@@ -263,13 +244,12 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
             .catch(err => console.log(err));
         }
       })
-      .catch(err => console.log(err))
-      .finally(() => {
-        setLoadingProfile(false);
-      });
+      .catch(err => console.log(err));
   };
   return (
-    <SafeAreaView style={[stylesCentral.container]}>
+    <SafeAreaView
+      style={[stylesCentral.container]}
+      edges={['right', 'top', 'left']}>
       {backbotton ? (
         <View style={styles.appBar}>
           <Text style={styles.appBarHeader}>โปรไฟล์ของฉัน</Text>
@@ -283,378 +263,402 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
           <View style={styles.listTileIcon} />
         </View>
       )}
-      <View style={[styles.body]}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.profile}>
-            <View style={styles.profileDescription}>
-              <Avatar
-                size={normalize(80)}
-                source={
-                  profilestate.image === ''
-                    ? icons.account
-                    : {uri: profilestate.image}
-                }
-                avatarStyle={{
-                  borderRadius: normalize(40),
-                }}
-              />
-              <View style={styles.profileName}>
-                <Text
-                  style={{
-                    fontFamily: font.medium,
-                    fontSize: normalize(14),
-                    paddingBottom: normalize(2),
-                    color: colors.fontBlack,
-                  }}>
-                  {profilestate.name}
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: font.light,
-                    fontSize: normalize(12),
-                    color: colors.gray,
-                    paddingBottom: normalize(5),
-                  }}>
-                  {profilestate.id}
-                </Text>
-                <View style={styles.review}>
+      <NetworkLost onPress={onRefresh}>
+        <View style={[styles.body]}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
+            <View style={styles.profile}>
+              <View style={styles.profileDescription}>
+                <Avatar
+                  size={normalize(80)}
+                  source={
+                    profilestate.image === ''
+                      ? icons.account
+                      : {uri: profilestate.image}
+                  }
+                  avatarStyle={{
+                    borderRadius: normalize(40),
+                  }}
+                />
+                <View style={styles.profileName}>
                   <Text
                     style={{
                       fontFamily: font.medium,
-                      color: colors.white,
-                      fontSize: normalize(11),
-                    }}>
-                    {profilestate.rating}
-                  </Text>
-                  <Image
-                    source={icons.review}
-                    style={{
-                      width: normalize(12),
-                      height: normalize(12),
-                    }}
-                  />
-                </View>
-                <View
-                  style={{
-                    marginTop: normalize(10),
-                    width: normalize(109),
-                    height: normalize(24),
-                    borderRadius: normalize(12),
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: StatusObject(profilestate.status).colorBg,
-                  }}>
-                  <Text
-                    style={{
-                      color: StatusObject(profilestate.status).fontColor,
-                      fontFamily: font.light,
                       fontSize: normalize(14),
+                      paddingBottom: normalize(2),
+                      color: colors.fontBlack,
                     }}>
-                    {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
-                      ? 'ยืนยันตัวตนแล้ว'
-                      : StatusObject(profilestate.status).status}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            {profilestate.status != 'ACTIVE' ? (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('ViewProfile');
-                }}>
-                <Text
-                  style={{
-                    fontFamily: font.medium,
-                    fontSize: normalize(14),
-                    paddingTop: normalize(8),
-                    color: colors.fontBlack,
-                  }}>
-                  ดูข้อมูล
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('ViewProfile');
-                }}>
-                <Text
-                  style={{
-                    fontFamily: font.medium,
-                    fontSize: normalize(14),
-                    paddingTop: normalize(8),
-                    color: colors.fontBlack,
-                  }}>
-                  ดูข้อมูล
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
-          {profilestate.status === 'REJECTED' ? (
-            <View style={styles.commentBg}>
-              <Text style={styles.commentFront}>
-                หมายเหตุ : บัตรประชาชนไม่ชัดเจน/ไม่ถูกต้อง
-                กรุณาติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. 02-233-9000
-              </Text>
-            </View>
-          ) : profilestate.status === 'INACTIVE' ? (
-            <View style={styles.commentBg}>
-              <Text style={styles.commentFront}>
-                หมายเหตุ : หากต้องการเปิดใช้งานบัญชี กรุณาติดต่อเจ้าหน้าที่ โทร.
-                02-233-9000
-              </Text>
-            </View>
-          ) : (
-            <></>
-          )}
-
-          <View
-            style={{
-              paddingVertical: normalize(15),
-            }}>
-            <Text
-              style={{
-                fontFamily: font.medium,
-                fontSize: normalize(16),
-                color: colors.fontBlack,
-              }}>
-              โดรนฉีดพ่นของคุณ
-            </Text>
-          </View>
-          {profilestate.droneitem.map((item: any, index: number) => (
-            <DroneBrandingItem
-              key={index}
-              dronebrand={item.drone.series}
-              serialbrand={item.serialNo}
-              status={item.status}
-              image={item.drone.droneBrand.logoImagePath}
-            />
-          ))}
-          <MainButton
-            label="+ เพิ่มโดรน"
-            fontColor={colors.orange}
-            color={'#FFEAD1'}
-            onPress={showActionSheet}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('IncomeScreen');
-            }}
-            style={styles.listTile}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <Image source={icons.wallet} style={styles.listTileIcon} />
-              <Text style={styles.listTileTitle}>รายได้</Text>
-            </View>
-            <Text style={styles.revenue}>{`฿${numberWithCommas(
-              profilestate.totalRevenue,
-            )}`}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('AdditionDocumentScreen');
-            }}>
-            <View style={[styles.listTile, {alignItems: 'flex-start'}]}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'flex-start',
-                }}>
-                <Image source={icons.doc} style={styles.listTileIcon} />
-                <View>
-                  <Text style={styles.listTileTitle}>ส่งเอกสารเพิ่มเติม</Text>
-                  <Text
-                    style={[
-                      styles.listTileTitle,
-                      {
-                        fontFamily: font.light,
-                        fontSize: 12,
-                        color: colors.gray,
-                      },
-                    ]}>
-                    เพิ่มเอกสารเพื่อรับของรางวัล
+                    {profilestate.name}
                   </Text>
                   <Text
-                    style={[
-                      styles.listTileTitle,
-                      {
-                        fontFamily: font.light,
-                        fontSize: 12,
-                        color: colors.gray,
-                      },
-                    ]}>
-                    และสิทธิประโยชน์พิเศษจากบริษัท
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                {!isDoneAuth && (
-                  <Image
-                    source={icons.warningFillError}
                     style={{
-                      width: responsiveWidth(24),
-                      height: responsiveHeigth(24),
-                      marginRight: 16,
-                    }}
-                  />
-                )}
-                <Image source={icons.arrowRight} style={styles.listTileIcon} />
-              </View>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={async () => {
-              // await onLogout();
-              RootNavigation.navigate('Main', {
-                screen: 'NotificationList',
-              });
-            }}>
-            <View style={styles.listTile}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Image
-                  source={icons.notification}
-                  style={styles.listTileIcon}
-                />
-                <Text style={styles.listTileTitle}>การแจ้งเตือน</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                {notidata != 0 ? (
-                  <View
-                    style={{
-                      width: responsiveWidth(39),
-                      height: responsiveHeigth(24),
-                      borderRadius: responsiveHeigth(12),
-                      backgroundColor: '#EB5757',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginRight: normalize(10),
+                      fontFamily: font.light,
+                      fontSize: normalize(12),
+                      color: colors.gray,
+                      paddingBottom: normalize(5),
                     }}>
+                    {profilestate.id}
+                  </Text>
+                  <View style={styles.review}>
                     <Text
                       style={{
                         fontFamily: font.medium,
-                        fontSize: normalize(12),
                         color: colors.white,
+                        fontSize: normalize(11),
                       }}>
-                      {notidata > 99 ? '99+' : notidata}
+                      {profilestate.rating}
+                    </Text>
+                    <Image
+                      source={icons.review}
+                      style={{
+                        width: normalize(12),
+                        height: normalize(12),
+                      }}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      marginTop: normalize(10),
+                      width: normalize(109),
+                      height: normalize(24),
+                      borderRadius: normalize(12),
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: StatusObject(profilestate.status)
+                        .colorBg,
+                    }}>
+                    <Text
+                      style={{
+                        color: StatusObject(profilestate.status).fontColor,
+                        fontFamily: font.light,
+                        fontSize: normalize(14),
+                      }}>
+                      {StatusObject(profilestate.status).status ===
+                      'ตรวจสอบแล้ว'
+                        ? 'ยืนยันตัวตนแล้ว'
+                        : StatusObject(profilestate.status).status}
                     </Text>
                   </View>
-                ) : (
-                  <></>
-                )}
-                <Image source={icons.arrowRight} style={styles.listTileIcon} />
+                </View>
               </View>
+              {profilestate.status != 'ACTIVE' ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('ViewProfile');
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.medium,
+                      fontSize: normalize(14),
+                      paddingTop: normalize(8),
+                      color: colors.fontBlack,
+                    }}>
+                    ดูข้อมูล
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('ViewProfile');
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.medium,
+                      fontSize: normalize(14),
+                      paddingTop: normalize(8),
+                      color: colors.fontBlack,
+                    }}>
+                    ดูข้อมูล
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={async () => {
-              if (Platform.OS === 'ios') {
-                await Geolocation.requestAuthorization('always');
-              } else if (Platform.OS === 'android') {
-                await PermissionsAndroid.request(
-                  PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                );
-              }
-              const dronerId = await AsyncStorage.getItem('droner_id');
-              ProfileDatasource.getProfile(dronerId!).then(res => {
-                if (!res.dronerArea.districtId) {
-                  navigation.navigate('ServiceArea', {
-                    area: '',
-                    lat: res.dronerArea.lat,
-                    long: res.dronerArea.long,
-                    provinceId: 0,
-                    districtId: 0,
-                    subdistrictId: 0,
-                  });
-                } else {
-                  QueryLocation.QueryProfileSubDistrict(
-                    res.dronerArea.districtId,
-                  ).then(result => {
-                    let item = result.filter(
-                      (item: any) =>
-                        item.subdistrictId === res.dronerArea.subdistrictId,
-                    );
+            {profilestate.status === 'REJECTED' ? (
+              <View style={styles.commentBg}>
+                <Text style={styles.commentFront}>
+                  หมายเหตุ : บัตรประชาชนไม่ชัดเจน/ไม่ถูกต้อง
+                  กรุณาติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร. 02-233-9000
+                </Text>
+              </View>
+            ) : profilestate.status === 'INACTIVE' ? (
+              <View style={styles.commentBg}>
+                <Text style={styles.commentFront}>
+                  หมายเหตุ : หากต้องการเปิดใช้งานบัญชี กรุณาติดต่อเจ้าหน้าที่
+                  โทร. 02-233-9000
+                </Text>
+              </View>
+            ) : (
+              <></>
+            )}
+
+            <View
+              style={{
+                paddingVertical: normalize(15),
+              }}>
+              <Text
+                style={{
+                  fontFamily: font.medium,
+                  fontSize: normalize(16),
+                  color: colors.fontBlack,
+                }}>
+                โดรนฉีดพ่นของคุณ
+              </Text>
+            </View>
+            {profilestate.droneitem.map((item: any, index: number) => (
+              <DroneBrandingItem
+                key={index}
+                dronebrand={item.drone.series}
+                serialbrand={item.serialNo}
+                status={item.status}
+                image={item.drone.droneBrand.logoImagePath}
+              />
+            ))}
+            <MainButton
+              label="+ เพิ่มโดรน"
+              fontColor={colors.orange}
+              color={'#FFEAD1'}
+              onPress={showActionSheet}
+            />
+
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('IncomeScreen');
+              }}
+              style={styles.listTile}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image source={icons.wallet} style={styles.listTileIcon} />
+                <Text style={styles.listTileTitle}>รายได้</Text>
+              </View>
+              <Text style={styles.revenue}>{`฿${numberWithCommas(
+                profilestate.totalRevenue,
+              )}`}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('AdditionDocumentScreen');
+              }}>
+              <View style={[styles.listTile, {alignItems: 'flex-start'}]}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'flex-start',
+                  }}>
+                  <Image source={icons.doc} style={styles.listTileIcon} />
+                  <View>
+                    <Text style={styles.listTileTitle}>ส่งเอกสารเพิ่มเติม</Text>
+                    <Text
+                      style={[
+                        styles.listTileTitle,
+                        {
+                          fontFamily: font.light,
+                          fontSize: 12,
+                          color: colors.gray,
+                        },
+                      ]}>
+                      เพิ่มเอกสารเพื่อรับของรางวัล
+                    </Text>
+                    <Text
+                      style={[
+                        styles.listTileTitle,
+                        {
+                          fontFamily: font.light,
+                          fontSize: 12,
+                          color: colors.gray,
+                        },
+                      ]}>
+                      และสิทธิประโยชน์พิเศษจากบริษัท
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  {!isDoneAuth && (
+                    <Image
+                      source={icons.warningFillError}
+                      style={{
+                        width: responsiveWidth(24),
+                        height: responsiveHeigth(24),
+                        marginRight: 16,
+                      }}
+                    />
+                  )}
+                  <Image
+                    source={icons.arrowRight}
+                    style={styles.listTileIcon}
+                  />
+                </View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={async () => {
+                // await onLogout();
+                RootNavigation.navigate('Main', {
+                  screen: 'NotificationList',
+                });
+              }}>
+              <View style={styles.listTile}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={icons.notification}
+                    style={styles.listTileIcon}
+                  />
+                  <Text style={styles.listTileTitle}>การแจ้งเตือน</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  {notidata != 0 ? (
+                    <View
+                      style={{
+                        width: responsiveWidth(39),
+                        height: responsiveHeigth(24),
+                        borderRadius: responsiveHeigth(12),
+                        backgroundColor: '#EB5757',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginRight: normalize(10),
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: font.medium,
+                          fontSize: normalize(12),
+                          color: colors.white,
+                        }}>
+                        {notidata > 99 ? '99+' : notidata}
+                      </Text>
+                    </View>
+                  ) : (
+                    <></>
+                  )}
+                  <Image
+                    source={icons.arrowRight}
+                    style={styles.listTileIcon}
+                  />
+                </View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={async () => {
+                if (Platform.OS === 'ios') {
+                  await Geolocation.requestAuthorization('always');
+                } else if (Platform.OS === 'android') {
+                  await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                  );
+                }
+                const dronerId = await AsyncStorage.getItem('droner_id');
+                ProfileDatasource.getProfile(dronerId!).then(res => {
+                  if (!res.dronerArea.districtId) {
                     navigation.navigate('ServiceArea', {
-                      area: `${item[0].subdistrictName}/${item[0].districtName}/${item[0].provinceName}`,
+                      area: '',
                       lat: res.dronerArea.lat,
                       long: res.dronerArea.long,
-                      provinceId: res.dronerArea.provinceId,
-                      districtId: res.dronerArea.districtId,
-                      subdistrictId: res.dronerArea.subdistrictId,
-                      locationName: res.dronerArea.locationName,
+                      provinceId: 0,
+                      districtId: 0,
+                      subdistrictId: 0,
                     });
-                  });
-                }
-              });
-            }}>
-            <View style={styles.listTile}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Image source={icons.service} style={styles.listTileIcon} />
-                <Text style={styles.listTileTitle}>พื้นที่ให้บริการ</Text>
+                  } else {
+                    QueryLocation.QueryProfileSubDistrict(
+                      res.dronerArea.districtId,
+                    ).then(result => {
+                      let item = result.filter(
+                        (item: any) =>
+                          item.subdistrictId === res.dronerArea.subdistrictId,
+                      );
+                      navigation.navigate('ServiceArea', {
+                        area: `${item[0].subdistrictName}/${item[0].districtName}/${item[0].provinceName}`,
+                        lat: res.dronerArea.lat,
+                        long: res.dronerArea.long,
+                        provinceId: res.dronerArea.provinceId,
+                        districtId: res.dronerArea.districtId,
+                        subdistrictId: res.dronerArea.subdistrictId,
+                        locationName: res.dronerArea.locationName,
+                      });
+                    });
+                  }
+                });
+              }}>
+              <View style={styles.listTile}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image source={icons.service} style={styles.listTileIcon} />
+                  <Text style={styles.listTileTitle}>พื้นที่ให้บริการ</Text>
+                </View>
+                <Image source={icons.arrowRight} style={styles.listTileIcon} />
               </View>
-              <Image source={icons.arrowRight} style={styles.listTileIcon} />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('DeleteProfileScreen', {
-                tele: profilestate.id,
-              });
-            }}>
-            <View style={styles.listTile}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Image source={icons.deleteUser} style={styles.listTileIcon} />
-                <Text style={styles.listTileTitle}>ลบบัญชี</Text>
-              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('DeleteProfileScreen', {
+                  tele: profilestate.id,
+                });
+              }}>
+              <View style={styles.listTile}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={icons.deleteUser}
+                    style={styles.listTileIcon}
+                  />
+                  <Text style={styles.listTileTitle}>ลบบัญชี</Text>
+                </View>
 
-              <Image source={icons.arrowRight} style={styles.listTileIcon} />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={async () => {
-              await onLogout();
-              RootNavigation.navigate('Auth', {
-                screen: 'HomeScreen',
-              });
-            }}>
-            <View style={styles.listTile}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Image source={icons.logout} style={styles.listTileIcon} />
-                <Text style={styles.listTileTitle}>ออกจากระบบ</Text>
+                <Image source={icons.arrowRight} style={styles.listTileIcon} />
               </View>
-              <Image source={icons.arrowRight} style={styles.listTileIcon} />
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={async () => {
+                await onLogout();
+                RootNavigation.navigate('Auth', {
+                  screen: 'HomeScreen',
+                });
+              }}>
+              <View style={styles.listTile}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image source={icons.logout} style={styles.listTileIcon} />
+                  <Text style={styles.listTileTitle}>ออกจากระบบ</Text>
+                </View>
+                <Image source={icons.arrowRight} style={styles.listTileIcon} />
+              </View>
+            </TouchableOpacity>
+            <View
+              style={{
+                height: 40,
+              }}
+            />
+          </ScrollView>
+        </View>
+      </NetworkLost>
+
       <ActionSheet ref={actionSheet}>
         <View
           style={{
@@ -1061,9 +1065,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   appBar: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    height: normalize(56),
   },
   appBarBack: {
     flex: 1,
@@ -1078,7 +1082,7 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
   },
   body: {
-    flex: 9,
+    flex: 1,
     paddingTop: normalize(10),
     paddingHorizontal: normalize(17),
     color: colors.fontBlack,

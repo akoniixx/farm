@@ -19,6 +19,7 @@ import {Image} from 'react-native';
 import {RedemptionTransaction} from '../../types/MyRewardType';
 import Text from '../../components/Text';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 
 const mappingStatusText = {
   REQUEST: 'คำร้องขอแลก',
@@ -168,153 +169,157 @@ export default function HistoryTab({navigation}: {navigation: any}) {
     );
   };
   return (
-    <SectionList
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-      contentContainerStyle={{
-        paddingHorizontal: 16,
-        marginTop: 16,
-      }}
-      onEndReached={onLoadingMore}
-      ListFooterComponent={
-        <View
-          style={{
-            height: 100,
-          }}
-        />
-      }
-      stickySectionHeadersEnabled={false}
-      keyExtractor={(item, index) => `-${index}`}
-      sections={historyData || []}
-      renderSectionHeader={({section: {title}}) => {
-        return (
-          <Text
+    <NetworkLost
+      onPress={onRefresh}
+      height={Dimensions.get('window').height - 300}>
+      <SectionList
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          marginTop: 16,
+        }}
+        onEndReached={onLoadingMore}
+        ListFooterComponent={
+          <View
             style={{
-              fontSize: 14,
-              fontFamily: fonts.medium,
-              color: colors.gray,
-              marginBottom: 8,
-            }}>
-            {title}
-          </Text>
-        );
-      }}
-      ListEmptyComponent={EmptyState()}
-      renderItem={({item}) => {
-        const statusRedeem = item.redeemDetail.redeemStatus;
-        const isMission = item.rewardExchange !== 'SCORE';
-        const isDigital = item.rewardType === 'DIGITAL';
-
-        return (
-          <TouchableOpacity
-            onPress={() => {
-              isDigital
-                ? navigation.navigate('RedeemDetailDigitalScreen', {
-                    id: item.dronerTransactionsId,
-                  })
-                : onPressItem(item.dronerTransactionsId);
+              height: 100,
             }}
-            style={styles({type: statusRedeem}).card}>
-            <ProgressiveImage
-              source={{
-                uri: item.imagePath,
-              }}
+          />
+        }
+        stickySectionHeadersEnabled={false}
+        keyExtractor={(item, index) => `-${index}`}
+        sections={historyData || []}
+        renderSectionHeader={({section: {title}}) => {
+          return (
+            <Text
               style={{
-                borderRadius: 10,
-                width: 76,
-                height: 76,
-                marginRight: 16,
-              }}
-            />
-            <View
-              style={{
-                width: '75%',
+                fontSize: 14,
+                fontFamily: fonts.medium,
+                color: colors.gray,
+                marginBottom: 8,
               }}>
-              <RenderHTML
-                source={{html: item.rewardName}}
-                contentWidth={500}
-                tagsStyles={{
-                  body: {
-                    fontSize: 16,
-                    fontFamily: fonts.medium,
-                  },
+              {title}
+            </Text>
+          );
+        }}
+        ListEmptyComponent={EmptyState()}
+        renderItem={({item}) => {
+          const statusRedeem = item.redeemDetail.redeemStatus;
+          const isMission = item.rewardExchange !== 'SCORE';
+          const isDigital = item.rewardType === 'DIGITAL';
+
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                isDigital
+                  ? navigation.navigate('RedeemDetailDigitalScreen', {
+                      id: item.dronerTransactionsId,
+                    })
+                  : onPressItem(item.dronerTransactionsId);
+              }}
+              style={styles({type: statusRedeem}).card}>
+              <ProgressiveImage
+                source={{
+                  uri: item.imagePath,
+                }}
+                style={{
+                  borderRadius: 10,
+                  width: 76,
+                  height: 76,
+                  marginRight: 16,
                 }}
               />
-              <Text
-                style={{
-                  marginTop: 4,
-                  fontSize: 14,
-                  fontFamily: fonts.light,
-                }}>
-                {`แลกเมื่อ ${momentExtend.toBuddhistYear(
-                  item.redeemDate,
-                  'DD MMM YYYY HH:mm',
-                )}`}
-              </Text>
               <View
                 style={{
-                  marginTop: 4,
-
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flex: 1,
+                  width: '75%',
                 }}>
+                <RenderHTML
+                  source={{html: item.rewardName}}
+                  contentWidth={500}
+                  tagsStyles={{
+                    body: {
+                      fontSize: 16,
+                      fontFamily: fonts.medium,
+                    },
+                  }}
+                />
+                <Text
+                  style={{
+                    marginTop: 4,
+                    fontSize: 14,
+                    fontFamily: fonts.light,
+                  }}>
+                  {`แลกเมื่อ ${momentExtend.toBuddhistYear(
+                    item.redeemDate,
+                    'DD MMM YYYY HH:mm',
+                  )}`}
+                </Text>
                 <View
                   style={{
+                    marginTop: 4,
+
                     flexDirection: 'row',
                     alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flex: 1,
                   }}>
                   <View
                     style={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: 3,
-                      marginRight: 4,
-                      backgroundColor:
-                        mappingStatusColor[
-                          statusRedeem as keyof typeof mappingStatusColor
-                        ],
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: fonts.light,
-                      color: colors.gray,
+                      flexDirection: 'row',
+                      alignItems: 'center',
                     }}>
-                    {
-                      mappingStatusText[
-                        statusRedeem as keyof typeof mappingStatusText
-                      ]
-                    }
-                  </Text>
-                </View>
-                {isMission && (
-                  <View
-                    style={{
-                      borderRadius: 10,
-                      backgroundColor: '#FBCC96',
-                      paddingVertical: 2,
-                      paddingHorizontal: 8,
-                    }}>
+                    <View
+                      style={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: 3,
+                        marginRight: 4,
+                        backgroundColor:
+                          mappingStatusColor[
+                            statusRedeem as keyof typeof mappingStatusColor
+                          ],
+                      }}
+                    />
                     <Text
                       style={{
-                        fontSize: 12,
-                        fontFamily: fonts.semiBold,
-                        color: '#993A03',
+                        fontSize: 14,
+                        fontFamily: fonts.light,
+                        color: colors.gray,
                       }}>
-                      ภารกิจ
+                      {
+                        mappingStatusText[
+                          statusRedeem as keyof typeof mappingStatusText
+                        ]
+                      }
                     </Text>
                   </View>
-                )}
+                  {isMission && (
+                    <View
+                      style={{
+                        borderRadius: 10,
+                        backgroundColor: '#FBCC96',
+                        paddingVertical: 2,
+                        paddingHorizontal: 8,
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontFamily: fonts.semiBold,
+                          color: '#993A03',
+                        }}>
+                        ภารกิจ
+                      </Text>
+                    </View>
+                  )}
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        );
-      }}
-    />
+            </TouchableOpacity>
+          );
+        }}
+      />
+    </NetworkLost>
   );
 }
 const styles = ({type}: {type: string}) => {

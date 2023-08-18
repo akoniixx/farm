@@ -25,9 +25,10 @@ import {usePoint} from '../../contexts/PointContext';
 import {Campaign} from '../../datasource/CampaignDatasource';
 import GuruKasetCarousel from '../../components/GuruKasetCarousel/GuruKasetCarousel';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
-import NetworkLost from '../../components/NetworkLost/NetworkLost';
+import {useNetwork} from '../../contexts/NetworkContext';
 
-const MainScreen: React.FC<any> = ({navigation, route}) => {
+const MainScreen: React.FC<any> = ({navigation}) => {
+  const {isConnected} = useNetwork();
   const insets = useSafeAreaInsets();
   const [profile, setProfile] = useState({
     name: '',
@@ -338,7 +339,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
               />
             ) : null}
           </View>
-
           <TaskTapNavigator
             isOpenReceiveTask={profile.isOpenReceiveTask}
             dronerStatus={profile.status}
@@ -346,39 +346,44 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           />
         </View>
       </View>
-      <View
-        style={{
-          display: showCampaign,
-          position: 'absolute',
-          bottom: 20,
-          right: 10,
-          zIndex: 1,
-        }}>
-        {/* <NetworkLost /> */}
-        <View style={{width: 10, marginLeft: 20}}>
+
+      {isConnected && (
+        <View
+          style={{
+            display: showCampaign,
+            position: 'absolute',
+            bottom: 20,
+            right: 10,
+            zIndex: 1,
+          }}>
+          <View style={{width: 10, marginLeft: 20}}>
+            <TouchableOpacity
+              onPress={() => {
+                mixpanel.track('กดปิดแคมเปญทอง');
+                setShowCampaign('none');
+              }}>
+              <Image
+                source={icons.closeBlack}
+                style={{width: 10, height: 10}}
+              />
+            </TouchableOpacity>
+          </View>
+
           <TouchableOpacity
             onPress={() => {
-              mixpanel.track('กดปิดแคมเปญทอง');
-              setShowCampaign('none');
+              mixpanel.track('กดแคมเปญทองจากหน้าแรก');
+              navigation.navigate('CampaignScreen');
             }}>
-            <Image source={icons.closeBlack} style={{width: 10, height: 10}} />
+            <ProgressiveImage
+              source={{
+                uri: campaignImage,
+              }}
+              resizeMode="contain"
+              style={{width: 140, height: 60}}
+            />
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          onPress={() => {
-            mixpanel.track('กดแคมเปญทองจากหน้าแรก');
-            navigation.navigate('CampaignScreen');
-          }}>
-          <ProgressiveImage
-            source={{
-              uri: campaignImage,
-            }}
-            resizeMode="contain"
-            style={{width: 140, height: 60}}
-          />
-        </TouchableOpacity>
-      </View>
+      )}
     </BottomSheetModalProvider>
   );
 };

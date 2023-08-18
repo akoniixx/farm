@@ -3,12 +3,11 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  FlatList,
   ScrollView,
   NativeScrollEvent,
   Image,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import fonts from '../../assets/fonts';
 import {normalize} from '../../function/Normalize';
 import colors from '../../assets/colors/colors';

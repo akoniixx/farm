@@ -13,6 +13,7 @@ import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocum
 import {useAuth} from '../../contexts/AuthContext';
 import {RefreshControl} from 'react-native';
 import Loading from '../../components/Loading/Loading';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 
 const initialPage = 1;
 const limit = 10;
@@ -112,7 +113,7 @@ const WaitStartTask: React.FC = () => {
   }, [isDoneAuth, data]);
 
   return (
-    <>
+    <NetworkLost onPress={onRefresh}>
       <RenderWarningDocEmpty />
       {data.data.length !== 0 && checkResIsComplete ? (
         <View style={[{flex: 1}]}>
@@ -181,7 +182,7 @@ const WaitStartTask: React.FC = () => {
         textContent={'Loading...'}
         textStyle={{color: '#FFF'}}
       />
-    </>
+    </NetworkLost>
   );
 };
 export default WaitStartTask;

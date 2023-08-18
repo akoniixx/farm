@@ -119,6 +119,7 @@ const App = () => {
                     <AppNavigator />
                   </SheetProvider>
                 </PointProvider>
+
                 <Toast config={toastConfig} />
               </>
             </AuthProvider>

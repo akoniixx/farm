@@ -3,8 +3,8 @@ import {View, StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
 
 import {normalize} from '@rneui/themed';
 import colors from '../assets/colors/colors';
-import {Text} from '@rneui/base';
 import {font} from '../assets';
+import Text from './Text';
 
 interface PrantSelectProps {
   label: string;
@@ -42,9 +42,3 @@ export const PlantSelect: React.FC<PrantSelectProps> = ({
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-  },
-});
