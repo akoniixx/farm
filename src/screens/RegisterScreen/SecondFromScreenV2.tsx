@@ -350,10 +350,6 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
                         renderItem={({item}) => (
                           <Pressable
                             onPress={() => {
-                              console.log({
-                                lat: item.latitude,
-                                lng: item.longitude,
-                              });
                               setEdit(false);
                               setPage(0);
                               setSearchResult(item.area);

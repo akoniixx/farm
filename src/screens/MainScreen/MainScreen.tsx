@@ -184,7 +184,6 @@ const MainScreen: React.FC<any> = ({navigation}) => {
 
     fetch('https://api.mixpanel.com/engage#profile-set', options)
       .then(response => response.json())
-      .then(response => console.log(response))
       .catch(err => console.error(err));
   };
 
@@ -369,19 +368,21 @@ const MainScreen: React.FC<any> = ({navigation}) => {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity
-            onPress={() => {
-              mixpanel.track('กดแคมเปญทองจากหน้าแรก');
-              navigation.navigate('CampaignScreen');
-            }}>
-            <ProgressiveImage
-              source={{
-                uri: campaignImage,
-              }}
-              resizeMode="contain"
-              style={{width: 140, height: 60}}
-            />
-          </TouchableOpacity>
+          {campaignImage && (
+            <TouchableOpacity
+              onPress={() => {
+                mixpanel.track('กดแคมเปญทองจากหน้าแรก');
+                navigation.navigate('CampaignScreen');
+              }}>
+              <ProgressiveImage
+                source={{
+                  uri: campaignImage,
+                }}
+                resizeMode="contain"
+                style={{width: 140, height: 60}}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       )}
     </BottomSheetModalProvider>

@@ -252,6 +252,7 @@ export default function ModalTaskDone({
               const isActive = index === step;
               return (
                 <View
+                  key={index}
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',

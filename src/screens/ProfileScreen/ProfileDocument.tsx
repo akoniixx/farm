@@ -32,9 +32,9 @@ const ProfileDocument: React.FC<any> = ({navigation, route}) => {
       setLoading(true);
 
       await ProfileDatasource.uploadDronerIDCard(result)
-        .then(res => {
-          console.log(res);
-        })
+        // .then(res => {
+        //   console.log(res);
+        // })
         .catch(err => {
           console.log(err);
         })
