@@ -105,3 +105,40 @@ export const thaiLongDate = (dateString: string) => {
 
   return `${day} ${thaiMonthName} ${thaiYear}`;
 };
+
+/**
+ * Checks if the given Thai National ID card number is valid.
+ * @param idCardNumber - The ID card number to check.
+ * @returns A string indicating whether the ID card number is valid or not.
+ */
+export function checkIdCard(idCardNumber: string): {
+  isValid: boolean;
+  message: string;
+} {
+  const EXPECTED_LENGTH = 13;
+  if (idCardNumber.length !== EXPECTED_LENGTH || !/^\d+$/.test(idCardNumber)) {
+    return {
+      isValid: false,
+      message: 'หมายเลขบัตรประชาชนไม่ถูกต้อง',
+    };
+  }
+
+  let sum = 0;
+  for (let i = 0; i < idCardNumber.length - 1; i++) {
+    sum += parseInt(idCardNumber[i], 10) * (13 - i);
+  }
+
+  const checkDigit = (11 - (sum % 11)) % 10;
+
+  if (checkDigit === parseInt(idCardNumber[12], 10)) {
+    return {
+      isValid: true,
+      message: '',
+    };
+  } else {
+    return {
+      isValid: false,
+      message: 'หมายเลขบัตรประชาชนไม่ถูกต้อง',
+    };
+  }
+}

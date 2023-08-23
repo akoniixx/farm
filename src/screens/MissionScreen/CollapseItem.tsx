@@ -1,5 +1,5 @@
 import {View, StyleSheet, Animated, Pressable} from 'react-native';
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import Text from '../../components/Text';
 
 import moment from 'moment';

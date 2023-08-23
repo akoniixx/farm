@@ -22,6 +22,7 @@ import ProgressBarAnimated from '../../components/ProgressBarAnimated/ProgressBa
 import {momentExtend, thaiLongDate} from '../../function/utility';
 import {mixpanel} from '../../../mixpanel';
 import Text from '../../components/Text';
+import {checkDecimal} from '../../function/checkDecimal';
 
 const CampaignScreen: React.FC<any> = ({navigation, route}) => {
   const [campaign, setCampaign] = useState<CampaignEntitie>(init_campaign);
@@ -143,7 +144,7 @@ const CampaignScreen: React.FC<any> = ({navigation, route}) => {
                       styles.rewardFont,
                       {fontSize: normalize(28), marginRight: 20},
                     ]}>
-                    {afterRai ? afterRai : 0}
+                    {afterRai ? checkDecimal(afterRai) : 0}
                   </Text>
                   <Text style={[styles.rewardFont, {marginBottom: 2}]}>
                     ไร่

@@ -33,6 +33,7 @@ import MyProfileScreen from '../../screens/ProfileVerifyScreen/MyProfileScreen';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import {useAuth} from '../../contexts/AuthContext';
+import {firebase} from '@react-native-firebase/analytics';
 
 export type TabNavigatorParamList = {
   mission: undefined;
@@ -63,6 +64,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   useEffect(() => {
     const getProfile = async () => {
       const droner_id = await AsyncStorage.getItem('droner_id');
+
       ProfileDatasource.getProfile(droner_id!).then(res => {
         setStatus(res.status);
       });
@@ -133,9 +135,14 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     };
     messaging()
       .getInitialNotification()
-      .then(message => {
+      .then(async message => {
         if (message) {
           const type = message.data?.type;
+          await firebase.analytics().logEvent('notification_open', {
+            type: type,
+            ...message.data,
+          });
+
           switch (type) {
             case 'APPROVE_DRONER_SUCCESS':
               setInitialRouteName('profile');
@@ -214,6 +221,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
       });
     messaging().onNotificationOpenedApp(async message => {
       const type = message.data?.type;
+      await firebase.analytics().logEvent('notification_open', {
+        type: type,
+        ...message.data,
+      });
+
       const jumpAction = TabActions.jumpTo('profile');
       switch (type) {
         case 'APPROVE_DRONER_SUCCESS':
@@ -290,6 +302,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
 
     messaging().onMessage(async message => {
       const type = message.data?.type;
+      await firebase.analytics().logEvent('notification_received', {
+        type: type,
+        ...message.data,
+      });
+
       switch (type) {
         case 'APPROVE_DRONER_SUCCESS':
           setRegisterNoti(true);

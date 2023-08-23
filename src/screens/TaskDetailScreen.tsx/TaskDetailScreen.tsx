@@ -48,6 +48,7 @@ import Text from '../../components/Text';
 import BadgeStatus from '../../components/BadgeStatus/BadgeStatus';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
 import {RefreshControl} from 'react-native';
+import {checkDecimal} from '../../function/checkDecimal';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
@@ -420,7 +421,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                   </View>
                   <View>
                     <Text style={styles.fontGray}>พื้นที่</Text>
-                    <Text style={styles.font16}>{data.farmAreaAmount} ไร่</Text>
+                    <Text style={styles.font16}>
+                      {checkDecimal(data.farmAreaAmount)} ไร่
+                    </Text>
                   </View>
                   <View>
                     <Text style={styles.fontGray}>ปุ๋ย/ยา</Text>
@@ -516,7 +519,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 </View>
                 <View style={{marginTop: normalize(10)}}>
                   <Text style={[styles.font16, {color: 'black'}]}>
-                    จุดสังเกตุ
+                    จุดสังเกต
                   </Text>
                   <View
                     style={{
@@ -652,7 +655,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                         style={{
                           fontFamily: font.medium,
                         }}>
-                        จากเกตรกร
+                        จากเกษตรกร
                       </Text>
                       <Text
                         style={{

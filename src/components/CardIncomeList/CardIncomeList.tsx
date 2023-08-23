@@ -6,6 +6,7 @@ import icons from '../../assets/icons/icons';
 import {numberWithCommas} from '../../function/utility';
 import {font} from '../../assets';
 import {State} from '../../screens/IncomeScreen';
+import {checkDecimal} from '../../function/checkDecimal';
 
 interface Props {
   data: State;
@@ -34,7 +35,7 @@ const CardIncomeList = ({styleContainer, data}: Props): JSX.Element => {
     },
     {
       title: 'ไร่สะสม',
-      value: totalArea || 0,
+      value: checkDecimal(totalArea) || 0,
       icons: icons.farm,
       unitPostion: 'back',
       unit: 'ไร่',

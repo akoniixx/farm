@@ -7,6 +7,7 @@ import {momentExtend, numberWithCommas} from '../../function/utility';
 import {useNavigation} from '@react-navigation/native';
 import {mixpanel} from '../../../mixpanel';
 import {useAuth} from '../../contexts/AuthContext';
+import {checkDecimal} from '../../function/checkDecimal';
 
 const NewTask: React.FC<any> = (props: any) => {
   const onPressReceiveTask = props.receiveTask;
@@ -95,7 +96,7 @@ const NewTask: React.FC<any> = (props: any) => {
               fontSize: normalize(19),
               color: colors.fontBlack,
             }}>
-            {`${props.title} | ${props.farmArea} ไร่`}
+            {`${props.title} | ${checkDecimal(props.farmArea)} ไร่`}
           </Text>
           <Text
             style={{

@@ -13,6 +13,7 @@ import {SheetManager} from 'react-native-actions-sheet';
 import Text from '../Text';
 import {useAuth} from '../../contexts/AuthContext';
 import BadgeStatus from '../BadgeStatus/BadgeStatus';
+import {checkDecimal} from '../../function/checkDecimal';
 
 const MainTasklists: React.FC<any> = (props: any) => {
   const ratting = [1, 2, 3, 4, 5];
@@ -94,7 +95,7 @@ const MainTasklists: React.FC<any> = (props: any) => {
                   fontFamily: fonts.medium,
                   fontSize: normalize(19),
                 }}>
-                {`${props.title} | ${props.farmArea} ไร่`}
+                {`${props.title} | ${checkDecimal(props.farmArea)} ไร่`}
               </Text>
               <Text
                 style={{

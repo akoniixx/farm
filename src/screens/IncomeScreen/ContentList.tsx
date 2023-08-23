@@ -22,6 +22,7 @@ import Divider from '../../components/Divider';
 import image from '../../assets/images/image';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {DataType} from '.';
+import {checkDecimal} from '../../function/checkDecimal';
 
 interface Styles {
   isFocus?: boolean;
@@ -164,9 +165,9 @@ export default function ContentList({
                         item?.purposeSpray?.purposeSprayName
                           ? item?.purposeSpray.purposeSprayName
                           : ''
-                      } (${item?.farmerPlot?.plantName}) (${
-                        item?.farmAreaAmount
-                      } ไร่)`}
+                      } (${item?.farmerPlot?.plantName}) (${checkDecimal(
+                        +item?.farmAreaAmount,
+                      )} ไร่)`}
                     </Text>
                     <Text style={styles({}).textMoney}>
                       ฿

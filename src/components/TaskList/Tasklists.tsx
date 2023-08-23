@@ -21,6 +21,7 @@ import Text from '../Text';
 import {useAuth} from '../../contexts/AuthContext';
 import {Task} from '../../types/TaskType';
 import AsyncButton from '../Button/AsyncButton';
+import {checkDecimal} from '../../function/checkDecimal';
 
 interface Props extends Task {
   onPressSetTaskId: (taskId: string) => void;
@@ -136,7 +137,7 @@ const Tasklists: React.FC<any> = (props: Props) => {
                 fontFamily: fonts.medium,
                 fontSize: normalize(19),
               }}>
-              {`${props.title} | ${props.farmArea} ไร่`}
+              {`${props.title} | ${checkDecimal(+props.farmArea)} ไร่`}
             </Text>
             <Text
               style={{
