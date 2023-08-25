@@ -26,14 +26,12 @@ import {ActionContext} from '../../../App';
 import {dialCall} from '../../function/utility';
 import RewardScreen from '../../screens/RewardScreen';
 import MissionScreen from '../../screens/MissionScreen';
-import Draggable from 'react-native-draggable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Campaign} from '../../datasource/CampaignDatasource';
 import MyProfileScreen from '../../screens/ProfileVerifyScreen/MyProfileScreen';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import {useAuth} from '../../contexts/AuthContext';
-import {firebase} from '@react-native-firebase/analytics';
+import analytics from '@react-native-firebase/analytics';
 
 export type TabNavigatorParamList = {
   mission: undefined;
@@ -138,7 +136,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
       .then(async message => {
         if (message) {
           const type = message.data?.type;
-          await firebase.analytics().logEvent('notification_open', {
+          await analytics().logEvent('notification_opened', {
             type: type,
             ...message.data,
           });
@@ -221,7 +219,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
       });
     messaging().onNotificationOpenedApp(async message => {
       const type = message.data?.type;
-      await firebase.analytics().logEvent('notification_open', {
+      await analytics().logEvent('notification_opened', {
         type: type,
         ...message.data,
       });
@@ -302,7 +300,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
 
     messaging().onMessage(async message => {
       const type = message.data?.type;
-      await firebase.analytics().logEvent('notification_received', {
+      await analytics().logEvent('notification_received', {
         type: type,
         ...message.data,
       });
