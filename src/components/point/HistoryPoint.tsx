@@ -72,7 +72,7 @@ export const HistoryPoint: React.FC<guruData> = ({
                 true,
               )} `}</Text>
               <Text style={styles.textDate}>
-                {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm `)}
+                {momentExtend.toBuddhistYear(date, 'DD MMM YY HH:mm ')}
               </Text>
             </View>
           ) : (
@@ -85,7 +85,7 @@ export const HistoryPoint: React.FC<guruData> = ({
                 true,
               )} `}</Text>
               <Text style={styles.textDate}>
-                {momentExtend.toBuddhistYear(date, `DD MMM YY HH:mm `)}
+                {momentExtend.toBuddhistYear(date, 'DD MMM YY HH:mm ')}
               </Text>
             </View>
           )}

@@ -4,20 +4,18 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
-  TextInput,
   Modal,
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
-  Text,
 } from 'react-native';
 import {stylesCentral} from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {normalize} from '@rneui/themed';
 import colors from '../../assets/colors/colors';
-import {font, icons, image as img} from '../../assets';
+import {font, icons} from '../../assets';
 import {MainButton} from '../../components/Button/MainButton';
 import ActionSheet from 'react-native-actions-sheet';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -25,11 +23,11 @@ import Lottie from 'lottie-react-native';
 import image from '../../assets/images/image';
 import {Register} from '../../datasource/AuthDatasource';
 import DroneBrandingItem from '../../components/Drone/DroneBranding';
-import {color} from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import Text from '../../components/Text';
 
-const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
+const AddDroneScreen: React.FC<any> = ({navigation}) => {
   const actionSheet = useRef<any>(null);
   const [loading, setLoading] = useState(false);
   const windowWidth = Dimensions.get('screen').width;
@@ -42,7 +40,6 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
   const [opentype, setOpentype] = useState(false);
   const [value, setValue] = useState(null);
   const [valuetype, setValuetype] = useState(null);
-  const [droneno, setdroneno] = useState<any>(null);
   const [dronedataUI, setDronedataUI] = useState<any>([]);
   const [dronedata, setDronedata] = useState<any>([]);
   const [count, setCount] = useState(1);
@@ -121,7 +118,6 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
     setDronedataUI(dronesUI);
     setBrand(null);
     setBrandType(null);
-    setdroneno(null);
     actionSheet.current.hide();
   };
   return (
@@ -197,11 +193,10 @@ const AddDroneScreen: React.FC<any> = ({route, navigation}) => {
               setLoading(true);
               incrementCount();
               Register.uploadDronerdrone(dronedata, Number(percentSuccess) + 25)
-                .then(res => {
+                .then(() => {
                   setLoading(false);
                   setBrand(null);
                   setBrandType(null);
-                  setdroneno(null);
                   setValue(null);
                   setValuetype(null);
                   setLoading(false);

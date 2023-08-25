@@ -2,14 +2,12 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Button,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font} from '../../assets';
@@ -18,13 +16,11 @@ import CustomHeader from '../../components/CustomHeader';
 import {InputPhone} from '../../components/InputPhone';
 import {MainButton} from '../../components/Button/MainButton';
 import {Authentication} from '../../datasource/AuthDatasource';
-import Toast from 'react-native-toast-message';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen: React.FC<any> = ({navigation}) => {
   const [value, setValue] = useState<string>('');
-  const [isError, setIsError] = useState(false);
-  const [message, setMessage] = useState<string>('');
+  const [isError] = useState(false);
+  const [message] = useState<string>('');
   const [errMessage, setErrMessage] = useState<string>('');
   const login = () => {
     Authentication.generateOtpRegister(value)

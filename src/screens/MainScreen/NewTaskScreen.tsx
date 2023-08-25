@@ -1,13 +1,5 @@
-import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {normalize} from '@rneui/themed';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -16,9 +8,9 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Animated,
+  RefreshControl,
 } from 'react-native';
-import {FlatList, ScrollView} from 'react-native-gesture-handler';
+import {FlatList} from 'react-native-gesture-handler';
 import {colors, font, image} from '../../assets';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import {stylesCentral} from '../../styles/StylesCentral';
@@ -29,16 +21,16 @@ import Toast from 'react-native-toast-message';
 import icons from '../../assets/icons/icons';
 import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import {socket} from '../../function/utility';
+import {momentExtend, socket} from '../../function/utility';
 import {ActionContext} from '../../../App';
 import {mixpanel} from '../../../mixpanel';
 import {callcenterNumber} from '../../definitions/callCenterNumber';
-import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import MyProfileScreen from '../ProfileVerifyScreen/MyProfileScreen';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {useAuth} from '../../contexts/AuthContext';
 import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 
 interface Prop {
   isOpenReceiveTask: boolean;
@@ -48,30 +40,35 @@ interface Prop {
 const initialPage = 1;
 
 const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
-  const [unsendTask, setUnsendtask] = useState([]);
-
   const {
     state: {isDoneAuth},
   } = useAuth();
   const navigation = RootNavigation.navigate;
   const dronerStatus = props.dronerStatus;
   const {isOpenReceiveTask} = props;
-  const [data, setData] = useState<any>([]);
+  const [data, setData] = useState<{
+    data: any;
+    count: number;
+  }>({
+    data: [],
+    count: 0,
+  });
+  const [refreshing, setRefreshing] = useState(false);
+
   const [page, setPage] = useState(initialPage);
   const [loading, setLoading] = useState(false);
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const [checkResIsComplete, setCheckResIsComplete] = useState(false);
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
+  // const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  // const handlePresentModalPress = useCallback(() => {
+  //   bottomSheetModalRef.current?.present();
+  // }, []);
 
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const width = Dimensions.get('window').width;
   const [selectedTaskId, setSelectedTaskId] = useState<string>('');
   const [dronerId, setDronerId] = useState<string>('');
-  const {actiontaskId, setActiontaskId} = useContext(ActionContext);
+  const {actiontaskId} = useContext(ActionContext);
   const [percentSuccess, setPercentSuccess] = useState<number>(0);
-  const limit = 999;
+  const limit = 10;
   const getData = async () => {
     setLoading(true);
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
@@ -79,7 +76,6 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
       .then(res => {
         if (res !== undefined) {
           setData(res);
-          setCheckResIsComplete(true);
           setLoading(false);
         }
       })
@@ -89,38 +85,53 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
       setPercentSuccess(res.percentSuccess);
     });
   };
+  const onRefresh = React.useCallback(() => {
+    try {
+      setRefreshing(true);
+      getData();
+      setRefreshing(false);
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
+  const onLoadMore = async () => {
+    if (data.data.length < data.count) {
+      const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
+      TaskDatasource.getTaskById(dronerId, ['WAIT_RECEIVE'], page + 1, limit)
+        .then(res => {
+          if (res !== undefined) {
+            setData({
+              data: [...data.data, ...res.data],
+              count: res.count,
+            });
+            setPage(page + 1);
+          }
+        })
+        .catch(err => console.log(err));
+    }
+  };
   const receiveTask = async () => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(selectedTaskId, dronerId, true)
       .then(res => {
         if (res.success) {
           const task = res.responseData.data;
-          setData(data.filter((x: any) => x.item.id != task.id));
+          setData(data?.data?.filter((x: any) => x.item.id != task.id));
           Toast.show({
             type: 'receiveTaskSuccess',
             text1: `งาน #${task.taskNo}`,
-            text2: `วันที่ ${
-              data.dateAppointment.split('T')[0].split('-')[2]
-            }/${data.dateAppointment.split('T')[0].split('-')[1]}/${
-              parseInt(data.dateAppointment.split('T')[0].split('-')[0]) + 543
-            } เวลา ${
-              parseInt(data.dateAppointment.split('T')[1].split(':')[0]) + 7 > 9
-                ? `${
-                    parseInt(data.dateAppointment.split('T')[1].split(':')[0]) +
-                    7
-                  }`
-                : `0${
-                    parseInt(data.dateAppointment.split('T')[1].split(':')[0]) +
-                    7
-                  }`
-            }:${data.dateAppointment.split('T')[1].split(':')[1]}`,
+            text2: `วันที่ ${momentExtend.toBuddhistYear(
+              new Date(),
+              'DD MMM YYYY',
+            )}`,
             onPress: () => {
               Toast.hide();
             },
           });
         } else {
           getData();
-          setData(data.filter((x: any) => x.item.id != selectedTaskId));
+          setData(data?.data?.filter((x: any) => x.item.id != selectedTaskId));
         }
       })
       .catch(err => console.log(err));
@@ -128,54 +139,59 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   const rejectTask = async () => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(selectedTaskId, dronerId, false)
-      .then(res => {
-        setData(data.filter((x: any) => x.item.id != selectedTaskId));
+      .then(() => {
+        setData(data?.data?.filter((x: any) => x.item.id != selectedTaskId));
       })
       .catch(err => console.log(err));
   };
   useFocusEffect(
     React.useCallback(() => {
       getData();
-      return () => disconnectSocket();
+      return () => {
+        disconnectSocket();
+        setPage(initialPage);
+      };
     }, []),
   );
 
   useEffect(() => {
+    const onNewTask = async () => {
+      const dronerId = await AsyncStorage.getItem('droner_id');
+      socket.on(`send-task-${dronerId!}`, task => {
+        setData(prev => ({
+          data: [
+            {image_profile_url: task.image_profile_url, item: task.data},
+          ].concat(data?.data?.filter((x: any) => x.item.id != task.data.id)),
+          count: prev.count + 1,
+        }));
+      });
+    };
     onNewTask();
-    onTaskReceive();
-  }, [data]);
+    // onTaskReceive();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getDronerId = async () => {
     setDronerId((await AsyncStorage.getItem('droner_id')) ?? '');
   };
 
   useEffect(() => {
-    setData(data.filter((x: any) => x.item.id != actiontaskId));
+    setData(data?.data?.filter((x: any) => x.item.id != actiontaskId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actiontaskId]);
   useEffect(() => {
     getDronerId();
   }, []);
 
-  const onNewTask = async () => {
-    const dronerId = await AsyncStorage.getItem('droner_id');
-    socket.on(`send-task-${dronerId!}`, task => {
-      setData(
-        [{image_profile_url: task.image_profile_url, item: task.data}].concat(
-          data.filter((x: any) => x.item.id != task.data.id),
-        ),
-      );
-    });
-  };
-
-  const onTaskReceive = async () => {
-    // const dronerId = await AsyncStorage.getItem('droner_id');
-    // socket.on(`unsend-task-${dronerId!}`, (taskId: string) => {
-    // if (data.find((x: any) => x.item.id == taskId)) {
-    // setUnsendtask(data.concat(data))
-    // setData(data.filter((x: any) => x.item.id != taskId));
-    // }
-    // });
-  };
+  // const onTaskReceive = async () => {
+  // const dronerId = await AsyncStorage.getItem('droner_id');
+  // socket.on(`unsend-task-${dronerId!}`, (taskId: string) => {
+  // if (data.find((x: any) => x.item.id == taskId)) {
+  // setUnsendtask(data.concat(data))
+  // setData(data.filter((x: any) => x.item.id != taskId));
+  // }
+  // });
+  // };
 
   const disconnectSocket = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
@@ -202,14 +218,14 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
     }
   }, [isDoneAuth, props.navigation]);
   const RenderWarningDocEmpty = useMemo(() => {
-    if (!isDoneAuth && data.length < 1) {
+    if (!isDoneAuth && data?.data?.length < 1) {
       return () => (
         <View
           style={{
             paddingHorizontal: 8,
             paddingBottom: 8,
-            height : normalize(80),
-            backgroundColor : colors.grayBg
+            height: normalize(80),
+            backgroundColor: colors.grayBg,
           }}>
           <WarningDocumentBox navigation={props.navigation} />
         </View>
@@ -220,10 +236,12 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   }, [isDoneAuth, props.navigation, data]);
 
   return (
-    <>
+    <NetworkLost onPress={onRefresh}>
       <RenderWarningDocEmpty />
       <View style={[{flex: 1}]}>
-        {data.length == 0 && !isOpenReceiveTask && dronerStatus === 'ACTIVE' ? (
+        {data?.data?.length == 0 &&
+        !isOpenReceiveTask &&
+        dronerStatus === 'ACTIVE' ? (
           <View
             style={[
               stylesCentral.center,
@@ -245,29 +263,31 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
             </View>
           </View>
         ) : (
-          dronerStatus === 'ACTIVE' && <View></View>
+          dronerStatus === 'ACTIVE' && <View />
         )}
-        {data.length == 0 && isOpenReceiveTask && dronerStatus === 'ACTIVE' && (
-          <View
-            style={[
-              stylesCentral.center,
-              {flex: 1, backgroundColor: colors.grayBg},
-            ]}>
-            <Image
-              source={image.blankNewTask}
-              style={{width: normalize(136), height: normalize(111)}}
-            />
+        {data?.data?.length == 0 &&
+          isOpenReceiveTask &&
+          dronerStatus === 'ACTIVE' && (
             <View
-              style={{
-                marginTop: normalize(20),
-                paddingHorizontal: normalize(40),
-              }}>
-              <Text style={stylesCentral.blankFont}>
-                โปรดรอเพื่อรับงานจากระบบ
-              </Text>
+              style={[
+                stylesCentral.center,
+                {flex: 1, backgroundColor: colors.grayBg},
+              ]}>
+              <Image
+                source={image.blankNewTask}
+                style={{width: normalize(136), height: normalize(111)}}
+              />
+              <View
+                style={{
+                  marginTop: normalize(20),
+                  paddingHorizontal: normalize(40),
+                }}>
+                <Text style={stylesCentral.blankFont}>
+                  โปรดรอเพื่อรับงานจากระบบ
+                </Text>
+              </View>
             </View>
-          </View>
-        )}
+          )}
 
         {dronerStatus == 'PENDING' ? (
           <View
@@ -449,12 +469,16 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
             </View>
           </View>
         ) : null}
-        {data.length > 0 && (
+        {data?.data?.length > 0 && (
           <View
             style={{
               paddingTop: 8,
             }}>
             <FlatList
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              onEndReached={onLoadMore}
               ListHeaderComponent={RenderWarningDoc}
               contentContainerStyle={{
                 paddingHorizontal: 8,
@@ -462,7 +486,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
                 marginBottom: 8,
               }}
               keyExtractor={element => element.item.id}
-              data={data}
+              data={data.data}
               renderItem={({item}: any) => (
                 <NewTask
                   {...item.item}
@@ -611,7 +635,7 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
         textContent={'Loading...'}
         textStyle={{color: '#FFF'}}
       />
-    </>
+    </NetworkLost>
   );
 };
 export default NewTaskScreen;

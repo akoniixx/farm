@@ -4,7 +4,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  Button,
   PermissionsAndroid,
   Platform,
   Modal,
@@ -19,7 +18,6 @@ import {normalize} from '../../function/Normalize';
 import CustomHeader from '../../components/CustomHeader';
 import {MainButton} from '../../components/Button/MainButton';
 import {ScrollView} from 'react-native-gesture-handler';
-import {ProgressBar} from '../../components/ProgressBar';
 import {Avatar} from '@rneui/themed';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {QueryLocation} from '../../datasource/LocationDatasource';
@@ -28,13 +26,11 @@ import {Register} from '../../datasource/AuthDatasource';
 import Geolocation from 'react-native-geolocation-service';
 import * as ImagePicker from 'react-native-image-picker';
 import Lottie from 'lottie-react-native';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import CalendarCustom from '../../components/Calendar/Calendar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {build12Year, CalendarMode} from '../../hooks/calendar';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 
-const EditProfile: React.FC<any> = ({navigation, route}) => {
+const EditProfile: React.FC<any> = ({navigation}) => {
   const initialFormRegisterState = {
     name: '',
     surname: '',
@@ -62,7 +58,6 @@ const EditProfile: React.FC<any> = ({navigation, route}) => {
   const [itemsSubDistrict, setItemSubDistrict] = useState([]);
   const [province, setProvince] = useState<any>(null);
   const [district, setDistrict] = useState<any>(null);
-  const [subdistrict, setSubdistrict] = useState<any>(null);
   const [image, setImage] = useState<any>(null);
   const [imagePreview, setImagePreview] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -109,7 +104,7 @@ const EditProfile: React.FC<any> = ({navigation, route}) => {
     if (!result.didCancel) {
       setImage(result);
     }
-  }, [image]);
+  }, []);
 
   useEffect(() => {
     getProfile();
@@ -397,7 +392,6 @@ const EditProfile: React.FC<any> = ({navigation, route}) => {
               items={itemsSubDistrict}
               setOpen={setOpenSubDistrict}
               onSelectItem={(value: any) => {
-                setSubdistrict(value);
                 dispatch({
                   type: 'Handle Input',
                   field: 'subdistrict',
@@ -456,7 +450,7 @@ const EditProfile: React.FC<any> = ({navigation, route}) => {
                 formState.subdistrict.value,
                 formState.postal,
               )
-                .then(async res => {
+                .then(async () => {
                   if (!image) {
                     if (Platform.OS === 'ios') {
                       await Geolocation.requestAuthorization('always');
@@ -485,7 +479,7 @@ const EditProfile: React.FC<any> = ({navigation, route}) => {
                     );
                   } else {
                     Register.uploadProfileImage(image)
-                      .then(async res => {
+                      .then(async () => {
                         if (Platform.OS === 'ios') {
                           await Geolocation.requestAuthorization('always');
                         } else if (Platform.OS === 'android') {

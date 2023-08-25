@@ -6,11 +6,11 @@ import PinScreen from '../screens/PinScreen/PinScreen';
 import OtpScreen from '../screens/OtpScreen/OtpScreen';
 import ConditionScreen from '../screens/RegisterScreen/ConditionScreen';
 import TelNumberScreen from '../screens/RegisterScreen/TelNumberScreen';
-import FirstFormScreen from '../screens/RegisterScreen/FirstFormScreen';
+// import FirstFormScreen from '../screens/RegisterScreen/FirstFormScreen';
 import FirstFormScreenV2 from '../screens/RegisterScreen/FirstFromScreenV2';
-import SecondFormScreen from '../screens/RegisterScreen/SecondFormScreen';
-import ThirdFormScreen from '../screens/RegisterScreen/ThirdFormScreen';
-import FourthFormScreen from '../screens/RegisterScreen/FourthFormScreen';
+// import SecondFormScreen from '../screens/RegisterScreen/SecondFormScreen';
+// import ThirdFormScreen from '../screens/RegisterScreen/ThirdFormScreen';
+// import FourthFormScreen from '../screens/RegisterScreen/FourthFormScreen';
 import AddIDcardScreen from '../screens/RegisterScreen/AddIDcardScreen';
 import SuccessRegister from '../screens/RegisterScreen/SuccessRegister';
 import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
@@ -28,12 +28,12 @@ const AppAuthNavigator: React.FC = () => {
       <Stack.Screen name="PinScreen" component={PinScreen} />
       <Stack.Screen name="ConditionScreen" component={ConditionScreen} />
       <Stack.Screen name="TelNumberScreen" component={TelNumberScreen} />
-      <Stack.Screen name="FirstFormScreen" component={FirstFormScreen} />
+      {/* <Stack.Screen name="FirstFormScreen" component={FirstFormScreen} /> */}
+      {/* <Stack.Screen name="SecondFormScreen" component={SecondFormScreen} /> */}
+      {/* <Stack.Screen name="ThirdFormScreen" component={ThirdFormScreen} />
+    <Stack.Screen name="FourthFormScreen" component={FourthFormScreen} /> */}
       <Stack.Screen name="FirstFormScreenV2" component={FirstFormScreenV2} />
-      <Stack.Screen name="SecondFormScreen" component={SecondFormScreen} />
       <Stack.Screen name="SecondFormScreenV2" component={SecondFormScreenV2} />
-      <Stack.Screen name="ThirdFormScreen" component={ThirdFormScreen} />
-      <Stack.Screen name="FourthFormScreen" component={FourthFormScreen} />
       <Stack.Screen name="AddIDCardScreen" component={AddIDcardScreen} />
       <Stack.Screen name="SuccessScreen" component={SuccessRegister} />
       <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />

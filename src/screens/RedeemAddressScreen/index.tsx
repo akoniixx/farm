@@ -15,9 +15,9 @@ import CustomHeader from '../../components/CustomHeader';
 import {numberWithCommas} from '../../function/utility';
 import AddressDetail from './AddressDetail';
 import Text from '../../components/Text';
-import FastImage from 'react-native-fast-image';
 import {usePoint} from '../../contexts/PointContext';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 
 interface Props {
   navigation: any;
@@ -97,7 +97,7 @@ export default function RedeemAddressScreen({navigation, route}: Props) {
                 style={{
                   flex: 0.2,
                 }}>
-                <FastImage
+                <ProgressiveImage
                   source={{uri: data.imagePath}}
                   style={{
                     width: 80,
@@ -232,7 +232,7 @@ export default function RedeemAddressScreen({navigation, route}: Props) {
                 style={{
                   flex: 0.2,
                 }}>
-                <FastImage
+                <ProgressiveImage
                   source={{uri: missionDetail?.imagePath}}
                   style={{
                     width: 80,

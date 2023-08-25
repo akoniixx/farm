@@ -14,7 +14,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		15B5C69CB9394B9689A6AE7A /* Anuphan-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 772F96D02BEA4F9FB73501EB /* Anuphan-SemiBold.ttf */; };
 		163B2C8FA3D0CC77B91F89D1 /* libPods-Droner-DronerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 465A5C9678C9127BA3FEFB9F /* libPods-Droner-DronerTests.a */; };
-		2D461767E99A9A1A3C4DE70E /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		2D461767E99A9A1A3C4DE70E /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		4B38A4CB68704964A3F5B7F0 /* newtaskcoming.wav in Resources */ = {isa = PBXBuildFile; fileRef = 85014E51942745C88FFA147C /* newtaskcoming.wav */; };
 		60DC076C28AB7E5E000756CF /* geolocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DC076B28AB7E5E000756CF /* geolocation.swift */; };
 		60F03EE22883795100CFC2C7 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 60F03EE12883795100CFC2C7 /* fonts */; };
@@ -27,6 +27,7 @@
 		E1330D792A21F45700857A41 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1330D782A21F45700857A41 /* File.swift */; };
 		E138B9A62A70D2F7000A08B8 /* iconkaset.wav in Resources */ = {isa = PBXBuildFile; fileRef = E138B9A52A70D2F7000A08B8 /* iconkaset.wav */; };
 		E138B9A82A70D31B000A08B8 /* newtaskcoming.wav in Resources */ = {isa = PBXBuildFile; fileRef = E138B9A72A70D31B000A08B8 /* newtaskcoming.wav */; };
+		E1A3492B2A8CA13B009F1468 /* hermes.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A3492A2A8CA13B009F1468 /* hermes.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 		E1330D782A21F45700857A41 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		E138B9A52A70D2F7000A08B8 /* iconkaset.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = iconkaset.wav; path = ../src/assets/sound/iconkaset.wav; sourceTree = "<group>"; };
 		E138B9A72A70D31B000A08B8 /* newtaskcoming.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = newtaskcoming.wav; path = ../src/assets/sound/newtaskcoming.wav; sourceTree = "<group>"; };
+		E1A3492A2A8CA13B009F1468 /* hermes.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = hermes.xcframework; path = "Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -81,7 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D461767E99A9A1A3C4DE70E /* (null) in Frameworks */,
+				2D461767E99A9A1A3C4DE70E /* BuildFile in Frameworks */,
 				163B2C8FA3D0CC77B91F89D1 /* libPods-Droner-DronerTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -90,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1A3492B2A8CA13B009F1468 /* hermes.xcframework in Frameworks */,
 				8C529319F80D993BF9E93590 /* libPods-Droner.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -133,6 +136,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E1A3492A2A8CA13B009F1468 /* hermes.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				7780ED7F6A708230715A2EFA /* libPods-Droner.a */,
 				465A5C9678C9127BA3FEFB9F /* libPods-Droner-DronerTests.a */,

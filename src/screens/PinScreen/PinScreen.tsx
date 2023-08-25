@@ -2,24 +2,14 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
-  KeyboardAvoidingView,
   Platform,
-  Button,
   Animated,
-  Image,
   TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
-import {colors, font} from '../../assets';
-import {normalize} from '../../function/Normalize';
-import CustomHeader from '../../components/CustomHeader';
-import {InputPhone} from '../../components/InputPhone';
-import {MainButton} from '../../components/Button/MainButton';
+
 import VirtualKeyboard from '../../components/VirtualKeyboard/Virtualkeyboard';
 import {
   CodeField,
@@ -28,11 +18,9 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 
-const PinScreen: React.FC<any> = ({navigation}) => {
+const PinScreen: React.FC<any> = () => {
   const [value, setValue] = useState<string>('');
-  const [isError, setIsError] = React.useState(false);
 
-  const [message, setMessage] = React.useState<string>('');
   return (
     <SafeAreaView style={stylesCentral.container}>
       <Text>{value}</Text>
@@ -43,35 +31,12 @@ const PinScreen: React.FC<any> = ({navigation}) => {
 };
 export default PinScreen;
 
-const styles = StyleSheet.create({
-  inner: {
-    paddingHorizontal: normalize(17),
-    flex: 1,
-    justifyContent: 'space-around',
-  },
-  headText: {
-    fontFamily: font.bold,
-    fontSize: normalize(20),
-    marginBottom: normalize(24),
-  },
-  label: {
-    fontFamily: font.light,
-    fontSize: normalize(14),
-    color: colors.gray,
-    marginTop: normalize(24),
-  },
-  containerTopCard: {
-    flex: 1,
-    paddingTop: normalize(70),
-  },
-});
-
 const {Value, Text: AnimatedText} = Animated;
 
 const CELL_COUNT = 4;
-const source = {
-  uri: 'https://user-images.githubusercontent.com/4661784/56352614-4631a680-61d8-11e9-880d-86ecb053413d.png',
-};
+// const source = {
+//   uri: 'https://user-images.githubusercontent.com/4661784/56352614-4631a680-61d8-11e9-880d-86ecb053413d.png',
+// };
 
 const animationsColor = [...new Array(CELL_COUNT)].map(() => new Value(0));
 const animationsScale = [...new Array(CELL_COUNT)].map(() => new Value(1));

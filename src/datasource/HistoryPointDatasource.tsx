@@ -4,7 +4,7 @@ import {BASE_URL, httpClient} from '../config/develop-config';
 export class historyPoint {
   static async getPoint(dronerId: string): Promise<any> {
     return axios
-      .post(BASE_URL + `/promotion/historypoint-quota/getpoint`, {
+      .post(BASE_URL + '/promotion/historypoint-quota/getpoint', {
         dronerId: dronerId,
       })
       .then(res => {

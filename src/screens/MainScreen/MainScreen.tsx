@@ -1,19 +1,12 @@
 import {Switch} from '@rneui/themed';
-import React, {useEffect, useRef, useState} from 'react';
-import {
-  Animated,
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
@@ -24,7 +17,6 @@ import {numberWithCommas, socket} from '../../function/utility';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
 import Toast from 'react-native-toast-message';
-import fonts from '../../assets/fonts';
 import {mixpanel, mixpanel_token} from '../../../mixpanel';
 import {GuruKaset} from '../../datasource/GuruDatasource';
 import LinearGradient from 'react-native-linear-gradient';
@@ -32,8 +24,11 @@ import {usePoint} from '../../contexts/PointContext';
 
 import {Campaign} from '../../datasource/CampaignDatasource';
 import GuruKasetCarousel from '../../components/GuruKasetCarousel/GuruKasetCarousel';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import {useNetwork} from '../../contexts/NetworkContext';
 
-const MainScreen: React.FC<any> = ({navigation, route}) => {
+const MainScreen: React.FC<any> = ({navigation}) => {
+  const {isConnected} = useNetwork();
   const insets = useSafeAreaInsets();
   const [profile, setProfile] = useState({
     name: '',
@@ -85,7 +80,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    fecthImage();
+    fetchImage();
     getProfile();
     openSocket();
     getCurrentPoint();
@@ -106,7 +101,7 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
     });
   };
 
-  const fecthImage = async () => {
+  const fetchImage = async () => {
     await Campaign.getImage('DRONER', 'QUATA', 'ACTIVE')
       .then(res => {
         setLoading(true);
@@ -189,7 +184,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
 
     fetch('https://api.mixpanel.com/engage#profile-set', options)
       .then(response => response.json())
-      .then(response => console.log(response))
       .catch(err => console.error(err));
   };
 
@@ -265,51 +259,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 </View>
               </View>
 
-              {/*  <View>
-              <TouchableOpacity
-                style={{
-                  width: responsiveWidth(100),
-                }}
-                onPress={() => navigation.navigate('HistoryRewardScreen')}>
-                <LinearGradient
-                  colors={['#FA7052', '#F89132']}
-                  start={{x: 0, y: 0}}
-                  end={{x: 0.8, y: 1}}
-                  style={{
-                    flexDirection: 'row',
-                    borderRadius: 20,
-                    alignItems: 'center',
-                    padding: 2,
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}>
-                    <Image
-                      source={icons.ICKDronerPoint}
-                      style={{
-                        width: 32,
-                        height: 32,
-                        marginRight: 8,
-                      }}
-                    />
-                    <View>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontFamily: font.bold,
-                          color: colors.white,
-                          lineHeight: 30,
-                        }}>
-                        {numberWithCommas(currentPoint.toString(), true)}
-                      </Text>
-                    </View>
-                  </View>
-                </LinearGradient>
-              </TouchableOpacity>
-            </View> */}
               <View>
                 <TouchableOpacity
                   onPress={() => {
@@ -352,104 +301,6 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
               </View>
             </View>
 
-            {/*  <View style={{height: normalize(95)}}>
-              <ScrollView
-                showsHorizontalScrollIndicator={false}
-                horizontal
-                contentContainerStyle={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <View
-                  style={{
-                    backgroundColor: colors.orange,
-                    marginHorizontal: 5,
-                    paddingHorizontal: 10,
-                    paddingVertical: normalize(10),
-                    justifyContent: 'space-between',
-                    width: 160,
-                    height: 75,
-                    borderRadius: 16,
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <Image source={icons.income} style={styles.iconsTask} />
-                    <Text style={styles.font}>รายได้วันนี้</Text>
-                  </View>
-                  <Text style={styles.font}>{`฿${numberWithCommas(
-                    profile.totalRevenueToday,
-                  )}`}</Text>
-                </View>
-                <View
-                  style={{
-                    backgroundColor: '#6B7580',
-                    marginHorizontal: 5,
-                    paddingHorizontal: 10,
-                    paddingVertical: normalize(10),
-                    justifyContent: 'space-between',
-                    width: 160,
-                    height: 75,
-                    borderRadius: 16,
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <Image source={icons.income} style={styles.iconsTask} />
-                    <Text style={styles.font}>รายได้ทั้งหมด</Text>
-                  </View>
-                  <Text style={styles.font}>{`฿${numberWithCommas(
-                    profile.totalRevenue,
-                  )}`}</Text>
-                </View>
-                <View
-                  style={{
-                    backgroundColor: '#37ABFF',
-                    marginHorizontal: 5,
-                    paddingHorizontal: 10,
-                    paddingVertical: normalize(10),
-                    justifyContent: 'space-between',
-                    width: 160,
-                    height: 75,
-                    borderRadius: 16,
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <Image source={icons.farm} style={styles.iconsTask} />
-                    <Text style={styles.font}>ไร่สะสม</Text>
-                  </View>
-                  <Text style={styles.font}>{`${profile.totalArea} ไร่`}</Text>
-                </View>
-                <View
-                  style={{
-                    backgroundColor: '#3EBD93',
-                    marginHorizontal: 5,
-                    paddingHorizontal: 10,
-                    paddingVertical: normalize(10),
-                    justifyContent: 'space-between',
-                    width: 160,
-                    height: 75,
-                    borderRadius: 16,
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <Image source={icons.dronejob} style={styles.iconsTask} />
-                    <Text style={styles.font}>งานที่บินเสร็จ</Text>
-                  </View>
-                  <Text style={styles.font}>{`${profile.totalTask} งาน`}</Text>
-                </View>
-              </ScrollView>
-            </View> */}
             <View
               style={{
                 flexDirection: 'row',
@@ -480,14 +331,13 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
                 </Text>
               </TouchableOpacity>
             </View>
-            {guruKaset != undefined ? (
+            {guruKaset !== undefined ? (
               <GuruKasetCarousel
                 guruKaset={guruKaset}
                 navigation={navigation}
               />
             ) : null}
           </View>
-
           <TaskTapNavigator
             isOpenReceiveTask={profile.isOpenReceiveTask}
             dronerStatus={profile.status}
@@ -495,36 +345,46 @@ const MainScreen: React.FC<any> = ({navigation, route}) => {
           />
         </View>
       </View>
-      <View
-        style={{
-          display: showCampaign,
-          position: 'absolute',
-          bottom: 20,
-          right: 10,
-          zIndex: 1,
-        }}>
-        <View style={{width: 10, marginLeft: 20}}>
-          <TouchableOpacity
-            onPress={() => {
-              mixpanel.track('กดปิดแคมเปญทอง');
-              setShowCampaign('none');
-            }}>
-            <Image source={icons.closeBlack} style={{width: 10, height: 10}} />
-          </TouchableOpacity>
-        </View>
 
-        <TouchableOpacity
-          onPress={() => {
-            mixpanel.track('กดแคมเปญทองจากหน้าแรก');
-            navigation.navigate('CampaignScreen');
+      {isConnected && (
+        <View
+          style={{
+            display: showCampaign,
+            position: 'absolute',
+            bottom: 20,
+            right: 10,
+            zIndex: 1,
           }}>
-          <Image
-            source={{uri: campaignImage}}
-            style={{width: 150, height: 60}}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-      </View>
+          <View style={{width: 10, marginLeft: 20}}>
+            <TouchableOpacity
+              onPress={() => {
+                mixpanel.track('กดปิดแคมเปญทอง');
+                setShowCampaign('none');
+              }}>
+              <Image
+                source={icons.closeBlack}
+                style={{width: 10, height: 10}}
+              />
+            </TouchableOpacity>
+          </View>
+
+          {campaignImage && (
+            <TouchableOpacity
+              onPress={() => {
+                mixpanel.track('กดแคมเปญทองจากหน้าแรก');
+                navigation.navigate('CampaignScreen');
+              }}>
+              <ProgressiveImage
+                source={{
+                  uri: campaignImage,
+                }}
+                resizeMode="contain"
+                style={{width: 140, height: 60}}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
     </BottomSheetModalProvider>
   );
 };

@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -32,6 +25,7 @@ import {mixpanel} from '../../../mixpanel';
 import {RefreshControl} from 'react-native-gesture-handler';
 import GuruKasetCarousel from '../../components/GuruKasetCarousel/GuruKasetCarousel';
 import Text from '../../components/Text';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 const initialLimit = 6;
 const filterListSelect = [
   {
@@ -137,7 +131,6 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
 
   const GuruKasetHeader = useMemo(() => {
     const filterNews = pinNews?.data.filter((el: any) => el.pin_all);
-    console.log(JSON.stringify(filterNews, null, 2));
     if (filterNews.length < 1) {
       return <View />;
     }
@@ -152,6 +145,16 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
       </>
     );
   }, [pinNews, navigation]);
+  const onRefresh = async () => {
+    try {
+      setRefreshing(true);
+      await findAllNews();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
@@ -172,47 +175,41 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
           </TouchableOpacity>
         )}
       />
-      <FlatList
-        ListHeaderComponent={GuruKasetHeader}
-        onEndReached={onLoadMore}
-        keyExtractor={(item, index) => index.toString()}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={async () => {
-              try {
-                setRefreshing(true);
-                await findAllNews();
-              } catch (err) {
-                console.log(err);
-              } finally {
-                setRefreshing(false);
-              }
-            }}
-          />
-        }
-        data={data.data}
-        renderItem={({item, index}) => {
-          return (
-            <TouchableOpacity
-              key={index}
-              onPress={async () => {
-                mixpanel.track('กดอ่านกูรูเกษตรในหน้ารวมข่าวสาร');
-                await AsyncStorage.setItem('guruId', `${item.id}`);
-                navigation.push('DetailGuruScreen');
-              }}>
-              <CardGuru
+      <NetworkLost onPress={onRefresh}>
+        <FlatList
+          ListHeaderComponent={GuruKasetHeader}
+          onEndReached={onLoadMore}
+          keyExtractor={(item, index) => index.toString()}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          data={data.data}
+          renderItem={({item, index}) => {
+            return (
+              <TouchableOpacity
                 key={index}
-                index={item.index}
-                background={item.image_path}
-                title={item.title}
-                date={momentExtend.toBuddhistYear(item.created_at, 'DD MMM YY')}
-                read={item.read}
-              />
-            </TouchableOpacity>
-          );
-        }}
-      />
+                onPress={async () => {
+                  mixpanel.track('กดอ่านกูรูเกษตรในหน้ารวมข่าวสาร');
+                  await AsyncStorage.setItem('guruId', `${item.id}`);
+                  navigation.push('DetailGuruScreen');
+                }}>
+                <CardGuru
+                  key={index}
+                  index={item.index}
+                  background={item.image_path}
+                  title={item.title}
+                  date={momentExtend.toBuddhistYear(
+                    item.created_at,
+                    'DD MMM YY',
+                  )}
+                  read={item.read}
+                />
+              </TouchableOpacity>
+            );
+          }}
+        />
+      </NetworkLost>
+
       <ActionSheet ref={filterNews}>
         <View
           style={{
@@ -258,7 +255,7 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
             {filterListSelect.map((el, idx) => {
               const isFocus = sortBy === el.value;
               return (
-                <>
+                <View key={idx}>
                   <TouchableOpacity
                     onPress={async () => {
                       mixpanel.track(el.mixpanel);
@@ -308,7 +305,7 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
                       alignSelf: 'center',
                     }}
                   />
-                </>
+                </View>
               );
             })}
           </View>

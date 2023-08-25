@@ -8,8 +8,6 @@ import icons from '../../assets/icons/icons';
 
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import dayjs from 'dayjs';
-import DatePicker from 'react-native-modern-datepicker';
-import Modal from 'react-native-modal/dist/modal';
 
 interface Props {
   onChange?: (date: Date) => void;

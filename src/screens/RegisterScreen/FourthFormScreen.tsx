@@ -96,7 +96,7 @@ const FourthFormScreen: React.FC<any> = ({route, navigation}) => {
             onPress={() => {
               mixpanel.track('กดข้ามหน้าอัพโหลดเอกสาร');
               Register.registerSkipStep4()
-                .then(res => navigation.navigate('SuccessScreen'))
+                .then(() => navigation.navigate('SuccessScreen'))
                 .catch(err => console.log(err));
             }}
           />

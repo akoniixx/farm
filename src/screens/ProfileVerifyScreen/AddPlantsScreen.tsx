@@ -23,7 +23,7 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {cropDatasource} from '../../datasource/CropDatasource';
 
-const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
+const AddPlantsScreen: React.FC<any> = ({navigation}) => {
   const [plantListSelect, setPlantListSelect] = useState<
     {
       active: boolean;
@@ -214,7 +214,7 @@ const AddPlantsScreen: React.FC<any> = ({route, navigation}) => {
               }
             });
             Register.registerUpPlants(plant, Number(percentSuccess) + 25)
-              .then(res => {
+              .then(() => {
                 setLoading(false);
                 navigation.goBack();
               })

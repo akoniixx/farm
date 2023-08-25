@@ -29,7 +29,6 @@ import {plantList} from '../../definitions/plants';
 import {PlantSelect} from '../../components/PlantSelect';
 import ActionSheet from 'react-native-actions-sheet';
 import {icons} from '../../assets';
-import Animated from 'react-native-reanimated';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {Register} from '../../datasource/AuthDatasource';
 import * as ImagePicker from 'react-native-image-picker';
@@ -39,7 +38,6 @@ import DroneBrandingItem from '../../components/Drone/DroneBranding';
 import {mixpanel} from '../../../mixpanel';
 
 const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
-  const fall = new Animated.Value(1);
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const [position, setPosition] = useState({
@@ -78,9 +76,152 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const actionSheet = useRef<any>();
 
   useEffect(() => {
+    const getNameFormLat = () => {
+      let myApiKey = 'AIzaSyDg4BI3Opn-Bo2Pnr40Z7PKlC6MOv8T598';
+      let myLat = position.latitude;
+      let myLon = position.longitude;
+      fetch(
+        'https://maps.googleapis.com/maps/api/geocode/json?address=' +
+          myLat +
+          ',' +
+          myLon +
+          '&key=' +
+          myApiKey,
+      )
+        .then(response => response.json())
+        .then(responseJson => {
+          setlat(responseJson.results[0].geometry.location.lat);
+          setlong(responseJson.results[0].geometry.location.lng);
+          setAddress(
+            responseJson.results[0].address_components[0].long_name +
+              ' ' +
+              responseJson.results[0].address_components[2].long_name +
+              ' ' +
+              responseJson.results[0].address_components[3].long_name +
+              ' ' +
+              responseJson.results[0].address_components[4].long_name,
+          );
+          QueryLocation.QueryProvince()
+            .then(item => {
+              item.map((Province: any) => {
+                if (
+                  Province.provinceName ==
+                  `จังหวัด${responseJson.results[0].address_components[3].long_name}`
+                ) {
+                  setProvinceId(Province.provinceId);
+                  QueryLocation.QueryDistrict(Province.provinceId)
+                    .then((itemDistrict: any) => {
+                      itemDistrict.map((District: any) => {
+                        if (
+                          District.districtName ===
+                          `${
+                            responseJson.results[0].address_components[2].long_name.split(
+                              ' ',
+                            )[0]
+                          }${
+                            responseJson.results[0].address_components[2].long_name.split(
+                              ' ',
+                            )[1]
+                          }`
+                        ) {
+                          setDistrictId(District.districtId);
+                          QueryLocation.QuerySubDistrict(
+                            District.districtId,
+                            District.districtName,
+                          )
+                            .then(itemSubDistrict => {
+                              itemSubDistrict.map((SubDistrict: any) => {
+                                if (
+                                  SubDistrict.districtName ===
+                                  `${
+                                    responseJson.results[0].address_components[2].long_name.split(
+                                      ' ',
+                                    )[0]
+                                  }${
+                                    responseJson.results[0].address_components[2].long_name.split(
+                                      ' ',
+                                    )[1]
+                                  }`
+                                ) {
+                                  setSubdistrictId(SubDistrict.subdistrictId);
+                                }
+                              });
+                            })
+                            .catch(err => console.log(err));
+                        }
+                      });
+                    })
+                    .catch(err => console.log(err));
+                }
+              });
+            })
+            .catch(err => console.log(err));
+        });
+    };
     getNameFormLat();
   }, [position]);
+
   useEffect(() => {
+    const hasLocationPermission = async () => {
+      if (Platform.OS === 'ios') {
+        const hasPermission = await hasPermissionIOS();
+        return hasPermission;
+      }
+
+      if (Platform.OS === 'android' && Platform.Version < 23) {
+        return true;
+      }
+
+      const hasPermission = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+
+      if (hasPermission) {
+        return true;
+      }
+
+      const status = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+
+      if (status === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      }
+
+      if (status === PermissionsAndroid.RESULTS.DENIED) {
+        ToastAndroid.show(
+          'Location permission denied by user.',
+          ToastAndroid.LONG,
+        );
+      } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+        ToastAndroid.show(
+          'Location permission revoked by user.',
+          ToastAndroid.LONG,
+        );
+      }
+
+      return false;
+    };
+    const getLocation = async () => {
+      const hasPermission = await hasLocationPermission();
+      if (hasPermission) {
+        Geolocation.getCurrentPosition(
+          pos => {
+            setPosition({
+              latitude: pos.coords.latitude,
+              longitude: pos.coords.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            });
+          },
+          error => {
+            // See error code charts below.
+            console.log(error.code, error.message);
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        );
+      }
+    };
     getLocation();
     Register.getDroneBrand(1, 14)
       .then(result => {
@@ -161,89 +302,6 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
     }
   };
 
-  const getNameFormLat = () => {
-    let myApiKey = 'AIzaSyDg4BI3Opn-Bo2Pnr40Z7PKlC6MOv8T598';
-    let myLat = position.latitude;
-    let myLon = position.longitude;
-    fetch(
-      'https://maps.googleapis.com/maps/api/geocode/json?address=' +
-        myLat +
-        ',' +
-        myLon +
-        '&key=' +
-        myApiKey,
-    )
-      .then(response => response.json())
-      .then(responseJson => {
-        setlat(responseJson.results[0].geometry.location.lat);
-        setlong(responseJson.results[0].geometry.location.lng);
-        setAddress(
-          responseJson.results[0].address_components[0].long_name +
-            ' ' +
-            responseJson.results[0].address_components[2].long_name +
-            ' ' +
-            responseJson.results[0].address_components[3].long_name +
-            ' ' +
-            responseJson.results[0].address_components[4].long_name,
-        );
-        QueryLocation.QueryProvince()
-          .then(item => {
-            item.map((Province: any) => {
-              if (
-                Province.provinceName ==
-                `จังหวัด${responseJson.results[0].address_components[3].long_name}`
-              ) {
-                setProvinceId(Province.provinceId);
-                QueryLocation.QueryDistrict(Province.provinceId)
-                  .then((itemDistrict: any) => {
-                    itemDistrict.map((District: any) => {
-                      if (
-                        District.districtName ===
-                        `${
-                          responseJson.results[0].address_components[2].long_name.split(
-                            ' ',
-                          )[0]
-                        }${
-                          responseJson.results[0].address_components[2].long_name.split(
-                            ' ',
-                          )[1]
-                        }`
-                      ) {
-                        setDistrictId(District.districtId);
-                        QueryLocation.QuerySubDistrict(
-                          District.districtId,
-                          District.districtName,
-                        )
-                          .then(itemSubDistrict => {
-                            itemSubDistrict.map((SubDistrict: any) => {
-                              if (
-                                SubDistrict.districtName ===
-                                `${
-                                  responseJson.results[0].address_components[2].long_name.split(
-                                    ' ',
-                                  )[0]
-                                }${
-                                  responseJson.results[0].address_components[2].long_name.split(
-                                    ' ',
-                                  )[1]
-                                }`
-                              ) {
-                                setSubdistrictId(SubDistrict.subdistrictId);
-                              }
-                            });
-                          })
-                          .catch(err => console.log(err));
-                      }
-                    });
-                  })
-                  .catch(err => console.log(err));
-              }
-            });
-          })
-          .catch(err => console.log(err));
-      });
-  };
-
   const hasPermissionIOS = async () => {
     const openSetting = () => {
       Linking.openSettings().catch(() => {
@@ -272,68 +330,6 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
     }
 
     return false;
-  };
-
-  const hasLocationPermission = async () => {
-    if (Platform.OS === 'ios') {
-      const hasPermission = await hasPermissionIOS();
-      return hasPermission;
-    }
-
-    if (Platform.OS === 'android' && Platform.Version < 23) {
-      return true;
-    }
-
-    const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-
-    if (hasPermission) {
-      return true;
-    }
-
-    const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-
-    if (status === PermissionsAndroid.RESULTS.GRANTED) {
-      return true;
-    }
-
-    if (status === PermissionsAndroid.RESULTS.DENIED) {
-      ToastAndroid.show(
-        'Location permission denied by user.',
-        ToastAndroid.LONG,
-      );
-    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-      ToastAndroid.show(
-        'Location permission revoked by user.',
-        ToastAndroid.LONG,
-      );
-    }
-
-    return false;
-  };
-
-  const getLocation = async () => {
-    const hasPermission = await hasLocationPermission();
-    if (hasPermission) {
-      Geolocation.getCurrentPosition(
-        pos => {
-          setPosition({
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          });
-        },
-        error => {
-          // See error code charts below.
-          console.log(error.code, error.message);
-        },
-        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-      );
-    }
   };
 
   const addDrone = () => {
@@ -555,9 +551,9 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                   lat,
                   long,
                 )
-                  .then(res => {
+                  .then(() => {
                     Register.uploadDronerdrone(dronedata)
-                      .then(res => {
+                      .then(() => {
                         setLoading(false);
                         navigation.navigate('FourthFormScreen', {
                           tele: telNo.tele,
@@ -945,7 +941,6 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                     color={colors.orange}
                     onPress={() => {
                       if (image1 == null && image2 != null) {
-                        const arrayfile2 = [...arrayFile2];
                         arrayFile2.push(image2);
                         setArrayFile2(arrayFile2);
                         setImage2(null);
@@ -957,10 +952,8 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                         setdroneno(null);
                         actionSheet.current.hide();
                       } else if (image1 != null && image2 != null) {
-                        const arrayfile1 = [...arrayFile1];
                         arrayFile1.push(image1);
                         setArrayFile1(arrayFile1);
-                        const arrayfile2 = [...arrayFile2];
                         arrayFile2.push(image2);
                         setImage1(null);
                         setImage2(null);
@@ -1084,20 +1077,3 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
   },
 });
-function useCallback(
-  arg0: () => Promise<void>,
-  arg1: {
-    onboard1: any;
-    onboard2: any;
-    onboard3: any;
-    blankNewTask: any;
-    blankTask: any;
-    idcard: any;
-    pirotcer: any;
-    dronecer: any;
-    marker: any;
-    map: any;
-  }[],
-) {
-  throw new Error('Function not implemented.');
-}

@@ -43,7 +43,7 @@ const AddIDcardScreen: React.FC<any> = ({route, navigation}) => {
     if (!result.didCancel) {
       setImage(result);
     }
-  }, [image]);
+  }, []);
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={stylesCentral.container}>
@@ -156,9 +156,9 @@ const AddIDcardScreen: React.FC<any> = ({route, navigation}) => {
                 if (Profile) {
                   setLoading(true);
                   ProfileDatasource.addIdCard(idcard)
-                    .then(res => {
+                    .then(() => {
                       ProfileDatasource.uploadDronerIDCard(image)
-                        .then(res => {
+                        .then(() => {
                           setLoading(false);
                           navigation.navigate('MainScreen');
                         })
@@ -208,9 +208,9 @@ const AddIDcardScreen: React.FC<any> = ({route, navigation}) => {
                     setOpenModal(false);
                     setLoading(true);
                     Register.registerStep4(telNo, idcard)
-                      .then(res => {
+                      .then(() => {
                         Register.uploadDronerIDCard(image)
-                          .then(res => {
+                          .then(() => {
                             setLoading(false);
                             navigation.navigate('SuccessScreen');
                           })

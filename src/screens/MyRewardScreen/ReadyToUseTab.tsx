@@ -6,6 +6,7 @@ import {
   Dimensions,
   RefreshControl,
   TouchableOpacity,
+  LogBox,
 } from 'react-native';
 import React, {useCallback, useEffect} from 'react';
 import {colors, image} from '../../assets';
@@ -14,10 +15,11 @@ import {momentExtend} from '../../function/utility';
 import Text from '../../components/Text';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
-import {useFocusEffect} from '@react-navigation/native';
 import {RedemptionTransaction} from '../../types/MyRewardType';
-import FastImage from 'react-native-fast-image';
+
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 const mappingStatusText = {
   REQUEST: 'พร้อมใช้',
   PREPARE: 'เตรียมจัดส่ง',
@@ -56,6 +58,9 @@ export default function ReadyToUseTab({navigation}: {navigation: any}) {
 
   useEffect(() => {
     getHistoryRewardReadyToUse();
+    LogBox.ignoreLogs([]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onNavigation = async (item: RedemptionTransaction) => {
@@ -98,157 +103,159 @@ export default function ReadyToUseTab({navigation}: {navigation: any}) {
     }
   }, [total, data.length]);
   return (
-    <FlatList
-      onEndReached={onLoadMore}
-      style={{
-        marginTop: 16,
-      }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-      contentContainerStyle={{
-        paddingHorizontal: 16,
-      }}
-      data={data}
-      renderItem={({item}) => {
-        const isMission = item.rewardExchange !== 'SCORE';
-        const statusRedeem = item.redeemDetail.redeemStatus;
+    <NetworkLost onPress={onRefresh}>
+      <FlatList
+        onEndReached={onLoadMore}
+        style={{
+          marginTop: 16,
+        }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+        }}
+        data={data}
+        renderItem={({item}) => {
+          const isMission = item.rewardExchange !== 'SCORE';
+          const statusRedeem = item.redeemDetail.redeemStatus;
 
-        return (
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() => onNavigation(item)}>
-            <FastImage
-              source={{
-                uri: item.imagePath,
-              }}
-              style={{
-                borderRadius: 10,
-                width: 76,
-                height: 76,
-                marginRight: 16,
-              }}
-            />
-            <View
-              style={{
-                width: '75%',
-              }}>
-              <RenderHTML
-                source={{html: item.rewardName}}
-                contentWidth={500}
-                tagsStyles={{
-                  body: {
-                    fontSize: 16,
-                    fontFamily: fonts.medium,
-                  },
+          return (
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() => onNavigation(item)}>
+              <ProgressiveImage
+                source={{
+                  uri: item.imagePath,
+                }}
+                style={{
+                  borderRadius: 10,
+                  width: 76,
+                  height: 76,
+                  marginRight: 16,
                 }}
               />
-              <Text
-                style={{
-                  marginTop: 4,
-                  fontSize: 14,
-                  fontFamily: fonts.light,
-                }}>
-                {`แลกเมื่อ ${momentExtend.toBuddhistYear(
-                  item.redeemDate,
-                  'DD MMM YYYY HH:mm',
-                )}`}
-              </Text>
               <View
                 style={{
-                  marginTop: 4,
-
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flex: 1,
+                  width: '75%',
                 }}>
+                <RenderHTML
+                  source={{html: item.rewardName}}
+                  contentWidth={500}
+                  tagsStyles={{
+                    body: {
+                      fontSize: 16,
+                      fontFamily: fonts.medium,
+                    },
+                  }}
+                />
+                <Text
+                  style={{
+                    marginTop: 4,
+                    fontSize: 14,
+                    fontFamily: fonts.light,
+                  }}>
+                  {`แลกเมื่อ ${momentExtend.toBuddhistYear(
+                    item.redeemDate,
+                    'DD MMM YYYY HH:mm',
+                  )}`}
+                </Text>
                 <View
                   style={{
+                    marginTop: 4,
+
                     flexDirection: 'row',
                     alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flex: 1,
                   }}>
                   <View
                     style={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: 3,
-                      marginRight: 4,
-                      backgroundColor:
-                        mappingStatusColor[
-                          statusRedeem as keyof typeof mappingStatusColor
-                        ],
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: fonts.light,
-                      color: colors.gray,
+                      flexDirection: 'row',
+                      alignItems: 'center',
                     }}>
-                    {
-                      mappingStatusText[
-                        statusRedeem as keyof typeof mappingStatusText
-                      ]
-                    }
-                  </Text>
-                </View>
-                {isMission && (
-                  <View
-                    style={{
-                      borderRadius: 10,
-                      backgroundColor: '#FBCC96',
-                      paddingVertical: 2,
-                      paddingHorizontal: 8,
-                    }}>
+                    <View
+                      style={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: 3,
+                        marginRight: 4,
+                        backgroundColor:
+                          mappingStatusColor[
+                            statusRedeem as keyof typeof mappingStatusColor
+                          ],
+                      }}
+                    />
                     <Text
                       style={{
-                        fontSize: 12,
-                        fontFamily: fonts.semiBold,
-                        color: '#993A03',
+                        fontSize: 14,
+                        fontFamily: fonts.light,
+                        color: colors.gray,
                       }}>
-                      ภารกิจ
+                      {
+                        mappingStatusText[
+                          statusRedeem as keyof typeof mappingStatusText
+                        ]
+                      }
                     </Text>
                   </View>
-                )}
+                  {isMission && (
+                    <View
+                      style={{
+                        borderRadius: 10,
+                        backgroundColor: '#FBCC96',
+                        paddingVertical: 2,
+                        paddingHorizontal: 8,
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontFamily: fonts.semiBold,
+                          color: '#993A03',
+                        }}>
+                        ภารกิจ
+                      </Text>
+                    </View>
+                  )}
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        );
-      }}
-      ListFooterComponent={
-        <View
-          style={{
-            height: 60,
-          }}
-        />
-      }
-      ListEmptyComponent={
-        <View
-          style={{
-            height: Dimensions.get('window').height - 300,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            source={image.emptyReward}
+            </TouchableOpacity>
+          );
+        }}
+        ListFooterComponent={
+          <View
             style={{
-              width: 155,
-              height: 130,
-              marginBottom: 16,
+              height: 60,
             }}
           />
-          <Text
+        }
+        ListEmptyComponent={
+          <View
             style={{
-              fontFamily: fonts.light,
-              fontSize: 16,
-              color: colors.gray,
+              height: Dimensions.get('window').height - 300,
+              justifyContent: 'center',
+              alignItems: 'center',
             }}>
-            ไม่มีรีวอร์ด
-          </Text>
-        </View>
-      }
-    />
+            <Image
+              source={image.emptyReward}
+              style={{
+                width: 155,
+                height: 130,
+                marginBottom: 16,
+              }}
+            />
+            <Text
+              style={{
+                fontFamily: fonts.light,
+                fontSize: 16,
+                color: colors.gray,
+              }}>
+              ไม่มีรีวอร์ด
+            </Text>
+          </View>
+        }
+      />
+    </NetworkLost>
   );
 }
 const styles = StyleSheet.create({

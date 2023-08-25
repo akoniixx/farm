@@ -3,22 +3,26 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  FlatList,
   ScrollView,
   NativeScrollEvent,
   Image,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import fonts from '../../assets/fonts';
 import {normalize} from '../../function/Normalize';
 import colors from '../../assets/colors/colors';
 import dayjs from 'dayjs';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
-import {calTotalPrice, numberWithCommas} from '../../function/utility';
+import {
+  calTotalPrice,
+  momentExtend,
+  numberWithCommas,
+} from '../../function/utility';
 import Divider from '../../components/Divider';
 import image from '../../assets/images/image';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {DataType} from '.';
+import {checkDecimal} from '../../function/checkDecimal';
 
 interface Styles {
   isFocus?: boolean;
@@ -141,7 +145,10 @@ export default function ContentList({
                   paddingHorizontal: 16,
                 }}>
                 <Text style={styles({}).textTitle}>
-                  {dayjs(item.dateAppointment).format('DD/MM/BBBB')}
+                  {`${momentExtend.toBuddhistYear(
+                    item.dateAppointment,
+                    'DD MMM YYYY',
+                  )}`}
                 </Text>
 
                 <View style={{paddingVertical: 8}}>
@@ -158,9 +165,9 @@ export default function ContentList({
                         item?.purposeSpray?.purposeSprayName
                           ? item?.purposeSpray.purposeSprayName
                           : ''
-                      } (${item?.farmerPlot?.plantName}) (${
-                        item?.farmAreaAmount
-                      } ไร่)`}
+                      } (${item?.farmerPlot?.plantName}) (${checkDecimal(
+                        +item?.farmAreaAmount,
+                      )} ไร่)`}
                     </Text>
                     <Text style={styles({}).textMoney}>
                       ฿

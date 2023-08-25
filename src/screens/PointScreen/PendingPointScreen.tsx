@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
+  Dimensions,
   FlatList,
   Image,
   RefreshControl,
@@ -16,14 +17,15 @@ import {colors, font, image} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {PendingPoint} from '../../components/point/PendingPoint';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 
-const PendingPointScreen: React.FC<any> = ({navigation, route}) => {
+const PendingPointScreen: React.FC<any> = () => {
   const [dataAllPoint, setDataAllPoint] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [row, setRow] = useState(10);
+  const [row] = useState(10);
   const [current, setCurrent] = useState(1);
-  const [total, setTotal] = useState(0);
+  const [total] = useState(0);
   useEffect(() => {
     getPendingPoint();
   }, []);
@@ -78,48 +80,52 @@ const PendingPointScreen: React.FC<any> = ({navigation, route}) => {
           แต้มโดยประมาณที่ท่านจะได้รับหลังจากเกษตรกรรีวิวงานเสร็จ
         </Text>
       </View>
-      {dataAllPoint ? (
-        <View
-          style={{
-            backgroundColor: colors.white,
-          }}>
-          <FlatList
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-            onEndReached={loadMoreData}
-            keyExtractor={(item, index) => index.toString()}
-            ListFooterComponent={<View style={{height: normalize(450)}} />}
-            data={dataAllPoint}
-            renderItem={({item, index}) => (
-              <PendingPoint
-                index={index}
-                date={item.createAt}
-                point={item.receivePoint}
-                action={item.campaignName}
-                taskId={item.taskId}
-                taskNo={item.task.taskNo}
-              />
-            )}
-          />
-        </View>
-      ) : (
-        <View
-          style={{
-            alignSelf: 'center',
-            paddingVertical: normalize(150),
-            height: '100%',
-          }}>
-          <Image
-            source={image.pointEmpty}
-            style={{width: normalize(130), height: normalize(120)}}
-          />
-          <View style={{top: normalize(20)}}>
-            <Text style={styles.textEmpty}>ไม่มีคะแนนที่ได้รับ</Text>
-            <Text style={styles.textEmpty}>และการที่ใช้คะแนน</Text>
+      <NetworkLost
+        onPress={onRefresh}
+        height={Dimensions.get('window').height - 300}>
+        {dataAllPoint ? (
+          <View
+            style={{
+              backgroundColor: colors.white,
+            }}>
+            <FlatList
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              onEndReached={loadMoreData}
+              keyExtractor={(item, index) => index.toString()}
+              ListFooterComponent={<View style={{height: normalize(450)}} />}
+              data={dataAllPoint}
+              renderItem={({item, index}) => (
+                <PendingPoint
+                  index={index}
+                  date={item.createAt}
+                  point={item.receivePoint}
+                  action={item.campaignName}
+                  taskId={item.taskId}
+                  taskNo={item.task.taskNo}
+                />
+              )}
+            />
           </View>
-        </View>
-      )}
+        ) : (
+          <View
+            style={{
+              alignSelf: 'center',
+              paddingVertical: normalize(150),
+              height: '100%',
+            }}>
+            <Image
+              source={image.pointEmpty}
+              style={{width: normalize(130), height: normalize(120)}}
+            />
+            <View style={{top: normalize(20)}}>
+              <Text style={styles.textEmpty}>ไม่มีคะแนนที่ได้รับ</Text>
+              <Text style={styles.textEmpty}>และการที่ใช้คะแนน</Text>
+            </View>
+          </View>
+        )}
+      </NetworkLost>
 
       <Spinner
         visible={loading}

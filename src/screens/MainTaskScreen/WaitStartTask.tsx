@@ -1,7 +1,6 @@
 import {normalize} from '@rneui/themed';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {FlatList, Image, Text, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, image} from '../../assets';
 import MainTasklist from '../../components/TaskList/MainTasklist';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
@@ -12,27 +11,43 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {calTotalPrice} from '../../function/utility';
 import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
 import {useAuth} from '../../contexts/AuthContext';
+import {RefreshControl} from 'react-native';
+import Loading from '../../components/Loading/Loading';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
+
+const initialPage = 1;
+const limit = 10;
 const WaitStartTask: React.FC = () => {
-  const [data, setData] = useState<any>([]);
-  const [page, setPage] = useState(1);
+  const [data, setData] = useState<{
+    data: any[];
+    count: number;
+  }>({
+    data: [],
+    count: 0,
+  });
+  const [page, setPage] = useState(initialPage);
   const {
     state: {isDoneAuth},
   } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loadingInfinite, setLoadingInfinite] = useState(false);
   const [checkResIsComplete, setCheckResIsComplete] = useState(false);
 
-  useEffect(() => {
-    getData();
-  }, []);
   useFocusEffect(
     React.useCallback(() => {
       getData();
     }, []),
   );
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getData();
+    setRefreshing(false);
+  }, []);
   const getData = async () => {
     setLoading(true);
     const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
-    TaskDatasource.getTaskById(droner_id, ['WAIT_START'], page, 99)
+    TaskDatasource.getTaskById(droner_id, ['WAIT_START'], initialPage, limit)
       .then(res => {
         setTimeout(() => setLoading(false), 200);
         setData(res);
@@ -42,6 +57,21 @@ const WaitStartTask: React.FC = () => {
         setLoading(false);
         console.log(err);
       });
+  };
+  const onEndReached = async () => {
+    if (data.data.length < data.count) {
+      setLoadingInfinite(true);
+      const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
+      TaskDatasource.getTaskById(droner_id, ['WAIT_START'], page + 1, limit)
+        .then(res => {
+          setData({
+            data: [...data.data, ...res.data],
+            count: res.count,
+          });
+          setPage(page + 1);
+        })
+        .finally(() => setLoadingInfinite(false));
+    }
   };
   const RenderWarningDoc = useMemo(() => {
     if (!isDoneAuth) {
@@ -65,14 +95,14 @@ const WaitStartTask: React.FC = () => {
   }, [isDoneAuth]);
 
   const RenderWarningDocEmpty = useMemo(() => {
-    if (!isDoneAuth && data.length < 1) {
+    if (!isDoneAuth && data.data.length < 1) {
       return () => (
         <View
           style={{
             paddingBottom: 8,
             paddingHorizontal: 8,
-            height : normalize(80),
-            backgroundColor : colors.grayBg
+            height: normalize(80),
+            backgroundColor: colors.grayBg,
           }}>
           <WarningDocumentBox />
         </View>
@@ -83,17 +113,32 @@ const WaitStartTask: React.FC = () => {
   }, [isDoneAuth, data]);
 
   return (
-    <>
+    <NetworkLost onPress={onRefresh}>
       <RenderWarningDocEmpty />
-      {data.length !== 0 && checkResIsComplete ? (
+      {data.data.length !== 0 && checkResIsComplete ? (
         <View style={[{flex: 1}]}>
           <FlatList
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            onEndReached={onEndReached}
             ListHeaderComponent={RenderWarningDoc}
             keyExtractor={element => element.item.taskNo}
-            data={data}
-            extraData={data}
+            data={data.data}
+            extraData={data.data}
             contentContainerStyle={{paddingHorizontal: 8}}
-            ListFooterComponent={<View style={{height: 40}} />}
+            ListFooterComponent={
+              loadingInfinite ? (
+                <View
+                  style={{
+                    padding: 16,
+                  }}>
+                  <Loading spinnerSize={40} />
+                </View>
+              ) : (
+                <View style={{height: 40}} />
+              )
+            }
             renderItem={({item}: any) => (
               <MainTasklist
                 {...item.item}
@@ -137,7 +182,7 @@ const WaitStartTask: React.FC = () => {
         textContent={'Loading...'}
         textStyle={{color: '#FFF'}}
       />
-    </>
+    </NetworkLost>
   );
 };
 export default WaitStartTask;

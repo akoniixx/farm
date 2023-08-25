@@ -57,7 +57,7 @@ export const CardGuru: React.FC<guruData> = ({
               {date}
             </Text>
             <Text style={[styles.textDate, {left: 15}]} numberOfLines={1}>
-              {`อ่านแล้ว ` + read + ` ครั้ง`}
+              {'อ่านแล้ว ' + read + ' ครั้ง'}
             </Text>
           </View>
           {isPinned && (
