@@ -465,7 +465,7 @@ PODS:
     - React
   - react-native-maps (1.3.2):
     - React-Core
-  - react-native-notifications (5.0.0):
+  - react-native-notifications (4.3.3):
     - React-Core
   - react-native-pager-view (6.2.0):
     - React-Core
@@ -895,7 +895,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: bf34f3f516d139ed3e24c5f5a381a91819e349ea
   react-native-kill-app: ccfc7722345b53a3c6abf8e78c800b79a387135d
   react-native-maps: 085f614cf14d3637b2048bb9752da5b1c27c2886
-  react-native-notifications: d309f7080aad71206882dbb98d9ed788969f3b6d
+  react-native-notifications: 83b4fd4a127a6c918fc846cae90da60f84819e44
   react-native-pager-view: 0ccb8bf60e2ebd38b1f3669fa3650ecce81db2df
   react-native-render-html: 984dfe2294163d04bf5fe25d7c9f122e60e05ebe
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc

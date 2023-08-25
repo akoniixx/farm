@@ -28,7 +28,6 @@ import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { useAuth } from '../../contexts/AuthContext';
-import fonts from '../../assets/fonts';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { mixpanel, mixpanel_token } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
@@ -292,13 +291,17 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           $token: mixpanel_token,
           $distinct_id: await mixpanel.getDistinctId(),
           $set: profiles,
+          $name: `${profiles.firstname} ${profiles.lastname}`,
+          $telephoneNo: profiles.telephoneNo,
+          $farmerId: profiles.id,
+          $email: profiles.email ? profiles.email : 'NONE',
         },
       ]),
     };
 
     fetch('https://api.mixpanel.com/engage#profile-set', options)
       .then(response => response.json())
-      .then(response => console.log(response))
+
       .catch(err => console.error(err));
   };
 
@@ -346,11 +349,14 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     alignItems: 'center',
                   }}>
                   <TouchableOpacity
-                    onPress={() =>
+                    onPress={() => {
+                      mixpanel.track('MainScreen_ButtonNotification_Press', {
+                        navigateTo: 'NotificationScreen',
+                      });
                       navigation.navigate('NotificationScreen', {
                         data: notiData?.data,
-                      })
-                    }>
+                      });
+                    }}>
                     {showBell ? (
                       <Image
                         source={
@@ -371,7 +377,12 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     style={{
                       marginLeft: 10,
                     }}
-                    onPress={() => navigation.navigate('DetailPointScreen')}>
+                    onPress={() => {
+                      mixpanel.track('MainScreen_ButtonPoint_Press', {
+                        navigateTo: 'DetailPointScreen',
+                      });
+                      navigation.navigate('DetailPointScreen');
+                    }}>
                     <LinearGradient
                       colors={['#41D981', '#26A65C']}
                       start={{ x: 0.85, y: 0.25 }}
@@ -420,7 +431,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     if (disableBooking) {
                       setShowModalCantBooking(true);
                     } else {
-                      mixpanel.track('Tab booking with login');
+                      mixpanel.track('MainScreen_ButtonBookingTask_Press', {
+                        navigateTo: 'SelectDateScreen',
+                      });
                       navigation.navigate('SelectDateScreen', {
                         isSelectDroner: false,
                         profile: {},
@@ -445,10 +458,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     <Text style={styles.font}>จ้างโดรนเกษตร</Text>
                   </LinearGradient>
                 </TouchableOpacity>
-                <View style={{ width: normalize(10) }}></View>
                 <TouchableOpacity
                   onPress={() => {
-                    mixpanel.track('Tab your plot with login');
+                    mixpanel.track('MainScreen_ButtonMyPlot_Press', {
+                      navigateTo: 'AllPlotScreen',
+                    });
                     navigation.navigate('AllPlotScreen');
                   }}>
                   <LinearGradient
@@ -987,7 +1001,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     </Text>
                     <TouchableOpacity
                       onPress={() => {
-                        mixpanel.track('Tab to all guru list ');
+                        mixpanel.track('MainScreen_ButtonAllGuru_Press', {
+                          navigateTo: 'AllGuruScreen',
+                        });
                         navigation.navigate('AllGuruScreen');
                       }}>
                       <Text
@@ -1093,7 +1109,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     <ScrollView
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}>
-                      {taskSugUsed.length != undefined &&
+                      {taskSugUsed.length !== undefined &&
                         taskSugUsed.map((item: any, index: number) => (
                           <TouchableOpacity
                             key={index}
@@ -1198,7 +1214,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   <ScrollView
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}>
-                    {taskSug.length != undefined &&
+                    {taskSug.length !== undefined &&
                       taskSug.map((item: any, index: any) => (
                         <TouchableOpacity
                           key={index}
@@ -1206,6 +1222,13 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                             await AsyncStorage.setItem(
                               'droner_id',
                               `${item.droner_id}`,
+                            );
+                            mixpanel.track(
+                              'MainScreen_ButtonDronerSuggest_Press',
+                              {
+                                dronerId: item.droner_id,
+                                navigateTo: 'DronerDetailScreen',
+                              },
                             );
                             navigation.push('DronerDetail');
                           }}>
@@ -1230,9 +1253,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                                 farmer_id !== null ? farmer_id : '',
                                 droner_id[index],
                               )
-                                .then(res => {
+                                .then(() => {
                                   setRefresh(!refresh);
-                                  let newTaskSug = taskSug.map((x, i) => {
+                                  let newTaskSug = taskSug.map(x => {
                                     let result = {};
                                     if (x.droner_id === item.droner_id) {
                                       let a =
@@ -1273,6 +1296,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               }}>
               <TouchableOpacity
                 onPress={() => {
+                  mixpanel.track('MainScreen_ButtonCallCenter_Press', {
+                    callcenterNumber: callcenterNumber,
+                  });
                   Linking.openURL(`tel:${callcenterNumber}`);
                 }}
                 style={{
@@ -1362,6 +1388,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         <TouchableOpacity
           style={styles.footer}
           onPress={() => {
+            mixpanel.track('MainScreen_ButtonSlipWaiting_Press', {
+              taskId: dataFinding.id,
+              navigateTo: 'SlipWaitingScreen',
+            });
             navigation.navigate('SlipWaitingScreen', {
               taskId: dataFinding.id,
             });
@@ -1413,9 +1443,17 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           text={profilestate.status}
           show={showModalCantBooking}
           onClose={() => {
+            mixpanel.track('MainScreen_ModalButton_Press', {
+              event: 'close',
+              description: 'alert cant booking',
+            });
             setShowModalCantBooking(false);
           }}
           onMainClick={() => {
+            mixpanel.track('MainScreen_ModalButton_Press', {
+              event: 'close',
+              description: 'alert cant booking',
+            });
             setShowModalCantBooking(false);
           }}
         />

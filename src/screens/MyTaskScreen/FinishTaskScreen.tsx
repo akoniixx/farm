@@ -42,6 +42,7 @@ const FinishScreen: React.FC<any> = ({}) => {
     };
     MyJobDatasource.getMyJobsList(params)
       .then(res => {
+        console.log(JSON.stringify(res, null, 2));
         setTaskList(res);
       })
       .catch(err => console.log(err))
@@ -57,7 +58,6 @@ const FinishScreen: React.FC<any> = ({}) => {
       getTaskList();
     }, []),
   );
-  console.log(JSON.stringify(taskList, null, 2));
   return (
     <>
       <View

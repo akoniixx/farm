@@ -3,21 +3,16 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   ImageBackground,
   Platform,
   TouchableOpacity,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
-import fonts from '../../assets/fonts';
 import { Avatar } from '@rneui/base';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ProfileDatasource } from '../../datasource/ProfileDatasource';
-import { TaskSuggestion } from '../../datasource/TaskSuggestion';
-import { FavoriteDroner } from '../../datasource/FavoriteDroner';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
+
+import { mixpanel } from '../../../mixpanel';
 
 interface dronerData {
   index: any;
@@ -67,7 +62,19 @@ const DronerSugg: React.FC<dronerData> = ({
                 alignSelf: 'flex-end',
                 margin: 10,
               }}>
-              <TouchableOpacity onPress={callBack}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (status === 'ACTIVE') {
+                    mixpanel.track(
+                      'MainScreen_ButtonFavoriteDroner_PressUnFavorite',
+                    );
+                  } else {
+                    mixpanel.track(
+                      'MainScreen_ButtonFavoriteDroner_PressFavorite',
+                    );
+                  }
+                  callBack();
+                }}>
                 <Image
                   source={
                     status === 'ACTIVE' ? icons.heart_active : icons.heart

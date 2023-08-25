@@ -11,11 +11,9 @@ import {
 import { colors, font, image } from '../../assets';
 import { normalize } from '../../functions/Normalize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { TaskSuggestion } from '../../datasource/TaskSuggestion';
-import { ProfileDatasource } from '../../datasource/ProfileDatasource';
-import { initProfileState, profileReducer } from '../../hook/profilefield';
+
 import { useIsFocused } from '@react-navigation/native';
-import AllDroner from '../../components/Carousel/AllDronerUsed';
+
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import FavDronerUsedList from '../../components/Carousel/FavDronerUsedList';

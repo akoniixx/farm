@@ -1,10 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
 import { normalize } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, TouchableOpacity, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import { font, image } from '../../assets';
+
 import colors from '../../assets/colors/colors';
 import { CardTask } from '../../components/Mytask/CardTask';
 import { Filter } from '../../components/Mytask/Filter';
@@ -15,7 +14,9 @@ import { MyJobDatasource } from '../../datasource/MyJobDatasource';
 import { SearchMyJobsEntites } from '../../entites/SearchMyJobsEntites';
 import * as RootNavigation from '../../navigations/RootNavigation';
 
-const InprogressScreen: React.FC<any> = ({ route, navigation }) => {
+const initialPage = 1;
+const limit = 10;
+const InprogressScreen: React.FC<any> = ({}) => {
   const [taskList, setTaskList] = useState([]);
   const [selectedField, setSelectedField] = useState({
     name: 'ใกล้ถึงวันงาน',
@@ -51,9 +52,12 @@ const InprogressScreen: React.FC<any> = ({ route, navigation }) => {
       sortField: selectedField.value,
       sortDirection: selectedField.direction,
       filterStatus: selectedStatus.value,
+      page: 1,
+      take: limit,
     };
     MyJobDatasource.getMyJobsList(params)
       .then(res => {
+        console.log('resJob', JSON.stringify(res, null, 2));
         setTaskList(res);
       })
       .catch(err => console.log(err))

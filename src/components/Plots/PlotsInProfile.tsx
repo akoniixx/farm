@@ -1,16 +1,8 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Dimensions,
-} from 'react-native';
+import { Image, StyleSheet, Text, View, Dimensions } from 'react-native';
 import React from 'react';
 import { normalize } from '../../functions/Normalize';
-import { colors, font, icons, image } from '../../assets';
+import { colors, font, icons } from '../../assets';
 import fonts from '../../assets/fonts';
-import { Avatar } from '@rneui/base';
 
 interface plotData {
   index: number;

@@ -4,6 +4,8 @@ export interface SearchMyJobsEntites {
   sortField: string;
   sortDirection?: string;
   filterStatus: string;
+  take?: number;
+  page?: number;
 }
 export interface DelayTask {
   date_delay?: any;
