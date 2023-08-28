@@ -2,7 +2,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { normalize } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  Image,
+  RefreshControl,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { font, image } from '../../assets';
 import colors from '../../assets/colors/colors';
@@ -10,15 +17,23 @@ import { CardTask } from '../../components/Mytask/CardTask';
 import { Filter } from '../../components/Mytask/Filter';
 import { FilterFinish } from '../../components/Mytask/FilterFinish';
 import { StatusFilterFinish } from '../../components/Mytask/StatusFilterFinish';
-import { StatusFilterInprogress } from '../../components/Mytask/StatusFilterInprogress';
 
 import { EmptyTask } from '../../components/TaskDetail/emptyTask';
 import { MyJobDatasource } from '../../datasource/MyJobDatasource';
 import { SearchMyJobsEntites } from '../../entites/SearchMyJobsEntites';
 import * as RootNavigation from '../../navigations/RootNavigation';
 
+const initialPage = 1;
+const limit = 10;
 const FinishScreen: React.FC<any> = ({}) => {
-  const [taskList, setTaskList] = useState([]);
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const [taskList, setTaskList] = useState<{
+    data: any[];
+    total: number;
+  }>({
+    data: [],
+    total: 0,
+  });
   const [selectedField, setSelectedField] = useState({
     name: 'งานล่าสุด',
     value: 'date_appointment',
@@ -29,6 +44,7 @@ const FinishScreen: React.FC<any> = ({}) => {
     value: 'ALL',
   });
   const [loading, setLoading] = useState<boolean>(false);
+  const [page, setPage] = useState(initialPage);
 
   const getTaskList = async () => {
     setLoading(true);
@@ -39,10 +55,11 @@ const FinishScreen: React.FC<any> = ({}) => {
       sortField: selectedField.value,
       sortDirection: selectedField.direction,
       filterStatus: selectedStatus.value,
+      page: 1,
+      take: limit,
     };
     MyJobDatasource.getMyJobsList(params)
       .then(res => {
-        console.log(JSON.stringify(res, null, 2));
         setTaskList(res);
       })
       .catch(err => console.log(err))
@@ -53,11 +70,42 @@ const FinishScreen: React.FC<any> = ({}) => {
     getTaskList();
   }, [selectedField, selectedStatus]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getTaskList();
-    }, []),
-  );
+  const onLoadMore = async () => {
+    try {
+      if (taskList.data.length >= taskList.total) {
+        return;
+      }
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      const params: SearchMyJobsEntites = {
+        farmerId: farmer_id,
+        stepTab: '1',
+        sortField: selectedField.value,
+        sortDirection: selectedField.direction,
+        filterStatus: selectedStatus.value,
+        page: page + 1,
+        take: limit,
+      };
+      MyJobDatasource.getMyJobsList(params)
+        .then(res => {
+          setTaskList({
+            data: [...taskList.data, ...res.data],
+            total: res.total,
+          });
+          setPage(page + 1);
+        })
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const onRefresh = async () => {
+    setPage(initialPage);
+    setRefresh(true);
+    await getTaskList();
+    setRefresh(false);
+  };
+
   return (
     <>
       <View
@@ -82,9 +130,13 @@ const FinishScreen: React.FC<any> = ({}) => {
           />
         </View>
         <View style={{ flex: 1 }}>
-          {taskList.length > 0 ? (
+          {taskList.data.length > 0 ? (
             <FlatList
-              data={taskList}
+              onEndReached={onLoadMore}
+              refreshControl={
+                <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+              }
+              data={taskList.data}
               renderItem={({ item, index }) => (
                 <TouchableOpacity
                   key={index}

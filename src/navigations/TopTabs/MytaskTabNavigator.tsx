@@ -14,7 +14,10 @@ const renderTabBar = (props: any) => (
     style={{ backgroundColor: colors.white }}
     renderLabel={({ route, focused, color }) => (
       <Text
-        style={[styles.label, { color: focused ? '#1F8449' : colors.gray }]}>
+        style={[
+          styles.label,
+          { color: focused ? '#1F8449' : colors.gray, lineHeight: 30 },
+        ]}>
         {route.title}
       </Text>
     )}
@@ -25,11 +28,6 @@ const renderTabBar = (props: any) => (
 //   task: TaskScreen,
 //   newTask: NewTaskScreen,
 // });
-
-interface Prop {
-  isOpenReceiveTask: boolean;
-  dronerStatus: string;
-}
 
 const MyTaskTapNavigator: React.FC<any> = ({}) => {
   const layout = useWindowDimensions();

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useReducer, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Image,
   ImageBackground,
@@ -21,18 +21,15 @@ import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
-import { CallingModal } from '../../components/Modal/CallingModal';
 import { DronerCard } from '../../components/Mytask/DronerCard';
 import { MyTaskDateTimeDetail } from '../../components/Mytask/MyTaskDetail';
 import {
-  DateTimeDetail,
   PlotDetail,
   TargetSpray,
 } from '../../components/TaskDetail/TaskDetail';
 import { MyJobDatasource } from '../../datasource/MyJobDatasource';
 import { normalize } from '../../functions/Normalize';
 import { getStatusToText, numberWithCommas } from '../../functions/utility';
-import { initProfileState, profileReducer } from '../../hook/profilefield';
 import Banner from '../../components/Banner/Banner';
 
 interface Campaign {
@@ -615,7 +612,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                       1. มารยาทนักบิน
                     </Text>
                     <View style={styles.reviewBar}>
-                      {maxRatting.map((item, key) => {
+                      {maxRatting.map(item => {
                         return (
                           <TouchableOpacity
                             activeOpacity={0.9}

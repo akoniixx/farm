@@ -8,9 +8,9 @@ import {
   View,
   Image,
 } from 'react-native';
-import { Picker, onOpen } from 'react-native-actions-sheet-picker';
+import { Picker, onOpen, onClose } from 'react-native-actions-sheet-picker';
 import { colors, font, icons } from '../../assets';
-import { sortField, sortFieldFinish } from '../../definitions/taskFilter';
+import { sortFieldFinish } from '../../definitions/taskFilter';
 
 interface props {
   selectedField: {
@@ -25,12 +25,11 @@ export const FilterFinish: React.FC<props> = ({
   selectedField,
   setSelectedField,
 }) => {
-  const [field, setField] = useState<any>([]);
+  // const [field, setField] = useState([]);
 
-  useEffect(() => {
-    setField(sortFieldFinish);
-  }, []);
-
+  // useEffect(() => {
+  //   setField();
+  // }, []);
   return (
     <>
       <TouchableOpacity
@@ -58,8 +57,81 @@ export const FilterFinish: React.FC<props> = ({
 
       <Picker
         id="field"
-        data={field}
-        label="เรียงลำดับงาน"
+        data={sortFieldFinish}
+        actionsSheetProps={{
+          children: <View />,
+          containerStyle: {
+            height: 300,
+            borderRadius: 20,
+            padding: 0,
+          },
+        }}
+        flatListProps={{
+          contentContainerStyle: {
+            paddingHorizontal: 0,
+          },
+          ListHeaderComponent: () => {
+            return (
+              <>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    minHeight: 40,
+                    paddingHorizontal: 20,
+                    marginBottom: 10,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanMedium,
+                      fontSize: normalize(20),
+                    }}>
+                    แสดงสถานะงาน
+                  </Text>
+                  <TouchableOpacity>
+                    <Text
+                      style={{
+                        fontFamily: font.SarabunMedium,
+                        fontSize: normalize(20),
+                        color: colors.greenLight,
+                      }}>
+                      ยกเลิก
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.separator} />
+              </>
+            );
+          },
+          data: sortFieldFinish,
+          keyExtractor: (item, index) => index.toString(),
+          renderItem: ({ item }) => {
+            return (
+              <View
+                style={{
+                  paddingLeft: 20,
+                }}>
+                <TouchableOpacity
+                  style={styles.row}
+                  onPress={() => {
+                    onClose('field');
+                    setSelectedField(item);
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.SarabunLight,
+                      fontSize: normalize(20),
+                      color: colors.fontBlack,
+                    }}>
+                    {item.name}
+                  </Text>
+                </TouchableOpacity>
+                <View style={styles.separator} />
+              </View>
+            );
+          },
+        }}
         setSelected={setSelectedField}
       />
     </>
@@ -82,5 +154,15 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
     fontFamily: font.SarabunMedium,
     color: '#8D96A0',
+  },
+  row: {
+    flexDirection: 'row',
+    height: 60,
+    alignItems: 'center',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: colors.disable,
+    width: '100%',
   },
 });
