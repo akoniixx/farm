@@ -21,6 +21,7 @@ import SelectDronerCouponModal from '../../components/Modal/SelectDronerCoupon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import VerifyStatus from '../../components/Modal/VerifyStatus';
+import { mixpanel } from '../../../mixpanel';
 
 const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
@@ -71,6 +72,12 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
         show={modal}
         onClose={() => setModal(false)}
         onMainClick={() => {
+          mixpanel.track(
+            'MyCouponUsedScreen_SelectDronerCouponModalMainButton_tapped',
+            {
+              changeTo: 'DronerUsedScreen',
+            },
+          );
           RootNavigation.navigate('DronerUsedScreen', {
             isSelectDroner: true,
             profile: {},
@@ -78,6 +85,12 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
           setModal(false);
         }}
         onBottomClick={() => {
+          mixpanel.track(
+            'MyCouponUsedScreen_SelectDronerCouponModalMainButton_tapped',
+            {
+              changeTo: 'SelectDateScreen',
+            },
+          );
           RootNavigation.navigate('SelectDateScreen', {
             isSelectDroner: false,
             profile: {},
@@ -94,46 +107,56 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
             onScrollEndDrag={onScrollEnd}
             data={data}
             ListFooterComponent={<View style={{ height: normalize(250) }} />}
-            renderItem={({ item }) => (
-              <CouponCard
-                id={item.promotion.id}
-                couponCode={item.promotion.couponCode}
-                couponName={item.promotion.couponName}
-                couponType={item.promotion.couponType}
-                promotionType={item.promotion.promotionType}
-                promotionStatus={item.promotion.promotionStatus}
-                discountType={item.promotion.discountType}
-                discount={item.promotion.discount}
-                count={item.promotion.count}
-                keep={item.promotion.keep}
-                used={item.promotion.used}
-                startDate={item.promotion.startDate}
-                expiredDate={item.promotion.expiredDate}
-                description={item.promotion.description}
-                condition={item.promotion.condition}
-                conditionSpecificFarmer={item.promotion.conditionSpecificFarmer}
-                couponConditionRai={item.promotion.couponConditionRai}
-                couponConditionRaiMin={item.promotion.couponConditionRaiMin}
-                couponConditionRaiMax={item.promotion.couponConditionRaiMax}
-                couponConditionService={item.promotion.couponConditionService}
-                couponConditionServiceMin={
-                  item.promotion.couponConditionServiceMin
-                }
-                couponConditionServiceMax={
-                  item.promotion.couponConditionServiceMax
-                }
-                couponConditionPlant={item.promotion.couponConditionPlant}
-                couponConditionPlantList={
-                  item.promotion.couponConditionPlantList
-                }
-                couponConditionProvince={item.promotion.couponConditionProvince}
-                couponConditionProvinceList={
-                  item.promotion.couponConditionProvinceList
-                }
-                keepthis={false}
-                disabled={true}
-              />
-            )}
+            renderItem={({ item }) => {
+              return (
+                <CouponCard
+                  id={item.promotion.id}
+                  couponCode={
+                    item.promotion.promotionType === 'ONLINE'
+                      ? item.promotion.couponCode
+                      : item.offlineCode
+                  }
+                  couponName={item.promotion.couponName}
+                  couponType={item.promotion.couponType}
+                  promotionType={item.promotion.promotionType}
+                  promotionStatus={item.promotion.promotionStatus}
+                  discountType={item.promotion.discountType}
+                  discount={item.promotion.discount}
+                  count={item.promotion.count}
+                  keep={item.promotion.keep}
+                  used={item.promotion.used}
+                  startDate={item.promotion.startDate}
+                  expiredDate={item.promotion.expiredDate}
+                  description={item.promotion.description}
+                  condition={item.promotion.condition}
+                  conditionSpecificFarmer={
+                    item.promotion.conditionSpecificFarmer
+                  }
+                  couponConditionRai={item.promotion.couponConditionRai}
+                  couponConditionRaiMin={item.promotion.couponConditionRaiMin}
+                  couponConditionRaiMax={item.promotion.couponConditionRaiMax}
+                  couponConditionService={item.promotion.couponConditionService}
+                  couponConditionServiceMin={
+                    item.promotion.couponConditionServiceMin
+                  }
+                  couponConditionServiceMax={
+                    item.promotion.couponConditionServiceMax
+                  }
+                  couponConditionPlant={item.promotion.couponConditionPlant}
+                  couponConditionPlantList={
+                    item.promotion.couponConditionPlantList
+                  }
+                  couponConditionProvince={
+                    item.promotion.couponConditionProvince
+                  }
+                  couponConditionProvinceList={
+                    item.promotion.couponConditionProvinceList
+                  }
+                  keepthis={false}
+                  disabled={true}
+                />
+              );
+            }}
             keyExtractor={item => item.promotion.id}
           />
         </View>
@@ -166,9 +189,12 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
         <MainButton
           label="จ้างนักบินโดรน"
           color={colors.greenLight}
-          onPress={() =>
-            status !== 'ACTIVE' ? setModalVerify(true) : setModal(true)
-          }
+          onPress={() => {
+            mixpanel.track('MyCouponUsedScreen_MainButtonTask_tapped', {
+              status,
+            });
+            status !== 'ACTIVE' ? setModalVerify(true) : setModal(true);
+          }}
         />
       </View>
       <Modal animationType="fade" transparent={true} visible={modalVerify}>
@@ -176,9 +202,15 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
           text={status}
           show={modalVerify}
           onClose={() => {
+            mixpanel.track(
+              'MyCouponUsedScreen_ModalVerifyStatusOnClose_tapped',
+            );
             setModalVerify(false);
           }}
           onMainClick={() => {
+            mixpanel.track(
+              'MyCouponUsedScreen_ModalVerifyStatusOnMainClick_tapped',
+            );
             setModalVerify(false);
           }}
         />

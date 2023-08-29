@@ -19,13 +19,14 @@ import * as RootNavigation from '../../navigations/RootNavigation';
 import SelectDronerCouponModal from '../../components/Modal/SelectDronerCoupon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import VerifyStatus from '../../components/Modal/VerifyStatus';
+import { mixpanel } from '../../../mixpanel';
 
 const MyCouponExpiredScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [data, setData] = useState<any[]>([]);
+
   const [modal, setModal] = useState<boolean>(false);
   const [modalVerify, setModalVerify] = useState<boolean>(false);
   const [status, setStatus] = useState();
@@ -94,47 +95,57 @@ const MyCouponExpiredScreen: React.FC<any> = ({ navigation, route }) => {
             onScrollEndDrag={onScrollEnd}
             data={data}
             ListFooterComponent={<View style={{ height: normalize(250) }} />}
-            renderItem={({ item }) => (
-              <CouponCard
-                id={item.promotion.id}
-                couponCode={item.promotion.couponCode}
-                couponName={item.promotion.couponName}
-                couponType={item.promotion.couponType}
-                promotionType={item.promotion.promotionType}
-                promotionStatus={item.promotion.promotionStatus}
-                discountType={item.promotion.discountType}
-                discount={item.promotion.discount}
-                count={item.promotion.count}
-                keep={item.promotion.keep}
-                used={item.promotion.used}
-                startDate={item.promotion.startDate}
-                expiredDate={item.promotion.expiredDate}
-                description={item.promotion.description}
-                condition={item.promotion.condition}
-                conditionSpecificFarmer={item.promotion.conditionSpecificFarmer}
-                couponConditionRai={item.promotion.couponConditionRai}
-                couponConditionRaiMin={item.promotion.couponConditionRaiMin}
-                couponConditionRaiMax={item.promotion.couponConditionRaiMax}
-                couponConditionService={item.promotion.couponConditionService}
-                couponConditionServiceMin={
-                  item.promotion.couponConditionServiceMin
-                }
-                couponConditionServiceMax={
-                  item.promotion.couponConditionServiceMax
-                }
-                couponConditionPlant={item.promotion.couponConditionPlant}
-                couponConditionPlantList={
-                  item.promotion.couponConditionPlantList
-                }
-                couponConditionProvince={item.promotion.couponConditionProvince}
-                couponConditionProvinceList={
-                  item.promotion.couponConditionProvinceList
-                }
-                keepthis={false}
-                disabled={true}
-                expired={true}
-              />
-            )}
+            renderItem={({ item }) => {
+              return (
+                <CouponCard
+                  id={item.promotion.id}
+                  couponCode={
+                    item.promotion.promotionType === 'ONLINE'
+                      ? item.promotion.couponCode
+                      : item.offlineCode
+                  }
+                  couponName={item.promotion.couponName}
+                  couponType={item.promotion.couponType}
+                  promotionType={item.promotion.promotionType}
+                  promotionStatus={item.promotion.promotionStatus}
+                  discountType={item.promotion.discountType}
+                  discount={item.promotion.discount}
+                  count={item.promotion.count}
+                  keep={item.promotion.keep}
+                  used={item.promotion.used}
+                  startDate={item.promotion.startDate}
+                  expiredDate={item.promotion.expiredDate}
+                  description={item.promotion.description}
+                  condition={item.promotion.condition}
+                  conditionSpecificFarmer={
+                    item.promotion.conditionSpecificFarmer
+                  }
+                  couponConditionRai={item.promotion.couponConditionRai}
+                  couponConditionRaiMin={item.promotion.couponConditionRaiMin}
+                  couponConditionRaiMax={item.promotion.couponConditionRaiMax}
+                  couponConditionService={item.promotion.couponConditionService}
+                  couponConditionServiceMin={
+                    item.promotion.couponConditionServiceMin
+                  }
+                  couponConditionServiceMax={
+                    item.promotion.couponConditionServiceMax
+                  }
+                  couponConditionPlant={item.promotion.couponConditionPlant}
+                  couponConditionPlantList={
+                    item.promotion.couponConditionPlantList
+                  }
+                  couponConditionProvince={
+                    item.promotion.couponConditionProvince
+                  }
+                  couponConditionProvinceList={
+                    item.promotion.couponConditionProvinceList
+                  }
+                  keepthis={false}
+                  disabled={true}
+                  expired={true}
+                />
+              );
+            }}
             keyExtractor={item => item.promotion.id}
           />
         </View>
@@ -177,9 +188,15 @@ const MyCouponExpiredScreen: React.FC<any> = ({ navigation, route }) => {
           text={status}
           show={modalVerify}
           onClose={() => {
+            mixpanel.track(
+              'MyCouponUsedScreen_ModalVerifyStatusOnClose_tapped',
+            );
             setModalVerify(false);
           }}
           onMainClick={() => {
+            mixpanel.track(
+              'MyCouponUsedScreen_ModalVerifyStatusOnMainClick_tapped',
+            );
             setModalVerify(false);
           }}
         />

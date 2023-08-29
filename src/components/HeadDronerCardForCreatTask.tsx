@@ -41,22 +41,29 @@ const HeadDronerCardForCreatTask: React.FC<Prop> = ({
           padding: normalize(12),
           backgroundColor: '#F7FFF0',
         }}>
-        <Image
+        <View
           style={{
-            height: normalize(32),
-            width: normalize(32),
-            borderRadius: 50,
-          }}
-          source={{ uri: image }}
-        />
-        <Text
-          style={{
-            fontFamily: font.SarabunMedium,
-            fontSize: normalize(18),
-            color: '#5F6872',
+            flexDirection: 'row',
+            alignItems: 'center',
           }}>
-          {name}
-        </Text>
+          <Image
+            style={{
+              height: normalize(32),
+              width: normalize(32),
+              borderRadius: 50,
+              marginRight: normalize(8),
+            }}
+            source={{ uri: image }}
+          />
+          <Text
+            style={{
+              fontFamily: font.SarabunMedium,
+              fontSize: normalize(18),
+              color: '#5F6872',
+            }}>
+            {name}
+          </Text>
+        </View>
         <TouchableOpacity
           style={{ flexDirection: 'row', alignItems: 'baseline' }}
           onPress={() => {
@@ -72,7 +79,7 @@ const HeadDronerCardForCreatTask: React.FC<Prop> = ({
           </Text>
           <Image
             source={icons.arrowRightGrey}
-            style={{ width: normalize(24), height: normalize(12) }}
+            style={{ width: normalize(28), height: normalize(16) }}
           />
         </TouchableOpacity>
       </View>

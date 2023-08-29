@@ -16,7 +16,7 @@ export interface PayloadCal {
   cropName: string;
   raiAmount: number;
   couponCode: string;
-  usePoint: number;
+  usePoint?: number;
 }
 
 export class PlotDatasource {
