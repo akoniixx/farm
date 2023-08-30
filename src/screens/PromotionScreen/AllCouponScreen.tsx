@@ -7,6 +7,7 @@ import { normalize } from '@rneui/themed';
 import CouponCard from '../../components/CouponCard/CouponCard';
 import { CouponCardEntities } from '../../entites/CouponCard';
 import { useFocusEffect } from '@react-navigation/native';
+import { mixpanel } from '../../../mixpanel';
 
 const AllCouponScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
@@ -54,6 +55,7 @@ const AllCouponScreen: React.FC<any> = ({ navigation, route }) => {
         title="สิทธิพิเศษทั้งหมด"
         showBackBtn
         onPressBack={() => {
+          mixpanel.track('AllCouponScreen_ButtonBack_tapped');
           navigation.goBack();
         }}
       />
