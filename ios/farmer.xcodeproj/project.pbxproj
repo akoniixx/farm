@@ -20,8 +20,6 @@
 		350B0960CDD7457D8DC4E862 /* receivetasksuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = D18E7E29A0F34983BE96F780 /* receivetasksuccess.wav */; };
 		4E0E688E542C429A8E49A91D /* Sarabun-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3CB3D555E4984153AE4BA2D5 /* Sarabun-Medium.ttf */; };
 		5074541692BF49118BE96830 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E354E12A922F4E29915ECEC5 /* EvilIcons.ttf */; };
-		607998622A7297E1006EC06D /* iconkaset.wav in Resources */ = {isa = PBXBuildFile; fileRef = 607998612A7297E1006EC06D /* iconkaset.wav */; };
-		607998642A7297E7006EC06D /* receivetasksuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = 607998632A7297E7006EC06D /* receivetasksuccess.wav */; };
 		60F1F01829266B65007549EB /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 60F1F01729266B63007549EB /* fonts */; };
 		64A332CA74844D35B3393CAF /* Sarabun-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2FE69C8B24DA43A3A19E6C72 /* Sarabun-Bold.ttf */; };
 		6D8D1046338E437AB06BD36F /* libPods-farmer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1D988025A77D758AF25144 /* libPods-farmer.a */; };
@@ -76,8 +74,6 @@
 		4F4087F42B2843228EE8D8D8 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = ../src/assets/fonts/Octicons.ttf; sourceTree = "<group>"; };
 		50A411CBB8631D30BDB91777 /* Pods-farmer-farmerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer-farmerTests.release.xcconfig"; path = "Target Support Files/Pods-farmer-farmerTests/Pods-farmer-farmerTests.release.xcconfig"; sourceTree = "<group>"; };
 		5536E3154E7B34B92E50187B /* Pods-farmer-farmerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer-farmerTests.debug.xcconfig"; path = "Target Support Files/Pods-farmer-farmerTests/Pods-farmer-farmerTests.debug.xcconfig"; sourceTree = "<group>"; };
-		607998612A7297E1006EC06D /* iconkaset.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = iconkaset.wav; path = ../src/assets/sound/iconkaset.wav; sourceTree = "<group>"; };
-		607998632A7297E7006EC06D /* receivetasksuccess.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = receivetasksuccess.wav; path = ../src/assets/sound/receivetasksuccess.wav; sourceTree = "<group>"; };
 		60F1F01729266B63007549EB /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		6104EDE766E24424A0000B38 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = ../src/assets/fonts/Fontisto.ttf; sourceTree = "<group>"; };
 		65D81DE2054F4B3899F3DAED /* Anuphan-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Anuphan-Medium.otf"; path = "../src/assets/fonts/Anuphan-Medium.otf"; sourceTree = "<group>"; };
