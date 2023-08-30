@@ -168,9 +168,9 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
     }
   };
 
-  const checkOffline = () => {
+  const checkOffline = async () => {
     setDisabled(true);
-
+    setCoupon(prev => ({ ...prev, err: '' }));
     checkCouponByCode(couponOffline)
       .then(res => {
         if (res.canUsed === undefined) {
@@ -178,7 +178,7 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
             ...coupon,
             err: 'ไม่มีรหัสคูปอง โปรดตรวจสอบหมายเลขคูปองอีกครั้ง',
           });
-          mixpanel.track('UseCouponScreen_CollectCouponButton_tapped', {
+          mixpanel.track('UseCouponScreen_KeepCouponButton_tapped', {
             couponCode: couponOffline,
             errorMessage: 'ไม่มีรหัสคูปอง โปรดตรวจสอบหมายเลขคูปองอีกครั้ง',
           });
@@ -197,14 +197,11 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
                       ...coupon,
                       err: res.message,
                     });
-                    mixpanel.track(
-                      'UseCouponScreen_CollectCouponButton_tapped',
-                      {
-                        couponCode: couponOffline,
-                        errorMessage:
-                          'ไม่มีรหัสคูปอง โปรดตรวจสอบหมายเลขคูปองอีกครั้ง',
-                      },
-                    );
+                    mixpanel.track('UseCouponScreen_KeepCouponButton_tapped', {
+                      couponCode: couponOffline,
+                      errorMessage:
+                        'ไม่มีรหัสคูปอง โปรดตรวจสอบหมายเลขคูปองอีกครั้ง',
+                    });
                   });
                 } else {
                   if (res.promotionStatus === 'INACTIVE') {
@@ -212,13 +209,10 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
                       ...coupon,
                       err: res.message,
                     });
-                    mixpanel.track(
-                      'UseCouponScreen_CollectCouponButton_tapped',
-                      {
-                        couponCode: couponOffline,
-                        errorMessage: res.message,
-                      },
-                    );
+                    mixpanel.track('UseCouponScreen_KeepCouponButton_tapped', {
+                      couponCode: couponOffline,
+                      errorMessage: res.message,
+                    });
                   } else {
                     keepCoupon(res.id, couponOffline)
                       .then(resKeep => {
@@ -245,7 +239,7 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
                         ];
                         setData(newData);
                         mixpanel.track(
-                          'UseCouponScreen_CollectCouponButton_tapped',
+                          'UseCouponScreen_KeepCouponButton_tapped',
                           {
                             couponCode: couponOffline,
                             errorMessage: res.message,
@@ -262,7 +256,7 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
               ...coupon,
               err: res.message,
             });
-            mixpanel.track('UseCouponScreen_CollectCouponButton_tapped', {
+            mixpanel.track('UseCouponScreen_KeepCouponButton_tapped', {
               couponCode: couponOffline,
               errorMessage: res.message,
             });

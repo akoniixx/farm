@@ -57,6 +57,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
   });
   const getCoupon = (code: string) => {
     setDisable(true);
+    setErrText('');
     checkCouponByCode(code)
       .then(res => {
         if (res.canUsed === undefined) {
@@ -72,9 +73,10 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               couponCode: code,
               ...res,
             });
+
             setData({
               id: res.id,
-              couponCode: res.couponCode,
+              couponCode: res.couponOfflineCode[0].couponCode,
               couponName: res.couponName,
               couponType: res.couponType,
               promotionStatus: res.promotionStatus,
@@ -116,6 +118,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
         setDisable(false);
       });
   };
+  // console.log(JSON.stringify(data, null, 2));
   return (
     <>
       <View>
