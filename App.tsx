@@ -39,6 +39,7 @@ const App = () => {
     }
     requestUserPermission();
     getToken();
+    AsyncStorage.getAllKeys().then(keys => console.log(keys));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

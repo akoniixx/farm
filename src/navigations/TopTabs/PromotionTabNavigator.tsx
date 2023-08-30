@@ -7,6 +7,7 @@ import { normalize } from '../../functions/Normalize';
 import MyCouponExpiredScreen from '../../screens/PromotionScreen/MyCouponExpiredScreen';
 import MyCouponUsedScreen from '../../screens/PromotionScreen/MyCouponUsedScreen';
 import MyCouponUseScreen from '../../screens/PromotionScreen/MyCouponUseScreen';
+import { mixpanel } from '../../../mixpanel';
 
 const renderTabBar: React.FC<any> = (props: any) => {
   return (
@@ -56,36 +57,17 @@ const PromotionTabNavigator: React.FC<any> = ({}) => {
       navigationState={{ index, routes }}
       renderTabBar={renderTabBar}
       renderScene={renderScene}
-      onIndexChange={setIndex}
+      onIndexChange={(index: number) => {
+        mixpanel.track('MyCouponScreen_TabSelect_tapped', {
+          tab: routes[index].title,
+        });
+        setIndex(index);
+      }}
       initialLayout={{ width: layout.width }}
       lazy
     />
   );
 };
-
-// const checkColorNumber = (key: number): string => {
-//   let result = colors.greenLight;
-//   if (key === 0) {
-//     result = colors.greenLight;
-//   } else if (key === 1) {
-//     result = '#B05E03';
-//   } else if (key === 2) {
-//     result = '#AB091E';
-//   }
-//   return result;
-// };
-
-// const checkColor = (key: string): string => {
-//   let result = colors.greenLight;
-//   if (key === 'use') {
-//     result = colors.greenLight;
-//   } else if (key === 'used') {
-//     result = '#B05E03';
-//   } else if (key === 'expired') {
-//     result = '#AB091E';
-//   }
-//   return result;
-// };
 
 export default PromotionTabNavigator;
 

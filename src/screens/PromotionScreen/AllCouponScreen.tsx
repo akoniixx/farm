@@ -7,38 +7,40 @@ import { normalize } from '@rneui/themed';
 import CouponCard from '../../components/CouponCard/CouponCard';
 import { CouponCardEntities } from '../../entites/CouponCard';
 import { useFocusEffect } from '@react-navigation/native';
+import { mixpanel } from '../../../mixpanel';
 
 const AllCouponScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [data, setData] = useState<CouponCardEntities[]>([]);
+  const limit = 5;
 
   const getData = async (page: number) => {
-    getCouponUser(page, 5)
+    getCouponUser(page, limit)
       .then(res => {
-        setCount(res.count);
-        setData(res.data);
+        setCount(res?.count);
+        setData(res?.data);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   const onScrollEnd = () => {
     let pageNow = page;
     if (data.length < count) {
-      getCouponUser(pageNow + 1, 5)
+      getCouponUser(pageNow + 1, limit)
         .then(res => {
           let Data = res.data;
           let newData = data.concat(Data);
           setPage(pageNow + 1);
           setData(newData);
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          console.log(err.response);
+        });
     }
   };
-
-  useEffect(() => {
-    getData(page);
-  }, []);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -52,7 +54,10 @@ const AllCouponScreen: React.FC<any> = ({ navigation, route }) => {
       <CustomHeader
         title="สิทธิพิเศษทั้งหมด"
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('AllCouponScreen_ButtonBack_tapped');
+          navigation.goBack();
+        }}
       />
       <View
         style={{
@@ -62,7 +67,7 @@ const AllCouponScreen: React.FC<any> = ({ navigation, route }) => {
         <FlatList
           onScrollEndDrag={onScrollEnd}
           ListFooterComponent={<View style={{ height: normalize(450) }} />}
-          data={data}
+          data={data || []}
           renderItem={({ item }) => (
             <CouponCard
               id={item.id}

@@ -16,6 +16,7 @@ import { checkCouponByCode } from '../../datasource/PromotionDatasource';
 import CouponCard from '../../components/CouponCard/CouponCard';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { couponState } from '../../recoil/CouponAtom';
+import { mixpanel } from '../../../mixpanel';
 
 const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
   const [coupon, setCoupon] = useRecoilState(couponState);
@@ -56,16 +57,26 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
   });
   const getCoupon = (code: string) => {
     setDisable(true);
+    setErrText('');
     checkCouponByCode(code)
       .then(res => {
         if (res.canUsed === undefined) {
+          mixpanel.track('SearchCouponScreen_KeepButton_tapped', {
+            errorMessage: 'ไม่มีรหัสคูปอง โปรดตรวจสอบหมายเลขคูปองอีกครั้ง',
+            couponCode: code,
+          });
           setErrText('ไม่มีรหัสคูปอง โปรดตรวจสอบหมายเลขคูปองอีกครั้ง');
         } else {
           if (res.canUsed) {
             setEmpty(false);
+            mixpanel.track('SearchCouponScreen_KeepButton_tapped', {
+              couponCode: code,
+              ...res,
+            });
+
             setData({
               id: res.id,
-              couponCode: res.couponCode,
+              couponCode: res.couponOfflineCode[0].couponCode,
               couponName: res.couponName,
               couponType: res.couponType,
               promotionStatus: res.promotionStatus,
@@ -94,7 +105,11 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               keepthis: false,
             });
           } else {
-            setErrText('คูปองนี้ถูกใช้แล้ว');
+            mixpanel.track('SearchCouponScreen_KeepButton_tapped', {
+              errorMessage: res.message,
+              couponCode: code,
+            });
+            setErrText(res.message);
           }
         }
       })
@@ -103,6 +118,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
         setDisable(false);
       });
   };
+  // console.log(JSON.stringify(data, null, 2));
   return (
     <>
       <View>
@@ -137,6 +153,11 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
               placeholder="ระบุรหัสคูปองส่วนลด"
               placeholderTextColor={colors.gray}
               clearButtonMode="always"
+              onBlur={() => {
+                mixpanel.track('SearchCouponScreen_InputCouponCode_blur', {
+                  couponCode: couponCode,
+                });
+              }}
               onChangeText={text => {
                 setCouponCode(text);
                 setErrText('');

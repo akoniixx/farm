@@ -43,7 +43,6 @@ const CouponCardUsed: React.FC<CouponCardEntities> = ({
   couponConditionPlantList,
   couponConditionProvince,
   couponConditionProvinceList,
-  couponOfflineCode,
   disabled,
   callback,
 }) => {
@@ -151,6 +150,7 @@ const CouponCardUsed: React.FC<CouponCardEntities> = ({
               }}
             />
           </View>
+
           <View
             style={{
               width: width * 0.45,
@@ -178,6 +178,15 @@ const CouponCardUsed: React.FC<CouponCardEntities> = ({
               </Text>
             ) : (
               <></>
+            )}
+            {couponCode && (
+              <Text
+                style={{
+                  color: colors.fontBlack,
+                  marginBottom: 4,
+                }}>
+                {couponCode}
+              </Text>
             )}
             {checkRai(couponConditionRaiMin!, couponConditionRaiMax!) != '' ? (
               <Text

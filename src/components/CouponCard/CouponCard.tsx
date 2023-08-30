@@ -16,8 +16,9 @@ import { CouponCardEntities } from '../../entites/CouponCard';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { keepCoupon } from '../../datasource/PromotionDatasource';
 import { width } from '../../functions/Normalize';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { couponState } from '../../recoil/CouponAtom';
+import { mixpanel } from '../../../mixpanel';
 
 const CouponCard: React.FC<CouponCardEntities> = ({
   id,
@@ -58,7 +59,14 @@ const CouponCard: React.FC<CouponCardEntities> = ({
       setDisabledBtn(true);
       if (promotionType === 'ONLINE') {
         keepCoupon(id)
-          .then(res => {
+          .then(() => {
+            mixpanel.track('KeepCoupon_tapped', {
+              couponName: couponName,
+              couponCode: couponCode,
+              type: promotionType,
+              id: id,
+              changeTo: 'MyCouponScreen',
+            });
             RootNavigation.navigate('MyCouponScreen', {});
           })
           .catch(err => console.log(err));
@@ -66,8 +74,22 @@ const CouponCard: React.FC<CouponCardEntities> = ({
         keepCoupon(id, couponOfflineCode![0].couponCode)
           .then(res => {
             if (!res.userMessage) {
+              mixpanel.track('KeepCoupon_tapped', {
+                couponName: couponName,
+                couponCode: couponCode,
+                type: promotionType,
+                id: id,
+                changeTo: 'MyCouponScreen',
+              });
               RootNavigation.navigate('MyCouponScreen', {});
             } else {
+              mixpanel.track('KeepCoupon_tapped', {
+                couponName: couponName,
+                couponCode: couponCode,
+                type: promotionType,
+                id: id,
+                errorMessage: res.userMessage,
+              });
               setCoupon({
                 ...coupon,
                 err: res.userMessage,
@@ -85,6 +107,12 @@ const CouponCard: React.FC<CouponCardEntities> = ({
   return (
     <TouchableOpacity
       onPress={() => {
+        mixpanel.track('CouponCard_tapped', {
+          couponName: couponName,
+          id: id,
+          changeTo: 'CouponDetail',
+          promotionType,
+        });
         RootNavigation.navigate('CouponDetail', {
           detail: {
             id: id,
@@ -231,8 +259,17 @@ const CouponCard: React.FC<CouponCardEntities> = ({
             ) : (
               <></>
             )}
+            {couponCode && (
+              <Text
+                style={{
+                  color: colors.fontBlack,
+                  marginBottom: 4,
+                }}>
+                {couponCode}
+              </Text>
+            )}
             {couponConditionRai &&
-            checkRai(couponConditionRaiMin!, couponConditionRaiMax!) != '' ? (
+            checkRai(couponConditionRaiMin!, couponConditionRaiMax!) !== '' ? (
               <Text
                 style={{
                   color: colors.fontBlack,
