@@ -109,6 +109,7 @@ export class Authentication {
   static async logout() {
     await AsyncStorage.removeItem('token');
     await AsyncStorage.removeItem('droner_id');
+    await AsyncStorage.clear();
   }
 
   static getBankList(): Promise<any> {
