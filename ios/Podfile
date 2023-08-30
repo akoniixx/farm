@@ -58,6 +58,11 @@ end
     react_native_post_install(installer)
     __apply_Xcode_14_3_RC_post_install_workaround(installer)
     installer.pods_project.targets.each do |target|
+      if target.name == "RCT-Folly"
+        target.build_configurations.each do |config|
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'FOLLY_HAVE_CLOCK_GETTIME=1']
+        end
+      end
       target.build_configurations.each do |config|
         # Disable arm64 builds for the simulator
         config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'

@@ -23,6 +23,7 @@ import { AuthProvider } from './src/contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from './mixpanel';
 import { RecoilRoot } from 'recoil';
+import { NetworkProvider } from './src/contexts/NetworkContext';
 
 const App = () => {
   useEffect(() => {
@@ -50,20 +51,22 @@ const App = () => {
   };
   return (
     <>
-      <RecoilRoot>
-        <NavigationContainer ref={navigationRef}>
-          <PaperProvider>
-            <AuthProvider>
-              <AutoBookingProvider>
-                <SheetProvider>
-                  <AppNavigator />
-                </SheetProvider>
-              </AutoBookingProvider>
-            </AuthProvider>
-          </PaperProvider>
-          <Toast config={toastConfig} />
-        </NavigationContainer>
-      </RecoilRoot>
+      <NetworkProvider>
+        <RecoilRoot>
+          <NavigationContainer ref={navigationRef}>
+            <PaperProvider>
+              <AuthProvider>
+                <AutoBookingProvider>
+                  <SheetProvider>
+                    <AppNavigator />
+                  </SheetProvider>
+                </AutoBookingProvider>
+              </AuthProvider>
+            </PaperProvider>
+            <Toast config={toastConfig} />
+          </NavigationContainer>
+        </RecoilRoot>
+      </NetworkProvider>
     </>
   );
 };
