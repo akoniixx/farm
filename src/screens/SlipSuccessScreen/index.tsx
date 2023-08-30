@@ -56,9 +56,12 @@ export default function SlipSuccessScreen({
     TaskDatasource.getTaskByTaskId(taskId)
       .then(res => {
         DronerDatasource.getDronerData(res.data.droner.id).then(resDroner => {
-          resDroner.file.map((item: any) => {
-            if (item.category === 'PROFILE_IMAGE') {
-              DronerDatasource.getDronerProfileImage(item.path).then(resImg => {
+          const findProfileImage = resDroner.file.find(
+            (el: any) => el.category === 'PROFILE_IMAGE',
+          );
+          if (findProfileImage) {
+            DronerDatasource.getDronerProfileImage(findProfileImage.path).then(
+              resImg => {
                 DronerDatasource.getDronerRating(res.data.droner.id).then(
                   resRating => {
                     setTaskData({
@@ -78,12 +81,30 @@ export default function SlipSuccessScreen({
                     setLoading(false);
                   },
                 );
-              });
-            }
-          });
+              },
+            );
+          } else {
+            DronerDatasource.getDronerRating(res.data.droner.id).then(
+              resRating => {
+                setTaskData({
+                  ...res.data,
+                  cropName: res.data.purposeSpray.crop.cropName || '',
+                  purposeSprayName:
+                    res.data.purposeSpray.purposeSprayName || '',
+                  firstname: res.data.droner.firstname,
+                  lastname: res.data.droner.lastname,
+                  telNo: res.data.droner.telephoneNo,
+                  rating: parseFloat(resRating.ratingAvg).toFixed(1).toString(),
+                  totalTaskReview: resRating.totalTaskReview,
+                });
+                setLoading(false);
+              },
+            );
+          }
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   }, []);
   if (loading) {
     return <></>;
