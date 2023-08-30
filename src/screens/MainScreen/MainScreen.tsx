@@ -1404,8 +1404,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
             <View
               style={{
                 marginLeft: 16,
+                alignSelf: 'flex-start',
+                width: Dimensions.get('window').width - 100,
               }}>
               <Text
+                numberOfLines={1}
                 style={{
                   color: colors.primary,
                   fontSize: normalize(20),

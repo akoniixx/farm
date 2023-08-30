@@ -111,6 +111,7 @@ export default function SlipWaitingScreen({
 
           if (res.data.status === 'WAIT_START') {
             await AsyncStorage.removeItem('taskId');
+
             navigation.navigate('SlipSuccessScreen', { taskId: res.data.id });
           }
 
