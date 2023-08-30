@@ -311,6 +311,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       <RemoveCoupon
         show={modalCoupon}
         onMainClick={() => {
+          mixpanel.track('TaskBookingScreen_buttonRemoveCoupon_tapped');
           setCoupon({
             id: '',
             promotionId: '',
@@ -760,7 +761,10 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             }}
           />
           <TouchableOpacity
-            onPress={() =>
+            onPress={() => {
+              mixpanel.track('TaskBookingScreen_buttonSelectCoupon_tapped', {
+                changeTo: 'UseCouponScreen',
+              });
               navigation.navigate('UseCouponScreen', {
                 plantName: taskData.plantName,
                 purposeSprayName: taskData.purposeSpray.name,
@@ -772,8 +776,8 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 raiAmount: taskData.farmAreaAmount
                   ? +taskData.farmAreaAmount
                   : 0,
-              })
-            }>
+              });
+            }}>
             <View
               style={{
                 paddingHorizontal: normalize(16),

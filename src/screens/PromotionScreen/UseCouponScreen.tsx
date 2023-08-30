@@ -23,6 +23,8 @@ import { Image } from '@rneui/base';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { couponState } from '../../recoil/CouponAtom';
 import { PlotDatasource } from '../../datasource/PlotDatasource';
+import { mixpanel } from '../../../mixpanel';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
   const conditionCheck = route.params;
@@ -168,12 +170,17 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
 
   const checkOffline = () => {
     setDisabled(true);
+
     checkCouponByCode(couponOffline)
       .then(res => {
         if (res.canUsed === undefined) {
           setCoupon({
             ...coupon,
             err: 'ไม่มีรหัสคูปอง โปรดตรวจสอบหมายเลขคูปองอีกครั้ง',
+          });
+          mixpanel.track('UseCouponScreen_CollectCouponButton_tapped', {
+            couponCode: couponOffline,
+            errorMessage: 'ไม่มีรหัสคูปอง โปรดตรวจสอบหมายเลขคูปองอีกครั้ง',
           });
         } else {
           if (res.canUsed) {
@@ -185,18 +192,33 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
                     couponCode: couponOffline,
                     cropName: conditionCheck.cropName,
                     raiAmount: conditionCheck.raiAmount,
-                  }).then(resCal => {
+                  }).then(() => {
                     setCoupon({
                       ...coupon,
-                      err: 'คูปองนี้ถูกเก็บไปแล้ว',
+                      err: res.message,
                     });
+                    mixpanel.track(
+                      'UseCouponScreen_CollectCouponButton_tapped',
+                      {
+                        couponCode: couponOffline,
+                        errorMessage:
+                          'ไม่มีรหัสคูปอง โปรดตรวจสอบหมายเลขคูปองอีกครั้ง',
+                      },
+                    );
                   });
                 } else {
                   if (res.promotionStatus === 'INACTIVE') {
                     setCoupon({
                       ...coupon,
-                      err: 'คูปองนี้หมดอายุแล้ว',
+                      err: res.message,
                     });
+                    mixpanel.track(
+                      'UseCouponScreen_CollectCouponButton_tapped',
+                      {
+                        couponCode: couponOffline,
+                        errorMessage: res.message,
+                      },
+                    );
                   } else {
                     keepCoupon(res.id, couponOffline)
                       .then(resKeep => {
@@ -222,6 +244,13 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
                           ...data,
                         ];
                         setData(newData);
+                        mixpanel.track(
+                          'UseCouponScreen_CollectCouponButton_tapped',
+                          {
+                            couponCode: couponOffline,
+                            errorMessage: res.message,
+                          },
+                        );
                       })
                       .catch(err => console.log(err));
                   }
@@ -231,7 +260,11 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
           } else {
             setCoupon({
               ...coupon,
-              err: 'คูปองนี้ถูกใช้งานแล้ว',
+              err: res.message,
+            });
+            mixpanel.track('UseCouponScreen_CollectCouponButton_tapped', {
+              couponCode: couponOffline,
+              errorMessage: res.message,
             });
           }
         }
@@ -249,7 +282,16 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
     <>
       <CustomHeader
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('UseCouponScreen_BackButton_tapped', {
+            changeTo: 'TaskBookingScreen',
+          });
+          setCoupon(prev => ({
+            ...prev,
+            err: '',
+          }));
+          navigation.goBack();
+        }}
         title="คูปองส่วนลด"
       />
       <View style={styles.searchCode}>
@@ -270,6 +312,11 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
               style={styles.searchInput}
               value={couponOffline}
               clearButtonMode="always"
+              onBlur={() => {
+                mixpanel.track('UseCouponScreen_CouponCodeInput_typed', {
+                  couponCode: couponOffline,
+                });
+              }}
               onChangeText={value => {
                 setCouponOffline(value);
                 if (value.length != 0) {
@@ -444,6 +491,16 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
                     cropName: conditionCheck.cropName,
                     raiAmount: conditionCheck.raiAmount,
                   }).then(res => {
+                    mixpanel.track('UseCouponScreen_UseCouponButton_tapped', {
+                      couponCode: item.promotion.couponCode,
+                      type: item.promotion.promotionType,
+                      cropName: conditionCheck.cropName,
+                      raiAmount: conditionCheck.raiAmount,
+                      couponName: item.promotion.couponName,
+                      discountType: item.promotion.discountType,
+                      discount: res.responseData.priceCouponDiscount,
+                      netPrice: res.responseData.netPrice,
+                    });
                     setCoupon({
                       id: item.id,
                       promotionId: item.promotionId,

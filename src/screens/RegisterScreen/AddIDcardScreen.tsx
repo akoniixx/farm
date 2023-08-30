@@ -62,6 +62,30 @@ const AddIDcardScreen: React.FC<any> = ({ navigation, route }) => {
       setOpenModalCard(false);
     }
   }, [image]);
+
+  const onSubmit = async () => {
+    if (idcard.length === 13 && image != null) {
+      if (Profile) {
+        mixpanel.track('Tab confirm from add id card register');
+        setLoading(true);
+        ProfileDatasource.addIdCard(idcard)
+          .then(res => {
+            ProfileDatasource.uploadFarmerIDCard(image)
+              .then(res => {
+                setLoading(false);
+                navigation.navigate('MainScreen');
+              })
+              .catch(err => console.log(err));
+          })
+          .finally(() => {
+            setLoading(false);
+          })
+          .catch(err => console.log(err));
+      } else {
+        setOpenModal(true);
+      }
+    }
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -178,26 +202,7 @@ const AddIDcardScreen: React.FC<any> = ({ navigation, route }) => {
                   : colors.disable
               }
               disable={idcard.length === 13 && image != null ? false : true}
-              onPress={() => {
-                if (idcard.length === 13 && image != null) {
-                  if (Profile) {
-                    mixpanel.track('Tab confirm from add id card register');
-                    setLoading(true);
-                    ProfileDatasource.addIdCard(idcard)
-                      .then(res => {
-                        ProfileDatasource.uploadFarmerIDCard(image)
-                          .then(res => {
-                            setLoading(false);
-                            navigation.navigate('MainScreen');
-                          })
-                          .catch(err => console.log(err));
-                      })
-                      .catch(err => console.log(err));
-                  } else {
-                    setOpenModal(true);
-                  }
-                }
-              }}
+              onPress={onSubmit}
             />
             <Modal transparent={true} visible={openModal}>
               <View
@@ -243,7 +248,10 @@ const AddIDcardScreen: React.FC<any> = ({ navigation, route }) => {
                               setLoading(false);
                               navigation.navigate('SuccessRegister');
                             })
-                            .catch(err => console.log(err));
+                            .catch(err => console.log(err))
+                            .finally(() => {
+                              setLoading(false);
+                            });
                         })
                         .catch(err => console.log(err));
                     }}

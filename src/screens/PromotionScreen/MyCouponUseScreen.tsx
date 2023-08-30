@@ -21,6 +21,7 @@ import SelectDronerCouponModal from '../../components/Modal/SelectDronerCoupon';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import VerifyStatus from '../../components/Modal/VerifyStatus';
+import { mixpanel } from '../../../mixpanel';
 
 const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
@@ -73,6 +74,12 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
         show={modal}
         onClose={() => setModal(false)}
         onMainClick={() => {
+          mixpanel.track(
+            'MyCouponUseScreen_SelectDronerCouponModalMainButton_tapped',
+            {
+              changeTo: 'DronerUsedScreen',
+            },
+          );
           RootNavigation.navigate('DronerUsedScreen', {
             isSelectDroner: true,
             profile: {},
@@ -80,6 +87,12 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
           setModal(false);
         }}
         onBottomClick={() => {
+          mixpanel.track(
+            'MyCouponUseScreen_SelectDronerCouponModalOnBottomButton_tapped',
+            {
+              changeTo: 'SelectDateScreen',
+            },
+          );
           RootNavigation.navigate('SelectDateScreen', {
             isSelectDroner: false,
             profile: {},
@@ -179,6 +192,9 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
           label="จ้างนักบินโดรน"
           color={colors.greenLight}
           onPress={() => {
+            mixpanel.track('MyCouponUseScreen_MainButtonTask_tapped', {
+              status,
+            });
             status !== 'ACTIVE' ? setModalVerify(true) : setModal(true);
           }}
         />
@@ -188,9 +204,12 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
           text={status}
           show={modalVerify}
           onClose={() => {
+            mixpanel.track('MyCouponUseScreen_VerifyStatusModalOnClose_tapped');
             setModalVerify(false);
           }}
           onMainClick={() => {
+            mixpanel.track('MyCouponUseScreen_VerifyStatusModalOnClose_tapped');
+
             setModalVerify(false);
           }}
         />

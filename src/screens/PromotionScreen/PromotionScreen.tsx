@@ -30,6 +30,7 @@ import CouponCard from '../../components/CouponCard/CouponCard';
 import { getCouponUser } from '../../datasource/PromotionDatasource';
 import { CouponCardEntities } from '../../entites/CouponCard';
 import { useIsFocused } from '@react-navigation/native';
+import { mixpanel } from '../../../mixpanel';
 
 const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
   const [data, setData] = useState<CouponCardEntities[]>([]);
@@ -42,6 +43,7 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
   useEffect(() => {
     getData();
   }, [isFocused]);
+
   return (
     <View
       style={{
@@ -91,7 +93,12 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
               width: '48%',
               height: '100%',
             }}
-            onPress={() => navigation.navigate('SearchCouponScreen')}>
+            onPress={() => {
+              mixpanel.track('PromotionScreen_SearchCouponButton_tapped', {
+                changeTo: 'SearchCouponScreen',
+              });
+              navigation.navigate('SearchCouponScreen');
+            }}>
             <View
               style={{
                 borderRadius: normalize(10),
@@ -129,7 +136,12 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
               width: '48%',
               height: '100%',
             }}
-            onPress={() => navigation.navigate('MyCouponScreen')}>
+            onPress={() => {
+              mixpanel.track('PromotionScreen_MyCouponButton_tapped', {
+                changeTo: 'MyCouponScreen',
+              });
+              navigation.navigate('MyCouponScreen');
+            }}>
             <View
               style={{
                 borderRadius: normalize(10),
@@ -182,7 +194,12 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
             สิทธิพิเศษ
           </Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate('AllCouponScreen')}>
+            onPress={() => {
+              mixpanel.track('PromotionScreen_AllCouponButton_tapped', {
+                changeTo: 'AllCouponScreen',
+              });
+              navigation.navigate('AllCouponScreen');
+            }}>
             <Text
               style={{
                 lineHeight: normalize(28),

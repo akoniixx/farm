@@ -15,6 +15,7 @@ import {
 } from '../../datasource/PromotionDatasource';
 import CouponCardHeader from '../../components/CouponCard/CouponCardHeader';
 import { useFocusEffect } from '@react-navigation/native';
+import { mixpanel } from '../../../mixpanel';
 
 const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
   const { detail } = route.params;
@@ -34,8 +35,12 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
   const KeepCoupon = () => {
     setDisable(true);
     keepCoupon(detail.id)
-      .then(res => {
+      .then(() => {
         setDisable(false);
+        mixpanel.track('CouponDetailScreen_KeepCouponButton_tapped', {
+          ...detail,
+          changeTo: 'MyCouponScreen',
+        });
         navigation.navigate('MyCouponScreen');
       })
       .catch(err => console.log(err))
@@ -43,9 +48,6 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
         setDisable(false);
       });
   };
-  useEffect(() => {
-    checkCoupon();
-  }, []);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -60,7 +62,10 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
           titleColor={colors.white}
           title="รายละเอียดของคูปอง"
           showBackBtn
-          onPressBack={() => navigation.goBack()}
+          onPressBack={() => {
+            mixpanel.track('CouponDetailScreen_BackButton_tapped');
+            navigation.goBack();
+          }}
         />
         <View style={styles.appBarCard}>
           <CouponCardHeader
