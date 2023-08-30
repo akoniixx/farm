@@ -111,6 +111,51 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     }
     setFcmToken(value!);
   };
+  useEffect(() => {
+    const getMaintenance = async () => {
+      setLoading(true);
+      const value = await AsyncStorage.getItem('Maintenance');
+      await SystemMaintenance.Maintenance('FARMER')
+        .then(res => {
+          if (res.responseData !== null) {
+            if (value === 'read') {
+              setMaintenance(res.responseData);
+            } else {
+              setMaintenance(res.responseData);
+              setPopupMaintenance(res.responseData.id ? true : false);
+            }
+          }
+          if (maintenance !== null) {
+            setStart(
+              momentExtend.toBuddhistYear(
+                maintenance.dateStart,
+                'DD MMMM YYYY',
+              ),
+            );
+            setEnd(
+              momentExtend.toBuddhistYear(maintenance.dateEnd, 'DD MMMM YYYY'),
+            );
+            setNotiStart(
+              momentExtend.toBuddhistYear(
+                maintenance.dateNotiStart,
+                'DD MMMM YYYY',
+              ),
+            );
+            setNotiEnd(
+              momentExtend.toBuddhistYear(
+                maintenance.dateNotiEnd,
+                'DD MMMM YYYY',
+              ),
+            );
+          }
+          setReload(!reload);
+        })
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
+    };
+    getMaintenance();
+  }, [reload]);
+
   const getNotificationData = async () => {
     FCMtokenDatasource.getNotificationList()
       .then(res =>
@@ -282,7 +327,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     };
     getPointFarmer();
   });
-
   const sendProfilesToMixpanel = async (profiles: any) => {
     const options = {
       method: 'POST',
@@ -491,12 +535,12 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                           }}>
                           <View style={{ marginTop: 15 }}>
                             <Image
-                              source={image.maintenance}
+                              source={{ uri: maintenance.imagePath }}
                               style={{ width: 58, height: 60 }}
                             />
                           </View>
                           <View style={{ paddingHorizontal: 30 }}>
-                            {start != end ? (
+                            {start !== end ? (
                               <View>
                                 <Text
                                   style={{

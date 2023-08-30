@@ -25,7 +25,7 @@ import NotificationScreen from '../screens/NotificationScreen/NotificationScreen
 import MyTaskDetailScreenNoti from '../screens/MyTaskScreen/MyTaskDetailScreenNoti';
 import VerifyOTP from '../screens/ProfileScreen/DeleteProfile/VerifyOTP';
 import { StackNavigationHelpers } from '@react-navigation/stack/lib/typescript/src/types';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useIsFocused } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import DeleteProfile from '../screens/ProfileScreen/DeleteProfile/DeleteProfile';
 import AddPlotScreen from '../screens/ProfileScreen/PlotScreen/AddPlotScreen';
@@ -57,6 +57,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import PagerView from 'react-native-pager-view';
+import moment from 'moment';
 
 export type MainStackParamList = {
   MainScreen: undefined;
@@ -108,34 +109,36 @@ export type StackNativeScreenProps<T extends keyof MainStackParamList> =
 
 const Stack = createStackNavigator<MainStackParamList>();
 const MainNavigator: React.FC = () => {
+  const [checkTime, setCheckTime] = useState(false);
+  const dateNow = moment(Date.now());
   const [reload, setReload] = useState(false);
-  const [end, setEnd] = useState<any>();
-  const [start, setStart] = useState<any>();
-  const [maintenanceApp, setMaintenanceApp] = useState<MaintenanceSystem>(
-    MaintenanceSystem_INIT,
-  );
-  const Maintenance = async () => {
-    await SystemMaintenance.Maintenance('FARMER')
-      .then(res => {
-        setMaintenanceApp(res.responseData);
-        setReload(!reload);
-      })
-      .catch(err => console.log(err));
-    if (maintenanceApp != null) {
-      setStart(Date.parse(maintenanceApp.dateStart));
-      setEnd(Date.parse(maintenanceApp.dateEnd));
-    }
-  };
 
-  const d = Date.now();
-  const checkDateNoti = d >= start && d <= end;
-  //  useEffect(() => {
-  //   Maintenance();
-  // }, [reload]);
+  useEffect(() => {
+    const Maintenance = async () => {
+      await SystemMaintenance.Maintenance('FARMER')
+        .then(res => {
+          if (res.responseData !== null) {
+            setCheckTime(
+              checkTimeMaintance(
+                moment(res.responseData.dateStart),
+                moment(res.responseData.dateEnd),
+              ),
+            );
+          }
+          setReload(!reload);
+        })
+        .catch(err => console.log(err));
+    };
+    Maintenance();
+  }, [reload]);
+
+  const checkTimeMaintance = (startDate: any, endDate: any) => {
+    return dateNow.isBetween(startDate, endDate, 'milliseconds');
+  };
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {checkDateNoti === true ? (
+      {checkTime === true ? (
         <Stack.Screen
           name="MaintenanceScreen"
           component={MaintenanceScreen}

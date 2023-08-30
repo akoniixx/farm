@@ -2,7 +2,7 @@ import { View, Text, Modal, TouchableOpacity, Image } from 'react-native';
 import React from 'react';
 import { MaintenanceEntity, ModalEntity } from '../ModalEntity';
 import { ModalStyle } from '../ModalStyle';
-import { colors, icons, image } from '../../../assets';
+import { colors, icons } from '../../../assets';
 import { normalize, width } from '../../../functions/Normalize';
 import { MainButton } from '../../Button/MainButton';
 import fonts from '../../../assets/fonts';
@@ -16,6 +16,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
 }) => {
   const start = momentExtend.toBuddhistYear(data.dateStart, 'DD MMMM YYYY');
   const end = momentExtend.toBuddhistYear(data.dateEnd, 'DD MMMM YYYY');
+
   return (
     <Modal visible={show} transparent={true}>
       <View style={ModalStyle.modal}>
@@ -31,9 +32,12 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
               />
             </TouchableOpacity>
           </View>
-          <Image source={image.maintenance} style={ModalStyle.image} />
-          {start != end ? (
+          {start !== end ? (
             <>
+              <Image
+                source={{ uri: data.imagePath }}
+                style={ModalStyle.image}
+              />
               <Text
                 style={[
                   ModalStyle.modalHeader,
@@ -122,6 +126,10 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
             </>
           ) : (
             <>
+              <Image
+                source={{ uri: data.imagePath }}
+                style={ModalStyle.image}
+              />
               <Text
                 style={[
                   ModalStyle.modalHeader,
@@ -180,6 +188,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                     fontSize: normalize(16),
                     color: colors.fontBlack,
                     lineHeight: 30,
+                    textAlign: 'center',
                   }}>
                   {data.footer}
                 </Text>

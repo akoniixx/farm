@@ -55,7 +55,6 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const telNo = route.params.tele;
-
   const [items, setItems] = useState<any>([]);
   const [itemsDistrict, setItemDistrict] = useState([]);
   const [itemsSubDistrict, setItemSubDistrict] = useState([]);
@@ -79,10 +78,15 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
     getPermission();
 
     QueryLocation.QueryProvince().then(res => {
-      const Province = res.map((item: any) => {
-        return { label: item.provinceName, value: item.provinceId };
-      });
-      setItems(Province);
+      const filteredProvinces = res.filter(
+        (province: any) => province.provinceName,
+      );
+
+      const sortedProvinces = filteredProvinces.sort(
+        (a: { provinceName: string }, b: { provinceName: any }) =>
+          a.provinceName.localeCompare(b.provinceName),
+      );
+      setItems(sortedProvinces);
     });
   }, []);
   useEffect(() => {
@@ -125,6 +129,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
     setProVince(value);
     provinceSheet.current.hide();
   };
+
   const selectDistrict = (value: any, label: any) => {
     dispatch({
       type: 'Handle Input',
@@ -492,21 +497,16 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                 </View>
                 <View style={styles.container}>
                   <ScrollView>
-                    {items.map(
-                      (
-                        v: { label: any; value: any },
-                        i: React.Key | null | undefined,
-                      ) => (
-                        <TouchableOpacity>
-                          <LocationSelect
-                            key={i}
-                            label={v.label}
-                            value={v.value}
-                            onPress={() => selectProvince(v, i)}
-                          />
-                        </TouchableOpacity>
-                      ),
-                    )}
+                    {items.map((value: any, index: any) => (
+                      <TouchableOpacity>
+                        <LocationSelect
+                          key={index}
+                          label={value.provinceName}
+                          value={value.provinceName}
+                          onPress={() => selectProvince(value, index)}
+                        />
+                      </TouchableOpacity>
+                    ))}
                   </ScrollView>
                 </View>
               </View>
