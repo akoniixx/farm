@@ -418,13 +418,16 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 style={{
                   flexDirection: 'row',
                   paddingTop: 130,
+                  paddingHorizontal: 16,
                   paddingBottom:
                     profilestate.status === 'REJECTED' ||
                     profilestate.status === 'INACTIVE' ||
                     profilestate.status === 'PENDING'
                       ? 32
                       : 0,
-                  alignSelf: 'center',
+                  alignItems: 'center',
+
+                  justifyContent: 'space-between',
                 }}>
                 <TouchableOpacity
                   onPress={() => {
@@ -1019,7 +1022,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       </Text>
                     </TouchableOpacity>
                   </View>
-                  {guruKaset != undefined ? (
+                  {guruKaset !== undefined ? (
                     <View>
                       <Carousel
                         autoplay={true}
