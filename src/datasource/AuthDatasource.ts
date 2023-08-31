@@ -73,13 +73,14 @@ export class Authentication {
       });
   }
   static async logout(navigation: any) {
-    await AsyncStorage.multiRemove(['token', 'farmer_id', 'task_id']);
     const fcmtoken = await AsyncStorage.getItem('fcmtoken');
-    FCMtokenDatasource.deleteFCMtoken(fcmtoken!).then(res => {
+
+    FCMtokenDatasource.deleteFCMtoken(fcmtoken!).then(async () => {
       const resetActionNavigate = CommonActions.reset({
         index: 1,
         routes: [{ name: 'Auth' }],
       });
+      await AsyncStorage.multiRemove(['token', 'farmer_id', 'task_id']);
       navigation.popToTop();
       navigation.dispatch(resetActionNavigate);
     });

@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { normalize } from '@rneui/themed';
 import { colors, font, image } from '../../assets';
@@ -9,10 +9,30 @@ import { Register } from '../../datasource/AuthDatasource';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { mixpanel } from '../../../mixpanel';
 import messaging from '@react-native-firebase/messaging';
+import { useFocusEffect } from '@react-navigation/native';
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
 const SuccessRegister: React.FC<any> = ({ navigation }) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      const autoSendData = async () => {
+        const token_register = await AsyncStorage.getItem('token_register');
+        await AsyncStorage.setItem('token', token_register!);
+        Register.changeToPending()
+          .then(async () => {
+            const fcmToken =
+              (await AsyncStorage.getItem('fcmtoken')) ??
+              (await messaging().getToken());
+            FCMtokenDatasource.saveFCMtoken(fcmToken).catch(err =>
+              console.log(err),
+            );
+          })
+          .catch(err => console.log(err));
+      };
+      autoSendData();
+    }, []),
+  );
   return (
     <View
       style={{
@@ -67,23 +87,12 @@ const SuccessRegister: React.FC<any> = ({ navigation }) => {
         label="เริ่มใช้งาน"
         color={colors.greenLight}
         onPress={async () => {
-          mixpanel.track('Tab success register');
-          const token_register = await AsyncStorage.getItem('token_register');
-          await AsyncStorage.setItem('token', token_register!);
-          Register.changeToPending()
-            .then(async res => {
-              const fcmToken =
-                (await AsyncStorage.getItem('fcmtoken')) ??
-                (await messaging().getToken());
-              FCMtokenDatasource.saveFCMtoken(fcmToken)
-                .then(res => {
-                  RootNavigation.navigate('Main', {
-                    screen: 'MainScreen',
-                  });
-                })
-                .catch(err => console.log(err));
-            })
-            .catch(err => console.log(err));
+          mixpanel.track('SuccessRegisterScreen_StartButton_tapped', {
+            changeTo: 'MainScreen',
+          });
+          RootNavigation.navigate('Main', {
+            screen: 'MainScreen',
+          });
         }}
       />
     </View>

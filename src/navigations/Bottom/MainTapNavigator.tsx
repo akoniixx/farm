@@ -4,11 +4,11 @@ import { colors, font, icons } from '../../assets';
 import { Text } from '@rneui/base';
 import fonts from '../../assets/fonts';
 import { normalize } from '@rneui/themed';
-import { Image, Platform, StyleSheet, View } from 'react-native';
+import { Image } from 'react-native';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import PromotionScreen from '../../screens/PromotionScreen/PromotionScreen';
 import TaskScreen from '../../screens/MyTaskScreen/MyTaskScreen';
-import messaging, { firebase } from '@react-native-firebase/messaging';
+import messaging from '@react-native-firebase/messaging';
 import * as RootNavigation from '../RootNavigation';
 import FarmerPlotSuccess from '../../components/Modal/FarmerPlotSuccess';
 import FarmerRegisterSuccess from '../../components/Modal/FarmerRegisterSuccess';
@@ -18,6 +18,7 @@ import { TaskDatasource } from '../../datasource/TaskDatasource';
 import { TabActions } from '@react-navigation/native';
 import MainScreen from '../../screens/MainScreen/MainScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { mixpanel } from '../../../mixpanel';
 
 const Tab = createBottomTabNavigator();
 
@@ -181,6 +182,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
           break;
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (loading) {
     return <></>;
@@ -194,12 +196,23 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             tabBarStyle: { height: '9%', borderBottomColor: colors.white },
           }}>
           <Tab.Screen
+            listeners={{
+              tabPress: e => {
+                const jumpAction = TabActions.jumpTo('หน้าแรก');
+                mixpanel.track('MainBottomTab_BottomTab_tapped', {
+                  tabName: 'หน้าแรก',
+                  changeTo: 'MainScreen',
+                });
+                navigation.dispatch(jumpAction);
+              },
+            }}
             name="หน้าแรก"
             component={MainScreen}
             options={{
               tabBarLabelStyle: {
                 fontFamily: font.AnuphanMedium,
               },
+
               lazy: true,
               tabBarLabel: ({ focused }) => (
                 <Text
@@ -227,6 +240,16 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
           />
           <Tab.Screen
             name="งานของฉัน"
+            listeners={{
+              tabPress: e => {
+                const jumpAction = TabActions.jumpTo('งานของฉัน');
+                mixpanel.track('MainBottomTab_BottomTab_tapped', {
+                  tabName: 'งานของฉัน',
+                  changeTo: 'TaskScreen',
+                });
+                navigation.dispatch(jumpAction);
+              },
+            }}
             component={TaskScreen}
             options={{
               tabBarLabelStyle: {
@@ -258,6 +281,16 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             }}
           />
           <Tab.Screen
+            listeners={{
+              tabPress: e => {
+                const jumpAction = TabActions.jumpTo('โปรโมชั่น');
+                mixpanel.track('MainBottomTab_BottomTab_tapped', {
+                  tabName: 'โปรโมชั่น',
+                  changeTo: 'PromotionScreen',
+                });
+                navigation.dispatch(jumpAction);
+              },
+            }}
             name="โปรโมชั่น"
             component={PromotionScreen}
             options={{
@@ -291,6 +324,16 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
           />
           <Tab.Screen
             name="บัญชีของฉัน"
+            listeners={{
+              tabPress: e => {
+                const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
+                mixpanel.track('MainBottomTab_BottomTab_tapped', {
+                  tabName: 'บัญชีของฉัน',
+                  changeTo: 'ProfileScreen',
+                });
+                navigation.dispatch(jumpAction);
+              },
+            }}
             component={ProfileScreen}
             options={{
               tabBarLabelStyle: {

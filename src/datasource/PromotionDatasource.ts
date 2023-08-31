@@ -117,6 +117,7 @@ export const getCouponUser = async (page: number, take: number) => {
     page: page,
     take: take,
   };
+
   return httpClient
     .get(BASE_URL + '/promotion/farmer-promotions/query', { params })
     .then(response => {

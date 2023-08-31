@@ -11,7 +11,6 @@ import fonts from '../../assets/fonts';
 import { colors, image } from '../../assets';
 import SlipCard, { TaskDataTypeSlip } from '../../components/SlipCard/SlipCard';
 import icons from '../../assets/icons/icons';
-import { DronerDatasource } from '../../datasource/DronerDatasource';
 
 export default function SectionBody(props: TaskDataTypeSlip) {
   return (
