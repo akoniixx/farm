@@ -115,6 +115,7 @@ export default function SlipSuccessScreen({
         }}>
         <Content noPadding>
           <ScrollView
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={{
               flexGrow: 1,
             }}>

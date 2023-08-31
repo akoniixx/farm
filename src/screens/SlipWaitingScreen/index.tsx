@@ -199,6 +199,7 @@ export default function SlipWaitingScreen({
       />
       <Content noPadding>
         <ScrollView
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             flexGrow: 1,
           }}>

@@ -7,7 +7,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Button,
   Dimensions,
   Image,
 } from 'react-native';
@@ -31,6 +30,7 @@ import { Modal } from 'react-native';
 import DatePickerCustom from '../../components/Calendar/Calendar';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { mixpanel } from '../../../mixpanel';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const AddIDcardScreen: React.FC<any> = ({ navigation, route }) => {
   const telNo = route.params.tele;
@@ -314,6 +314,11 @@ const AddIDcardScreen: React.FC<any> = ({ navigation, route }) => {
           </View>
         </SafeAreaView>
       </TouchableWithoutFeedback>
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: colors.white }}
+      />
     </KeyboardAvoidingView>
   );
 };
