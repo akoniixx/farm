@@ -23,7 +23,6 @@ import TimePicker from '../../components/TimePicker/TimePicker';
 import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { normalize, width } from '../../functions/Normalize';
 import { momentExtend } from '../../utils/moment-buddha-year';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import HeadDronerCardForCreatTask from '../../components/HeadDronerCardForCreatTask';
 
 const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
@@ -71,7 +70,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
   return (
     <>
       <StepIndicatorHead
-        curentPosition={0}
+        currentPosition={0}
         onPressBack={() => {
           mixpanel.track('Tab back from select date screen');
           navigation.goBack();
@@ -211,9 +210,11 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
               </View>
               <TextInput
                 scrollEnabled={false}
+                allowFontScaling={false}
                 numberOfLines={6}
                 onChangeText={t => {
-                  setNote(t);
+                  const removeSpaceFront = t.replace(/^\s+/, '');
+                  setNote(removeSpaceFront);
                 }}
                 value={note}
                 returnKeyType="done"

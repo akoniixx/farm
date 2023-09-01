@@ -35,12 +35,15 @@ import LinearGradient from 'react-native-linear-gradient';
 import { normalize } from '../../functions/Normalize';
 import Lottie from 'lottie-react-native';
 import messaging from '@react-native-firebase/messaging';
+import { useNetwork } from '../../contexts/NetworkContext';
 export default function SlipWaitingScreen({
   navigation,
   route,
 }: StackScreenProps<MainStackParamList, 'SlipWaitingScreen'>) {
   const { taskId, cntResend } = route.params;
+  const { appState } = useNetwork();
   const [loading, setLoading] = useState(true);
+  const refPlayAnimation = React.useRef<any>(null);
   const [isFocus, setIsFocus] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
   const [reason, setReason] = useState('');
@@ -104,6 +107,7 @@ export default function SlipWaitingScreen({
     NotiFication();
     const getTaskByTaskId = async (taskId: string) => {
       try {
+        refPlayAnimation.current?.play();
         const res = await TaskDatasource.getTaskByTaskId(taskId);
 
         if (res && res.data) {
@@ -114,11 +118,12 @@ export default function SlipWaitingScreen({
 
             navigation.navigate('SlipSuccessScreen', { taskId: res.data.id });
           }
+          const isWaitReceive = res.data.status === 'WAIT_RECEIVE';
 
           const { countResend, updatedAt } = res.data;
           const endTime = moment(updatedAt).add(30, 'minutes').toISOString();
           const isAfter = moment(endTime).isAfter(moment());
-          if (!isAfter) {
+          if (!isAfter && isWaitReceive) {
             (countResend === null || !countResend) && setShowModalExtend(true);
             +countResend === 1 && setModalExtendTwo(true);
             +countResend >= 2 && setModalExtendThree(true);
@@ -133,11 +138,11 @@ export default function SlipWaitingScreen({
         console.log('error', error);
       }
     };
-    if (taskId) {
+    if (taskId && appState === 'active') {
       getTaskByTaskId(taskId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskId]);
+  }, [taskId, appState]);
 
   const NotiFication = () => {
     messaging().onMessage(async message => {
@@ -219,6 +224,7 @@ export default function SlipWaitingScreen({
                 marginBottom: 32,
               }}>
               <Lottie
+                ref={refPlayAnimation}
                 source={image.waitinglottie}
                 autoPlay
                 loop

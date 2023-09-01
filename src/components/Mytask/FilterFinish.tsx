@@ -1,16 +1,10 @@
 import { normalize } from '@rneui/themed';
-import React, { useState, useMemo, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  View,
-  Image,
-} from 'react-native';
-import { Picker, onOpen, onClose } from 'react-native-actions-sheet-picker';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { onOpen } from 'react-native-actions-sheet-picker';
 import { colors, font, icons } from '../../assets';
 import { sortFieldFinish } from '../../definitions/taskFilter';
+import PickerFilter from '../PickerFilter/PickerFilter';
 
 interface props {
   selectedField: {
@@ -55,84 +49,11 @@ export const FilterFinish: React.FC<props> = ({
         </View>
       </TouchableOpacity>
 
-      <Picker
-        id="field"
-        data={sortFieldFinish}
-        actionsSheetProps={{
-          children: <View />,
-          containerStyle: {
-            height: 300,
-            borderRadius: 20,
-            padding: 0,
-          },
-        }}
-        flatListProps={{
-          contentContainerStyle: {
-            paddingHorizontal: 0,
-          },
-          ListHeaderComponent: () => {
-            return (
-              <>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    minHeight: 40,
-                    paddingHorizontal: 20,
-                    marginBottom: 10,
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: font.AnuphanMedium,
-                      fontSize: normalize(20),
-                    }}>
-                    แสดงสถานะงาน
-                  </Text>
-                  <TouchableOpacity>
-                    <Text
-                      style={{
-                        fontFamily: font.SarabunMedium,
-                        fontSize: normalize(20),
-                        color: colors.greenLight,
-                      }}>
-                      ยกเลิก
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.separator} />
-              </>
-            );
-          },
-          data: sortFieldFinish,
-          keyExtractor: (item, index) => index.toString(),
-          renderItem: ({ item }) => {
-            return (
-              <View
-                style={{
-                  paddingLeft: 20,
-                }}>
-                <TouchableOpacity
-                  style={styles.row}
-                  onPress={() => {
-                    onClose('field');
-                    setSelectedField(item);
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: font.SarabunLight,
-                      fontSize: normalize(20),
-                      color: colors.fontBlack,
-                    }}>
-                    {item.name}
-                  </Text>
-                </TouchableOpacity>
-                <View style={styles.separator} />
-              </View>
-            );
-          },
-        }}
+      <PickerFilter
         setSelected={setSelectedField}
+        data={sortFieldFinish}
+        title="แสดงสถานะงาน"
+        id="field"
       />
     </>
   );

@@ -6,13 +6,17 @@ import {
   ImageBackground,
   Platform,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
 import { Avatar } from '@rneui/base';
 
 import { mixpanel } from '../../../mixpanel';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FavoriteDroner } from '../../datasource/FavoriteDroner';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 interface dronerData {
   index: any;
@@ -25,6 +29,8 @@ interface dronerData {
   distance: any;
   status: any;
   callBack: () => void;
+  dronerId: string;
+  isLoading?: boolean;
 }
 
 const DronerSugg: React.FC<dronerData> = ({
@@ -38,8 +44,44 @@ const DronerSugg: React.FC<dronerData> = ({
   distance,
   status,
   callBack,
+  dronerId,
+  isLoading,
 }) => {
-  return (
+  const [disabled, setDisabled] = useState(false);
+  const onFavorite = async () => {
+    setDisabled(true);
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    await FavoriteDroner.addUnaddFav(
+      farmer_id !== null ? farmer_id : '',
+      dronerId,
+    )
+      .catch((err: any) => console.log(err))
+      .finally(() => setDisabled(false));
+  };
+
+  return isLoading ? (
+    <View
+      style={{
+        width: normalize(160),
+      }}>
+      <SkeletonPlaceholder
+        borderRadius={10}
+        speed={2000}
+        backgroundColor={colors.skeleton}>
+        <SkeletonPlaceholder.Item
+          flexDirection="row"
+          alignItems="center"
+          style={{ marginLeft: 16, width: '100%' }}>
+          <View
+            style={{
+              width: '100%',
+              height: 200,
+            }}
+          />
+        </SkeletonPlaceholder.Item>
+      </SkeletonPlaceholder>
+    </View>
+  ) : (
     <View style={{ paddingHorizontal: 8 }}>
       <View style={[styles.cards]}>
         <ImageBackground
@@ -62,31 +104,47 @@ const DronerSugg: React.FC<dronerData> = ({
                 alignSelf: 'flex-end',
                 margin: 10,
               }}>
-              <TouchableOpacity
-                onPress={() => {
-                  if (status === 'ACTIVE') {
-                    mixpanel.track(
-                      'MainScreen_ButtonFavoriteDroner_PressUnFavorite',
-                    );
-                  } else {
-                    mixpanel.track(
-                      'MainScreen_ButtonFavoriteDroner_PressFavorite',
-                    );
-                  }
-                  callBack();
-                }}>
-                <Image
-                  source={
-                    status === 'ACTIVE' ? icons.heart_active : icons.heart
-                  }
+              {disabled ? (
+                <View
                   style={{
-                    alignSelf: 'center',
-                    width: 20,
-                    height: 20,
-                    top: 4,
-                  }}
-                />
-              </TouchableOpacity>
+                    backgroundColor: colors.white,
+
+                    borderRadius: 15,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 4,
+                  }}>
+                  <ActivityIndicator />
+                </View>
+              ) : (
+                <TouchableOpacity
+                  disabled={disabled}
+                  onPress={async () => {
+                    callBack();
+                    await onFavorite();
+                    if (status === 'ACTIVE') {
+                      mixpanel.track(
+                        'MainScreen_ButtonFavoriteDroner_PressUnFavorite',
+                      );
+                    } else {
+                      mixpanel.track(
+                        'MainScreen_ButtonFavoriteDroner_PressFavorite',
+                      );
+                    }
+                  }}>
+                  <Image
+                    source={
+                      status === 'ACTIVE' ? icons.heart_active : icons.heart
+                    }
+                    style={{
+                      alignSelf: 'center',
+                      width: 20,
+                      height: 20,
+                      top: 4,
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
             <View style={{ alignSelf: 'center' }}>
               <Avatar

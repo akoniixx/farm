@@ -46,38 +46,52 @@ export const DateTimeDetail: React.FC<DateTimeProp> = ({
             borderRadius: 10,
             marginTop: normalize(10),
           }}>
-          <View style={{ flexDirection: 'row' }}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
             <View>
-              <Image
-                source={icons.calendarOrange}
+              <View
                 style={{
-                  width: normalize(18),
-                  height: normalize(20),
-                  marginRight: normalize(10),
-                }}
-              />
-            </View>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <View>
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={icons.calendarOrange}
+                  style={{
+                    width: normalize(18),
+                    height: normalize(20),
+                    marginRight: normalize(10),
+                  }}
+                />
                 <Text style={styles.h2}>วันที่</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <View
+                  style={{
+                    width: normalize(18),
+                    marginRight: normalize(10),
+                  }}
+                />
                 <Text style={styles.h2}>เวลา</Text>
               </View>
-              <View style={{ alignItems: 'flex-end' }}>
-                <Text style={styles.h1}>
-                  {moment(date)
-                    .add(543, 'year')
-                    .locale('th')
-                    .format('DD MMMM YYYY')}
-                </Text>
-                <Text style={styles.h1}>
-                  {moment(time).locale('th').format('HH.mm')} น
-                </Text>
-              </View>
+            </View>
+            <View style={{ alignItems: 'flex-end' }}>
+              <Text style={styles.h1}>
+                {moment(date)
+                  .add(543, 'year')
+                  .locale('th')
+                  .format('DD MMMM YYYY')}
+              </Text>
+              <Text style={styles.h1}>
+                {moment(time).locale('th').format('HH.mm')} น
+              </Text>
             </View>
           </View>
         </View>

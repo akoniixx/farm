@@ -1,9 +1,17 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from 'react';
 import NetInfo from '@react-native-community/netinfo';
+import { AppState } from 'react-native';
 
 type NetworkContextType = {
   isConnected: boolean;
   onReconnect: () => Promise<void>;
+  appState: 'active' | 'background' | 'inactive' | 'extension' | 'unknown';
 };
 
 const NetworkContext = createContext<NetworkContextType | undefined>(undefined);
@@ -12,6 +20,21 @@ export const NetworkProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
+  const [appState, setAppState] = useState(AppState.currentState);
+
+  useEffect(() => {
+    const appStateListener = AppState.addEventListener(
+      'change',
+      nextAppState => {
+        console.log('Next AppState is: ', nextAppState);
+        setAppState(nextAppState);
+      },
+    );
+    return () => {
+      appStateListener?.remove();
+    };
+  }, []);
+
   const onReconnect = async () => {
     await NetInfo.fetch().then(state => {
       setIsConnected(!!state.isConnected);
@@ -34,7 +57,7 @@ export const NetworkProvider: React.FC<{
   }, []);
 
   return (
-    <NetworkContext.Provider value={{ isConnected, onReconnect }}>
+    <NetworkContext.Provider value={{ isConnected, onReconnect, appState }}>
       {children}
     </NetworkContext.Provider>
   );

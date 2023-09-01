@@ -10,12 +10,12 @@ import icons from '../assets/icons/icons';
 
 interface Prop {
   onPressBack?: () => void;
-  curentPosition: number;
+  currentPosition: number;
   label: string;
 }
 const StepIndicatorHead: React.FC<Prop> = ({
   onPressBack,
-  curentPosition,
+  currentPosition,
   label,
 }) => {
   const customStyles = {
@@ -82,7 +82,7 @@ const StepIndicatorHead: React.FC<Prop> = ({
               }}>
               <StepIndicator
                 customStyles={customStyles}
-                currentPosition={curentPosition}
+                currentPosition={currentPosition}
                 stepCount={3}
                 renderStepIndicator={({ stepStatus }) => {
                   if (stepStatus === 'finished') {

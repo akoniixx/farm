@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Platform,
+  Keyboard,
 } from 'react-native';
 import React from 'react';
 import fonts from '../../assets/fonts';
@@ -39,7 +40,13 @@ export default function InputWithSuffix({
       }}>
       <TextInput
         {...props}
+        scrollEnabled={false}
         ref={refInput}
+        onBlur={e => {
+          props.onBlur && props.onBlur(e);
+          refInput.current?.blur();
+          Keyboard.dismiss();
+        }}
         placeholderTextColor={colors.grey30}
         style={[styles({ allowClear }).input, style]}
       />

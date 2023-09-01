@@ -1,16 +1,10 @@
 import { normalize } from '@rneui/themed';
 import React, { useState, useMemo, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  View,
-  Image,
-} from 'react-native';
-import { Picker, onOpen } from 'react-native-actions-sheet-picker';
-import { colors, font, icons } from '../../assets';
+import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { onOpen } from 'react-native-actions-sheet-picker';
+import { font, icons } from '../../assets';
 import { sortField } from '../../definitions/taskFilter';
+import PickerFilter from '../PickerFilter/PickerFilter';
 
 interface props {
   selectedField: {
@@ -56,11 +50,12 @@ export const Filter: React.FC<props> = ({
         </View>
       </TouchableOpacity>
 
-      <Picker
-        id="field"
-        data={field}
-        label="เรียงลำดับงาน"
+      <PickerFilter
         setSelected={setSelectedField}
+        data={field}
+        title="เรียงลำดับงาน"
+        id="field"
+        height={400}
       />
     </>
   );

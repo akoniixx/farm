@@ -406,7 +406,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           <View
             style={{
               flexDirection: 'row',
-              paddingHorizontal: normalize(16),
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
@@ -1262,7 +1261,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         <View
           style={{
             paddingHorizontal: 16,
-            paddingVertical: 8,
+            paddingTop: 8,
             borderBottomColor: colors.greyDivider,
             borderBottomWidth: 1,
           }}>

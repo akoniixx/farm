@@ -1,6 +1,15 @@
 import { normalize } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
+} from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -89,7 +98,7 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
   return (
     <>
       <StepIndicatorHead
-        curentPosition={2}
+        currentPosition={2}
         onPressBack={() => {
           mixpanel.track('Tab back from select target screen');
           navigation.goBack();
@@ -108,237 +117,243 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
             justifyContent: 'space-between',
             paddingHorizontal: normalize(16),
           }}>
-          <View>
-            <Text style={[styles.label, { marginTop: normalize(20) }]}>
-              เป้าหมาย
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                backgroundColor: 'white',
-                justifyContent: 'space-between',
-              }}>
-              {checkBoxList.map(option => (
-                <TouchableOpacity
-                  key={option.id}
-                  style={[
-                    styles.card,
-                    {
-                      backgroundColor:
-                        option.label &&
-                        selectedOption.includes(option.label.toString())
-                          ? '#56D88C'
-                          : '#F2F3F4',
-                    },
-                  ]}
-                  onPress={() => {
-                    mixpanel.track('Tab select target spray');
-                    if (selectedOption.includes(option.label.toString())) {
-                      setSelectedOption(prev =>
-                        prev.filter(item => item !== option.label.toString()),
-                      );
-                    } else {
-                      setSelectedOption(prev => [
-                        ...prev,
-                        option.label.toString(),
-                      ]);
-                    }
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: 18,
-
-                      color:
-                        option.label &&
-                        selectedOption.includes(option?.label.toString())
-                          ? colors.white
-                          : colors.fontBlack,
-                    }}>
-                    {option.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-            <InputWithSuffix
-              styleContainer={{
-                marginTop: 16,
-              }}
-              value={otherPlant}
-              placeholder="เป้าหมายอื่นๆ"
-              onChangeText={text => setOtherPlant(text)}
-              suffixComponent={
-                otherPlant && (
+          <ScrollView>
+            <View>
+              <Text style={[styles.label, { marginTop: normalize(20) }]}>
+                เป้าหมาย
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  backgroundColor: 'white',
+                  justifyContent: 'space-between',
+                }}>
+                {checkBoxList.map(option => (
                   <TouchableOpacity
+                    key={option.id}
+                    style={[
+                      styles.card,
+                      {
+                        backgroundColor:
+                          option.label &&
+                          selectedOption.includes(option.label.toString())
+                            ? '#56D88C'
+                            : '#F2F3F4',
+                      },
+                    ]}
                     onPress={() => {
-                      if (
-                        checkBoxList.find(item => item.label === otherPlant)
-                      ) {
-                        return null;
+                      mixpanel.track('Tab select target spray');
+                      if (selectedOption.includes(option.label.toString())) {
+                        setSelectedOption(prev =>
+                          prev.filter(item => item !== option.label.toString()),
+                        );
+                      } else {
+                        setSelectedOption(prev => [
+                          ...prev,
+                          option.label.toString(),
+                        ]);
                       }
-                      setCheckBoxList(prev => [
-                        ...prev,
-                        { id: prev.length + 1, label: otherPlant },
-                      ]);
-                      mixpanel.track('Tab add other target spray');
-                      setSelectedOption(prev => [...prev, otherPlant]);
-                    }}
-                    style={{
-                      backgroundColor: '#56D88C',
-                      width: 60,
-                      height: 35,
-                      borderRadius: 8,
-                      justifyContent: 'center',
-                      alignItems: 'center',
                     }}>
                     <Text
                       style={{
-                        color: colors.white,
                         fontSize: 18,
-                        fontFamily: fonts.AnuphanMedium,
+
+                        color:
+                          option.label &&
+                          selectedOption.includes(option?.label.toString())
+                            ? colors.white
+                            : colors.fontBlack,
                       }}>
-                      เพิ่ม
+                      {option.label}
                     </Text>
                   </TouchableOpacity>
-                )
-              }
-            />
-
-            <Text style={[styles.label, { marginTop: normalize(20) }]}>
-              ช่วงเวลาการพ่น
-            </Text>
-            <TouchableOpacity
-              style={styles.injectionInput}
-              onPress={async () => {
-                mixpanel.track('Tab select purpose spray');
-                const currentValue: any = await SheetManager.show(
-                  'sheet-select-injection',
-                  {
-                    payload: {
-                      periodSpray,
-                      currentVal: periodSprayValue,
-                    },
-                  },
-                );
-                setPeriodSprayValue(currentValue);
-              }}>
-              {periodSprayValue?.label ? (
-                <Text
-                  style={{
-                    color: colors.fontBlack,
-                    fontFamily: fonts.SarabunMedium,
-                    fontSize: 20,
-                    lineHeight: 40,
-                  }}>
-                  {periodSprayValue.label}
-                </Text>
-              ) : (
-                <Text
-                  style={{
-                    color: colors.disable,
-                    fontFamily: fonts.SarabunMedium,
-                    fontSize: 20,
-                    lineHeight: 40,
-                  }}>
-                  {'เลือกช่วงเวลา'}
-                </Text>
-              )}
-              <Image
-                source={icons.arrowDown}
-                style={{
-                  width: 24,
-                  height: 24,
+                ))}
+              </View>
+              <InputWithSuffix
+                styleContainer={{
+                  marginTop: 16,
                 }}
+                value={otherPlant}
+                placeholder="เป้าหมายอื่นๆ"
+                onChangeText={text => {
+                  const removeSpaceFront = text.replace(/^\s+/, '');
+                  setOtherPlant(removeSpaceFront);
+                }}
+                suffixComponent={
+                  otherPlant && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (
+                          checkBoxList.find(item => item.label === otherPlant)
+                        ) {
+                          return null;
+                        }
+                        setCheckBoxList(prev => [
+                          ...prev,
+                          { id: prev.length + 1, label: otherPlant },
+                        ]);
+                        mixpanel.track('Tab add other target spray');
+                        setOtherPlant('');
+                        setSelectedOption(prev => [...prev, otherPlant]);
+                      }}
+                      style={{
+                        backgroundColor: '#56D88C',
+                        width: 60,
+                        height: 35,
+                        borderRadius: 8,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text
+                        style={{
+                          color: colors.white,
+                          fontSize: 18,
+                          fontFamily: fonts.AnuphanMedium,
+                        }}>
+                        เพิ่ม
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                }
               />
-            </TouchableOpacity>
-            <Text style={[styles.label, { marginTop: normalize(20) }]}>
-              ยาที่ต้องใช้
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                mixpanel.track('Tab เกษตรกรเตรียมยาเอง');
-                setSelectedCheckbox('เกษตรกรเตรียมยาเอง');
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginTop: normalize(10),
-                  alignItems: 'center',
-                }}>
-                <Image
-                  source={
-                    selectedCheckbox === 'เกษตรกรเตรียมยาเอง'
-                      ? icons.checked
-                      : icons.check
-                  }
-                  style={{ width: normalize(20), height: normalize(20) }}
-                />
 
-                <Text
-                  style={[
+              <Text style={[styles.label, { marginTop: normalize(20) }]}>
+                ช่วงเวลาการพ่น
+              </Text>
+              <TouchableOpacity
+                style={styles.injectionInput}
+                onPress={async () => {
+                  mixpanel.track('Tab select purpose spray');
+                  const currentValue: any = await SheetManager.show(
+                    'sheet-select-injection',
                     {
-                      color: colors.fontBlack,
-                      fontSize: 20,
-                      marginLeft: normalize(10),
+                      payload: {
+                        periodSpray,
+                        currentVal: periodSprayValue,
+                      },
                     },
-                  ]}>
-                  เกษตรกรเตรียมยาเอง
-                </Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                mixpanel.track('Tab นักบินโดรนเตรียมให้');
-                setSelectedCheckbox('นักบินโดรนเตรียมให้');
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginTop: normalize(10),
-                  alignItems: 'center',
+                  );
+                  setPeriodSprayValue(currentValue);
                 }}>
-                <Image
-                  source={
-                    selectedCheckbox === 'นักบินโดรนเตรียมให้'
-                      ? icons.checked
-                      : icons.check
-                  }
-                  style={{ width: normalize(20), height: normalize(20) }}
-                />
-
-                <Text
-                  style={[
-                    {
+                {periodSprayValue?.label ? (
+                  <Text
+                    style={{
                       color: colors.fontBlack,
+                      fontFamily: fonts.SarabunMedium,
                       fontSize: 20,
-                      marginLeft: normalize(10),
-                    },
-                  ]}>
-                  นักบินโดรนเตรียมให้
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              paddingVertical: 16,
-              marginBottom: 8,
-            }}>
-            <MainButton
-              label="ยืนยัน"
-              disable={
-                selectedOption.length < 1 ||
-                periodSprayValue?.value === '' ||
-                selectedCheckbox === ''
-              }
-              color={colors.greenLight}
-              onPress={() => {
-                mixpanel.track('Tab submit from select target screen');
-                onSubmit();
-              }}
-              style={{}}
-            />
-          </View>
+                      lineHeight: 40,
+                    }}>
+                    {periodSprayValue.label}
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      color: colors.disable,
+                      fontFamily: fonts.SarabunMedium,
+                      fontSize: 20,
+                      lineHeight: 40,
+                    }}>
+                    {'เลือกช่วงเวลา'}
+                  </Text>
+                )}
+                <Image
+                  source={icons.arrowDown}
+                  style={{
+                    width: 24,
+                    height: 24,
+                  }}
+                />
+              </TouchableOpacity>
+              <Text style={[styles.label, { marginTop: normalize(20) }]}>
+                ยาที่ต้องใช้
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  mixpanel.track('Tab เกษตรกรเตรียมยาเอง');
+                  setSelectedCheckbox('เกษตรกรเตรียมยาเอง');
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: normalize(10),
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={
+                      selectedCheckbox === 'เกษตรกรเตรียมยาเอง'
+                        ? icons.checked
+                        : icons.check
+                    }
+                    style={{ width: normalize(20), height: normalize(20) }}
+                  />
+
+                  <Text
+                    style={[
+                      {
+                        color: colors.fontBlack,
+                        fontSize: 20,
+                        marginLeft: normalize(10),
+                      },
+                    ]}>
+                    เกษตรกรเตรียมยาเอง
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  mixpanel.track('Tab นักบินโดรนเตรียมให้');
+                  setSelectedCheckbox('นักบินโดรนเตรียมให้');
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: normalize(10),
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={
+                      selectedCheckbox === 'นักบินโดรนเตรียมให้'
+                        ? icons.checked
+                        : icons.check
+                    }
+                    style={{ width: normalize(20), height: normalize(20) }}
+                  />
+
+                  <Text
+                    style={[
+                      {
+                        color: colors.fontBlack,
+                        fontSize: 20,
+                        marginLeft: normalize(10),
+                      },
+                    ]}>
+                    นักบินโดรนเตรียมให้
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                paddingVertical: 16,
+                marginBottom: 8,
+              }}>
+              <MainButton
+                label="ยืนยัน"
+                disable={
+                  selectedOption.length < 1 ||
+                  periodSprayValue?.value === '' ||
+                  selectedCheckbox === ''
+                }
+                color={colors.greenLight}
+                onPress={() => {
+                  mixpanel.track('Tab submit from select target screen');
+                  onSubmit();
+                }}
+                style={{}}
+              />
+            </View>
+          </ScrollView>
         </SafeAreaView>
       </View>
       <Spinner

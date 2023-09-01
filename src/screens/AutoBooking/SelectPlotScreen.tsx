@@ -4,7 +4,6 @@ import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import {
   FlatList,
   Image,
-  KeyboardAvoidingView,
   Linking,
   LogBox,
   Platform,
@@ -26,7 +25,7 @@ import { PlotDatasource } from '../../datasource/PlotDatasource';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { normalize } from '../../functions/Normalize';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner;
   const profile = route.params.profile;
@@ -34,6 +33,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
     state: { plotDisable },
     autoBookingContext: { setTaskData, getLocationPrice, searchDroner },
   } = useAutoBookingContext();
+  const scrollRef = React.createRef<KeyboardAwareScrollView>();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [plotList, setPlotList] = useState<any>([]);
   const [loading, setLoading] = useState(false);
@@ -110,7 +110,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
   return (
     <>
       <StepIndicatorHead
-        curentPosition={1}
+        currentPosition={1}
         onPressBack={() => {
           mixpanel.track('Tab back from select plot screen');
           navigation.goBack();
@@ -158,9 +158,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
             justifyContent: 'space-between',
             backgroundColor: 'white',
           }}>
-          <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <KeyboardAwareScrollView extraScrollHeight={150}>
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{ paddingVertical: 10 }}
@@ -311,7 +309,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 />
               </View>
             </ScrollView>
-          </KeyboardAvoidingView>
+          </KeyboardAwareScrollView>
         </SafeAreaView>
       )}
 
