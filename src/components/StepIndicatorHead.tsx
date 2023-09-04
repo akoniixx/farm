@@ -1,12 +1,12 @@
 import Icon from 'react-native-vector-icons/AntDesign';
 import React from 'react';
-import { Text, TouchableOpacity, View, Image, Dimensions } from 'react-native';
+import { TouchableOpacity, View, Image, Dimensions } from 'react-native';
 import StepIndicator from 'react-native-step-indicator-v2';
 import { normalize } from '../functions/Normalize';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font } from '../assets';
-import images from '../assets/images/image';
 import icons from '../assets/icons/icons';
+import Text from './Text/Text';
 
 interface Prop {
   onPressBack?: () => void;

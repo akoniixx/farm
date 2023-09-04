@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image, Text } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import React from 'react';
 import ActionSheet, {
   SheetManager,
@@ -9,6 +9,7 @@ import fonts from '../../assets/fonts';
 import { MainButton } from '../Button/MainButton';
 import colors from '../../assets/colors/colors';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
+import Text from '../Text/Text';
 
 export default function SelectCallingSheet(props: SheetProps) {
   const telDroner = '0812345678';

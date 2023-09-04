@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   TextInput,
   TouchableWithoutFeedback,
@@ -10,7 +9,7 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../styles/StylesCentral';
 import { colors, font } from '../../assets';
@@ -31,6 +30,7 @@ import DatePickerCustom from '../../components/Calendar/Calendar';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { mixpanel } from '../../../mixpanel';
 import Spinner from 'react-native-loading-spinner-overlay';
+import Text from '../../components/Text/Text';
 
 const AddIDcardScreen: React.FC<any> = ({ navigation, route }) => {
   const telNo = route.params.tele;

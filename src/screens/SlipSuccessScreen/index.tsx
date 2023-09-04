@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Platform,
-} from 'react-native';
+import { View, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
@@ -20,6 +14,7 @@ import { TaskDatasource } from '../../datasource/TaskDatasource';
 import Lottie from 'lottie-react-native';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { DronerDatasource } from '../../datasource/DronerDatasource';
+import Text from '../../components/Text/Text';
 
 export default function SlipSuccessScreen({
   navigation,

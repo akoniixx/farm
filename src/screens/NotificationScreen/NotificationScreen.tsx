@@ -1,5 +1,5 @@
-import { View, Text, SafeAreaView, Image, StyleSheet } from 'react-native';
-import React from 'react';
+import { View, SafeAreaView, Image, StyleSheet } from 'react-native';
+import React, { useMemo } from 'react';
 import { stylesCentral } from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
 import NotificationCard from '../../components/NotificationCard/NotificationCard';
@@ -10,6 +10,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { image } from '../../assets';
 import { normalize } from '@rneui/themed';
 import fonts from '../../assets/fonts';
+import Text from '../../components/Text/Text';
 
 const monthArray = [
   'ม.ค.',
@@ -107,6 +108,13 @@ const readIt = (notiId: string) => {
 
 const NotificationScreen: React.FC<any> = ({ navigation, route }) => {
   const data = route.params.data;
+  const notiData = useMemo(() => {
+    if (data.length !== 0) {
+      return generateDataNotification(data).filter(
+        (el: any) => el.notificationType !== NotificationType.UNKNOWN,
+      );
+    }
+  }, [data]);
 
   return (
     <SafeAreaView style={stylesCentral.container}>
@@ -118,10 +126,11 @@ const NotificationScreen: React.FC<any> = ({ navigation, route }) => {
 
       {data.length !== 0 ? (
         <FlatList
-          data={generateDataNotification(data)}
-          renderItem={({ item }: any) =>
-            item.notificationType != NotificationType.UNKNOWN ? (
+          data={notiData}
+          renderItem={({ item, index }: any) => {
+            return (
               <NotificationCard
+                key={index}
                 expand={item?.expand}
                 title={item?.title}
                 notificationType={item?.notificationType}
@@ -132,10 +141,8 @@ const NotificationScreen: React.FC<any> = ({ navigation, route }) => {
                   readIt(item?.notiId);
                 }}
               />
-            ) : (
-              <></>
-            )
-          }
+            );
+          }}
         />
       ) : (
         <View

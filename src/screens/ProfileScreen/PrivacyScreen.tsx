@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../../assets';
 import { condition } from '../../assets/constant/constant';
@@ -7,6 +7,7 @@ import fonts from '../../assets/fonts';
 import CustomHeader from '../../components/CustomHeader';
 import { normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
+import Text from '../../components/Text/Text';
 
 const PrivacyScreen: React.FC<any> = ({ navigation }) => {
   return (

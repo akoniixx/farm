@@ -1,13 +1,8 @@
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  ViewStyle,
-} from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import React from 'react';
 import colors from '../../assets/colors/colors';
 import fonts from '../../assets/fonts';
+import Text from '../Text/Text';
 
 interface Props {
   radioLists: {

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { colors, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
-import { dialCall } from '../../functions/utility';
+import Text from '../Text/Text';
 
 export const WaittingCard = () => {
   return (

@@ -1,65 +1,39 @@
-import { Switch } from '@rneui/themed';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useState,
-} from 'react';
+import React, { useEffect, useReducer } from 'react';
 import {
-  Button,
   Image,
   ScrollView,
   StyleSheet,
-  Text,
   View,
   Dimensions,
-  ImageBackground,
   TouchableOpacity,
 } from 'react-native';
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Avatar } from '@rneui/base';
 import icons from '../../assets/icons/icons';
-import { SheetManager } from 'react-native-actions-sheet';
 import { useFocusEffect } from '@react-navigation/native';
-import { normalize, width } from '../../functions/Normalize';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { normalize } from '../../functions/Normalize';
 import image from '../../assets/images/image';
-import MainTapNavigator from '../../navigations/Bottom/MainTapNavigator';
-import { socket } from '../../functions/utility';
-import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
-import { Authentication } from '../../datasource/AuthDatasource';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
-import DronerCarousel from '../../components/Carousel/DronerCarousel';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
+import Text from '../../components/Text/Text';
 
 const AuthMainScreen: React.FC<any> = ({ navigation }) => {
-  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-  const imageWidth = screenWidth / 2;
-  const date = new Date().toLocaleDateString();
-  const [fcmToken, setFcmToken] = useState('');
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
-  const [taskSug, setTaskSug] = useState<any[]>([]);
-  const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
   const { height, width } = Dimensions.get('window');
 
-  const getData = async () => {
-    const value = await AsyncStorage.getItem('token');
-    setFcmToken(value!);
-  };
+  // const getData = async () => {
+  //   const value = await AsyncStorage.getItem('token');
+  //   setFcmToken(value!);
+  // };
   useEffect(() => {
-    getData();
+    // getData();
     getProfile();
-    dronerSug();
-    dronerSugUsed();
+    // dronerSug();
+    // dronerSugUsed();
   }, []);
 
   useFocusEffect(
@@ -84,40 +58,40 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
         .catch(err => console.log(err));
     }
   };
-  const dronerSug = async () => {
-    const value = await AsyncStorage.getItem('token');
-    if (value) {
-      const farmer_id = await AsyncStorage.getItem('farmer_id');
-      TaskSuggestion.searchDroner(
-        farmer_id !== null ? farmer_id : '',
-        profilestate.plotItem[0].id,
-        date,
-      )
-        .then(res => {
-          setTaskSug(res);
-        })
-        .catch(err => console.log(err));
-    }
-  };
-  const dronerSugUsed = async () => {
-    const value = await AsyncStorage.getItem('token');
-    if (value) {
-      const farmer_id = await AsyncStorage.getItem('farmer_id');
-      const limit = 8;
-      const offset = 0;
-      TaskSuggestion.DronerUsed(
-        farmer_id !== null ? farmer_id : '',
-        profilestate.plotItem[0].id,
-        date,
-        limit,
-        offset,
-      )
-        .then(res => {
-          setTaskSugUsed(res);
-        })
-        .catch(err => console.log(err));
-    }
-  };
+  // const dronerSug = async () => {
+  //   const value = await AsyncStorage.getItem('token');
+  //   if (value) {
+  //     const farmer_id = await AsyncStorage.getItem('farmer_id');
+  //     TaskSuggestion.searchDroner(
+  //       farmer_id !== null ? farmer_id : '',
+  //       profilestate.plotItem[0].id,
+  //       date,
+  //     )
+  //       .then(res => {
+  //         setTaskSug(res);
+  //       })
+  //       .catch(err => console.log(err));
+  //   }
+  // };
+  // const dronerSugUsed = async () => {
+  //   const value = await AsyncStorage.getItem('token');
+  //   if (value) {
+  //     const farmer_id = await AsyncStorage.getItem('farmer_id');
+  //     const limit = 8;
+  //     const offset = 0;
+  //     TaskSuggestion.DronerUsed(
+  //       farmer_id !== null ? farmer_id : '',
+  //       profilestate.plotItem[0].id,
+  //       date,
+  //       limit,
+  //       offset,
+  //     )
+  //       .then(res => {
+  //         setTaskSugUsed(res);
+  //       })
+  //       .catch(err => console.log(err));
+  //   }
+  // };
 
   return (
     <View
@@ -201,7 +175,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                         </Text>
                       </LinearGradient>
                     </TouchableOpacity>
-                    <View style={{ width: normalize(10) }}></View>
+                    <View style={{ width: normalize(10) }} />
                     <TouchableOpacity
                       onPress={() => navigation.navigate('MyPlotScreen')}>
                       <LinearGradient

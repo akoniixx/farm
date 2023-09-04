@@ -1,6 +1,5 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import {
-  TouchableOpacity,
   StyleSheet,
   View,
   Text,
@@ -8,29 +7,19 @@ import {
   Image,
   ScrollView,
   Dimensions,
-  Modal,
-  TextInput,
 } from 'react-native';
 import { colors, font, image } from '../../assets';
 import { normalize } from '../../functions/Normalize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
-import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import {
   detailDronerReducer,
   initDetailDronerState,
-  initProfileState,
-  profileReducer,
 } from '../../hook/profilefield';
-import { useIsFocused } from '@react-navigation/native';
-import AllDroner from '../../components/Carousel/AllDronerUsed';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import { FavoriteDroner } from '../../datasource/FavoriteDroner';
-import FavDronerUsedList from '../../components/Carousel/FavDronerUsedList';
 import { stylesCentral } from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
 import CardReview from '../../components/Carousel/CardReview';
-import icons from '../../assets/icons/icons';
 import { FilterReview } from '../../components/FilterReview';
 
 const AllReviewDroner: React.FC<any> = ({ navigation }) => {

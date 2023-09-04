@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
-import React, { useCallback, useEffect } from 'react';
+import { View, StyleSheet, Image, Dimensions } from 'react-native';
+import React from 'react';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { normalize } from '@rneui/themed';
 import { colors, font, image } from '../../assets';
@@ -10,6 +10,7 @@ import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { mixpanel } from '../../../mixpanel';
 import messaging from '@react-native-firebase/messaging';
 import { useFocusEffect } from '@react-navigation/native';
+import Text from '../../components/Text/Text';
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 

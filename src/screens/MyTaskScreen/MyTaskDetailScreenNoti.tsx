@@ -3,7 +3,6 @@ import {
   Image,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -21,6 +20,7 @@ import {
 import { DronerDatasource } from '../../datasource/DronerDatasource';
 import { normalize } from '../../functions/Normalize';
 import { getStatusToText, numberWithCommas } from '../../functions/utility';
+import Text from '../../components/Text/Text';
 
 const MyTaskDetailScreenNoti: React.FC<any> = ({ navigation, route }) => {
   const task = route.params.task;

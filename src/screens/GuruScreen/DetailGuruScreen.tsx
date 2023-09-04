@@ -5,13 +5,11 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import HTML from 'react-native-render-html';
 import colors from '../../assets/colors/colors';
 import CustomHeader from '../../components/CustomHeader';
-import { CardGuru } from '../../components/Guru/CardGuru';
 import { normalize } from '../../functions/Normalize';
 import { font } from '../../assets/index';
 import { useIsFocused } from '@react-navigation/native';
@@ -21,6 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import image from '../../assets/images/image';
 import { mixpanel } from '../../../mixpanel';
+import Text from '../../components/Text/Text';
 
 const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
   const isFocused = useIsFocused();

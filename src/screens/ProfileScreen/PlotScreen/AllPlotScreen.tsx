@@ -3,7 +3,6 @@ import {
   Image,
   View,
   StyleSheet,
-  Text,
   Modal,
   Linking,
   Platform,
@@ -24,6 +23,7 @@ import PlotsItemEdit from '../../../components/Plots/PlotsItemEdit';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { callcenterNumber } from '../../../definitions/callCenterNumber';
 import { useFocusEffect } from '@react-navigation/native';
+import Text from '../../../components/Text/Text';
 
 const AllPlotScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);

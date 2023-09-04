@@ -6,7 +6,6 @@ import {
   ViewStyle,
   FlatList,
   TouchableOpacity,
-  Text,
   Image,
   PermissionsAndroid,
   Platform,
@@ -21,7 +20,7 @@ import ThirdFormScreen, {
 import { normalize } from '@rneui/themed';
 import Geolocation from 'react-native-geolocation-service';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { navigationRef } from '../navigations/RootNavigation';
+import Text from './Text/Text';
 
 type SearchBarProps = {
   value: string;
@@ -43,7 +42,7 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = props => {
     showPredictions,
   } = props;
 
-  const { container, inputStyle } = styles;
+  const { container } = styles;
   const passedStyles = Array.isArray(style)
     ? Object.assign({}, ...style)
     : style;

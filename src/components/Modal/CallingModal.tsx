@@ -1,11 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import ActionSheet, { SheetProps } from 'react-native-actions-sheet';
 import { colors } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
 import { dialCall } from '../../functions/utility';
 import { MainButton } from '../Button/MainButton';
+import Text from '../Text/Text';
 
 export const CallingModal = (props: SheetProps<{ tel: string }>) => {
   return (

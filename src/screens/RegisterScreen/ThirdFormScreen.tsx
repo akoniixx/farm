@@ -1,23 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Alert,
-  Button,
   Dimensions,
-  FlatList,
   Image,
-  Keyboard,
   KeyboardAvoidingView,
   Linking,
-  Modal,
   PermissionsAndroid,
   Platform,
   ScrollView,
-  StatusBar,
   StyleSheet,
-  Text,
   TextInput,
   ToastAndroid,
-  TouchableHighlight,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -29,34 +22,24 @@ import fonts from '../../assets/fonts';
 import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
 import { ProgressBar } from '../../components/ProgressBar';
-import { height, normalize } from '../../functions/Normalize';
+import { normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
-import Animated, { color } from 'react-native-reanimated';
-import { plant, plantList } from '../../definitions/plants';
+import { plant } from '../../definitions/plants';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import ActionSheet from 'react-native-actions-sheet';
-import DropDownPicker from 'react-native-dropdown-picker';
-import { registerReducer } from '../../hook/registerfield';
 import Geolocation from 'react-native-geolocation-service';
-import DroneBrandingItem from '../../components/Plots/Plots';
 import PlotsItem from '../../components/Plots/Plots';
 import { QueryLocation } from '../../datasource/LocationDatasource';
-import { ButtonGroup, ScreenWidth } from '@rneui/base';
 import { image } from '../../assets/index';
 import { PlantSelect } from '../../components/PlantSelect/PlantSelect';
 import axios from 'axios';
 import { Register } from '../../datasource/AuthDatasource';
-import Geocoder from 'react-native-geocoding';
 import SearchBarWithAutocomplete from '../../components/SearchBarWithAutocomplete';
 import { useDebounce } from '../../hook/useDebounce';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { navigate, navigationRef } from '../../navigations/RootNavigation';
-import SearchPlotArea from '../../components/SearchPlotArea';
-import { LAT_LNG_BANGKOK } from '../../definitions/location';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { useDebounceValue } from '../../hook/useDebounceValue';
 import { mixpanel } from '../../../mixpanel';
+import Text from '../../components/Text/Text';
 
 export type PredictionType = {
   description: string;
@@ -545,6 +528,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   ชื่อแปลงเกษตร
                 </Text>
                 <TextInput
+                  allowFontScaling={false}
                   onChangeText={value => {
                     setplotName(value);
                   }}
@@ -567,6 +551,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   <Text style={{ fontSize: normalize(16) }}>(โดยประมาณ)</Text>
                 </Text>
                 <TextInput
+                  allowFontScaling={false}
                   onChangeText={value => {
                     const newNumber = value.replace(/[^0-9]/g, '');
                     setraiAmount(newNumber);
@@ -768,6 +753,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                 )}
                 <Text style={styles.head}>จุดสังเกต</Text>
                 <TextInput
+                  allowFontScaling={false}
                   onChangeText={value => {
                     setlandmark(value);
                   }}
@@ -939,6 +925,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   justifyContent: 'space-between',
                 }}>
                 <TextInput
+                  allowFontScaling={false}
                   onChangeText={searchPlotArea}
                   value={searchValue}
                   defaultValue={searchValue}

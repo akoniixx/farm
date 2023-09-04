@@ -10,7 +10,6 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -52,6 +51,7 @@ import { couponState } from '../../recoil/CouponAtom';
 import { Switch } from '@rneui/base';
 import Counter from '../../components/Counter/Counter';
 import { useDebounceValue } from '../../hook/useDebounceValue';
+import Text from '../../components/Text/Text';
 interface CampaignDetail {
   id: string;
   point: number;

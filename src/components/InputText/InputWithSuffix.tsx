@@ -40,6 +40,7 @@ export default function InputWithSuffix({
       }}>
       <TextInput
         {...props}
+        allowFontScaling={false}
         scrollEnabled={false}
         ref={refInput}
         onBlur={e => {

@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import ActionSheet, {
   SheetManager,
@@ -12,6 +6,7 @@ import ActionSheet, {
 } from 'react-native-actions-sheet';
 import colors from '../../assets/colors/colors';
 import fonts from '../../assets/fonts';
+import Text from '../Text/Text';
 
 export default function SelectInjectionSheet(props: SheetProps) {
   const {

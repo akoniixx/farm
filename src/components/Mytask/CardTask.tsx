@@ -1,12 +1,13 @@
 import moment from 'moment';
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { colors, icons } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
 import { getStatusToText, numberWithCommas } from '../../functions/utility';
 import { DronerCard } from './DronerCard';
 import { WaittingCard } from './WaitingCard';
+import Text from '../Text/Text';
 
 interface taskListProps {
   task: {

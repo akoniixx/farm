@@ -8,7 +8,6 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -31,6 +30,7 @@ import { MyJobDatasource } from '../../datasource/MyJobDatasource';
 import { normalize } from '../../functions/Normalize';
 import { getStatusToText, numberWithCommas } from '../../functions/utility';
 import Banner from '../../components/Banner/Banner';
+import Text from '../../components/Text/Text';
 
 interface Campaign {
   id: string;
@@ -769,6 +769,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                       onChangeText={setCommentReview}
                       scrollEnabled={false}
                       numberOfLines={6}
+                      allowFontScaling={false}
                       returnKeyType="done"
                       multiline
                       blurOnSubmit={true}

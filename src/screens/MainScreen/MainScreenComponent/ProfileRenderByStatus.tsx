@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   Image,
   TouchableOpacity,
   StyleSheet,
@@ -9,6 +8,7 @@ import {
 import React from 'react';
 import { normalize } from '../../../functions/Normalize';
 import { colors, font, icons } from '../../../assets';
+import Text from '../../../components/Text/Text';
 
 interface Props {
   status: string;

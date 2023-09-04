@@ -1,7 +1,5 @@
 import {
-  Button,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableOpacity,
@@ -17,6 +15,7 @@ import CouponCard from '../../components/CouponCard/CouponCard';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { couponState } from '../../recoil/CouponAtom';
 import { mixpanel } from '../../../mixpanel';
+import Text from '../../components/Text/Text';
 
 const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
   const [coupon, setCoupon] = useRecoilState(couponState);
@@ -139,6 +138,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
           }}>
           <View style={styles.searchBar}>
             <TextInput
+              allowFontScaling={false}
               style={{
                 flex: 5,
                 height: normalize(50),

@@ -2,12 +2,9 @@ import { normalize } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   Image,
-  TouchableWithoutFeedback,
-  Keyboard,
   ScrollView,
 } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
@@ -22,6 +19,7 @@ import StepIndicatorHead from '../../components/StepIndicatorHead';
 import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { CropDatasource } from '../../datasource/CropDatasource';
 import { PURPOSE_SPRAY_CHECKBOX } from '../../definitions/timeSpray';
+import Text from '../../components/Text/Text';
 
 const SelectTarget: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner;

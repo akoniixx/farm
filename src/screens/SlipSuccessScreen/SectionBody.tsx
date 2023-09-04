@@ -1,16 +1,16 @@
 import {
   View,
-  Text,
   StyleSheet,
   Image,
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import fonts from '../../assets/fonts';
 import { colors, image } from '../../assets';
 import SlipCard, { TaskDataTypeSlip } from '../../components/SlipCard/SlipCard';
 import icons from '../../assets/icons/icons';
+import Text from '../../components/Text/Text';
 
 export default function SectionBody(props: TaskDataTypeSlip) {
   return (

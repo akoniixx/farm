@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   TouchableOpacity,
   Image,
   ScrollView,
@@ -36,6 +35,7 @@ import { normalize } from '../../functions/Normalize';
 import Lottie from 'lottie-react-native';
 import messaging from '@react-native-firebase/messaging';
 import { useNetwork } from '../../contexts/NetworkContext';
+import Text from '../../components/Text/Text';
 export default function SlipWaitingScreen({
   navigation,
   route,

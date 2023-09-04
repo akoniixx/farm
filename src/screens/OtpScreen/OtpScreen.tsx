@@ -1,13 +1,10 @@
 import {
   View,
-  Text,
   StyleSheet,
-  TextInput,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Button,
   TouchableOpacity,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -29,6 +26,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import messaging from '@react-native-firebase/messaging';
+import Text from '../../components/Text/Text';
 
 const CELL_COUNT = 6;
 

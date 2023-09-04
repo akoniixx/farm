@@ -1,9 +1,9 @@
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { font, icons, image } from '../../assets';
 import colors from '../../assets/colors/colors';
 import { normalize } from '../../functions/Normalize';
-import { momentExtend } from '../../utils/moment-buddha-year';
+import Text from '../Text/Text';
 interface guruData {
   index: any;
   background: any;

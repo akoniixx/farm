@@ -2,7 +2,6 @@ import {
   Image,
   Linking,
   Platform,
-  Text,
   View,
   useWindowDimensions,
 } from 'react-native';
@@ -18,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { navigate } from '../../navigations/RootNavigation';
 import { mixpanel } from '../../../mixpanel';
 import AsyncButton from '../../components/Button/AsyncButton';
+import Text from '../../components/Text/Text';
 
 export default function ForceUpdateScreen({ route }: any) {
   const { isForce = false, isDev = false } = route.params;

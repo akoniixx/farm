@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  Text,
   TouchableOpacity,
   SafeAreaView,
   StyleSheet,
@@ -10,6 +9,7 @@ import {
 import { normalize } from '../functions/Normalize';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { colors, font } from '../assets';
+import Text from './Text/Text';
 
 interface Prop {
   title?: string;

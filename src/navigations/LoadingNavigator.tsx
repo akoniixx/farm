@@ -1,11 +1,14 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { navigate } from './RootNavigation';
 import VersionCheck from 'react-native-version-check';
 import storeVersion from 'react-native-store-version';
 import { isForceUpdate } from '../functions/checkForceUpdate';
 import { useFocusEffect } from '@react-navigation/native';
+import Text from '../components/Text/Text';
+import { ActivityIndicator } from 'react-native-paper';
+import colors from '../assets/colors/colors';
 
 const LoadingNavigator: React.FC<any> = ({ navigation, route }) => {
   useFocusEffect(() => {
@@ -80,7 +83,7 @@ const LoadingNavigator: React.FC<any> = ({ navigation, route }) => {
 
   return (
     <View style={styles.scaffold}>
-      <Text>Loading...</Text>
+      <ActivityIndicator size={'large'} color={colors.greenLight} />
     </View>
   );
 };

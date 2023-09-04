@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   Image,
   TouchableOpacity,
@@ -8,13 +7,14 @@ import {
 } from 'react-native';
 import React from 'react';
 import { normalize } from '@rneui/themed';
-import { colors, icons, image } from '../../assets';
+import { colors, icons } from '../../assets';
 import fonts from '../../assets/fonts';
 import { checkRai } from '../../functions/CheckRai';
 import { generateTime } from '../../functions/DateTime';
 import { CouponCardEntities } from '../../entites/CouponCard';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { width } from '../../functions/Normalize';
+import Text from '../Text/Text';
 
 const CouponCardUsed: React.FC<CouponCardEntities> = ({
   id,

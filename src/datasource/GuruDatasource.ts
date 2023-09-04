@@ -2,15 +2,23 @@ import axios from 'axios';
 import { BASE_URL } from '../config/develop-config';
 
 export class GuruKaset {
-  static async findAllNews(
-    status: string,
-    application: string,
-    sortField?: string,
-    sortDirection?: string,
-    limit?: number,
-    offset?: number,
-    pageType?: string,
-  ): Promise<any> {
+  static async findAllNews({
+    status,
+    application,
+    sortField,
+    sortDirection,
+    limit,
+    offset,
+    pageType,
+  }: {
+    status: string;
+    application: string;
+    sortField?: string;
+    sortDirection?: string;
+    limit?: number;
+    offset?: number;
+    pageType?: string;
+  }): Promise<any> {
     return axios
       .post(BASE_URL + `/promotion/news/find-all-news`, {
         status: status,

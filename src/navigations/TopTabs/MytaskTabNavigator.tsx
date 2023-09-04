@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import { TabBar, TabView } from 'react-native-tab-view';
 import { colors } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
 import FinishTaskScreen from '../../screens/MyTaskScreen/FinishTaskScreen';
 import InprogressScreen from '../../screens/MyTaskScreen/InprogressScreen';
+import Text from '../../components/Text/Text';
 
 const renderTabBar = (props: any) => (
   <TabBar
     {...props}
     indicatorStyle={{ backgroundColor: '#2EC46D' }}
     style={{ backgroundColor: colors.white }}
-    renderLabel={({ route, focused, color }) => (
+    renderLabel={({ route, focused }) => (
       <Text
         style={[
           styles.label,

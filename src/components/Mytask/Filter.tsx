@@ -1,10 +1,11 @@
 import { normalize } from '@rneui/themed';
-import React, { useState, useMemo, useEffect } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, TouchableOpacity, View, Image } from 'react-native';
 import { onOpen } from 'react-native-actions-sheet-picker';
 import { font, icons } from '../../assets';
 import { sortField } from '../../definitions/taskFilter';
 import PickerFilter from '../PickerFilter/PickerFilter';
+import Text from '../Text/Text';
 
 interface props {
   selectedField: {

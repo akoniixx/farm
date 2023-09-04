@@ -1,20 +1,19 @@
 import {
   Image,
   StyleSheet,
-  Text,
   View,
   ImageBackground,
   TouchableOpacity,
   Platform,
   ActivityIndicator,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
 import { Avatar } from '@rneui/base';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FavoriteDroner } from '../../datasource/FavoriteDroner';
+
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import Text from '../Text/Text';
 
 interface dronerUsedData {
   index: any;

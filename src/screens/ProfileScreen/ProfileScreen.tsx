@@ -7,7 +7,6 @@ import {
   Modal,
   Platform,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -29,6 +28,7 @@ import PlotInProfile from '../../components/Plots/PlotsInProfile';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { useIsFocused } from '@react-navigation/native';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
+import Text from '../../components/Text/Text';
 
 const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);

@@ -12,6 +12,7 @@ const InputText = ({ style, ...props }: Props) => {
   return (
     <TextInput
       ref={props.ref}
+      allowFontScaling={false}
       placeholderTextColor={colors.gray}
       {...props}
       style={[

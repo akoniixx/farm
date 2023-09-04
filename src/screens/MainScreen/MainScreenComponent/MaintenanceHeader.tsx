@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import React from 'react';
 import { normalize } from '../../../functions/Normalize';
 import { Image } from 'react-native';
@@ -6,6 +6,7 @@ import { font, image } from '../../../assets';
 import { momentExtend } from '../../../utils/moment-buddha-year';
 import colors from '../../../assets/colors/colors';
 import moment from 'moment';
+import Text from '../../../components/Text/Text';
 
 interface Props {
   maintenance: any;

@@ -1,36 +1,21 @@
-import { Switch } from '@rneui/themed';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   StyleSheet,
-  Text,
   View,
   Dimensions,
   TouchableOpacity,
   FlatList,
-  ScrollView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons } from '../../assets';
-import { stylesCentral } from '../../styles/StylesCentral';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Avatar } from '@rneui/base';
-import { normalize, width } from '../../functions/Normalize';
+import { normalize } from '../../functions/Normalize';
 import image from '../../assets/images/image';
-import CustomHeader from '../../components/CustomHeader';
-import { MainButton } from '../../components/Button/MainButton';
 import CouponCard from '../../components/CouponCard/CouponCard';
 import { getCouponUser } from '../../datasource/PromotionDatasource';
 import { CouponCardEntities } from '../../entites/CouponCard';
 import { useIsFocused } from '@react-navigation/native';
 import { mixpanel } from '../../../mixpanel';
+import Text from '../../components/Text/Text';
 
 const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
   const [data, setData] = useState<CouponCardEntities[]>([]);

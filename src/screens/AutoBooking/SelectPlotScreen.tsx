@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text } from '@rneui/base';
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import {
   FlatList,
@@ -26,6 +25,7 @@ import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { normalize } from '../../functions/Normalize';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Text from '../../components/Text/Text';
 const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner;
   const profile = route.params.profile;

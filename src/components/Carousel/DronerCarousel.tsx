@@ -1,7 +1,6 @@
 import {
   Image,
   StyleSheet,
-  Text,
   View,
   ImageBackground,
   Platform,
@@ -17,6 +16,7 @@ import { mixpanel } from '../../../mixpanel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import Text from '../Text/Text';
 
 interface dronerData {
   index: any;

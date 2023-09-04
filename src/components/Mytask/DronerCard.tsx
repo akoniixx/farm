@@ -1,9 +1,10 @@
 import { normalize } from '@rneui/themed';
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { colors, icons } from '../../assets';
 import fonts from '../../assets/fonts';
 import { dialCall } from '../../functions/utility';
+import Text from '../Text/Text';
 
 interface props {
   name: string;

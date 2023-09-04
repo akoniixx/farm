@@ -4,10 +4,8 @@ import {
   Dimensions,
   Image,
   Modal,
-  RefreshControl,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -15,26 +13,22 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
-import { height, normalize } from '../../functions/Normalize';
+import { normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ImageSlider } from 'react-native-image-slider-banner';
 
 import {
   detailDronerReducer,
   initDetailDronerState,
 } from '../../hook/profilefield';
-import moment from 'moment';
 import { CardDetailDroner } from '../../components/Carousel/CardTaskDetailDroner';
-import { SliderHeader } from 'react-native-image-slider-banner/src/sliderHeader';
-import Animated from 'react-native-reanimated';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import { momentExtend } from '../../utils/moment-buddha-year';
-import CardReview from '../../components/Carousel/CardReview';
 import { useIsFocused } from '@react-navigation/native';
 import VerifyStatus from '../../components/Modal/VerifyStatus';
+import Text from '../../components/Text/Text';
 
 const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   const isFocused = useIsFocused();

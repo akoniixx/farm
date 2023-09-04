@@ -1,4 +1,3 @@
-import { Text } from '@rneui/base';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import {
@@ -24,6 +23,7 @@ import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { normalize, width } from '../../functions/Normalize';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import HeadDronerCardForCreatTask from '../../components/HeadDronerCardForCreatTask';
+import Text from '../../components/Text/Text';
 
 const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner;
@@ -121,6 +121,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
                     },
                   ]}>
                   <TextInput
+                    allowFontScaling={false}
                     value={momentExtend.toBuddhistYear(date, 'DD MMMM YYYY')}
                     editable={false}
                     placeholder={'ระบุวัน เดือน ปี'}
@@ -163,6 +164,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
                     value={
                       ('0' + hour).slice(-2) + ':' + ('0' + minute).slice(-2)
                     }
+                    allowFontScaling={false}
                     editable={false}
                     placeholder={'ระบุวัน เดือน ปี'}
                     placeholderTextColor={colors.disable}

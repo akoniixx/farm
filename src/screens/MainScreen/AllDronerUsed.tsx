@@ -3,7 +3,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   View,
-  Text,
   SafeAreaView,
   Image,
   ScrollView,
@@ -20,6 +19,7 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import FavDronerUsedList from '../../components/Carousel/FavDronerUsedList';
 import * as RootNavigation from '../../navigations/RootNavigation';
+import Text from '../../components/Text/Text';
 
 const AllDronerUsed: React.FC<any> = ({ navigation }) => {
   const date = new Date();

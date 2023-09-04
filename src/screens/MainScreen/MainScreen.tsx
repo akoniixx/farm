@@ -27,14 +27,10 @@ import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { useAuth } from '../../contexts/AuthContext';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { mixpanel, mixpanel_token } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import DronerSugg from '../../components/Carousel/DronerCarousel';
-import DronerUsedList from '../../components/Carousel/DronerUsedList';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
-import { SystemMaintenance } from '../../datasource/SystemMaintenanceDatasource';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import PopUpMaintenance from '../../components/Modal/MaintenanceApp/PopUpMaintenance';
 import {
@@ -42,8 +38,6 @@ import {
   MaintenanceSystem_INIT,
 } from '../../entites/MaintenanceApp';
 import { GuruKaset } from '../../datasource/GuruDatasource';
-import { CardGuruKaset } from '../../components/Carousel/GuruKaset';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { historyPoint } from '../../datasource/HistoryPointDatasource';
 import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
 import VerifyStatus from '../../components/Modal/VerifyStatus';
@@ -112,12 +106,12 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   };
   const getNotificationData = async () => {
     FCMtokenDatasource.getNotificationList()
-      .then(res =>
+      .then(res => {
         setNotiData({
           count: res.count,
           data: res.data,
-        }),
-      )
+        });
+      })
       .catch(err => console.log(err));
   };
 
@@ -168,9 +162,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       }
     };
     getInitialData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
-  console.log('taskSug', JSON.stringify(taskSug, null, 2));
-  console.log('taskSugUsed', JSON.stringify(taskSugUsed, null, 2));
+
   useEffect(() => {
     const dronerSug = async () => {
       const value = await AsyncStorage.getItem('token');

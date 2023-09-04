@@ -1,14 +1,13 @@
-import { View, Text, Modal, TouchableOpacity, Image } from 'react-native';
+import { View, Modal, TouchableOpacity, Image } from 'react-native';
 import React from 'react';
-import { MaintenanceEntity, ModalEntity } from '../ModalEntity';
+import { MaintenanceEntity } from '../ModalEntity';
 import { ModalStyle } from '../ModalStyle';
 import { colors, icons, image } from '../../../assets';
-import { normalize, width } from '../../../functions/Normalize';
-import { MainButton } from '../../Button/MainButton';
+import { normalize } from '../../../functions/Normalize';
 import fonts from '../../../assets/fonts';
 import { momentExtend } from '../../../utils/moment-buddha-year';
 import moment from 'moment';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Text from '../../Text/Text';
 const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
   show,
   onClose,
@@ -32,7 +31,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
             </TouchableOpacity>
           </View>
           <Image source={image.maintenance} style={ModalStyle.image} />
-          {start != end ? (
+          {start !== end ? (
             <>
               <Text
                 style={[

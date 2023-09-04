@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   Image,
@@ -16,6 +15,7 @@ import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { normalize } from '../../functions/Normalize';
 import InputWithSuffix from '../InputText/InputWithSuffix';
 import Radio from '../Radio/Radio';
+import Text from '../Text/Text';
 
 interface Prop {
   id: string;

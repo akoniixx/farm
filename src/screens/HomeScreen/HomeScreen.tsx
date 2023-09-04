@@ -1,42 +1,14 @@
-import { Switch } from '@rneui/themed';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import {
-  Button,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  ImageBackground,
-  Platform,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React from 'react';
+import { Image, StyleSheet, Platform } from 'react-native';
 import { colors, font } from '../../assets';
-import { stylesCentral } from '../../styles/StylesCentral';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Avatar } from '@rneui/base';
 import icons from '../../assets/icons/icons';
-import { SheetManager } from 'react-native-actions-sheet';
-import { useFocusEffect } from '@react-navigation/native';
-import { normalize, width } from '../../functions/Normalize';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import image from '../../assets/images/image';
+import { normalize } from '../../functions/Normalize';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MainScreen from '../MainScreen/MainScreen';
 import fonts from '../../assets/fonts';
-import PromotionScreen from '../PromotionScreen/PromotionScreen';
-import ProfileScreen from '../ProfileScreen/ProfileScreen';
 import AuthMainScreen from '../AuthMainScreen/AuthMainScreen';
 import AuthProfileScreen from '../AuthProfileScreen/AuthProfileScreen';
 import AuthPromotionScreen from '../AuthPromotionScreen/AuthPromotionScreen';
+import Text from '../../components/Text/Text';
 
 const Tab = createBottomTabNavigator();
 const HomeScreen: React.FC<any> = ({ navigation, route }) => {

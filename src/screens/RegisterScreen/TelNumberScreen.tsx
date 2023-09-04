@@ -1,15 +1,12 @@
 import {
   View,
-  Text,
   StyleSheet,
-  TextInput,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Button,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../styles/StylesCentral';
 import { colors, font } from '../../assets';
@@ -17,11 +14,9 @@ import CustomHeader from '../../components/CustomHeader';
 import { MainButton } from '../../components/Button/MainButton';
 import { normalize } from '../../functions/Normalize';
 import { InputPhone } from '../../components/InputPhone';
-import OtpScreen from '../OtpScreen/OtpScreen';
-import * as RootNavigation from '../../navigations/RootNavigation';
 import { Authentication } from '../../datasource/AuthDatasource';
-import Toast from 'react-native-toast-message';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import Text from '../../components/Text/Text';
 
 const TelNumScreen: React.FC<any> = ({ navigation }) => {
   const [value, setValue] = useState<string>('');

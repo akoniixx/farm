@@ -1,47 +1,23 @@
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  Button,
-  PermissionsAndroid,
-  Platform,
-  Modal,
   Image,
   Dimensions,
-  Pressable,
-  Alert,
   ScrollView,
 } from 'react-native';
-import React, {
-  useCallback,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../styles/StylesCentral';
-import { colors, font, icons, image as img } from '../../assets';
+import { colors, font, icons } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import { MainButton } from '../../components/Button/MainButton';
-import * as ImagePicker from 'react-native-image-picker';
-import { normalize, width } from '../../functions/Normalize';
-import { ProgressBar } from '../../components/ProgressBar';
-import { registerReducer } from '../../hook/registerfield';
-import fonts from '../../assets/fonts';
+import { normalize } from '../../functions/Normalize';
 import { Avatar } from '@rneui/themed';
-import { Register } from '../../datasource/AuthDatasource';
-import Geolocation from 'react-native-geolocation-service';
-import moment from 'moment';
-import { _monthName, build12Year } from '../../definitions/constants';
-import DatePicker from 'react-native-date-picker';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
-import DatePickerCustom from '../../components/Calendar/Calendar';
+import { _monthName } from '../../definitions/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
-import { profileReducer } from '../../hook/profilefield';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import { QueryLocation } from '../../datasource/LocationDatasource';
 import ActionSheet from 'react-native-actions-sheet';
@@ -49,6 +25,7 @@ import {
   LocationInPostcodeSelect,
   LocationSelect,
 } from '../../components/Location/Location';
+import Text from '../../components/Text/Text';
 
 const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [initProfile, setInitProfile] = useState({
@@ -227,6 +204,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </View>
             <Text style={styles.head}>ชื่อ*</Text>
             <TextInput
+              allowFontScaling={false}
               value={value.firstname}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
@@ -235,6 +213,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             />
             <Text style={styles.head}>นามสกุล*</Text>
             <TextInput
+              allowFontScaling={false}
               value={value.lastname}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
@@ -256,6 +235,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   value.birthDate,
                   'DD MMMM YYYY',
                 )}
+                allowFontScaling={false}
                 editable={false}
                 placeholder={'ระบุวัน เดือน ปี'}
                 placeholderTextColor={colors.disable}
@@ -278,6 +258,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </View>
             <Text style={styles.head}>เบอร์โทรศัพท์</Text>
             <TextInput
+              allowFontScaling={false}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               value={value.telephoneNo}
@@ -285,6 +266,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             <Text style={styles.headAdd}>ที่อยู่ของคุณ</Text>
             <Text style={styles.head}>บ้านเลขที่</Text>
             <TextInput
+              allowFontScaling={false}
               value={address.address1}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
@@ -293,6 +275,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             />
             <Text style={styles.head}>รายละเอียดที่อยู่</Text>
             <TextInput
+              allowFontScaling={false}
               value={address.address2}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
@@ -301,6 +284,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             />
             <Text style={styles.head}>จังหวัด</Text>
             <TextInput
+              allowFontScaling={false}
               value={addr.provinceName}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
@@ -309,6 +293,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             />
             <Text style={styles.head}>อำเภอ</Text>
             <TextInput
+              allowFontScaling={false}
               value={addr.districtName}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
@@ -317,6 +302,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             />
             <Text style={styles.head}>ตำบล</Text>
             <TextInput
+              allowFontScaling={false}
               value={addr.subdistrictName}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
@@ -325,6 +311,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             />
             <Text style={styles.head}>รหัสไปรษณีย์</Text>
             <TextInput
+              allowFontScaling={false}
               value={address.postcode}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}

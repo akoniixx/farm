@@ -1,7 +1,8 @@
 import React from 'react';
 import { font } from '../assets';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { normalize } from '../functions/Normalize';
+import Text from '../components/Text/Text';
 
 const toastStyle = {
   backgroundColor: '#3EBD93',

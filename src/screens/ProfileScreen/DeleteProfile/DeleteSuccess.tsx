@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  useWindowDimensions,
-} from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import React, { useState } from 'react';
 import fonts from '../../../assets/fonts';
 import colors from '../../../assets/colors/colors';
@@ -18,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { socket } from '../../../functions/utility';
 import { Authentication } from '../../../datasource/AuthDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import Text from '../../../components/Text/Text';
 
 const DeleteSuccess: React.FC<any> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);

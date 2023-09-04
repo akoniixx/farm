@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, Image, Dimensions } from 'react-native';
 import React from 'react';
 import colors from '../../assets/colors/colors';
 import fonts from '../../assets/fonts';
@@ -6,6 +6,7 @@ import DashedLine from 'react-native-dashed-line';
 import { image } from '../../assets';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
+import Text from '../Text/Text';
 export interface TaskDataTypeSlip {
   id: string;
   taskNo: string;

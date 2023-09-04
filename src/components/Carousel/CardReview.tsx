@@ -1,20 +1,10 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { Avatar } from '@rneui/base';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FavoriteDroner } from '../../datasource/FavoriteDroner';
-import { TaskSuggestion } from '../../datasource/TaskSuggestion';
+import Text from '../Text/Text';
 
 interface data {
   index: any;
