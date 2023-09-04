@@ -130,12 +130,14 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
 
   const onLogout = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
-    socket.removeAllListeners(`send-task-${dronerId!}`);
-    socket.close();
+
     FCMtokenDatasource.deleteFCMtoken(fcmToken)
-      .then(async () => await Authentication.logout())
+      .then(async () => {
+        socket.removeAllListeners(`send-task-${dronerId!}`);
+        socket.close();
+        await Authentication.logout();
+      })
       .catch(err => console.log(err));
-    await AsyncStorage.clear();
   };
 
   useEffect(() => {
