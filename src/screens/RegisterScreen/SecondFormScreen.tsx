@@ -1,35 +1,26 @@
 import {
   View,
-  Text,
   StyleSheet,
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Button,
   Dimensions,
   Image,
   PermissionsAndroid,
 } from 'react-native';
-import React, {
-  useCallback,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../styles/StylesCentral';
 import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import { MainButton } from '../../components/Button/MainButton';
-import { normalize, width } from '../../functions/Normalize';
-import { Authentication, Register } from '../../datasource/AuthDatasource';
+import { normalize } from '../../functions/Normalize';
+import { Register } from '../../datasource/AuthDatasource';
 import { ProgressBar } from '../../components/ProgressBar';
 import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import { Avatar } from '@rneui/base';
 import { registerReducer } from '../../hook/registerfield';
 import icons from '../../assets/icons/icons';
 import { QueryLocation } from '../../datasource/LocationDatasource';
@@ -42,6 +33,7 @@ import {
 } from '../../components/Location/Location';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { mixpanel } from '../../../mixpanel';
+import Text from '../../components/Text/Text';
 
 const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
   const initialFormRegisterState = {
@@ -183,6 +175,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
               <ScrollView style={{ top: '5%' }}>
                 <Text style={styles.head}>บ้านเลขที่</Text>
                 <TextInput
+                  allowFontScaling={false}
                   onChangeText={value => {
                     dispatch({
                       type: 'Handle Input',
@@ -198,6 +191,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                 />
                 <Text style={styles.head}>รายละเอียดที่อยู่</Text>
                 <TextInput
+                  allowFontScaling={false}
                   onChangeText={value => {
                     dispatch({
                       type: 'Handle Input',
@@ -249,6 +243,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                           </Text>
                         ) : (
                           <TextInput
+                            allowFontScaling={false}
                             style={{
                               fontFamily: font.SarabunLight,
                               color: colors.fontGrey,
@@ -394,6 +389,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                 </TouchableOpacity>
                 <Text style={styles.head}>รหัสไปรษณีย์</Text>
                 <TextInput
+                  allowFontScaling={false}
                   value={subDistrict.postcode}
                   style={[
                     styles.input,

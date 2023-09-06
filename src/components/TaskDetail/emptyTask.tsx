@@ -1,7 +1,8 @@
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, View } from 'react-native';
 import { font, image } from '../../assets';
 import { normalize } from '../../functions/Normalize';
+import Text from '../Text/Text';
 
 export const EmptyTask = () => {
   return (

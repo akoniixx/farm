@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
@@ -16,6 +16,7 @@ import {
 import CouponCardHeader from '../../components/CouponCard/CouponCardHeader';
 import { useFocusEffect } from '@react-navigation/native';
 import { mixpanel } from '../../../mixpanel';
+import Text from '../../components/Text/Text';
 
 const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
   const { detail } = route.params;

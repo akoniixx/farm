@@ -1,7 +1,6 @@
 import {
   FlatList,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -25,6 +24,7 @@ import { couponState } from '../../recoil/CouponAtom';
 import { PlotDatasource } from '../../datasource/PlotDatasource';
 import { mixpanel } from '../../../mixpanel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Text from '../../components/Text/Text';
 
 const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
   const conditionCheck = route.params;
@@ -300,6 +300,7 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
               height: normalize(60),
             }}>
             <TextInput
+              allowFontScaling={false}
               keyboardType="numeric"
               placeholder="ระบุรหัสคูปองส่วนลด"
               placeholderTextColor={colors.gray}

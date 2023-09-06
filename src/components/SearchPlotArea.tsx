@@ -6,12 +6,11 @@ import {
   ViewStyle,
   FlatList,
   TouchableOpacity,
-  Text,
-  Image,
 } from 'react-native';
 import { colors, font, icons } from '../assets';
 import { PredictionType } from '../screens/RegisterScreen/ThirdFormScreen';
 import { normalize } from '@rneui/themed';
+import Text from './Text/Text';
 
 type SearchBarProps = {
   value: string;
@@ -87,6 +86,7 @@ const SearchPlotArea: FunctionComponent<SearchBarProps> = props => {
         placeholder="ระบุพื้นที่แปลงเกษตร"
         placeholderTextColor="gray"
         value={value}
+        allowFontScaling={false}
         onChangeText={onChangeText}
         returnKeyType="search"
         onLayout={event => {

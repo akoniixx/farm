@@ -3,13 +3,13 @@ import {
   Image,
   ScrollView,
   StyleSheet,
-  Text,
   View,
   Dimensions,
   Modal,
   TouchableOpacity,
   Platform,
   Linking,
+  RefreshControl,
 } from 'react-native';
 
 import { colors, font } from '../../assets';
@@ -28,15 +28,10 @@ import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { useAuth } from '../../contexts/AuthContext';
-import fonts from '../../assets/fonts';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { mixpanel, mixpanel_token } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import DronerSugg from '../../components/Carousel/DronerCarousel';
-import DronerUsedList from '../../components/Carousel/DronerUsedList';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
-import { SystemMaintenance } from '../../datasource/SystemMaintenanceDatasource';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import PopUpMaintenance from '../../components/Modal/MaintenanceApp/PopUpMaintenance';
 import {
@@ -44,24 +39,25 @@ import {
   MaintenanceSystem_INIT,
 } from '../../entites/MaintenanceApp';
 import { GuruKaset } from '../../datasource/GuruDatasource';
-import { CardGuruKaset } from '../../components/Carousel/GuruKaset';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { historyPoint } from '../../datasource/HistoryPointDatasource';
 import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
-import axios from 'axios';
 import VerifyStatus from '../../components/Modal/VerifyStatus';
-import NotiMaintenance from '../../components/Modal/MaintenanceApp/NotiMaintenance';
+import Text from '../../components/Text/Text';
+import MaintenanceHeader from './MainScreenComponent/MaintenanceHeader';
+import ProfileRenderByStatus from './MainScreenComponent/ProfileRenderByStatus';
+import CarouselMainScreen from './MainScreenComponent/CarouselMainScreen';
+import BookedDroner from './MainScreenComponent/BookedDroner';
+import DronerSuggestion from './MainScreenComponent/DronerSuggestion';
+import { SystemMaintenance } from '../../datasource/SystemMaintenanceDatasource';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
-  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-  const imageWidth = screenWidth / 2;
   const date = new Date();
   const [fcmToken, setFcmToken] = useState('');
   const {
     authContext: { getProfileAuth },
     state: { user },
   } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const isFocused = useIsFocused();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [taskSug, setTaskSug] = useState<any[]>([]);
@@ -74,6 +70,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [showModalCall, setShowModalCall] = useState(false);
   const [refresh, setRefresh] = useState<boolean>(false);
   const [guruKaset, setGuruKaset] = useState<any>();
+  const [refreshing, setRefreshing] = useState(false);
   const screen = Dimensions.get('window');
   const [dataFinding, setDataFinding] = useState({
     id: '',
@@ -86,9 +83,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [notiData, setNotiData] = useState<{
     count: Number;
     data: any;
+    isUnread: boolean;
   }>({
     count: 0,
     data: [],
+    isUnread: false,
   });
   const [reload, setReload] = useState(false);
   const [statusFav, setStatusFav] = useState<any[]>([]);
@@ -149,43 +148,22 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   }, [reload]);
 
   const getNotificationData = async () => {
-    FCMtokenDatasource.getNotificationList()
-      .then(res =>
+    FCMtokenDatasource.getNotificationList({
+      page: 1,
+      take: 5,
+    })
+      .then(res => {
         setNotiData({
           count: res.count,
           data: res.data,
-        }),
-      )
+          isUnread: res.countUnRead > 0,
+        });
+      })
       .catch(err => console.log(err));
   };
 
   const d = momentExtend.toBuddhistYear(date, 'DD MMMM YYYY');
   const checkDateNoti = d >= notiStart && d <= notiEnd;
-  useEffect(() => {
-    const getTaskId = async () => {
-      const value = await AsyncStorage.getItem('taskId');
-      setTaskId(value);
-    };
-
-    const getInitialData = async () => {
-      try {
-        setLoading(true);
-        await Promise.all([
-          getTaskId(),
-          getData(),
-          getProfile(),
-          getNotificationData(),
-          getFavDroner(),
-          findAllNews(),
-        ]);
-      } catch (error) {
-        console.log('error', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getInitialData();
-  }, [isFocused]);
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
     if (value) {
@@ -207,6 +185,38 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         .catch(err => console.log(err));
     }
   };
+  const getInitialData = async () => {
+    const getTaskId = async () => {
+      const value = await AsyncStorage.getItem('taskId');
+      setTaskId(value);
+    };
+    try {
+      setLoading(true);
+      await Promise.all([
+        getTaskId(),
+        getData(),
+        getProfile(),
+        getNotificationData(),
+        getFavDroner(),
+        findAllNews(),
+      ]);
+    } catch (error) {
+      console.log('error', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    getInitialData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getInitialData();
+    setRefreshing(false);
+  };
+
   useEffect(() => {
     const dronerSug = async () => {
       const value = await AsyncStorage.getItem('token');
@@ -307,6 +317,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       })
       .catch(err => console.log(err));
   };
+
   useFocusEffect(() => {
     const getPointFarmer = async () => {
       const farmer_id: any = await AsyncStorage.getItem('farmer_id');
@@ -328,23 +339,31 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           $token: mixpanel_token,
           $distinct_id: await mixpanel.getDistinctId(),
           $set: profiles,
+          $name: `${profiles.firstname} ${profiles.lastname}`,
+          $telephoneNo: profiles.telephoneNo,
+          $farmerId: profiles.id,
+          $email: profiles.email ? profiles.email : 'NONE',
         },
       ]),
     };
 
     fetch('https://api.mixpanel.com/engage#profile-set', options)
       .then(response => response.json())
-      .then(response => console.log(response))
+
       .catch(err => console.error(err));
   };
 
   return (
-    <View
+    <SafeAreaView
+      edges={['left', 'right']}
       style={{
         backgroundColor: colors.white,
         flex: 1,
       }}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+        }>
         <View
           style={[stylesCentral.container, { paddingBottom: normalize(30) }]}>
           <View style={{ backgroundColor: colors.white }}>
@@ -382,15 +401,18 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     alignItems: 'center',
                   }}>
                   <TouchableOpacity
-                    onPress={() =>
+                    onPress={() => {
+                      mixpanel.track('MainScreen_ButtonNotification_Press', {
+                        navigateTo: 'NotificationScreen',
+                      });
                       navigation.navigate('NotificationScreen', {
-                        data: notiData?.data,
-                      })
-                    }>
+                        data: [],
+                      });
+                    }}>
                     {showBell ? (
                       <Image
                         source={
-                          notiData.count != 0
+                          notiData.isUnread
                             ? icons.newnotification
                             : icons.notification
                         }
@@ -407,7 +429,12 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     style={{
                       marginLeft: 10,
                     }}
-                    onPress={() => navigation.navigate('DetailPointScreen')}>
+                    onPress={() => {
+                      mixpanel.track('MainScreen_ButtonPoint_Press', {
+                        navigateTo: 'DetailPointScreen',
+                      });
+                      navigation.navigate('DetailPointScreen');
+                    }}>
                     <LinearGradient
                       colors={['#41D981', '#26A65C']}
                       start={{ x: 0.85, y: 0.25 }}
@@ -443,20 +470,25 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 style={{
                   flexDirection: 'row',
                   paddingTop: 130,
+                  paddingHorizontal: 16,
                   paddingBottom:
                     profilestate.status === 'REJECTED' ||
                     profilestate.status === 'INACTIVE' ||
                     profilestate.status === 'PENDING'
                       ? 32
                       : 0,
-                  alignSelf: 'center',
+                  alignItems: 'center',
+
+                  justifyContent: 'space-between',
                 }}>
                 <TouchableOpacity
                   onPress={() => {
                     if (disableBooking) {
                       setShowModalCantBooking(true);
                     } else {
-                      mixpanel.track('Tab booking with login');
+                      mixpanel.track('MainScreen_ButtonBookingTask_Press', {
+                        navigateTo: 'SelectDateScreen',
+                      });
                       navigation.navigate('SelectDateScreen', {
                         isSelectDroner: false,
                         profile: {},
@@ -481,10 +513,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     <Text style={styles.font}>จ้างโดรนเกษตร</Text>
                   </LinearGradient>
                 </TouchableOpacity>
-                <View style={{ width: normalize(10) }}></View>
                 <TouchableOpacity
                   onPress={() => {
-                    mixpanel.track('Tab your plot with login');
+                    mixpanel.track('MainScreen_ButtonMyPlot_Press', {
+                      navigateTo: 'AllPlotScreen',
+                    });
                     navigation.navigate('AllPlotScreen');
                   }}>
                   <LinearGradient
@@ -507,359 +540,18 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 </TouchableOpacity>
               </View>
               <View>
-                <View>
-                  {checkDateNoti === true && (
-                    <NotiMaintenance data={maintenance} show={checkDateNoti} />
-                  )}
-                </View>
-                {profilestate.status === 'REJECTED' && (
-                  <View
-                    style={{
-                      width: normalize(350),
-                      alignSelf: 'center',
-                      backgroundColor: '#FFF9F2',
-                      borderWidth: 1,
-                      borderColor: '#FEDBB4',
-                      borderRadius: 15,
-                    }}>
-                    <View style={{ padding: 15 }}>
-                      <View
-                        style={{
-                          borderColor:
-                            profilestate.status === 'REJECTED'
-                              ? colors.darkOrange
-                              : colors.fontGrey,
-                          borderWidth: 1,
-                          borderRadius: 15,
-                          padding: 4,
-                          backgroundColor:
-                            profilestate.status === 'REJECTED'
-                              ? colors.white
-                              : colors.greyDivider,
-                          width: profilestate.status === 'REJECTED' ? 170 : 105,
-                        }}>
-                        <View
-                          style={{
-                            justifyContent: 'space-between',
-                            flexDirection: 'row',
-                            paddingHorizontal: 5,
-                          }}>
-                          {profilestate.status === 'REJECTED' ? (
-                            <Image
-                              source={icons.wrong}
-                              style={{
-                                width: 15,
-                                height: 15,
-                                alignSelf: 'center',
-                              }}
-                            />
-                          ) : null}
+                <MaintenanceHeader
+                  checkDateNoti={checkDateNoti}
+                  end={end}
+                  start={start}
+                  maintenance={maintenance}
+                />
+                <ProfileRenderByStatus
+                  reason={reason}
+                  setShowModalCall={setShowModalCall}
+                  status={profilestate.status}
+                />
 
-                          <Text
-                            style={{
-                              fontFamily: font.AnuphanMedium,
-                              color:
-                                profilestate.status === 'REJECTED'
-                                  ? colors.error
-                                  : colors.fontGrey,
-                              fontSize: normalize(14),
-                            }}>
-                            {profilestate.status === 'REJECTED'
-                              ? 'ยืนยันตัวตนไม่สำเร็จ'
-                              : 'ปิดการใช้งาน'}
-                          </Text>
-                        </View>
-                      </View>
-                      <View style={{ paddingVertical: 8 }}>
-                        <Text style={[styles.textAlert]}>
-                          {profilestate.status === 'REJECTED'
-                            ? reason
-                            : 'บัญชีของท่านถูกปิดการใช้งาน หากต้องการ'}
-                        </Text>
-                        <Text style={[styles.textAlert]}>
-                          {profilestate.status === 'REJECTED'
-                            ? 'กรุณาติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข'
-                            : 'เปิดใช้งานบัญชี กรุณาติดต่อเจ้าหน้าที่'}
-                        </Text>
-                      </View>
-                    </View>
-                    <View style={{ paddingHorizontal: 10 }}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setShowModalCall(true);
-                        }}
-                        style={{
-                          ...Platform.select({
-                            ios: {
-                              height: 60,
-                              paddingVertical: 8,
-                              paddingHorizontal: 16,
-                              backgroundColor: colors.white,
-                              justifyContent: 'center',
-                              alignItems: 'flex-start',
-                              width: '100%',
-                              borderRadius: 12,
-                              marginBottom: 8,
-                              borderWidth: 1,
-                              borderColor: colors.blueBorder,
-                            },
-                            android: {
-                              height: 60,
-                              paddingVertical: 8,
-                              paddingHorizontal: 16,
-                              backgroundColor: colors.white,
-                              justifyContent: 'center',
-                              alignItems: 'flex-start',
-                              width: '100%',
-                              borderRadius: 12,
-                              marginBottom: 8,
-                              borderWidth: 1,
-                              borderColor: colors.blueBorder,
-                              bottom: 15,
-                            },
-                          }),
-                        }}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            alignSelf: 'center',
-                          }}>
-                          <Image
-                            style={{
-                              width: 24,
-                              height: 24,
-                              marginRight: 16,
-                            }}
-                            source={icons.calling}
-                          />
-                          <Text
-                            style={{
-                              fontFamily: font.AnuphanMedium,
-                              color: colors.blueBorder,
-                              fontSize: 20,
-                            }}>
-                            โทรหาเจ้าหน้าที่
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                )}
-                {profilestate.status === 'INACTIVE' && (
-                  <View
-                    style={{
-                      width: normalize(350),
-                      alignSelf: 'center',
-                      backgroundColor: '#FFF9F2',
-                      borderWidth: 1,
-                      borderColor: '#FEDBB4',
-                      borderRadius: 15,
-                    }}>
-                    <View style={{ padding: 15 }}>
-                      <View
-                        style={{
-                          borderColor: colors.fontGrey,
-                          borderWidth: 1,
-                          borderRadius: 15,
-                          padding: 4,
-                          backgroundColor: colors.greyDivider,
-                          width: 105,
-                        }}>
-                        <View
-                          style={{
-                            justifyContent: 'space-between',
-                            flexDirection: 'row',
-                            paddingHorizontal: 5,
-                          }}>
-                          <Text
-                            style={{
-                              fontFamily: font.AnuphanMedium,
-                              color: colors.fontGrey,
-                              fontSize: normalize(14),
-                            }}>
-                            ปิดการใช้งาน
-                          </Text>
-                        </View>
-                      </View>
-                      <View style={{ paddingVertical: 8 }}>
-                        <Text style={[styles.textAlert]}>
-                          บัญชีของท่านถูกปิดการใช้งาน หากต้องการ
-                        </Text>
-                        <Text style={[styles.textAlert]}>
-                          เปิดใช้งานบัญชี กรุณาติดต่อเจ้าหน้าที่
-                        </Text>
-                      </View>
-                    </View>
-                    <View style={{ paddingHorizontal: 10 }}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setShowModalCall(true);
-                        }}
-                        style={{
-                          ...Platform.select({
-                            ios: {
-                              height: 60,
-                              paddingVertical: 8,
-                              paddingHorizontal: 16,
-                              backgroundColor: colors.white,
-                              justifyContent: 'center',
-                              alignItems: 'flex-start',
-                              width: '100%',
-                              borderRadius: 12,
-                              marginBottom: 8,
-                              borderWidth: 1,
-                              borderColor: colors.blueBorder,
-                            },
-                            android: {
-                              height: 60,
-                              paddingVertical: 8,
-                              paddingHorizontal: 16,
-                              backgroundColor: colors.white,
-                              justifyContent: 'center',
-                              alignItems: 'flex-start',
-                              width: '100%',
-                              borderRadius: 12,
-                              marginBottom: 8,
-                              borderWidth: 1,
-                              borderColor: colors.blueBorder,
-                              bottom: 15,
-                            },
-                          }),
-                        }}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            alignSelf: 'center',
-                          }}>
-                          <Image
-                            style={{
-                              width: 24,
-                              height: 24,
-                              marginRight: 16,
-                            }}
-                            source={icons.calling}
-                          />
-                          <Text
-                            style={{
-                              fontFamily: font.AnuphanMedium,
-                              color: colors.blueBorder,
-                              fontSize: 20,
-                            }}>
-                            โทรหาเจ้าหน้าที่
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                )}
-                {profilestate.status === 'PENDING' && (
-                  <View
-                    style={{
-                      width: normalize(350),
-                      alignSelf: 'center',
-                      backgroundColor: '#FFF9F2',
-                      borderWidth: 1,
-                      borderColor: '#FEDBB4',
-                      borderRadius: 15,
-                    }}>
-                    <View style={{ padding: 15 }}>
-                      <View
-                        style={{
-                          borderColor: colors.darkOrange,
-                          borderWidth: 1,
-                          borderRadius: 15,
-                          padding: 4,
-                          backgroundColor: '#FFF2E3',
-                          width: 125,
-                        }}>
-                        <View
-                          style={{
-                            justifyContent: 'space-between',
-                            flexDirection: 'row',
-                            paddingHorizontal: 5,
-                          }}>
-                          <Text
-                            style={{
-                              fontFamily: font.AnuphanMedium,
-                              color: '#E27904',
-                              fontSize: normalize(14),
-                            }}>
-                            รอการตรวจสอบ
-                          </Text>
-                        </View>
-                      </View>
-                      <View style={{ paddingVertical: 8 }}>
-                        <Text style={[styles.textAlert]}>
-                          ขณะนี้เจ้าหน้าที่กำลังตรวจสอบเอกสารยืนยันของคุณอยู่
-                          สอบถามข้อมูลเพิ่มเติม กรุณาติดต่อเจ้าหน้าที่
-                        </Text>
-                      </View>
-                    </View>
-                    <View style={{ paddingHorizontal: 10 }}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setShowModalCall(true);
-                        }}
-                        style={{
-                          ...Platform.select({
-                            ios: {
-                              height: 60,
-                              paddingVertical: 8,
-                              paddingHorizontal: 16,
-                              backgroundColor: colors.white,
-                              justifyContent: 'center',
-                              alignItems: 'flex-start',
-                              width: '100%',
-                              borderRadius: 12,
-                              marginBottom: 8,
-                              borderWidth: 1,
-                              borderColor: colors.blueBorder,
-                            },
-                            android: {
-                              height: 60,
-                              paddingVertical: 8,
-                              paddingHorizontal: 16,
-                              backgroundColor: colors.white,
-                              justifyContent: 'center',
-                              alignItems: 'flex-start',
-                              width: '100%',
-                              borderRadius: 12,
-                              marginBottom: 8,
-                              borderWidth: 1,
-                              borderColor: colors.blueBorder,
-                              bottom: 15,
-                            },
-                          }),
-                        }}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            alignSelf: 'center',
-                          }}>
-                          <Image
-                            style={{
-                              width: 24,
-                              height: 24,
-                              marginRight: 16,
-                            }}
-                            source={icons.calling}
-                          />
-                          <Text
-                            style={{
-                              fontFamily: font.AnuphanMedium,
-                              color: colors.blueBorder,
-                              fontSize: 20,
-                            }}>
-                            โทรหาเจ้าหน้าที่
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                )}
                 <View>
                   <View
                     style={{
@@ -879,7 +571,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     </Text>
                     <TouchableOpacity
                       onPress={() => {
-                        mixpanel.track('Tab to all guru list ');
+                        mixpanel.track('MainScreen_ButtonAllGuru_Press', {
+                          navigateTo: 'AllGuruScreen',
+                        });
                         navigation.navigate('AllGuruScreen');
                       }}>
                       <Text
@@ -895,57 +589,12 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       </Text>
                     </TouchableOpacity>
                   </View>
-                  {guruKaset != undefined ? (
-                    <View>
-                      <Carousel
-                        autoplay={true}
-                        autoplayInterval={7000}
-                        autoplayDelay={5000}
-                        loop={true}
-                        ref={isCarousel}
-                        data={guruKaset.data}
-                        sliderWidth={screen.width}
-                        itemWidth={screen.width}
-                        onSnapToItem={index => setIndex(index)}
-                        useScrollView={true}
-                        vertical={false}
-                        renderItem={({ item }: any) => {
-                          return (
-                            <TouchableOpacity
-                              onPress={async () => {
-                                await AsyncStorage.setItem(
-                                  'guruId',
-                                  `${item.id}`,
-                                );
-                                navigation.push('DetailGuruScreen');
-                              }}>
-                              <CardGuruKaset background={item.image_path} />
-                            </TouchableOpacity>
-                          );
-                        }}
-                      />
-                      <View
-                        style={{
-                          alignItems: 'center',
-                          top: -15,
-                          marginVertical: -10,
-                        }}>
-                        <Pagination
-                          dotsLength={guruKaset.data.length}
-                          activeDotIndex={index}
-                          carouselRef={isCarousel}
-                          dotStyle={{
-                            width: 8,
-                            height: 8,
-                            borderRadius: 5,
-                            backgroundColor: colors.fontGrey,
-                          }}
-                          inactiveDotOpacity={0.4}
-                          inactiveDotScale={0.9}
-                          tappableDots={true}
-                        />
-                      </View>
-                    </View>
+                  {guruKaset !== undefined ? (
+                    <CarouselMainScreen
+                      navigation={navigation}
+                      data={guruKaset}
+                      isLoading={loading}
+                    />
                   ) : null}
                 </View>
                 <View
@@ -980,95 +629,13 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                {taskSugUsed.length != 0 ? (
-                  <View style={{ height: 'auto' }}>
-                    <ScrollView
-                      horizontal={true}
-                      showsHorizontalScrollIndicator={false}>
-                      {taskSugUsed.length != undefined &&
-                        taskSugUsed.map((item: any, index: number) => (
-                          <TouchableOpacity
-                            key={index}
-                            onPress={async () => {
-                              await AsyncStorage.setItem(
-                                'droner_id',
-                                `${item.droner_id}`,
-                              );
-                              navigation.push('DronerDetail');
-                            }}>
-                            <DronerUsedList
-                              key={index}
-                              index={index}
-                              profile={item.image_droner}
-                              background={item.task_image}
-                              name={item.firstname + ' ' + item.lastname}
-                              rate={item.rating_avg}
-                              total_task={item.count_rating}
-                              province={item.province_name}
-                              distance={item.street_distance}
-                              status={item.favorite_status}
-                              callBack={async () => {
-                                setLoading(true);
-                                const farmer_id = await AsyncStorage.getItem(
-                                  'farmer_id',
-                                );
-                                const droner_id = taskSugUsed.map(
-                                  x => x.droner_id,
-                                );
-                                await FavoriteDroner.addUnaddFav(
-                                  farmer_id !== null ? farmer_id : '',
-                                  droner_id[index],
-                                )
-                                  .then(res => {
-                                    setRefresh(!refresh);
-                                    let newTaskSugUsed = taskSugUsed.map(
-                                      (x, i) => {
-                                        let result = {};
-                                        if (x.droner_id === item.droner_id) {
-                                          let a =
-                                            x.favorite_status === 'ACTIVE'
-                                              ? 'INACTIVE'
-                                              : 'ACTIVE';
-                                          result = { ...x, favorite_status: a };
-                                        } else {
-                                          result = { ...x };
-                                        }
-                                        return result;
-                                      },
-                                    );
-                                    setTaskSugUsed(newTaskSugUsed);
-                                  })
-                                  .catch(err => console.log(err))
-                                  .finally(() => setLoading(false));
-                              }}
-                            />
-                          </TouchableOpacity>
-                        ))}
-                    </ScrollView>
-                  </View>
-                ) : (
-                  <View style={{ alignItems: 'center' }}>
-                    <Image
-                      source={image.empty_droner}
-                      style={{
-                        width: normalize(136),
-                        height: normalize(130),
-                        top: '16%',
-                        marginBottom: normalize(32),
-                      }}
-                    />
-                    <Text
-                      style={{
-                        top: '10%',
-                        fontFamily: font.SarabunBold,
-                        fontSize: normalize(16),
-                        fontWeight: '300',
-                        color: colors.gray,
-                      }}>
-                      ไม่มีนักบินโดรนที่เคยจ้าง
-                    </Text>
-                  </View>
-                )}
+                <BookedDroner
+                  taskSugUsed={taskSugUsed}
+                  setTaskSugUsed={setTaskSugUsed}
+                  navigation={navigation}
+                  isLoading={loading}
+                  setRefresh={setRefresh}
+                />
                 <View
                   style={{
                     flexDirection: 'row',
@@ -1086,67 +653,13 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     นักบินโดรนที่แนะนำ
                   </Text>
                 </View>
-                <View style={{ height: 'auto' }}>
-                  <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}>
-                    {taskSug.length != undefined &&
-                      taskSug.map((item: any, index: any) => (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={async () => {
-                            await AsyncStorage.setItem(
-                              'droner_id',
-                              `${item.droner_id}`,
-                            );
-                            navigation.push('DronerDetail');
-                          }}>
-                          <DronerSugg
-                            key={index}
-                            index={index}
-                            profile={item.image_droner}
-                            background={item.task_image}
-                            name={item.firstname + ' ' + item.lastname}
-                            rate={item.rating_avg}
-                            total_task={item.count_rating}
-                            province={item.province_name}
-                            distance={item.street_distance}
-                            status={item.favorite_status}
-                            callBack={async () => {
-                              setLoading(true);
-                              const farmer_id = await AsyncStorage.getItem(
-                                'farmer_id',
-                              );
-                              const droner_id = taskSug.map(x => x.droner_id);
-                              await FavoriteDroner.addUnaddFav(
-                                farmer_id !== null ? farmer_id : '',
-                                droner_id[index],
-                              )
-                                .then(res => {
-                                  setRefresh(!refresh);
-                                  let newTaskSug = taskSug.map((x, i) => {
-                                    let result = {};
-                                    if (x.droner_id === item.droner_id) {
-                                      let a =
-                                        x.favorite_status === 'ACTIVE'
-                                          ? 'INACTIVE'
-                                          : 'ACTIVE';
-                                      result = { ...x, favorite_status: a };
-                                    } else {
-                                      result = { ...x };
-                                    }
-                                    return result;
-                                  });
-                                  setTaskSug(newTaskSug);
-                                })
-                                .catch(err => console.log(err))
-                                .finally(() => setLoading(false));
-                            }}
-                          />
-                        </TouchableOpacity>
-                      ))}
-                  </ScrollView>
-                </View>
+                <DronerSuggestion
+                  taskSug={taskSug}
+                  setTaskSug={setTaskSug}
+                  navigation={navigation}
+                  isLoading={loading}
+                  setRefresh={setRefresh}
+                />
               </View>
             </View>
           </View>
@@ -1165,6 +678,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               }}>
               <TouchableOpacity
                 onPress={() => {
+                  mixpanel.track('MainScreen_ButtonCallCenter_Press', {
+                    callcenterNumber: callcenterNumber,
+                  });
                   Linking.openURL(`tel:${callcenterNumber}`);
                 }}
                 style={{
@@ -1233,17 +749,16 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           </Modal>
-          <Spinner
-            visible={loading}
-            textContent={'Loading...'}
-            textStyle={{ color: '#FFF' }}
-          />
         </View>
       </ScrollView>
       {showFinding && (
         <TouchableOpacity
           style={styles.footer}
           onPress={() => {
+            mixpanel.track('MainScreen_ButtonSlipWaiting_Press', {
+              taskId: dataFinding.id,
+              navigateTo: 'SlipWaitingScreen',
+            });
             navigation.navigate('SlipWaitingScreen', {
               taskId: dataFinding.id,
             });
@@ -1256,8 +771,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
             <View
               style={{
                 marginLeft: 16,
+                alignSelf: 'flex-start',
+                width: Dimensions.get('window').width - 100,
               }}>
               <Text
+                numberOfLines={1}
                 style={{
                   color: colors.primary,
                   fontSize: normalize(20),
@@ -1295,14 +813,22 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           text={profilestate.status}
           show={showModalCantBooking}
           onClose={() => {
+            mixpanel.track('MainScreen_ModalButton_Press', {
+              event: 'close',
+              description: 'alert cant booking',
+            });
             setShowModalCantBooking(false);
           }}
           onMainClick={() => {
+            mixpanel.track('MainScreen_ModalButton_Press', {
+              event: 'close',
+              description: 'alert cant booking',
+            });
             setShowModalCantBooking(false);
           }}
         />
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 export default MainScreen;

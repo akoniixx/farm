@@ -1,12 +1,10 @@
-import { View, Text, Modal, TouchableOpacity, Image } from 'react-native';
+import { View, Modal, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { ModalStyle } from './ModalStyle';
-import { font, icons } from '../../assets';
-import { normalize, width } from '../../functions/Normalize';
-import { MainButton } from '../Button/MainButton';
+import { font } from '../../assets';
+import { normalize } from '../../functions/Normalize';
 import colors from '../../assets/colors/colors';
-import fonts from '../../assets/fonts';
 import { ModalEntity } from './ModalEntity';
+import Text from '../Text/Text';
 
 const VerifyStatus: React.FC<ModalEntity> = ({ show, text, onClose }) => {
   return (

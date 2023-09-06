@@ -1,5 +1,5 @@
 import { BASE_URL, httpClient } from '../config/develop-config';
-import { ReviewDroner } from '../entites/MyJobsEntites';
+
 import { SearchMyJobsEntites } from '../entites/SearchMyJobsEntites';
 
 export class MyJobDatasource {

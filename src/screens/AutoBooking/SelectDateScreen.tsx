@@ -1,4 +1,3 @@
-import { Text } from '@rneui/base';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import {
@@ -23,8 +22,8 @@ import TimePicker from '../../components/TimePicker/TimePicker';
 import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { normalize, width } from '../../functions/Normalize';
 import { momentExtend } from '../../utils/moment-buddha-year';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import HeadDronerCardForCreatTask from '../../components/HeadDronerCardForCreatTask';
+import Text from '../../components/Text/Text';
 
 const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner;
@@ -71,7 +70,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
   return (
     <>
       <StepIndicatorHead
-        curentPosition={0}
+        currentPosition={0}
         onPressBack={() => {
           mixpanel.track('Tab back from select date screen');
           navigation.goBack();
@@ -122,6 +121,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
                     },
                   ]}>
                   <TextInput
+                    allowFontScaling={false}
                     value={momentExtend.toBuddhistYear(date, 'DD MMMM YYYY')}
                     editable={false}
                     placeholder={'ระบุวัน เดือน ปี'}
@@ -164,6 +164,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
                     value={
                       ('0' + hour).slice(-2) + ':' + ('0' + minute).slice(-2)
                     }
+                    allowFontScaling={false}
                     editable={false}
                     placeholder={'ระบุวัน เดือน ปี'}
                     placeholderTextColor={colors.disable}
@@ -211,9 +212,11 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
               </View>
               <TextInput
                 scrollEnabled={false}
+                allowFontScaling={false}
                 numberOfLines={6}
                 onChangeText={t => {
-                  setNote(t);
+                  const removeSpaceFront = t.replace(/^\s+/, '');
+                  setNote(removeSpaceFront);
                 }}
                 value={note}
                 returnKeyType="done"

@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
@@ -28,6 +27,7 @@ import * as RootNavigation from '../../../navigations/RootNavigation';
 import { FCMtokenDatasource } from '../../../datasource/FCMDatasource';
 import { socket } from '../../../functions/utility';
 import { normalize } from '../../../functions/Normalize';
+import Text from '../../../components/Text/Text';
 
 const CELL_COUNT = 6;
 interface props {

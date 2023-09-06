@@ -1,21 +1,17 @@
 import {
   Image,
   StyleSheet,
-  Text,
   View,
-  TextInput,
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { Avatar } from '@rneui/base';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FavoriteDroner } from '../../datasource/FavoriteDroner';
-import { TaskSuggestion } from '../../datasource/TaskSuggestion';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
+import Text from '../Text/Text';
+import ProgressiveImage from '../ProgressingImage/ProgressingImage';
 
 interface data {
   img: any;
@@ -55,15 +51,15 @@ const FavDronerUsedList: React.FC<data> = ({
         ]}>
         <View>
           <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
-            <Avatar
-              size={56}
+            <ProgressiveImage
+              borderRadius={28}
               source={img === null ? image.empty_plot : { uri: img }}
-              avatarStyle={{
-                width: 56,
-                height: 56,
-                borderRadius: normalize(40),
+              style={{
+                borderRadius: normalize(28),
                 borderColor: colors.white,
                 borderWidth: 1,
+                width: normalize(56),
+                height: normalize(56),
               }}
             />
             <View style={{ flex: 1 }}>
@@ -171,7 +167,8 @@ const FavDronerUsedList: React.FC<data> = ({
               width: 20,
               marginTop: 8,
               minWidth: Dimensions.get('window').width - 50,
-            }}></View>
+            }}
+          />
           <View
             style={{
               flexDirection: 'row',

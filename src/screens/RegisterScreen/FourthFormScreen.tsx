@@ -1,11 +1,8 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   Image,
-  Dimensions,
   TouchableOpacity,
   Platform,
   ScrollView,
@@ -19,11 +16,8 @@ import { MainButton } from '../../components/Button/MainButton';
 import CustomHeader from '../../components/CustomHeader';
 import { ProgressBar } from '../../components/ProgressBar';
 import { Register } from '../../datasource/AuthDatasource';
-import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { normalize } from '../../functions/Normalize';
-import { stylesCentral } from '../../styles/StylesCentral';
-import Container from '../../components/Container/Container';
-const width = Dimensions.get('window').width;
+import Text from '../../components/Text/Text';
 const FourthFormScreen: React.FC<any> = ({ route, navigation }) => {
   const telNo = route.params.tele;
   const Profile = route.params.profile ?? false;

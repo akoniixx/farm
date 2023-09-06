@@ -1,10 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text } from '@rneui/base';
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import {
   FlatList,
   Image,
-  KeyboardAvoidingView,
   Linking,
   LogBox,
   Platform,
@@ -26,7 +24,9 @@ import { PlotDatasource } from '../../datasource/PlotDatasource';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { normalize } from '../../functions/Normalize';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Text from '../../components/Text/Text';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner;
   const profile = route.params.profile;
@@ -34,6 +34,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
     state: { plotDisable },
     autoBookingContext: { setTaskData, getLocationPrice, searchDroner },
   } = useAutoBookingContext();
+  const scrollRef = React.createRef<KeyboardAwareScrollView>();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [plotList, setPlotList] = useState<any>([]);
   const [loading, setLoading] = useState(false);
@@ -110,216 +111,261 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
   return (
     <>
       <StepIndicatorHead
-        curentPosition={1}
+        currentPosition={1}
         onPressBack={() => {
           mixpanel.track('Tab back from select plot screen');
           navigation.goBack();
         }}
         label={'เลือกแปลงของคุณ'}
       />
-      {isSelectDroner && (
-        <HeadDronerCardForCreatTask
-          navigation={navigation}
-          image={profile.image_droner}
-          name={profile.firstname + ' ' + profile.lastname}
-        />
-      )}
-
-      {plotList.length === 0 ? (
-        <View style={{ backgroundColor: 'white' }}>
-          <Image
-            source={image.empty_plot}
-            style={{
-              width: normalize(138),
-              height: normalize(120),
-              alignSelf: 'center',
-              top: '5%',
-            }}
-          />
-          <Text
-            style={{
-              fontFamily: font.SarabunLight,
-              fontSize: normalize(16),
-              color: colors.gray,
-              textAlign: 'center',
-              paddingVertical: normalize(22),
-            }}>{`คุณไม่มีแปลงเกษตร
- กดเพิ่มแปลงเกษตรได้เลย!`}</Text>
-
-          <View style={[styles.buttonAdd]}>
-            <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
-          </View>
-        </View>
-      ) : (
-        <SafeAreaView
-          edges={['left', 'right']}
-          style={{
-            flex: 1,
-            justifyContent: 'space-between',
-            backgroundColor: 'white',
-          }}>
-          <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={{ paddingVertical: 10 }}
-              contentContainerStyle={{
-                flexGrow: 1,
-              }}
-              showsHorizontalScrollIndicator={false}>
-              {isHaveWaitingApprove && (
-                <View style={styles.containerWarning}>
-                  <View
-                    style={{
-                      backgroundColor: '#FFF9F2',
-                      padding: 16,
-                      borderRadius: 12,
-                    }}>
+      {loading ? (
+        <View style={{ flex: 1, marginTop: 16, padding: 16 }}>
+          <SkeletonPlaceholder
+            borderRadius={10}
+            speed={2000}
+            backgroundColor={colors.skeleton}>
+            <>
+              {[1, 2, 3].map((_, idx) => {
+                return (
+                  <SkeletonPlaceholder.Item
+                    key={idx}
+                    flexDirection="row"
+                    alignItems="center"
+                    style={{ width: '100%', marginBottom: 16 }}>
                     <View
                       style={{
-                        flexDirection: 'row',
-                      }}>
-                      <Image
-                        source={icons.warningIcon}
-                        style={{
-                          marginTop: 4,
-                          width: 18,
-                          height: 18,
-                          marginRight: 8,
-                        }}
-                      />
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          fontSize: 18,
-                          paddingRight: 16,
-                          alignSelf: 'flex-start',
-                        }}>
-                        หากแปลงของคุณมีสถานะ “รอการตรวจสอบ”
-                        จะส่งผลต่อขั้นตอนจ้างนักบินโดรน กรุณาติดต่อเจ้าหน้าที่
-                        เพื่อยืนยันสถานะ
-                      </Text>
-                    </View>
-                    <TouchableOpacity
-                      onPress={() => {
-                        mixpanel.track(
-                          'Tab callcenter from select plot screen',
-                        );
-                        Linking.openURL(`tel:${callcenterNumber}`);
+                        width: '100%',
+                        height: 160,
                       }}
-                      style={{
-                        backgroundColor: colors.white,
-                        borderRadius: 8,
-                        borderWidth: 1,
-                        borderColor: colors.blueBorder,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: 50,
-                        marginTop: 16,
-                      }}>
+                    />
+                  </SkeletonPlaceholder.Item>
+                );
+              })}
+            </>
+          </SkeletonPlaceholder>
+        </View>
+      ) : (
+        <>
+          {isSelectDroner && (
+            <HeadDronerCardForCreatTask
+              navigation={navigation}
+              image={profile.image_droner}
+              name={profile.firstname + ' ' + profile.lastname}
+            />
+          )}
+
+          {plotList.length === 0 ? (
+            <View style={{ backgroundColor: 'white' }}>
+              <Image
+                source={image.empty_plot}
+                style={{
+                  width: normalize(138),
+                  height: normalize(120),
+                  alignSelf: 'center',
+                  top: '5%',
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: font.SarabunLight,
+                  fontSize: normalize(16),
+                  color: colors.gray,
+                  textAlign: 'center',
+                  paddingVertical: normalize(22),
+                }}>{`คุณไม่มีแปลงเกษตร
+ กดเพิ่มแปลงเกษตรได้เลย!`}</Text>
+
+              <View style={[styles.buttonAdd]}>
+                <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
+              </View>
+            </View>
+          ) : (
+            <SafeAreaView
+              edges={['left', 'right']}
+              style={{
+                flex: 1,
+                justifyContent: 'space-between',
+                backgroundColor: 'white',
+              }}>
+              <KeyboardAwareScrollView extraScrollHeight={150}>
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  style={{ paddingVertical: 10 }}
+                  contentContainerStyle={{
+                    flexGrow: 1,
+                  }}
+                  showsHorizontalScrollIndicator={false}>
+                  {isHaveWaitingApprove && (
+                    <View style={styles.containerWarning}>
                       <View
                         style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
+                          backgroundColor: '#FFF9F2',
+                          padding: 16,
+                          borderRadius: 12,
                         }}>
-                        <Image
+                        <View
                           style={{
-                            width: 20,
-                            height: 20,
-                            marginRight: 8,
-                          }}
-                          source={icons.callingDarkblue}
-                        />
-                        <Text
-                          style={{
-                            fontFamily: font.AnuphanMedium,
-                            color: colors.blueDark,
-                            fontSize: 20,
+                            flexDirection: 'row',
                           }}>
-                          โทรหาเจ้าหน้าที่
-                        </Text>
+                          <Image
+                            source={icons.warningIcon}
+                            style={{
+                              marginTop: 4,
+                              width: 18,
+                              height: 18,
+                              marginRight: 8,
+                            }}
+                          />
+                          <Text
+                            style={{
+                              fontFamily: font.SarabunLight,
+                              fontSize: 18,
+                              paddingRight: 16,
+                              alignSelf: 'flex-start',
+                            }}>
+                            หากแปลงของคุณมีสถานะ “รอการตรวจสอบ”
+                            จะส่งผลต่อขั้นตอนจ้างนักบินโดรน
+                            กรุณาติดต่อเจ้าหน้าที่ เพื่อยืนยันสถานะ
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          onPress={() => {
+                            mixpanel.track(
+                              'Tab callcenter from select plot screen',
+                            );
+                            Linking.openURL(`tel:${callcenterNumber}`);
+                          }}
+                          style={{
+                            backgroundColor: colors.white,
+                            borderRadius: 8,
+                            borderWidth: 1,
+                            borderColor: colors.blueBorder,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: 50,
+                            marginTop: 16,
+                          }}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                            }}>
+                            <Image
+                              style={{
+                                width: 20,
+                                height: 20,
+                                marginRight: 8,
+                              }}
+                              source={icons.callingDarkblue}
+                            />
+                            <Text
+                              style={{
+                                fontFamily: font.AnuphanMedium,
+                                color: colors.blueDark,
+                                fontSize: 20,
+                              }}>
+                              โทรหาเจ้าหน้าที่
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
                       </View>
-                    </TouchableOpacity>
-                  </View>
+                    </View>
+                  )}
+                  <FlatList
+                    data={plotList}
+                    renderItem={({ item }) => (
+                      <PlotSelect
+                        id={item.id}
+                        isHaveDroner={item.isHaveDroner}
+                        status={item.status}
+                        plotName={item.plotName}
+                        plantName={item.plantName}
+                        locationName={item.locationName}
+                        raiAmount={item.raiAmount}
+                        onPress={async () => {
+                          try {
+                            await getLocationPrice({
+                              provinceId: item.plotArea.provinceId,
+                              cropName: item.plantName,
+                            });
+                            await searchDroner({
+                              farmerId: item.farmerId,
+                              farmerPlotId: item.id,
+                            });
+                            mixpanel.track(
+                              'Tab select plot from select plot screen',
+                            );
+                            handleCardPress(item.id);
+                            setTaskData(prev => ({
+                              ...prev,
+                              cropName: item.plantName,
+                              plantName: item.plantName,
+                              plotName: item.plotName,
+                              farmerId: item.farmerId,
+                              plotArea: item.plotArea,
+
+                              province: item.province,
+                              locationName: item.locationName,
+                              farmAreaAmount: item.raiAmount,
+                              purposeSpray: {
+                                id: '',
+                                name: '',
+                              },
+                              targetSpray: [],
+                              preparationBy: '',
+                            }));
+                          } catch (e) {
+                            console.log(e);
+                          }
+                        }}
+                        selected={item.id === selectedCard}
+                      />
+                    )}
+                    keyExtractor={item => item.id}
+                  />
+                  {plotList.length < 8 && (
+                    <View
+                      style={{
+                        padding: 16,
+                      }}>
+                      <MainButton
+                        label="ถัดไป"
+                        disable={selectedCard === null}
+                        color={colors.greenLight}
+                        onPress={() => {
+                          mixpanel.track('Tab submit from select plot screen');
+                          onSubmit();
+                        }}
+                      />
+                    </View>
+                  )}
+                </ScrollView>
+              </KeyboardAwareScrollView>
+              {plotList.length >= 8 && (
+                <View
+                  style={{
+                    padding: 16,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: -4 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 4,
+                    elevation: 4,
+                  }}>
+                  <MainButton
+                    label="ถัดไป"
+                    disable={selectedCard === null}
+                    color={colors.greenLight}
+                    onPress={() => {
+                      mixpanel.track('Tab submit from select plot screen');
+                      onSubmit();
+                    }}
+                  />
                 </View>
               )}
-              <FlatList
-                data={plotList}
-                renderItem={({ item, index }) => (
-                  <PlotSelect
-                    id={item.id}
-                    isHaveDroner={item.isHaveDroner}
-                    status={item.status}
-                    plotName={item.plotName}
-                    plantName={item.plantName}
-                    locationName={item.locationName}
-                    raiAmount={item.raiAmount}
-                    onPress={async () => {
-                      try {
-                        await getLocationPrice({
-                          provinceId: item.plotArea.provinceId,
-                          cropName: item.plantName,
-                        });
-                        await searchDroner({
-                          farmerId: item.farmerId,
-                          farmerPlotId: item.id,
-                        });
-                        mixpanel.track(
-                          'Tab select plot from select plot screen',
-                        );
-                        handleCardPress(item.id);
-                        setTaskData(prev => ({
-                          ...prev,
-                          cropName: item.plantName,
-                          plantName: item.plantName,
-                          plotName: item.plotName,
-                          farmerId: item.farmerId,
-                          plotArea: item.plotArea,
-
-                          province: item.province,
-                          locationName: item.locationName,
-                          farmAreaAmount: item.raiAmount,
-                          purposeSpray: {
-                            id: '',
-                            name: '',
-                          },
-                          targetSpray: [],
-                          preparationBy: '',
-                        }));
-                      } catch (e) {
-                        console.log(e);
-                      }
-                    }}
-                    selected={item.id === selectedCard}
-                  />
-                )}
-                keyExtractor={item => item.id}
-              />
-              <View
-                style={{
-                  padding: 16,
-                }}>
-                <MainButton
-                  label="ถัดไป"
-                  disable={selectedCard === null}
-                  color={colors.greenLight}
-                  onPress={() => {
-                    mixpanel.track('Tab submit from select plot screen');
-                    onSubmit();
-                  }}
-                />
-              </View>
-            </ScrollView>
-          </KeyboardAvoidingView>
-        </SafeAreaView>
+            </SafeAreaView>
+          )}
+        </>
       )}
-
-      <Spinner
-        visible={loading}
-        textContent={'Loading...'}
-        textStyle={{ color: '#FFF' }}
-      />
     </>
   );
 };

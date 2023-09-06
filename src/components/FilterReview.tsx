@@ -1,16 +1,10 @@
 import { normalize } from '@rneui/themed';
-import React, { useState, useMemo, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  View,
-  Image,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, TouchableOpacity, View, Image } from 'react-native';
 import { Picker, onOpen } from 'react-native-actions-sheet-picker';
 import { font, icons } from '../assets/index';
 import { sortFieldReview } from '../definitions/reviewFilter';
+import Text from './Text/Text';
 
 interface props {
   selectedField: {

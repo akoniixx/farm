@@ -1,16 +1,11 @@
 import { normalize } from '@rneui/themed';
-import React, { useState, useMemo, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  View,
-  Image,
-} from 'react-native';
-import { Picker, onOpen } from 'react-native-actions-sheet-picker';
-import { colors, font, icons } from '../../assets';
-import { sortField, sortStatusInprogress } from '../../definitions/taskFilter';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, TouchableOpacity, View, Image } from 'react-native';
+import { onOpen } from 'react-native-actions-sheet-picker';
+import { font, icons } from '../../assets';
+import { sortStatusInprogress } from '../../definitions/taskFilter';
+import PickerFilter from '../PickerFilter/PickerFilter';
+import Text from '../Text/Text';
 
 interface props {
   selectedStatus: {
@@ -55,11 +50,13 @@ export const StatusFilterInprogress: React.FC<props> = ({
         </View>
       </TouchableOpacity>
 
-      <Picker
-        id="status"
-        data={status}
-        label="แสดงสถานะงาน"
+      <PickerFilter
         setSelected={setSelectedStatus}
+        data={status}
+        title="แสดงสถานะงาน"
+        id="status"
+        height={400}
+        selected={selectedStatus}
       />
     </>
   );
@@ -81,5 +78,6 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
     fontFamily: font.SarabunMedium,
     color: '#8D96A0',
+    lineHeight: normalize(26),
   },
 });

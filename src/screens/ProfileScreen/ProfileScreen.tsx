@@ -7,18 +7,17 @@ import {
   Modal,
   Platform,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
-import { height, normalize } from '../../functions/Normalize';
+import { normalize } from '../../functions/Normalize';
 import CustomHeader from '../../components/CustomHeader';
-import { Avatar, Icon } from '@rneui/themed';
+import { Avatar } from '@rneui/themed';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { ScrollView } from 'react-native';
-import PlotsItem, { StatusObject } from '../../components/Plots/Plots';
+import { StatusObject } from '../../components/Plots/Plots';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Authentication } from '../../datasource/AuthDatasource';
 import { socket } from '../../functions/utility';
@@ -29,11 +28,12 @@ import PlotInProfile from '../../components/Plots/PlotsInProfile';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { useIsFocused } from '@react-navigation/native';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
+import Text from '../../components/Text/Text';
 
 const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
-  const [reload, setReload] = useState(false);
+
   const [reason, setReason] = useState<any>('');
   const noti = route.params?.noti ?? false;
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');

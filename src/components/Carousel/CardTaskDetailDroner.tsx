@@ -1,16 +1,8 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Platform,
-} from 'react-native';
+import { Image, StyleSheet, View, Platform } from 'react-native';
 import React from 'react';
 import { normalize, width } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
-import fonts from '../../assets/fonts';
-import { Avatar } from '@rneui/base';
+import Text from '../Text/Text';
 
 interface DetailData {
   index: number;

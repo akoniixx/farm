@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   Image,
   TouchableOpacity,
@@ -16,6 +15,7 @@ import { CouponCardEntities } from '../../entites/CouponCard';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { keepCoupon } from '../../datasource/PromotionDatasource';
 import { width } from '../../functions/Normalize';
+import Text from '../Text/Text';
 
 const CouponCardHeader: React.FC<CouponCardEntities> = ({
   id,

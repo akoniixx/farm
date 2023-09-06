@@ -1,9 +1,9 @@
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import { font, icons, image } from '../../assets';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import { font, image } from '../../assets';
 import colors from '../../assets/colors/colors';
 import { normalize } from '../../functions/Normalize';
-import { momentExtend } from '../../utils/moment-buddha-year';
+import ProgressiveImage from '../ProgressingImage/ProgressingImage';
 interface guruData {
   background: any;
 }
@@ -14,7 +14,7 @@ export const CardGuruKaset: React.FC<guruData> = ({ background }) => {
         padding: 10,
       }}>
       <View style={styles.card}>
-        <Image
+        <ProgressiveImage
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
           borderBottomLeftRadius={10}

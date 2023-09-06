@@ -1,4 +1,4 @@
-import { View, Text, Modal, TouchableOpacity, Image } from 'react-native';
+import { View, Modal, TouchableOpacity, Image } from 'react-native';
 import React from 'react';
 import { ModalEntity } from './ModalEntity';
 import { ModalStyle } from './ModalStyle';
@@ -6,6 +6,7 @@ import { MainButton } from '../Button/MainButton';
 import { colors, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize, width } from '../../functions/Normalize';
+import Text from '../Text/Text';
 
 const FarmerPlotSuccess: React.FC<ModalEntity> = ({
   show,

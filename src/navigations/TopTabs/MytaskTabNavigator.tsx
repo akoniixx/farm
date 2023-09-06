@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import { TabBar, TabView } from 'react-native-tab-view';
 import { colors } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
 import FinishTaskScreen from '../../screens/MyTaskScreen/FinishTaskScreen';
 import InprogressScreen from '../../screens/MyTaskScreen/InprogressScreen';
+import Text from '../../components/Text/Text';
 
 const renderTabBar = (props: any) => (
   <TabBar
     {...props}
     indicatorStyle={{ backgroundColor: '#2EC46D' }}
-    style={{ backgroundColor: colors.white }}
-    renderLabel={({ route, focused, color }) => (
+    style={{ backgroundColor: colors.white, paddingVertical: 8 }}
+    renderLabel={({ route, focused }) => (
       <Text
-        style={[styles.label, { color: focused ? '#1F8449' : colors.gray }]}>
+        style={[
+          styles.label,
+          { color: focused ? '#1F8449' : colors.gray, lineHeight: 30 },
+        ]}>
         {route.title}
       </Text>
     )}
@@ -25,11 +29,6 @@ const renderTabBar = (props: any) => (
 //   task: TaskScreen,
 //   newTask: NewTaskScreen,
 // });
-
-interface Prop {
-  isOpenReceiveTask: boolean;
-  dronerStatus: string;
-}
 
 const MyTaskTapNavigator: React.FC<any> = ({}) => {
   const layout = useWindowDimensions();
@@ -66,7 +65,7 @@ export default MyTaskTapNavigator;
 
 const styles = StyleSheet.create({
   label: {
-    fontFamily: fonts.SarabunMedium,
-    fontSize: normalize(16),
+    fontFamily: fonts.AnuphanMedium,
+    fontSize: normalize(20),
   },
 });

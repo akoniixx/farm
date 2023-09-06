@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
-import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import { TabBar, TabBarIndicator, TabView } from 'react-native-tab-view';
+import React, { useState } from 'react';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import { TabBar, TabView } from 'react-native-tab-view';
 import { colors } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
@@ -8,6 +8,7 @@ import MyCouponExpiredScreen from '../../screens/PromotionScreen/MyCouponExpired
 import MyCouponUsedScreen from '../../screens/PromotionScreen/MyCouponUsedScreen';
 import MyCouponUseScreen from '../../screens/PromotionScreen/MyCouponUseScreen';
 import { mixpanel } from '../../../mixpanel';
+import Text from '../../components/Text/Text';
 
 const renderTabBar: React.FC<any> = (props: any) => {
   return (

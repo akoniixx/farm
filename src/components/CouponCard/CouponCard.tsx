@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   Image,
   TouchableOpacity,
@@ -19,6 +18,7 @@ import { width } from '../../functions/Normalize';
 import { useRecoilState } from 'recoil';
 import { couponState } from '../../recoil/CouponAtom';
 import { mixpanel } from '../../../mixpanel';
+import Text from '../Text/Text';
 
 const CouponCard: React.FC<CouponCardEntities> = ({
   id,

@@ -1,10 +1,11 @@
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import { font, image } from '../../assets';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { font } from '../../assets';
 import colors from '../../assets/colors/colors';
 import { normalize } from '../../functions/Normalize';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
+import Text from '../Text/Text';
 interface guruData {
   index: any;
   date: any;

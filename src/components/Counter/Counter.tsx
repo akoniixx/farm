@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   TextInput,
@@ -8,6 +7,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import { colors, font } from '../../assets';
+import Text from '../Text/Text';
 
 interface Props {
   currentCount: number;
@@ -84,6 +84,7 @@ export default function Counter({
           style={styles.textCounter}
           scrollEnabled={false}
           maxLength={7}
+          allowFontScaling={false}
           returnKeyType="done"
           keyboardType="number-pad"
           onBlur={() => onBlur()}

@@ -1,10 +1,11 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import fonts from '../assets/fonts';
 import { normalize } from '../functions/Normalize';
 import { colors } from '../assets';
 import { momentExtend } from '../utils/moment-buddha-year';
 import moment from 'moment';
+import Text from './Text/Text';
 
 interface MaintenanceProps {
   header: string;
@@ -23,7 +24,7 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
   const end = momentExtend.toBuddhistYear(dateEnd, 'DD MMMM YYYY');
   return (
     <>
-      {start != end ? (
+      {start !== end ? (
         <View
           style={{
             paddingHorizontal: 16,

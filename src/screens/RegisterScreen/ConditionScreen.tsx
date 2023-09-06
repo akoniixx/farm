@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   Image,
   TouchableOpacity,
@@ -16,6 +15,7 @@ import { condition } from '../../assets/constant/constant';
 import { normalize } from '../../functions/Normalize';
 import icons from '../../assets/icons/icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Text from '../../components/Text/Text';
 
 const ConditionScreen: React.FC<any> = ({ navigation }) => {
   const [checked, setChecked] = useState<boolean>(false);

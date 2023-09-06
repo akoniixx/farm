@@ -10,7 +10,6 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -52,6 +51,7 @@ import { couponState } from '../../recoil/CouponAtom';
 import { Switch } from '@rneui/base';
 import Counter from '../../components/Counter/Counter';
 import { useDebounceValue } from '../../hook/useDebounceValue';
+import Text from '../../components/Text/Text';
 interface CampaignDetail {
   id: string;
   point: number;
@@ -406,7 +406,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           <View
             style={{
               flexDirection: 'row',
-              paddingHorizontal: normalize(16),
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
@@ -1262,9 +1261,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         <View
           style={{
             paddingHorizontal: 16,
-            paddingVertical: 8,
-            borderBottomColor: colors.greyDivider,
-            borderBottomWidth: 1,
+            paddingTop: 8,
           }}>
           <MainButton
             disable={disabled}

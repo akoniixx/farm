@@ -3,7 +3,6 @@ import {
   Image,
   View,
   StyleSheet,
-  Text,
   KeyboardAvoidingView,
   Platform,
   TextInput,
@@ -43,6 +42,7 @@ import { LAT_LNG_BANGKOK } from '../../../definitions/location';
 import { PlotDatasource } from '../../../datasource/PlotDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { CropDatasource } from '../../../datasource/CropDatasource';
+import Text from '../../../components/Text/Text';
 
 export type PredictionType = {
   description: string;
@@ -363,6 +363,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 ชื่อแปลงเกษตร
               </Text>
               <TextInput
+                allowFontScaling={false}
                 clearTextOnFocus={true}
                 onChangeText={value => {
                   setplotName(value);
@@ -396,6 +397,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 editable={true}
                 placeholder={'ระบุจำนวนไร่'}
                 placeholderTextColor={colors.disable}
+                allowFontScaling={false}
               />
               <Text style={styles.head}>พืชที่ปลูก</Text>
               <TouchableOpacity
@@ -596,6 +598,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
               )}
               <Text style={styles.head}>จุดสังเกต</Text>
               <TextInput
+                allowFontScaling={false}
                 onChangeText={value => {
                   setlandmark(value);
                 }}
@@ -798,6 +801,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   justifyContent: 'space-between',
                 }}>
                 <TextInput
+                  allowFontScaling={false}
                   onChangeText={searchPlotArea}
                   value={searchValue}
                   defaultValue={searchValue}

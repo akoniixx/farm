@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import React from 'react';
 import fonts from '../../assets/fonts';
 import { colors } from '../../assets';
 import SlipCard, { TaskDataTypeSlip } from '../../components/SlipCard/SlipCard';
+import Text from '../../components/Text/Text';
 
 export default function SectionBody(props: TaskDataTypeSlip) {
   return (

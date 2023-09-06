@@ -20,8 +20,6 @@
 		350B0960CDD7457D8DC4E862 /* receivetasksuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = D18E7E29A0F34983BE96F780 /* receivetasksuccess.wav */; };
 		4E0E688E542C429A8E49A91D /* Sarabun-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3CB3D555E4984153AE4BA2D5 /* Sarabun-Medium.ttf */; };
 		5074541692BF49118BE96830 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E354E12A922F4E29915ECEC5 /* EvilIcons.ttf */; };
-		607998622A7297E1006EC06D /* iconkaset.wav in Resources */ = {isa = PBXBuildFile; fileRef = 607998612A7297E1006EC06D /* iconkaset.wav */; };
-		607998642A7297E7006EC06D /* receivetasksuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = 607998632A7297E7006EC06D /* receivetasksuccess.wav */; };
 		60F1F01829266B65007549EB /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 60F1F01729266B63007549EB /* fonts */; };
 		64A332CA74844D35B3393CAF /* Sarabun-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2FE69C8B24DA43A3A19E6C72 /* Sarabun-Bold.ttf */; };
 		6D8D1046338E437AB06BD36F /* libPods-farmer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1D988025A77D758AF25144 /* libPods-farmer.a */; };
@@ -40,6 +38,8 @@
 		D2A29406BA87492A95CA8BA4 /* Anuphan-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 828C0E280D604EFE8C155856 /* Anuphan-Light.otf */; };
 		D2D981DE0F334CA5987D66DB /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F1C865AEF1074351B752CE88 /* SimpleLineIcons.ttf */; };
 		DB0C1D99B0174AD2A12538DF /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 26E973754BE244C08A903311 /* Feather.ttf */; };
+		E138B9AA2A70D7BA000A08B8 /* iconkaset.wav in Resources */ = {isa = PBXBuildFile; fileRef = E138B9A92A70D7BA000A08B8 /* iconkaset.wav */; };
+		E138B9AC2A70D7C9000A08B8 /* receivetasksuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = E138B9AB2A70D7C9000A08B8 /* receivetasksuccess.wav */; };
 		FF11CFA2DF534E158972B845 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F4087F42B2843228EE8D8D8 /* Octicons.ttf */; };
 /* End PBXBuildFile section */
 
@@ -74,8 +74,6 @@
 		4F4087F42B2843228EE8D8D8 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = ../src/assets/fonts/Octicons.ttf; sourceTree = "<group>"; };
 		50A411CBB8631D30BDB91777 /* Pods-farmer-farmerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer-farmerTests.release.xcconfig"; path = "Target Support Files/Pods-farmer-farmerTests/Pods-farmer-farmerTests.release.xcconfig"; sourceTree = "<group>"; };
 		5536E3154E7B34B92E50187B /* Pods-farmer-farmerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer-farmerTests.debug.xcconfig"; path = "Target Support Files/Pods-farmer-farmerTests/Pods-farmer-farmerTests.debug.xcconfig"; sourceTree = "<group>"; };
-		607998612A7297E1006EC06D /* iconkaset.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = iconkaset.wav; path = ../src/assets/sound/iconkaset.wav; sourceTree = "<group>"; };
-		607998632A7297E7006EC06D /* receivetasksuccess.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = receivetasksuccess.wav; path = ../src/assets/sound/receivetasksuccess.wav; sourceTree = "<group>"; };
 		60F1F01729266B63007549EB /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		6104EDE766E24424A0000B38 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = ../src/assets/fonts/Fontisto.ttf; sourceTree = "<group>"; };
 		65D81DE2054F4B3899F3DAED /* Anuphan-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Anuphan-Medium.otf"; path = "../src/assets/fonts/Anuphan-Medium.otf"; sourceTree = "<group>"; };
@@ -94,6 +92,8 @@
 		D1F2C604491F47C6A563A689 /* Sarabun-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Light.ttf"; path = "../src/assets/fonts/Sarabun-Light.ttf"; sourceTree = "<group>"; };
 		D825E13E2910472ABD4CC80B /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = ../src/assets/fonts/MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
 		DFE751E1DA03441F864019BA /* iconkaset.wav */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = iconkaset.wav; path = ../src/assets/sound/iconkaset.wav; sourceTree = "<group>"; };
+		E138B9A92A70D7BA000A08B8 /* iconkaset.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = iconkaset.wav; path = ../src/assets/sound/iconkaset.wav; sourceTree = "<group>"; };
+		E138B9AB2A70D7C9000A08B8 /* receivetasksuccess.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = receivetasksuccess.wav; path = ../src/assets/sound/receivetasksuccess.wav; sourceTree = "<group>"; };
 		E354E12A922F4E29915ECEC5 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = ../src/assets/fonts/EvilIcons.ttf; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F1C865AEF1074351B752CE88 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = ../src/assets/fonts/SimpleLineIcons.ttf; sourceTree = "<group>"; };
@@ -203,8 +203,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				607998632A7297E7006EC06D /* receivetasksuccess.wav */,
-				607998612A7297E1006EC06D /* iconkaset.wav */,
+				E138B9A92A70D7BA000A08B8 /* iconkaset.wav */,
+				E138B9AB2A70D7C9000A08B8 /* receivetasksuccess.wav */,
 				60F1F01729266B63007549EB /* fonts */,
 				13B07FAE1A68108700A75B9A /* farmer */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -336,7 +336,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				607998622A7297E1006EC06D /* iconkaset.wav in Resources */,
+				E138B9AA2A70D7BA000A08B8 /* iconkaset.wav in Resources */,
 				9D4520479D6C44EE844AF082 /* Anuphan-Bold.otf in Resources */,
 				D2A29406BA87492A95CA8BA4 /* Anuphan-Light.otf in Resources */,
 				0BBE516B5CAB43D68B98C339 /* Anuphan-Medium.otf in Resources */,
@@ -358,7 +358,7 @@
 				64A332CA74844D35B3393CAF /* Sarabun-Bold.ttf in Resources */,
 				AC582E29205C4EEBADF6BE27 /* Sarabun-Light.ttf in Resources */,
 				4E0E688E542C429A8E49A91D /* Sarabun-Medium.ttf in Resources */,
-				607998642A7297E7006EC06D /* receivetasksuccess.wav in Resources */,
+				E138B9AC2A70D7C9000A08B8 /* receivetasksuccess.wav in Resources */,
 				D2D981DE0F334CA5987D66DB /* SimpleLineIcons.ttf in Resources */,
 				24841A7F6BB64F00AB0F0900 /* Zocial.ttf in Resources */,
 				7E6FBB5BFDEC44A8A487B939 /* iconkaset.wav in Resources */,

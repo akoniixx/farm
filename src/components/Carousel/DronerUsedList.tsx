@@ -1,24 +1,20 @@
 import {
   Image,
   StyleSheet,
-  Text,
   View,
-  TextInput,
   ImageBackground,
   TouchableOpacity,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
-import fonts from '../../assets/fonts';
 import { Avatar } from '@rneui/base';
-import { color } from 'react-native-reanimated';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FavoriteDroner } from '../../datasource/FavoriteDroner';
-import { TaskSuggestion } from '../../datasource/TaskSuggestion';
-import { ProfileDatasource } from '../../datasource/ProfileDatasource';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
+
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import Text from '../Text/Text';
+import ProgressiveImage from '../ProgressingImage/ProgressingImage';
 
 interface dronerUsedData {
   index: any;
@@ -30,7 +26,9 @@ interface dronerUsedData {
   province: any;
   distance: any;
   status: any;
-  callBack: () => void;
+  callBack: () => Promise<void>;
+  dronerId: string;
+  isLoading?: boolean;
 }
 
 const DronerUsedList: React.FC<dronerUsedData> = ({
@@ -44,8 +42,44 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
   distance,
   status,
   callBack,
+  dronerId,
+  isLoading,
 }) => {
-  return (
+  const [disabled, setDisabled] = useState(false);
+  // const onFavorite = async () => {
+  //   setDisabled(true);
+  //   const farmer_id = await AsyncStorage.getItem('farmer_id');
+  //   await FavoriteDroner.addUnaddFav(
+  //     farmer_id !== null ? farmer_id : '',
+  //     dronerId,
+  //   )
+  //     .catch((err: any) => console.log(err))
+  //     .finally(() => setDisabled(false));
+  // };
+
+  return isLoading ? (
+    <View
+      style={{
+        width: normalize(160),
+      }}>
+      <SkeletonPlaceholder
+        borderRadius={10}
+        speed={2000}
+        backgroundColor={colors.skeleton}>
+        <SkeletonPlaceholder.Item
+          flexDirection="row"
+          alignItems="center"
+          style={{ marginLeft: 16, width: '100%' }}>
+          <View
+            style={{
+              width: '100%',
+              height: 200,
+            }}
+          />
+        </SkeletonPlaceholder.Item>
+      </SkeletonPlaceholder>
+    </View>
+  ) : (
     <View style={{ paddingHorizontal: 8 }}>
       <View style={[styles.cards]}>
         <ImageBackground
@@ -68,28 +102,55 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                 alignSelf: 'flex-end',
                 margin: 10,
               }}>
-              <TouchableOpacity onPress={callBack}>
-                <Image
-                  source={
-                    status === 'ACTIVE' ? icons.heart_active : icons.heart
-                  }
+              {disabled ? (
+                <View
                   style={{
-                    alignSelf: 'center',
-                    width: 20,
-                    height: 20,
-                    top: 4,
-                  }}
-                />
-              </TouchableOpacity>
+                    backgroundColor: colors.white,
+
+                    borderRadius: 15,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 4,
+                  }}>
+                  <ActivityIndicator />
+                </View>
+              ) : (
+                <TouchableOpacity
+                  disabled={disabled}
+                  onPress={async () => {
+                    try {
+                      setDisabled(true);
+                      await callBack();
+                    } catch (err) {
+                      console.log(err);
+                    } finally {
+                      setDisabled(false);
+                    }
+                  }}>
+                  <Image
+                    source={
+                      status === 'ACTIVE' ? icons.heart_active : icons.heart
+                    }
+                    style={{
+                      alignSelf: 'center',
+                      width: 20,
+                      height: 20,
+                      top: 4,
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
             <View style={{ alignSelf: 'center', bottom: 15 }}>
-              <Avatar
-                size={normalize(56)}
+              <ProgressiveImage
+                borderRadius={28}
                 source={profile === null ? image.empty_plot : { uri: profile }}
-                avatarStyle={{
-                  borderRadius: normalize(40),
+                style={{
+                  borderRadius: normalize(28),
                   borderColor: colors.white,
                   borderWidth: 1,
+                  width: normalize(56),
+                  height: normalize(56),
                 }}
               />
             </View>

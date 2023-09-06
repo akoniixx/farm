@@ -1,14 +1,13 @@
-import { View, Text, Modal, TouchableOpacity, Image } from 'react-native';
+import { View, Modal, TouchableOpacity, Image } from 'react-native';
 import React from 'react';
-import { MaintenanceEntity, ModalEntity } from '../ModalEntity';
+import { MaintenanceEntity } from '../ModalEntity';
 import { ModalStyle } from '../ModalStyle';
-import { colors, icons } from '../../../assets';
-import { normalize, width } from '../../../functions/Normalize';
-import { MainButton } from '../../Button/MainButton';
+import { colors, icons, image } from '../../../assets';
+import { normalize } from '../../../functions/Normalize';
 import fonts from '../../../assets/fonts';
 import { momentExtend } from '../../../utils/moment-buddha-year';
 import moment from 'moment';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Text from '../../Text/Text';
 const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
   show,
   onClose,
@@ -56,6 +55,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                 <Text
                   style={{
                     color: '#FB8705',
+                    fontSize: normalize(18),
                   }}>
                   {momentExtend.toBuddhistYear(data.dateStart, 'DD MMMM YYYY')}
                 </Text>
@@ -85,6 +85,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                 <Text
                   style={{
                     color: '#FB8705',
+                    fontSize: normalize(18),
                   }}>
                   {momentExtend.toBuddhistYear(data.dateEnd, 'DD MMMM YYYY')}
                 </Text>
@@ -148,6 +149,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                 <Text
                   style={{
                     color: '#FB8705',
+                    fontSize: normalize(18),
                   }}>
                   {momentExtend.toBuddhistYear(data.dateStart, 'DD MMMM YYYY')}
                 </Text>
@@ -171,7 +173,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                   .format('HH.mm')}
                 {' น.'}
               </Text>
-              <View style={{ marginTop: 20}}>
+              <View style={{ marginTop: 20 }}>
                 <Text
                   style={{
                     fontFamily: fonts.SarabunLight,
@@ -179,7 +181,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                     color: colors.fontBlack,
                     lineHeight: 30,
                     paddingHorizontal: 20,
-                    alignItems: 'center' 
+                    alignItems: 'center',
                   }}>
                   {data.text}
                 </Text>

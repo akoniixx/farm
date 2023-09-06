@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import { TabBar, TabView } from 'react-native-tab-view';
 import { colors } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
 import AllDronerUsed from '../../screens/MainScreen/AllDronerUsed';
 import FavDronerUsed from '../../screens/MainScreen/FavDronerUsed';
+import Text from '../../components/Text/Text';
 
 const renderTabBar = (props: any) => (
   <TabBar

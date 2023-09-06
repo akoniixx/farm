@@ -4,14 +4,11 @@ import {
   Image,
   Modal,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import React, { useEffect, useReducer, useState } from 'react';
 import { normalize } from '@rneui/themed';
-import { useIsFocused } from '@react-navigation/native';
-import { MyCouponCardEntities } from '../../entites/CouponCard';
+
 import { getMyCoupon } from '../../datasource/PromotionDatasource';
 import { colors, font, image } from '../../assets';
 import CouponCard from '../../components/CouponCard/CouponCard';
@@ -22,6 +19,7 @@ import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import VerifyStatus from '../../components/Modal/VerifyStatus';
 import { mixpanel } from '../../../mixpanel';
+import Text from '../../components/Text/Text';
 
 const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
