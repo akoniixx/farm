@@ -1,4 +1,4 @@
-import { Image, Modal, StyleSheet, Text, View } from 'react-native';
+import { Image, Modal, StyleSheet, View } from 'react-native';
 import React from 'react';
 import { ModalEntity } from './ModalEntity';
 import { ModalStyle } from './ModalStyle';
@@ -7,6 +7,7 @@ import { MainButton } from '../Button/MainButton';
 import fonts from '../../assets/fonts';
 import { width } from '../../functions/Normalize';
 import { normalize } from '@rneui/themed';
+import Text from '../Text/Text';
 
 const RemoveCoupon: React.FC<ModalEntity> = ({
   show,

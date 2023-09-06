@@ -1,16 +1,11 @@
 import { normalize } from '@rneui/themed';
-import React, { useState, useMemo, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  View,
-  Image,
-} from 'react-native';
-import { Picker, onOpen } from 'react-native-actions-sheet-picker';
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View, Image } from 'react-native';
+import { onOpen } from 'react-native-actions-sheet-picker';
 import { colors, font, icons } from '../../assets';
-import { sortField, sortFieldFinish } from '../../definitions/taskFilter';
+import { sortFieldFinish } from '../../definitions/taskFilter';
+import PickerFilter from '../PickerFilter/PickerFilter';
+import Text from '../Text/Text';
 
 interface props {
   selectedField: {
@@ -25,12 +20,11 @@ export const FilterFinish: React.FC<props> = ({
   selectedField,
   setSelectedField,
 }) => {
-  const [field, setField] = useState<any>([]);
+  // const [field, setField] = useState([]);
 
-  useEffect(() => {
-    setField(sortFieldFinish);
-  }, []);
-
+  // useEffect(() => {
+  //   setField();
+  // }, []);
   return (
     <>
       <TouchableOpacity
@@ -56,11 +50,12 @@ export const FilterFinish: React.FC<props> = ({
         </View>
       </TouchableOpacity>
 
-      <Picker
-        id="field"
-        data={field}
-        label="เรียงลำดับงาน"
+      <PickerFilter
         setSelected={setSelectedField}
+        data={sortFieldFinish}
+        title="แสดงสถานะงาน"
+        id="field"
+        selected={selectedField}
       />
     </>
   );
@@ -82,5 +77,15 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
     fontFamily: font.SarabunMedium,
     color: '#8D96A0',
+  },
+  row: {
+    flexDirection: 'row',
+    height: 60,
+    alignItems: 'center',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: colors.disable,
+    width: '100%',
   },
 });

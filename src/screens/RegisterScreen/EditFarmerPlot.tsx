@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '../../components/CustomHeader';
-import { Text } from 'react-native';
+import Text from '../../components/Text/Text';
 
 const EditFarmerPlot: React.FC<any> = ({ route, navigation }) => {
   const [data, setData] = useState<any>();

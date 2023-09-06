@@ -1,22 +1,14 @@
-import { Switch } from '@rneui/themed';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
-import { Image, StyleSheet, Text, View, Dimensions } from 'react-native';
+import React from 'react';
+import { Image, StyleSheet, View, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Avatar } from '@rneui/base';
-import { normalize, width } from '../../functions/Normalize';
+import { normalize } from '../../functions/Normalize';
 import image from '../../assets/images/image';
 import CustomHeader from '../../components/CustomHeader';
 import { MainButton } from '../../components/Button/MainButton';
+import Text from '../../components/Text/Text';
 
 const AuthPromotionScreen: React.FC<any> = ({ navigation, route }) => {
   return (

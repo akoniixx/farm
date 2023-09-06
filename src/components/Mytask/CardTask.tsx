@@ -1,12 +1,13 @@
 import moment from 'moment';
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { colors, icons } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
 import { getStatusToText, numberWithCommas } from '../../functions/utility';
 import { DronerCard } from './DronerCard';
 import { WaittingCard } from './WaitingCard';
+import Text from '../Text/Text';
 
 interface taskListProps {
   task: {
@@ -34,8 +35,15 @@ export const CardTask: React.FC<taskListProps> = ({ task }) => {
     <View
       style={{
         backgroundColor: 'white',
-        padding: 10,
+        paddingTop: 16,
+        paddingHorizontal: 10,
         marginVertical: normalize(10),
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
       }}>
       <View
         style={{
@@ -137,24 +145,32 @@ export const CardTask: React.FC<taskListProps> = ({ task }) => {
       ) : (
         <></>
       )}
-      <View
-        style={{
-          marginTop: normalize(20),
-          borderTopWidth: StyleSheet.hairlineWidth,
-          borderColor: colors.disable,
-        }}>
-        {task.status === 'WAIT_RECEIVE' ? (
-          <WaittingCard />
-        ) : task.status === 'CANCELED' ? (
-          <></>
-        ) : (
-          <DronerCard
-            name={task.droner.firstname + ' ' + task.droner.lastname}
-            profile={task.droner.image_profile}
-            telnumber={task.droner.telephone_no}
-          />
-        )}
-      </View>
+      {task.status === 'CANCELED' ? (
+        <View
+          style={{
+            height: 16,
+          }}
+        />
+      ) : (
+        <View
+          style={{
+            marginTop: normalize(20),
+            borderTopWidth: StyleSheet.hairlineWidth,
+            borderColor: colors.disable,
+          }}>
+          {task.status === 'WAIT_RECEIVE' ? (
+            <WaittingCard />
+          ) : task.status === 'CANCELED' ? (
+            <></>
+          ) : (
+            <DronerCard
+              name={task.droner.firstname + ' ' + task.droner.lastname}
+              profile={task.droner.image_profile}
+              telnumber={task.droner.telephone_no}
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 };

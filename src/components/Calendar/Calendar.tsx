@@ -2,7 +2,6 @@ import moment from 'moment';
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import {
   View,
-  Text,
   ScrollView,
   StyleSheet,
   Dimensions,
@@ -11,7 +10,7 @@ import {
 import { colors, font } from '../../assets';
 import { _monthName, build12Year } from '../../definitions/constants';
 import { normalize } from '../../functions/Normalize';
-import { MainButton } from '../Button/MainButton';
+import Text from '../Text/Text';
 
 const DatePickerCustom: React.FC<DatePickerProps> = ({
   value,

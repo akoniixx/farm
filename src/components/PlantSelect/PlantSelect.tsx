@@ -1,15 +1,8 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  useWindowDimensions,
-} from 'react-native';
-
+import { View, TouchableOpacity, Dimensions } from 'react-native';
 import { normalize } from '@rneui/themed';
-import { Text } from '@rneui/base';
 import { colors, font } from '../../assets';
+import Text from '../Text/Text';
 
 interface PrantSelectProps {
   label: string;

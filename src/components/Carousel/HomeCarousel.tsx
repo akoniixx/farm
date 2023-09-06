@@ -1,10 +1,11 @@
 import React from 'react';
-import { Text, View, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Image, StyleSheet, Dimensions } from 'react-native';
 import { carouselItems } from '../../assets/constant/constant';
 import { normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
 import Carousel from 'react-native-reanimated-carousel';
 import { colors, font } from '../../assets';
+import Text from '../Text/Text';
 
 const HomeCarousel: React.FC<any> = () => {
   const screen = Dimensions.get('window');

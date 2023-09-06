@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   Image,
@@ -16,6 +15,7 @@ import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { normalize } from '../../functions/Normalize';
 import InputWithSuffix from '../InputText/InputWithSuffix';
 import Radio from '../Radio/Radio';
+import Text from '../Text/Text';
 
 interface Prop {
   id: string;
@@ -353,7 +353,11 @@ const PlotSelect: React.FC<Prop> = ({
                 }}
                 value={taskData.farmAreaAmount}
                 onChangeText={text => {
-                  const newNumber = text.replace(/[^0-9]/g, '');
+                  const newNumberWithDot = text.replace(/[^0-9.]/g, '');
+                  const toFixed = newNumberWithDot.split('.');
+                  if (toFixed[1] && toFixed[1].length > 2) {
+                    return null;
+                  }
                   if (+text !== +taskData.farmAreaAmount) {
                     setCheckValue('custom');
                   }
@@ -362,13 +366,13 @@ const PlotSelect: React.FC<Prop> = ({
                     setCheckValue('all');
                   }
 
-                  if (+newNumber > +raiAmount) {
+                  if (+newNumberWithDot > +raiAmount) {
                     return null;
                   }
 
                   setTaskData(prev => ({
                     ...prev,
-                    farmAreaAmount: newNumber.toString(),
+                    farmAreaAmount: newNumberWithDot,
                   }));
                 }}
                 keyboardType="numeric"

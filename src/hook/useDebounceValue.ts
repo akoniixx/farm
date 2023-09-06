@@ -1,3 +1,4 @@
+/* eslint-disable consistent-this */
 import { useEffect, useState } from 'react';
 
 export const useDebounceValue = <T>(value: T, delay: number): T => {

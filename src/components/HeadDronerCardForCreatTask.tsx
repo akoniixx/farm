@@ -1,14 +1,8 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
-import {
-  Image,
-  ImageSourcePropType,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 import { font, icons } from '../assets';
 import { normalize } from '../functions/Normalize';
+import Text from './Text/Text';
 
 interface Prop {
   navigation: any;

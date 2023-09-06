@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StyleSheet, View, Image, Text } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, image } from '../../assets';
 import { MainButton } from '../../components/Button/MainButton';
+import Text from '../../components/Text/Text';
 
 const MyPlotScreen: React.FC<any> = ({ navigation }) => {
   const [fcmToken, setFcmToken] = useState('');

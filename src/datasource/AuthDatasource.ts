@@ -80,7 +80,12 @@ export class Authentication {
         index: 1,
         routes: [{ name: 'Auth' }],
       });
-      await AsyncStorage.multiRemove(['token', 'farmer_id', 'task_id']);
+      await AsyncStorage.multiRemove([
+        'token',
+        'farmer_id',
+        'task_id',
+        'fcmtoken',
+      ]);
       navigation.popToTop();
       navigation.dispatch(resetActionNavigate);
     });

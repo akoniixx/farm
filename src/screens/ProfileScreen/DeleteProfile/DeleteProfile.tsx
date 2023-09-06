@@ -1,11 +1,9 @@
 import {
   View,
-  Text,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
   Image,
-  ScrollView,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -28,6 +26,7 @@ import { StackNativeScreenProps } from '../../../navigations/MainNavigator';
 import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
 import { MyJobDatasource } from '../../../datasource/MyJobDatasource';
 import { SearchMyJobsEntites } from '../../../entites/SearchMyJobsEntites';
+import Text from '../../../components/Text/Text';
 
 type DeleteProfileScreenProps = StackNativeScreenProps<'DeleteProfileScreen'>;
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { colors, font, icons } from '../../assets';
-import { Text } from '@rneui/base';
 import fonts from '../../assets/fonts';
 import { normalize } from '@rneui/themed';
 import { Image } from 'react-native';
@@ -19,6 +18,7 @@ import { TabActions } from '@react-navigation/native';
 import MainScreen from '../../screens/MainScreen/MainScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from '../../../mixpanel';
+import Text from '../../components/Text/Text';
 
 const Tab = createBottomTabNavigator();
 

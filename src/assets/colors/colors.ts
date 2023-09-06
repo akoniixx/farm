@@ -44,4 +44,5 @@ export default {
   bgGreen: '#F2F9F5',
   bgOrange: '#FFFDF6',
   Surface: '#F6F7F9',
+  skeleton: '#E3E3E3',
 };

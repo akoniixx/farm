@@ -1,16 +1,9 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Platform,
-  TouchableOpacity,
-} from 'react-native';
+import { Image, StyleSheet, View, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons } from '../../assets';
 import fonts from '../../assets/fonts';
+import Text from '../Text/Text';
 
 interface AddPlot {
   index: number;

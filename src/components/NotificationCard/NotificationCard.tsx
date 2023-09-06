@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
+import { View, StyleSheet, Image, Pressable } from 'react-native';
 import React, { useState } from 'react';
 import {
   NotificationCardEntity,
@@ -6,6 +6,7 @@ import {
 } from '../../entites/NotificationCard';
 import { normalize, width } from '../../functions/Normalize';
 import { colors, font, icons } from '../../assets';
+import Text from '../Text/Text';
 
 function iconType(type: NotificationType) {
   switch (type) {

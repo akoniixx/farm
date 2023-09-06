@@ -1,7 +1,5 @@
-import React, { useReducer, useRef, useState } from 'react';
+import React from 'react';
 import {
-  Dimensions,
-  FlatList,
   Image,
   Linking,
   Platform,
@@ -12,25 +10,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
-import { height, normalize } from '../../functions/Normalize';
+import { normalize } from '../../functions/Normalize';
 import { stylesCentral } from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
-import { Avatar } from '@rneui/themed';
-import * as RootNavigation from '../../navigations/RootNavigation';
-import { ScrollView } from 'react-native';
-import PlotsItem, { StatusObject } from '../../components/Plots/Plots';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Authentication } from '../../datasource/AuthDatasource';
-import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
-import { socket } from '../../functions/utility';
-import { initProfileState, profileReducer } from '../../hook/profilefield';
-import { useAuth } from '../../contexts/AuthContext';
-import { useEffect } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { MainButton } from '../../components/Button/MainButton';
-import ConditionScreen from '../RegisterScreen/ConditionScreen';
-import { ProfileDatasource } from '../../datasource/ProfileDatasource';
-import PlotInProfile from '../../components/Plots/PlotsInProfile';
 
 const AuthProfileScreen: React.FC<any> = ({ navigation }) => {
   const openGooglePlay = () => {
@@ -96,7 +81,7 @@ const AuthProfileScreen: React.FC<any> = ({ navigation }) => {
           </View>
         </View>
       </LinearGradient>
-      <View style={{ marginTop: 10 }}></View>
+      <View style={{ marginTop: 10 }} />
       <View style={[styles.section3]}>
         <View
           style={{

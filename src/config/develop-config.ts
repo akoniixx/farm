@@ -3,6 +3,7 @@ import axios from 'axios';
 import * as RootNavigation from '../navigations/RootNavigation';
 
 export const BASE_URL = 'https://api-dnds-dev.iconkaset.com';
+// export const BASE_URL = 'https://api-dnds.iconkaset.com';
 export const MIXPANEL_DEV = '7771b1854fb89d185debcd38023348d9';
 export const MIXPANEL_PROD = '0bae055d89d622289e54453d6285c4cf';
 

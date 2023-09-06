@@ -4,7 +4,6 @@ import {
   Image,
   Modal,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
@@ -21,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import VerifyStatus from '../../components/Modal/VerifyStatus';
 import { mixpanel } from '../../../mixpanel';
+import Text from '../../components/Text/Text';
 
 const MyCouponExpiredScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);

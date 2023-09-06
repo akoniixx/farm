@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   TextInput,
@@ -11,6 +10,7 @@ import { colors, icons } from '../assets';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { normalize } from '@rneui/themed';
 import { font } from '../assets/index';
+import Text from './Text/Text';
 
 interface InputPhoneProps {
   value: string;
@@ -50,6 +50,7 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
           keyboardType="number-pad"
           editable={true}
           value={number}
+          allowFontScaling={false}
           onChangeText={onTextChange}
           maxLength={maxLength}
           autoFocus={autoFocus}

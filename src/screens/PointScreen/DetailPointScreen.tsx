@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   Image,
   StyleSheet,
-  Text,
   View,
   FlatList,
   RefreshControl,
@@ -19,6 +18,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import Text from '../../components/Text/Text';
 
 const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
   const [dataPoint, setDataPoint] = useState<any>();

@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   TextInput,
   TouchableWithoutFeedback,
@@ -32,6 +31,7 @@ import DatePickerCustom from '../../components/Calendar/Calendar';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import moment from 'moment';
 import { mixpanel } from '../../../mixpanel';
+import Text from '../../components/Text/Text';
 
 const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
   const initialFormRegisterState = {
@@ -147,6 +147,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                 </View>
                 <Text style={styles.head}>ชื่อ*</Text>
                 <TextInput
+                  allowFontScaling={false}
                   onChangeText={value => {
                     dispatch({
                       type: 'Handle Input',
@@ -169,6 +170,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       payload: value,
                     });
                   }}
+                  allowFontScaling={false}
                   value={formState.surname}
                   style={styles.input}
                   editable={true}
@@ -187,6 +189,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       },
                     ]}>
                     <TextInput
+                      allowFontScaling={false}
                       value={
                         date
                           ? momentExtend.toBuddhistYear(date, 'DD MMMM YYYY')
@@ -217,6 +220,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                 </TouchableOpacity>
                 <Text style={styles.head}>เบอร์โทรศัพท์</Text>
                 <TextInput
+                  allowFontScaling={false}
                   style={[styles.input, { backgroundColor: '#F2F3F4' }]}
                   editable={false}
                   value={` ${tele}`}

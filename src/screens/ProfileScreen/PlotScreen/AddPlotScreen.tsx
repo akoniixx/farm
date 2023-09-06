@@ -3,7 +3,6 @@ import {
   Image,
   View,
   StyleSheet,
-  Text,
   KeyboardAvoidingView,
   Platform,
   TextInput,
@@ -41,6 +40,7 @@ import { PlotDatasource } from '../../../datasource/PlotDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { CropDatasource } from '../../../datasource/CropDatasource';
+import Text from '../../../components/Text/Text';
 
 export type PredictionType = {
   description: string;
@@ -392,6 +392,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 onChangeText={value => {
                   setplotName(value);
                 }}
+                allowFontScaling={false}
                 clearTextOnFocus={true}
                 defaultValue={!plotName ? plantName : plotName}
                 style={[styles.input, { borderColor: colors.disable }]}
@@ -408,6 +409,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   const newNumber = value.replace(/[^0-9]/g, '');
                   setraiAmount(newNumber);
                 }}
+                allowFontScaling={false}
                 keyboardType={'numeric'}
                 value={raiAmount}
                 style={[styles.input, { borderColor: colors.disable }]}
@@ -614,6 +616,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 onChangeText={value => {
                   setlandmark(value);
                 }}
+                allowFontScaling={false}
                 value={landmark}
                 style={[styles.input, { borderColor: colors.disable }]}
                 editable={true}
@@ -812,6 +815,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   justifyContent: 'space-between',
                 }}>
                 <TextInput
+                  allowFontScaling={false}
                   onChangeText={searchPlotArea}
                   value={searchValue}
                   defaultValue={searchValue}

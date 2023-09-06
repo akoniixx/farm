@@ -4,13 +4,13 @@ import {
   TouchableOpacity,
   Image,
   ViewStyle,
-  Text,
 } from 'react-native';
 import React from 'react';
 
 import { useNavigation } from '@react-navigation/native';
 import icons from '../../assets/icons/icons';
 import { font } from '../../assets';
+import Text from '../Text/Text';
 
 interface Props {
   title?: string;

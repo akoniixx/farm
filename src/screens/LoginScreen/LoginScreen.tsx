@@ -1,13 +1,10 @@
 import {
   View,
-  Text,
   StyleSheet,
-  TextInput,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Button,
 } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,6 +15,7 @@ import { InputPhone } from '../../components/InputPhone';
 import { MainButton } from '../../components/Button/MainButton';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { normalize } from '../../functions/Normalize';
+import Text from '../../components/Text/Text';
 
 const LoginScreen: React.FC<any> = ({ navigation }) => {
   const [value, setValue] = useState<string>('');

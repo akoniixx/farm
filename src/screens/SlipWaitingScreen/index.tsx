@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   TouchableOpacity,
   Image,
   ScrollView,
@@ -35,12 +34,16 @@ import LinearGradient from 'react-native-linear-gradient';
 import { normalize } from '../../functions/Normalize';
 import Lottie from 'lottie-react-native';
 import messaging from '@react-native-firebase/messaging';
+import { useNetwork } from '../../contexts/NetworkContext';
+import Text from '../../components/Text/Text';
 export default function SlipWaitingScreen({
   navigation,
   route,
 }: StackScreenProps<MainStackParamList, 'SlipWaitingScreen'>) {
   const { taskId, cntResend } = route.params;
+  const { appState } = useNetwork();
   const [loading, setLoading] = useState(true);
+  const refPlayAnimation = React.useRef<any>(null);
   const [isFocus, setIsFocus] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
   const [reason, setReason] = useState('');
@@ -104,6 +107,7 @@ export default function SlipWaitingScreen({
     NotiFication();
     const getTaskByTaskId = async (taskId: string) => {
       try {
+        refPlayAnimation.current?.play();
         const res = await TaskDatasource.getTaskByTaskId(taskId);
 
         if (res && res.data) {
@@ -111,16 +115,23 @@ export default function SlipWaitingScreen({
 
           if (res.data.status === 'WAIT_START') {
             await AsyncStorage.removeItem('taskId');
+
             navigation.navigate('SlipSuccessScreen', { taskId: res.data.id });
           }
+          const isWaitReceive = res.data.status === 'WAIT_RECEIVE';
 
           const { countResend, updatedAt } = res.data;
           const endTime = moment(updatedAt).add(30, 'minutes').toISOString();
           const isAfter = moment(endTime).isAfter(moment());
-          if (!isAfter) {
-            (countResend === null || !countResend) && setShowModalExtend(true);
-            +countResend === 1 && setModalExtendTwo(true);
-            +countResend >= 2 && setModalExtendThree(true);
+          if (!isAfter && isWaitReceive) {
+            (countResend === null || !countResend) &&
+              setTimeout(() => {
+                setShowModalExtend(true);
+              }, 1000);
+            countResend === 1 &&
+              setTimeout(() => setModalExtendTwo(true), 1000);
+            +countResend >= 2 &&
+              setTimeout(() => setModalExtendThree(true), 1000);
           }
           setTaskData({
             ...res.data,
@@ -132,11 +143,11 @@ export default function SlipWaitingScreen({
         console.log('error', error);
       }
     };
-    if (taskId) {
+    if (taskId && appState === 'active') {
       getTaskByTaskId(taskId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskId]);
+  }, [taskId, appState]);
 
   const NotiFication = () => {
     messaging().onMessage(async message => {
@@ -218,6 +229,7 @@ export default function SlipWaitingScreen({
                 marginBottom: 32,
               }}>
               <Lottie
+                ref={refPlayAnimation}
                 source={image.waitinglottie}
                 autoPlay
                 loop

@@ -1,13 +1,13 @@
-import { View, Text, Modal, TouchableOpacity, Image } from 'react-native';
+import { View, Image } from 'react-native';
 import React from 'react';
-import { MaintenanceEntity, ModalEntity } from '../ModalEntity';
+import { MaintenanceEntity } from '../ModalEntity';
 import { ModalStyle } from '../ModalStyle';
-import { colors, font, icons, image } from '../../../assets';
-import { normalize, width } from '../../../functions/Normalize';
-import { MainButton } from '../../Button/MainButton';
+import { colors, image } from '../../../assets';
+import { normalize } from '../../../functions/Normalize';
 import fonts from '../../../assets/fonts';
 import { momentExtend } from '../../../utils/moment-buddha-year';
 import moment from 'moment';
+import Text from '../../Text/Text';
 const NotiMaintenance: React.FC<MaintenanceEntity> = ({ data }) => {
   return (
     <View style={ModalStyle.modal}>
