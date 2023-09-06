@@ -25,7 +25,11 @@ import NotificationScreen from '../screens/NotificationScreen/NotificationScreen
 import MyTaskDetailScreenNoti from '../screens/MyTaskScreen/MyTaskDetailScreenNoti';
 import VerifyOTP from '../screens/ProfileScreen/DeleteProfile/VerifyOTP';
 import { StackNavigationHelpers } from '@react-navigation/stack/lib/typescript/src/types';
-import { RouteProp, useIsFocused } from '@react-navigation/native';
+import {
+  RouteProp,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import DeleteProfile from '../screens/ProfileScreen/DeleteProfile/DeleteProfile';
 import AddPlotScreen from '../screens/ProfileScreen/PlotScreen/AddPlotScreen';
@@ -49,15 +53,9 @@ import AllCouponScreen from '../screens/PromotionScreen/AllCouponScreen';
 import AllGuruScreen from '../screens/GuruScreen/AllGuruScreen';
 import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
 import DetailPointScreen from '../screens/PointScreen/DetailPointScreen';
-import {
-  KeyboardAvoidingView,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
-import PagerView from 'react-native-pager-view';
 import moment from 'moment';
+import PopUpMaintenance from '../components/Modal/MaintenanceApp/PopUpMaintenance';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type MainStackParamList = {
   MainScreen: undefined;
@@ -110,13 +108,17 @@ export type StackNativeScreenProps<T extends keyof MainStackParamList> =
 const Stack = createStackNavigator<MainStackParamList>();
 const MainNavigator: React.FC = () => {
   const [checkTime, setCheckTime] = useState(false);
-  const dateNow = moment(Date.now());
-  const [reload, setReload] = useState(false);
+  const [popupMaintenance, setPopupMaintenance] = useState<boolean>(false);
+  const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
+    MaintenanceSystem_INIT,
+  );
+  const navigation = useNavigation();
 
   useEffect(() => {
-    const Maintenance = async () => {
-      await SystemMaintenance.Maintenance('FARMER')
-        .then(res => {
+    const unsubscribe = navigation.addListener('state', () => {
+      const checkDataMA = async () => {
+        const value = await AsyncStorage.getItem('Maintenance');
+        SystemMaintenance.Maintenance('FARMER').then(res => {
           if (res.responseData !== null) {
             setCheckTime(
               checkTimeMaintance(
@@ -124,81 +126,118 @@ const MainNavigator: React.FC = () => {
                 moment(res.responseData.dateEnd),
               ),
             );
+            setMaintenance(res.responseData);
+            const isMaintenanceActive = checkTimeMaintenancePopUp(
+              moment(res.responseData.dateNotiStart),
+              moment(res.responseData.dateNotiEnd),
+            );
+            if (value !== 'read') {
+              setPopupMaintenance(isMaintenanceActive);
+            }
           }
-          setReload(!reload);
-        })
-        .catch(err => console.log(err));
-    };
-    Maintenance();
-  }, [reload]);
+        });
+      };
+      checkDataMA();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const checkTimeMaintance = (startDate: any, endDate: any) => {
+    const dateNow = moment(Date.now());
     return dateNow.isBetween(startDate, endDate, 'milliseconds');
   };
-
+  const checkTimeMaintenancePopUp = (startDate: any, endDate: any) => {
+    const dateNow = moment(Date.now());
+    return dateNow.isBetween(startDate, endDate, 'milliseconds');
+  };
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {checkTime === true ? (
-        <Stack.Screen
-          name="MaintenanceScreen"
-          component={MaintenanceScreen}
-          options={{
-            gestureEnabled: false,
-            headerLeft: () => null,
-          }}
-        />
-      ) : (
-        <Stack.Screen
-          name="MainScreen"
-          component={MainTapNavigator}
-          options={{
-            gestureEnabled: false,
-            headerLeft: () => null,
-          }}
-        />
-      )}
-
-      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-      <Stack.Screen name="AllPlotScreen" component={AllPlotScreen} />
-      <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
-      <Stack.Screen name="SelectDateScreen" component={SelectDateScreen} />
-      <Stack.Screen name="SelectPlotScreen" component={SelectPlotScreen} />
-      <Stack.Screen name="SelectTarget" component={SelectTarget} />
-      <Stack.Screen name="DronerDetail" component={DronerDetail} />
-      <Stack.Screen name="FullScreenTaskImg" component={FullScreenTaskImg} />
-      <Stack.Screen name="DronerUsedScreen" component={DronerUsedScreen} />
-      <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
-      <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
-      <Stack.Screen name="DetailTaskScreen" component={DetailTaskScreen} />
-      <Stack.Screen name="MyTaskDetailScreen" component={MyTaskDetailScreen} />
-      <Stack.Screen
-        name="MyTaskDetailScreenNoti"
-        component={MyTaskDetailScreenNoti}
+    <>
+      <PopUpMaintenance
+        show={popupMaintenance}
+        onClose={async () => {
+          await AsyncStorage.setItem('Maintenance', 'read');
+          setPopupMaintenance(!popupMaintenance);
+        }}
+        data={maintenance}
       />
-      <Stack.Group
-        screenOptions={{
-          gestureEnabled: false,
-        }}>
-        <Stack.Screen name="SlipWaitingScreen" component={SlipWaitingScreen} />
-        <Stack.Screen name="SlipSuccessScreen" component={SlipSuccessScreen} />
-      </Stack.Group>
-      <Stack.Screen name="ViewMapScreen" component={ViewMapScreen} />
-      <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
-      <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
-      <Stack.Screen name="DeleteProfileScreen" component={DeleteProfile} />
-      <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
-      <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
-      <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
-      <Stack.Screen name="CouponDetail" component={CouponDetailScreen} />
-      <Stack.Screen name="MyCouponScreen" component={MyCouponScreen} />
-      <Stack.Screen name="SearchCouponScreen" component={SearchCouponScreen} />
-      <Stack.Screen name="UseCouponScreen" component={UseCouponScreen} />
-      <Stack.Screen name="AllCouponScreen" component={AllCouponScreen} />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {checkTime === true ? (
+          <Stack.Screen
+            name="MaintenanceScreen"
+            component={MaintenanceScreen}
+            options={{
+              gestureEnabled: false,
+              headerLeft: () => null,
+            }}
+          />
+        ) : (
+          <Stack.Screen
+            name="MainScreen"
+            component={MainTapNavigator}
+            options={{
+              gestureEnabled: false,
+              headerLeft: () => null,
+            }}
+          />
+        )}
 
-      <Stack.Screen name="DetailPointScreen" component={DetailPointScreen} />
-      <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
-      <Stack.Screen name="DetailGuruScreen" component={DetailGuruScreen} />
-    </Stack.Navigator>
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+        <Stack.Screen name="AllPlotScreen" component={AllPlotScreen} />
+        <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
+        <Stack.Screen name="SelectDateScreen" component={SelectDateScreen} />
+        <Stack.Screen name="SelectPlotScreen" component={SelectPlotScreen} />
+        <Stack.Screen name="SelectTarget" component={SelectTarget} />
+        <Stack.Screen name="DronerDetail" component={DronerDetail} />
+        <Stack.Screen name="FullScreenTaskImg" component={FullScreenTaskImg} />
+        <Stack.Screen name="DronerUsedScreen" component={DronerUsedScreen} />
+        <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
+        <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+        <Stack.Screen name="DetailTaskScreen" component={DetailTaskScreen} />
+        <Stack.Screen
+          name="MyTaskDetailScreen"
+          component={MyTaskDetailScreen}
+        />
+        <Stack.Screen
+          name="MyTaskDetailScreenNoti"
+          component={MyTaskDetailScreenNoti}
+        />
+        <Stack.Group
+          screenOptions={{
+            gestureEnabled: false,
+          }}>
+          <Stack.Screen
+            name="SlipWaitingScreen"
+            component={SlipWaitingScreen}
+          />
+          <Stack.Screen
+            name="SlipSuccessScreen"
+            component={SlipSuccessScreen}
+          />
+        </Stack.Group>
+        <Stack.Screen name="ViewMapScreen" component={ViewMapScreen} />
+        <Stack.Screen
+          name="NotificationScreen"
+          component={NotificationScreen}
+        />
+        <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
+        <Stack.Screen name="DeleteProfileScreen" component={DeleteProfile} />
+        <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
+        <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
+        <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
+        <Stack.Screen name="CouponDetail" component={CouponDetailScreen} />
+        <Stack.Screen name="MyCouponScreen" component={MyCouponScreen} />
+        <Stack.Screen
+          name="SearchCouponScreen"
+          component={SearchCouponScreen}
+        />
+        <Stack.Screen name="UseCouponScreen" component={UseCouponScreen} />
+        <Stack.Screen name="AllCouponScreen" component={AllCouponScreen} />
+
+        <Stack.Screen name="DetailPointScreen" component={DetailPointScreen} />
+        <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
+        <Stack.Screen name="DetailGuruScreen" component={DetailGuruScreen} />
+      </Stack.Navigator>
+    </>
   );
 };
 export default MainNavigator;

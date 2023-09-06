@@ -50,6 +50,7 @@ import { historyPoint } from '../../datasource/HistoryPointDatasource';
 import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
 import axios from 'axios';
 import VerifyStatus from '../../components/Modal/VerifyStatus';
+import NotiMaintenance from '../../components/Modal/MaintenanceApp/NotiMaintenance';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -96,7 +97,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   );
   const [index, setIndex] = React.useState(0);
   const isCarousel = React.useRef(null);
-  const [popupMaintenance, setPopupMaintenance] = useState<boolean>(true);
   const [end, setEnd] = useState<any>();
   const [start, setStart] = useState<any>();
   const [notiEnd, setNotiEnd] = useState<any>();
@@ -114,18 +114,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   useEffect(() => {
     const getMaintenance = async () => {
       setLoading(true);
-      const value = await AsyncStorage.getItem('Maintenance');
       await SystemMaintenance.Maintenance('FARMER')
         .then(res => {
           if (res.responseData !== null) {
-            if (value === 'read') {
-              setMaintenance(res.responseData);
-            } else {
-              setMaintenance(res.responseData);
-              setPopupMaintenance(res.responseData.id ? true : false);
-            }
-          }
-          if (maintenance !== null) {
+            setMaintenance(res.responseData);
             setStart(
               momentExtend.toBuddhistYear(
                 maintenance.dateStart,
@@ -517,151 +509,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               <View>
                 <View>
                   {checkDateNoti === true && (
-                    <View style={{ marginTop: 20, marginBottom: 20 }}>
-                      <View
-                        style={{
-                          paddingHorizontal: 20,
-                          height: 'auto',
-                          width: normalize(340),
-                          alignSelf: 'center',
-                          backgroundColor: '#ECFBF2',
-                          borderRadius: 10,
-                        }}>
-                        <View
-                          style={{
-                            paddingVertical: 20,
-                            justifyContent: 'space-between',
-                            flexDirection: 'row',
-                          }}>
-                          <View style={{ marginTop: 15 }}>
-                            <Image
-                              source={{ uri: maintenance.imagePath }}
-                              style={{ width: 58, height: 60 }}
-                            />
-                          </View>
-                          <View style={{ paddingHorizontal: 30 }}>
-                            {start !== end ? (
-                              <View>
-                                <Text
-                                  style={{
-                                    fontFamily: font.AnuphanMedium,
-                                    fontSize: normalize(18),
-                                    color: colors.fontBlack,
-                                    fontWeight: '800',
-                                  }}>
-                                  {`วันที่ `}
-                                  <Text
-                                    style={{
-                                      color: '#FB8705',
-                                    }}>
-                                    {momentExtend.toBuddhistYear(
-                                      maintenance.dateStart,
-                                      'DD MMMM YYYY',
-                                    )}
-                                  </Text>
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontFamily: font.AnuphanMedium,
-                                    fontSize: normalize(18),
-                                    color: colors.fontBlack,
-                                    fontWeight: '800',
-                                  }}>
-                                  ช่วงเวลา{' '}
-                                  {moment(maintenance.dateStart)
-                                    .add(543, 'year')
-                                    .locale('th')
-                                    .format('HH.mm')}
-                                  {' - 23:59 น.'}
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontFamily: font.AnuphanMedium,
-                                    fontSize: normalize(18),
-                                    color: colors.fontBlack,
-                                    fontWeight: '800',
-                                  }}>
-                                  {`ถึงวันที่ `}
-                                  <Text
-                                    style={{
-                                      color: '#FB8705',
-                                    }}>
-                                    {momentExtend.toBuddhistYear(
-                                      maintenance.dateEnd,
-                                      'DD MMMM YYYY',
-                                    )}
-                                  </Text>
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontFamily: font.AnuphanMedium,
-                                    fontSize: normalize(18),
-                                    color: colors.fontBlack,
-                                    fontWeight: '800',
-                                  }}>
-                                  ช่วงเวลา
-                                  {` 00:00 - `}
-                                  {moment(maintenance.dateEnd)
-                                    .add(543, 'year')
-                                    .locale('th')
-                                    .format('HH.mm น.')}
-                                </Text>
-                              </View>
-                            ) : (
-                              <View>
-                                <Text
-                                  style={{
-                                    fontFamily: font.AnuphanMedium,
-                                    fontSize: normalize(18),
-                                    color: colors.fontBlack,
-                                    fontWeight: '800',
-                                  }}>
-                                  {`วันที่ `}
-                                  <Text
-                                    style={{
-                                      color: '#FB8705',
-                                    }}>
-                                    {maintenance != null &&
-                                      momentExtend.toBuddhistYear(
-                                        maintenance.dateStart,
-                                        'DD MMMM YYYY',
-                                      )}
-                                  </Text>
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontFamily: font.AnuphanMedium,
-                                    fontSize: normalize(18),
-                                    color: colors.fontBlack,
-                                    fontWeight: '800',
-                                  }}>
-                                  ช่วงเวลา{' '}
-                                  {moment(maintenance.dateStart)
-                                    .add(543, 'year')
-                                    .locale('th')
-                                    .format('HH.mm')}
-                                  {' - '}
-                                  {moment(maintenance.dateEnd)
-                                    .add(543, 'year')
-                                    .locale('th')
-                                    .format('HH.mm')}
-                                  {' น.'}
-                                </Text>
-                              </View>
-                            )}
-                            <Text
-                              style={{
-                                marginRight: 20,
-                                fontFamily: font.SarabunLight,
-                                fontSize: normalize(16),
-                                color: colors.fontBlack,
-                              }}>
-                              {maintenance.text}
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
+                    <NotiMaintenance data={maintenance} show={checkDateNoti} />
                   )}
                 </View>
                 {profilestate.status === 'REJECTED' && (
@@ -1385,16 +1233,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           </Modal>
-          {checkDateNoti === true && (
-            <PopUpMaintenance
-              show={popupMaintenance}
-              onClose={async () => {
-                await AsyncStorage.setItem('Maintenance', 'read');
-                setPopupMaintenance(!popupMaintenance);
-              }}
-              data={maintenance}
-            />
-          )}
           <Spinner
             visible={loading}
             textContent={'Loading...'}

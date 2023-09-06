@@ -171,7 +171,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                   .format('HH.mm')}
                 {' น.'}
               </Text>
-              <View style={{ marginTop: 20, alignItems: 'center' }}>
+              <View style={{ marginTop: 20}}>
                 <Text
                   style={{
                     fontFamily: fonts.SarabunLight,
@@ -179,6 +179,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                     color: colors.fontBlack,
                     lineHeight: 30,
                     paddingHorizontal: 20,
+                    alignItems: 'center' 
                   }}>
                   {data.text}
                 </Text>
