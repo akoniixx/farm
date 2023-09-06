@@ -16,18 +16,18 @@ const MaintenanceScreen: React.FC<any> = ({ navigation }) => {
   const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
     MaintenanceSystem_INIT,
   );
-  // useEffect(() => {
-  //   getMaintenance();
-  // }, []);
-  // const getMaintenance = async () => {
-  //   await SystemMaintenance.Maintenance('FARMER')
-  //     .then(res => {
-  //       if (res.responseData) {
-  //         setMaintenance(res.responseData);
-  //       }
-  //     })
-  //     .catch(err => console.log(err));
-  // };
+  useEffect(() => {
+    getMaintenance();
+  }, []);
+  const getMaintenance = async () => {
+    await SystemMaintenance.Maintenance('FARMER')
+      .then(res => {
+        if (res.responseData) {
+          setMaintenance(res.responseData);
+        }
+      })
+      .catch(err => console.log(err));
+  };
 
   return (
     <SafeAreaView style={stylesCentral.container}>
@@ -38,7 +38,7 @@ const MaintenanceScreen: React.FC<any> = ({ navigation }) => {
             marginTop: 180,
           }}>
           <Image
-            source={image.maintenance}
+            source={{ uri: maintenance.imagePath }}
             style={{ width: 156, height: 160 }}
           />
           <DateTimeMaintenance

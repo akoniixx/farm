@@ -48,6 +48,7 @@ import ProfileRenderByStatus from './MainScreenComponent/ProfileRenderByStatus';
 import CarouselMainScreen from './MainScreenComponent/CarouselMainScreen';
 import BookedDroner from './MainScreenComponent/BookedDroner';
 import DronerSuggestion from './MainScreenComponent/DronerSuggestion';
+import { SystemMaintenance } from '../../datasource/SystemMaintenanceDatasource';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const date = new Date();
@@ -93,7 +94,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
     MaintenanceSystem_INIT,
   );
-  const [popupMaintenance, setPopupMaintenance] = useState<boolean>(true);
+  const [index, setIndex] = React.useState(0);
+  const isCarousel = React.useRef(null);
   const [end, setEnd] = useState<any>();
   const [start, setStart] = useState<any>();
   const [notiEnd, setNotiEnd] = useState<any>();
@@ -108,6 +110,43 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     }
     setFcmToken(value!);
   };
+  useEffect(() => {
+    const getMaintenance = async () => {
+      setLoading(true);
+      await SystemMaintenance.Maintenance('FARMER')
+        .then(res => {
+          if (res.responseData !== null) {
+            setMaintenance(res.responseData);
+            setStart(
+              momentExtend.toBuddhistYear(
+                maintenance.dateStart,
+                'DD MMMM YYYY',
+              ),
+            );
+            setEnd(
+              momentExtend.toBuddhistYear(maintenance.dateEnd, 'DD MMMM YYYY'),
+            );
+            setNotiStart(
+              momentExtend.toBuddhistYear(
+                maintenance.dateNotiStart,
+                'DD MMMM YYYY',
+              ),
+            );
+            setNotiEnd(
+              momentExtend.toBuddhistYear(
+                maintenance.dateNotiEnd,
+                'DD MMMM YYYY',
+              ),
+            );
+          }
+          setReload(!reload);
+        })
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false));
+    };
+    getMaintenance();
+  }, [reload]);
+
   const getNotificationData = async () => {
     FCMtokenDatasource.getNotificationList({
       page: 1,
@@ -291,7 +330,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     };
     getPointFarmer();
   });
-
   const sendProfilesToMixpanel = async (profiles: any) => {
     const options = {
       method: 'POST',
@@ -711,16 +749,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           </Modal>
-          {checkDateNoti === true && (
-            <PopUpMaintenance
-              show={popupMaintenance}
-              onClose={async () => {
-                await AsyncStorage.setItem('Maintenance', 'read');
-                setPopupMaintenance(!popupMaintenance);
-              }}
-              data={maintenance}
-            />
-          )}
         </View>
       </ScrollView>
       {showFinding && (
