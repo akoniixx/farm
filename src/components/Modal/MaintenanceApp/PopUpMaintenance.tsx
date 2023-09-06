@@ -15,6 +15,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
 }) => {
   const start = momentExtend.toBuddhistYear(data.dateStart, 'DD MMMM YYYY');
   const end = momentExtend.toBuddhistYear(data.dateEnd, 'DD MMMM YYYY');
+
   return (
     <Modal visible={show} transparent={true}>
       <View style={ModalStyle.modal}>
@@ -30,9 +31,12 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
               />
             </TouchableOpacity>
           </View>
-          <Image source={image.maintenance} style={ModalStyle.image} />
           {start !== end ? (
             <>
+              <Image
+                source={{ uri: data.imagePath }}
+                style={ModalStyle.image}
+              />
               <Text
                 style={[
                   ModalStyle.modalHeader,
@@ -51,6 +55,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                 <Text
                   style={{
                     color: '#FB8705',
+                    fontSize: normalize(18),
                   }}>
                   {momentExtend.toBuddhistYear(data.dateStart, 'DD MMMM YYYY')}
                 </Text>
@@ -80,6 +85,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                 <Text
                   style={{
                     color: '#FB8705',
+                    fontSize: normalize(18),
                   }}>
                   {momentExtend.toBuddhistYear(data.dateEnd, 'DD MMMM YYYY')}
                 </Text>
@@ -121,6 +127,10 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
             </>
           ) : (
             <>
+              <Image
+                source={{ uri: data.imagePath }}
+                style={ModalStyle.image}
+              />
               <Text
                 style={[
                   ModalStyle.modalHeader,
@@ -139,6 +149,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                 <Text
                   style={{
                     color: '#FB8705',
+                    fontSize: normalize(18),
                   }}>
                   {momentExtend.toBuddhistYear(data.dateStart, 'DD MMMM YYYY')}
                 </Text>
@@ -162,7 +173,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                   .format('HH.mm')}
                 {' น.'}
               </Text>
-              <View style={{ marginTop: 20, alignItems: 'center' }}>
+              <View style={{ marginTop: 20 }}>
                 <Text
                   style={{
                     fontFamily: fonts.SarabunLight,
@@ -170,6 +181,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                     color: colors.fontBlack,
                     lineHeight: 30,
                     paddingHorizontal: 20,
+                    alignItems: 'center',
                   }}>
                   {data.text}
                 </Text>
@@ -179,6 +191,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                     fontSize: normalize(16),
                     color: colors.fontBlack,
                     lineHeight: 30,
+                    textAlign: 'center',
                   }}>
                   {data.footer}
                 </Text>

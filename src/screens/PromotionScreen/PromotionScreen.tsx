@@ -196,15 +196,17 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
       </View>
-      {data.length != 0 ? (
+      {data.length !== 0 ? (
         <View
           style={{
             backgroundColor: colors.bgGreen,
-            paddingHorizontal: normalize(17),
           }}>
           <FlatList
             ListFooterComponent={<View style={{ height: normalize(450) }} />}
             data={data}
+            contentContainerStyle={{
+              paddingHorizontal: 16,
+            }}
             renderItem={({ item }) => (
               <CouponCard
                 id={item.id}

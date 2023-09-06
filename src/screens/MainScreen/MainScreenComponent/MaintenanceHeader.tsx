@@ -41,7 +41,7 @@ export default function MaintenanceHeader({
               }}>
               <View style={{ marginTop: 15 }}>
                 <Image
-                  source={image.maintenance}
+                  source={{ uri: maintenance.imagePath }}
                   style={{ width: 58, height: 60 }}
                 />
               </View>
@@ -59,6 +59,7 @@ export default function MaintenanceHeader({
                       <Text
                         style={{
                           color: '#FB8705',
+                          fontSize: normalize(18),
                         }}>
                         {momentExtend.toBuddhistYear(
                           maintenance.dateStart,
@@ -91,10 +92,11 @@ export default function MaintenanceHeader({
                       <Text
                         style={{
                           color: '#FB8705',
+                          fontSize: normalize(18),
                         }}>
                         {momentExtend.toBuddhistYear(
                           maintenance.dateEnd,
-                          'DD MMMM YYYY',
+                          ' DD MMMM YYYY',
                         )}
                       </Text>
                     </Text>
@@ -125,6 +127,7 @@ export default function MaintenanceHeader({
                       <Text
                         style={{
                           color: '#FB8705',
+                          fontSize: normalize(18),
                         }}>
                         {maintenance != null &&
                           momentExtend.toBuddhistYear(

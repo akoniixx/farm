@@ -104,48 +104,60 @@ const CouponCard: React.FC<CouponCardEntities> = ({
       setDisabledBtn(false);
     }
   };
+  const onPressCardCoupon = () => {
+    mixpanel.track('CouponCard_tapped', {
+      couponName: couponName,
+      id: id,
+      changeTo: 'CouponDetail',
+      promotionType,
+    });
+    RootNavigation.navigate('CouponDetail', {
+      detail: {
+        id: id,
+        couponCode: couponCode,
+        couponName: couponName,
+        couponType: couponType,
+        promotionStatus: promotionStatus,
+        promotionType: promotionType,
+        discountType: discountType,
+        discount: discount,
+        count: count,
+        keep: keep,
+        used: used,
+        startDate: startDate,
+        expiredDate: expiredDate,
+        description: description,
+        condition: condition,
+        conditionSpecificFarmer: conditionSpecificFarmer,
+        couponConditionRai: couponConditionRai,
+        couponConditionRaiMin: couponConditionRaiMin,
+        couponConditionRaiMax: couponConditionRaiMax,
+        couponConditionService: couponConditionService,
+        couponConditionServiceMin: couponConditionServiceMin,
+        couponConditionServiceMax: couponConditionServiceMax,
+        couponConditionPlant: couponConditionPlant,
+        couponConditionPlantList: couponConditionPlantList,
+        couponConditionProvince: couponConditionProvince,
+        couponConditionProvinceList: couponConditionProvinceList,
+        keepthis: keepthis,
+      },
+    });
+  };
+  const { isExpired } = React.useMemo(() => {
+    if (!expiredDate) {
+      return {
+        isExpired: false,
+      };
+    }
+    const isExpired =
+      new Date(expiredDate).getTime() - new Date().getTime() < 0;
+    return {
+      isExpired,
+    };
+  }, [expiredDate]);
   return (
-    <TouchableOpacity
-      onPress={() => {
-        mixpanel.track('CouponCard_tapped', {
-          couponName: couponName,
-          id: id,
-          changeTo: 'CouponDetail',
-          promotionType,
-        });
-        RootNavigation.navigate('CouponDetail', {
-          detail: {
-            id: id,
-            couponCode: couponCode,
-            couponName: couponName,
-            couponType: couponType,
-            promotionStatus: promotionStatus,
-            promotionType: promotionType,
-            discountType: discountType,
-            discount: discount,
-            count: count,
-            keep: keep,
-            used: used,
-            startDate: startDate,
-            expiredDate: expiredDate,
-            description: description,
-            condition: condition,
-            conditionSpecificFarmer: conditionSpecificFarmer,
-            couponConditionRai: couponConditionRai,
-            couponConditionRaiMin: couponConditionRaiMin,
-            couponConditionRaiMax: couponConditionRaiMax,
-            couponConditionService: couponConditionService,
-            couponConditionServiceMin: couponConditionServiceMin,
-            couponConditionServiceMax: couponConditionServiceMax,
-            couponConditionPlant: couponConditionPlant,
-            couponConditionPlantList: couponConditionPlantList,
-            couponConditionProvince: couponConditionProvince,
-            couponConditionProvinceList: couponConditionProvinceList,
-            keepthis: keepthis,
-          },
-        });
-      }}>
-      <View
+    <TouchableOpacity onPress={onPressCardCoupon} disabled={disabled}>
+      {/* <View
         style={[
           styles.mainCard,
           {
@@ -346,6 +358,156 @@ const CouponCard: React.FC<CouponCardEntities> = ({
             <></>
           )}
         </View>
+      </View> */}
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'row',
+          height: 92,
+          marginBottom: 16,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }}>
+        <Image
+          source={image.couponHeader}
+          style={{
+            height: 92,
+            width: 72,
+          }}
+        />
+        <View
+          style={[
+            styles.mainCard,
+            {
+              backgroundColor: disabled
+                ? colors.grey10
+                : new Date(expiredDate).getTime() - new Date().getTime() >
+                    604800000 || disabled
+                ? colors.white
+                : colors.bgOrange,
+            },
+          ]}>
+          <View style={styles.content}>
+            <View
+              style={{
+                width: width * 0.45,
+              }}>
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: colors.fontBlack,
+                  fontFamily: fonts.AnuphanMedium,
+                  fontSize: 16,
+                }}>
+                {couponName}{' '}
+                {couponCode && (
+                  <Text
+                    style={{
+                      color: colors.fontBlack,
+                      fontFamily: fonts.AnuphanMedium,
+                      fontSize: 16,
+                      marginBottom: normalize(5),
+                    }}>
+                    {`(${couponConditionProvinceList?.[0]})`}
+                  </Text>
+                )}
+              </Text>
+
+              {/* {couponCode && (
+                <Text
+                  style={{
+                    color: colors.fontBlack,
+                    marginBottom: 4,
+                  }}>
+                  {couponCode}
+                </Text>
+              )} */}
+              {couponConditionRai &&
+              checkRai(couponConditionRaiMin!, couponConditionRaiMax!) !==
+                '' ? (
+                <Text
+                  style={{
+                    color: colors.fontBlack,
+                    fontFamily: fonts.SarabunLight,
+                    fontSize: 14,
+                    lineHeight: 24,
+                  }}>
+                  {checkRai(couponConditionRaiMin!, couponConditionRaiMax!)}
+                </Text>
+              ) : (
+                <></>
+              )}
+              <Text
+                style={{
+                  fontFamily: fonts.SarabunLight,
+                  fontSize: 14,
+                  color:
+                    new Date(expiredDate).getTime() - new Date().getTime() >
+                      604800000 || disabled
+                      ? colors.gray
+                      : colors.error,
+                }}>
+                {expired
+                  ? `ใช้ได้ถึง ${generateTime(expiredDate)}`
+                  : new Date(expiredDate).getTime() - new Date().getTime() >
+                      604800000 || disabled
+                  ? `ใช้ได้ถึง ${generateTime(expiredDate)}`
+                  : `เหลือเวลาใช้อีก ${(
+                      (new Date(expiredDate).getTime() - new Date().getTime()) /
+                      86400000
+                    ).toFixed(0)} วัน`}
+              </Text>
+            </View>
+            {keepthis ? (
+              <TouchableOpacity
+                disabled={disabledBtn}
+                onPress={KeepCoupon}
+                style={{
+                  position: 'absolute',
+                  right: normalize(15),
+                }}>
+                <View
+                  style={{
+                    backgroundColor: colors.greenLight,
+                    borderRadius: normalize(10),
+                    paddingHorizontal: normalize(10),
+                    paddingVertical: normalize(6),
+                    marginLeft: normalize(30),
+                  }}>
+                  <Text
+                    style={{
+                      color: colors.white,
+                      fontSize: normalize(16),
+                      fontFamily: fonts.AnuphanMedium,
+                    }}>
+                    ใช้งาน
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <></>
+            )}
+            {expired ? (
+              <Image
+                source={image.expired}
+                style={{
+                  width: normalize(60),
+                  height: normalize(30),
+                  position: 'absolute',
+                  right: normalize(10),
+                }}
+              />
+            ) : (
+              <></>
+            )}
+          </View>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -353,14 +515,11 @@ const CouponCard: React.FC<CouponCardEntities> = ({
 
 const styles = StyleSheet.create({
   mainCard: {
-    paddingVertical: normalize(20),
-    paddingHorizontal: normalize(10),
-    minHeight: normalize(121),
-    borderRadius: normalize(12),
-    marginVertical: normalize(10),
-    position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
+    borderBottomRightRadius: normalize(8),
+    borderTopRightRadius: normalize(8),
+    flex: 1,
   },
   cardImg: {
     width: Dimensions.get('window').width - normalize(35),

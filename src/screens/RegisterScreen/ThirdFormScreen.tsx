@@ -40,6 +40,7 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { useDebounceValue } from '../../hook/useDebounceValue';
 import { mixpanel } from '../../../mixpanel';
 import Text from '../../components/Text/Text';
+import { CropDatasource } from '../../datasource/CropDatasource';
 
 export type PredictionType = {
   description: string;
@@ -81,7 +82,9 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
   const [value, setValue] = useState(null);
   const [plantName, setPlantName] = useState<any>();
   const [raiAmount, setraiAmount] = useState<any>();
-  const [plantListSelect, setPlantListSelect] = useState(plant);
+  const [plantListSelect, setPlantListSelect] = useState<
+    { id: string; cropName: string }[]
+  >([]);
   const [landmark, setlandmark] = useState<any>('');
   const [plotDataUI, setplotDataUI] = useState<any>([]);
   const [plotData, setplotData] = useState<any>([]);
@@ -110,6 +113,7 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
 
   useEffect(() => {
     getLocation();
+    getAllCropName();
   }, [searchLocation]);
 
   const hasPermissionIOS = async () => {
@@ -242,7 +246,14 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
     setSelectPlot(null);
     actionSheet.current.hide();
   };
-
+  const getAllCropName = async () => {
+    try {
+      const result = await CropDatasource.getAllCrop();
+      setPlantListSelect(result);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const selectPlants = (value: any) => {
     setPlantName(value);
     plantSheet.current.hide();
@@ -852,9 +863,9 @@ const ThirdFormScreen: React.FC<any> = ({ route, navigation }) => {
                   <TouchableOpacity>
                     <PlantSelect
                       key={i}
-                      label={v}
-                      id={v}
-                      onPress={() => selectPlants(v)}
+                      label={v.cropName}
+                      id={v.id}
+                      onPress={() => selectPlants(v.cropName)}
                     />
                   </TouchableOpacity>
                 ))}

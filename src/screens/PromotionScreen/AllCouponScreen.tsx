@@ -62,7 +62,6 @@ const AllCouponScreen: React.FC<any> = ({ navigation, route }) => {
       <View
         style={{
           backgroundColor: colors.bgGreen,
-          paddingHorizontal: normalize(17),
         }}>
         <FlatList
           onScrollEndDrag={onScrollEnd}
