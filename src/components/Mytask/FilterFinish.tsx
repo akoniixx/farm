@@ -55,6 +55,7 @@ export const FilterFinish: React.FC<props> = ({
         data={sortFieldFinish}
         title="แสดงสถานะงาน"
         id="field"
+        selected={selectedField}
       />
     </>
   );

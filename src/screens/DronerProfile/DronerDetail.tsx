@@ -29,6 +29,9 @@ import { momentExtend } from '../../utils/moment-buddha-year';
 import { useIsFocused } from '@react-navigation/native';
 import VerifyStatus from '../../components/Modal/VerifyStatus';
 import Text from '../../components/Text/Text';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import moment from 'moment';
 
 const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   const isFocused = useIsFocused();
@@ -69,6 +72,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       date.toLocaleDateString(),
     )
       .then(res => {
+        console.log('res', JSON.stringify(res, null, 2));
         setStatusFav(res[0].favorite_status);
         setProfile(res[0]);
         setReview(res[0].review);
@@ -77,7 +81,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           type: 'InitDroner',
           name: `${res[0].firstname} ${res[0].lastname}`,
           distance: `${res[0].street_distance}`,
-          imagePro: res[0].image_droner,
+          imagePro: res[0].image_droner ? res[0].image_droner : icons.avatar,
           imageTask: res[0].image_task,
           rate: res[0].rating_avg,
           total_task: res[0].count_rating,
@@ -182,7 +186,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                       await AsyncStorage.setItem('imgTask', `${item}`);
                       navigation.push('FullScreenTaskImg');
                     }}>
-                    <Image
+                    <ProgressiveImage
                       key={index}
                       source={{ uri: item ? item : icons.avatar }}
                       style={{
@@ -288,46 +292,87 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
               </Text>
             </View>
           )} */}
-        <View style={{ height: 10, backgroundColor: '#F8F9FA' }}></View>
+        <View style={{ height: 10, backgroundColor: '#F8F9FA' }} />
         <View style={[styles.section]}>
           <Text style={[styles.text, { marginBottom: '3%' }]}>
-            {`ราคา ${detailState.price} บาท/ไร`}่
+            {`ราคา ${detailState.price || 0} บาท/ไร`}่
           </Text>
           <View
-            style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+            style={{
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginBottom: '3%',
+                marginBottom: 10,
               }}>
               <Image
                 source={icons.star}
                 style={{ width: 24, height: 24, right: 3 }}
               />
-              <Text style={[styles.label]}>
-                {detailState.rate !== null
-                  ? `${parseFloat(detailState.rate).toFixed(1)}`
-                  : `0`}
-              </Text>
-              <Text style={[styles.label, { color: colors.gray }]}>
-                {detailState.total_task !== null
-                  ? ` (${detailState.total_task})`
-                  : ` (0)`}
-              </Text>
+              {loading ? (
+                <SkeletonPlaceholder
+                  borderRadius={10}
+                  backgroundColor={colors.skeleton}>
+                  <SkeletonPlaceholder.Item>
+                    <View
+                      style={{
+                        width: 100,
+                        height: 22,
+                      }}
+                    />
+                  </SkeletonPlaceholder.Item>
+                </SkeletonPlaceholder>
+              ) : (
+                <>
+                  <Text style={[styles.label]}>
+                    {detailState.rate !== null
+                      ? `${parseFloat(detailState.rate || 0).toFixed(1)}`
+                      : `0`}
+                  </Text>
+                  <Text style={[styles.label, { color: colors.gray }]}>
+                    {detailState.total_task !== null
+                      ? ` (${detailState.total_task || 0})`
+                      : ` (0)`}
+                  </Text>
+                </>
+              )}
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 10,
+              }}>
               <Image
                 source={icons.distance}
                 style={{ width: 24, height: 24, right: 3 }}
               />
-              <Text style={[styles.label]}>
-                ห่างคุณ{' '}
-                {detailState.distance !== null
-                  ? `${parseFloat(detailState.distance).toFixed(1)}`
-                  : 0}{' '}
-                กม.
-              </Text>
+              {loading ? (
+                <SkeletonPlaceholder
+                  borderRadius={10}
+                  backgroundColor={colors.skeleton}>
+                  <SkeletonPlaceholder.Item>
+                    <View
+                      style={{
+                        width: 100,
+                        height: 22,
+                      }}
+                    />
+                  </SkeletonPlaceholder.Item>
+                </SkeletonPlaceholder>
+              ) : (
+                <Text style={[styles.label]}>
+                  ห่างคุณ{' '}
+                  {detailState.distance !== null
+                    ? `${parseFloat(detailState.distance || 0).toFixed(1)}`
+                    : 0}{' '}
+                  กม.
+                </Text>
+              )}
             </View>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -335,13 +380,29 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
               source={icons.location}
               style={{ width: 24, height: 24, right: 3 }}
             />
-            <Text
-              style={[
-                styles.label,
-              ]}>{`${detailState.district} , จ. ${detailState.province}`}</Text>
+            {loading ? (
+              <SkeletonPlaceholder
+                borderRadius={10}
+                backgroundColor={colors.skeleton}>
+                <SkeletonPlaceholder.Item>
+                  <View
+                    style={{
+                      width: 100,
+                      height: 22,
+                    }}
+                  />
+                </SkeletonPlaceholder.Item>
+              </SkeletonPlaceholder>
+            ) : (
+              <Text style={[styles.label]}>
+                {detailState.district && detailState.province
+                  ? `${detailState.district} , จ. ${detailState.province}`
+                  : '-'}
+              </Text>
+            )}
           </View>
         </View>
-        <View style={{ height: 10, backgroundColor: '#F8F9FA' }}></View>
+        <View style={{ height: 10, backgroundColor: '#F8F9FA' }} />
         <View style={[styles.section]}>
           <Text style={[styles.text]}>คิวงานของนักบินโดรน</Text>
           <View
@@ -373,11 +434,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
             <View>
               <Text style={[styles.label]}>
                 วันนี้{' '}
-                {new Date(date).toLocaleDateString('th-TH', {
-                  day: 'numeric',
-                  month: 'short',
-                  year: '2-digit',
-                })}
+                {momentExtend.toBuddhistYear(moment().toDate(), 'DD MMM YY')}
               </Text>
             </View>
           </View>
@@ -424,7 +481,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
             </View>
           )}
         </View>
-        <View style={{ height: 10, backgroundColor: '#F8F9FA' }}></View>
+        <View style={{ height: 10, backgroundColor: '#F8F9FA' }} />
         <View style={[styles.section]}>
           <Text style={[styles.text]}>ข้อมูลนักบิน</Text>
           <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
@@ -512,11 +569,6 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           }
         />
       </View>
-      <Spinner
-        visible={loading}
-        textContent={'Loading...'}
-        textStyle={{ color: '#FFF' }}
-      />
     </SafeAreaView>
   );
 };
@@ -553,5 +605,6 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunLight,
     fontSize: normalize(18),
     color: colors.fontBlack,
+    lineHeight: normalize(26),
   },
 });

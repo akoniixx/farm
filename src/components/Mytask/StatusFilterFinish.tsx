@@ -56,6 +56,7 @@ export const StatusFilterFinish: React.FC<props> = ({
         title="เลือกสถานะ"
         id="status"
         height={400}
+        selected={selectedStatus}
       />
     </>
   );

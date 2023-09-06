@@ -10,13 +10,13 @@ import {
 import React, { useState } from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
-import { Avatar } from '@rneui/base';
 
 import { mixpanel } from '../../../mixpanel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Text from '../Text/Text';
+import ProgressiveImage from '../ProgressingImage/ProgressingImage';
 
 interface dronerData {
   index: any;
@@ -146,16 +146,18 @@ const DronerSugg: React.FC<dronerData> = ({
                 </TouchableOpacity>
               )}
             </View>
-            <View style={{ alignSelf: 'center' }}>
-              <Avatar
-                size={normalize(56)}
+            <View style={{ alignSelf: 'center', marginBottom: 8 }}>
+              <ProgressiveImage
+                borderRadius={28}
                 source={
                   profile === null ? image.empty_droner : { uri: profile }
                 }
-                avatarStyle={{
-                  borderRadius: normalize(40),
+                style={{
+                  borderRadius: normalize(28),
                   borderColor: colors.white,
                   borderWidth: 1,
+                  width: normalize(56),
+                  height: normalize(56),
                 }}
               />
             </View>

@@ -20,6 +20,7 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import image from '../../assets/images/image';
 import { mixpanel } from '../../../mixpanel';
 import Text from '../../components/Text/Text';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 
 const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
   const isFocused = useIsFocused();
@@ -59,16 +60,14 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
           await GuruKaset.updateId(guruId!, 1, pinAll, pinMain);
         }}
       />
-      {data != undefined ? (
-        <ScrollView>
+      {data !== undefined ? (
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View>
             <View>
-              <Image
-                style={{ height: 150 }}
+              <ProgressiveImage
+                style={{ height: 160 }}
                 resizeMode="contain"
-                source={
-                  !data.imagePath ? image.bg_droner : { uri: data.imagePath }
-                }
+                source={{ uri: data.imagePath }}
               />
               <View style={{ paddingHorizontal: 15, top: 15 }}>
                 <Text style={styles.text}>{data.title}</Text>

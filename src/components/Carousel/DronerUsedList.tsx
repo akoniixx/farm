@@ -14,6 +14,7 @@ import { Avatar } from '@rneui/base';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Text from '../Text/Text';
+import ProgressiveImage from '../ProgressingImage/ProgressingImage';
 
 interface dronerUsedData {
   index: any;
@@ -141,13 +142,15 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
               )}
             </View>
             <View style={{ alignSelf: 'center', bottom: 15 }}>
-              <Avatar
-                size={normalize(56)}
+              <ProgressiveImage
+                borderRadius={28}
                 source={profile === null ? image.empty_plot : { uri: profile }}
-                avatarStyle={{
-                  borderRadius: normalize(40),
+                style={{
+                  borderRadius: normalize(28),
                   borderColor: colors.white,
                   borderWidth: 1,
+                  width: normalize(56),
+                  height: normalize(56),
                 }}
               />
             </View>

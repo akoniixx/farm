@@ -1,7 +1,7 @@
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import React from 'react';
 import { Picker, onClose } from 'react-native-actions-sheet-picker';
-import { font } from '../../assets';
+import { font, image } from '../../assets';
 import { normalize } from '../../functions/Normalize';
 import colors from '../../assets/colors/colors';
 import Text from '../Text/Text';
@@ -15,6 +15,7 @@ interface Props {
   title?: string;
   setSelected: (value: any) => void;
   height?: number;
+  selected?: any;
 }
 export default function PickerFilter({
   id,
@@ -22,6 +23,7 @@ export default function PickerFilter({
   title,
   setSelected,
   height = 300,
+  selected,
 }: Props) {
   return (
     <Picker
@@ -90,14 +92,32 @@ export default function PickerFilter({
                   onClose(id);
                   setSelected(item);
                 }}>
-                <Text
+                <View
                   style={{
-                    fontFamily: font.SarabunLight,
-                    fontSize: normalize(20),
-                    color: colors.fontBlack,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    paddingRight: 20,
                   }}>
-                  {item.name}
-                </Text>
+                  <Text
+                    style={{
+                      fontFamily: font.SarabunLight,
+                      fontSize: normalize(20),
+                      color: colors.fontBlack,
+                    }}>
+                    {item.name}
+                  </Text>
+                  {selected && selected.name === item.name && (
+                    <Image
+                      source={image.checked}
+                      style={{
+                        width: normalize(24),
+                        height: normalize(24),
+                      }}
+                    />
+                  )}
+                </View>
               </TouchableOpacity>
               <View style={styles.separator} />
             </View>

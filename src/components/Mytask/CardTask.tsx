@@ -35,8 +35,15 @@ export const CardTask: React.FC<taskListProps> = ({ task }) => {
     <View
       style={{
         backgroundColor: 'white',
-        padding: 10,
+        paddingTop: 16,
+        paddingHorizontal: 10,
         marginVertical: normalize(10),
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
       }}>
       <View
         style={{
@@ -138,24 +145,32 @@ export const CardTask: React.FC<taskListProps> = ({ task }) => {
       ) : (
         <></>
       )}
-      <View
-        style={{
-          marginTop: normalize(20),
-          borderTopWidth: StyleSheet.hairlineWidth,
-          borderColor: colors.disable,
-        }}>
-        {task.status === 'WAIT_RECEIVE' ? (
-          <WaittingCard />
-        ) : task.status === 'CANCELED' ? (
-          <></>
-        ) : (
-          <DronerCard
-            name={task.droner.firstname + ' ' + task.droner.lastname}
-            profile={task.droner.image_profile}
-            telnumber={task.droner.telephone_no}
-          />
-        )}
-      </View>
+      {task.status === 'CANCELED' ? (
+        <View
+          style={{
+            height: 16,
+          }}
+        />
+      ) : (
+        <View
+          style={{
+            marginTop: normalize(20),
+            borderTopWidth: StyleSheet.hairlineWidth,
+            borderColor: colors.disable,
+          }}>
+          {task.status === 'WAIT_RECEIVE' ? (
+            <WaittingCard />
+          ) : task.status === 'CANCELED' ? (
+            <></>
+          ) : (
+            <DronerCard
+              name={task.droner.firstname + ' ' + task.droner.lastname}
+              profile={task.droner.image_profile}
+              telnumber={task.droner.telephone_no}
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 };

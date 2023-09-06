@@ -1,20 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
 import { normalize } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
-import {
-  FlatList,
-  Image,
-  RefreshControl,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, RefreshControl, TouchableOpacity, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import { font, image } from '../../assets';
 import colors from '../../assets/colors/colors';
 import { CardTask } from '../../components/Mytask/CardTask';
-import { Filter } from '../../components/Mytask/Filter';
 import { FilterFinish } from '../../components/Mytask/FilterFinish';
 import { StatusFilterFinish } from '../../components/Mytask/StatusFilterFinish';
 
@@ -22,6 +12,7 @@ import { EmptyTask } from '../../components/TaskDetail/emptyTask';
 import { MyJobDatasource } from '../../datasource/MyJobDatasource';
 import { SearchMyJobsEntites } from '../../entites/SearchMyJobsEntites';
 import * as RootNavigation from '../../navigations/RootNavigation';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const initialPage = 1;
 const limit = 10;
@@ -114,53 +105,80 @@ const FinishScreen: React.FC<any> = ({}) => {
           paddingHorizontal: normalize(10),
           backgroundColor: colors.grayBg,
         }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginVertical: normalize(10),
-          }}>
-          <FilterFinish
-            selectedField={selectedField}
-            setSelectedField={setSelectedField}
-          />
-          <StatusFilterFinish
-            selectedStatus={selectedStatus}
-            setSelectedStatus={setSelectedStatus}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          {taskList.data.length > 0 ? (
-            <FlatList
-              onEndReached={onLoadMore}
-              refreshControl={
-                <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
-              }
-              data={taskList.data}
-              renderItem={({ item, index }) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() =>
-                    RootNavigation.navigate('Main', {
-                      screen: 'MyTaskDetailScreen',
-                      params: { task: item },
-                    })
-                  }>
-                  <CardTask task={item} />
-                </TouchableOpacity>
+        {loading ? (
+          <View style={{ flex: 1, marginTop: 16 }}>
+            <SkeletonPlaceholder
+              borderRadius={10}
+              speed={2000}
+              backgroundColor={colors.skeleton}>
+              <>
+                {[1, 2].map((_, idx) => {
+                  return (
+                    <SkeletonPlaceholder.Item
+                      key={idx}
+                      flexDirection="row"
+                      alignItems="center"
+                      style={{ width: '100%', marginBottom: 16 }}>
+                      <View
+                        style={{
+                          width: '100%',
+                          height: 250,
+                        }}
+                      />
+                    </SkeletonPlaceholder.Item>
+                  );
+                })}
+              </>
+            </SkeletonPlaceholder>
+          </View>
+        ) : (
+          <>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginVertical: normalize(10),
+              }}>
+              <FilterFinish
+                selectedField={selectedField}
+                setSelectedField={setSelectedField}
+              />
+              <StatusFilterFinish
+                selectedStatus={selectedStatus}
+                setSelectedStatus={setSelectedStatus}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              {taskList.data.length > 0 ? (
+                <FlatList
+                  onEndReached={onLoadMore}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refresh}
+                      onRefresh={onRefresh}
+                    />
+                  }
+                  data={taskList.data}
+                  renderItem={({ item, index }) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() =>
+                        RootNavigation.navigate('Main', {
+                          screen: 'MyTaskDetailScreen',
+                          params: { task: item },
+                        })
+                      }>
+                      <CardTask task={item} />
+                    </TouchableOpacity>
+                  )}
+                />
+              ) : (
+                <EmptyTask />
               )}
-            />
-          ) : (
-            <EmptyTask />
-          )}
-        </View>
+            </View>
+          </>
+        )}
       </View>
-
-      <Spinner
-        visible={loading}
-        textContent={'Loading...'}
-        textStyle={{ color: '#FFF' }}
-      />
     </>
   );
 };

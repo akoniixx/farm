@@ -11,6 +11,7 @@ import { colors, font, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { Avatar } from '@rneui/base';
 import Text from '../Text/Text';
+import ProgressiveImage from '../ProgressingImage/ProgressingImage';
 
 interface data {
   img: any;
@@ -50,15 +51,15 @@ const FavDronerUsedList: React.FC<data> = ({
         ]}>
         <View>
           <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
-            <Avatar
-              size={56}
+            <ProgressiveImage
+              borderRadius={28}
               source={img === null ? image.empty_plot : { uri: img }}
-              avatarStyle={{
-                width: 56,
-                height: 56,
-                borderRadius: normalize(40),
+              style={{
+                borderRadius: normalize(28),
                 borderColor: colors.white,
                 borderWidth: 1,
+                width: normalize(56),
+                height: normalize(56),
               }}
             />
             <View style={{ flex: 1 }}>

@@ -124,9 +124,14 @@ export default function SlipWaitingScreen({
           const endTime = moment(updatedAt).add(30, 'minutes').toISOString();
           const isAfter = moment(endTime).isAfter(moment());
           if (!isAfter && isWaitReceive) {
-            (countResend === null || !countResend) && setShowModalExtend(true);
-            +countResend === 1 && setModalExtendTwo(true);
-            +countResend >= 2 && setModalExtendThree(true);
+            (countResend === null || !countResend) &&
+              setTimeout(() => {
+                setShowModalExtend(true);
+              }, 1000);
+            countResend === 1 &&
+              setTimeout(() => setModalExtendTwo(true), 1000);
+            +countResend >= 2 &&
+              setTimeout(() => setModalExtendThree(true), 1000);
           }
           setTaskData({
             ...res.data,

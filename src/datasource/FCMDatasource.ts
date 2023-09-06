@@ -1,11 +1,19 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL, httpClient } from '../config/develop-config';
 
+interface NotificationPayload {
+  page?: number;
+  take?: number;
+}
 export class FCMtokenDatasource {
-  static async getNotificationList(): Promise<any> {
+  static async getNotificationList({
+    page = 1,
+    take = 10,
+  }: NotificationPayload): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
+    const query = `?farmerId=${farmer_id}&page=${page}&take=${take}`;
     return httpClient
-      .get(BASE_URL + `/fcm/notification/farmer/${farmer_id}`)
+      .get(BASE_URL + '/fcm/notification/notification-farmer' + query)
       .then(res => {
         return res.data;
       })

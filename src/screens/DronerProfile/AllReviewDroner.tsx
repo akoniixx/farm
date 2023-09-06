@@ -2,7 +2,6 @@ import React, { useEffect, useReducer, useState } from 'react';
 import {
   StyleSheet,
   View,
-  Text,
   SafeAreaView,
   Image,
   ScrollView,
@@ -21,6 +20,7 @@ import { stylesCentral } from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
 import CardReview from '../../components/Carousel/CardReview';
 import { FilterReview } from '../../components/FilterReview';
+import Text from '../../components/Text/Text';
 
 const AllReviewDroner: React.FC<any> = ({ navigation }) => {
   const [data, setData] = useState<any[]>([]);

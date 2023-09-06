@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Platform,
   Linking,
+  RefreshControl,
 } from 'react-native';
 
 import { colors, font } from '../../assets';
@@ -55,7 +56,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     authContext: { getProfileAuth },
     state: { user },
   } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const isFocused = useIsFocused();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [taskSug, setTaskSug] = useState<any[]>([]);
@@ -68,6 +69,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [showModalCall, setShowModalCall] = useState(false);
   const [refresh, setRefresh] = useState<boolean>(false);
   const [guruKaset, setGuruKaset] = useState<any>();
+  const [refreshing, setRefreshing] = useState(false);
   const screen = Dimensions.get('window');
   const [dataFinding, setDataFinding] = useState({
     id: '',
@@ -80,9 +82,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [notiData, setNotiData] = useState<{
     count: Number;
     data: any;
+    isUnread: boolean;
   }>({
     count: 0,
     data: [],
+    isUnread: false,
   });
   const [reload, setReload] = useState(false);
   const [statusFav, setStatusFav] = useState<any[]>([]);
@@ -105,11 +109,15 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     setFcmToken(value!);
   };
   const getNotificationData = async () => {
-    FCMtokenDatasource.getNotificationList()
+    FCMtokenDatasource.getNotificationList({
+      page: 1,
+      take: 5,
+    })
       .then(res => {
         setNotiData({
           count: res.count,
           data: res.data,
+          isUnread: res.countUnRead > 0,
         });
       })
       .catch(err => console.log(err));
@@ -138,32 +146,37 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         .catch(err => console.log(err));
     }
   };
-  useEffect(() => {
+  const getInitialData = async () => {
     const getTaskId = async () => {
       const value = await AsyncStorage.getItem('taskId');
       setTaskId(value);
     };
-
-    const getInitialData = async () => {
-      try {
-        setLoading(true);
-        await Promise.all([
-          getTaskId(),
-          getData(),
-          getProfile(),
-          getNotificationData(),
-          getFavDroner(),
-          findAllNews(),
-        ]);
-      } catch (error) {
-        console.log('error', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    try {
+      setLoading(true);
+      await Promise.all([
+        getTaskId(),
+        getData(),
+        getProfile(),
+        getNotificationData(),
+        getFavDroner(),
+        findAllNews(),
+      ]);
+    } catch (error) {
+      console.log('error', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     getInitialData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getInitialData();
+    setRefreshing(false);
+  };
 
   useEffect(() => {
     const dronerSug = async () => {
@@ -303,12 +316,16 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   };
 
   return (
-    <View
+    <SafeAreaView
+      edges={['left', 'right']}
       style={{
         backgroundColor: colors.white,
         flex: 1,
       }}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+        }>
         <View
           style={[stylesCentral.container, { paddingBottom: normalize(30) }]}>
           <View style={{ backgroundColor: colors.white }}>
@@ -351,13 +368,13 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         navigateTo: 'NotificationScreen',
                       });
                       navigation.navigate('NotificationScreen', {
-                        data: notiData?.data,
+                        data: [],
                       });
                     }}>
                     {showBell ? (
                       <Image
                         source={
-                          notiData.count != 0
+                          notiData.isUnread
                             ? icons.newnotification
                             : icons.notification
                         }
@@ -783,7 +800,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           }}
         />
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 export default MainScreen;

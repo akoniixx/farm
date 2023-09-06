@@ -56,6 +56,7 @@ export const StatusFilterInprogress: React.FC<props> = ({
         title="แสดงสถานะงาน"
         id="status"
         height={400}
+        selected={selectedStatus}
       />
     </>
   );

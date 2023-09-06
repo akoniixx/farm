@@ -1262,8 +1262,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           style={{
             paddingHorizontal: 16,
             paddingTop: 8,
-            borderBottomColor: colors.greyDivider,
-            borderBottomWidth: 1,
           }}>
           <MainButton
             disable={disabled}

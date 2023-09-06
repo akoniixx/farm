@@ -13,6 +13,7 @@ import { EmptyTask } from '../../components/TaskDetail/emptyTask';
 import { MyJobDatasource } from '../../datasource/MyJobDatasource';
 import { SearchMyJobsEntites } from '../../entites/SearchMyJobsEntites';
 import * as RootNavigation from '../../navigations/RootNavigation';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const initialPage = 1;
 const limit = 10;
@@ -115,12 +116,6 @@ const InprogressScreen: React.FC<any> = ({}) => {
     setRefresh(false);
   };
 
-  /*  useFocusEffect(
-    React.useCallback(() => {
-      getTaskList();
-    }, []),
-  ); */
-
   return (
     <>
       <View
@@ -129,48 +124,75 @@ const InprogressScreen: React.FC<any> = ({}) => {
           paddingHorizontal: normalize(10),
           backgroundColor: colors.grayBg,
         }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginVertical: normalize(10),
-          }}>
-          <Filter
-            selectedField={selectedField}
-            setSelectedField={setSelectedField}
-          />
-          <StatusFilterInprogress
-            selectedStatus={selectedStatus}
-            setSelectedStatus={setSelectedStatus}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          {taskList.data.length > 0 ? (
-            <FlatList
-              onEndReached={onLoadMore}
-              refreshControl={
-                <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
-              }
-              data={taskList.data}
-              renderItem={({ item, index }) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => toTaskDetail(item)}>
-                  <CardTask task={item} />
-                </TouchableOpacity>
+        {loading ? (
+          <View style={{ flex: 1, marginTop: 16 }}>
+            <SkeletonPlaceholder
+              borderRadius={10}
+              speed={2000}
+              backgroundColor={colors.skeleton}>
+              <>
+                {[1, 2].map((_, idx) => {
+                  return (
+                    <SkeletonPlaceholder.Item
+                      key={idx}
+                      flexDirection="row"
+                      alignItems="center"
+                      style={{ width: '100%', marginBottom: 16 }}>
+                      <View
+                        style={{
+                          width: '100%',
+                          height: 250,
+                        }}
+                      />
+                    </SkeletonPlaceholder.Item>
+                  );
+                })}
+              </>
+            </SkeletonPlaceholder>
+          </View>
+        ) : (
+          <>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginVertical: normalize(10),
+              }}>
+              <Filter
+                selectedField={selectedField}
+                setSelectedField={setSelectedField}
+              />
+              <StatusFilterInprogress
+                selectedStatus={selectedStatus}
+                setSelectedStatus={setSelectedStatus}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              {taskList.data.length > 0 ? (
+                <FlatList
+                  onEndReached={onLoadMore}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refresh}
+                      onRefresh={onRefresh}
+                    />
+                  }
+                  data={taskList.data}
+                  renderItem={({ item, index }) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => toTaskDetail(item)}>
+                      <CardTask task={item} />
+                    </TouchableOpacity>
+                  )}
+                />
+              ) : (
+                <EmptyTask />
               )}
-            />
-          ) : (
-            <EmptyTask />
-          )}
-        </View>
+            </View>
+          </>
+        )}
       </View>
-
-      <Spinner
-        visible={loading}
-        textContent={'Loading...'}
-        textStyle={{ color: '#FFF' }}
-      />
     </>
   );
 };

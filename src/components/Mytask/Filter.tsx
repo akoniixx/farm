@@ -57,6 +57,7 @@ export const Filter: React.FC<props> = ({
         title="เรียงลำดับงาน"
         id="field"
         height={400}
+        selected={selectedField}
       />
     </>
   );

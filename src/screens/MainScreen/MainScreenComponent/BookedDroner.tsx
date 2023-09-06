@@ -84,7 +84,7 @@ export default function BookedDroner({
                       )
                         .then(() => {
                           setRefresh(prev => !prev);
-                          let newTaskSugUsed = taskSugUsed.map((x, i) => {
+                          let newTaskSugUsed = taskSugUsed.map(x => {
                             let result = {};
                             if (x.droner_id === item.droner_id) {
                               let a =

@@ -5,6 +5,7 @@ import { colors, icons } from '../../assets';
 import fonts from '../../assets/fonts';
 import { dialCall } from '../../functions/utility';
 import Text from '../Text/Text';
+import ProgressiveImage from '../ProgressingImage/ProgressingImage';
 
 interface props {
   name: string;
@@ -27,21 +28,23 @@ export const DronerCard: React.FC<props> = ({ name, profile, telnumber }) => {
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
-        <Image
-          source={
-            profile
-              ? {
-                  uri: profile,
-                }
-              : icons.avatar
-          }
+        <View
           style={{
-            width: normalize(56),
-            height: normalize(56),
-            borderRadius: 50,
             marginRight: normalize(10),
-          }}
-        />
+          }}>
+          <ProgressiveImage
+            borderRadius={28}
+            source={profile === null ? icons.avatar : { uri: profile }}
+            style={{
+              borderRadius: normalize(28),
+              borderColor: colors.white,
+              borderWidth: 1,
+              width: normalize(56),
+              height: normalize(56),
+            }}
+          />
+        </View>
+
         <Text style={styles.name}>{name}</Text>
       </View>
       <TouchableOpacity onPress={() => dialCall(telnumber)}>

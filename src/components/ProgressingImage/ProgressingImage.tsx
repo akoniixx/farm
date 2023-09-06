@@ -9,17 +9,21 @@ import {
 import FastImage from 'react-native-fast-image';
 import { useNetwork } from '../../contexts/NetworkContext';
 import { image } from '../../assets';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import colors from '../../assets/colors/colors';
 
 interface ProgressiveImageProps extends ImageProps {
   source: ImageProps['source'];
   style?: ImageStyle;
   resizeMode?: ImageProps['resizeMode'];
+  borderRadius?: number;
 }
 
 const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   source,
   style = {},
   resizeMode,
+  borderRadius = 10,
   ...props
 }) => {
   const [highResImageLoaded, setHighResImageLoaded] = useState(false);
@@ -27,25 +31,6 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   const [opacity] = useState(new Animated.Value(0));
 
   // Skeleton animation setup
-  const [skeletonAnimation] = useState(new Animated.Value(0));
-  Animated.loop(
-    Animated.sequence([
-      Animated.timing(skeletonAnimation, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: false,
-      }),
-      Animated.timing(skeletonAnimation, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: false,
-      }),
-    ]),
-  ).start();
-  const skeletonBackgroundColor = skeletonAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['#E0E0E0', '#E3E3E3'],
-  });
 
   const onLoadHighResImage = () => {
     Animated.timing(opacity, {
@@ -60,14 +45,14 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   return (
     <View style={style}>
       {!highResImageLoaded && (
-        <Animated.View
-          style={[
-            style,
-            {
-              backgroundColor: skeletonBackgroundColor,
-            },
-          ]}
-        />
+        <SkeletonPlaceholder
+          borderRadius={borderRadius}
+          speed={2000}
+          backgroundColor={colors.skeleton}>
+          <SkeletonPlaceholder.Item style={style}>
+            <View style={{ width: '100%', height: '100%' }} />
+          </SkeletonPlaceholder.Item>
+        </SkeletonPlaceholder>
       )}
       <Animated.Image
         source={isConnected ? source : image.loaderImage}

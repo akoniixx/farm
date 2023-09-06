@@ -12,7 +12,7 @@ const renderTabBar = (props: any) => (
   <TabBar
     {...props}
     indicatorStyle={{ backgroundColor: '#2EC46D' }}
-    style={{ backgroundColor: colors.white }}
+    style={{ backgroundColor: colors.white, paddingVertical: 8 }}
     renderLabel={({ route, focused }) => (
       <Text
         style={[
@@ -65,7 +65,7 @@ export default MyTaskTapNavigator;
 
 const styles = StyleSheet.create({
   label: {
-    fontFamily: fonts.SarabunMedium,
-    fontSize: normalize(16),
+    fontFamily: fonts.AnuphanMedium,
+    fontSize: normalize(20),
   },
 });
