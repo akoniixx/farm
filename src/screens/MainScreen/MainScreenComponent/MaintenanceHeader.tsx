@@ -63,7 +63,7 @@ export default function MaintenanceHeader({
                         }}>
                         {momentExtend.toBuddhistYear(
                           maintenance.dateStart,
-                          'DD MMMM YYYY',
+                          ' DD MMMM YYYY',
                         )}
                       </Text>
                     </Text>
@@ -132,7 +132,7 @@ export default function MaintenanceHeader({
                         {maintenance != null &&
                           momentExtend.toBuddhistYear(
                             maintenance.dateStart,
-                            'DD MMMM YYYY',
+                            ' DD MMMM YYYY',
                           )}
                       </Text>
                     </Text>

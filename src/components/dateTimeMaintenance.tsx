@@ -52,7 +52,7 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
                   style={{
                     color: '#FB8705',
                   }}>
-                  {momentExtend.toBuddhistYear(dateStart, 'DD MMMM YYYY')}
+                  {momentExtend.toBuddhistYear(dateStart, ' DD MMMM YYYY')}
                 </Text>
               </Text>
               <Text
@@ -82,7 +82,7 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
                   style={{
                     color: '#FB8705',
                   }}>
-                  {momentExtend.toBuddhistYear(dateEnd, 'DD MMMM YYYY')}
+                  {momentExtend.toBuddhistYear(dateEnd, ' DD MMMM YYYY')}
                 </Text>
               </Text>
               <Text
@@ -143,8 +143,9 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
                 <Text
                   style={{
                     color: '#FB8705',
+                    fontSize: normalize(24),
                   }}>
-                  {momentExtend.toBuddhistYear(dateStart, 'DD MMMM YYYY')}
+                  {momentExtend.toBuddhistYear(dateStart, ' DD MMMM YYYY')}
                 </Text>
               </Text>
               <Text

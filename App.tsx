@@ -48,7 +48,6 @@ const App = () => {
   const getToken = async () => {
     console.log(`farmerid = ${await AsyncStorage.getItem('farmer_id')}`);
     console.log(`token = ${await AsyncStorage.getItem('token')}`);
-    await AsyncStorage.removeItem('Maintenance')
     console.log(`fcmtoken = ${await AsyncStorage.getItem('fcmtoken')}`);
   };
   return (
