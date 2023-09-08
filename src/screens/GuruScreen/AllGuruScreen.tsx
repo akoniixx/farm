@@ -182,50 +182,133 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         style={{ backgroundColor: '#F8F9FA' }}>
-        {loading ? (
-          <View
-            style={{
-              paddingVertical: 10,
-            }}>
-            <SkeletonPlaceholder
-              borderRadius={10}
-              speed={2000}
-              backgroundColor={colors.skeleton}>
-              <SkeletonPlaceholder.Item
-                flexDirection="row"
-                alignItems="center"
-                style={{ paddingHorizontal: 16 }}>
-                <View style={{ width: '100%', height: 200 }} />
-              </SkeletonPlaceholder.Item>
-            </SkeletonPlaceholder>
-
-            <View
-              style={{
-                alignItems: 'center',
-                top: -10,
-                marginVertical: -10,
-              }}>
-              <Pagination
-                dotsLength={Array.from(Array(5).keys()).length}
-                activeDotIndex={index}
-                carouselRef={isCarousel}
-                dotStyle={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: 5,
-                  backgroundColor: colors.fontGrey,
+        <View style={{ paddingVertical: 10 }}>
+          {pinAll !== undefined && pinAll.length > 1 ? (
+            <>
+              <Carousel
+                autoplay={true}
+                autoplayInterval={7000}
+                autoplayDelay={5000}
+                loop={true}
+                ref={isCarousel}
+                data={pinAll}
+                sliderWidth={screen.width}
+                itemWidth={screen.width}
+                onSnapToItem={index => setIndex(index)}
+                useScrollView={true}
+                vertical={false}
+                renderItem={({ item }: any) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={async () => {
+                        await AsyncStorage.setItem('guruId', `${item.id}`);
+                        navigation.push('DetailGuruScreen');
+                      }}>
+                      <CardPinGuru
+                        key={index}
+                        index={item.index}
+                        background={item.image_path}
+                        title={item.title}
+                        date={momentExtend.toBuddhistYear(
+                          item.created_at,
+                          'DD MMM YY',
+                        )}
+                        read={item.read}
+                        pin={item.pin_all}
+                      />
+                    </TouchableOpacity>
+                  );
                 }}
-                dotContainerStyle={{ marginHorizontal: 4 }}
-                inactiveDotOpacity={0.4}
-                inactiveDotScale={0.9}
-                tappableDots={true}
               />
-            </View>
-            {[1, 2].map(() => {
-              return (
+              <View
+                style={{
+                  alignItems: 'center',
+                  top: -5,
+                  marginVertical: -20,
+                }}>
+                <Pagination
+                  dotsLength={pinAll.length}
+                  activeDotIndex={index}
+                  carouselRef={isCarousel}
+                  dotStyle={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: 5,
+                    backgroundColor: colors.fontGrey,
+                    marginHorizontal: 0,
+                  }}
+                  inactiveDotOpacity={0.4}
+                  inactiveDotScale={0.9}
+                  tappableDots={true}
+                />
+              </View>
+            </>
+          ) : (
+            pinAll.length > 0 &&
+            pinAll.map((item: any, index: any) => (
+              <TouchableOpacity
+                key={index}
+                onPress={async () => {
+                  await AsyncStorage.setItem('guruId', `${item.id}`);
+                  navigation.push('DetailGuruScreen');
+                  mixpanel.track('Tab detail guru ');
+                }}>
+                <CardPinGuru
+                  key={index}
+                  index={item.index}
+                  background={item.image_path}
+                  title={item.title}
+                  date={momentExtend.toBuddhistYear(
+                    item.created_at,
+                    'DD MMM YY',
+                  )}
+                  read={item.read}
+                  pin={item.pin_all}
+                />
+
                 <View
                   style={{
-                    marginBottom: 10,
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    backgroundColor: colors.gray,
+                    borderRadius: 20,
+                    height: 8,
+                    width: 8,
+                  }}
+                />
+              </TouchableOpacity>
+            ))
+          )}
+
+          {data.data.length > 0 ? (
+            <>
+              {data.data.map((item: any, index) => {
+                return (
+                  <TouchableOpacity
+                    key={item.id}
+                    onPress={async () => {
+                      await AsyncStorage.setItem('guruId', `${item.id}`);
+                      navigation.push('DetailGuruScreen');
+                      mixpanel.track('Tab detail guru ');
+                    }}>
+                    <CardGuru
+                      key={index}
+                      index={item.index}
+                      background={item.image_path}
+                      title={item.title}
+                      date={momentExtend.toBuddhistYear(
+                        item.created_at,
+                        'DD MMM YY',
+                      )}
+                      read={item.read}
+                    />
+                  </TouchableOpacity>
+                );
+              })}
+              {loadingMore ? (
+                <View
+                  style={{
+                    marginTop: 16,
                   }}>
                   <SkeletonPlaceholder
                     borderRadius={10}
@@ -239,155 +322,10 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
                     </SkeletonPlaceholder.Item>
                   </SkeletonPlaceholder>
                 </View>
-              );
-            })}
-          </View>
-        ) : (
-          <View style={{ paddingVertical: 10 }}>
-            {pinAll !== undefined && pinAll.length > 1 ? (
-              <>
-                <Carousel
-                  autoplay={true}
-                  autoplayInterval={7000}
-                  autoplayDelay={5000}
-                  loop={true}
-                  ref={isCarousel}
-                  data={pinAll}
-                  sliderWidth={screen.width}
-                  itemWidth={screen.width}
-                  onSnapToItem={index => setIndex(index)}
-                  useScrollView={true}
-                  vertical={false}
-                  renderItem={({ item }: any) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={async () => {
-                          await AsyncStorage.setItem('guruId', `${item.id}`);
-                          navigation.push('DetailGuruScreen');
-                        }}>
-                        <CardPinGuru
-                          key={index}
-                          index={item.index}
-                          background={item.image_path}
-                          title={item.title}
-                          date={momentExtend.toBuddhistYear(
-                            item.created_at,
-                            'DD MMM YY',
-                          )}
-                          read={item.read}
-                          pin={item.pin_all}
-                        />
-                      </TouchableOpacity>
-                    );
-                  }}
-                />
-                <View
-                  style={{
-                    alignItems: 'center',
-                    top: -5,
-                    marginVertical: -20,
-                  }}>
-                  <Pagination
-                    dotsLength={pinAll.length}
-                    activeDotIndex={index}
-                    carouselRef={isCarousel}
-                    dotStyle={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: 5,
-                      backgroundColor: colors.fontGrey,
-                      marginHorizontal: 0,
-                    }}
-                    inactiveDotOpacity={0.4}
-                    inactiveDotScale={0.9}
-                    tappableDots={true}
-                  />
-                </View>
-              </>
-            ) : (
-              pinAll.length > 0 &&
-              pinAll.map((item: any, index: any) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={async () => {
-                    await AsyncStorage.setItem('guruId', `${item.id}`);
-                    navigation.push('DetailGuruScreen');
-                    mixpanel.track('Tab detail guru ');
-                  }}>
-                  <CardPinGuru
-                    key={index}
-                    index={item.index}
-                    background={item.image_path}
-                    title={item.title}
-                    date={momentExtend.toBuddhistYear(
-                      item.created_at,
-                      'DD MMM YY',
-                    )}
-                    read={item.read}
-                    pin={item.pin_all}
-                  />
-
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                      backgroundColor: colors.gray,
-                      borderRadius: 20,
-                      height: 8,
-                      width: 8,
-                    }}
-                  />
-                </TouchableOpacity>
-              ))
-            )}
-
-            {data.data.length > 0 ? (
-              <>
-                {data.data.map((item: any, index) => {
-                  return (
-                    <TouchableOpacity
-                      key={item.id}
-                      onPress={async () => {
-                        await AsyncStorage.setItem('guruId', `${item.id}`);
-                        navigation.push('DetailGuruScreen');
-                        mixpanel.track('Tab detail guru ');
-                      }}>
-                      <CardGuru
-                        key={index}
-                        index={item.index}
-                        background={item.image_path}
-                        title={item.title}
-                        date={momentExtend.toBuddhistYear(
-                          item.created_at,
-                          'DD MMM YY',
-                        )}
-                        read={item.read}
-                      />
-                    </TouchableOpacity>
-                  );
-                })}
-                {loadingMore ? (
-                  <View
-                    style={{
-                      marginTop: 16,
-                    }}>
-                    <SkeletonPlaceholder
-                      borderRadius={10}
-                      speed={2000}
-                      backgroundColor={colors.skeleton}>
-                      <SkeletonPlaceholder.Item
-                        flexDirection="row"
-                        alignItems="center"
-                        style={{ paddingHorizontal: 16 }}>
-                        <View style={{ width: '100%', height: 200 }} />
-                      </SkeletonPlaceholder.Item>
-                    </SkeletonPlaceholder>
-                  </View>
-                ) : null}
-              </>
-            ) : null}
-          </View>
-        )}
+              ) : null}
+            </>
+          ) : null}
+        </View>
       </ScrollView>
 
       <ActionSheet ref={filterNews}>

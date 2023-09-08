@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useReducer, useState } from 'react';
 import {
   Image,
   View,
@@ -24,6 +24,7 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { callcenterNumber } from '../../../definitions/callCenterNumber';
 import { useFocusEffect } from '@react-navigation/native';
 import Text from '../../../components/Text/Text';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const AllPlotScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -126,7 +127,11 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
         </ImageBackground>
         <View style={styles.inner}>
           <View style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                flexGrow: 1,
+              }}>
               {result ? (
                 <View
                   style={{
@@ -235,9 +240,16 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                       display: 'flex',
                       flexDirection: 'column',
                       top: 20,
+                      height: '100%',
                     }}>
-                    <View>
+                    <View
+                      style={{
+                        height: '100%',
+                      }}>
                       <TouchableOpacity
+                        style={{
+                          height: normalize(80),
+                        }}
                         onPress={() => {
                           setFirstRender(true);
 
@@ -259,39 +271,72 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                           </Text>
                         </View>
                       </TouchableOpacity>
-                      <View style={{ top: 10 }}>
-                        {profilestate.plotItem.map((item: any, index: any) => (
-                          <TouchableOpacity
-                            key={index}
-                            onPress={async () => {
-                              await AsyncStorage.setItem(
-                                'plot_id',
-                                `${item.id}`,
-                              );
-                              navigation.push('EditPlotScreen');
-                            }}>
-                            <PlotsItemEdit
-                              key={index}
-                              index={index}
-                              plotName={
-                                !item.plotName
-                                  ? 'แปลงที่' +
-                                    ' ' +
-                                    `${index + 1}` +
-                                    ' ' +
-                                    item.plantName
-                                  : item.plotName
-                              }
-                              raiAmount={item.raiAmount}
-                              plantName={item.plantName}
-                              status={item.status}
-                              locationName={item.locationName}
-                              reason={item.reason}
-                              onClick={() => setShowModalCall(true)}
-                            />
-                          </TouchableOpacity>
-                        ))}
-                      </View>
+                      {loading ? (
+                        <View
+                          style={{
+                            marginTop: 10,
+                            flex: 1,
+                          }}>
+                          <SkeletonPlaceholder
+                            speed={2000}
+                            backgroundColor={colors.skeleton}
+                            borderRadius={8}>
+                            <>
+                              {Array.from(Array(3).keys()).map(() => {
+                                return (
+                                  <SkeletonPlaceholder.Item
+                                    style={{
+                                      marginBottom: 10,
+                                    }}>
+                                    <View
+                                      style={{
+                                        width: '100%',
+                                        height: 100,
+                                      }}
+                                    />
+                                  </SkeletonPlaceholder.Item>
+                                );
+                              })}
+                            </>
+                          </SkeletonPlaceholder>
+                        </View>
+                      ) : (
+                        <View style={{ top: 10 }}>
+                          {profilestate.plotItem.map(
+                            (item: any, index: any) => (
+                              <TouchableOpacity
+                                key={index}
+                                onPress={async () => {
+                                  await AsyncStorage.setItem(
+                                    'plot_id',
+                                    `${item.id}`,
+                                  );
+                                  navigation.push('EditPlotScreen');
+                                }}>
+                                <PlotsItemEdit
+                                  key={index}
+                                  index={index}
+                                  plotName={
+                                    !item.plotName
+                                      ? 'แปลงที่' +
+                                        ' ' +
+                                        `${index + 1}` +
+                                        ' ' +
+                                        item.plantName
+                                      : item.plotName
+                                  }
+                                  raiAmount={item.raiAmount}
+                                  plantName={item.plantName}
+                                  status={item.status}
+                                  locationName={item.locationName}
+                                  reason={item.reason}
+                                  onClick={() => setShowModalCall(true)}
+                                />
+                              </TouchableOpacity>
+                            ),
+                          )}
+                        </View>
+                      )}
                     </View>
                   </View>
                 </View>
@@ -380,11 +425,6 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </Modal>
-        <Spinner
-          visible={loading}
-          textContent={'Loading...'}
-          textStyle={{ color: '#FFF' }}
-        />
       </SafeAreaView>
     </>
   );
@@ -472,6 +512,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalize(15),
     flex: 1,
     justifyContent: 'space-around',
+    height: '100%',
   },
   h1: {
     fontFamily: font.AnuphanBold,
@@ -506,6 +547,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    height: '100%',
   },
 
   rectangleFixed: {

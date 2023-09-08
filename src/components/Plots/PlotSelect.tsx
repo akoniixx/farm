@@ -27,6 +27,7 @@ interface Prop {
   selected: boolean;
   status: string;
   isHaveDroner: boolean;
+  timeSpent: number;
 }
 
 const PlotSelect: React.FC<Prop> = ({
@@ -38,6 +39,7 @@ const PlotSelect: React.FC<Prop> = ({
   onPress,
   status,
   isHaveDroner,
+  timeSpent,
 }) => {
   const {
     state: { taskData },
@@ -226,7 +228,10 @@ const PlotSelect: React.FC<Prop> = ({
             </Text>
             <TouchableOpacity
               onPress={() => {
-                mixpanel.track('Tab callcenter from select plot screen');
+                mixpanel.track('PlotSelect_CallCenter_tapped', {
+                  status,
+                  timeSpent,
+                });
                 Linking.openURL(`tel:${callcenterNumber}`);
               }}
               style={{
@@ -350,6 +355,16 @@ const PlotSelect: React.FC<Prop> = ({
               <InputWithSuffix
                 style={{
                   color: colors.fontBlack,
+                }}
+                onBlur={() => {
+                  mixpanel.track('PlotSelect_InputWithSuffixOnBlur_tapped', {
+                    status,
+                    plotName,
+                    raiAmount,
+                    plantName,
+                    locationName,
+                    farmAreaAmount: taskData.farmAreaAmount,
+                  });
                 }}
                 value={taskData.farmAreaAmount}
                 onChangeText={text => {

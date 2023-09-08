@@ -14,11 +14,11 @@ import { generateTime } from '../../functions/DateTime';
 import { CouponCardEntities } from '../../entites/CouponCard';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { keepCoupon } from '../../datasource/PromotionDatasource';
-import { width } from '../../functions/Normalize';
 import { useRecoilState } from 'recoil';
 import { couponState } from '../../recoil/CouponAtom';
 import { mixpanel } from '../../../mixpanel';
 import Text from '../Text/Text';
+import moment from 'moment';
 
 const CouponCard: React.FC<CouponCardEntities> = ({
   id,
@@ -51,6 +51,7 @@ const CouponCard: React.FC<CouponCardEntities> = ({
   keepthis,
   disabled,
   expired,
+  titleButtonKeep = 'ใช้งาน',
 }) => {
   const [coupon, setCoupon] = useRecoilState(couponState);
   const [disabledBtn, setDisabledBtn] = React.useState(false);
@@ -143,21 +144,19 @@ const CouponCard: React.FC<CouponCardEntities> = ({
       },
     });
   };
-  const { isExpired } = React.useMemo(() => {
-    if (!expiredDate) {
-      return {
-        isExpired: false,
-      };
-    }
-    const isExpired =
-      new Date(expiredDate).getTime() - new Date().getTime() < 0;
-    return {
-      isExpired,
-    };
-  }, [expiredDate]);
+  // const { isLessThan7Days } = React.useMemo(() => {
+  //   const isLessThan7Days = moment(expiredDate).diff(moment(), 'days') < 7;
+  //   return {
+  //     isLessThan7Days,
+  //   };
+  // }, [expiredDate]);
   return (
-    <TouchableOpacity onPress={onPressCardCoupon} disabled={disabled}>
-      {/* <View
+    <View
+      style={{
+        marginBottom: 16,
+      }}>
+      <TouchableOpacity onPress={onPressCardCoupon} disabled={disabled}>
+        {/* <View
         style={[
           styles.mainCard,
           {
@@ -359,164 +358,165 @@ const CouponCard: React.FC<CouponCardEntities> = ({
           )}
         </View>
       </View> */}
-      <View
-        style={{
-          width: '100%',
-          flexDirection: 'row',
-          height: 92,
-          marginBottom: 16,
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
-        }}>
-        <Image
-          source={image.couponHeader}
-          style={{
-            height: 92,
-            width: 72,
-          }}
-        />
         <View
-          style={[
-            styles.mainCard,
-            {
-              backgroundColor: disabled
-                ? colors.grey10
-                : new Date(expiredDate).getTime() - new Date().getTime() >
-                    604800000 || disabled
-                ? colors.white
-                : colors.bgOrange,
+          style={{
+            width: '100%',
+            flexDirection: 'row',
+            height: 100,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 1,
+              height: 3,
             },
-          ]}>
-          <View style={styles.content}>
-            <View
-              style={{
-                width: width * 0.45,
-              }}>
-              <Text
-                numberOfLines={1}
+            shadowOpacity: 0.05,
+            shadowRadius: 0.1,
+            elevation: 3,
+          }}>
+          <Image
+            source={image.couponHeader}
+            style={{
+              height: 100,
+              width: 80,
+            }}
+          />
+          <View
+            style={[
+              styles.mainCard,
+              {
+                backgroundColor: disabled
+                  ? colors.greyDivider
+                  : moment(expiredDate).diff(moment(), 'days') > 7 || disabled
+                  ? colors.white
+                  : colors.bgOrange,
+              },
+            ]}>
+            <View style={styles.content}>
+              <View
                 style={{
-                  color: colors.fontBlack,
-                  fontFamily: fonts.AnuphanMedium,
-                  fontSize: 16,
+                  flex: 1,
                 }}>
-                {couponName}{' '}
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    color: colors.fontBlack,
+                    fontFamily: fonts.AnuphanMedium,
+                    fontSize: 16,
+                  }}>
+                  {couponName}{' '}
+                  {/* {couponConditionProvinceList?.[0] && (
+                    <Text
+                      style={{
+                        color: colors.fontBlack,
+                        fontFamily: fonts.AnuphanMedium,
+                        fontSize: 16,
+                        marginBottom: normalize(5),
+                      }}>
+                      {`(${couponConditionProvinceList?.[0]})`}
+                    </Text>
+                  )} */}
+                </Text>
+
                 {couponCode && (
                   <Text
                     style={{
                       color: colors.fontBlack,
+                      fontSize: 14,
                       fontFamily: fonts.AnuphanMedium,
-                      fontSize: 16,
-                      marginBottom: normalize(5),
                     }}>
-                    {`(${couponConditionProvinceList?.[0]})`}
+                    {couponCode}
                   </Text>
                 )}
-              </Text>
-
-              {/* {couponCode && (
-                <Text
-                  style={{
-                    color: colors.fontBlack,
-                    marginBottom: 4,
-                  }}>
-                  {couponCode}
-                </Text>
-              )} */}
-              {couponConditionRai &&
-              checkRai(couponConditionRaiMin!, couponConditionRaiMax!) !==
-                '' ? (
-                <Text
-                  style={{
-                    color: colors.fontBlack,
-                    fontFamily: fonts.SarabunLight,
-                    fontSize: 14,
-                    lineHeight: 24,
-                  }}>
-                  {checkRai(couponConditionRaiMin!, couponConditionRaiMax!)}
-                </Text>
-              ) : (
-                <></>
-              )}
-              <Text
-                style={{
-                  fontFamily: fonts.SarabunLight,
-                  fontSize: 14,
-                  color:
-                    new Date(expiredDate).getTime() - new Date().getTime() >
-                      604800000 || disabled
-                      ? colors.gray
-                      : colors.error,
-                }}>
-                {expired
-                  ? `ใช้ได้ถึง ${generateTime(expiredDate)}`
-                  : new Date(expiredDate).getTime() - new Date().getTime() >
-                      604800000 || disabled
-                  ? `ใช้ได้ถึง ${generateTime(expiredDate)}`
-                  : `เหลือเวลาใช้อีก ${(
-                      (new Date(expiredDate).getTime() - new Date().getTime()) /
-                      86400000
-                    ).toFixed(0)} วัน`}
-              </Text>
-            </View>
-            {keepthis ? (
-              <TouchableOpacity
-                disabled={disabledBtn}
-                onPress={KeepCoupon}
-                style={{
-                  position: 'absolute',
-                  right: normalize(15),
-                }}>
-                <View
-                  style={{
-                    backgroundColor: colors.greenLight,
-                    borderRadius: normalize(10),
-                    paddingHorizontal: normalize(10),
-                    paddingVertical: normalize(6),
-                    marginLeft: normalize(30),
-                  }}>
+                {couponConditionRai &&
+                checkRai(couponConditionRaiMin!, couponConditionRaiMax!) !==
+                  '' ? (
                   <Text
                     style={{
-                      color: colors.white,
-                      fontSize: normalize(16),
-                      fontFamily: fonts.AnuphanMedium,
+                      color: colors.fontBlack,
+                      fontFamily: fonts.SarabunLight,
+                      fontSize: 14,
+                      lineHeight: 24,
                     }}>
-                    ใช้งาน
+                    {checkRai(couponConditionRaiMin!, couponConditionRaiMax!)}
                   </Text>
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <></>
-            )}
-            {expired ? (
-              <Image
-                source={image.expired}
+                ) : (
+                  <></>
+                )}
+                <Text
+                  style={{
+                    marginTop: 2,
+                    fontFamily: fonts.SarabunLight,
+                    fontSize: 14,
+                    color:
+                      moment(expiredDate).diff(moment(), 'days') > 7 || disabled
+                        ? colors.gray
+                        : colors.errorText,
+                  }}>
+                  {expired
+                    ? `ใช้ได้ถึง ${generateTime(expiredDate)}`
+                    : moment(expiredDate).diff(moment(), 'days') > 7 || disabled
+                    ? `ใช้ได้ถึง ${generateTime(expiredDate)}`
+                    : `เหลือเวลาใช้อีก ${moment(expiredDate).diff(
+                        moment(),
+                        'days',
+                      )} วัน`}
+                </Text>
+              </View>
+
+              <View
                 style={{
-                  width: normalize(60),
-                  height: normalize(30),
-                  position: 'absolute',
-                  right: normalize(10),
-                }}
-              />
-            ) : (
-              <></>
-            )}
+                  height: '100%',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                  minWidth: 40,
+                }}>
+                {keepthis && (
+                  <TouchableOpacity
+                    disabled={disabledBtn || !keepthis}
+                    onPress={KeepCoupon}
+                    style={{
+                      right: normalize(16),
+                    }}>
+                    <View
+                      style={
+                        disabledBtn || !keepthis
+                          ? styles.buttonKeepDisable
+                          : styles.buttonKeep
+                      }>
+                      <Text
+                        style={
+                          disabledBtn || !keepthis
+                            ? styles.buttonKeepTextDisable
+                            : styles.buttonKeepText
+                        }>
+                        {titleButtonKeep}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+                {expired && (
+                  <Image
+                    source={image.expired}
+                    resizeMode="contain"
+                    style={{
+                      marginRight: 16,
+                      width: normalize(80),
+                      height: normalize(50),
+                    }}
+                  />
+                )}
+              </View>
+            </View>
           </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   mainCard: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
     borderBottomRightRadius: normalize(8),
     borderTopRightRadius: normalize(8),
     flex: 1,
@@ -528,8 +528,31 @@ const styles = StyleSheet.create({
   content: {
     width: '100%',
     flexDirection: 'row',
-    paddingHorizontal: normalize(15),
-    alignItems: 'center',
+    paddingLeft: 16,
+    paddingVertical: 8,
+    alignItems: 'flex-start',
+  },
+  buttonKeep: {
+    backgroundColor: colors.greenLight,
+    borderRadius: 4,
+    paddingHorizontal: normalize(10),
+    paddingVertical: normalize(6),
+  },
+  buttonKeepText: {
+    color: colors.white,
+    fontSize: normalize(16),
+    fontFamily: fonts.AnuphanBold,
+  },
+  buttonKeepTextDisable: {
+    color: colors.greyDivider,
+    fontSize: normalize(16),
+    fontFamily: fonts.AnuphanBold,
+  },
+  buttonKeepDisable: {
+    backgroundColor: colors.disable,
+    borderRadius: 4,
+    paddingHorizontal: normalize(10),
+    paddingVertical: normalize(6),
   },
 });
 

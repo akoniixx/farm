@@ -1,7 +1,6 @@
 import React, { useMemo, useReducer, useRef, useState } from 'react';
 import {
   Dimensions,
-  FlatList,
   Image,
   Linking,
   Modal,
@@ -29,13 +28,16 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { useIsFocused } from '@react-navigation/native';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import Text from '../../components/Text/Text';
+import { Carousel, Pagination } from 'react-native-snap-carousel';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
-
+  const isCarousel = useRef(null);
   const [reason, setReason] = useState<any>('');
   const noti = route.params?.noti ?? false;
+  const [index, setIndex] = useState(0);
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const [showModalCall, setShowModalCall] = useState(false);
   const [countPlot, setCountPlot] = useState<any>();
@@ -548,7 +550,8 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
               justifyContent: 'space-between',
               paddingHorizontal: 15,
             }}>
-            <Text style={[styles.head]}>แปลงของคุณ ({countPlot})</Text>
+            <Text style={[styles.head]}>แปลงของคุณ</Text>
+            {/* <Text style={[styles.head]}>แปลงของคุณ ({countPlot})</Text> */}
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('AllPlotScreen');
@@ -556,109 +559,219 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
               <Text style={[styles.h1]}>ดูแปลงทั้งหมด</Text>
             </TouchableOpacity>
           </View>
-          {profilestate.plotItem.length === 0 ? (
-            <View>
-              <Image
-                source={image.empty_plot}
-                style={{
-                  width: normalize(138),
-                  height: normalize(120),
-                  alignSelf: 'center',
-                  top: '5%',
-                }}
-              />
-              <Text
-                style={{
-                  fontFamily: font.SarabunLight,
-                  fontSize: normalize(16),
-                  color: colors.gray,
-                  textAlign: 'center',
-                  paddingVertical: normalize(22),
-                }}>{`คุณไม่มีแปลงเกษตร
- กดเพิ่มแปลงเกษตรได้เลย!`}</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('AddPlotScreen');
-                }}>
-                <View style={{ paddingHorizontal: normalize(15) }}>
-                  <View style={[styles.buttonAdd]}>
-                    <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-          ) : (
+          {loading ? (
             <View
               style={{
-                flex: 1,
-                justifyContent: 'space-between',
-                backgroundColor: 'white',
-                alignSelf: 'center',
+                marginVertical: 8,
               }}>
-              <FlatList
-                pagingEnabled={false}
-                keyExtractor={item => item.id}
-                horizontal={true}
-                scrollEnabled={true}
-                contentContainerStyle={{
-                  justifyContent: 'center',
-                }}
-                ItemSeparatorComponent={({ highlighted }) => (
-                  <View style={[highlighted && { marginLeft: 0 }]} />
-                )}
-                showsVerticalScrollIndicator={true}
-                showsHorizontalScrollIndicator={false}
-                data={newPlotList}
-                renderItem={({ item, index }) => (
-                  <View style={{ minHeight: 300 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <View>
-                        <PlotInProfile
-                          key={index}
-                          plotName={
-                            !item[0].plotName
-                              ? 'แปลงที่' +
-                                ' ' +
-                                `${index + 1}` +
-                                ' ' +
-                                item[0].plantName
-                              : item[0].plotName
-                          }
-                          raiAmount={item[0].raiAmount}
-                          locationName={item[0].locationName}
-                          plantName={item[0].plantName}
-                          status={item[0].status}
-                          index={index}
-                        />
+              <SkeletonPlaceholder
+                speed={2000}
+                backgroundColor={colors.skeleton}
+                borderRadius={8}>
+                <>
+                  {[1, 2].map(el => {
+                    return (
+                      <SkeletonPlaceholder.Item
+                        style={{
+                          marginBottom: 10,
+                        }}>
+                        <View style={{ height: 160 }} />
+                      </SkeletonPlaceholder.Item>
+                    );
+                  })}
+                </>
+              </SkeletonPlaceholder>
+            </View>
+          ) : (
+            <>
+              {profilestate.plotItem.length === 0 ? (
+                <View>
+                  <Image
+                    source={image.empty_plot}
+                    style={{
+                      width: normalize(138),
+                      height: normalize(120),
+                      alignSelf: 'center',
+                      top: '5%',
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: font.SarabunLight,
+                      fontSize: normalize(16),
+                      color: colors.gray,
+                      textAlign: 'center',
+                      paddingVertical: normalize(22),
+                    }}>{`คุณไม่มีแปลงเกษตร
+ กดเพิ่มแปลงเกษตรได้เลย!`}</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('AddPlotScreen');
+                    }}>
+                    <View style={{ paddingHorizontal: normalize(15) }}>
+                      <View style={[styles.buttonAdd]}>
+                        <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
                       </View>
                     </View>
-                    {item?.[1] && (
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: 'space-between',
+                      backgroundColor: 'white',
+                      alignSelf: 'center',
+                    }}>
+                    {/* <FlatList
+                  pagingEnabled={false}
+                  keyExtractor={item => item.id}
+                  horizontal={true}
+                  scrollEnabled={true}
+                  contentContainerStyle={{
+                    justifyContent: 'center',
+                  }}
+                  ItemSeparatorComponent={({ highlighted }) => (
+                    <View style={[highlighted && { marginLeft: 0 }]} />
+                  )}
+                  showsVerticalScrollIndicator={true}
+                  showsHorizontalScrollIndicator={false}
+                  data={newPlotList}
+                  renderItem={({ item, index }) => (
+                    <View style={{ minHeight: 300 }}>
                       <View style={{ flexDirection: 'row' }}>
                         <View>
                           <PlotInProfile
                             key={index}
                             plotName={
-                              !item[1].plotName
+                              !item[0].plotName
                                 ? 'แปลงที่' +
                                   ' ' +
                                   `${index + 1}` +
                                   ' ' +
-                                  item[1].plantName
-                                : item[1].plotName
+                                  item[0].plantName
+                                : item[0].plotName
                             }
-                            raiAmount={item[1].raiAmount}
-                            locationName={item[1].locationName}
-                            plantName={item[1].plantName}
-                            status={item[1].status}
+                            raiAmount={item[0].raiAmount}
+                            locationName={item[0].locationName}
+                            plantName={item[0].plantName}
+                            status={item[0].status}
                             index={index}
                           />
                         </View>
                       </View>
-                    )}
+                      {item?.[1] && (
+                        <View style={{ flexDirection: 'row' }}>
+                          <View>
+                            <PlotInProfile
+                              key={index}
+                              plotName={
+                                !item[1].plotName
+                                  ? 'แปลงที่' +
+                                    ' ' +
+                                    `${index + 1}` +
+                                    ' ' +
+                                    item[1].plantName
+                                  : item[1].plotName
+                              }
+                              raiAmount={item[1].raiAmount}
+                              locationName={item[1].locationName}
+                              plantName={item[1].plantName}
+                              status={item[1].status}
+                              index={index}
+                            />
+                          </View>
+                        </View>
+                      )}
+                    </View>
+                  )}
+                /> */}
+                    <Carousel
+                      ref={isCarousel}
+                      vertical={false}
+                      onSnapToItem={index => setIndex(index)}
+                      data={newPlotList}
+                      itemWidth={screenWidth - 30}
+                      sliderWidth={screenWidth}
+                      renderItem={({ item, index }: any) => {
+                        return (
+                          <View style={{ minHeight: 300 }}>
+                            <View style={{ flexDirection: 'row' }}>
+                              <View>
+                                <PlotInProfile
+                                  key={index}
+                                  plotName={
+                                    !item[0].plotName
+                                      ? 'แปลงที่' +
+                                        ' ' +
+                                        `${index + 1}` +
+                                        ' ' +
+                                        item[0].plantName
+                                      : item[0].plotName
+                                  }
+                                  raiAmount={item[0].raiAmount}
+                                  locationName={item[0].locationName}
+                                  plantName={item[0].plantName}
+                                  status={item[0].status}
+                                  index={index}
+                                />
+                              </View>
+                            </View>
+                            {item?.[1] && (
+                              <View style={{ flexDirection: 'row' }}>
+                                <View>
+                                  <PlotInProfile
+                                    key={index}
+                                    plotName={
+                                      !item[1].plotName
+                                        ? 'แปลงที่' +
+                                          ' ' +
+                                          `${index + 1}` +
+                                          ' ' +
+                                          item[1].plantName
+                                        : item[1].plotName
+                                    }
+                                    raiAmount={item[1].raiAmount}
+                                    locationName={item[1].locationName}
+                                    plantName={item[1].plantName}
+                                    status={item[1].status}
+                                    index={index}
+                                  />
+                                </View>
+                              </View>
+                            )}
+                          </View>
+                        );
+                      }}
+                    />
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        top: -5,
+                        marginVertical: -20,
+                      }}>
+                      <Pagination
+                        dotsLength={newPlotList.length}
+                        activeDotIndex={index}
+                        carouselRef={isCarousel}
+                        inactiveDotColor={colors.grey40}
+                        dotColor={colors.greenLight}
+                        dotStyle={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: 5,
+                          marginHorizontal: -2,
+                        }}
+                        inactiveDotOpacity={0.4}
+                        inactiveDotScale={0.9}
+                        tappableDots={true}
+                      />
+                    </View>
                   </View>
-                )}
-              />
-            </View>
+                </>
+              )}
+            </>
           )}
         </View>
         <View
@@ -875,11 +988,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
           </View>
         </Modal>
       </ScrollView>
-      <Spinner
-        visible={loading}
-        textContent={'Loading...'}
-        textStyle={{ color: '#FFF' }}
-      />
     </SafeAreaView>
   );
 };

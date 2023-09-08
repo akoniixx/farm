@@ -241,7 +241,7 @@ const SearchCouponScreen: React.FC<any> = ({ navigation }) => {
             style={{
               backgroundColor: '#F6FCF8',
               height: '100%',
-              padding: normalize(17),
+              padding: 16,
             }}>
             <CouponCard
               id={data.id}

@@ -3,6 +3,7 @@ import {
   FlatList,
   Image,
   Modal,
+  RefreshControl,
   StyleSheet,
   View,
 } from 'react-native';
@@ -20,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import VerifyStatus from '../../components/Modal/VerifyStatus';
 import { mixpanel } from '../../../mixpanel';
 import Text from '../../components/Text/Text';
+import LoadingSkeletonCoupon from './LoadingSkeletonCoupon';
 
 const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
@@ -28,12 +30,24 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
   const [modal, setModal] = useState<boolean>(false);
   const [modalVerify, setModalVerify] = useState<boolean>(false);
   const [status, setStatus] = useState();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
-  const getData = (page: number, take: number, used?: boolean) => {
-    getMyCoupon(page, take, used).then(res => {
-      setCount(res.count);
-      setData(res.data);
-    });
+  const getData = async (page: number, take: number, used?: boolean) => {
+    setLoading(true);
+    getMyCoupon(page, take, used)
+      .then(res => {
+        setCount(res.count);
+        setData(res.data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getData(1, 5, false);
+    setRefreshing(false);
   };
   useEffect(() => {
     getData(page, 5, false);
@@ -98,86 +112,117 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
           setModal(false);
         }}
       />
-      {data.length != 0 ? (
+      {loading ? (
         <View
           style={{
-            padding: normalize(17),
+            height: '100%',
+            marginTop: 10,
           }}>
-          <FlatList
-            onScrollEndDrag={onScrollEnd}
-            data={data}
-            ListFooterComponent={<View style={{ height: normalize(250) }} />}
-            renderItem={({ item }) => {
-              return (
-                <CouponCard
-                  id={item.promotion.id}
-                  couponCode={
-                    item.promotion.promotionType === 'ONLINE'
-                      ? item.promotion.couponCode
-                      : item.offlineCode
-                  }
-                  couponName={item.promotion.couponName}
-                  couponType={item.promotion.couponType}
-                  promotionType={item.promotion.promotionType}
-                  promotionStatus={item.promotion.promotionStatus}
-                  discountType={item.promotion.discountType}
-                  discount={item.promotion.discount}
-                  count={item.promotion.count}
-                  keep={item.promotion.keep}
-                  used={item.promotion.used}
-                  startDate={item.promotion.startDate}
-                  expiredDate={item.promotion.expiredDate}
-                  description={item.promotion.description}
-                  condition={item.promotion.condition}
-                  conditionSpecificFarmer={
-                    item.promotion.conditionSpecificFarmer
-                  }
-                  couponConditionRai={item.promotion.couponConditionRai}
-                  couponConditionRaiMin={item.promotion.couponConditionRaiMin}
-                  couponConditionRaiMax={item.promotion.couponConditionRaiMax}
-                  couponConditionService={item.promotion.couponConditionService}
-                  couponConditionServiceMin={
-                    item.promotion.couponConditionServiceMin
-                  }
-                  couponConditionServiceMax={
-                    item.promotion.couponConditionServiceMax
-                  }
-                  couponConditionPlant={item.promotion.couponConditionPlant}
-                  couponConditionPlantList={
-                    item.promotion.couponConditionPlantList
-                  }
-                  couponConditionProvince={
-                    item.promotion.couponConditionProvince
-                  }
-                  couponConditionProvinceList={
-                    item.promotion.couponConditionProvinceList
-                  }
-                  keepthis={false}
-                  disabled={false}
-                />
-              );
-            }}
-            keyExtractor={item => item.promotion.id}
-          />
+          <LoadingSkeletonCoupon />
         </View>
       ) : (
-        <View style={styles.empty}>
-          <Image
-            source={image.empty_coupon}
-            style={{ width: 130, height: 122 }}
-          />
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingVertical: 10,
-            }}>
-            <Text style={styles.textEmpty}>ไม่มีคูปองเก็บสะสม</Text>
-            <Text style={styles.textEmpty}>ติดตามคูปองและสิทธิพิเศษมากมาย</Text>
-            <Text style={styles.textEmpty}>ได้ที่หน้าโปรโมชั่น เร็วๆนี้ </Text>
-          </View>
-        </View>
+        <>
+          {data.length !== 0 ? (
+            <View>
+              <FlatList
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+                onScrollEndDrag={onScrollEnd}
+                data={data}
+                contentContainerStyle={{
+                  padding: 16,
+                }}
+                ListFooterComponent={
+                  <View style={{ height: normalize(250) }} />
+                }
+                renderItem={({ item }) => {
+                  return (
+                    <CouponCard
+                      id={item.promotion.id}
+                      couponCode={
+                        item.promotion.promotionType === 'ONLINE'
+                          ? item.promotion.couponCode
+                          : item.offlineCode
+                      }
+                      couponName={item.promotion.couponName}
+                      couponType={item.promotion.couponType}
+                      promotionType={item.promotion.promotionType}
+                      promotionStatus={item.promotion.promotionStatus}
+                      discountType={item.promotion.discountType}
+                      discount={item.promotion.discount}
+                      count={item.promotion.count}
+                      keep={item.promotion.keep}
+                      used={item.promotion.used}
+                      startDate={item.promotion.startDate}
+                      expiredDate={item.promotion.expiredDate}
+                      description={item.promotion.description}
+                      condition={item.promotion.condition}
+                      conditionSpecificFarmer={
+                        item.promotion.conditionSpecificFarmer
+                      }
+                      couponConditionRai={item.promotion.couponConditionRai}
+                      couponConditionRaiMin={
+                        item.promotion.couponConditionRaiMin
+                      }
+                      couponConditionRaiMax={
+                        item.promotion.couponConditionRaiMax
+                      }
+                      couponConditionService={
+                        item.promotion.couponConditionService
+                      }
+                      couponConditionServiceMin={
+                        item.promotion.couponConditionServiceMin
+                      }
+                      couponConditionServiceMax={
+                        item.promotion.couponConditionServiceMax
+                      }
+                      couponConditionPlant={item.promotion.couponConditionPlant}
+                      couponConditionPlantList={
+                        item.promotion.couponConditionPlantList
+                      }
+                      couponConditionProvince={
+                        item.promotion.couponConditionProvince
+                      }
+                      couponConditionProvinceList={
+                        item.promotion.couponConditionProvinceList
+                      }
+                      keepthis={false}
+                      disabled={false}
+                    />
+                  );
+                }}
+                keyExtractor={item => item.promotion.id}
+              />
+            </View>
+          ) : (
+            <View style={styles.empty}>
+              <Image
+                source={image.empty_coupon}
+                style={{ width: 130, height: 122 }}
+              />
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingVertical: 10,
+                }}>
+                <Text style={styles.textEmpty}>ไม่มีคูปองเก็บสะสม</Text>
+                <Text style={styles.textEmpty}>
+                  ติดตามคูปองและสิทธิพิเศษมากมาย
+                </Text>
+                <Text style={styles.textEmpty}>
+                  ได้ที่หน้าโปรโมชั่น เร็วๆนี้{' '}
+                </Text>
+              </View>
+            </View>
+          )}
+        </>
       )}
+
       <View
         style={{
           width: Dimensions.get('screen').width,

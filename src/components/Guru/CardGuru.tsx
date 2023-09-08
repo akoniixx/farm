@@ -4,6 +4,7 @@ import { font, icons, image } from '../../assets';
 import colors from '../../assets/colors/colors';
 import { normalize } from '../../functions/Normalize';
 import Text from '../Text/Text';
+import ProgressiveImage from '../ProgressingImage/ProgressingImage';
 interface guruData {
   index: any;
   background: any;
@@ -34,11 +35,12 @@ export const CardGuru: React.FC<guruData> = ({
         paddingVertical: 5,
       }}>
       <View style={styles.card}>
-        <Image
+        <ProgressiveImage
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
           style={{ height: 130 }}
           resizeMode="cover"
+          borderRadius={0}
           source={background === '' ? image.bg_droner : { uri: background }}
         />
         <View style={{ paddingHorizontal: 15, top: 15 }}>
@@ -76,11 +78,12 @@ export const CardPinGuru: React.FC<guruPinData> = ({
         paddingVertical: 5,
       }}>
       <View style={styles.card}>
-        <Image
+        <ProgressiveImage
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
           style={{ height: 130 }}
           resizeMode="cover"
+          borderRadius={0}
           source={background === '' ? image.bg_droner : { uri: background }}
         />
         <View style={{ paddingHorizontal: 15, top: 15 }}>

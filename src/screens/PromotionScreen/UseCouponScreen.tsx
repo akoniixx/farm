@@ -25,6 +25,7 @@ import { PlotDatasource } from '../../datasource/PlotDatasource';
 import { mixpanel } from '../../../mixpanel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Text from '../../components/Text/Text';
+import LoadingSkeletonCoupon from './LoadingSkeletonCoupon';
 
 const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
   const conditionCheck = route.params;
@@ -350,13 +351,23 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
         }}>
         <Text style={styles.error}>{couponInfo.err}</Text>
       </View>
+
       <View
         style={{
           height: '100%',
-          padding: normalize(17),
+          marginTop: 10,
+        }}>
+        <LoadingSkeletonCoupon />
+      </View>
+      <View
+        style={{
+          height: '100%',
           backgroundColor: colors.bgGreen,
         }}>
         <FlatList
+          contentContainerStyle={{
+            padding: 16,
+          }}
           data={data}
           ListFooterComponent={<View style={{ height: normalize(250) }} />}
           onScrollEndDrag={onScrollEnd}
@@ -427,7 +438,7 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
                   <Text
                     style={{
                       fontFamily: fonts.SarabunMedium,
-                      color: '#DE350B',
+                      color: colors.errorText,
                       fontSize: normalize(16),
                     }}>
                     ไม่ตรงตามเงื่อนไขที่สามารถใช้คูปองได้

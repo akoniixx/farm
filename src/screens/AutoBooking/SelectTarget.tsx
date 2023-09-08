@@ -20,9 +20,11 @@ import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { CropDatasource } from '../../datasource/CropDatasource';
 import { PURPOSE_SPRAY_CHECKBOX } from '../../definitions/timeSpray';
 import Text from '../../components/Text/Text';
+import useTimeSpent from '../../hook/useTimeSpent';
 
 const SelectTarget: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner;
+  const timeSpent = useTimeSpent();
   const profile = route.params.profile;
   const [checkBoxList, setCheckBoxList] = useState<
     { id: number; label: string }[]
@@ -58,6 +60,11 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
         name: periodSprayValue.label,
       },
     }));
+    mixpanel.track('SelectTargetScreen_ButtonNext_tabbed', {
+      ...taskData,
+      timeSpent: timeSpent,
+      navigateTo: 'DetailTaskScreen',
+    });
     navigation.navigate('DetailTaskScreen', {
       isSelectDroner: isSelectDroner,
       profile: profile,
@@ -98,7 +105,11 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
       <StepIndicatorHead
         currentPosition={2}
         onPressBack={() => {
-          mixpanel.track('Tab back from select target screen');
+          mixpanel.track('SelectTargetScreen_ButtonBack_tabbed', {
+            ...taskData,
+            timeSpent: timeSpent,
+            navigateTo: 'SelectPlantScreen',
+          });
           navigation.goBack();
         }}
         label={'เป้าหมายการพ่น'}
@@ -141,7 +152,9 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
                       },
                     ]}
                     onPress={() => {
-                      mixpanel.track('Tab select target spray');
+                      mixpanel.track('SelectTargetScreen_SelectTarget_tabbed', {
+                        target: option.label,
+                      });
                       if (selectedOption.includes(option.label.toString())) {
                         setSelectedOption(prev =>
                           prev.filter(item => item !== option.label.toString()),
@@ -191,7 +204,9 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
                           ...prev,
                           { id: prev.length + 1, label: otherPlant },
                         ]);
-                        mixpanel.track('Tab add other target spray');
+                        mixpanel.track('SelectTargetScreen_AddTarget_tabbed', {
+                          otherPlant: otherPlant,
+                        });
                         setOtherPlant('');
                         setSelectedOption(prev => [...prev, otherPlant]);
                       }}
@@ -222,7 +237,6 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
               <TouchableOpacity
                 style={styles.injectionInput}
                 onPress={async () => {
-                  mixpanel.track('Tab select purpose spray');
                   const currentValue: any = await SheetManager.show(
                     'sheet-select-injection',
                     {
@@ -232,6 +246,13 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
                       },
                     },
                   );
+                  mixpanel.track(
+                    'SelectTargetScreen_SelectPeriodSpray_tabbed',
+                    {
+                      periodSpray: currentValue,
+                    },
+                  );
+
                   setPeriodSprayValue(currentValue);
                 }}>
                 {periodSprayValue?.label ? (
@@ -268,7 +289,12 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
               </Text>
               <TouchableOpacity
                 onPress={() => {
-                  mixpanel.track('Tab เกษตรกรเตรียมยาเอง');
+                  mixpanel.track(
+                    'SelectTargetScreen_SelectPreparationBy_tabbed',
+                    {
+                      preparationBy: 'เกษตรกรเตรียมยาเอง',
+                    },
+                  );
                   setSelectedCheckbox('เกษตรกรเตรียมยาเอง');
                 }}>
                 <View
@@ -300,7 +326,12 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  mixpanel.track('Tab นักบินโดรนเตรียมให้');
+                  mixpanel.track(
+                    'SelectTargetScreen_SelectPreparationBy_tabbed',
+                    {
+                      preparationBy: 'นักบินโดรนเตรียมให้',
+                    },
+                  );
                   setSelectedCheckbox('นักบินโดรนเตรียมให้');
                 }}>
                 <View
@@ -345,7 +376,6 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
                 }
                 color={colors.greenLight}
                 onPress={() => {
-                  mixpanel.track('Tab submit from select target screen');
                   onSubmit();
                 }}
                 style={{}}

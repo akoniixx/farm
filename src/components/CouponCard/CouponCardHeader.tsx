@@ -16,6 +16,7 @@ import * as RootNavigation from '../../navigations/RootNavigation';
 import { keepCoupon } from '../../datasource/PromotionDatasource';
 import { width } from '../../functions/Normalize';
 import Text from '../Text/Text';
+import moment from 'moment';
 
 const CouponCardHeader: React.FC<CouponCardEntities> = ({
   id,
@@ -66,17 +67,24 @@ const CouponCardHeader: React.FC<CouponCardEntities> = ({
   };
   return (
     <View
+      style={{
+        marginBottom: 16,
+      }}>
+      <View>
+        {/* <View
       style={[
         styles.mainCard,
         {
           backgroundColor: disabled
             ? colors.grey10
-            : new Date(expiredDate).getTime() - new Date().getTime() > 604800000
+            : new Date(expiredDate).getTime() - new Date().getTime() >
+                604800000 || disabled
             ? colors.white
             : colors.bgOrange,
           borderColor: disabled
             ? colors.grey5
-            : new Date(expiredDate).getTime() - new Date().getTime() > 604800000
+            : new Date(expiredDate).getTime() - new Date().getTime() >
+                604800000 || disabled
             ? colors.grey20
             : '#FDC382',
           borderWidth: normalize(1),
@@ -89,7 +97,14 @@ const CouponCardHeader: React.FC<CouponCardEntities> = ({
           right: normalize(80),
         }}>
         <Image
-          source={icons.halfcirclegreen1}
+          source={
+            expired
+              ? icons.halfcircle1
+              : new Date(expiredDate).getTime() - new Date().getTime() >
+                  604800000 || disabled
+              ? icons.halfcircle1
+              : icons.halfcircleorange1
+          }
           style={{
             width: normalize(20),
             height: normalize(10),
@@ -103,7 +118,14 @@ const CouponCardHeader: React.FC<CouponCardEntities> = ({
           right: normalize(80),
         }}>
         <Image
-          source={icons.halfcirclegreen2}
+          source={
+            expired
+              ? icons.halfcircle2
+              : new Date(expiredDate).getTime() - new Date().getTime() >
+                  604800000 || disabled
+              ? icons.halfcircle2
+              : icons.halfcircleorange2
+          }
           style={{
             width: normalize(20),
             height: normalize(10),
@@ -115,16 +137,22 @@ const CouponCardHeader: React.FC<CouponCardEntities> = ({
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            height: normalize(48),
-            width: normalize(48),
-            borderRadius: normalize(24),
-            backgroundColor: colors.bgGreen,
+            height: normalize(60),
+            width: normalize(60),
+            borderRadius: normalize(30),
+            backgroundColor:
+              couponType === 'INJECTION' ? colors.bgGreen : colors.bgOrange,
             marginRight: normalize(20),
           }}>
           <Image
-            source={icons.injectionicon}
+            source={
+              couponType === 'INJECTION'
+                ? icons.injectionicon
+                : icons.drugicon
+            }
             style={{
-              width: normalize(17),
+              width:
+                couponType === 'INJECTION' ? normalize(32) : normalize(38),
               height: normalize(30),
             }}
           />
@@ -143,7 +171,8 @@ const CouponCardHeader: React.FC<CouponCardEntities> = ({
             }}>
             {couponName}
           </Text>
-          {couponConditionProvinceList?.length === 1 ? (
+          {couponConditionProvince &&
+          couponConditionProvinceList?.length === 1 ? (
             <Text
               style={{
                 color: colors.fontBlack,
@@ -156,7 +185,17 @@ const CouponCardHeader: React.FC<CouponCardEntities> = ({
           ) : (
             <></>
           )}
-          {checkRai(couponConditionRaiMin!, couponConditionRaiMax!) != '' ? (
+          {couponCode && (
+            <Text
+              style={{
+                color: colors.fontBlack,
+                marginBottom: 4,
+              }}>
+              {couponCode}
+            </Text>
+          )}
+          {couponConditionRai &&
+          checkRai(couponConditionRaiMin!, couponConditionRaiMax!) !== '' ? (
             <Text
               style={{
                 color: colors.fontBlack,
@@ -175,27 +214,24 @@ const CouponCardHeader: React.FC<CouponCardEntities> = ({
               fontSize: normalize(18),
               color:
                 new Date(expiredDate).getTime() - new Date().getTime() >
-                604800000
+                  604800000 || disabled
                   ? colors.gray
                   : colors.error,
             }}>
             {expired
               ? `ใช้ได้ถึง ${generateTime(expiredDate)}`
               : new Date(expiredDate).getTime() - new Date().getTime() >
-                604800000
+                  604800000 || disabled
               ? `ใช้ได้ถึง ${generateTime(expiredDate)}`
-              : `เหลือเวลาใช้อีก ${((new Date(expiredDate).getTime() -
-                  new Date().getTime()) /
-                  86400000 >
-                0
-                  ? (new Date(expiredDate).getTime() - new Date().getTime()) /
-                    86400000
-                  : 0
+              : `เหลือเวลาใช้อีก ${(
+                  (new Date(expiredDate).getTime() - new Date().getTime()) /
+                  86400000
                 ).toFixed(0)} วัน`}
           </Text>
         </View>
         {keepthis ? (
           <TouchableOpacity
+            disabled={disabledBtn}
             onPress={KeepCoupon}
             style={{
               position: 'absolute',
@@ -228,11 +264,142 @@ const CouponCardHeader: React.FC<CouponCardEntities> = ({
             style={{
               width: normalize(60),
               height: normalize(30),
+              position: 'absolute',
+              right: normalize(10),
             }}
           />
         ) : (
           <></>
         )}
+      </View>
+    </View> */}
+        <View
+          style={{
+            width: '100%',
+            flexDirection: 'row',
+            height: 100,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 1,
+              height: 3,
+            },
+            shadowOpacity: 0.05,
+            shadowRadius: 0.1,
+            elevation: 3,
+          }}>
+          <Image
+            source={image.couponHeader}
+            style={{
+              height: 100,
+              width: 80,
+            }}
+          />
+          <View
+            style={[
+              styles.mainCard,
+              {
+                backgroundColor:
+                  moment(expiredDate).diff(moment(), 'days') > 7 || disabled
+                    ? colors.white
+                    : colors.bgOrange,
+              },
+            ]}>
+            <View style={styles.content}>
+              <View
+                style={{
+                  flex: 1,
+                }}>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    color: colors.fontBlack,
+                    fontFamily: fonts.AnuphanMedium,
+                    fontSize: 16,
+                  }}>
+                  {couponName}{' '}
+                  {/* {couponConditionProvinceList?.[0] && (
+                    <Text
+                      style={{
+                        color: colors.fontBlack,
+                        fontFamily: fonts.AnuphanMedium,
+                        fontSize: 16,
+                        marginBottom: normalize(5),
+                      }}>
+                      {`(${couponConditionProvinceList?.[0]})`}
+                    </Text>
+                  )} */}
+                </Text>
+
+                {couponCode && (
+                  <Text
+                    style={{
+                      color: colors.fontBlack,
+                      fontSize: 14,
+                      fontFamily: fonts.AnuphanMedium,
+                    }}>
+                    {couponCode}
+                  </Text>
+                )}
+                {couponConditionRai &&
+                checkRai(couponConditionRaiMin!, couponConditionRaiMax!) !==
+                  '' ? (
+                  <Text
+                    style={{
+                      color: colors.fontBlack,
+                      fontFamily: fonts.SarabunLight,
+                      fontSize: 14,
+                      lineHeight: 24,
+                    }}>
+                    {checkRai(couponConditionRaiMin!, couponConditionRaiMax!)}
+                  </Text>
+                ) : (
+                  <></>
+                )}
+                <Text
+                  style={{
+                    fontFamily: fonts.SarabunLight,
+                    fontSize: 14,
+                    color:
+                      moment(expiredDate).diff(moment(), 'days') > 7 || disabled
+                        ? colors.gray
+                        : colors.errorText,
+                  }}>
+                  {expired
+                    ? `ใช้ได้ถึง ${generateTime(expiredDate)}`
+                    : moment(expiredDate).diff(moment(), 'days') > 7 || disabled
+                    ? `ใช้ได้ถึง ${generateTime(expiredDate)}`
+                    : `เหลือเวลาใช้อีก ${moment(expiredDate).diff(
+                        moment(),
+                        'days',
+                      )} วัน`}
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  height: '100%',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                  width: 80,
+                }}
+              />
+
+              {/* {expired ? (
+            <Image
+              source={image.expired}
+              style={{
+                width: normalize(60),
+                height: normalize(30),
+                position: 'absolute',
+                right: normalize(10),
+              }}
+            />
+          ) : (
+            <></>
+          )} */}
+            </View>
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -240,14 +407,11 @@ const CouponCardHeader: React.FC<CouponCardEntities> = ({
 
 const styles = StyleSheet.create({
   mainCard: {
-    paddingVertical: normalize(20),
-    paddingHorizontal: normalize(10),
-    minHeight: normalize(121),
-    borderRadius: normalize(12),
-    marginVertical: normalize(10),
-    position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
+    borderBottomRightRadius: normalize(8),
+    borderTopRightRadius: normalize(8),
+    flex: 1,
   },
   cardImg: {
     width: Dimensions.get('window').width - normalize(35),

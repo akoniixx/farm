@@ -145,7 +145,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         .finally(() => setLoading(false));
     };
     getMaintenance();
-  }, [reload]);
+  }, []);
 
   const getNotificationData = async () => {
     FCMtokenDatasource.getNotificationList({
@@ -488,6 +488,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     } else {
                       mixpanel.track('MainScreen_ButtonBookingTask_Press', {
                         navigateTo: 'SelectDateScreen',
+                        type: 'auto-booking',
                       });
                       navigation.navigate('SelectDateScreen', {
                         isSelectDroner: false,
