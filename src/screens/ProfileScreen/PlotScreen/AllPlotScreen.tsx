@@ -21,12 +21,18 @@ import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
 
 import PlotsItemEdit from '../../../components/Plots/PlotsItemEdit';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import { callcenterNumber } from '../../../definitions/callCenterNumber';
+import {
+  callCenterNumberWithHyphens,
+  callcenterNumber,
+} from '../../../definitions/callCenterNumber';
 import { useFocusEffect } from '@react-navigation/native';
 import Text from '../../../components/Text/Text';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { mixpanel } from '../../../../mixpanel';
+import useTimeSpent from '../../../hook/useTimeSpent';
 
 const AllPlotScreen: React.FC<any> = ({ navigation }) => {
+  const timeSpent = useTimeSpent();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
   const [showModalCall, setShowModalCall] = useState(false);
@@ -95,7 +101,11 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
               alignContent: 'center',
               top: 30,
             }}>
-            <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
+            <TouchableOpacity
+              onPress={() => {
+                mixpanel.track('AllPlotScreen_ButtonBack_tapped');
+                navigation.navigate('MainScreen');
+              }}>
               <Image
                 source={icons.arrowLeft}
                 style={{
@@ -226,6 +236,10 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                   <TouchableOpacity
                     onPress={() => {
                       setFirstRender(true);
+                      mixpanel.track('AllPlotScreen_ButtonAddPlot_tapped', {
+                        timeSpent: timeSpent,
+                        navigateTo: 'AddPlotScreen',
+                      });
                       navigation.navigate('AddPlotScreen');
                     }}>
                     <View style={[styles.buttonAdd]}>
@@ -252,7 +266,10 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                         }}
                         onPress={() => {
                           setFirstRender(true);
-
+                          mixpanel.track('AllPlotScreen_ButtonAddPlot_tapped', {
+                            timeSpent: timeSpent,
+                            navigateTo: 'AddPlotScreen',
+                          });
                           navigation.navigate('AddPlotScreen');
                         }}>
                         <View
@@ -311,7 +328,16 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                                     'plot_id',
                                     `${item.id}`,
                                   );
-                                  navigation.push('EditPlotScreen');
+                                  mixpanel.track(
+                                    'AllPlotScreen_ButtonPlot_tapped',
+                                    {
+                                      timeSpent: timeSpent,
+                                      navigateTo: 'EditPlotScreen',
+                                      ...item,
+                                      plotId: item.id,
+                                    },
+                                  );
+                                  navigation.navigate('EditPlotScreen');
                                 }}>
                                 <PlotsItemEdit
                                   key={index}
@@ -357,6 +383,9 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
             }}>
             <TouchableOpacity
               onPress={() => {
+                mixpanel.track('AllPlotScreen_ButtonCall_tapped', {
+                  timeSpent: timeSpent,
+                });
                 Linking.openURL(`tel:${callcenterNumber}`);
               }}
               style={{
@@ -389,7 +418,7 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                     color: '#007AFF',
                     fontSize: 20,
                   }}>
-                  โทร +66 2-233-9000
+                  โทร {callCenterNumberWithHyphens}
                 </Text>
               </View>
             </TouchableOpacity>

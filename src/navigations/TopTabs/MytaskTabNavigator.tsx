@@ -7,6 +7,7 @@ import { normalize } from '../../functions/Normalize';
 import FinishTaskScreen from '../../screens/MyTaskScreen/FinishTaskScreen';
 import InprogressScreen from '../../screens/MyTaskScreen/InprogressScreen';
 import Text from '../../components/Text/Text';
+import { mixpanel } from '../../../mixpanel';
 
 const renderTabBar = (props: any) => (
   <TabBar
@@ -54,7 +55,12 @@ const MyTaskTapNavigator: React.FC<any> = ({}) => {
       navigationState={{ index, routes }}
       renderTabBar={renderTabBar}
       renderScene={renderScene}
-      onIndexChange={setIndex}
+      onIndexChange={idx => {
+        mixpanel.track('MyTaskScreen_TabViewOnIndexChange_tapped', {
+          tab: routes[idx].title,
+        });
+        setIndex(idx);
+      }}
       initialLayout={{ width: layout.width }}
       lazy
     />

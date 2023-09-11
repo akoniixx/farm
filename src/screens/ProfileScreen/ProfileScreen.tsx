@@ -13,7 +13,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { normalize } from '../../functions/Normalize';
 import CustomHeader from '../../components/CustomHeader';
-import { Avatar } from '@rneui/themed';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { ScrollView } from 'react-native';
 import { StatusObject } from '../../components/Plots/Plots';
@@ -24,14 +23,17 @@ import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { useEffect } from 'react';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import PlotInProfile from '../../components/Plots/PlotsInProfile';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { useIsFocused } from '@react-navigation/native';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import Text from '../../components/Text/Text';
 import { Carousel, Pagination } from 'react-native-snap-carousel';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import { mixpanel } from '../../../mixpanel';
+import useTimeSpent from '../../hook/useTimeSpent';
 
 const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
+  const timeSpent = useTimeSpent();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
   const isCarousel = useRef(null);
@@ -125,6 +127,9 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   }, [isFocused]);
 
   const openGooglePlay = () => {
+    mixpanel.track('ProfileScreen_ButtonDownloadApp_tapped', {
+      timeSpent: timeSpent,
+    });
     if (Platform.OS === 'ios') {
       Linking.openURL(
         `https://apps.apple.com/th/app/iconkaset-droner/id6443516628?l=th`,
@@ -165,147 +170,198 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
       )}
       <ScrollView>
         <View style={styles.section1}>
-          <Avatar
-            size={normalize(80)}
-            source={
-              profilestate.image === ''
-                ? icons.avatar
-                : { uri: profilestate.image }
-            }
-            avatarStyle={{
+          <ProgressiveImage
+            source={{
+              uri: profilestate.image,
+            }}
+            borderRadius={50}
+            style={{
+              width: normalize(80),
+              height: normalize(80),
               borderRadius: normalize(40),
-              borderColor: colors.greenLight,
-              borderWidth: 1,
             }}
           />
           <View
             style={{
               flexDirection: 'row',
               width: screenWidth,
+              marginTop: 16,
             }}>
             <View
               style={{
-                flexDirection: 'column',
-                marginLeft: normalize(15),
+                marginLeft: 16,
               }}>
-              <Text style={[styles.text]}>{profilestate.name} </Text>
-              {StatusObject(profilestate.status).status === 'ไม่อนุมัติ' ? (
+              {loading ? (
                 <View
                   style={{
-                    marginTop: normalize(10),
-                    height: normalize(28),
-                    borderRadius: normalize(15),
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderWidth: 1,
-                    borderColor: StatusObject(profilestate.status).fontColor,
-                    backgroundColor: StatusObject(profilestate.status).colorBg,
-                    flexDirection: 'row',
+                    flex: 1,
+                    minWidth: 200,
                   }}>
-                  {StatusObject(profilestate.status).status ===
-                  'ตรวจสอบแล้ว' ? (
-                    <Image
-                      source={icons.correct}
-                      style={{ width: 16, height: 16, right: 5 }}
-                    />
-                  ) : StatusObject(profilestate.status).status ===
-                    'รอการตรวจสอบ' ? (
-                    <Image
-                      source={icons.warning}
-                      style={{ width: 16, height: 16, right: 5 }}
-                    />
-                  ) : StatusObject(profilestate.status).status ===
-                    'ไม่อนุมัติ' ? (
-                    <Image
-                      source={icons.wrong}
-                      style={{ width: 16, height: 16, right: 5 }}
-                    />
-                  ) : (
-                    <Image
-                      style={{
-                        width: 16,
-                        height: 16,
-                        right: 5,
-                        tintColor: colors.bg,
-                      }}
-                    />
-                  )}
-
-                  <Text
-                    style={{
-                      color: StatusObject(profilestate.status).fontColor,
-                      fontFamily: font.AnuphanBold,
-                      fontSize: normalize(14),
-                    }}>
-                    {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
-                      ? 'ยืนยันตัวตนสำเร็จ'
-                      : StatusObject(profilestate.status).status ===
-                        'รอการตรวจสอบ'
-                      ? 'รอการตรวจสอบ'
-                      : StatusObject(profilestate.status).status ===
-                        'ไม่อนุมัติ'
-                      ? 'ยืนยันตัวตนไม่สำเร็จ'
-                      : 'ปิดการใช้งาน'}
-                  </Text>
+                  <SkeletonPlaceholder
+                    speed={2000}
+                    borderRadius={8}
+                    backgroundColor={colors.skeleton}>
+                    <>
+                      <SkeletonPlaceholder.Item
+                        style={{
+                          width: '100%',
+                          marginBottom: 16,
+                        }}>
+                        <View
+                          style={{
+                            width: 150,
+                            height: 20,
+                          }}
+                        />
+                      </SkeletonPlaceholder.Item>
+                      <SkeletonPlaceholder.Item
+                        style={{
+                          width: '100%',
+                        }}>
+                        <View
+                          style={{
+                            width: 160,
+                            height: 20,
+                          }}
+                        />
+                      </SkeletonPlaceholder.Item>
+                    </>
+                  </SkeletonPlaceholder>
                 </View>
               ) : (
-                <View
-                  style={{
-                    marginTop: normalize(10),
-                    width: normalize(135),
-                    height: normalize(28),
-                    borderRadius: normalize(15),
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderWidth: 1,
-                    borderColor: StatusObject(profilestate.status).fontColor,
-                    backgroundColor: StatusObject(profilestate.status).colorBg,
-                    flexDirection: 'row',
-                  }}>
-                  {StatusObject(profilestate.status).status ===
-                  'ตรวจสอบแล้ว' ? (
-                    <Image
-                      source={icons.correct}
-                      style={{ width: 16, height: 16, right: 5 }}
-                    />
-                  ) : StatusObject(profilestate.status).status ===
-                    'รอการตรวจสอบ' ? (
-                    <Image
-                      source={icons.warning}
-                      style={{ width: 16, height: 16, right: 5 }}
-                    />
-                  ) : StatusObject(profilestate.status).status ===
-                    'ไม่อนุมัติ' ? (
-                    <Image
-                      source={icons.wrong}
-                      style={{ width: 16, height: 16, right: 5 }}
-                    />
-                  ) : null}
+                <>
+                  <Text style={[styles.text]}>{profilestate.name} </Text>
+                  {StatusObject(profilestate.status).status === 'ไม่อนุมัติ' ? (
+                    <View
+                      style={{
+                        marginTop: normalize(10),
+                        height: normalize(28),
+                        borderRadius: normalize(15),
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: StatusObject(profilestate.status)
+                          .fontColor,
+                        backgroundColor: StatusObject(profilestate.status)
+                          .colorBg,
+                        flexDirection: 'row',
+                      }}>
+                      {StatusObject(profilestate.status).status ===
+                      'ตรวจสอบแล้ว' ? (
+                        <Image
+                          source={icons.correct}
+                          style={{ width: 16, height: 16, right: 5 }}
+                        />
+                      ) : StatusObject(profilestate.status).status ===
+                        'รอการตรวจสอบ' ? (
+                        <Image
+                          source={icons.warning}
+                          style={{ width: 16, height: 16, right: 5 }}
+                        />
+                      ) : StatusObject(profilestate.status).status ===
+                        'ไม่อนุมัติ' ? (
+                        <Image
+                          source={icons.wrong}
+                          style={{ width: 16, height: 16, right: 5 }}
+                        />
+                      ) : (
+                        <Image
+                          style={{
+                            width: 16,
+                            height: 16,
+                            right: 5,
+                            tintColor: colors.bg,
+                          }}
+                        />
+                      )}
 
-                  <Text
-                    style={{
-                      color: StatusObject(profilestate.status).fontColor,
-                      fontFamily: font.AnuphanBold,
-                      fontSize: normalize(14),
-                    }}>
-                    {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
-                      ? 'ยืนยันตัวตนสำเร็จ'
-                      : StatusObject(profilestate.status).status ===
-                        'รอการตรวจสอบ'
-                      ? 'รอการตรวจสอบ'
-                      : StatusObject(profilestate.status).status ===
-                        'ไม่อนุมัติ'
-                      ? 'ยืนยันตัวตนไม่สำเร็จ'
-                      : 'ปิดการใช้งาน'}
-                  </Text>
-                </View>
+                      <Text
+                        style={{
+                          color: StatusObject(profilestate.status).fontColor,
+                          fontFamily: font.AnuphanBold,
+                          fontSize: normalize(14),
+                        }}>
+                        {StatusObject(profilestate.status).status ===
+                        'ตรวจสอบแล้ว'
+                          ? 'ยืนยันตัวตนสำเร็จ'
+                          : StatusObject(profilestate.status).status ===
+                            'รอการตรวจสอบ'
+                          ? 'รอการตรวจสอบ'
+                          : StatusObject(profilestate.status).status ===
+                            'ไม่อนุมัติ'
+                          ? 'ยืนยันตัวตนไม่สำเร็จ'
+                          : 'ปิดการใช้งาน'}
+                      </Text>
+                    </View>
+                  ) : (
+                    <View
+                      style={{
+                        marginTop: normalize(10),
+                        width: normalize(135),
+                        height: normalize(28),
+                        borderRadius: normalize(15),
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: StatusObject(profilestate.status)
+                          .fontColor,
+                        backgroundColor: StatusObject(profilestate.status)
+                          .colorBg,
+                        flexDirection: 'row',
+                      }}>
+                      {StatusObject(profilestate.status).status ===
+                      'ตรวจสอบแล้ว' ? (
+                        <Image
+                          source={icons.correct}
+                          style={{ width: 16, height: 16, right: 5 }}
+                        />
+                      ) : StatusObject(profilestate.status).status ===
+                        'รอการตรวจสอบ' ? (
+                        <Image
+                          source={icons.warning}
+                          style={{ width: 16, height: 16, right: 5 }}
+                        />
+                      ) : StatusObject(profilestate.status).status ===
+                        'ไม่อนุมัติ' ? (
+                        <Image
+                          source={icons.wrong}
+                          style={{ width: 16, height: 16, right: 5 }}
+                        />
+                      ) : null}
+
+                      <Text
+                        style={{
+                          color: StatusObject(profilestate.status).fontColor,
+                          fontFamily: font.AnuphanBold,
+                          fontSize: normalize(14),
+                        }}>
+                        {StatusObject(profilestate.status).status ===
+                        'ตรวจสอบแล้ว'
+                          ? 'ยืนยันตัวตนสำเร็จ'
+                          : StatusObject(profilestate.status).status ===
+                            'รอการตรวจสอบ'
+                          ? 'รอการตรวจสอบ'
+                          : StatusObject(profilestate.status).status ===
+                            'ไม่อนุมัติ'
+                          ? 'ยืนยันตัวตนไม่สำเร็จ'
+                          : 'ปิดการใช้งาน'}
+                      </Text>
+                    </View>
+                  )}
+                </>
               )}
             </View>
-            <View style={{ alignSelf: 'flex-start' }}>
+            <View>
               <TouchableOpacity
-                onPress={() => navigation.navigate('EditProfileScreen')}>
+                onPress={() => {
+                  navigation.navigate('EditProfileScreen');
+                  mixpanel.track('ProfileScreen_ButtonEditProfile_tapped', {
+                    navigateTo: 'EditProfileScreen',
+                    timeSpent: timeSpent,
+                  });
+                }}>
                 <Image
                   source={icons.edit}
                   style={{
@@ -555,6 +611,10 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('AllPlotScreen');
+                mixpanel.track('ProfileScreen_ButtonSeeAllPlot_tapped', {
+                  navigateTo: 'AllPlotScreen',
+                  timeSpent: timeSpent,
+                });
               }}>
               <Text style={[styles.h1]}>ดูแปลงทั้งหมด</Text>
             </TouchableOpacity>
@@ -607,6 +667,10 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate('AddPlotScreen');
+                      mixpanel.track('ProfileScreen_ButtonAddPlot_tapped', {
+                        navigateTo: 'AddPlotScreen',
+                        timeSpent: timeSpent,
+                      });
                     }}>
                     <View style={{ paddingHorizontal: normalize(15) }}>
                       <View style={[styles.buttonAdd]}>
@@ -809,6 +873,10 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
+                mixpanel.track('ProfileScreen_ButtonPrivacy_tapped', {
+                  timeSpent: timeSpent,
+                  navigateTo: 'PrivacyScreen',
+                });
                 navigation.navigate('PrivacyScreen');
               }}>
               <View style={styles.listTile}>
@@ -830,6 +898,10 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
+                mixpanel.track('ProfileScreen_ButtonDeleteProfile_tapped', {
+                  timeSpent: timeSpent,
+                  navigateTo: 'DeleteProfileScreen',
+                });
                 navigation.navigate('DeleteProfileScreen', {
                   tele: profilestate.id,
                 });
@@ -853,6 +925,10 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={async () => {
+                mixpanel.track('ProfileScreen_ButtonLogout_tapped', {
+                  timeSpent: timeSpent,
+                  navigateTo: 'LoginScreen',
+                });
                 await onLogout();
                 RootNavigation.navigate('Auth', {
                   screen: 'HomeScreen',
@@ -919,6 +995,10 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             }}>
             <TouchableOpacity
               onPress={() => {
+                mixpanel.track('ProfileScreen_ButtonCallCenter_tapped', {
+                  timeSpent: timeSpent,
+                  tel: callcenterNumber,
+                });
                 Linking.openURL(`tel:${callcenterNumber}`);
               }}
               style={{
@@ -1050,6 +1130,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     padding: 15,
     width: '100%',
+    minHeight: 120,
   },
   section2: {
     ...Platform.select({

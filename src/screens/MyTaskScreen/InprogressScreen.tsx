@@ -14,11 +14,14 @@ import { MyJobDatasource } from '../../datasource/MyJobDatasource';
 import { SearchMyJobsEntites } from '../../entites/SearchMyJobsEntites';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { mixpanel } from '../../../mixpanel';
+import useTimeSpent from '../../hook/useTimeSpent';
 
 const initialPage = 1;
 const limit = 10;
 
 const InprogressScreen: React.FC<any> = ({}) => {
+  const timeSpent = useTimeSpent();
   const [taskList, setTaskList] = useState<{
     data: any[];
     total: number;
@@ -39,6 +42,10 @@ const InprogressScreen: React.FC<any> = ({}) => {
   const [page, setPage] = useState(initialPage);
   const [refresh, setRefresh] = useState<boolean>(false);
   const toTaskDetail = (item: any) => {
+    mixpanel.track('MyTaskScreen_InprogressScreen_tapped', {
+      ...item,
+      timeSpent,
+    });
     if (item.status === 'WAIT_RECEIVE') {
       RootNavigation.navigate('Main', {
         screen: 'SlipWaitingScreen',

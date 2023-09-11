@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import AppAuthNavigator from './AppAuthNavigator';
 import LoadingNavigator from './LoadingNavigator';
 import { createStackNavigator } from '@react-navigation/stack';

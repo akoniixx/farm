@@ -138,7 +138,7 @@ const MainNavigator: React.FC = () => {
       });
     };
     checkDataMA();
-  }, [reload]);
+  }, []);
 
   const checkTimeMaintance = (startDate: any, endDate: any) => {
     const dateNow = moment(Date.now());

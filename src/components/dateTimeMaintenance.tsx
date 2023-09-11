@@ -4,13 +4,13 @@ import fonts from '../assets/fonts';
 import { normalize } from '../functions/Normalize';
 import { colors } from '../assets';
 import { momentExtend } from '../utils/moment-buddha-year';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import Text from './Text/Text';
 
 interface MaintenanceProps {
   header: string;
-  dateStart: string;
-  dateEnd: string;
+  dateStart: Moment;
+  dateEnd: Moment;
   text: string;
   footer: string;
 }

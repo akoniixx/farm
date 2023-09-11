@@ -13,10 +13,14 @@ import { MyJobDatasource } from '../../datasource/MyJobDatasource';
 import { SearchMyJobsEntites } from '../../entites/SearchMyJobsEntites';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { mixpanel } from '../../../mixpanel';
+import useTimeSpent from '../../hook/useTimeSpent';
 
 const initialPage = 1;
 const limit = 10;
 const FinishScreen: React.FC<any> = ({}) => {
+  const timeSpent = useTimeSpent();
+
   const [refresh, setRefresh] = useState<boolean>(false);
   const [taskList, setTaskList] = useState<{
     data: any[];
@@ -39,6 +43,7 @@ const FinishScreen: React.FC<any> = ({}) => {
 
   const getTaskList = async () => {
     setLoading(true);
+
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const params: SearchMyJobsEntites = {
       farmerId: farmer_id,
@@ -162,12 +167,16 @@ const FinishScreen: React.FC<any> = ({}) => {
                   renderItem={({ item, index }) => (
                     <TouchableOpacity
                       key={index}
-                      onPress={() =>
+                      onPress={() => {
+                        mixpanel.track('MyTaskScreen_CardTask_tapped', {
+                          ...item,
+                          timeSpent,
+                        });
                         RootNavigation.navigate('Main', {
                           screen: 'MyTaskDetailScreen',
                           params: { task: item },
-                        })
-                      }>
+                        });
+                      }}>
                       <CardTask task={item} />
                     </TouchableOpacity>
                   )}
