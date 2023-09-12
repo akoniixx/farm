@@ -359,13 +359,9 @@ const CouponCardUsed: React.FC<CouponCardEntities> = ({
                 justifyContent: 'flex-end',
                 alignItems: 'center',
                 minWidth: 40,
+                paddingVertical: 16,
               }}>
-              <TouchableOpacity
-                disabled={disabled}
-                onPress={callback}
-                style={{
-                  right: normalize(16),
-                }}>
+              <TouchableOpacity disabled={disabled} onPress={callback}>
                 <View
                   style={
                     disabled ? styles.buttonKeepDisable : styles.buttonKeep
