@@ -87,10 +87,13 @@ const DroneBrandingItem: React.FC<DroneBranding> = ({
           style={{
             height: normalize(24),
             borderRadius: normalize(12),
+            marginTop: 8,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: StatusObject(status).colorBg,
+            borderWidth: 1,
+            borderColor: StatusObject(status).fontColor,
           }}>
           <Text style={[styles.label, {color: StatusObject(status).fontColor}]}>
             {StatusObject(status).status}
@@ -110,7 +113,7 @@ const DroneBrandingItem: React.FC<DroneBranding> = ({
 
 const styles = StyleSheet.create({
   label: {
-    fontFamily: font.light,
+    fontFamily: font.semiBold,
     fontSize: normalize(14),
     color: colors.gray,
   },

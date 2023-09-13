@@ -320,7 +320,9 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                     <View style={{height: 40}} />
                   )
                 }
-                keyExtractor={element => element.item.taskNo}
+                keyExtractor={(element, index) =>
+                  `${element.item.taskNo}-${index}`
+                }
                 data={data.data}
                 extraData={data}
                 renderItem={({item}: any) => {

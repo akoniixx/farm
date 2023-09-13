@@ -26,6 +26,7 @@ import {Campaign} from '../../datasource/CampaignDatasource';
 import GuruKasetCarousel from '../../components/GuruKasetCarousel/GuruKasetCarousel';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 import {useNetwork} from '../../contexts/NetworkContext';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const MainScreen: React.FC<any> = ({navigation}) => {
   const {isConnected} = useNetwork();
@@ -242,14 +243,42 @@ const MainScreen: React.FC<any> = ({navigation}) => {
           <View>
             <View style={styles.headCard}>
               <View>
-                <Text
-                  style={{
-                    fontFamily: font.bold,
-                    fontSize: normalize(24),
-                    color: colors.fontBlack,
-                  }}>
-                  สวัสดี, {profile.name}
-                </Text>
+                {loading ? (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: font.bold,
+                        fontSize: normalize(24),
+                        color: colors.fontBlack,
+                      }}>
+                      สวัสดี,
+                    </Text>
+                    <SkeletonPlaceholder
+                      speed={2000}
+                      borderRadius={10}
+                      backgroundColor={colors.skeleton}>
+                      <SkeletonPlaceholder.Item
+                        width={100}
+                        height={24}
+                        borderRadius={4}
+                        marginLeft={10}
+                      />
+                    </SkeletonPlaceholder>
+                  </View>
+                ) : (
+                  <Text
+                    style={{
+                      fontFamily: font.bold,
+                      fontSize: normalize(24),
+                      color: colors.fontBlack,
+                    }}>
+                    สวัสดี, {profile.name}
+                  </Text>
+                )}
                 <View style={styles.activeContainer}>
                   <Switch
                     trackColor={{false: '#767577', true: colors.green}}
@@ -343,6 +372,7 @@ const MainScreen: React.FC<any> = ({navigation}) => {
             </View>
             {guruKaset !== undefined ? (
               <GuruKasetCarousel
+                loading={loading}
                 guruKaset={guruKaset}
                 navigation={navigation}
               />
