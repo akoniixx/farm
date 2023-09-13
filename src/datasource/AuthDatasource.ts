@@ -109,11 +109,12 @@ export class Authentication {
   static async logout() {
     await AsyncStorage.removeItem('token');
     await AsyncStorage.removeItem('droner_id');
+    await AsyncStorage.clear();
   }
 
   static getBankList(): Promise<any> {
     return httpClient
-      .get(BASE_URL + `/bank-data`)
+      .get(BASE_URL + '/bank-data')
       .then(res => {
         return res.data;
       })
@@ -305,7 +306,7 @@ export class Register {
 
   static async uploadDronerdrone(
     dronerDrone: any,
-    percentSuccess: number,
+    percentSuccess?: number,
   ): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient
@@ -413,7 +414,7 @@ export class Register {
   static async registerStep4(
     telephoneNo: string,
     idNo: string,
-    percentSuccess: number,
+    percentSuccess?: number,
   ): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return registerClient

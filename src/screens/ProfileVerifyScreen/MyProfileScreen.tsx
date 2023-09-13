@@ -1,36 +1,24 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
-import {
-  ActivityIndicator,
-  InteractionManager,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Image} from 'react-native';
-import {normalize, width} from '../../function/Normalize';
+import {normalize} from '../../function/Normalize';
 import {colors, font} from '../../assets';
 import icons from '../../assets/icons/icons';
 import CustomHeader from '../../components/CustomHeader';
 import fonts from '../../assets/fonts';
 import image from '../../assets/images/image';
-import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {Register} from '../../datasource/AuthDatasource';
-import CircularProgress from '../../components/Progress/CircularProgress';
 // import ProgressCircle from 'react-native-progress-circle'
 
-const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
+const MyProfileScreen: React.FC<any> = ({navigation}) => {
   const [drone, setDrone] = useState<any>([]);
   const [plants, setPlants] = useState();
-  const [idCard, setIdCard] = useState();
   const [checkNum, setCheckNum] = useState<number>(50);
   const [showModal, setShowModal] = useState(false);
   const isFocused = useIsFocused();
@@ -44,10 +32,9 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
         setLoading(false);
         setDrone(res.dronerDrone);
         setPlants(res.expPlant);
-        setIdCard(res.idNo);
         setCheckNum(res.percentSuccess);
         if (res.dronerDrone[0] && res.expPlant[0]) {
-          Register.changeToPending().then(res => {
+          Register.changeToPending().then(() => {
             setShowModal(true);
           });
         }
@@ -64,10 +51,14 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
         title={'โปรไฟล์ของคุณ'}
       />
       <View style={[styles.body]}>
-        <View style={[styles.cardProgress,{
-          flexDirection : 'row',
-          justifyContent : 'space-between'
-        }]}>
+        <View
+          style={[
+            styles.cardProgress,
+            {
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            },
+          ]}>
           <View
             style={{
               flexDirection: 'row',
@@ -75,30 +66,35 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
               alignItems: 'center',
               paddingVertical: 10,
             }}>
-            <Image source={
-              (checkNum === 50)?
-              image.inprogress50:(
-                checkNum === 75?
-                image.inprogress75:
-                image.inprogress100
-              )
-            } style={{
-              width : normalize(50),
-              height : normalize(50)
-            }}/>
+            <Image
+              source={
+                checkNum === 50
+                  ? image.inprogress50
+                  : checkNum === 75
+                  ? image.inprogress75
+                  : image.inprogress100
+              }
+              style={{
+                width: normalize(50),
+                height: normalize(50),
+              }}
+            />
           </View>
-          <View style={{
-            display : 'flex',
-            justifyContent : 'flex-start',
-            alignItems : 'flex-start',
-            width : '78%'
-          }}>
-          <Text style={[styles.textCard]}>
-              {`ใช้เวลาเพียง 2 นาที กรอกข้อมูลโปรไฟล์ ของคุณให้สมบูรณ์เพื่อเริ่มรับงานบินโดรนในระบบ`}
+          <View
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              width: '78%',
+            }}>
+            <Text style={[styles.textCard]}>
+              {
+                'ใช้เวลาเพียง 2 นาที กรอกข้อมูลโปรไฟล์ ของคุณให้สมบูรณ์เพื่อเริ่มรับงานบินโดรนในระบบ'
+              }
             </Text>
-          <View style={[styles.pending]}>
-            <Text style={[styles.textPending]}>รอยืนยันตัวตน</Text>
-          </View>
+            <View style={[styles.pending]}>
+              <Text style={[styles.textPending]}>รอยืนยันตัวตน</Text>
+            </View>
           </View>
         </View>
         <View style={{paddingVertical: normalize(12)}}>
@@ -180,7 +176,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
                 fontSize: 22,
                 textAlign: 'center',
                 paddingBottom: 2,
-                color : colors.fontBlack
+                color: colors.fontBlack,
               }}>
               ยินดีด้วย!
             </Text>
@@ -190,7 +186,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
                 fontSize: 22,
                 textAlign: 'center',
                 paddingBottom: 20,
-                color : colors.fontBlack
+                color: colors.fontBlack,
               }}>
               คุณทำโปรไฟล์เสร็จสมบูรณ์แล้ว
             </Text>
@@ -200,7 +196,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
                 fontSize: 18,
                 textAlign: 'center',
                 paddingBottom: 2,
-                color : colors.fontBlack
+                color: colors.fontBlack,
               }}>
               กรุณารอเจ้าหน้าที่ตรวจสอบเอกสารยืนยัน
             </Text>
@@ -210,7 +206,7 @@ const MyProfileScreen: React.FC<any> = ({navigation, route}) => {
                 fontSize: 18,
                 textAlign: 'center',
                 paddingBottom: 20,
-                color : colors.fontBlack
+                color: colors.fontBlack,
               }}>
               บัญชีนักบินโดรนของคุณ เพื่อรับงานบินโดรน
             </Text>
@@ -269,7 +265,7 @@ const styles = StyleSheet.create({
   textCard: {
     fontSize: normalize(16),
     fontFamily: fonts.bold,
-    color : colors.fontBlack
+    color: colors.fontBlack,
   },
   text: {
     fontFamily: font.bold,

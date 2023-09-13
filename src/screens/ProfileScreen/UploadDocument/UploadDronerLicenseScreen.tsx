@@ -31,13 +31,13 @@ const UploadDronerLicenseScreen: React.FC<any> = ({navigation, route}) => {
     if (!result.didCancel) {
       setImage(result);
     }
-  }, [image]);
+  }, []);
 
   const onSubmit = () => {
     setToggleModal(false);
     setLoading(true);
     ProfileDatasource.uploadDronerLicense(image)
-      .then(res => {
+      .then(() => {
         navigation.goBack();
       })
       .catch(err => {
@@ -57,6 +57,7 @@ const UploadDronerLicenseScreen: React.FC<any> = ({navigation, route}) => {
 
   useEffect(() => {
     getImg();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <SafeAreaView style={[stylesCentral.container]}>

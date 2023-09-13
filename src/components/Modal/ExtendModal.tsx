@@ -22,6 +22,7 @@ import dayjs from 'dayjs';
 import InputTime from '../InputTime/InputTime';
 import TextInputArea from '../TextInputArea/TextInputArea';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
+import {momentExtend} from '../../function/utility';
 
 interface Props {
   isVisible: boolean;
@@ -196,7 +197,10 @@ const ExtendModal = ({
                     color: colors.inputText,
                   }}>
                   {date.dateString
-                    ? dayjs(date.dateString).format('DD/MM/YYYY')
+                    ? momentExtend.toBuddhistYear(
+                        date.dateString,
+                        'DD MMM YYYY',
+                      )
                     : ''}
                 </Text>
               )}

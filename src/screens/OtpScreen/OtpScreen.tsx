@@ -47,7 +47,7 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
     authContext: {login},
   } = useAuth();
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
-  const [isError, setIsError] = useState(false);
+  const [isError] = useState(false);
   const [otpCalling, setOtpCalling] = useState(false);
   const [tokenOtp, setTokenOtp] = useState(route.params.token);
   const [codeRef, setCodeRef] = useState(route.params.refCode);
@@ -56,19 +56,13 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
     setValue,
   });
   const [errOTP, setErrOTP] = useState(false);
-  const newTokenOtp = useCallback(
-    (value: any) => {
-      setTokenOtp(value);
-    },
-    [tokenOtp],
-  );
+  const newTokenOtp = useCallback((value: any) => {
+    setTokenOtp(value);
+  }, []);
 
-  const newCodeRef = useCallback(
-    (value: any) => {
-      setCodeRef(value);
-    },
-    [codeRef],
-  );
+  const newCodeRef = useCallback((value: any) => {
+    setCodeRef(value);
+  }, []);
 
   const [otpTimeOut, setOTPtimeout] = useState(120);
   const [time, setTime] = useState('02:00');
@@ -165,7 +159,7 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
               await getFCMToken();
               const fcmtoken = await AsyncStorage.getItem('fcmtoken');
               FCMtokenDatasource.saveFCMtoken(fcmtoken!)
-                .then(res => {
+                .then(() => {
                   mixpanel.track('Login Success');
                   RootNavigation.navigate('Main', {
                     screen: 'MainScreen',
@@ -342,28 +336,3 @@ const styles = StyleSheet.create({
     marginVertical: normalize(10),
   },
 });
-
-const OtpTimerCount: React.FC<propsOTP> = ({toggle}) => {
-  const [otpTimeOut, setOTPtimeout] = useState(300);
-  const [time, setTime] = useState('05:00');
-  useEffect(() => {
-    setOTPtimeout(300);
-    setTime('05:00');
-  }, [toggle]);
-  useEffect(() => {
-    let timer = setInterval(() => {
-      if (otpTimeOut === 0) {
-      } else {
-        let second = otpTimeOut - 1;
-        setOTPtimeout(second);
-        setTime(
-          `0${parseInt((second / 60).toString())}:${
-            second % 60 < 10 ? '0' + (second % 60) : second % 60
-          }`,
-        );
-      }
-    }, 1000);
-    return () => clearInterval(timer);
-  });
-  return <Text>{time}</Text>;
-};

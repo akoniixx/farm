@@ -22,7 +22,6 @@ import ServiceArea from '../screens/ProfileScreen/ServiceArea';
 import AllGuruScreen from '../screens/GuruScreen/AllScreen';
 import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
 import IncomeScreen from '../screens/IncomeScreen';
-import HistoryRewardScreen from '../screens/HistoryRewardScreen';
 import MyRewardScreen from '../screens/MyRewardScreen';
 import RewardDetailScreen from '../screens/RewardDetailScreen';
 import RedeemAddressScreen from '../screens/RedeemAddressScreen';
@@ -177,10 +176,7 @@ const MainNavigator: React.FC = () => {
 
       <Stack.Screen name="DetailGuruScreen" component={DetailGuruScreen} />
       <Stack.Screen name="IncomeScreen" component={IncomeScreen} />
-      <Stack.Screen
-        name="HistoryRewardScreen"
-        component={HistoryRewardScreen}
-      />
+
       <Stack.Screen name="MyRewardScreen" component={MyRewardScreen} />
       <Stack.Screen name="RewardDetailScreen" component={RewardDetailScreen} />
       <Stack.Screen

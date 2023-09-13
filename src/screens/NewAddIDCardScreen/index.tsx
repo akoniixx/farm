@@ -21,7 +21,7 @@ import {Authentication} from '../../datasource/AuthDatasource';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Modal from '../../components/Modal/Modal';
 import {useAuth} from '../../contexts/AuthContext';
-import Loading from '../../components/Loading/Loading';
+import {checkIdCard} from '../../function/utility';
 
 interface Props {
   navigation: any;
@@ -31,9 +31,9 @@ export default function NewAddIDCardScreen({navigation}: Props) {
     state: {user},
     authContext: {getProfileAuth},
   } = useAuth();
-  const [loadingImage, setLoadingImage] = React.useState(false);
   const [showModalSelectImage, setShowModalSelectImage] = React.useState(false);
   const [error, setError] = React.useState('');
+  const [errorIdCard, setErrorIdCard] = React.useState('');
   const [images, setImages] = React.useState<any>(null);
   const [idCardNumber, setIdCardNumber] = React.useState('');
   const [updateSuccess, setUpdateSuccess] = React.useState(false);
@@ -134,6 +134,10 @@ export default function NewAddIDCardScreen({navigation}: Props) {
 
   const onFinish = async () => {
     try {
+      const {isValid: isValidIdCard, message} = checkIdCard(idCardNumber);
+      if (!isValidIdCard) {
+        return setErrorIdCard(message);
+      }
       const imageNotChange = Object.keys(images).includes('path');
       const listPromise = imageNotChange
         ? [Authentication.updateIDCardNumber(idCardNumber)]
@@ -250,9 +254,11 @@ export default function NewAddIDCardScreen({navigation}: Props) {
                 imageStyle={{
                   borderRadius: 12,
                 }}
-                source={{
-                  uri: images?.uri,
-                }}>
+                source={
+                  images && {
+                    uri: images?.uri,
+                  }
+                }>
                 {!images ? (
                   <TouchableOpacity
                     style={styles({isHavePic: false}).button}
@@ -305,6 +311,7 @@ export default function NewAddIDCardScreen({navigation}: Props) {
                 onChangeText={v => {
                   setIsDataChange(true);
                   setIdCardNumber(v);
+                  setErrorIdCard('');
                 }}
                 keyboardType="number-pad"
               />
@@ -314,6 +321,15 @@ export default function NewAddIDCardScreen({navigation}: Props) {
                 }}>
                 ใส่เลข 13 หลักบนบัตรโดยไม่ต้องเว้นวรรค
               </Text>
+              {errorIdCard.length > 0 && (
+                <Text
+                  style={{
+                    marginTop: 8,
+                    color: colors.decreasePoint,
+                  }}>
+                  {errorIdCard}
+                </Text>
+              )}
             </View>
             <View
               style={{

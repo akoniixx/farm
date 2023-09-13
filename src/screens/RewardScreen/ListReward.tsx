@@ -9,13 +9,14 @@ import {
 
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import moment from 'moment';
-import FastImage from 'react-native-fast-image';
 import {colors, font} from '../../assets';
 import {numberWithCommas} from '../../function/utility';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
 import Text from '../../components/Text';
 import {mixpanel} from '../../../mixpanel';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 
 export interface RewardListType {
   id: string;
@@ -120,7 +121,7 @@ export default function ListReward({
                 isDigital: item.rewardType === 'DIGITAL',
               });
             }}>
-            <FastImage
+            <ProgressiveImage
               style={{
                 width: widthImg,
                 height: widthImg,
@@ -176,30 +177,37 @@ export default function ListReward({
         </>
       );
     };
-  }, [navigation]);
+  }, [navigation, widthImg]);
   return (
-    <FlatList
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-      style={{marginTop: 16}}
-      data={listReward?.data || []}
-      renderItem={renderItem}
-      numColumns={2}
-      onEndReached={loadMore}
-      ListFooterComponent={
-        <View
-          style={{
-            height: 180,
-          }}
-        />
-      }
-      columnWrapperStyle={{
-        justifyContent: 'space-between',
-        paddingHorizontal: 16,
+    <NetworkLost
+      onPress={onRefresh}
+      style={{
+        marginTop: 16,
       }}
-      ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
-    />
+      height={Dimensions.get('window').height - 300}>
+      <FlatList
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        style={{marginTop: 16}}
+        data={listReward?.data || []}
+        renderItem={renderItem}
+        numColumns={2}
+        onEndReached={loadMore}
+        ListFooterComponent={
+          <View
+            style={{
+              height: 180,
+            }}
+          />
+        }
+        columnWrapperStyle={{
+          justifyContent: 'space-between',
+          paddingHorizontal: 16,
+        }}
+        ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
+      />
+    </NetworkLost>
   );
 }
 const styles = StyleSheet.create({

@@ -3,7 +3,6 @@ import {View, StyleSheet} from 'react-native';
 
 import {normalize} from '@rneui/themed';
 import colors from '../assets/colors/colors';
-import {Text} from '@rneui/base';
 
 interface ProgressBarProps {
   index: number;

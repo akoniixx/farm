@@ -7,7 +7,7 @@ import {
   Dimensions,
   TextInput,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font, icons, image} from '../../assets';
 import {normalize} from '../../function/Normalize';
@@ -46,10 +46,14 @@ import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocum
 import {useAuth} from '../../contexts/AuthContext';
 import Text from '../../components/Text';
 import BadgeStatus from '../../components/BadgeStatus/BadgeStatus';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
+import {RefreshControl} from 'react-native';
+import {checkDecimal} from '../../function/checkDecimal';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
   const [data, setData] = useState<any>();
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [dateAppointment, setDateAppointment] = useState<any>();
   const [profileImg, setProfileImg] = useState<string>();
   const [position, setPosition] = useState({
@@ -80,7 +84,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const [defaulRating, setDefaulRating] = useState<number>(0);
   const [isVisibleExtendModal, setIsVisibleExtendModal] =
     useState<boolean>(false);
-  const [maxRatting, setMaxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
+  const [maxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
   const [comment, setComment] = useState<string>('');
   const starImgFilled = icons.starfill;
   const starImgCorner = icons.starCorner;
@@ -110,6 +114,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   useEffect(() => {
     getDronerId();
     getTaskDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onFinishTask = () => {
@@ -197,6 +202,11 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
       })
       .catch(err => console.log(err));
   };
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getTaskDetail();
+    setRefreshing(false);
+  };
   const receiveTask = async () => {
     const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(data.id, droner_id, true)
@@ -206,21 +216,10 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
           Toast.show({
             type: 'receiveTaskSuccess',
             text1: `งาน #${data.taskNo}`,
-            text2: `วันที่ ${
-              data.dateAppointment.split('T')[0].split('-')[2]
-            }/${data.dateAppointment.split('T')[0].split('-')[1]}/${
-              parseInt(data.dateAppointment.split('T')[0].split('-')[0]) + 543
-            } เวลา ${
-              parseInt(data.dateAppointment.split('T')[1].split(':')[0]) + 7 > 9
-                ? `${
-                    parseInt(data.dateAppointment.split('T')[1].split(':')[0]) +
-                    7
-                  }`
-                : `0${
-                    parseInt(data.dateAppointment.split('T')[1].split(':')[0]) +
-                    7
-                  }`
-            }:${data.dateAppointment.split('T')[1].split(':')[1]}`,
+            text2: `วันที่  ${momentExtend.toBuddhistYear(
+              new Date(),
+              'DD MMMM YYYY',
+            )}`,
             onPress: () => {
               Toast.hide();
             },
@@ -262,600 +261,614 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
         showBackBtn
         onPressBack={() => navigation.goBack()}
       />
+      <NetworkLost onPress={onRefresh}>
+        {data ? (
+          <>
+            <ScrollView
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              showsVerticalScrollIndicator={false}
+              persistentScrollbar={false}>
+              {data.status == 'WAIT_REVIEW' || data.status == 'DONE' ? (
+                <View style={{flex: 1, backgroundColor: '#2EC66E'}}>
+                  <View
+                    style={{
+                      padding: normalize(18),
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                    <View>
+                      <Text
+                        style={{
+                          fontFamily: font.bold,
+                          fontSize: normalize(17),
+                          color: 'white',
+                        }}>
+                        งานเสร็จสิ้น
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: font.light,
+                          fontSize: normalize(12),
+                          color: 'white',
+                        }}>
+                        ยินดีด้วยคุณบินงานสำเร็จแล้ว
+                      </Text>
+                    </View>
+                    <Image
+                      source={icons.ssbaner}
+                      style={{width: normalize(54), height: normalize(54)}}
+                    />
+                  </View>
+                </View>
+              ) : null}
+              {data.status !== 'DONE' ? <Banner /> : null}
 
-      {data ? (
-        <>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            persistentScrollbar={false}>
-            {data.status == 'WAIT_REVIEW' || data.status == 'DONE' ? (
-              <View style={{flex: 1, backgroundColor: '#2EC66E'}}>
+              <View style={[styles.taskMenu, {marginVertical: 0}]}>
+                <View style={styles.listTile}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontSize: normalize(14),
+                      color: '#9BA1A8',
+                    }}>
+                    #{data.taskNo}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <View
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: getStatusToText(data.status)?.bgcolor,
+                        paddingHorizontal: normalize(12),
+                        paddingVertical: normalize(5),
+                        borderRadius: normalize(12),
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: fonts.medium,
+                          color: getStatusToText(data.status)?.color,
+                          fontSize: normalize(12),
+                        }}>
+                        {getStatusToText(data.status)?.label}
+                      </Text>
+                    </View>
+                    <BadgeStatus
+                      style={{
+                        marginLeft: 4,
+                      }}
+                      status={data.status}
+                      statusPayment={data.statusPayment}
+                    />
+                  </View>
+                </View>
+                <View style={styles.listTile}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontSize: normalize(19),
+                      color: colors.fontBlack,
+                    }}>
+                    {data.farmerPlot.plantName}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      color: '#2EC66E',
+                      fontSize: normalize(17),
+                    }}>
+                    ฿{' '}
+                    {numberWithCommas(
+                      calTotalPrice(data.price, data.revenuePromotion),
+                    )}
+                  </Text>
+                </View>
                 <View
                   style={{
-                    padding: normalize(18),
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    paddingVertical: normalize(5),
+                  }}>
+                  <Image
+                    source={icons.jobCard}
+                    style={{
+                      width: normalize(20),
+                      height: normalize(20),
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      paddingLeft: normalize(8),
+                      fontSize: normalize(14),
+                      color: colors.fontBlack,
+                    }}>{`${momentExtend.toBuddhistYear(
+                    dateAppointment,
+                    'DD MMM YYYY HH:mm',
+                  )} น.`}</Text>
+                </View>
+                {data?.statusDelay !== null && (
+                  <StatusExtend
+                    status={data?.statusDelay || null}
+                    dateDelay={data?.dateDelay || null}
+                    delayRejectRemark={data?.delayRejectRemark || null}
+                    delayRemark={data?.delayRemark || null}
+                  />
+                )}
+              </View>
+              <View style={styles.taskMenu}>
+                <View style={styles.listTile}>
+                  <Text style={styles.font16}>รายละเอียดงาน</Text>
+                </View>
+                <View
+                  style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    alignItems: 'center',
                   }}>
                   <View>
+                    <Text style={styles.fontGray}>พืช</Text>
+                    <Text style={styles.font16}>
+                      {data.farmerPlot.plantName}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={styles.fontGray}>พื้นที่</Text>
+                    <Text style={styles.font16}>
+                      {checkDecimal(data.farmAreaAmount)} ไร่
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={styles.fontGray}>ปุ๋ย/ยา</Text>
+                    <Text style={styles.font16}>{data.preparationBy}</Text>
+                  </View>
+                </View>
+              </View>
+              <View
+                style={{backgroundColor: colors.white, padding: normalize(15)}}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Image
+                    source={icons.note}
+                    style={{marginRight: 20, height: 24, width: 24}}
+                  />
+                  <Text style={styles.fontGray}>
+                    {data.comment ? data.comment : '-'}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.taskMenu}>
+                <View style={styles.listTile}>
+                  <Text style={styles.font16}>เกษตรกร</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Image
+                      source={profileImg ? {uri: profileImg} : icons.account}
+                      style={{
+                        width: normalize(24),
+                        height: normalize(24),
+                        borderRadius: 99,
+                      }}
+                    />
                     <Text
                       style={{
-                        fontFamily: font.bold,
-                        fontSize: normalize(17),
-                        color: 'white',
+                        marginLeft: normalize(5),
+                        fontFamily: font.medium,
+                        color: 'black',
+                        fontSize: normalize(15),
                       }}>
-                      งานเสร็จสิ้น
+                      {`${data.farmer.firstname}` +
+                        ' ' +
+                        `${data.farmer.lastname}`}
+                    </Text>
+                  </View>
+                  {!['WAIT_RECEIVE', 'CANCELED'].includes(data.status) ? (
+                    <TouchableOpacity
+                      onPress={() => dialCall(data.farmer.telephoneNo)}
+                      style={styles.callFarmer}>
+                      <Image
+                        source={icons.calling}
+                        style={{height: 20, width: 20}}
+                      />
+                    </TouchableOpacity>
+                  ) : null}
+                </View>
+                <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
+                  <Image
+                    source={icons.jobDistance}
+                    style={{width: normalize(24), height: normalize(24)}}
+                  />
+                  <View style={{marginLeft: normalize(5)}}>
+                    <Text
+                      style={{
+                        fontFamily: font.medium,
+                        color: 'black',
+                        fontSize: normalize(15),
+                      }}>
+                      {data.farmerPlot.plotArea
+                        ? `${data.farmerPlot.plotArea.subdistrictName}/ ${data.farmerPlot.plotArea.districtName}/ ${data.farmerPlot.plotArea.provinceName}`
+                        : '-'}
                     </Text>
                     <Text
                       style={{
                         fontFamily: font.light,
-                        fontSize: normalize(12),
-                        color: 'white',
+                        color: colors.gray,
+                        fontSize: normalize(13),
                       }}>
-                      ยินดีด้วยคุณบินงานสำเร็จแล้ว
+                      ระยะทาง{' '}
+                      {data.status == 'WAIT_RECEIVE'
+                        ? data.taskDronerTemp.find(
+                            (x: any) => x.dronerId == dronerId,
+                          ).distance
+                        : data.distance}{' '}
+                      กม.
                     </Text>
                   </View>
-                  <Image
-                    source={icons.ssbaner}
-                    style={{width: normalize(54), height: normalize(54)}}
-                  />
                 </View>
-              </View>
-            ) : null}
-            {data.status !== 'DONE' ? <Banner /> : null}
-
-            <View style={[styles.taskMenu, {marginVertical: 0}]}>
-              <View style={styles.listTile}>
-                <Text
-                  style={{
-                    fontFamily: fonts.medium,
-                    fontSize: normalize(14),
-                    color: '#9BA1A8',
-                  }}>
-                  #{data.taskNo}
-                </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
+                <View style={{marginTop: normalize(10)}}>
+                  <Text style={[styles.font16, {color: 'black'}]}>
+                    จุดสังเกต
+                  </Text>
                   <View
                     style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: getStatusToText(data.status)?.bgcolor,
-                      paddingHorizontal: normalize(12),
-                      paddingVertical: normalize(5),
-                      borderRadius: normalize(12),
+                      marginLeft: normalize(10),
+                      marginTop: normalize(5),
                     }}>
-                    <Text
-                      style={{
-                        fontFamily: fonts.medium,
-                        color: getStatusToText(data.status)?.color,
-                        fontSize: normalize(12),
-                      }}>
-                      {getStatusToText(data.status)?.label}
+                    <Text style={styles.fontGray}>
+                      {data.farmerPlot.landmark}
                     </Text>
                   </View>
-                  <BadgeStatus
-                    style={{
-                      marginLeft: 4,
-                    }}
-                    status={data.status}
-                    statusPayment={data.statusPayment}
-                  />
                 </View>
-              </View>
-              <View style={styles.listTile}>
-                <Text
-                  style={{
-                    fontFamily: fonts.medium,
-                    fontSize: normalize(19),
-                    color: colors.fontBlack,
-                  }}>
-                  {data.farmerPlot.plantName}
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: fonts.medium,
-                    color: '#2EC66E',
-                    fontSize: normalize(17),
-                  }}>
-                  ฿{' '}
-                  {numberWithCommas(
-                    calTotalPrice(data.price, data.revenuePromotion),
-                  )}
-                </Text>
-              </View>
-              <View
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  paddingVertical: normalize(5),
-                }}>
-                <Image
-                  source={icons.jobCard}
-                  style={{
-                    width: normalize(20),
-                    height: normalize(20),
-                  }}
-                />
-                <Text
-                  style={{
-                    fontFamily: fonts.medium,
-                    paddingLeft: normalize(8),
-                    fontSize: normalize(14),
-                    color: colors.fontBlack,
-                  }}>{`${momentExtend.toBuddhistYear(
-                  dateAppointment,
-                  'DD MMM YYYY HH:mm',
-                )} น.`}</Text>
-              </View>
-              {data?.statusDelay !== null && (
-                <StatusExtend
-                  status={data?.statusDelay || null}
-                  dateDelay={data?.dateDelay || null}
-                  delayRejectRemark={data?.delayRejectRemark || null}
-                  delayRemark={data?.delayRemark || null}
-                />
-              )}
-            </View>
-            <View style={styles.taskMenu}>
-              <View style={styles.listTile}>
-                <Text style={styles.font16}>รายละเอียดงาน</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <View>
-                  <Text style={styles.fontGray}>พืช</Text>
-                  <Text style={styles.font16}>{data.farmerPlot.plantName}</Text>
-                </View>
-                <View>
-                  <Text style={styles.fontGray}>พื้นที่</Text>
-                  <Text style={styles.font16}>{data.farmAreaAmount} ไร่</Text>
-                </View>
-                <View>
-                  <Text style={styles.fontGray}>ปุ๋ย/ยา</Text>
-                  <Text style={styles.font16}>{data.preparationBy}</Text>
-                </View>
-              </View>
-            </View>
-            <View
-              style={{backgroundColor: colors.white, padding: normalize(15)}}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image
-                  source={icons.note}
-                  style={{marginRight: 20, height: 24, width: 24}}
-                />
-                <Text style={styles.fontGray}>
-                  {data.comment ? data.comment : '-'}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.taskMenu}>
-              <View style={styles.listTile}>
-                <Text style={styles.font16}>เกษตรกร</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <MapView.Animated
+                  style={styles.map}
+                  zoomEnabled={false}
+                  zoomTapEnabled={false}
+                  pitchEnabled={false}
+                  rotateEnabled={false}
+                  scrollEnabled={false}
+                  provider={PROVIDER_GOOGLE}
+                  region={position}>
+                  <Marker coordinate={position} />
+                </MapView.Animated>
+
+                <TouchableOpacity
+                  style={styles.viewMap}
+                  onPress={() =>
+                    openGps(
+                      position.latitude,
+                      position.longitude,
+                      data.farmerPlot.plotName,
+                    )
+                  }>
                   <Image
-                    source={profileImg ? {uri: profileImg} : icons.account}
-                    style={{
-                      width: normalize(24),
-                      height: normalize(24),
-                      borderRadius: 99,
-                    }}
+                    source={icons.direction}
+                    style={{width: normalize(24), height: normalize(24)}}
                   />
                   <Text
                     style={{
-                      marginLeft: normalize(5),
+                      marginLeft: 5,
                       fontFamily: font.medium,
                       color: 'black',
-                      fontSize: normalize(15),
                     }}>
-                    {`${data.farmer.firstname}` +
-                      ' ' +
-                      `${data.farmer.lastname}`}
+                    ดูแผนที่
                   </Text>
-                </View>
-                {!['WAIT_RECEIVE', 'CANCELED'].includes(data.status) ? (
-                  <TouchableOpacity
-                    onPress={() => dialCall(data.farmer.telephoneNo)}
-                    style={styles.callFarmer}>
-                    <Image
-                      source={icons.calling}
-                      style={{height: 20, width: 20}}
-                    />
-                  </TouchableOpacity>
-                ) : null}
+                </TouchableOpacity>
               </View>
-              <View style={{flexDirection: 'row', marginTop: normalize(10)}}>
-                <Image
-                  source={icons.jobDistance}
-                  style={{width: normalize(24), height: normalize(24)}}
-                />
-                <View style={{marginLeft: normalize(5)}}>
-                  <Text
-                    style={{
-                      fontFamily: font.medium,
-                      color: 'black',
-                      fontSize: normalize(15),
-                    }}>
-                    {data.farmerPlot.plotArea
-                      ? `${data.farmerPlot.plotArea.subdistrictName}/ ${data.farmerPlot.plotArea.districtName}/ ${data.farmerPlot.plotArea.provinceName}`
-                      : '-'}
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: font.light,
-                      color: colors.gray,
-                      fontSize: normalize(13),
-                    }}>
-                    ระยะทาง{' '}
-                    {data.status == 'WAIT_RECEIVE'
-                      ? data.taskDronerTemp.find(
-                          (x: any) => x.dronerId == dronerId,
-                        ).distance
-                      : data.distance}{' '}
-                    กม.
-                  </Text>
-                </View>
-              </View>
-              <View style={{marginTop: normalize(10)}}>
-                <Text style={[styles.font16, {color: 'black'}]}>
-                  จุดสังเกตุ
-                </Text>
-                <View
-                  style={{marginLeft: normalize(10), marginTop: normalize(5)}}>
-                  <Text style={styles.fontGray}>
-                    {data.farmerPlot.landmark}
-                  </Text>
-                </View>
-              </View>
-              <MapView.Animated
-                style={styles.map}
-                zoomEnabled={false}
-                zoomTapEnabled={false}
-                pitchEnabled={false}
-                rotateEnabled={false}
-                scrollEnabled={false}
-                provider={PROVIDER_GOOGLE}
-                region={position}>
-                <Marker coordinate={position} />
-              </MapView.Animated>
+              <View style={styles.taskMenu}>
+                <Text style={[styles.font16, {color: 'black'}]}>รายได้</Text>
 
-              <TouchableOpacity
-                style={styles.viewMap}
-                onPress={() =>
-                  openGps(
-                    position.latitude,
-                    position.longitude,
-                    data.farmerPlot.plotName,
-                  )
-                }>
-                <Image
-                  source={icons.direction}
-                  style={{width: normalize(24), height: normalize(24)}}
-                />
-                <Text
-                  style={{
-                    marginLeft: 5,
-                    fontFamily: font.medium,
-                    color: 'black',
-                  }}>
-                  ดูแผนที่
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.taskMenu}>
-              <Text style={[styles.font16, {color: 'black'}]}>รายได้</Text>
-
-              <View
-                style={[
-                  stylesCentral.flexRowBetwen,
-                  {marginVertical: normalize(5)},
-                ]}>
-                <Text style={styles.fontGray}>ค่าจ้าง</Text>
-                <Text style={styles.fontGray}>
-                  {numberWithCommas(
-                    calTotalPrice(data.price, data.revenuePromotion),
-                  )}{' '}
-                  ฿
-                </Text>
-              </View>
-              <View
-                style={[
-                  stylesCentral.flexRowBetwen,
-                  {marginVertical: normalize(5)},
-                ]}>
-                <Text style={styles.fontGray}>
-                  ค่าธรรมเนียม (5% ของราคารวม)
-                </Text>
-                <Text style={styles.fontGray}>
-                  {numberWithCommas(data.fee)} ฿
-                </Text>
-              </View>
-
-              {data.discountFee ? (
                 <View
                   style={[
                     stylesCentral.flexRowBetwen,
                     {marginVertical: normalize(5)},
                   ]}>
-                  <Text style={[styles.fontGray]}>ส่วนลดค่าธรรมเนียม</Text>
-                  <Text style={[styles.fontGray]}>
-                    {data.discountFee !== '0' ? '- ' : null}{' '}
-                    {numberWithCommas(data.discountFee)} ฿
+                  <Text style={styles.fontGray}>ค่าจ้าง</Text>
+                  <Text style={styles.fontGray}>
+                    {numberWithCommas(
+                      calTotalPrice(data.price, data.revenuePromotion),
+                    )}{' '}
+                    ฿
                   </Text>
                 </View>
-              ) : null}
+                <View
+                  style={[
+                    stylesCentral.flexRowBetwen,
+                    {marginVertical: normalize(5)},
+                  ]}>
+                  <Text style={styles.fontGray}>
+                    ค่าธรรมเนียม (5% ของราคารวม)
+                  </Text>
+                  <Text style={styles.fontGray}>
+                    {numberWithCommas(data.fee)} ฿
+                  </Text>
+                </View>
 
-              <View
-                style={[
-                  stylesCentral.flexRowBetwen,
-                  {marginVertical: normalize(5)},
-                ]}>
-                <Text style={[styles.fontGray, {color: 'black'}]}>
-                  ยอดรายได้รวม
-                </Text>
-                <Text style={[styles.fontGray, {color: 'black'}]}>
-                  {numberWithCommas(
-                    calTotalPrice(data.price, data.revenuePromotion),
-                  )}{' '}
-                  ฿
-                </Text>
-              </View>
+                {data.discountFee ? (
+                  <View
+                    style={[
+                      stylesCentral.flexRowBetwen,
+                      {marginVertical: normalize(5)},
+                    ]}>
+                    <Text style={[styles.fontGray]}>ส่วนลดค่าธรรมเนียม</Text>
+                    <Text style={[styles.fontGray]}>
+                      {data.discountFee !== '0' ? '- ' : null}{' '}
+                      {numberWithCommas(data.discountFee)} ฿
+                    </Text>
+                  </View>
+                ) : null}
 
-              <View
-                style={{
-                  padding: normalize(10),
-                  backgroundColor: '#FAFAFB',
-                  marginTop: 16,
-                  borderWidth: 1,
-                  borderColor: colors.disable,
-                  borderRadius: 8,
-                }}>
-                <Text style={styles.fontIncomeDetail}>รายละเอียดเพิ่มเติม</Text>
+                <View
+                  style={[
+                    stylesCentral.flexRowBetwen,
+                    {marginVertical: normalize(5)},
+                  ]}>
+                  <Text style={[styles.fontGray, {color: 'black'}]}>
+                    ยอดรายได้รวม
+                  </Text>
+                  <Text style={[styles.fontGray, {color: 'black'}]}>
+                    {numberWithCommas(
+                      calTotalPrice(data.price, data.revenuePromotion),
+                    )}{' '}
+                    ฿
+                  </Text>
+                </View>
+
                 <View
                   style={{
-                    borderWidth: StyleSheet.hairlineWidth,
-                    marginTop: normalize(8),
+                    padding: normalize(10),
+                    backgroundColor: '#FAFAFB',
+                    marginTop: 16,
+                    borderWidth: 1,
                     borderColor: colors.disable,
-                  }}
-                />
-                <View style={{marginTop: 16}}>
+                    borderRadius: 8,
+                  }}>
+                  <Text style={styles.fontIncomeDetail}>
+                    รายละเอียดเพิ่มเติม
+                  </Text>
                   <View
                     style={{
+                      borderWidth: StyleSheet.hairlineWidth,
+                      marginTop: normalize(8),
+                      borderColor: colors.disable,
+                    }}
+                  />
+                  <View style={{marginTop: 16}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: font.medium,
+                        }}>
+                        จากเกษตรกร
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: font.semiBold,
+                          color: colors.gray,
+                        }}>
+                        {data.totalPrice === '0'
+                          ? '-'
+                          : numberWithCommas(data.totalPrice) + ' ' + '฿'}
+                      </Text>
+                    </View>
+
+                    {data.totalPrice === '0' ? (
+                      <Text>รายการนี้ไม่มีเก็บเงินสดจากเกษตรกร</Text>
+                    ) : (
+                      <View
+                        style={{
+                          borderColor: colors.orange,
+                          borderWidth: 1,
+                          alignSelf: 'flex-start',
+                          paddingVertical: 2,
+                          paddingHorizontal: 4,
+                          borderRadius: 6,
+                          marginTop: 4,
+                          backgroundColor: colors.white,
+                        }}>
+                        <Text
+                          style={{
+                            fontFamily: font.medium,
+                            color: colors.orange,
+                          }}>
+                          เงินสด
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                  <View style={{marginTop: 16}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                      }}>
+                      <View
+                        style={{
+                          flex: 0.7,
+                        }}>
+                        <Text
+                          style={{
+                            fontFamily: font.medium,
+                          }}>
+                          จากบริษัท
+                        </Text>
+                        <Text
+                          style={{
+                            color: colors.greenSoft,
+                            lineHeight: 20,
+                            fontSize: 14,
+                          }}>
+                          หลังจากงานเสร็จสิ้น ท่านจะได้รับเงิน ภายใน 1-2
+                          วันทำการ
+                        </Text>
+                      </View>
+                      <Text
+                        style={{
+                          fontFamily: font.semiBold,
+                          color: colors.gray,
+                        }}>
+                        {numberWithCommas(
+                          calTotalPromotion(
+                            data?.discountCoupon,
+                            data?.discountPromotion,
+                            data?.revenuePromotion,
+                            data?.discountCampaignPoint,
+                          ),
+                        )}{' '}
+                        ฿
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+
+                {data.status == 'CANCELED' ? (
+                  <View
+                    style={{
+                      marginTop: normalize(20),
                       flexDirection: 'row',
-                      justifyContent: 'space-between',
                       alignItems: 'center',
                     }}>
+                    <Image
+                      source={icons.warningGrey}
+                      style={{
+                        marginRight: 8,
+                        width: normalize(24),
+                        height: normalize(24),
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: font.light,
+                        fontSize: normalize(14),
+                        color: colors.gray,
+                        flexShrink: 1,
+                      }}>
+                      งานถูกยกเลิก หากต้องการสอบถามข้อมูลเพิ่มเติม
+                      กรุณาติดต่อเจ้าหน้าที่
+                    </Text>
+                  </View>
+                ) : null}
+                {!isDoneAuth && (
+                  <WarningDocumentBox
+                    style={{
+                      marginTop: 16,
+                    }}
+                    screen="TASK_DETAIL"
+                  />
+                )}
+              </View>
+              {data?.statusDelay && data.statusDelay === 'APPROVED' ? (
+                <View
+                  style={{
+                    marginVertical: normalize(10),
+                    flexDirection: 'row',
+                    paddingHorizontal: normalize(20),
+                    alignItems: 'center',
+                    minHeight: normalize(44),
+                  }}>
+                  <View
+                    style={{
+                      paddingHorizontal: 16,
+                      paddingVertical: 8,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      backgroundColor: '#F7F8FA',
+                      borderWidth: 1,
+                      borderColor: '#F3F4F6',
+                      borderRadius: 8,
+                      width: '100%',
+                    }}>
+                    <Image
+                      source={icons.warningGrey}
+                      style={{marginRight: 20, width: 32, height: 32}}
+                    />
                     <Text
                       style={{
                         fontFamily: font.medium,
+                        fontSize: normalize(12),
+                        color: '#A5A7AB',
+                        width: '85%',
                       }}>
-                      จากเกตรกร
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: font.semiBold,
-                        color: colors.gray,
-                      }}>
-                      {data.totalPrice === '0'
-                        ? '-'
-                        : numberWithCommas(data.totalPrice) + ' ' + '฿'}
+                      คุณขอขยายเวลางานครบกำหนดที่ทางระบบกำหนดแล้ว
+                      หากต้องการขยายงานเพิ่มเติม กรุณาติดต่อเจ้าหน้าที่
                     </Text>
                   </View>
-
-                  {data.totalPrice === '0' ? (
-                    <Text>รายการนี้ไม่มีเก็บเงินสดจากเกษตรกร</Text>
-                  ) : (
-                    <View
-                      style={{
-                        borderColor: colors.orange,
-                        borderWidth: 1,
-                        alignSelf: 'flex-start',
-                        paddingVertical: 2,
-                        paddingHorizontal: 4,
-                        borderRadius: 6,
-                        marginTop: 4,
-                        backgroundColor: colors.white,
-                      }}>
-                      <Text
-                        style={{
-                          fontFamily: font.medium,
-                          color: colors.orange,
-                        }}>
-                        เงินสด
-                      </Text>
-                    </View>
-                  )}
-                </View>
-                <View style={{marginTop: 16}}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'flex-start',
-                    }}>
-                    <View
-                      style={{
-                        flex: 0.7,
-                      }}>
-                      <Text
-                        style={{
-                          fontFamily: font.medium,
-                        }}>
-                        จากบริษัท
-                      </Text>
-                      <Text
-                        style={{
-                          color: colors.greenSoft,
-                          lineHeight: 20,
-                          fontSize: 14,
-                        }}>
-                        หลังจากงานเสร็จสิ้น ท่านจะได้รับเงิน ภายใน 1-2 วันทำการ
-                      </Text>
-                    </View>
-                    <Text
-                      style={{
-                        fontFamily: font.semiBold,
-                        color: colors.gray,
-                      }}>
-                      {numberWithCommas(
-                        calTotalPromotion(
-                          data?.discountCoupon,
-                          data?.discountPromotion,
-                          data?.revenuePromotion,
-                          data?.discountCampaignPoint,
-                        ),
-                      )}{' '}
-                      ฿
-                    </Text>
-                  </View>
-                </View>
-              </View>
-
-              {data.status == 'CANCELED' ? (
-                <View
-                  style={{
-                    marginTop: normalize(20),
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={icons.warningGrey}
-                    style={{
-                      marginRight: 8,
-                      width: normalize(24),
-                      height: normalize(24),
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: font.light,
-                      fontSize: normalize(14),
-                      color: colors.gray,
-                      flexShrink: 1,
-                    }}>
-                    งานถูกยกเลิก หากต้องการสอบถามข้อมูลเพิ่มเติม
-                    กรุณาติดต่อเจ้าหน้าที่
-                  </Text>
                 </View>
               ) : null}
-              {!isDoneAuth && (
-                <WarningDocumentBox
-                  style={{
-                    marginTop: 16,
-                  }}
-                  screen="TASK_DETAIL"
-                />
-              )}
-            </View>
-            {data?.statusDelay && data.statusDelay === 'APPROVED' ? (
-              <View
-                style={{
-                  marginVertical: normalize(10),
-                  flexDirection: 'row',
-                  paddingHorizontal: normalize(20),
-                  alignItems: 'center',
-                  minHeight: normalize(44),
-                }}>
-                <View
-                  style={{
-                    paddingHorizontal: 16,
-                    paddingVertical: 8,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    backgroundColor: '#F7F8FA',
-                    borderWidth: 1,
-                    borderColor: '#F3F4F6',
-                    borderRadius: 8,
-                    width: '100%',
-                  }}>
-                  <Image
-                    source={icons.warningGrey}
-                    style={{marginRight: 20, width: 32, height: 32}}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: font.medium,
-                      fontSize: normalize(12),
-                      color: '#A5A7AB',
-                      width: '85%',
-                    }}>
-                    คุณขอขยายเวลางานครบกำหนดที่ทางระบบกำหนดแล้ว
-                    หากต้องการขยายงานเพิ่มเติม กรุณาติดต่อเจ้าหน้าที่
-                  </Text>
-                </View>
-              </View>
+            </ScrollView>
+
+            {data.status == 'WAIT_RECEIVE' ? (
+              <WaitReceiveFooter
+                mainFunc={() => {
+                  setOpenConfirmModal(true);
+                }}
+                togleModal={
+                  () => {}
+                  //  SheetManager.show('CallingSheet', {
+                  //    payload: {tel: data.farmer.telephoneNo},
+                  //  })
+                }
+                updatedAt={data.updatedAt}
+              />
             ) : null}
-          </ScrollView>
 
-          {data.status == 'WAIT_RECEIVE' ? (
-            <WaitReceiveFooter
-              mainFunc={() => {
-                setOpenConfirmModal(true);
-              }}
-              togleModal={
-                () => {}
-                //  SheetManager.show('CallingSheet', {
-                //    payload: {tel: data.farmer.telephoneNo},
-                //  })
-              }
-              updatedAt={data.updatedAt}
-            />
-          ) : null}
+            {data.status == 'WAIT_START' ? (
+              <WaitStartFooter
+                disable={
+                  new Date(
+                    convertDate(data.dateAppointment).setHours(
+                      convertDate(data.dateAppointment).getHours() - 3,
+                    ),
+                  ) >= todate
+                }
+                mainFunc={() => setShowModalStartTask(true)}
+                togleModal={() =>
+                  SheetManager.show('CallingSheet', {
+                    payload: {tel: data.farmer.telephoneNo},
+                  })
+                }
+              />
+            ) : null}
 
-          {data.status == 'WAIT_START' ? (
-            <WaitStartFooter
-              disable={
-                new Date(
-                  convertDate(data.dateAppointment).setHours(
-                    convertDate(data.dateAppointment).getHours() - 3,
-                  ),
-                ) >= todate
-              }
-              mainFunc={() => setShowModalStartTask(true)}
-              togleModal={() =>
-                SheetManager.show('CallingSheet', {
-                  payload: {tel: data.farmer.telephoneNo},
-                })
-              }
-            />
-          ) : null}
+            {data.status == 'IN_PROGRESS' ? (
+              <InprogressFooter
+                togleModalExtend={() => {
+                  setIsVisibleExtendModal(true);
+                }}
+                isProblem={data.isProblem || false}
+                statusDelay={data.statusDelay || null}
+                mainFunc={() => setTogleModalUpload(true)}
+                togleModal={() =>
+                  SheetManager.show('CallingSheet', {
+                    payload: {tel: data.farmer.telephoneNo},
+                  })
+                }
+              />
+            ) : null}
 
-          {data.status == 'IN_PROGRESS' ? (
-            <InprogressFooter
-              togleModalExtend={() => {
-                setIsVisibleExtendModal(true);
-              }}
-              isProblem={data.isProblem || false}
-              statusDelay={data.statusDelay || null}
-              mainFunc={() => setTogleModalUpload(true)}
-              togleModal={() =>
-                SheetManager.show('CallingSheet', {
-                  payload: {tel: data.farmer.telephoneNo},
-                })
-              }
-            />
-          ) : null}
-
-          {data.status == 'CANCELED' ? (
-            <CanceledFooter mainFunc={() => dialCall(callcenterNumber)} />
-          ) : null}
-        </>
-      ) : null}
+            {data.status == 'CANCELED' ? (
+              <CanceledFooter mainFunc={() => dialCall(callcenterNumber)} />
+            ) : null}
+          </>
+        ) : null}
+      </NetworkLost>
 
       <Modal transparent={true} visible={openConfirmModal}>
         <View

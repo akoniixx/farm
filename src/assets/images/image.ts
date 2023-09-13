@@ -54,4 +54,6 @@ export default {
   imageUploadIDCardDone: require('./imageUploadIDCardDone.png'),
   imageUploadBookBank: require('./imageUploadBookBank.png'),
   loaderImage: require('./loaderImage.png'),
+  lostNetwork: require('./lostNetwork.png'),
+  refresh: require('./refresh.png'),
 };

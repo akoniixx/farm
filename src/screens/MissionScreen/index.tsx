@@ -40,10 +40,10 @@ const tabLists = [
 ];
 
 export default function MissionScreen({navigation}: MissionScreenProps) {
-  const [selectedTab, setSelectedTab] = React.useState<string>('all');
-  const handleTabChange = (value: string) => {
-    setSelectedTab(value);
-  };
+  // const [selectedTab, setSelectedTab] = React.useState<string>('all');
+  // const handleTabChange = (value: string) => {
+  //   setSelectedTab(value);
+  // };
   const [campaignImage, setCampaignImage] = React.useState<string>('');
   const [loading, setLoading] = React.useState(false);
 
@@ -88,7 +88,7 @@ export default function MissionScreen({navigation}: MissionScreenProps) {
             }}>
             ภารกิจ
           </Text>
-          {/* 
+          {/*
           <View
             style={{
               height: 45,

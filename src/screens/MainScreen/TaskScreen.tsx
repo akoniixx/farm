@@ -1,14 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {normalize} from '@rneui/themed';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {
-  Animated,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useMemo, useState} from 'react';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {FlatList} from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -20,47 +14,58 @@ import Tasklists from '../../components/TaskList/Tasklists';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 
 import {stylesCentral} from '../../styles/StylesCentral';
-import * as ImagePicker from 'react-native-image-picker';
 import {dataUpdateStatusEntity} from '../../entities/TaskScreenEntities';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {callcenterNumber} from '../../definitions/callCenterNumber';
-import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import MyProfileScreen from '../ProfileVerifyScreen/MyProfileScreen';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {useAuth} from '../../contexts/AuthContext';
 import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
 import Text from '../../components/Text';
+import {RefreshControl} from 'react-native';
+import Loading from '../../components/Loading/Loading';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
 
 interface Prop {
   navigation: any;
   dronerStatus: string;
 }
 
+const initialPage = 1;
+const limit = 10;
 const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const dronerStatus = props.dronerStatus;
   const {
     state: {isDoneAuth},
   } = useAuth();
-
+  const [page, setPage] = useState<number>(initialPage);
   const navigation = RootNavigation.navigate;
-  const [error, setError] = useState<string>('');
-  const [data, setData] = useState<any>([]);
+  const [error] = useState<string>('');
+  const [data, setData] = useState<{
+    data: any;
+    count: number;
+  }>({
+    data: [],
+    count: 0,
+  });
   const [loading, setLoading] = useState<boolean>(false);
   const [checkResIsComplete, setCheckResIsComplete] = useState<boolean>(false);
-  const [toggleModalStartTask, setToggleModalStartTask] =
-    useState<boolean>(false);
 
-  const [toggleModalReview, setToggleModalReview] = useState<boolean>(false);
-  const [toggleModalSuccess, setToggleModalSuccess] = useState<boolean>(false);
-  const [imgUploaded, setImgUploaded] = useState<boolean>(false);
+  // const [toggleModalStartTask, setToggleModalStartTask] =
+  //   useState<boolean>(false);
+
+  // const [toggleModalReview, setToggleModalReview] = useState<boolean>(false);
+  const [imgUploaded] = useState<boolean>(false);
   const [finishImg, setFinishImg] = useState<any>(null);
   const [defaultRating, setDefaultRating] = useState<number>(0);
-  const [maxRatting, setMaxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
+  const [maxRatting] = useState<Array<number>>([1, 2, 3, 4, 5]);
   const [comment, setComment] = useState<string>('');
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [imageFile, setImageFile] = useState<{
     file: any;
     fileDrug: any;
   }>();
+  const [loadingInfinite, setLoadingInfinite] = useState<boolean>(false);
   const [idUpload, setIdUpload] = useState<string>('');
   const [updateBy, setUpdateBy] = useState<string>('');
   const [percentSuccess, setPercentSuccess] = useState<number>(0);
@@ -79,21 +84,49 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
       getData();
     }, []),
   );
-
-  useEffect(() => {
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
     getData();
+    setRefreshing(false);
   }, []);
-
+  const onEndReached = async () => {
+    if (data.data.length < data.count) {
+      setLoadingInfinite(true);
+      setPage(page + 1);
+      const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
+      TaskDatasource.getTaskById(
+        droner_id,
+        ['WAIT_START', 'IN_PROGRESS'],
+        page + 1,
+        limit,
+      )
+        .then(res => {
+          if (res !== undefined) {
+            setData({
+              data: [...data.data, ...res.data],
+              count: res.count,
+            });
+            setCheckResIsComplete(true);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoadingInfinite(false);
+        });
+    }
+  };
   const startTask = () => {
     setLoading(true);
-    setToggleModalStartTask(false);
+    // setToggleModalStartTask(false);
     TaskDatasource.updateTaskStatus(
       dataUpdateStatus.id,
       dataUpdateStatus.dronerId,
       'IN_PROGRESS',
       dataUpdateStatus.updateBy,
     )
-      .then(res => {
+      .then(() => {
         Toast.show({
           type: 'success',
           text1: `งาน #${dataUpdateStatus.taskNo}`,
@@ -118,16 +151,15 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
       updateBy: updateBy,
     });
 
-    setToggleModalStartTask(true);
+    // setToggleModalStartTask(true);
   };
 
   const openModalUpload = (name: string) => {
     setUpdateBy(name);
   };
 
-  const onFinishTask = () => {
-    setToggleModalReview(false);
-    setTimeout(() => setLoading(true), 500);
+  const onFinishTask = async () => {
+    setLoading(true);
     const payload = {
       taskId: idUpload,
       updateBy: updateBy,
@@ -137,31 +169,35 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
       fileDrug: imageFile?.fileDrug,
     };
 
-    TaskDatasource.finishTask(payload)
-      .then(res => {
-        setLoading(false);
-        setTimeout(() => setToggleModalSuccess(true), 200);
+    await TaskDatasource.finishTask(payload)
+      .then(() => {
         setFinishImg(null);
         setDefaultRating(0);
+        // setLoading(false);
       })
       .catch(err => {
         console.log(err.response);
+        // setLoading(false);
 
-        setLoading(false);
         Toast.show({
           type: 'error',
           text1: 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
         });
       })
       .finally(() => {
-        setLoading(false);
+        // setLoading(false);
       });
   };
 
   const getData = async () => {
     setLoading(true);
     const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
-    TaskDatasource.getTaskById(droner_id, ['WAIT_START', 'IN_PROGRESS'], 1, 999)
+    TaskDatasource.getTaskById(
+      droner_id,
+      ['WAIT_START', 'IN_PROGRESS'],
+      initialPage,
+      limit,
+    )
       .then(res => {
         if (res !== undefined) {
           // setData(res);
@@ -183,12 +219,10 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     setIdUpload(id);
   };
 
-  const onChangImgFinish = (payloadFile: any) => {
+  const onChangeImgFinish = (payloadFile: any) => {
     setImageFile(payloadFile);
-    setTimeout(() => setToggleModalReview(true), 500);
   };
   const onCloseSuccessModal = () => {
-    setToggleModalSuccess(false);
     setTimeout(() => navigation('TaskDetailScreen', {taskId: idUpload}), 500);
   };
   const RenderWarningDoc = useMemo(() => {
@@ -213,14 +247,14 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   }, [isDoneAuth, props.navigation]);
 
   const RenderWarningDocEmpty = useMemo(() => {
-    if (!isDoneAuth && data.length < 1) {
+    if (!isDoneAuth && data.data.length < 1) {
       return () => (
         <View
           style={{
             paddingBottom: 8,
             paddingHorizontal: 8,
-            height : normalize(80),
-            backgroundColor : colors.grayBg
+            height: normalize(80),
+            backgroundColor: colors.grayBg,
           }}>
           <WarningDocumentBox navigation={props.navigation} />
         </View>
@@ -230,16 +264,31 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     }
   }, [isDoneAuth, props.navigation, data]);
   return (
-    <>
+    <NetworkLost onPress={onRefresh}>
       <RenderWarningDocEmpty />
-      {data.length !== 0 && checkResIsComplete ? (
+      {data.data.length !== 0 && checkResIsComplete ? (
         <View style={[{flex: 1}]}>
           <FlatList
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            onEndReached={onEndReached}
             ListHeaderComponent={RenderWarningDoc}
             contentContainerStyle={{paddingHorizontal: 8}}
-            ListFooterComponent={<View style={{height: 40}} />}
+            ListFooterComponent={
+              loadingInfinite ? (
+                <View
+                  style={{
+                    padding: 16,
+                  }}>
+                  <Loading spinnerSize={40} />
+                </View>
+              ) : (
+                <View style={{height: 40}} />
+              )
+            }
             keyExtractor={element => element.item.taskNo}
-            data={data}
+            data={data.data}
             extraData={data}
             renderItem={({item}: any) => {
               return (
@@ -263,9 +312,9 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                   tel={item.item.farmer.telephoneNo}
                   taskId={item.item.id}
                   farmArea={item.item.farmAreaAmount}
-                  toggleModalStartTask={toggleModalStartTask}
                   fetchTask={getData}
-                  setToggleModalStartTask={setToggleModalStartTask}
+                  // toggleModalStartTask={toggleModalStartTask}
+                  // setToggleModalStartTask={setToggleModalStartTask}
                   setShowModalStartTask={() =>
                     showModalStartTask(
                       item.item.id,
@@ -282,15 +331,12 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
                   starImgCorner={starImgCorner}
                   imgUploaded={imgUploaded}
                   finishImg={finishImg}
-                  onChangImgFinish={onChangImgFinish}
-                  toggleModalReview={toggleModalReview}
+                  onChangeImgFinish={onChangeImgFinish}
                   setComment={setComment}
                   comment={comment}
                   error={error}
-                  toggleModalSuccess={toggleModalSuccess}
-                  setToggleModalSuccess={setToggleModalSuccess}
                   onFinishTask={onFinishTask}
-                  setToggleModalUpload={() =>
+                  openModalUpload={() =>
                     openModalUpload(
                       `${item.item.droner.firstname} ${item.item.droner.lastname}`,
                     )
@@ -321,7 +367,8 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
               style={[
                 stylesCentral.center,
                 {flex: 1, backgroundColor: colors.grayBg, padding: 8},
-              ]}></View>
+              ]}
+            />
           )}
           {dronerStatus == 'PENDING' ? (
             <View style={{backgroundColor: colors.grayBg}}>
@@ -501,7 +548,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
         textContent={'Loading...'}
         textStyle={{color: '#FFF'}}
       />
-    </>
+    </NetworkLost>
   );
 };
 export default TaskScreen;

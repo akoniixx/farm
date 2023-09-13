@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, Image, ScrollView} from 'react-native';
+import {View, TouchableOpacity, Image, ScrollView} from 'react-native';
 import React from 'react';
 import {RouteProp, useFocusEffect} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';

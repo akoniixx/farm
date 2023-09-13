@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {colors, font, icons} from '../../assets';
 import LinearGradient from 'react-native-linear-gradient';
 import {numberWithCommas} from '../../function/utility';

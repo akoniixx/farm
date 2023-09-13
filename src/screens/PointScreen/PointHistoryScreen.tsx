@@ -1,37 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  RefreshControl,
-  TouchableOpacity,
-} from 'react-native';
+import React from 'react';
+import {Image, Text, View} from 'react-native';
 import {colors, font, icons} from '../../assets';
-import image from '../../assets/images/image';
 import CustomHeader from '../../components/CustomHeader';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {normalize} from '../../function/Normalize';
 import {numberWithCommas} from '../../function/utility';
-import {HistoryPoint} from '../../components/point/HistoryPoint';
-import {
-  getAllHistoryPoint,
-  historyPoint,
-} from '../../datasource/HistoryPointDatasource';
 import LinearGradient from 'react-native-linear-gradient';
 import PointTapNavigator from '../../navigations/topTabs/PointTapNavigator';
 import {usePoint} from '../../contexts/PointContext';
 import {mixpanel} from '../../../mixpanel';
 
-const DetailPointScreen: React.FC<any> = ({navigation, route}) => {
+const DetailPointScreen: React.FC<any> = ({navigation}) => {
   const {currentPoint} = usePoint();
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: colors.white,
+        backgroundColor: colors.grayBg,
       }}>
       <View>
         <CustomHeader

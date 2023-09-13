@@ -32,4 +32,5 @@ export default {
   redPrice: '#EF4E4E',
   redMedium: '#D6432E',
   blown: '#523A19',
+  loading: '#E3E3E3',
 };

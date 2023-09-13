@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -11,7 +11,6 @@ import {
 import HTML from 'react-native-render-html';
 import colors from '../../assets/colors/colors';
 import CustomHeader from '../../components/CustomHeader';
-import {CardGuru} from '../../components/Guru/CardGuru';
 
 import {font} from '../../assets/index';
 import {useIsFocused} from '@react-navigation/native';
@@ -23,11 +22,18 @@ import image from '../../assets/images/image';
 import {momentExtend} from '../../function/utility';
 import {normalize} from '../../function/Normalize';
 import {mixpanel} from '../../../mixpanel';
+import NetworkLost from '../../components/NetworkLost/NetworkLost';
+import {RefreshControl} from 'react-native';
 
 const DetailGuruScreen: React.FC<any> = ({navigation}) => {
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>();
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getGuruById();
+  };
 
   useEffect(() => {
     getGuruById();
@@ -62,96 +68,105 @@ const DetailGuruScreen: React.FC<any> = ({navigation}) => {
           navigation.goBack();
         }}
       />
-      {data != undefined ? (
-        <ScrollView>
-          <View>
+      <NetworkLost onPress={onRefresh}>
+        {data != undefined ? (
+          <ScrollView
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
             <View>
-              <Image
-                style={{height: normalize(150)}}
-                source={!data.imagePath ? image.loading : {uri: data.imagePath}}
-              />
-              <View style={{paddingHorizontal: 15, top: 15}}>
-                <Text style={styles.text}>{data.title}</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  paddingVertical: 20,
-                  paddingHorizontal: 15,
-                }}>
-                <Text style={styles.textDate} numberOfLines={1}>
-                  {momentExtend.toBuddhistYear(data.createAt, 'DD MMM YY')}
-                </Text>
-                <Text style={[styles.textDate, {left: 15}]} numberOfLines={1}>
-                  {`อ่านแล้ว ` + data.read + ` ครั้ง`}
-                </Text>
-              </View>
-              <View
-                style={{
-                  borderBottomWidth: 0.3,
-                  borderColor: colors.disable,
-                  width: Dimensions.get('screen').width * 0.9,
-                  alignSelf: 'center',
-                }}></View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  paddingVertical: 20,
-                  paddingHorizontal: 15,
-                }}>
-                <HTML
-                  source={{html: data.details}}
-                  contentWidth={Dimensions.get('screen').width}
-                  tagsStyles={{
-                    strong: {
-                      color: colors.fontGrey,
-                      fontSize: normalize(18),
-                      fontWeight: '400',
-                      lineHeight: 28,
-                    },
-                    em: {
-                      color: colors.fontGrey,
-                      fontSize: normalize(18),
-                      fontWeight: '200',
-                      lineHeight: 28,
-                    },
-                    ul: {
-                      color: colors.fontGrey,
-                      fontSize: normalize(18),
-                      fontWeight: '200',
-                      lineHeight: 28,
-                    },
-                    u: {
-                      color: colors.fontGrey,
-                      fontSize: normalize(18),
-                      fontWeight: '200',
-                      lineHeight: 28,
-                    },
-                    p: {
-                      color: colors.fontGrey,
-                      fontSize: normalize(18),
-                      fontWeight: '200',
-                      lineHeight: 28,
-                    },
-                    ol: {
-                      color: colors.fontGrey,
-                      fontSize: normalize(18),
-                      fontWeight: '200',
-                      lineHeight: 28,
-                    },
-                    li: {
-                      color: colors.fontGrey,
-                      fontSize: normalize(18),
-                      fontWeight: '200',
-                      lineHeight: 28,
-                    },
+              <View>
+                <Image
+                  style={{height: normalize(150)}}
+                  source={
+                    !data.imagePath ? image.loading : {uri: data.imagePath}
+                  }
+                />
+                <View style={{paddingHorizontal: 15, top: 15}}>
+                  <Text style={styles.text}>{data.title}</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingVertical: 20,
+                    paddingHorizontal: 15,
+                  }}>
+                  <Text style={styles.textDate} numberOfLines={1}>
+                    {momentExtend.toBuddhistYear(data.createAt, 'DD MMM YY')}
+                  </Text>
+                  <Text style={[styles.textDate, {left: 15}]} numberOfLines={1}>
+                    {'อ่านแล้ว ' + data.read + ' ครั้ง'}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 0.3,
+                    borderColor: colors.disable,
+                    width: Dimensions.get('screen').width * 0.9,
+                    alignSelf: 'center',
                   }}
                 />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingVertical: 20,
+                    paddingHorizontal: 15,
+                  }}>
+                  <HTML
+                    source={{html: data.details}}
+                    contentWidth={Dimensions.get('screen').width}
+                    tagsStyles={{
+                      strong: {
+                        color: colors.fontGrey,
+                        fontSize: normalize(18),
+                        fontWeight: '400',
+                        lineHeight: 28,
+                      },
+                      em: {
+                        color: colors.fontGrey,
+                        fontSize: normalize(18),
+                        fontWeight: '200',
+                        lineHeight: 28,
+                      },
+                      ul: {
+                        color: colors.fontGrey,
+                        fontSize: normalize(18),
+                        fontWeight: '200',
+                        lineHeight: 28,
+                      },
+                      u: {
+                        color: colors.fontGrey,
+                        fontSize: normalize(18),
+                        fontWeight: '200',
+                        lineHeight: 28,
+                      },
+                      p: {
+                        color: colors.fontGrey,
+                        fontSize: normalize(18),
+                        fontWeight: '200',
+                        lineHeight: 28,
+                      },
+                      ol: {
+                        color: colors.fontGrey,
+                        fontSize: normalize(18),
+                        fontWeight: '200',
+                        lineHeight: 28,
+                      },
+                      li: {
+                        color: colors.fontGrey,
+                        fontSize: normalize(18),
+                        fontWeight: '200',
+                        lineHeight: 28,
+                      },
+                    }}
+                  />
+                </View>
               </View>
             </View>
-          </View>
-        </ScrollView>
-      ) : null}
+          </ScrollView>
+        ) : null}
+      </NetworkLost>
+
       <Spinner
         visible={loading}
         textContent={'Loading...'}

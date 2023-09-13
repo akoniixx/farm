@@ -3,12 +3,12 @@ import React from 'react';
 import {font, image} from '../../assets';
 import colors from '../../assets/colors/colors';
 import {DigitalRewardType} from '../../types/TypeRewardDigital';
-import FastImage from 'react-native-fast-image';
 import DashedLine from 'react-native-dashed-line';
 import {useAuth} from '../../contexts/AuthContext';
 import {momentExtend} from '../../function/utility';
 import Text from '../Text';
 import moment from 'moment';
+import ProgressiveImage from '../ProgressingImage/ProgressingImage';
 const mappingStatusText = {
   REQUEST: 'พร้อมใช้',
   USED: 'ใช้แล้ว',
@@ -55,7 +55,7 @@ export default function CardRedeemDigital({
           style={{
             flex: 0.2,
           }}>
-          <FastImage
+          <ProgressiveImage
             source={{
               uri: imagePath,
             }}

@@ -21,7 +21,6 @@ import {MainButton} from '../../components/Button/MainButton';
 import fonts from '../../assets/fonts';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
-import * as RootNavigation from '../../navigations/RootNavigation';
 
 interface AreaServiceEntity {
   area: string;
@@ -79,6 +78,7 @@ const ServiceArea: React.FC<any> = ({navigation, route}) => {
 
   useEffect(() => {
     getNameFormLat();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [position]);
 
   useEffect(() => {
@@ -89,6 +89,8 @@ const ServiceArea: React.FC<any> = ({navigation, route}) => {
         longitude: position.longitude,
       });
     }, 500);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -96,13 +98,13 @@ const ServiceArea: React.FC<any> = ({navigation, route}) => {
     let filter = data.filter(str => str.area.includes(searchActive));
     let arr = [];
     for (let i = 0; i < 20; i++) {
-      if (!!filter[i]) {
+      if (filter[i]) {
         arr.push(filter[i]);
       }
     }
     setDataStore(filter);
     setDataRender(arr);
-  }, [searchActive]);
+  }, [searchActive, data]);
 
   useEffect(() => {
     let arr = [];
@@ -116,6 +118,7 @@ const ServiceArea: React.FC<any> = ({navigation, route}) => {
     }
     let newarr = dataRender.concat(arr);
     setDataRender(newarr);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const getNameFormLat = () => {
@@ -434,7 +437,7 @@ const ServiceArea: React.FC<any> = ({navigation, route}) => {
                       positionForm.districtId,
                       positionForm.subdistrictId,
                       positionForm.locationName,
-                    ).then(res => navigation.goBack());
+                    ).then(() => navigation.goBack());
                   }}
                   label="บันทึก"
                   color={colors.orange}

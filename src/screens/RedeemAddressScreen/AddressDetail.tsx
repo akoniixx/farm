@@ -360,7 +360,8 @@ export default function AddressDetail({
           <View
             style={{
               marginTop: 16,
-            }}></View>
+            }}
+          />
         ) : (
           <View
             style={{

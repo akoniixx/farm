@@ -15,14 +15,11 @@ import {normalize} from '../../function/Normalize';
 import CustomHeader from '../../components/CustomHeader';
 import {ScrollView} from 'react-native-gesture-handler';
 import {condition} from '../../assets/constant/constant';
-import {CheckBox} from '@rneui/themed';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import icons from '../../assets/icons/icons';
 
 const ConditionScreen: React.FC<any> = ({navigation}) => {
   const [checked1, setChecked1] = useState<boolean>(false);
   const [checked2, setChecked2] = useState<boolean>(false);
-  const [disabledCheckbox, setDisabledCheckbox] = useState<boolean>(true);
 
   //function check scroll down
   /* const isCloseToBottom = ({

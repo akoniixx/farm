@@ -1,11 +1,10 @@
 import {View, Image, TouchableOpacity, Platform, Linking} from 'react-native';
-import React, {useEffect, useRef} from 'react';
+import React from 'react';
 import Modal from './Modal';
 import {colors, font, icons} from '../../assets';
 import Text from '../Text';
-import {Camera, PhotoFile, useCameraDevices} from 'react-native-vision-camera';
+import {Camera, PhotoFile} from 'react-native-vision-camera';
 import {navigate} from '../../navigations/RootNavigation';
-import {Asset} from 'react-native-image-picker';
 
 interface Props {
   visible: boolean;
@@ -90,8 +89,10 @@ export default function ModalUploadImage({
         Platform.OS === 'android' ? onOpenCamera() : onPressCamera();
       },
       icon: icons.cameraGray,
+      id: 1,
     },
     {
+      id: 2,
       label: 'เลือกจากคลังภาพ',
       onPress: () => {
         onPressLibrary();
@@ -99,6 +100,7 @@ export default function ModalUploadImage({
       icon: icons.imageStorage,
     },
     {
+      id: 3,
       label: 'ยกเลิก',
       onPress: () => {
         onCancel();
@@ -124,6 +126,7 @@ export default function ModalUploadImage({
             if (isLast) {
               return (
                 <TouchableOpacity
+                  key={el.id}
                   onPress={el.onPress}
                   style={{
                     backgroundColor: 'white',
@@ -149,6 +152,7 @@ export default function ModalUploadImage({
 
             return (
               <TouchableOpacity
+                key={el.id}
                 onPress={el.onPress}
                 style={{
                   backgroundColor: 'white',

@@ -26,9 +26,7 @@ import {ActionContext} from '../../../App';
 import {dialCall} from '../../function/utility';
 import RewardScreen from '../../screens/RewardScreen';
 import MissionScreen from '../../screens/MissionScreen';
-import Draggable from 'react-native-draggable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Campaign} from '../../datasource/CampaignDatasource';
 import MyProfileScreen from '../../screens/ProfileVerifyScreen/MyProfileScreen';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
@@ -36,6 +34,7 @@ import {useAuth} from '../../contexts/AuthContext';
 import { rewardDatasource } from '../../datasource/RewardDatasource';
 import { missionDatasource } from '../../datasource/MissionDatasource';
 import moment from 'moment';
+import analytics from '@react-native-firebase/analytics';
 
 export type TabNavigatorParamList = {
   mission: undefined;
@@ -66,6 +65,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   useEffect(() => {
     const getProfile = async () => {
       const droner_id = await AsyncStorage.getItem('droner_id');
+
       ProfileDatasource.getProfile(droner_id!).then(res => {
         setStatus(res.status);
       });
@@ -139,6 +139,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
       .then(async message => {
         if (message) {
           const type = message.data?.type;
+          await analytics().logEvent('notification_opened', {
+            type: type,
+            ...message.data,
+          });
+
           switch (type) {
             case 'APPROVE_DRONER_SUCCESS':
               setInitialRouteName('profile');
@@ -249,6 +254,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
       });
     messaging().onNotificationOpenedApp(async message => {
       const type = message.data?.type;
+      await analytics().logEvent('notification_opened', {
+        type: type,
+        ...message.data,
+      });
+
       const jumpAction = TabActions.jumpTo('profile');
       switch (type) {
         case 'APPROVE_DRONER_SUCCESS':
@@ -357,6 +367,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
 
     messaging().onMessage(async message => {
       const type = message.data?.type;
+      await analytics().logEvent('notification_received', {
+        type: type,
+        ...message.data,
+      });
+
       switch (type) {
         case 'APPROVE_DRONER_SUCCESS':
           setRegisterNoti(true);
