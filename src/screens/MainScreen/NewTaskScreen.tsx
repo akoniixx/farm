@@ -31,6 +31,7 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {useAuth} from '../../contexts/AuthContext';
 import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 interface Prop {
   isOpenReceiveTask: boolean;
@@ -238,36 +239,39 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
   return (
     <NetworkLost onPress={onRefresh}>
       <RenderWarningDocEmpty />
-      <View style={[{flex: 1}]}>
-        {data?.data?.length == 0 &&
-        !isOpenReceiveTask &&
-        dronerStatus === 'ACTIVE' ? (
-          <View
-            style={[
-              stylesCentral.center,
-              {flex: 1, backgroundColor: colors.grayBg},
-            ]}>
-            <Image
-              source={image.blankNewTask}
-              style={{width: normalize(136), height: normalize(111)}}
-            />
-            <View
-              style={{
-                marginTop: normalize(20),
-                paddingHorizontal: normalize(25),
-              }}>
-              <Text style={[stylesCentral.blankFont, {textAlign: 'center'}]}>
-                ยังไม่มีงานใหม่ เนื่องจากคุณปิดรับงานอยู่
-                กรุณากดเปิดรับงานเพื่อที่จะไม่พลาดงานสำหรับคุณ!
-              </Text>
-            </View>
-          </View>
-        ) : (
-          dronerStatus === 'ACTIVE' && <View />
-        )}
-        {data?.data?.length == 0 &&
-          isOpenReceiveTask &&
-          dronerStatus === 'ACTIVE' && (
+      {loading ? (
+        <View
+          style={{
+            paddingHorizontal: 16,
+          }}>
+          <SkeletonPlaceholder
+            backgroundColor={colors.skeleton}
+            speed={2000}
+            borderRadius={8}>
+            <>
+              {[1, 2].map(() => {
+                return (
+                  <SkeletonPlaceholder.Item
+                    style={{
+                      marginTop: 16,
+                    }}>
+                    <View
+                      style={{
+                        height: normalize(200),
+                        width: '100%',
+                      }}
+                    />
+                  </SkeletonPlaceholder.Item>
+                );
+              })}
+            </>
+          </SkeletonPlaceholder>
+        </View>
+      ) : (
+        <View style={[{flex: 1}]}>
+          {data?.data?.length == 0 &&
+          !isOpenReceiveTask &&
+          dronerStatus === 'ACTIVE' ? (
             <View
               style={[
                 stylesCentral.center,
@@ -280,361 +284,392 @@ const NewTaskScreen: React.FC<Prop> = (props: Prop) => {
               <View
                 style={{
                   marginTop: normalize(20),
-                  paddingHorizontal: normalize(40),
+                  paddingHorizontal: normalize(25),
                 }}>
-                <Text style={stylesCentral.blankFont}>
-                  โปรดรอเพื่อรับงานจากระบบ
+                <Text style={[stylesCentral.blankFont, {textAlign: 'center'}]}>
+                  ยังไม่มีงานใหม่ เนื่องจากคุณปิดรับงานอยู่
+                  กรุณากดเปิดรับงานเพื่อที่จะไม่พลาดงานสำหรับคุณ!
                 </Text>
               </View>
             </View>
+          ) : (
+            dronerStatus === 'ACTIVE' && <View />
           )}
-
-        {dronerStatus == 'PENDING' ? (
-          <View
-            style={{
-              backgroundColor: colors.grayBg,
-              flex: 1,
-              justifyContent: 'flex-end',
-            }}>
-            <View
-              style={{
-                backgroundColor: 'white',
-                padding: normalize(10),
-                margin: normalize(10),
-                borderWidth: 2,
-                borderColor: colors.greyWhite,
-                borderRadius: 16,
-              }}>
-              <View style={{flexDirection: 'row'}}>
-                <View
-                  style={{
-                    display: 'flex',
-                    backgroundColor: '#FFF7F4',
-                    paddingHorizontal: normalize(10),
-                    paddingVertical: normalize(5),
-                    borderRadius: 16,
-                  }}>
-                  <Text
-                    style={{
-                      color: '#B16F05',
-                      fontFamily: fonts.bold,
-                      fontSize: normalize(16),
-                    }}>
-                    รอตรวจสอบเอกสาร
-                  </Text>
-                </View>
-              </View>
+          {data?.data?.length == 0 &&
+            isOpenReceiveTask &&
+            dronerStatus === 'ACTIVE' && (
               <View
-                style={{paddingBottom: normalize(20), marginTop: normalize(5)}}>
-                <Text
-                  style={{
-                    fontFamily: fonts.medium,
-                    fontSize: normalize(18),
-                    color: 'black',
-                  }}>
-                  เจ้าหน้าที่กำลังตรวจสอบเอกสารการยืนยันตัวตน และ โดรนของคุณอยู่
-                  กรุณาตรวจสอบหากคุณยังไม่เพิ่มโดรน
-                </Text>
-              </View>
-            </View>
-          </View>
-        ) : null}
-        {dronerStatus == 'REJECTED' ? (
-          <View
-            style={{
-              backgroundColor: colors.grayBg,
-              flex: 1,
-              justifyContent: 'flex-end',
-            }}>
-            <View
-              style={{
-                backgroundColor: 'white',
-                padding: normalize(10),
-                margin: normalize(10),
-                borderWidth: 2,
-                borderColor: colors.greyWhite,
-                borderRadius: 16,
-              }}>
-              <View style={{flexDirection: 'row'}}>
-                <View
-                  style={{
-                    display: 'flex',
-                    backgroundColor: '#FFF7F4',
-                    paddingHorizontal: normalize(10),
-                    paddingVertical: normalize(5),
-                    borderRadius: 16,
-                  }}>
-                  <Text
-                    style={{
-                      color: '#B16F05',
-                      fontFamily: fonts.bold,
-                      fontSize: normalize(16),
-                    }}>
-                    ยืนยันตัวตนไม่สำเร็จ
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={{paddingBottom: normalize(20), marginTop: normalize(5)}}>
-                <Text
-                  style={{
-                    fontFamily: fonts.medium,
-                    fontSize: normalize(18),
-                    color: 'black',
-                  }}>
-                  โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร.{' '}
-                  {callcenterNumber}
-                </Text>
-              </View>
-            </View>
-          </View>
-        ) : null}
-        {dronerStatus == 'OPEN' ? (
-          <View
-            style={{
-              backgroundColor: colors.grayBg,
-              flex: 1,
-              justifyContent: 'flex-end',
-            }}>
-            <View
-              style={{
-                backgroundColor: 'white',
-                padding: normalize(10),
-                margin: normalize(10),
-                borderWidth: 2,
-                borderColor: colors.greyWhite,
-                borderRadius: 16,
-              }}>
-              <View style={{flexDirection: 'row'}}>
-                <View
-                  style={{
-                    display: 'flex',
-                    backgroundColor: '#FFF7F4',
-                    paddingHorizontal: normalize(10),
-                    paddingVertical: normalize(5),
-                    borderRadius: 16,
-                  }}>
-                  <Text
-                    style={{
-                      color: '#B16F05',
-                      fontFamily: fonts.bold,
-                      fontSize: normalize(16),
-                    }}>
-                    รอยืนยันตัวตน
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={{
-                  paddingBottom: normalize(20),
-                  marginTop: normalize(5),
-                }}>
-                <Text
-                  style={{
-                    fontFamily: fonts.medium,
-                    fontSize: normalize(18),
-                    color: 'black',
-                  }}>
-                  อีกนิดเดียว มากรอกข้อมูลโปรไฟล์ของคุณให้ ครบถ้วน
-                  เพื่อเริ่มรับงานบินโดรนในระบบ
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
+                style={[
+                  stylesCentral.center,
+                  {flex: 1, backgroundColor: colors.grayBg},
+                ]}>
                 <Image
-                  source={
-                    Number(percentSuccess) === 50
-                      ? image.inprogress50
-                      : Number(percentSuccess) === 75
-                      ? image.inprogress75
-                      : image.inprogress100
-                  }
+                  source={image.blankNewTask}
+                  style={{width: normalize(136), height: normalize(111)}}
+                />
+                <View
                   style={{
-                    width: normalize(50),
-                    height: normalize(50),
-                  }}
-                />
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation('MyProfileScreen', MyProfileScreen)
-                  }>
-                  <View style={styles.button}>
-                    <Text style={styles.textButton}>เพิ่มข้อมูลโปรไฟล์</Text>
-                  </View>
-                </TouchableOpacity>
+                    marginTop: normalize(20),
+                    paddingHorizontal: normalize(40),
+                  }}>
+                  <Text style={stylesCentral.blankFont}>
+                    โปรดรอเพื่อรับงานจากระบบ
+                  </Text>
+                </View>
               </View>
-            </View>
-          </View>
-        ) : null}
-        {data?.data?.length > 0 && (
-          <View
-            style={{
-              paddingTop: 8,
-            }}>
-            <FlatList
-              refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-              }
-              onEndReached={onLoadMore}
-              ListHeaderComponent={RenderWarningDoc}
-              contentContainerStyle={{
-                paddingHorizontal: 8,
-                paddingTop: 8,
-                marginBottom: 8,
-              }}
-              keyExtractor={element => element.item.id}
-              data={data.data}
-              renderItem={({item}: any) => (
-                <NewTask
-                  {...item.item}
-                  taskId={item.item.id}
-                  taskNo={item.item.taskNo}
-                  status={item.item.status}
-                  title={item.item.farmerPlot.plantName}
-                  price={
-                    parseInt(item.item.price) +
-                    parseInt(item.item.revenuePromotion)
-                  }
-                  date={item.item.dateAppointment}
-                  address={item.item.farmerPlot.locationName}
-                  distance={
-                    item.item.taskDronerTemp.find(
-                      (x: any) => x.dronerId == dronerId,
-                    ).distance
-                  }
-                  user={`${item.item.farmer.firstname} ${item.item.farmer.lastname}`}
-                  img={item.image_profile_url}
-                  preparation={item.item.preparationBy}
-                  tel={item.item.farmer.telephoneNo}
-                  updatedAt={item.item.updatedAt}
-                  comment={item.item.comment}
-                  // callFunc={handlePresentModalPress}
-                  // setTel={setTelNum}
-                  farmArea={item.item.farmAreaAmount}
-                  receiveTask={() => {
-                    setSelectedTaskId(item.item.id);
-                    setOpenConfirmModal(true);
-                  }}
-                  fetchData={() => getData()}
-                />
-              )}
-            />
-          </View>
-        )}
-        <Modal transparent={true} visible={openConfirmModal}>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+            )}
+
+          {dronerStatus == 'PENDING' ? (
             <View
               style={{
-                padding: normalize(20),
-                backgroundColor: colors.white,
-                width: width * 0.9,
-                display: 'flex',
-                justifyContent: 'center',
-                borderRadius: normalize(8),
+                backgroundColor: colors.grayBg,
+                flex: 1,
+                justifyContent: 'flex-end',
               }}>
-              <View>
-                <Text style={[styles.h2, {textAlign: 'center'}]}>
-                  ยืนยันการรับงาน?
-                </Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    setOpenConfirmModal(false);
-                  }}
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  padding: normalize(10),
+                  margin: normalize(10),
+                  borderWidth: 2,
+                  borderColor: colors.greyWhite,
+                  borderRadius: 16,
+                }}>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      display: 'flex',
+                      backgroundColor: '#FFF7F4',
+                      paddingHorizontal: normalize(10),
+                      paddingVertical: normalize(5),
+                      borderRadius: 16,
+                    }}>
+                    <Text
+                      style={{
+                        color: '#B16F05',
+                        fontFamily: fonts.bold,
+                        fontSize: normalize(16),
+                      }}>
+                      รอตรวจสอบเอกสาร
+                    </Text>
+                  </View>
+                </View>
+                <View
                   style={{
-                    position: 'absolute',
-                    top: normalize(4),
-                    right: normalize(0),
+                    paddingBottom: normalize(20),
+                    marginTop: normalize(5),
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontSize: normalize(18),
+                      color: 'black',
+                    }}>
+                    เจ้าหน้าที่กำลังตรวจสอบเอกสารการยืนยันตัวตน และ
+                    โดรนของคุณอยู่ กรุณาตรวจสอบหากคุณยังไม่เพิ่มโดรน
+                  </Text>
+                </View>
+              </View>
+            </View>
+          ) : null}
+          {dronerStatus == 'REJECTED' ? (
+            <View
+              style={{
+                backgroundColor: colors.grayBg,
+                flex: 1,
+                justifyContent: 'flex-end',
+              }}>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  padding: normalize(10),
+                  margin: normalize(10),
+                  borderWidth: 2,
+                  borderColor: colors.greyWhite,
+                  borderRadius: 16,
+                }}>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      display: 'flex',
+                      backgroundColor: '#FFF7F4',
+                      paddingHorizontal: normalize(10),
+                      paddingVertical: normalize(5),
+                      borderRadius: 16,
+                    }}>
+                    <Text
+                      style={{
+                        color: '#B16F05',
+                        fontFamily: fonts.bold,
+                        fontSize: normalize(16),
+                      }}>
+                      ยืนยันตัวตนไม่สำเร็จ
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    paddingBottom: normalize(20),
+                    marginTop: normalize(5),
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontSize: normalize(18),
+                      color: 'black',
+                    }}>
+                    โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร.{' '}
+                    {callcenterNumber}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          ) : null}
+          {dronerStatus == 'OPEN' ? (
+            <View
+              style={{
+                backgroundColor: colors.grayBg,
+                flex: 1,
+                justifyContent: 'flex-end',
+              }}>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  padding: normalize(10),
+                  margin: normalize(10),
+                  borderWidth: 2,
+                  borderColor: colors.greyWhite,
+                  borderRadius: 16,
+                }}>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      display: 'flex',
+                      backgroundColor: '#FFF7F4',
+                      paddingHorizontal: normalize(10),
+                      paddingVertical: normalize(5),
+                      borderRadius: 16,
+                    }}>
+                    <Text
+                      style={{
+                        color: '#B16F05',
+                        fontFamily: fonts.bold,
+                        fontSize: normalize(16),
+                      }}>
+                      รอยืนยันตัวตน
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    paddingBottom: normalize(20),
+                    marginTop: normalize(5),
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontSize: normalize(18),
+                      color: 'black',
+                    }}>
+                    อีกนิดเดียว มากรอกข้อมูลโปรไฟล์ของคุณให้ ครบถ้วน
+                    เพื่อเริ่มรับงานบินโดรนในระบบ
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
                   }}>
                   <Image
-                    source={icons.close}
+                    source={
+                      Number(percentSuccess) === 50
+                        ? image.inprogress50
+                        : Number(percentSuccess) === 75
+                        ? image.inprogress75
+                        : image.inprogress100
+                    }
                     style={{
-                      width: normalize(14),
-                      height: normalize(14),
+                      width: normalize(50),
+                      height: normalize(50),
                     }}
                   />
-                </TouchableOpacity>
-                <Text
-                  style={[
-                    styles.label,
-                    {textAlign: 'center', marginVertical: 5},
-                  ]}>
-                  กรุณากดยืนยันหากคุณต้องการรับงานนี้
-                </Text>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation('MyProfileScreen', MyProfileScreen)
+                    }>
+                    <View style={styles.button}>
+                      <Text style={styles.textButton}>เพิ่มข้อมูลโปรไฟล์</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <TouchableOpacity
-                style={{
-                  marginTop: normalize(10),
-                  width: '100%',
-                  height: normalize(50),
-                  borderRadius: normalize(8),
-                  backgroundColor: colors.orange,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-                onPress={() => {
-                  mixpanel.track('accept task from new task list');
-                  receiveTask().then(() => {
-                    setOpenConfirmModal(false);
-                  });
-                }}>
-                <Text
-                  style={{
-                    fontFamily: fonts.medium,
-                    fontWeight: '600',
-                    fontSize: normalize(19),
-                    color: '#ffffff',
-                  }}>
-                  รับงาน
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  marginTop: normalize(10),
-                  width: '100%',
-                  height: normalize(50),
-                  borderRadius: normalize(8),
-                  borderWidth: 0.2,
-                  borderColor: 'grey',
-                  // backgroundColor: '#FB8705',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-                onPress={() => {
-                  rejectTask().then(() => {
-                    mixpanel.track('reject task from new task');
-                    setOpenConfirmModal(false);
-                  });
-                }}>
-                <Text
-                  style={{
-                    fontFamily: fonts.medium,
-                    fontWeight: '600',
-                    fontSize: normalize(19),
-                    color: colors.fontBlack,
-                  }}>
-                  ไม่รับงาน
-                </Text>
-              </TouchableOpacity>
             </View>
-          </View>
-        </Modal>
-      </View>
-      <Spinner
-        visible={loading}
-        textContent={'Loading...'}
-        textStyle={{color: '#FFF'}}
-      />
+          ) : null}
+          {data?.data?.length > 0 && (
+            <View
+              style={{
+                paddingTop: 8,
+              }}>
+              <FlatList
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+                onEndReached={onLoadMore}
+                ListHeaderComponent={RenderWarningDoc}
+                contentContainerStyle={{
+                  paddingHorizontal: 8,
+                  paddingTop: 8,
+                  marginBottom: 8,
+                }}
+                keyExtractor={element => element.item.id}
+                data={data.data}
+                renderItem={({item}: any) => (
+                  <NewTask
+                    {...item.item}
+                    taskId={item.item.id}
+                    taskNo={item.item.taskNo}
+                    status={item.item.status}
+                    title={item.item.farmerPlot.plantName}
+                    price={
+                      parseInt(item.item.price) +
+                      parseInt(item.item.revenuePromotion)
+                    }
+                    date={item.item.dateAppointment}
+                    address={item.item.farmerPlot.locationName}
+                    distance={
+                      item.item.taskDronerTemp.find(
+                        (x: any) => x.dronerId == dronerId,
+                      ).distance
+                    }
+                    user={`${item.item.farmer.firstname} ${item.item.farmer.lastname}`}
+                    img={item.image_profile_url}
+                    preparation={item.item.preparationBy}
+                    tel={item.item.farmer.telephoneNo}
+                    updatedAt={item.item.updatedAt}
+                    comment={item.item.comment}
+                    // callFunc={handlePresentModalPress}
+                    // setTel={setTelNum}
+                    farmArea={item.item.farmAreaAmount}
+                    receiveTask={() => {
+                      setSelectedTaskId(item.item.id);
+                      setOpenConfirmModal(true);
+                    }}
+                    fetchData={() => getData()}
+                  />
+                )}
+              />
+            </View>
+          )}
+          <Modal transparent={true} visible={openConfirmModal}>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  padding: normalize(20),
+                  backgroundColor: colors.white,
+                  width: width * 0.9,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  borderRadius: normalize(8),
+                }}>
+                <View>
+                  <Text style={[styles.h2, {textAlign: 'center'}]}>
+                    ยืนยันการรับงาน?
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setOpenConfirmModal(false);
+                    }}
+                    style={{
+                      position: 'absolute',
+                      top: normalize(4),
+                      right: normalize(0),
+                    }}>
+                    <Image
+                      source={icons.close}
+                      style={{
+                        width: normalize(14),
+                        height: normalize(14),
+                      }}
+                    />
+                  </TouchableOpacity>
+                  <Text
+                    style={[
+                      styles.label,
+                      {textAlign: 'center', marginVertical: 5},
+                    ]}>
+                    กรุณากดยืนยันหากคุณต้องการรับงานนี้
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={{
+                    marginTop: normalize(10),
+                    width: '100%',
+                    height: normalize(50),
+                    borderRadius: normalize(8),
+                    backgroundColor: colors.orange,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onPress={() => {
+                    mixpanel.track('accept task from new task list');
+                    receiveTask().then(() => {
+                      setOpenConfirmModal(false);
+                    });
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontWeight: '600',
+                      fontSize: normalize(19),
+                      color: '#ffffff',
+                    }}>
+                    รับงาน
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    marginTop: normalize(10),
+                    width: '100%',
+                    height: normalize(50),
+                    borderRadius: normalize(8),
+                    borderWidth: 0.2,
+                    borderColor: 'grey',
+                    // backgroundColor: '#FB8705',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onPress={() => {
+                    rejectTask().then(() => {
+                      mixpanel.track('reject task from new task');
+                      setOpenConfirmModal(false);
+                    });
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontWeight: '600',
+                      fontSize: normalize(19),
+                      color: colors.fontBlack,
+                    }}>
+                    ไม่รับงาน
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </View>
+      )}
     </NetworkLost>
   );
 };

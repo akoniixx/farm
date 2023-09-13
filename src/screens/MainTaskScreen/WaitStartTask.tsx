@@ -1,5 +1,5 @@
 import {normalize} from '@rneui/themed';
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {FlatList, Image, Text, View} from 'react-native';
 import {colors, image} from '../../assets';
 import MainTasklist from '../../components/TaskList/MainTasklist';
@@ -18,6 +18,8 @@ import NetworkLost from '../../components/NetworkLost/NetworkLost';
 const initialPage = 1;
 const limit = 10;
 const WaitStartTask: React.FC = () => {
+  const isFetching = React.useRef(false);
+
   const [data, setData] = useState<{
     data: any[];
     count: number;
@@ -54,11 +56,18 @@ const WaitStartTask: React.FC = () => {
         setCheckResIsComplete(true);
       })
       .catch(err => {
-        setLoading(false);
         console.log(err);
+      })
+      .finally(() => {
+        isFetching.current = false;
+        setLoading(false);
       });
   };
   const onEndReached = async () => {
+    if (isFetching.current) {
+      return;
+    }
+    isFetching.current = true;
     if (data.data.length < data.count) {
       setLoadingInfinite(true);
       const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
@@ -70,7 +79,10 @@ const WaitStartTask: React.FC = () => {
           });
           setPage(page + 1);
         })
-        .finally(() => setLoadingInfinite(false));
+        .finally(() => {
+          setLoadingInfinite(false);
+          isFetching.current = false;
+        });
     }
   };
   const RenderWarningDoc = useMemo(() => {

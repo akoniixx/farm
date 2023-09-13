@@ -38,9 +38,11 @@ export const NewTaskModal = (
     data: any;
     dronerId: string;
     image_profile_url: string;
+    onHide: () => void;
   }>,
 ) => {
   const data = props.payload?.data;
+  const onHide = props.payload?.onHide;
   const dronerId = props.payload?.dronerId;
   const imageProfileUrl = props.payload?.image_profile_url;
   const date = new Date(data?.dateAppointment);
@@ -56,9 +58,13 @@ export const NewTaskModal = (
     TaskDatasource.receiveTask(data?.id, dronerId, true)
       .then(res => {
         if (res.success) {
+          onHide?.();
+
           SheetManager.hide('NewTaskSheet');
         } else {
           setTimeout(() => {
+            onHide?.();
+
             SheetManager.hide('NewTaskSheet');
           }, 5000);
         }
@@ -68,7 +74,8 @@ export const NewTaskModal = (
   const rejectTask = async () => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(data?.id, dronerId, false)
-      .then(res => {
+      .then(() => {
+        onHide?.();
         SheetManager.hide('NewTaskSheet');
       })
       .catch(err => console.log(err));

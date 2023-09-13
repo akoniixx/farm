@@ -192,7 +192,7 @@ const MainTasklists: React.FC<any> = (props: any) => {
                       color: '#9BA1A8',
                       fontSize: normalize(13),
                     }}>
-                    ระยะทาง {props.distance} กม.
+                    ระยะทาง {numberWithCommas(props.distance)} กม.
                   </Text>
                 </View>
               </View>

@@ -1,22 +1,23 @@
 import {normalize} from '@rneui/themed';
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {FlatList, Image, RefreshControl, Text, View} from 'react-native';
 import {colors, image} from '../../assets';
 import MainTasklist from '../../components/TaskList/MainTasklist';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import {stylesCentral} from '../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useFocusEffect} from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {calTotalPrice} from '../../function/utility';
 import {useAuth} from '../../contexts/AuthContext';
 import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
 import Loading from '../../components/Loading/Loading';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
+import {useFocusEffect} from '@react-navigation/native';
 
 const initialPage = 1;
 const limit = 10;
 const InprogressTask: React.FC = () => {
+  const isFetching = React.useRef(false);
   const {
     state: {isDoneAuth},
   } = useAuth();
@@ -44,40 +45,53 @@ const InprogressTask: React.FC = () => {
       .catch(err => {
         setLoading(false);
         console.log(err);
+      })
+      .finally(() => {
+        isFetching.current = false;
       });
   }, []);
   useFocusEffect(
     React.useCallback(() => {
       getData();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );
 
-  const onRefresh = useCallback(async () => {
+  const onRefresh = async () => {
     setRefreshing(true);
     getData();
     setRefreshing(false);
-  }, [getData]);
+  };
 
-  const getMoreData = useCallback(async () => {
+  const getMoreData = async () => {
+    if (isFetching.current) {
+      return;
+    }
+    isFetching.current = true;
+
     if (data.data.length < data.count) {
       setLoadingInfinite(true);
       const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
-      TaskDatasource.getTaskById(
+
+      await TaskDatasource.getTaskById(
         droner_id,
         ['IN_PROGRESS'],
         page + 1,
         limit,
-      ).then(res => {
-        setData(prev => ({
-          data: [...prev.data, ...res.data],
-          count: res.count,
-        }));
-        setPage(prev => prev + 1);
-        setLoadingInfinite(false);
-      });
+      )
+        .then(res => {
+          setData(prev => ({
+            data: [...prev.data, ...res.data],
+            count: res.count,
+          }));
+        })
+        .finally(() => {
+          isFetching.current = false;
+          setPage(prev => prev + 1);
+          setLoadingInfinite(false);
+        });
     }
-  }, [page, data]);
+    return;
+  };
   const RenderWarningDoc = useMemo(() => {
     if (!isDoneAuth) {
       return (
@@ -116,7 +130,6 @@ const InprogressTask: React.FC = () => {
       return () => <View />;
     }
   }, [isDoneAuth, data]);
-
   return (
     <NetworkLost onPress={onRefresh}>
       <RenderWarningDocEmpty />
@@ -140,7 +153,7 @@ const InprogressTask: React.FC = () => {
                 <View style={{height: 40}} />
               )
             }
-            keyExtractor={element => element.item.taskNo}
+            keyExtractor={(element, idx) => `${element.item.id}-${idx}}`}
             data={data.data}
             onEndReached={getMoreData}
             extraData={data.data}

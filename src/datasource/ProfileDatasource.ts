@@ -258,6 +258,27 @@ export class ProfileDatasource {
       .then(res => res.data)
       .catch(err => console.log(err));
   }
+
+  static async postMainAddressList({
+    dronerId,
+    ...payload
+  }: {
+    dronerId: string;
+    provinceId: string;
+    districtId: string;
+    subdistrictId: string;
+    postcode: string;
+    address1: string;
+    address2: string;
+  }) {
+    return httpClient
+      .post(BASE_URL + `/droner/add-main-address/${dronerId}`, {
+        address3: '',
+        ...payload,
+      })
+      .then(res => res.data)
+      .catch(err => console.log(err));
+  }
   static async postAddressList({
     dronerId,
     ...payload

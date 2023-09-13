@@ -16,6 +16,8 @@ import Body from './Body';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Campaign} from '../../datasource/CampaignDatasource';
 import Spinner from 'react-native-loading-spinner-overlay';
+import {mixpanel} from '../../../mixpanel';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 
 type MissionScreenProps = {
   navigation: BottomTabNavigationProp<TabNavigatorParamList, 'mission'>;
@@ -100,17 +102,26 @@ export default function MissionScreen({navigation}: MissionScreenProps) {
       <View
         style={{
           position: 'absolute',
-          bottom: 16,
-          right: 8,
+          bottom: 20,
+          right: 18,
           zIndex: 1,
         }}>
-        <TouchableOpacity onPress={() => navigation.navigate('CampaignScreen')}>
-          <Image
-            source={{uri: campaignImage}}
-            style={{width: 150, height: 60}}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
+        {campaignImage && (
+          <TouchableOpacity
+            onPress={() => {
+              mixpanel.track('กดเข้าสู่หน้าแคมเปญ');
+              navigation.navigate('CampaignScreen');
+            }}>
+            <ProgressiveImage
+              borderRadius={8}
+              source={{
+                uri: campaignImage,
+              }}
+              resizeMode="cover"
+              style={{width: 100, height: 60, borderRadius: 8}}
+            />
+          </TouchableOpacity>
+        )}
       </View>
       <Spinner
         visible={loading}

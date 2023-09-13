@@ -29,6 +29,7 @@ import {useNetwork} from '../../contexts/NetworkContext';
 
 const MainScreen: React.FC<any> = ({navigation}) => {
   const {isConnected} = useNetwork();
+  const socketSheetRef = React.useRef(false);
   const insets = useSafeAreaInsets();
   const [profile, setProfile] = useState({
     name: '',
@@ -52,7 +53,6 @@ const MainScreen: React.FC<any> = ({navigation}) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      openSocket();
       getCurrentPoint();
       getProfile();
     }, []),
@@ -84,18 +84,28 @@ const MainScreen: React.FC<any> = ({navigation}) => {
     getProfile();
     openSocket();
     getCurrentPoint();
+    return () => {
+      socketSheetRef.current = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const openSocket = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     await socket.connect();
+
     socket.on(`send-task-${dronerId!}`, ({data, image_profile_url}) => {
-      //Modal Task Screen
+      if (socketSheetRef.current) {
+        return;
+      }
+      socketSheetRef.current = true;
       SheetManager.show('NewTaskSheet', {
         payload: {
           data,
           dronerId,
           image_profile_url,
+          onHide: () => {
+            socketSheetRef.current = false;
+          },
         },
       });
     });
@@ -352,10 +362,10 @@ const MainScreen: React.FC<any> = ({navigation}) => {
             display: showCampaign,
             position: 'absolute',
             bottom: 20,
-            right: 10,
+            right: 18,
             zIndex: 1,
           }}>
-          <View style={{width: 10, marginLeft: 20}}>
+          <View style={{width: 10}}>
             <TouchableOpacity
               onPress={() => {
                 mixpanel.track('กดปิดแคมเปญทอง');
@@ -375,11 +385,12 @@ const MainScreen: React.FC<any> = ({navigation}) => {
                 navigation.navigate('CampaignScreen');
               }}>
               <ProgressiveImage
+                borderRadius={8}
                 source={{
                   uri: campaignImage,
                 }}
-                resizeMode="contain"
-                style={{width: 140, height: 60}}
+                resizeMode="cover"
+                style={{width: 100, height: 60, borderRadius: 8}}
               />
             </TouchableOpacity>
           )}

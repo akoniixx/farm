@@ -16,6 +16,7 @@ import NetworkLost from '../../components/NetworkLost/NetworkLost';
 const initialPage = 1;
 const limit = 10;
 const FinishTask: React.FC = () => {
+  const isFetching = React.useRef(false);
   const [data, setData] = useState<{
     data: any[];
     count: number;
@@ -48,6 +49,10 @@ const FinishTask: React.FC = () => {
       .catch(err => {
         setLoading(false);
         console.log(err);
+      })
+      .finally(() => {
+        isFetching.current = false;
+        setLoading(false);
       });
   };
   useFocusEffect(
@@ -61,6 +66,10 @@ const FinishTask: React.FC = () => {
     setRefreshing(false);
   };
   const onEndReached = async () => {
+    if (isFetching.current) {
+      return;
+    }
+    isFetching.current = true;
     if (data.data.length < data.count) {
       setLoadingInfinite(true);
       const droner_id = (await AsyncStorage.getItem('droner_id')) ?? '';
@@ -76,11 +85,13 @@ const FinishTask: React.FC = () => {
             count: res.count,
           });
           setPage(page + 1);
-          setTimeout(() => setLoadingInfinite(false), 200);
         })
         .catch(err => {
-          setLoadingInfinite(false);
           console.log(err);
+        })
+        .finally(() => {
+          isFetching.current = false;
+          setLoadingInfinite(false);
         });
     }
   };

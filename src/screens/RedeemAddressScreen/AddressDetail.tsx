@@ -172,6 +172,7 @@ export default function AddressDetail({
             user?.id || '',
           );
           const state = [result.address, result.otherAddress];
+          console.log(JSON.stringify(state, null, 2));
           setAddressList(state);
           setDisabled(false);
         } catch (e) {
@@ -200,28 +201,32 @@ export default function AddressDetail({
   const userPhoneNumber = useMemo(() => {
     return insertHyphenInTelNumber(user?.telephoneNo || '');
   }, [user?.telephoneNo]);
-  const dataList = [
-    {
-      label: 'ค่าเริ่มต้น',
-      value: 'default',
-      extra: null,
-      disabled: false,
-      belowComponent: (
-        <View>
-          <Text
-            style={{
-              color: colors.fontBlack,
-              fontFamily: font.light,
-              fontSize: 16,
-              marginTop: 8,
-              marginLeft: 8,
-            }}>
-            {mainAddress?.addressName}
-          </Text>
-        </View>
-      ),
-    },
-    {
+
+  const {dataList, notHaveAddress} = useMemo(() => {
+    const dataList = [];
+    if (mainAddress) {
+      dataList.push({
+        label: 'ค่าเริ่มต้น',
+        value: 'default',
+        extra: null,
+        disabled: false,
+        belowComponent: (
+          <View>
+            <Text
+              style={{
+                color: colors.fontBlack,
+                fontFamily: font.light,
+                fontSize: 16,
+                marginTop: 8,
+                marginLeft: 8,
+              }}>
+              {mainAddress?.addressName}
+            </Text>
+          </View>
+        ),
+      });
+    }
+    dataList.push({
       label: 'ที่อยู่อื่น',
       value: 'custom',
       disabled: !!secondAddress,
@@ -269,19 +274,19 @@ export default function AddressDetail({
               alignItems: 'center',
               padding: 10,
               margin: 8,
-              width: 140,
-              minHeight: 40,
+              width: 'auto',
+              alignSelf: 'flex-start',
               borderWidth: 1,
               borderColor: '#FB8705',
               borderRadius: 8,
             }}
             onPress={() => {
-              navigation.navigate('CustomAddressScreen', {data});
+              navigation.navigate('CustomAddressScreen', {data: null});
             }}>
             <Text
               style={{
                 fontSize: 24,
-                lineHeight: 22,
+                lineHeight: 30,
                 fontFamily: font.medium,
                 color: colors.orange,
               }}>
@@ -289,7 +294,7 @@ export default function AddressDetail({
               <Text
                 style={{
                   fontSize: 14,
-                  lineHeight: 14,
+                  lineHeight: 24,
                   fontFamily: font.medium,
                   color: colors.orange,
                 }}>
@@ -299,8 +304,10 @@ export default function AddressDetail({
           </TouchableOpacity>
         </View>
       ),
-    },
-  ];
+    });
+
+    return {dataList, notHaveAddress: !mainAddress && !secondAddress};
+  }, [mainAddress, secondAddress, data, navigation]);
 
   return (
     <>
@@ -354,14 +361,60 @@ export default function AddressDetail({
             marginTop: 8,
           }}>
           ที่อยู่ :{' '}
+          {notHaveAddress && (
+            <Text
+              style={{
+                color: colors.decreasePoint,
+                fontFamily: font.medium,
+                fontSize: 16,
+              }}>
+              กรุณาเพิ่มที่อยู่ของท่าน
+            </Text>
+          )}
         </Text>
 
-        {dataList.length < 1 ? (
-          <View
-            style={{
-              marginTop: 16,
-            }}
-          />
+        {notHaveAddress ? (
+          <View>
+            <TouchableOpacity
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: 10,
+                margin: 8,
+                width: 'auto',
+                alignSelf: 'flex-start',
+                borderWidth: 1,
+                borderColor: '#FB8705',
+                borderRadius: 8,
+              }}
+              onPress={() => {
+                navigation.navigate('CustomAddressScreen', {
+                  data: null,
+                  isAddMainAddress: true,
+                });
+              }}>
+              <Text
+                style={{
+                  fontSize: 24,
+                  lineHeight: 30,
+                  fontFamily: font.medium,
+                  color: colors.orange,
+                }}>
+                +{' '}
+                <Text
+                  style={{
+                    fontSize: 14,
+                    lineHeight: 24,
+                    fontFamily: font.medium,
+                    color: colors.orange,
+                  }}>
+                  เพิ่มที่อยู่ใหม่
+                </Text>
+              </Text>
+            </TouchableOpacity>
+          </View>
         ) : (
           <View
             style={{

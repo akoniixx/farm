@@ -33,4 +33,5 @@ export default {
   redMedium: '#D6432E',
   blown: '#523A19',
   loading: '#E3E3E3',
+  skeleton: '#E3E3E3',
 };
