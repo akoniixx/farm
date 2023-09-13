@@ -164,7 +164,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     TaskDatasource.getTaskById(droner_id, ['WAIT_START', 'IN_PROGRESS'], 1, 999)
       .then(res => {
         if (res !== undefined) {
-          setData(res);
+          // setData(res);
           setCheckResIsComplete(true);
           setLoading(false);
         }

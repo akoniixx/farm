@@ -33,6 +33,9 @@ import MyProfileScreen from '../../screens/ProfileVerifyScreen/MyProfileScreen';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import {useAuth} from '../../contexts/AuthContext';
+import { rewardDatasource } from '../../datasource/RewardDatasource';
+import { missionDatasource } from '../../datasource/MissionDatasource';
+import moment from 'moment';
 
 export type TabNavigatorParamList = {
   mission: undefined;
@@ -133,7 +136,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     };
     messaging()
       .getInitialNotification()
-      .then(message => {
+      .then(async message => {
         if (message) {
           const type = message.data?.type;
           switch (type) {
@@ -201,10 +204,42 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                 screen: 'receivePoint',
               });
               break;
-            case 'MISSION_REWARD_DIGITAL':
-              RootNavigation.navigate('Main', {
-                screen: 'MyRewardScreen',
-              });
+            case 'MISSION_REWARD_PHYSICAL':
+              const dronerId = await AsyncStorage.getItem('droner_id');
+              const payload = {
+                page: 1,
+                take: 10,
+                dronerId: dronerId || '',
+              };
+              missionDatasource.getListMissions(payload).then(
+                res => {
+                  const mission = res.mission.filter((item : any) => item.id === message.data?.campaignId)
+                  const condition = mission[0].condition[parseInt(message.data?.index!)]
+                  const isComplete = condition.allRai >= condition.rai;
+                  const current = condition.allRai > condition.rai ? condition.rai : condition.allRai;
+                  const isExpired = moment().isAfter(mission.endDate);
+                  const isStatusComplete = condition.status === 'COMPLETE';
+                  RootNavigation.navigate('Main', {
+                    screen: 'MissionDetailScreen',
+                    params : { data : {
+                      ...condition,
+                      isComplete,
+                      current,
+                      isExpired,
+                      isStatusComplete,                      
+                      status: condition.status,
+                      missionName: condition.missionName,
+                      reward: condition.reward,
+                      endDate: mission.endDate,
+                      total: condition.rai,
+                      conditionReward: condition.conditionReward,
+                      descriptionReward: condition.descriptionReward,
+                      num: condition.num,
+                      missionId: condition.missionId,
+                    }}
+                  });
+                }
+              )
               break;
             default:
               break;
@@ -278,10 +313,42 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
             screen: 'receivePoint',
           });
           break;
-        case 'MISSION_REWARD_DIGITAL':
-          RootNavigation.navigate('Main', {
-            screen: 'MyRewardScreen',
-          });
+        case 'MISSION_REWARD_PHYSICAL':
+          const dronerId = await AsyncStorage.getItem('droner_id');
+          const payload = {
+            page: 1,
+            take: 10,
+            dronerId: dronerId || '',
+          };
+          missionDatasource.getListMissions(payload).then(
+            res => {
+              const mission = res.mission.filter((item : any) => item.id === message.data?.campaignId)
+              const condition = mission[0].condition[parseInt(message.data?.index!)]
+              const isComplete = condition.allRai >= condition.rai;
+              const current = condition.allRai > condition.rai ? condition.rai : condition.allRai;
+              const isExpired = moment().isAfter(mission.endDate);
+              const isStatusComplete = condition.status === 'COMPLETE';
+              RootNavigation.navigate('Main', {
+                screen: 'MissionDetailScreen',
+                params : { data : {
+                  ...condition,
+                  isComplete,
+                  current,
+                  isExpired,
+                  isStatusComplete,                      
+                  status: condition.status,
+                  missionName: condition.missionName,
+                  reward: condition.reward,
+                  endDate: mission.endDate,
+                  total: condition.rai,
+                  conditionReward: condition.conditionReward,
+                  descriptionReward: condition.descriptionReward,
+                  num: condition.num,
+                  missionId: condition.missionId,
+                }}
+              });
+            }
+          )
           break;
         default:
           break;
@@ -478,6 +545,52 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
               Toast.hide();
             },
           });
+          break;
+        case 'MISSION_REWARD_PHYSICAL':
+          const dronerId = await AsyncStorage.getItem('droner_id');
+          const payload = {
+            page: 1,
+            take: 10,
+            dronerId: dronerId || '',
+          };
+          missionDatasource.getListMissions(payload).then(
+            res => {
+              const mission = res.mission.filter((item : any) => item.id === message.data?.campaignId)
+              const condition = mission[0].condition[parseInt(message.data?.index!)]
+              const isComplete = condition.allRai >= condition.rai;
+              const current = condition.allRai > condition.rai ? condition.rai : condition.allRai;
+              const isExpired = moment().isAfter(mission.endDate);
+              const isStatusComplete = condition.status === 'COMPLETE';
+              Toast.show({
+                type: 'missionDone',
+                topOffset: 40,
+                position: 'top',
+                text1: message.data?.message,
+                onPress() {
+                  RootNavigation.navigate('Main', {
+                    screen: 'MissionDetailScreen',
+                    params : { data : {
+                      ...condition,
+                      isComplete,
+                      current,
+                      isExpired,
+                      isStatusComplete,                      
+                      status: condition.status,
+                      missionName: condition.missionName,
+                      reward: condition.reward,
+                      endDate: mission.endDate,
+                      total: condition.rai,
+                      conditionReward: condition.conditionReward,
+                      descriptionReward: condition.descriptionReward,
+                      num: condition.num,
+                      missionId: condition.missionId,
+                    }}
+                  });
+                  Toast.hide();
+                },
+              });
+            }
+          )
           break;
         default:
           break;

@@ -8,7 +8,7 @@ import {TabBar, TabView} from 'react-native-tab-view';
 import ReadyToUseTab from './ReadyToUseTab';
 import HistoryTab from './HistoryTab';
 import {useFocusEffect} from '@react-navigation/native';
-import {ImageZoom} from '@likashefqet/react-native-image-zoom';
+// import {ImageZoom} from '@likashefqet/react-native-image-zoom';
 
 export default function MyRewardScreen({
   navigation,

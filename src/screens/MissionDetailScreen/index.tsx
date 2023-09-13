@@ -35,7 +35,6 @@ const mappingDigitalStatusColor = {
 
 export default function MissionDetailScreen({navigation, route}: Props) {
   const {data} = route.params;
-
   const [currentStatus, setCurrentStatus] = React.useState<string>('');
   const [dronerTransactionId, setDronerTransactionId] =
     React.useState<string>('');
