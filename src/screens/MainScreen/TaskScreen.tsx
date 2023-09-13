@@ -200,7 +200,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     )
       .then(res => {
         if (res !== undefined) {
-          setData(res);
+          // setData(res);
           setCheckResIsComplete(true);
           setLoading(false);
         }

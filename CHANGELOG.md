@@ -1,3 +1,6 @@
+## Improved [1.7.1] 2023-09-13
+- fixed mission done notification
+
 ## Improved [1.7.0] 2023-08-18
 - pagination 
 - network disconnect 
