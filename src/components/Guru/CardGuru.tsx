@@ -3,6 +3,7 @@ import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
 import {font, icons, image} from '../../assets';
 import colors from '../../assets/colors/colors';
 import {normalize} from '../../function/Normalize';
+import ProgressiveImage from '../ProgressingImage/ProgressingImage';
 
 interface guruData {
   index: any;
@@ -28,7 +29,7 @@ export const CardGuru: React.FC<guruData> = ({
         paddingVertical: 5,
       }}>
       <View style={styles.card}>
-        <Image
+        <ProgressiveImage
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
           style={{height: normalize(128)}}

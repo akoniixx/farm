@@ -311,11 +311,11 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
           </View>
         </View>
       </ActionSheet>
-      <Spinner
+      {/* <Spinner
         visible={loading}
         textContent={'Loading...'}
         textStyle={{color: '#FFF'}}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

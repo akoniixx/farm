@@ -1,17 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Platform,
-  Linking,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
+import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {normalize} from '@rneui/themed';
-import {MainButton} from '../Button/MainButton';
 import {colors, font, icons} from '../../assets';
 import fonts from '../../assets/fonts';
 import {
@@ -28,9 +17,8 @@ import ActionSheet, {
 } from 'react-native-actions-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
-import Toast from 'react-native-toast-message';
 import {useFocusEffect} from '@react-navigation/native';
-import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
+import {responsiveWidth} from '../../function/responsive';
 import {mixpanel} from '../../../mixpanel';
 
 export const NewTaskModal = (
@@ -38,9 +26,11 @@ export const NewTaskModal = (
     data: any;
     dronerId: string;
     image_profile_url: string;
+    onHide: () => void;
   }>,
 ) => {
   const data = props.payload?.data;
+  const onHide = props.payload?.onHide;
   const dronerId = props.payload?.dronerId;
   const imageProfileUrl = props.payload?.image_profile_url;
   const date = new Date(data?.dateAppointment);
@@ -56,9 +46,13 @@ export const NewTaskModal = (
     TaskDatasource.receiveTask(data?.id, dronerId, true)
       .then(res => {
         if (res.success) {
+          onHide?.();
+
           SheetManager.hide('NewTaskSheet');
         } else {
           setTimeout(() => {
+            onHide?.();
+
             SheetManager.hide('NewTaskSheet');
           }, 5000);
         }
@@ -68,7 +62,8 @@ export const NewTaskModal = (
   const rejectTask = async () => {
     const dronerId = (await AsyncStorage.getItem('droner_id')) ?? '';
     TaskDatasource.receiveTask(data?.id, dronerId, false)
-      .then(res => {
+      .then(() => {
+        onHide?.();
         SheetManager.hide('NewTaskSheet');
       })
       .catch(err => console.log(err));

@@ -8,6 +8,90 @@ import {
 } from '../config/develop-config';
 
 export class Authentication {
+  static async updateProfile({
+    firstname,
+    lastname,
+    telephoneNo,
+    address1,
+    address2,
+    provinceId,
+    districtId,
+    subdistrictId,
+    postcode,
+    birthDate,
+  }: {
+    firstname: string;
+    lastname: string;
+    birthDate: Date;
+    telephoneNo: string;
+    address1: string;
+    address2: string;
+    provinceId: string;
+    districtId: string;
+    subdistrictId: string;
+    postcode: string;
+  }) {
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    return httpClient
+      .patch(BASE_URL + `/droner/${droner_id}`, {
+        firstname: firstname,
+        lastname: lastname,
+        telephoneNo: telephoneNo,
+        address: {
+          address1: address1,
+          address2: address2,
+          address3: '',
+          provinceId: provinceId,
+          districtId: districtId,
+          subdistrictId: subdistrictId,
+          postcode: postcode,
+        },
+        birthDate: birthDate,
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  static async updateProfileImage(image: any): Promise<any> {
+    const droner_id = await AsyncStorage.getItem('droner_id');
+    const data = new FormData();
+    data.append('file', {
+      uri: image.assets[0].uri,
+      name: image.assets[0].fileName,
+      type: image.assets[0].type,
+    });
+    data.append('resourceId', droner_id);
+    data.append('resource', 'DRONER');
+    data.append('category', 'PROFILE_IMAGE');
+    return uploadFileClient
+      .post(BASE_URL + '/file/upload', data)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  static async removeProfileImage({
+    id,
+    path,
+  }: {
+    path: string;
+    id: string;
+  }): Promise<any> {
+    return httpClient
+      .delete(BASE_URL + '/file/delete' + `?id=${id}&path=${path}`)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
   static generateOtp(telNumber: String): Promise<any> {
     return axios
       .post(BASE_URL + '/auth/droner/request-login-otp', {

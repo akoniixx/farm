@@ -48,26 +48,26 @@ const PendingPointScreen: React.FC<any> = () => {
       setRefreshing(false);
     }, 1000);
   }, []);
-  const loadMoreData = async () => {
-    if (dataAllPoint.length >= total) {
-      return;
-    }
-    try {
-      setLoading(true);
-      const droner_id: any = await AsyncStorage.getItem('droner_id');
-      await getAllHistoryPoint(droner_id, current, row)
-        .then(res => {
-          setDataAllPoint([...dataAllPoint, ...res.history]);
-          setLoading(false);
-        })
-        .catch(err => console.log(err));
-      setCurrent(current + 1);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const loadMoreData = async () => {
+  //   if (dataAllPoint.length >= total) {
+  //     return;
+  //   }
+  //   try {
+  //     setLoading(true);
+  //     const droner_id: any = await AsyncStorage.getItem('droner_id');
+  //     await getAllHistoryPoint(droner_id, current, row)
+  //       .then(res => {
+  //         setDataAllPoint([...dataAllPoint, ...res.history]);
+  //         setLoading(false);
+  //       })
+  //       .catch(err => console.log(err));
+  //     setCurrent(current + 1);
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   return (
     <View>
       <View style={{alignItems: 'center', paddingVertical: normalize(10)}}>
@@ -92,7 +92,7 @@ const PendingPointScreen: React.FC<any> = () => {
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
-              onEndReached={loadMoreData}
+              // onEndReached={loadMoreData}
               keyExtractor={(item, index) => index.toString()}
               ListFooterComponent={<View style={{height: normalize(450)}} />}
               data={dataAllPoint}

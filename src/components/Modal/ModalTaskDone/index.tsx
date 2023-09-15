@@ -58,9 +58,14 @@ export default function ModalTaskDone({
   const onAddImageController = async () => {
     const result = await ImagePicker.launchImageLibrary({
       mediaType: 'photo',
+      quality: 0.8,
     });
     if (!result.didCancel) {
-      const fileSize = result?.assets?.[0]?.fileSize || 0;
+      const fileSize = result?.assets?.[0]?.fileSize;
+      if (!fileSize) {
+        setError('รูปภาพไม่ถูกต้อง');
+        return;
+      }
       const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
       const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
       let newResult: any = result;
@@ -69,7 +74,7 @@ export default function ModalTaskDone({
         setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
         onOpenModal();
         setStep(() => {
-          if (step === 0) {
+          if (step === 1) {
             return 1;
           }
           return 0;
@@ -85,8 +90,8 @@ export default function ModalTaskDone({
             {
               ...newImage,
               fileSize: newImage.size,
-              type: 'image/png',
-              fileName: newImage.name,
+              type: 'image/jpeg',
+              fileName: newImage?.name ? `${newImage.name}`.toLowerCase() : '',
             },
           ],
         };
@@ -104,6 +109,7 @@ export default function ModalTaskDone({
         onOpenModal();
       }, 500);
     }
+    return;
   };
   const onTakeImageController = async () => {
     const result = await ImagePicker.launchCamera({
@@ -141,7 +147,7 @@ export default function ModalTaskDone({
             {
               ...newImage,
               fileSize: newImage.size,
-              type: 'image/png',
+              type: 'image/jpeg',
               fileName: newImage.name,
             },
           ],
@@ -469,7 +475,7 @@ export default function ModalTaskDone({
               }}
             />
             <AsyncButton
-              title="ยืนยัน"
+              title={step === 0 ? 'ถัดไป' : 'ยืนยัน'}
               style={[styles.modalBtn, styleButtonCondition]}
               onPress={() => {
                 if (imgController && step === 0) {

@@ -39,6 +39,7 @@ import Text from '../../components/Text';
 import Spinner from 'react-native-loading-spinner-overlay';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
 import {RefreshControl} from 'react-native';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 
 const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -248,6 +249,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
       })
       .catch(err => console.log(err));
   };
+
   return (
     <SafeAreaView
       style={[stylesCentral.container]}
@@ -274,22 +276,24 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
             }>
             <View style={styles.profile}>
               <View style={styles.profileDescription}>
-                <Avatar
-                  size={normalize(80)}
+                <ProgressiveImage
+                  borderRadius={40}
                   source={
-                    profilestate.image === ''
+                    profilestate?.image === ''
                       ? icons.account
                       : {uri: profilestate.image}
                   }
-                  avatarStyle={{
+                  style={{
+                    width: normalize(80),
+                    height: normalize(80),
                     borderRadius: normalize(40),
                   }}
                 />
                 <View style={styles.profileName}>
                   <Text
                     style={{
-                      fontFamily: font.medium,
-                      fontSize: normalize(14),
+                      fontFamily: font.bold,
+                      fontSize: normalize(18),
                       paddingBottom: normalize(2),
                       color: colors.fontBlack,
                     }}>
@@ -326,6 +330,8 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                       marginTop: normalize(10),
                       width: normalize(109),
                       height: normalize(24),
+                      borderWidth: 1,
+                      borderColor: colors.greenDark,
                       borderRadius: normalize(12),
                       display: 'flex',
                       justifyContent: 'center',
@@ -336,7 +342,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                     <Text
                       style={{
                         color: StatusObject(profilestate.status).fontColor,
-                        fontFamily: font.light,
+                        fontFamily: font.semiBold,
                         fontSize: normalize(14),
                       }}>
                       {StatusObject(profilestate.status).status ===
@@ -365,7 +371,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
               ) : (
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('ViewProfile');
+                    navigation.navigate('EditProfile');
                   }}>
                   <Text
                     style={{

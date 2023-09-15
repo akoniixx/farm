@@ -24,6 +24,7 @@ import {normalize} from '../../function/Normalize';
 import {mixpanel} from '../../../mixpanel';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
 import {RefreshControl} from 'react-native';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 
 const DetailGuruScreen: React.FC<any> = ({navigation}) => {
   const isFocused = useIsFocused();
@@ -33,6 +34,7 @@ const DetailGuruScreen: React.FC<any> = ({navigation}) => {
   const onRefresh = async () => {
     setRefreshing(true);
     await getGuruById();
+    setRefreshing(false);
   };
 
   useEffect(() => {
@@ -76,7 +78,7 @@ const DetailGuruScreen: React.FC<any> = ({navigation}) => {
             }>
             <View>
               <View>
-                <Image
+                <ProgressiveImage
                   style={{height: normalize(150)}}
                   source={
                     !data.imagePath ? image.loading : {uri: data.imagePath}

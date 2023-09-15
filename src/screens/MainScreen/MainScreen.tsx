@@ -26,9 +26,11 @@ import {Campaign} from '../../datasource/CampaignDatasource';
 import GuruKasetCarousel from '../../components/GuruKasetCarousel/GuruKasetCarousel';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 import {useNetwork} from '../../contexts/NetworkContext';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const MainScreen: React.FC<any> = ({navigation}) => {
   const {isConnected} = useNetwork();
+  const socketSheetRef = React.useRef(false);
   const insets = useSafeAreaInsets();
   const [profile, setProfile] = useState({
     name: '',
@@ -52,7 +54,6 @@ const MainScreen: React.FC<any> = ({navigation}) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      openSocket();
       getCurrentPoint();
       getProfile();
     }, []),
@@ -84,18 +85,28 @@ const MainScreen: React.FC<any> = ({navigation}) => {
     getProfile();
     openSocket();
     getCurrentPoint();
+    return () => {
+      socketSheetRef.current = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const openSocket = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
     await socket.connect();
+
     socket.on(`send-task-${dronerId!}`, ({data, image_profile_url}) => {
-      //Modal Task Screen
+      if (socketSheetRef.current) {
+        return;
+      }
+      socketSheetRef.current = true;
       SheetManager.show('NewTaskSheet', {
         payload: {
           data,
           dronerId,
           image_profile_url,
+          onHide: () => {
+            socketSheetRef.current = false;
+          },
         },
       });
     });
@@ -232,14 +243,42 @@ const MainScreen: React.FC<any> = ({navigation}) => {
           <View>
             <View style={styles.headCard}>
               <View>
-                <Text
-                  style={{
-                    fontFamily: font.bold,
-                    fontSize: normalize(24),
-                    color: colors.fontBlack,
-                  }}>
-                  สวัสดี, {profile.name}
-                </Text>
+                {loading ? (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: font.bold,
+                        fontSize: normalize(24),
+                        color: colors.fontBlack,
+                      }}>
+                      สวัสดี,
+                    </Text>
+                    <SkeletonPlaceholder
+                      speed={2000}
+                      borderRadius={10}
+                      backgroundColor={colors.skeleton}>
+                      <SkeletonPlaceholder.Item
+                        width={100}
+                        height={24}
+                        borderRadius={4}
+                        marginLeft={10}
+                      />
+                    </SkeletonPlaceholder>
+                  </View>
+                ) : (
+                  <Text
+                    style={{
+                      fontFamily: font.bold,
+                      fontSize: normalize(24),
+                      color: colors.fontBlack,
+                    }}>
+                    สวัสดี, {profile.name}
+                  </Text>
+                )}
                 <View style={styles.activeContainer}>
                   <Switch
                     trackColor={{false: '#767577', true: colors.green}}
@@ -333,6 +372,7 @@ const MainScreen: React.FC<any> = ({navigation}) => {
             </View>
             {guruKaset !== undefined ? (
               <GuruKasetCarousel
+                loading={loading}
                 guruKaset={guruKaset}
                 navigation={navigation}
               />
@@ -352,10 +392,10 @@ const MainScreen: React.FC<any> = ({navigation}) => {
             display: showCampaign,
             position: 'absolute',
             bottom: 20,
-            right: 10,
+            right: 18,
             zIndex: 1,
           }}>
-          <View style={{width: 10, marginLeft: 20}}>
+          <View style={{width: 10}}>
             <TouchableOpacity
               onPress={() => {
                 mixpanel.track('กดปิดแคมเปญทอง');
@@ -375,11 +415,12 @@ const MainScreen: React.FC<any> = ({navigation}) => {
                 navigation.navigate('CampaignScreen');
               }}>
               <ProgressiveImage
+                borderRadius={8}
                 source={{
                   uri: campaignImage,
                 }}
-                resizeMode="contain"
-                style={{width: 140, height: 60}}
+                resizeMode="cover"
+                style={{width: 100, height: 60, borderRadius: 8}}
               />
             </TouchableOpacity>
           )}
