@@ -36,7 +36,6 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
             </View>
             <View
               style={{
-                paddingHorizontal: 30,
                 marginTop: 20,
                 alignItems: 'center',
               }}>
@@ -128,7 +127,7 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
             </View>
             <View
               style={{
-                paddingHorizontal: 30,
+                // paddingHorizontal: 30,
                 marginTop: 20,
                 alignItems: 'center',
               }}>

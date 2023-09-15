@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -20,27 +20,68 @@ import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
 import Text from '../../components/Text/Text';
+import MaintenanceHeader from '../MainScreen/MainScreenComponent/MaintenanceHeader';
+import { momentExtend } from '../../utils/moment-buddha-year';
+import { SystemMaintenance } from '../../datasource/SystemMaintenanceDatasource';
+import {
+  MaintenanceSystem,
+  MaintenanceSystem_INIT,
+} from '../../entites/MaintenanceApp';
+import moment from 'moment';
 
 const AuthMainScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const { height, width } = Dimensions.get('window');
+  const [end, setEnd] = useState<any>();
+  const [start, setStart] = useState<any>();
+  const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
+    MaintenanceSystem_INIT,
+  );
+  const dateNow = moment(Date.now());
+  const [checkTime, setCheckTime] = useState(false);
 
-  // const getData = async () => {
-  //   const value = await AsyncStorage.getItem('token');
-  //   setFcmToken(value!);
-  // };
   useEffect(() => {
-    // getData();
     getProfile();
-    // dronerSug();
-    // dronerSugUsed();
   }, []);
 
   useFocusEffect(
     React.useCallback(() => {
       getProfile();
+      const getMaintenance = async () => {
+        await SystemMaintenance.Maintenance('FARMER')
+          .then(res => {
+            console.log(res)
+            if (res.responseData !== null) {
+              setMaintenance(res.responseData);
+              setStart(
+                momentExtend.toBuddhistYear(
+                  maintenance.dateStart,
+                  'DD MMMM YYYY',
+                ),
+              );
+              setEnd(
+                momentExtend.toBuddhistYear(
+                  maintenance.dateEnd,
+                  'DD MMMM YYYY',
+                ),
+              );
+              setCheckTime(
+                checkTimeMaintance(
+                  moment(res.responseData.dateNotiStart),
+                  moment(res.responseData.dateNotiEnd),
+                ),
+              );
+            }
+          })
+          .catch(err => console.log(err));
+      };
+      getMaintenance();
     }, []),
   );
+
+  const checkTimeMaintance = (startDate: any, endDate: any) => {
+    return dateNow.isBetween(startDate, endDate, 'milliseconds');
+  };
 
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -58,40 +99,6 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
         .catch(err => console.log(err));
     }
   };
-  // const dronerSug = async () => {
-  //   const value = await AsyncStorage.getItem('token');
-  //   if (value) {
-  //     const farmer_id = await AsyncStorage.getItem('farmer_id');
-  //     TaskSuggestion.searchDroner(
-  //       farmer_id !== null ? farmer_id : '',
-  //       profilestate.plotItem[0].id,
-  //       date,
-  //     )
-  //       .then(res => {
-  //         setTaskSug(res);
-  //       })
-  //       .catch(err => console.log(err));
-  //   }
-  // };
-  // const dronerSugUsed = async () => {
-  //   const value = await AsyncStorage.getItem('token');
-  //   if (value) {
-  //     const farmer_id = await AsyncStorage.getItem('farmer_id');
-  //     const limit = 8;
-  //     const offset = 0;
-  //     TaskSuggestion.DronerUsed(
-  //       farmer_id !== null ? farmer_id : '',
-  //       profilestate.plotItem[0].id,
-  //       date,
-  //       limit,
-  //       offset,
-  //     )
-  //       .then(res => {
-  //         setTaskSugUsed(res);
-  //       })
-  //       .catch(err => console.log(err));
-  //   }
-  // };
 
   return (
     <View
@@ -201,6 +208,14 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                         </Text>
                       </LinearGradient>
                     </TouchableOpacity>
+                  </View>
+                  <View>
+                    <MaintenanceHeader
+                      checkDateNoti={checkTime}
+                      end={end}
+                      start={start}
+                      maintenance={maintenance}
+                    />
                   </View>
                   <View
                     style={{

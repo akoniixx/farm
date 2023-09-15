@@ -894,7 +894,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                   color: 'black',
                   marginVertical: normalize(5),
                 }}>
-                ขอบคุณสำรับการรีวิวงานนักบินโดรน
+                ขอบคุณสำหรับการรีวิวงานนักบินโดรน
               </Text>
             </View>
 
