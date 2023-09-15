@@ -51,7 +51,7 @@ const MaintenanceScreen: React.FC<any> = ({ navigation }) => {
           <View
             style={{
               marginTop: 30,
-              width: 385,
+              width: '90%',
             }}>
             <MainButton
               label="ปิด"

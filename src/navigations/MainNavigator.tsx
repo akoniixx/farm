@@ -1,5 +1,6 @@
 import React, {
   createContext,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -7,7 +8,6 @@ import React, {
 } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
-import MainScreen from '../screens/MainScreen/MainScreen';
 import AllPlotScreen from '../screens/ProfileScreen/PlotScreen/AllPlotScreen';
 import SelectDateScreen from '../screens/AutoBooking/SelectDateScreen';
 import DronerDetail from '../screens/DronerProfile/DronerDetail';
@@ -41,21 +41,12 @@ import AllReviewDroner from '../screens/DronerProfile/AllReviewDroner';
 import CouponDetailScreen from '../screens/PromotionScreen/CouponDetailScreen';
 import { CouponCardEntities } from '../entites/CouponCard';
 import MyCouponScreen from '../screens/PromotionScreen/MyCouponScreen';
-import {
-  MaintenanceSystem,
-  MaintenanceSystem_INIT,
-} from '../entites/MaintenanceApp';
-import { SystemMaintenance } from '../datasource/SystemMaintenanceDatasource';
-import MaintenanceScreen from '../screens/MaintenanceScreen/MaintenanceScreen';
 import SearchCouponScreen from '../screens/PromotionScreen/SearchCouponScreen';
 import UseCouponScreen from '../screens/PromotionScreen/UseCouponScreen';
 import AllCouponScreen from '../screens/PromotionScreen/AllCouponScreen';
 import AllGuruScreen from '../screens/GuruScreen/AllGuruScreen';
 import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
 import DetailPointScreen from '../screens/PointScreen/DetailPointScreen';
-import moment from 'moment';
-import PopUpMaintenance from '../components/Modal/MaintenanceApp/PopUpMaintenance';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type MainStackParamList = {
   MainScreen: undefined;
@@ -94,7 +85,6 @@ export type MainStackParamList = {
   AllReviewDroner: undefined;
   CouponDetail: { detail: CouponCardEntities };
   MyCouponScreen: undefined;
-  MaintenanceScreen: undefined;
   SearchCouponScreen: undefined;
   UseCouponScreen: undefined;
   AllCouponScreen: undefined;
@@ -106,162 +96,77 @@ export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
 
 const Stack = createStackNavigator<MainStackParamList>();
-const MainNavigator: React.FC = () => {
-  const [checkTime, setCheckTime] = useState(false);
-  const [popupMaintenance, setPopupMaintenance] = useState<boolean>(false);
-  const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
-    MaintenanceSystem_INIT,
+const MainNavigator: React.FC<any> = ({ checkDataMA }) => {
+  const renderMainTapNavigator = useCallback(
+    (props: any) => <MainTapNavigator {...props} checkDataMA={checkDataMA} />,
+    [checkDataMA], // dependencies
   );
-  const [reload, setReload] = useState<boolean>(false);
-
-  useEffect(() => {
-    const checkDataMA = async () => {
-      const value = await AsyncStorage.getItem('Maintenance');
-      SystemMaintenance.Maintenance('FARMER').then(res => {
-        if (res.responseData !== null) {
-          setCheckTime(
-            checkTimeMaintance(
-              moment(res.responseData.dateStart),
-              moment(res.responseData.dateEnd),
-            ),
-          );
-          setMaintenance(res.responseData);
-          const isMaintenanceActive = checkTimeMaintenancePopUp(
-            moment(res.responseData.dateNotiStart),
-            moment(res.responseData.dateNotiEnd),
-          );
-          if (value !== 'read') {
-            setPopupMaintenance(isMaintenanceActive);
-          }
-        }
-        setReload(!reload);
-      });
-    };
-    checkDataMA();
-  }, []);
-
-  const checkTimeMaintance = (startDate: any, endDate: any) => {
-    const dateNow = moment(Date.now());
-    return dateNow.isBetween(startDate, endDate, 'milliseconds');
-  };
-  const checkTimeMaintenancePopUp = (startDate: any, endDate: any) => {
-    const dateNow = moment(Date.now());
-    return dateNow.isBetween(startDate, endDate, 'milliseconds');
-  };
   return (
     <>
-      <PopUpMaintenance
-        show={popupMaintenance}
-        onClose={async () => {
-          await AsyncStorage.setItem('Maintenance', 'read');
-          setPopupMaintenance(!popupMaintenance);
-        }}
-        data={maintenance}
-      />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {checkTime === true ? (
+        <Stack.Screen
+          name="MainScreen"
+          component={renderMainTapNavigator}
+          options={{
+            gestureEnabled: false,
+            headerLeft: () => null,
+          }}
+        />
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+        <Stack.Screen name="AllPlotScreen" component={AllPlotScreen} />
+        <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
+        <Stack.Screen name="SelectDateScreen" component={SelectDateScreen} />
+        <Stack.Screen name="SelectPlotScreen" component={SelectPlotScreen} />
+        <Stack.Screen name="SelectTarget" component={SelectTarget} />
+        <Stack.Screen name="DronerDetail" component={DronerDetail} />
+        <Stack.Screen name="FullScreenTaskImg" component={FullScreenTaskImg} />
+        <Stack.Screen name="DronerUsedScreen" component={DronerUsedScreen} />
+        <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
+        <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+        <Stack.Screen name="DetailTaskScreen" component={DetailTaskScreen} />
+        <Stack.Screen
+          name="MyTaskDetailScreen"
+          component={MyTaskDetailScreen}
+        />
+        <Stack.Screen
+          name="MyTaskDetailScreenNoti"
+          component={MyTaskDetailScreenNoti}
+        />
+        <Stack.Group
+          screenOptions={{
+            gestureEnabled: false,
+          }}>
           <Stack.Screen
-            name="MaintenanceScreen"
-            component={MaintenanceScreen}
-            options={{
-              gestureEnabled: false,
-              headerLeft: () => null,
-            }}
+            name="SlipWaitingScreen"
+            component={SlipWaitingScreen}
           />
-        ) : (
-          <>
-            <Stack.Screen
-              name="MainScreen"
-              component={MainTapNavigator}
-              options={{
-                gestureEnabled: false,
-                headerLeft: () => null,
-              }}
-            />
-            <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-            <Stack.Screen name="AllPlotScreen" component={AllPlotScreen} />
-            <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
-            <Stack.Screen
-              name="SelectDateScreen"
-              component={SelectDateScreen}
-            />
-            <Stack.Screen
-              name="SelectPlotScreen"
-              component={SelectPlotScreen}
-            />
-            <Stack.Screen name="SelectTarget" component={SelectTarget} />
-            <Stack.Screen name="DronerDetail" component={DronerDetail} />
-            <Stack.Screen
-              name="FullScreenTaskImg"
-              component={FullScreenTaskImg}
-            />
-            <Stack.Screen
-              name="DronerUsedScreen"
-              component={DronerUsedScreen}
-            />
-            <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
-            <Stack.Screen
-              name="EditProfileScreen"
-              component={EditProfileScreen}
-            />
-            <Stack.Screen
-              name="DetailTaskScreen"
-              component={DetailTaskScreen}
-            />
-            <Stack.Screen
-              name="MyTaskDetailScreen"
-              component={MyTaskDetailScreen}
-            />
-            <Stack.Screen
-              name="MyTaskDetailScreenNoti"
-              component={MyTaskDetailScreenNoti}
-            />
-            <Stack.Group
-              screenOptions={{
-                gestureEnabled: false,
-              }}>
-              <Stack.Screen
-                name="SlipWaitingScreen"
-                component={SlipWaitingScreen}
-              />
-              <Stack.Screen
-                name="SlipSuccessScreen"
-                component={SlipSuccessScreen}
-              />
-            </Stack.Group>
-            <Stack.Screen name="ViewMapScreen" component={ViewMapScreen} />
-            <Stack.Screen
-              name="NotificationScreen"
-              component={NotificationScreen}
-            />
-            <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
-            <Stack.Screen
-              name="DeleteProfileScreen"
-              component={DeleteProfile}
-            />
-            <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
-            <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
-            <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
-            <Stack.Screen name="CouponDetail" component={CouponDetailScreen} />
-            <Stack.Screen name="MyCouponScreen" component={MyCouponScreen} />
-            <Stack.Screen
-              name="SearchCouponScreen"
-              component={SearchCouponScreen}
-            />
-            <Stack.Screen name="UseCouponScreen" component={UseCouponScreen} />
-            <Stack.Screen name="AllCouponScreen" component={AllCouponScreen} />
+          <Stack.Screen
+            name="SlipSuccessScreen"
+            component={SlipSuccessScreen}
+          />
+        </Stack.Group>
+        <Stack.Screen name="ViewMapScreen" component={ViewMapScreen} />
+        <Stack.Screen
+          name="NotificationScreen"
+          component={NotificationScreen}
+        />
+        <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
+        <Stack.Screen name="DeleteProfileScreen" component={DeleteProfile} />
+        <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
+        <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
+        <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
+        <Stack.Screen name="CouponDetail" component={CouponDetailScreen} />
+        <Stack.Screen name="MyCouponScreen" component={MyCouponScreen} />
+        <Stack.Screen
+          name="SearchCouponScreen"
+          component={SearchCouponScreen}
+        />
+        <Stack.Screen name="UseCouponScreen" component={UseCouponScreen} />
+        <Stack.Screen name="AllCouponScreen" component={AllCouponScreen} />
 
-            <Stack.Screen
-              name="DetailPointScreen"
-              component={DetailPointScreen}
-            />
-            <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
-            <Stack.Screen
-              name="DetailGuruScreen"
-              component={DetailGuruScreen}
-            />
-          </>
-        )}
+        <Stack.Screen name="DetailPointScreen" component={DetailPointScreen} />
+        <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
+        <Stack.Screen name="DetailGuruScreen" component={DetailGuruScreen} />
       </Stack.Navigator>
     </>
   );

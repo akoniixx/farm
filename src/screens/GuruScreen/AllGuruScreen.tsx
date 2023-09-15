@@ -395,6 +395,7 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
                           fontSize: 20,
                           fontFamily: font.SarabunMedium,
                           color: colors.fontBlack,
+                          lineHeight: 30
                         }}>
                         {el.title}
                       </Text>
@@ -413,7 +414,6 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
                   <View
                     style={{
                       borderBottomWidth: 0.3,
-
                       borderColor: colors.disable,
                       width: Dimensions.get('screen').width * 0.9,
                       alignSelf: 'center',

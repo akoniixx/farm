@@ -1,3 +1,6 @@
+## Fix [v1.4.19] 2023-09-15
+- fixed MA get api form noti
+
 ## Fix [v1.4.18] 2023-09-08
 
 - go to the maintenance screen. as soon as it's time
