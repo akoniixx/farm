@@ -15,6 +15,8 @@ import {
 } from '../../entities/MaintenanceApp';
 import MaintenanceHeader from './MaintenanceHaeder';
 import {useMaintenance} from '../../contexts/MaintenanceContext';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {normalize} from '../../function/Normalize';
 
 interface Props {
   navigation?: any;
@@ -22,11 +24,13 @@ interface Props {
     data: any[];
   };
   allScreen?: boolean;
+  loading?: boolean;
 }
 export default function GuruKasetCarousel({
   navigation,
   guruKaset,
   allScreen = false,
+  loading = false,
 }: Props) {
   const isCarousel = useRef(null);
   const screen = Dimensions.get('window');
@@ -50,83 +54,109 @@ export default function GuruKasetCarousel({
   return (
     <View>
       {allScreen ? (
-        <Carousel
-          autoplay={true}
-          autoplayInterval={7000}
-          autoplayDelay={5000}
-          loop={true}
-          hasParallaxImages
-          ref={isCarousel}
-          data={guruKaset.data.filter(el => el.pin_all)}
-          sliderWidth={screen.width}
-          itemWidth={screen.width - 48}
-          onSnapToItem={(idx: number) => setIndex(idx)}
-          useScrollView={true}
-          vertical={false}
-          renderItem={({item}: any) => {
-            return (
-              <TouchableOpacity
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginHorizontal: 32,
-                }}
-                onPress={async () => {
-                  await AsyncStorage.setItem('guruId', `${item.id}`);
-                  navigation.push('DetailGuruScreen');
-                }}>
-                <CardGuru
-                  key={index}
-                  isPinned
-                  index={item.index}
-                  background={item.image_path}
-                  title={item.title}
-                  date={momentExtend.toBuddhistYear(
-                    item.created_at,
-                    'DD MMM YY',
-                  )}
-                  read={item.read}
-                />
-              </TouchableOpacity>
-            );
-          }}
-        />
-      ) : (
-        <Carousel
-          autoplay={true}
-          autoplayInterval={7000}
-          autoplayDelay={5000}
-          loop={true}
-          ref={isCarousel}
-          data={guruKasetData}
-          sliderWidth={screen.width}
-          itemWidth={screen.width}
-          onSnapToItem={(idx: number) => setIndex(idx)}
-          useScrollView={true}
-          vertical={false}
-          renderItem={({item}: any) => {
-            if (item?.isMaintenance) {
-              return (
-                <MaintenanceHeader
-                  maintenance={maintenanceData}
-                  checkDateNoti={checkTime}
-                  start={maintenanceData.dateStart}
-                  end={maintenanceData.dateEnd}
-                />
-              );
-            } else {
+        <>
+          <Carousel
+            autoplay={true}
+            autoplayInterval={7000}
+            autoplayDelay={5000}
+            loop={true}
+            hasParallaxImages
+            ref={isCarousel}
+            data={guruKaset.data.filter(el => el.pin_all)}
+            sliderWidth={screen.width}
+            itemWidth={screen.width - 48}
+            onSnapToItem={(idx: number) => setIndex(idx)}
+            useScrollView={true}
+            vertical={false}
+            renderItem={({item}: any) => {
               return (
                 <TouchableOpacity
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginHorizontal: 32,
+                  }}
                   onPress={async () => {
                     await AsyncStorage.setItem('guruId', `${item.id}`);
                     navigation.push('DetailGuruScreen');
                   }}>
-                  <CardGuruKaset background={item.image_path} />
+                  <CardGuru
+                    key={index}
+                    isPinned
+                    index={item.index}
+                    background={item.image_path}
+                    title={item.title}
+                    date={momentExtend.toBuddhistYear(
+                      item.created_at,
+                      'DD MMM YY',
+                    )}
+                    read={item.read}
+                  />
                 </TouchableOpacity>
               );
-            }
-          }}
-        />
+            }}
+          />
+        </>
+      ) : (
+        <>
+          {loading ? (
+            <View
+              style={{
+                padding: 10,
+                width: '100%',
+              }}>
+              <SkeletonPlaceholder
+                backgroundColor={colors.skeleton}
+                speed={2000}
+                borderRadius={10}>
+                <SkeletonPlaceholder.Item>
+                  <View
+                    style={{
+                      height: normalize(120),
+                      borderRadius: 10,
+                    }}
+                  />
+                </SkeletonPlaceholder.Item>
+              </SkeletonPlaceholder>
+            </View>
+          ) : (
+            <Carousel
+              autoplay={true}
+              autoplayInterval={7000}
+              autoplayDelay={5000}
+              loop={true}
+              ref={isCarousel}
+              data={guruKaset.data}
+              sliderWidth={screen.width}
+              itemWidth={screen.width}
+              onSnapToItem={(idx: number) => setIndex(idx)}
+              useScrollView={true}
+              vertical={false}
+              renderItem={({item}: any) => {
+                if (item?.isMaintenance) {
+                  return (
+                    <MaintenanceHeader
+                      maintenance={maintenanceData}
+                      checkDateNoti={checkTime}
+                      start={maintenanceData.dateStart}
+                      end={maintenanceData.dateEnd}
+                    />
+                  );
+                } else {
+                  return (
+                    <TouchableOpacity
+                      onPress={async () => {
+                        await AsyncStorage.setItem('guruId', `${item.id}`);
+                        navigation.push('DetailGuruScreen');
+                      }}>
+                      <CardGuruKaset background={item.image_path} />
+                    </TouchableOpacity>
+                  );
+                }
+              }}
+            />
+          )}
+        </>
       )}
       {allScreen ? (
         <View>

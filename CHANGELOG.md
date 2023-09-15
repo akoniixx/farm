@@ -1,6 +1,9 @@
-## Improved [1.7.2] 2023-09-15
+## Improved [1.7.3] 2023-09-15
 
 - fixed maintenance
+## Enhance [1.7.2] 2023-09-15
+- fix bug when click select photo profile
+- edit profile droner
 
 ## Improved [1.7.1] 2023-09-13
 

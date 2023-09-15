@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
@@ -6,6 +6,7 @@ import VersionCheck from 'react-native-version-check';
 import storeVersion from 'react-native-store-version';
 import {isForceUpdate} from '../function/checkForceUpdate';
 import {navigate} from './RootNavigation';
+import colors from '../assets/colors/colors';
 
 const LoadingNavigator: React.FC<any> = ({navigation}) => {
   useFocusEffect(
@@ -75,7 +76,7 @@ const LoadingNavigator: React.FC<any> = ({navigation}) => {
   );
   return (
     <View style={styles.scaffold}>
-      <Text>Loading...</Text>
+      <ActivityIndicator size={'large'} color={colors.orange} />
     </View>
   );
 };

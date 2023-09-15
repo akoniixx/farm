@@ -23,7 +23,11 @@ export default function CustomAddressScreen({
   navigation: any;
   route: any;
 }) {
-  const {data, isEdit = false, initialValue = {}} = route.params;
+  const {
+    isEdit = false,
+    initialValue = {},
+    isAddMainAddress = false,
+  } = route.params;
   const [objInput, setObjInput] = React.useState({
     addressNo: '',
     detail: '',
@@ -59,6 +63,15 @@ export default function CustomAddressScreen({
         subdistrictId: objInput.subDistrict.value,
         postcode: objInput.postCode,
       };
+      if (isAddMainAddress) {
+        await ProfileDatasource.postMainAddressList(payload);
+        setLoading(false);
+        setTimeout(() => {
+          navigation.goBack();
+        }, 300);
+        return;
+      }
+
       if (!isEdit) {
         await ProfileDatasource.postAddressList(payload);
       } else {
@@ -78,7 +91,7 @@ export default function CustomAddressScreen({
   useEffect(() => {
     const getInitialValue = async () => {
       try {
-        if (isEdit) {
+        if (initialValue) {
           setObjInput({
             addressNo: initialValue.address1,
             detail: initialValue.address2,

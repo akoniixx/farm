@@ -918,7 +918,7 @@ export const toastConfig = {
       </View>
     </TouchableOpacity>
   ),
-  missionDone : ({onPress, text1, props}: any) => (
+  missionDone: ({onPress, text1, props}: any) => (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.modalBgSuccess}>
         <View
@@ -934,7 +934,7 @@ export const toastConfig = {
           />
           <View
             style={{
-              width : '87%',
+              width: '87%',
               paddingLeft: normalize(12),
             }}>
             <Text style={styles.info}>{text1}</Text>
@@ -956,7 +956,7 @@ export const toastConfig = {
         </View>
       </View>
     </TouchableOpacity>
-  )
+  ),
 };
 
 const styles = StyleSheet.create({

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BASE_URL } from '../config/develop-config';
+import {BASE_URL} from '../config/develop-config';
 
 export class SystemMaintenance {
   static async Maintenance(type: string): Promise<any> {

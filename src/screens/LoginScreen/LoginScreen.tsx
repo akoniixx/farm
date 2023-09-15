@@ -34,7 +34,7 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
   const [errMessage, setErrMessage] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = React.useState<string>('');
-  const {checkDataMA,checkTime} = useMaintenance();
+  const {checkDataMA, checkTime} = useMaintenance();
 
   const login = async () => {
     await checkDataMA();

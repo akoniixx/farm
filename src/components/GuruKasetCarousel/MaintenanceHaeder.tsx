@@ -1,8 +1,8 @@
-import { Image, Text, View } from 'react-native';
+import {Image, Text, View} from 'react-native';
 import React from 'react';
-import { normalize } from '../../function/Normalize';
-import { colors, font } from '../../assets';
-import { momentExtend } from '../../function/utility';
+import {normalize} from '../../function/Normalize';
+import {colors, font} from '../../assets';
+import {momentExtend} from '../../function/utility';
 import moment from 'moment';
 
 interface Props {
@@ -20,7 +20,7 @@ export default function MaintenanceHeader({
   return (
     <View>
       {checkDateNoti === true && (
-        <View style={{ marginTop: 20, marginBottom: 20 }}>
+        <View style={{marginTop: 20, marginBottom: 20}}>
           <View
             style={{
               paddingHorizontal: 20,
@@ -36,13 +36,13 @@ export default function MaintenanceHeader({
                 justifyContent: 'space-between',
                 flexDirection: 'row',
               }}>
-              <View style={{ marginTop: 15 }}>
+              <View style={{marginTop: 15}}>
                 <Image
-                  source={{ uri: maintenance.imagePath }}
-                  style={{ width: 58, height: 60 }}
+                  source={{uri: maintenance.imagePath}}
+                  style={{width: 58, height: 60}}
                 />
               </View>
-              <View style={{ paddingHorizontal: 30 }}>
+              <View style={{paddingHorizontal: 30}}>
                 {start !== end ? (
                   <View>
                     <Text

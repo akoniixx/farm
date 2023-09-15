@@ -3,14 +3,17 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
-  PermissionsAndroid,
-  Platform,
   Modal,
   Image,
   Dimensions,
 } from 'react-native';
-import React, {useCallback, useEffect, useReducer, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font, icons, image as img} from '../../assets';
@@ -19,16 +22,21 @@ import CustomHeader from '../../components/CustomHeader';
 import {MainButton} from '../../components/Button/MainButton';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Avatar} from '@rneui/themed';
-import DropDownPicker from 'react-native-dropdown-picker';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import {registerReducer} from '../../hooks/registerfield';
-import {Register} from '../../datasource/AuthDatasource';
+import {Authentication, Register} from '../../datasource/AuthDatasource';
 import Geolocation from 'react-native-geolocation-service';
 import * as ImagePicker from 'react-native-image-picker';
 import Lottie from 'lottie-react-native';
 import CalendarCustom from '../../components/Calendar/Calendar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import AnimatedInput from '../../components/Input/AnimatedInput';
+import Dropdown from '../../components/Dropdown/Dropdown';
+import ModalUploadImage from '../../components/Modal/ModalUploadImage';
+import {ResizeImage} from '../../function/Resizing';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const EditProfile: React.FC<any> = ({navigation}) => {
   const initialFormRegisterState = {
@@ -47,64 +55,176 @@ const EditProfile: React.FC<any> = ({navigation}) => {
   const windowWidth = Dimensions.get('window').width;
   const [openCalendar, setOpenCalendar] = useState(false);
   const [birthday, setBirthday] = useState('');
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
-  const [openDistrict, setOpenDistrict] = useState(false);
-  const [valueDistrict, setValueDistrict] = useState(null);
+  const [error, setError] = useState('');
+
+  const [subDistrict, setSubDistrict] = useState<any>();
+  const [province, setProvince] = useState<any>();
+  const [district, setDistrict] = useState<any>();
   const [itemsDistrict, setItemDistrict] = useState([]);
-  const [openSubDistrict, setOpenSubDistrict] = useState(false);
-  const [valueSubDistrict, setSubValueDistrict] = useState(null);
-  const [itemsSubDistrict, setItemSubDistrict] = useState([]);
-  const [province, setProvince] = useState<any>(null);
-  const [district, setDistrict] = useState<any>(null);
+  const [itemsSubDistrict, setItemSubDistrict] = useState<
+    {
+      value: string;
+      label: string;
+      postcode: string;
+    }[]
+  >([]);
   const [image, setImage] = useState<any>(null);
   const [imagePreview, setImagePreview] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingFetch, setLoadingFetch] = useState(false);
+  const [showModalSelectImage, setShowModalSelectImage] = useState(false);
   const [formState, dispatch] = useReducer(
     registerReducer,
     initialFormRegisterState,
   );
 
   const getProfile = async () => {
+    setLoadingFetch(true);
     const droner_id = await AsyncStorage.getItem('droner_id');
+
     ProfileDatasource.getProfile(droner_id!)
-      .then(res => {
-        ProfileDatasource.getImgePath(droner_id!, res.file[0].path)
-          .then(resImg => {
-            setImagePreview(resImg.url);
-            const datetime = res.birthDate;
-            const date = datetime.split('T')[0];
-            setBirthday(date);
-            setValue(res.address.provinceId);
-            setProvince(res.address.provinceId);
-            dispatch({
-              type: 'Initial Input',
-              name: res.firstname,
-              surname: res.lastname,
-              birthDate: date,
-              tel: res.telephoneNo,
-              no: res.address.address1,
-              address: res.address.address2,
-              province: '',
-              district: '',
-              subdistrict: '',
-              postal: '',
-            });
-          })
-          .catch(err => console.log(err));
+      .then(async res => {
+        const datetime = res.birthDate;
+        const date = datetime.split('T')[0];
+        setBirthday(date);
+        setProvince({
+          label: '',
+          value: res.address.provinceId,
+        });
+        setDistrict({
+          label: '',
+          value: res.address.districtId,
+        });
+        setSubDistrict({
+          label: '',
+          value: res.address.subdistrictId,
+        });
+        dispatch({
+          type: 'Initial Input',
+          name: res.firstname,
+          surname: res.lastname,
+          birthDate: date,
+          tel: res.telephoneNo,
+          no: res.address.address1,
+          address: res.address.address2,
+          province: res.address.provinceId,
+          district: res.address.districtId,
+          subdistrict: res.address.subdistrictId,
+          postal: res.address.postcode,
+        });
+        const findProfileImage = res.file.find(
+          (el: {category: string}) => el.category === 'PROFILE_IMAGE',
+        );
+        if (findProfileImage) {
+          await ProfileDatasource.getImgePath(droner_id!, findProfileImage.path)
+            .then(resImg => {
+              setImagePreview({
+                path: findProfileImage.path,
+                uri: resImg.url,
+                id: findProfileImage.id,
+              });
+            })
+            .catch(err => console.log(err))
+            .finally(() => setLoadingFetch(false));
+        }
+        setLoadingFetch(false);
       })
       .catch(err => console.log(err));
   };
+  const onFinishedTakePhoto = useCallback(async (v: any) => {
+    const isFileMoreThan5MB = v.assets[0].fileSize > 5 * 1024 * 1024;
+    if (isFileMoreThan5MB) {
+      setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 5 MB');
+      return false;
+    }
+    setError('');
+    setImage(v);
 
-  const onAddImage = useCallback(async () => {
+    setShowModalSelectImage(false);
+  }, []);
+  const onAddImageStorage = async () => {
     const result = await ImagePicker.launchImageLibrary({
       mediaType: 'photo',
+      quality: 0.8,
     });
     if (!result.didCancel) {
-      setImage(result);
+      const fileSize = result?.assets?.[0]?.fileSize;
+      if (!fileSize) {
+        setError('รูปภาพไม่ถูกต้อง');
+        return;
+      }
+      const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
+      const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
+      let newResult: any = result;
+
+      if (isFileMoreThan20MB) {
+        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
+
+        return false;
+      }
+      if (isFileMoreThan3MB) {
+        const newImage: any = await ResizeImage({
+          uri: result?.assets ? result?.assets?.[0].uri : '',
+        });
+        newResult = {
+          assets: [
+            {
+              ...newImage,
+              fileSize: newImage.size,
+              type: 'image/jpeg',
+              fileName: newImage?.name ? `${newImage.name}`.toLowerCase() : '',
+            },
+          ],
+        };
+      }
+      setImage(newResult);
+
+      setError('');
+      setShowModalSelectImage(false);
     }
-  }, []);
+    return;
+  };
+  const onTakeImage = async () => {
+    const result = await ImagePicker.launchCamera({
+      mediaType: 'photo',
+      maxHeight: 800,
+      maxWidth: 800,
+      cameraType: 'back',
+      quality: 0.8,
+    });
+
+    if (!result.didCancel) {
+      const fileSize = result?.assets?.[0]?.fileSize || 0;
+      const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
+      const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
+      let newResult: any = result;
+
+      if (isFileMoreThan20MB) {
+        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
+        return false;
+      }
+      if (isFileMoreThan3MB) {
+        const newImage: any = await ResizeImage({
+          uri: result?.assets ? result?.assets?.[0].uri : '',
+        });
+        newResult = {
+          assets: [
+            {
+              ...newImage,
+              fileSize: newImage.size,
+              type: 'image/jpeg',
+              fileName: newImage.name,
+            },
+          ],
+        };
+      }
+      setImage(newResult);
+
+      setError('');
+      setShowModalSelectImage(false);
+    }
+  };
 
   useEffect(() => {
     getProfile();
@@ -144,6 +264,36 @@ const EditProfile: React.FC<any> = ({navigation}) => {
     }
   }, [province, district]);
 
+  const {disableInputList, isDisableMainButton} = useMemo(() => {
+    const isDisableMainButton =
+      !formState.name ||
+      !formState.surname ||
+      !formState.tel ||
+      !formState.no ||
+      !formState.address ||
+      !formState.province ||
+      !formState.district ||
+      !formState.subdistrict ||
+      !formState.postal;
+    return {
+      isDisableMainButton,
+      disableInputList: [
+        {
+          label: 'ชื่อ',
+          value: formState.name,
+        },
+        {
+          label: 'นามสกุล',
+          value: formState.surname,
+        },
+        {
+          label: 'เบอร์โทรศัพท์',
+          value: formState.tel,
+        },
+      ],
+    };
+  }, [formState]);
+
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -160,29 +310,62 @@ const EditProfile: React.FC<any> = ({navigation}) => {
                 alignItems: 'center',
                 marginTop: normalize(40),
               }}>
-              <TouchableOpacity onPress={onAddImage}>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowModalSelectImage(true);
+                }}>
                 <View
                   style={{
                     width: normalize(116),
                     height: normalize(116),
+                    borderRadius: normalize(58),
                     position: 'relative',
+                    backgroundColor: colors.white,
+                    shadowColor: '#000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    elevation: 5,
                   }}>
-                  <Avatar
-                    size={116}
-                    rounded
-                    source={
-                      !image
-                        ? !imagePreview
-                          ? icons.account
-                          : {uri: imagePreview}
-                        : {uri: image.assets[0].uri}
-                    }
-                  />
+                  {loadingFetch ? (
+                    <SkeletonPlaceholder
+                      speed={2000}
+                      backgroundColor={colors.skeleton}>
+                      <SkeletonPlaceholder.Item borderRadius={58}>
+                        <View
+                          style={{
+                            width: normalize(116),
+                            height: normalize(116),
+                            borderRadius: normalize(58),
+                          }}
+                        />
+                      </SkeletonPlaceholder.Item>
+                    </SkeletonPlaceholder>
+                  ) : (
+                    <ProgressiveImage
+                      source={
+                        image
+                          ? {uri: image.assets[0].uri}
+                          : imagePreview
+                          ? {uri: imagePreview.uri}
+                          : icons.account
+                      }
+                      style={{
+                        width: normalize(116),
+                        height: normalize(116),
+                        borderRadius: normalize(58),
+                      }}
+                    />
+                  )}
+
                   <View
                     style={{
                       position: 'absolute',
-                      left: normalize(70.7),
-                      top: normalize(70.7),
+                      right: 8,
+                      bottom: 0,
                       width: normalize(32),
                       height: normalize(32),
                       borderRadius: normalize(16),
@@ -190,6 +373,14 @@ const EditProfile: React.FC<any> = ({navigation}) => {
                       flex: 1,
                       justifyContent: 'center',
                       alignItems: 'center',
+                      shadowColor: '#000',
+                      shadowOffset: {
+                        width: 0,
+                        height: 2,
+                      },
+                      shadowOpacity: 0.1,
+                      shadowRadius: 1.84,
+                      elevation: 5,
                     }}>
                     <Image
                       source={icons.camera}
@@ -205,75 +396,20 @@ const EditProfile: React.FC<any> = ({navigation}) => {
             <View style={{marginTop: normalize(40)}}>
               <Text style={styles.h1}>ข้อมูลทั่วไป (โปรดระบุ)</Text>
             </View>
-            <TextInput
-              onChangeText={value => {
-                dispatch({
-                  type: 'Handle Input',
-                  field: 'name',
-                  payload: value,
-                });
-              }}
-              value={formState.name}
-              style={styles.input}
-              editable={true}
-              placeholder={'ชื่อ'}
-              placeholderTextColor={colors.disable}
-            />
-            <TextInput
-              onChangeText={value => {
-                dispatch({
-                  type: 'Handle Input',
-                  field: 'surname',
-                  payload: value,
-                });
-              }}
-              value={formState.surname}
-              style={styles.input}
-              editable={true}
-              placeholder={'นามสกุล'}
-              placeholderTextColor={colors.disable}
-            />
-            <TouchableOpacity onPress={() => setOpenCalendar(true)}>
-              <View
-                style={[
-                  styles.input,
-                  {
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                  },
-                ]}>
-                <TextInput
-                  value={
-                    birthday != ''
-                      ? `${birthday.split('-')[2]}/${birthday.split('-')[1]}/${
-                          parseInt(birthday.split('-')[0]) + 543
-                        }`
-                      : birthday
-                  }
-                  editable={false}
-                  placeholder={'วัน/เดือน/ปี เกิด'}
-                  style={{width: windowWidth * 0.78}}
-                />
-                <Image
-                  source={icons.jobCard}
-                  style={{
-                    width: normalize(25),
-                    height: normalize(30),
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-            <TextInput
-              value={formState.tel}
-              style={[styles.input, {backgroundColor: colors.disable}]}
-              editable={false}
-              placeholder={'เบอร์โทรศัพท์'}
-              placeholderTextColor={colors.disable}
-            />
-            <View style={{marginTop: normalize(40)}}>
+            {disableInputList.map(el => {
+              return (
+                <View
+                  style={[styles.input, {backgroundColor: colors.softGrey2}]}>
+                  <Text style={styles.label}>{el.label}</Text>
+                  <Text style={styles.valueInput}>{el.value}</Text>
+                </View>
+              );
+            })}
+
+            <View style={{marginTop: normalize(16)}}>
               <Text style={styles.h1}>ที่อยู่</Text>
             </View>
-            <TextInput
+            {/* <TextInput
               onChangeText={value => {
                 dispatch({
                   type: 'Handle Input',
@@ -403,7 +539,7 @@ const EditProfile: React.FC<any> = ({navigation}) => {
                   payload: value.postcode,
                 });
               }}
-              setValue={setSubValueDistrict}
+              setValue={setSubDistrict}
               dropDownDirection="BOTTOM"
               dropDownContainerStyle={{
                 borderColor: colors.disable,
@@ -414,6 +550,116 @@ const EditProfile: React.FC<any> = ({navigation}) => {
               style={[styles.input, {backgroundColor: colors.disable}]}
               editable={false}
               placeholder={'รหัสไปรษณีย์'}
+            /> */}
+            <View style={styles.container}>
+              <AnimatedInput
+                label="บ้านเลขที่"
+                value={formState.no}
+                onChangeText={value => {
+                  dispatch({
+                    type: 'Handle Input',
+                    field: 'no',
+                    payload: value,
+                  });
+                }}
+              />
+              <AnimatedInput
+                label="รายละเอียดที่อยู่ (หมู่, ถนน)"
+                value={formState.address}
+                onChangeText={value => {
+                  dispatch({
+                    type: 'Handle Input',
+                    field: 'address',
+                    payload: value,
+                  });
+                }}
+              />
+              <Dropdown
+                placeholder="จังหวัด"
+                items={items}
+                value={province?.value}
+                onChange={(v: {label: string; value: string}) => {
+                  setProvince(v);
+                  setDistrict('');
+                  setSubDistrict('');
+                  dispatch({
+                    type: 'Handle Input',
+                    field: 'postal',
+                    payload: '',
+                  });
+
+                  dispatch({
+                    type: 'Handle Input',
+                    field: 'province',
+                    payload: v.value,
+                  });
+                }}
+              />
+              <View
+                style={{
+                  zIndex: -10,
+                }}>
+                <Dropdown
+                  placeholder="อำเภอ"
+                  items={itemsDistrict}
+                  value={district?.value}
+                  onChange={(v: {label: string; value: string}) => {
+                    setDistrict(v);
+                    setSubDistrict('');
+                    dispatch({
+                      type: 'Handle Input',
+                      field: 'postal',
+                      payload: '',
+                    });
+
+                    dispatch({
+                      type: 'Handle Input',
+                      field: 'district',
+                      payload: v.value,
+                    });
+                  }}
+                />
+              </View>
+              <View
+                style={{
+                  zIndex: -20,
+                }}>
+                <Dropdown
+                  placeholder="ตำบล"
+                  items={itemsSubDistrict}
+                  value={subDistrict?.value}
+                  onChange={(v: {label: string; value: string}) => {
+                    setSubDistrict(v);
+                    dispatch({
+                      type: 'Handle Input',
+                      field: 'subdistrict',
+                      payload: v.value,
+                    });
+                    dispatch({
+                      type: 'Handle Input',
+                      field: 'postal',
+                      payload: itemsSubDistrict.find(el => el.value === v.value)
+                        ?.postcode,
+                    });
+                  }}
+                />
+              </View>
+              <View
+                style={{
+                  zIndex: -30,
+                }}>
+                <AnimatedInput
+                  editable={false}
+                  label="รหัสไปรษณีย์"
+                  value={formState.postal}
+                />
+              </View>
+            </View>
+            <View
+              style={{
+                height: 150,
+                zIndex: -40,
+              }}
             />
           </ScrollView>
         </View>
@@ -421,95 +667,40 @@ const EditProfile: React.FC<any> = ({navigation}) => {
         <View style={{backgroundColor: colors.white}}>
           <MainButton
             label="ถัดไป"
-            disable={
-              !formState.name ||
-              !formState.surname ||
-              !formState.tel ||
-              !formState.birthDate ||
-              !formState.no ||
-              !formState.address ||
-              !formState.province.value ||
-              !formState.district.value ||
-              !formState.subdistrict.value ||
-              !formState.postal
-                ? true
-                : false
-            }
+            disable={isDisableMainButton}
             color={colors.orange}
-            onPress={() => {
+            onPress={async () => {
               setLoading(true);
-              Register.registerStep2(
-                formState.name,
-                formState.surname,
-                formState.birthDate,
-                formState.tel,
-                formState.no,
-                formState.address,
-                formState.province.value,
-                formState.district.value,
-                formState.subdistrict.value,
-                formState.postal,
-              )
+              const payload = {
+                address1: formState.no,
+                address2: formState.address,
+                districtId: formState.district,
+                provinceId: formState.province,
+                subdistrictId: formState.subdistrict,
+                postcode: formState.postal,
+                firstname: formState.name,
+                lastname: formState.surname,
+                telephoneNo: formState.tel,
+                birthDate: formState.birthDate,
+              };
+
+              await Authentication.updateProfile(payload)
                 .then(async () => {
-                  if (!image) {
-                    if (Platform.OS === 'ios') {
-                      await Geolocation.requestAuthorization('always');
-                    } else if (Platform.OS === 'android') {
-                      await PermissionsAndroid.request(
-                        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                      );
-                    }
-                    Geolocation.getCurrentPosition(
-                      position => {
-                        setLoading(false);
-                        navigation.navigate('ThirdFormScreen', {
-                          tele: formState.tel,
-                          latitude: position.coords.latitude,
-                          longitude: position.coords.longitude,
-                        });
-                      },
-                      error => {
-                        console.log(error.code, error.message);
-                      },
-                      {
-                        enableHighAccuracy: true,
-                        timeout: 15000,
-                        maximumAge: 10000,
-                      },
-                    );
-                  } else {
-                    Register.uploadProfileImage(image)
-                      .then(async () => {
-                        if (Platform.OS === 'ios') {
-                          await Geolocation.requestAuthorization('always');
-                        } else if (Platform.OS === 'android') {
-                          await PermissionsAndroid.request(
-                            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                          );
-                        }
-                        Geolocation.getCurrentPosition(
-                          position => {
-                            setLoading(false);
-                            navigation.navigate('ThirdFormScreen', {
-                              tele: formState.tel,
-                              latitude: position.coords.latitude,
-                              longitude: position.coords.longitude,
-                            });
-                          },
-                          error => {
-                            console.log(error.code, error.message);
-                          },
-                          {
-                            enableHighAccuracy: true,
-                            timeout: 15000,
-                            maximumAge: 10000,
-                          },
-                        );
-                      })
-                      .catch(err => console.log(err));
+                  if (imagePreview?.path) {
+                    await Authentication.removeProfileImage({
+                      id: imagePreview?.id,
+                      path: imagePreview.path,
+                    });
                   }
+                  if (image) {
+                    await Authentication.updateProfileImage(image);
+                  }
+                  navigation.goBack();
                 })
-                .catch(err => console.log(err));
+                .catch(err => console.log(err))
+                .finally(() => {
+                  setLoading(false);
+                });
             }}
           />
         </View>
@@ -573,6 +764,22 @@ const EditProfile: React.FC<any> = ({navigation}) => {
             </View>
           </View>
         </Modal>
+        <ModalUploadImage
+          onCloseModalSelect={() => {
+            setShowModalSelectImage(false);
+          }}
+          onFinishedTakePhoto={onFinishedTakePhoto}
+          onCancel={() => {
+            setShowModalSelectImage(false);
+          }}
+          onPressLibrary={() => {
+            onAddImageStorage();
+          }}
+          onPressCamera={() => {
+            onTakeImage();
+          }}
+          visible={showModalSelectImage}
+        />
       </View>
     </SafeAreaView>
   );
@@ -597,20 +804,28 @@ const styles = StyleSheet.create({
     marginTop: normalize(24),
   },
   label: {
-    fontFamily: font.light,
+    fontFamily: font.medium,
     fontSize: normalize(14),
     color: colors.gray,
+    marginBottom: 4,
   },
   container: {
     flex: 1,
+    marginTop: 16,
   },
   input: {
     height: normalize(56),
     marginVertical: 12,
-    padding: 10,
-    borderColor: colors.disable,
+    paddingTop: 4,
+    paddingHorizontal: 14,
+    borderColor: colors.grey3,
     borderWidth: 1,
     borderRadius: normalize(10),
     color: colors.fontBlack,
+  },
+  valueInput: {
+    fontFamily: font.semiBold,
+    fontSize: normalize(16),
+    color: colors.gray,
   },
 });

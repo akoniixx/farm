@@ -1,16 +1,19 @@
-import { View, Image, SafeAreaView } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import {View, Image, SafeAreaView} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import { stylesCentral } from '../../styles/StylesCentral';
-import { MainButton } from '../../components/Button/MainButton';
-import { colors, font, image } from '../../assets';
-import { SystemMaintenance } from '../../datasource/SystemMaintenanceDatasource';
+import {stylesCentral} from '../../styles/StylesCentral';
+import {MainButton} from '../../components/Button/MainButton';
+import {colors, font, image} from '../../assets';
+import {SystemMaintenance} from '../../datasource/SystemMaintenanceDatasource';
 
 import RNExitApp from 'react-native-kill-app';
-import { MaintenanceSystem, MaintenanceSystem_INIT } from '../../entities/MaintenanceApp';
+import {
+  MaintenanceSystem,
+  MaintenanceSystem_INIT,
+} from '../../entities/MaintenanceApp';
 import DateTimeMaintenance from '../../components/dateTimeMaintenance';
 
-const MaintenanceScreen: React.FC<any> = ({ navigation }) => {
+const MaintenanceScreen: React.FC<any> = ({navigation}) => {
   const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
     MaintenanceSystem_INIT,
   );
@@ -36,8 +39,8 @@ const MaintenanceScreen: React.FC<any> = ({ navigation }) => {
             marginTop: 180,
           }}>
           <Image
-            source={{ uri: maintenance.imagePath }}
-            style={{ width: 156, height: 160 }}
+            source={{uri: maintenance.imagePath}}
+            style={{width: 156, height: 160}}
           />
           <DateTimeMaintenance
             header={maintenance.header}

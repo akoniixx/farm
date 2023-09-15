@@ -1,11 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import { momentExtend } from '../function/utility';
+import {momentExtend} from '../function/utility';
 import fonts from '../assets/fonts';
-import { normalize } from '../function/Normalize';
-import { colors } from '../assets';
+import {normalize} from '../function/Normalize';
+import {colors} from '../assets';
 import moment from 'moment';
-
 
 interface MaintenanceProps {
   header: string;
@@ -30,8 +29,8 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
             paddingHorizontal: 16,
             justifyContent: 'space-between',
           }}>
-          <View style={{ alignItems: 'center' }}>
-            <View style={{ marginTop: 20 }}>
+          <View style={{alignItems: 'center'}}>
+            <View style={{marginTop: 20}}>
               <Text style={styles.fontTitle}>{header}</Text>
             </View>
             <View
@@ -99,7 +98,7 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
                   .locale('th')
                   .format('HH.mm น.')}
               </Text>
-              <View style={{ marginTop: 20 }}>
+              <View style={{marginTop: 20}}>
                 <Text
                   style={{
                     fontFamily: fonts.light,
@@ -121,8 +120,8 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
             paddingHorizontal: 16,
             justifyContent: 'space-between',
           }}>
-          <View style={{ alignItems: 'center' }}>
-            <View style={{ marginTop: 20 }}>
+          <View style={{alignItems: 'center'}}>
+            <View style={{marginTop: 20}}>
               <Text style={styles.fontTitle}>{header}</Text>
             </View>
             <View
@@ -164,7 +163,7 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
                 {moment(dateEnd).add(543, 'year').locale('th').format('HH.mm')}
                 {' น.'}
               </Text>
-              <View style={{ marginTop: 20 }}>
+              <View style={{marginTop: 20}}>
                 <Text
                   style={{
                     fontFamily: fonts.medium,

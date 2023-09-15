@@ -1,12 +1,12 @@
-import { View, Modal, TouchableOpacity, Image, Text } from 'react-native';
+import {View, Modal, TouchableOpacity, Image, Text} from 'react-native';
 import React from 'react';
-import { momentExtend } from '../../../function/utility';
+import {momentExtend} from '../../../function/utility';
 import moment from 'moment';
-import { normalize } from '../../../function/Normalize';
+import {normalize} from '../../../function/Normalize';
 import fonts from '../../../assets/fonts';
-import { colors, icons } from '../../../assets';
-import { ModalStyle } from './ModalStyle';
-import { MaintenanceEntity } from './ModalEntity';
+import {colors, icons} from '../../../assets';
+import {ModalStyle} from './ModalStyle';
+import {MaintenanceEntity} from './ModalEntity';
 
 const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
   show,
@@ -33,14 +33,11 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
           </View>
           {start !== end ? (
             <>
-              <Image
-                source={{ uri: data.imagePath }}
-                style={ModalStyle.image}
-              />
+              <Image source={{uri: data.imagePath}} style={ModalStyle.image} />
               <Text
                 style={[
                   ModalStyle.modalHeader,
-                  { paddingVertical: normalize(20) },
+                  {paddingVertical: normalize(20)},
                 ]}>
                 {data.header}
               </Text>
@@ -103,7 +100,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                   .locale('th')
                   .format('HH.mm น.')}
               </Text>
-              <View style={{ marginTop: 20, alignItems: 'center' }}>
+              <View style={{marginTop: 20, alignItems: 'center'}}>
                 <Text
                   style={{
                     fontFamily: fonts.light,
@@ -127,14 +124,11 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
             </>
           ) : (
             <>
-              <Image
-                source={{ uri: data.imagePath }}
-                style={ModalStyle.image}
-              />
+              <Image source={{uri: data.imagePath}} style={ModalStyle.image} />
               <Text
                 style={[
                   ModalStyle.modalHeader,
-                  { paddingVertical: normalize(20) },
+                  {paddingVertical: normalize(20)},
                 ]}>
                 {data.header}
               </Text>
@@ -173,7 +167,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                   .format('HH.mm')}
                 {' น.'}
               </Text>
-              <View style={{ marginTop: 20 }}>
+              <View style={{marginTop: 20}}>
                 <Text
                   style={{
                     fontFamily: fonts.light,

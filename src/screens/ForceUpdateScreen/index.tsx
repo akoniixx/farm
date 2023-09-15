@@ -61,6 +61,7 @@ export default function ForceUpdateScreen({route}: any) {
         flex: 1,
         paddingHorizontal: 16,
         backgroundColor: colors.white,
+        paddingBottom: 16,
       }}>
       <View
         style={{

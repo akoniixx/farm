@@ -5,7 +5,6 @@ import React, {useMemo, useState} from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {FlatList} from 'react-native-gesture-handler';
-import Spinner from 'react-native-loading-spinner-overlay';
 import Toast from 'react-native-toast-message';
 import {colors, image, icons} from '../../assets';
 import fonts from '../../assets/fonts';
@@ -25,6 +24,7 @@ import Text from '../../components/Text';
 import {RefreshControl} from 'react-native';
 import Loading from '../../components/Loading/Loading';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 interface Prop {
   navigation: any;
@@ -266,288 +266,324 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   return (
     <NetworkLost onPress={onRefresh}>
       <RenderWarningDocEmpty />
-      {data.data.length !== 0 && checkResIsComplete ? (
-        <View style={[{flex: 1}]}>
-          <FlatList
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-            onEndReached={onEndReached}
-            ListHeaderComponent={RenderWarningDoc}
-            contentContainerStyle={{paddingHorizontal: 8}}
-            ListFooterComponent={
-              loadingInfinite ? (
-                <View
-                  style={{
-                    padding: 16,
-                  }}>
-                  <Loading spinnerSize={40} />
-                </View>
-              ) : (
-                <View style={{height: 40}} />
-              )
-            }
-            keyExtractor={element => element.item.taskNo}
-            data={data.data}
-            extraData={data}
-            renderItem={({item}: any) => {
-              return (
-                <Tasklists
-                  {...item.item}
-                  idTask={item.item.id}
-                  onPressSetTaskId={onPressSetTaskId}
-                  id={item.item.taskNo}
-                  status={item.item.status}
-                  title={item.item.farmerPlot.plantName}
-                  price={
-                    parseInt(item.item.price) +
-                    parseInt(item.item.revenuePromotion)
-                  }
-                  date={item.item.dateAppointment}
-                  address={item.item.farmerPlot.locationName}
-                  distance={item.item.distance}
-                  user={`${item.item.farmer.firstname} ${item.item.farmer.lastname}`}
-                  img={item.image_profile_url}
-                  preparation={item.item.comment}
-                  tel={item.item.farmer.telephoneNo}
-                  taskId={item.item.id}
-                  farmArea={item.item.farmAreaAmount}
-                  fetchTask={getData}
-                  // toggleModalStartTask={toggleModalStartTask}
-                  // setToggleModalStartTask={setToggleModalStartTask}
-                  setShowModalStartTask={() =>
-                    showModalStartTask(
-                      item.item.id,
-                      item.item.dronerId,
-                      item.item.taskNo,
-                      `${item.item.droner.firstname} ${item.item.droner.lastname}`,
-                    )
-                  }
-                  startTask={startTask}
-                  maxRatting={maxRatting}
-                  setDefaultRating={setDefaultRating}
-                  defaultRating={defaultRating}
-                  starImgFilled={starImgFilled}
-                  starImgCorner={starImgCorner}
-                  imgUploaded={imgUploaded}
-                  finishImg={finishImg}
-                  onChangeImgFinish={onChangeImgFinish}
-                  setComment={setComment}
-                  comment={comment}
-                  error={error}
-                  onFinishTask={onFinishTask}
-                  openModalUpload={() =>
-                    openModalUpload(
-                      `${item.item.droner.firstname} ${item.item.droner.lastname}`,
-                    )
-                  }
-                  onCloseSuccessModal={onCloseSuccessModal}
-                />
-              );
-            }}
-          />
-          <View />
+      {loading ? (
+        <View
+          style={{
+            paddingHorizontal: 16,
+          }}>
+          <SkeletonPlaceholder
+            backgroundColor={colors.skeleton}
+            speed={2000}
+            borderRadius={8}>
+            <>
+              {[1, 2].map(() => {
+                return (
+                  <SkeletonPlaceholder.Item
+                    style={{
+                      marginTop: 16,
+                    }}>
+                    <View
+                      style={{
+                        height: normalize(270),
+                        width: '100%',
+                      }}
+                    />
+                  </SkeletonPlaceholder.Item>
+                );
+              })}
+            </>
+          </SkeletonPlaceholder>
         </View>
       ) : (
         <>
-          {dronerStatus === 'ACTIVE' ? (
-            <View
-              style={[
-                stylesCentral.center,
-                {flex: 1, backgroundColor: colors.grayBg, padding: 8},
-              ]}>
-              <Image
-                source={image.blankTask}
-                style={{width: normalize(136), height: normalize(111)}}
+          {data.data.length !== 0 && checkResIsComplete ? (
+            <View style={[{flex: 1}]}>
+              <FlatList
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+                onEndReached={onEndReached}
+                ListHeaderComponent={RenderWarningDoc}
+                contentContainerStyle={{paddingHorizontal: 8}}
+                ListFooterComponent={
+                  loadingInfinite ? (
+                    <View
+                      style={{
+                        padding: 16,
+                      }}>
+                      <Loading spinnerSize={40} />
+                    </View>
+                  ) : (
+                    <View style={{height: 40}} />
+                  )
+                }
+                keyExtractor={(element, index) =>
+                  `${element.item.taskNo}-${index}`
+                }
+                data={data.data}
+                extraData={data}
+                renderItem={({item}: any) => {
+                  return (
+                    <Tasklists
+                      {...item.item}
+                      idTask={item.item.id}
+                      onPressSetTaskId={onPressSetTaskId}
+                      id={item.item.taskNo}
+                      status={item.item.status}
+                      title={item.item.farmerPlot.plantName}
+                      price={
+                        parseInt(item.item.price) +
+                        parseInt(item.item.revenuePromotion)
+                      }
+                      date={item.item.dateAppointment}
+                      address={item.item.farmerPlot.locationName}
+                      distance={item.item.distance}
+                      user={`${item.item.farmer.firstname} ${item.item.farmer.lastname}`}
+                      img={item.image_profile_url}
+                      preparation={item.item.comment}
+                      tel={item.item.farmer.telephoneNo}
+                      taskId={item.item.id}
+                      farmArea={item.item.farmAreaAmount}
+                      fetchTask={getData}
+                      // toggleModalStartTask={toggleModalStartTask}
+                      // setToggleModalStartTask={setToggleModalStartTask}
+                      setShowModalStartTask={() =>
+                        showModalStartTask(
+                          item.item.id,
+                          item.item.dronerId,
+                          item.item.taskNo,
+                          `${item.item.droner.firstname} ${item.item.droner.lastname}`,
+                        )
+                      }
+                      startTask={startTask}
+                      maxRatting={maxRatting}
+                      setDefaultRating={setDefaultRating}
+                      defaultRating={defaultRating}
+                      starImgFilled={starImgFilled}
+                      starImgCorner={starImgCorner}
+                      imgUploaded={imgUploaded}
+                      finishImg={finishImg}
+                      onChangeImgFinish={onChangeImgFinish}
+                      setComment={setComment}
+                      comment={comment}
+                      error={error}
+                      onFinishTask={onFinishTask}
+                      openModalUpload={() =>
+                        openModalUpload(
+                          `${item.item.droner.firstname} ${item.item.droner.lastname}`,
+                        )
+                      }
+                      onCloseSuccessModal={onCloseSuccessModal}
+                    />
+                  );
+                }}
               />
-              <Text style={stylesCentral.blankFont}>ยังไม่มีงานที่ต้องทำ</Text>
+              <View />
             </View>
           ) : (
-            <View
-              style={[
-                stylesCentral.center,
-                {flex: 1, backgroundColor: colors.grayBg, padding: 8},
-              ]}
-            />
-          )}
-          {dronerStatus == 'PENDING' ? (
-            <View style={{backgroundColor: colors.grayBg}}>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  padding: normalize(10),
-                  margin: normalize(10),
-                  borderWidth: 2,
-                  borderColor: colors.greyWhite,
-                  borderRadius: 16,
-                }}>
-                <View style={{flexDirection: 'row'}}>
-                  <View
-                    style={{
-                      display: 'flex',
-                      backgroundColor: '#FFF7F4',
-                      paddingHorizontal: normalize(10),
-                      paddingVertical: normalize(5),
-                      borderRadius: 16,
-                    }}>
-                    <Text
-                      style={{
-                        color: '#B16F05',
-                        fontFamily: fonts.bold,
-                        fontSize: normalize(16),
-                      }}>
-                      รอตรวจสอบเอกสาร
-                    </Text>
-                  </View>
-                </View>
+            <>
+              {dronerStatus === 'ACTIVE' ? (
                 <View
-                  style={{
-                    paddingBottom: normalize(20),
-                    marginTop: normalize(5),
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: fonts.medium,
-                      fontSize: normalize(18),
-                      color: 'black',
-                    }}>
-                    เจ้าหน้าที่กำลังตรวจสอบเอกสารการยืนยันตัวตน และ
-                    โดรนของคุณอยู่ กรุณาตรวจสอบหากคุณยังไม่เพิ่มโดรน
-                  </Text>
-                </View>
-              </View>
-            </View>
-          ) : null}
-          {dronerStatus == 'REJECTED' ? (
-            <View style={{backgroundColor: colors.grayBg}}>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  padding: normalize(10),
-                  margin: normalize(10),
-                  borderWidth: 2,
-                  borderColor: colors.greyWhite,
-                  borderRadius: 16,
-                }}>
-                <View style={{flexDirection: 'row'}}>
-                  <View
-                    style={{
-                      display: 'flex',
-                      backgroundColor: '#FFF7F4',
-                      paddingHorizontal: normalize(10),
-                      paddingVertical: normalize(5),
-                      borderRadius: 16,
-                    }}>
-                    <Text
-                      style={{
-                        color: '#B16F05',
-                        fontFamily: fonts.bold,
-                        fontSize: normalize(16),
-                      }}>
-                      ยืนยันตัวตนไม่สำเร็จ
-                    </Text>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    paddingBottom: normalize(20),
-                    marginTop: normalize(5),
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: fonts.medium,
-                      fontSize: normalize(18),
-                      color: 'black',
-                    }}>
-                    โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร.{' '}
-                    {callcenterNumber}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          ) : null}
-          {dronerStatus == 'OPEN' ? (
-            <View style={{backgroundColor: colors.grayBg}}>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  padding: normalize(10),
-                  margin: normalize(10),
-                  borderWidth: 2,
-                  borderColor: colors.greyWhite,
-                  borderRadius: 16,
-                }}>
-                <View style={{flexDirection: 'row'}}>
-                  <View
-                    style={{
-                      display: 'flex',
-                      backgroundColor: '#FFF7F4',
-                      paddingHorizontal: normalize(10),
-                      paddingVertical: normalize(5),
-                      borderRadius: 16,
-                    }}>
-                    <Text
-                      style={{
-                        color: '#B16F05',
-                        fontFamily: fonts.bold,
-                        fontSize: normalize(16),
-                      }}>
-                      รอยืนยันตัวตน
-                    </Text>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    paddingBottom: normalize(20),
-                    marginTop: normalize(5),
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: fonts.medium,
-                      fontSize: normalize(18),
-                      color: 'black',
-                    }}>
-                    อีกนิดเดียว มากรอกข้อมูลโปรไฟล์ของคุณให้ ครบถ้วน
-                    เพื่อเริ่มรับงานบินโดรนในระบบ
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
+                  style={[
+                    stylesCentral.center,
+                    {flex: 1, backgroundColor: colors.grayBg, padding: 8},
+                  ]}>
                   <Image
-                    source={
-                      Number(percentSuccess) === 50
-                        ? image.inprogress50
-                        : Number(percentSuccess) === 75
-                        ? image.inprogress75
-                        : image.inprogress100
-                    }
-                    style={{
-                      width: normalize(50),
-                      height: normalize(50),
-                    }}
+                    source={image.blankTask}
+                    style={{width: normalize(136), height: normalize(111)}}
                   />
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation('MyProfileScreen', MyProfileScreen)
-                    }>
-                    <View style={styles.button}>
-                      <Text style={styles.textButton}>เพิ่มข้อมูลโปรไฟล์</Text>
-                    </View>
-                  </TouchableOpacity>
+                  <Text style={stylesCentral.blankFont}>
+                    ยังไม่มีงานที่ต้องทำ
+                  </Text>
                 </View>
-              </View>
-            </View>
-          ) : null}
+              ) : (
+                <View
+                  style={[
+                    stylesCentral.center,
+                    {flex: 1, backgroundColor: colors.grayBg, padding: 8},
+                  ]}
+                />
+              )}
+              {dronerStatus == 'PENDING' ? (
+                <View style={{backgroundColor: colors.grayBg}}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      padding: normalize(10),
+                      margin: normalize(10),
+                      borderWidth: 2,
+                      borderColor: colors.greyWhite,
+                      borderRadius: 16,
+                    }}>
+                    <View style={{flexDirection: 'row'}}>
+                      <View
+                        style={{
+                          display: 'flex',
+                          backgroundColor: '#FFF7F4',
+                          paddingHorizontal: normalize(10),
+                          paddingVertical: normalize(5),
+                          borderRadius: 16,
+                        }}>
+                        <Text
+                          style={{
+                            color: '#B16F05',
+                            fontFamily: fonts.bold,
+                            fontSize: normalize(16),
+                          }}>
+                          รอตรวจสอบเอกสาร
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        paddingBottom: normalize(20),
+                        marginTop: normalize(5),
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: fonts.medium,
+                          fontSize: normalize(18),
+                          color: 'black',
+                        }}>
+                        เจ้าหน้าที่กำลังตรวจสอบเอกสารการยืนยันตัวตน และ
+                        โดรนของคุณอยู่ กรุณาตรวจสอบหากคุณยังไม่เพิ่มโดรน
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              ) : null}
+              {dronerStatus == 'REJECTED' ? (
+                <View style={{backgroundColor: colors.grayBg}}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      padding: normalize(10),
+                      margin: normalize(10),
+                      borderWidth: 2,
+                      borderColor: colors.greyWhite,
+                      borderRadius: 16,
+                    }}>
+                    <View style={{flexDirection: 'row'}}>
+                      <View
+                        style={{
+                          display: 'flex',
+                          backgroundColor: '#FFF7F4',
+                          paddingHorizontal: normalize(10),
+                          paddingVertical: normalize(5),
+                          borderRadius: 16,
+                        }}>
+                        <Text
+                          style={{
+                            color: '#B16F05',
+                            fontFamily: fonts.bold,
+                            fontSize: normalize(16),
+                          }}>
+                          ยืนยันตัวตนไม่สำเร็จ
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        paddingBottom: normalize(20),
+                        marginTop: normalize(5),
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: fonts.medium,
+                          fontSize: normalize(18),
+                          color: 'black',
+                        }}>
+                        โปรดติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข โทร.{' '}
+                        {callcenterNumber}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              ) : null}
+              {dronerStatus == 'OPEN' ? (
+                <View style={{backgroundColor: colors.grayBg}}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      padding: normalize(10),
+                      margin: normalize(10),
+                      borderWidth: 2,
+                      borderColor: colors.greyWhite,
+                      borderRadius: 16,
+                    }}>
+                    <View style={{flexDirection: 'row'}}>
+                      <View
+                        style={{
+                          display: 'flex',
+                          backgroundColor: '#FFF7F4',
+                          paddingHorizontal: normalize(10),
+                          paddingVertical: normalize(5),
+                          borderRadius: 16,
+                        }}>
+                        <Text
+                          style={{
+                            color: '#B16F05',
+                            fontFamily: fonts.bold,
+                            fontSize: normalize(16),
+                          }}>
+                          รอยืนยันตัวตน
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        paddingBottom: normalize(20),
+                        marginTop: normalize(5),
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: fonts.medium,
+                          fontSize: normalize(18),
+                          color: 'black',
+                        }}>
+                        อีกนิดเดียว มากรอกข้อมูลโปรไฟล์ของคุณให้ ครบถ้วน
+                        เพื่อเริ่มรับงานบินโดรนในระบบ
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      }}>
+                      <Image
+                        source={
+                          Number(percentSuccess) === 50
+                            ? image.inprogress50
+                            : Number(percentSuccess) === 75
+                            ? image.inprogress75
+                            : image.inprogress100
+                        }
+                        style={{
+                          width: normalize(50),
+                          height: normalize(50),
+                        }}
+                      />
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation('MyProfileScreen', MyProfileScreen)
+                        }>
+                        <View style={styles.button}>
+                          <Text style={styles.textButton}>
+                            เพิ่มข้อมูลโปรไฟล์
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              ) : null}
+            </>
+          )}
         </>
       )}
-      <Spinner
-        visible={loading}
-        textContent={'Loading...'}
-        textStyle={{color: '#FFF'}}
-      />
     </NetworkLost>
   );
 };

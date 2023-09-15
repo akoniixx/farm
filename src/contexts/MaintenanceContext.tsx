@@ -67,7 +67,7 @@ export const MaintenanceProvider: React.FC<Props> = ({children}) => {
   };
   return (
     <MaintenanceContext.Provider
-      value={{checkDataMA, checkTime, maintenanceData:maintenance}}>
+      value={{checkDataMA, checkTime, maintenanceData: maintenance}}>
       <PopUpMaintenance
         show={popupMaintenance}
         onClose={async () => {
