@@ -25,6 +25,7 @@ import * as RootNavigation from '../../navigations/RootNavigation';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {mixpanel} from '../../../mixpanel';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import {useMaintenance} from '../../contexts/MaintenanceContext';
 
 const LoginScreen: React.FC<any> = ({navigation}) => {
   const [value, setValue] = useState<string>('');
@@ -33,7 +34,10 @@ const LoginScreen: React.FC<any> = ({navigation}) => {
   const [errMessage, setErrMessage] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = React.useState<string>('');
-  const login = () => {
+  const {checkDataMA,checkTime} = useMaintenance();
+
+  const login = async () => {
+    await checkDataMA();
     mixpanel.track('Click Login');
     setLoading(true);
     Authentication.generateOtp(value)
