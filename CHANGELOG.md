@@ -1,3 +1,7 @@
+## Enhance [v1.4.20] 2023-09-15
+- profile edit screen
+- fix some buggy
+
 ## Fix [v1.4.19] 2023-09-15
 - fixed MA get api form noti
 
