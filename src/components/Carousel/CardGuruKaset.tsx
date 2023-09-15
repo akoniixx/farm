@@ -16,11 +16,7 @@ export const CardGuruKaset: React.FC<guruData> = ({background}) => {
       }}>
       <View style={styles.card}>
         <ProgressiveImage
-          borderTopLeftRadius={10}
-          borderTopRightRadius={10}
-          borderBottomLeftRadius={10}
-          borderBottomRightRadius={10}
-          style={{height: normalize(120)}}
+          style={{height: normalize(120), borderRadius: 10}}
           source={{uri: background}}
         />
       </View>

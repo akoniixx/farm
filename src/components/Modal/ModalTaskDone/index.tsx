@@ -147,7 +147,7 @@ export default function ModalTaskDone({
             {
               ...newImage,
               fileSize: newImage.size,
-              type: 'image/png',
+              type: 'image/jpeg',
               fileName: newImage.name,
             },
           ],

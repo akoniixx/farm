@@ -249,6 +249,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
       })
       .catch(err => console.log(err));
   };
+
   return (
     <SafeAreaView
       style={[stylesCentral.container]}
@@ -370,7 +371,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
               ) : (
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('ViewProfile');
+                    navigation.navigate('EditProfile');
                   }}>
                   <Text
                     style={{

@@ -204,28 +204,43 @@ export default function AddressDetail({
 
   const {dataList, notHaveAddress} = useMemo(() => {
     const dataList = [];
-    if (mainAddress) {
-      dataList.push({
-        label: 'ค่าเริ่มต้น',
-        value: 'default',
-        extra: null,
-        disabled: false,
-        belowComponent: (
-          <View>
-            <Text
-              style={{
-                color: colors.fontBlack,
-                fontFamily: font.light,
-                fontSize: 16,
-                marginTop: 8,
-                marginLeft: 8,
-              }}>
-              {mainAddress?.addressName}
-            </Text>
-          </View>
-        ),
-      });
-    }
+    dataList.push({
+      label: 'ค่าเริ่มต้น',
+      value: 'default',
+      extra: (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('CustomAddressScreen', {
+              isAddMainAddress: true,
+              initialValue: mainAddress,
+              data: data,
+            });
+          }}>
+          <Image
+            source={icons.EditGrey}
+            style={{
+              width: 24,
+              height: 24,
+            }}
+          />
+        </TouchableOpacity>
+      ),
+      disabled: false,
+      belowComponent: (
+        <View>
+          <Text
+            style={{
+              color: colors.fontBlack,
+              fontFamily: font.light,
+              fontSize: 16,
+              marginTop: 8,
+              marginLeft: 8,
+            }}>
+            {mainAddress?.addressName}
+          </Text>
+        </View>
+      ),
+    });
     dataList.push({
       label: 'ที่อยู่อื่น',
       value: 'custom',
@@ -410,7 +425,7 @@ export default function AddressDetail({
                     fontFamily: font.medium,
                     color: colors.orange,
                   }}>
-                  เพิ่มที่อยู่ใหม่
+                  เพิ่มที่อยู่
                 </Text>
               </Text>
             </TouchableOpacity>

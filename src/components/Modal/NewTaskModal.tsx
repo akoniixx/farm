@@ -1,17 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Platform,
-  Linking,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
+import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {normalize} from '@rneui/themed';
-import {MainButton} from '../Button/MainButton';
 import {colors, font, icons} from '../../assets';
 import fonts from '../../assets/fonts';
 import {
@@ -28,9 +17,8 @@ import ActionSheet, {
 } from 'react-native-actions-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
-import Toast from 'react-native-toast-message';
 import {useFocusEffect} from '@react-navigation/native';
-import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
+import {responsiveWidth} from '../../function/responsive';
 import {mixpanel} from '../../../mixpanel';
 
 export const NewTaskModal = (

@@ -138,7 +138,10 @@ const AddPlantsScreen: React.FC<any> = ({navigation}) => {
                 width: addPlant.length != 0 ? '80%' : '100%',
                 color: colors.fontBlack,
               }}
-              onChangeText={value => setAddPlant(value)}
+              onChangeText={value => {
+                const trimSpaceFront = value.replace(/^\s+/, '');
+                setAddPlant(trimSpaceFront);
+              }}
             />
             <View style={{alignSelf: 'flex-end', bottom: '35%'}}>
               {addPlant.length != 0 ? (

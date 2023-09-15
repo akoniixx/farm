@@ -91,7 +91,7 @@ export default function CustomAddressScreen({
   useEffect(() => {
     const getInitialValue = async () => {
       try {
-        if (isEdit) {
+        if (initialValue) {
           setObjInput({
             addressNo: initialValue.address1,
             detail: initialValue.address2,
