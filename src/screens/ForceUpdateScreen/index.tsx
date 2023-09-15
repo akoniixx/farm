@@ -138,7 +138,10 @@ export default function ForceUpdateScreen({ route }: any) {
             onPress={onPressLater}
           />
           <AsyncButton
-            onPress={onPressUpdate}
+            onPress={async () => {
+              onPressUpdate
+              await AsyncStorage.removeItem('Maintenance')
+            }}
             title="อัปเดตเลย!"
             style={{
               width: widthButton,

@@ -98,10 +98,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const isCarousel = React.useRef(null);
   const [end, setEnd] = useState<any>();
   const [start, setStart] = useState<any>();
-  const [notiEnd, setNotiEnd] = useState<any>();
   const [reason, setReason] = useState<any>('');
-  const [notiStart, setNotiStart] = useState<any>();
   const [point, setPoint] = useState<any>();
+  const dateNow = moment(Date.now());
+  const [checkTime, setCheckTime] = useState(false);
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
     const farmerId = await AsyncStorage.getItem('farmer_id');
@@ -110,42 +110,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     }
     setFcmToken(value!);
   };
-  useEffect(() => {
-    const getMaintenance = async () => {
-      setLoading(true);
-      await SystemMaintenance.Maintenance('FARMER')
-        .then(res => {
-          if (res.responseData !== null) {
-            setMaintenance(res.responseData);
-            setStart(
-              momentExtend.toBuddhistYear(
-                maintenance.dateStart,
-                'DD MMMM YYYY',
-              ),
-            );
-            setEnd(
-              momentExtend.toBuddhistYear(maintenance.dateEnd, 'DD MMMM YYYY'),
-            );
-            setNotiStart(
-              momentExtend.toBuddhistYear(
-                maintenance.dateNotiStart,
-                'DD MMMM YYYY',
-              ),
-            );
-            setNotiEnd(
-              momentExtend.toBuddhistYear(
-                maintenance.dateNotiEnd,
-                'DD MMMM YYYY',
-              ),
-            );
-          }
-          setReload(!reload);
-        })
-        .catch(err => console.log(err))
-        .finally(() => setLoading(false));
-    };
-    getMaintenance();
-  }, [reload]);
 
   const getNotificationData = async () => {
     FCMtokenDatasource.getNotificationList({
@@ -162,8 +126,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err));
   };
 
-  const d = momentExtend.toBuddhistYear(date, 'DD MMMM YYYY');
-  const checkDateNoti = d >= notiStart && d <= notiEnd;
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
     if (value) {
@@ -252,6 +214,34 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           .catch(err => console.log(err));
       }
     };
+    const getMaintenance = async () => {
+      await SystemMaintenance.Maintenance('FARMER')
+        .then(res => {
+          if (res.responseData !== null) {
+            setMaintenance(res.responseData);
+            setStart(
+              momentExtend.toBuddhistYear(
+                maintenance.dateStart,
+                'DD MMMM YYYY',
+              ),
+            );
+            setEnd(
+              momentExtend.toBuddhistYear(
+                maintenance.dateEnd,
+                'DD MMMM YYYY',
+              ),
+            );
+            setCheckTime(
+              checkTimeMaintance(
+                moment(res.responseData.dateNotiStart),
+                moment(res.responseData.dateNotiEnd),
+              ),
+            );
+          }
+        })
+        .catch(err => console.log(err));
+    };
+    getMaintenance();
     dronerSug();
     dronerSugUsed();
     if (user) {
@@ -330,6 +320,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     };
     getPointFarmer();
   });
+
+  const checkTimeMaintance = (startDate: any, endDate: any) => {
+    return dateNow.isBetween(startDate, endDate, 'milliseconds');
+  };
   const sendProfilesToMixpanel = async (profiles: any) => {
     const options = {
       method: 'POST',
@@ -541,7 +535,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               </View>
               <View>
                 <MaintenanceHeader
-                  checkDateNoti={checkDateNoti}
+                  checkDateNoti={checkTime}
                   end={end}
                   start={start}
                   maintenance={maintenance}

@@ -19,10 +19,11 @@ import MainScreen from '../../screens/MainScreen/MainScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from '../../../mixpanel';
 import Text from '../../components/Text/Text';
+import PopUpMaintenance from '../../components/Modal/MaintenanceApp/PopUpMaintenance';
 
 const Tab = createBottomTabNavigator();
 
-const MainTapNavigator: React.FC<any> = ({ navigation }) => {
+const MainTapNavigator: React.FC<any> = ({ navigation, checkDataMA }) => {
   const [loading, setLoading] = useState(true);
   const [farmerRegisterSuccess, setFarmerRegisterSuccess] =
     useState<boolean>(false);
@@ -32,6 +33,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
   const [farmerPlotFailed, setFarmerPlotFailed] = useState<boolean>(false);
   const [messageNoti, setMessageNoti] = useState<string>('');
   const [initialRouteName, setInitialRouteName] = useState('หน้าแรก');
+
   useEffect(() => {
     messaging()
       .getInitialNotification()
@@ -131,6 +133,9 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
         case 'APPROVE_FARMER_PLOT_FAIL':
           navigation.dispatch(jumpAction);
           break;
+        case 'NOTIFICATION_MAINTAIN_FARMER':
+          checkDataMA();
+        break;
       }
     });
 
@@ -179,6 +184,9 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
         case 'APPROVE_FARMER_PLOT_FAIL':
           setMessageNoti(message.notification?.body!);
           setFarmerPlotFailed(true);
+          break;
+        case 'NOTIFICATION_MAINTAIN_FARMER':
+          checkDataMA();
           break;
       }
     });
