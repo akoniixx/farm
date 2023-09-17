@@ -13,6 +13,7 @@ import PopUpMaintenance from '../components/Modal/Maintenance/PopUpMaintenance';
 interface Context {
   maintenanceData: MaintenanceSystem;
   checkTime: boolean;
+  notiMaintenance: boolean;
   checkDataMA: () => Promise<void>;
 }
 interface Props {
@@ -21,15 +22,16 @@ interface Props {
 const MaintenanceContext = React.createContext<Context>({
   checkDataMA: async () => {},
   checkTime: false,
+  notiMaintenance: false,
   maintenanceData: {} as MaintenanceSystem,
 });
 export const MaintenanceProvider: React.FC<Props> = ({children}) => {
   const [checkTime, setCheckTime] = useState(false);
+  const [notiMaintenance, setNotiMaintenance] = useState<boolean>(true);
   const [popupMaintenance, setPopupMaintenance] = useState<boolean>(false);
   const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
     MaintenanceSystem_INIT,
   );
-
   const checkDataMA = async () => {
     const value = await AsyncStorage.getItem('Maintenance');
     SystemMaintenance.Maintenance('DRONER').then(res => {
@@ -45,6 +47,7 @@ export const MaintenanceProvider: React.FC<Props> = ({children}) => {
           moment(res.responseData.dateNotiStart),
           moment(res.responseData.dateNotiEnd),
         );
+        setNotiMaintenance(isMaintenanceActive);
         if (value !== 'read') {
           setPopupMaintenance(isMaintenanceActive);
         }
@@ -67,7 +70,12 @@ export const MaintenanceProvider: React.FC<Props> = ({children}) => {
   };
   return (
     <MaintenanceContext.Provider
-      value={{checkDataMA, checkTime, maintenanceData: maintenance}}>
+      value={{
+        checkDataMA,
+        checkTime,
+        maintenanceData: maintenance,
+        notiMaintenance,
+      }}>
       <PopUpMaintenance
         show={popupMaintenance}
         onClose={async () => {

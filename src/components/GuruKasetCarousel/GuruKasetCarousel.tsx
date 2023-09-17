@@ -6,13 +6,6 @@ import {colors} from '../../assets';
 import {Carousel, Pagination} from 'react-native-snap-carousel';
 import {CardGuru} from '../Guru/CardGuru';
 import {momentExtend} from '../../function/utility';
-import {useIsFocused} from '@react-navigation/native';
-import {SystemMaintenance} from '../../datasource/SystemMaintenanceDatasource';
-import moment from 'moment';
-import {
-  MaintenanceSystem,
-  MaintenanceSystem_INIT,
-} from '../../entities/MaintenanceApp';
 import MaintenanceHeader from './MaintenanceHaeder';
 import {useMaintenance} from '../../contexts/MaintenanceContext';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
@@ -35,10 +28,10 @@ export default function GuruKasetCarousel({
   const isCarousel = useRef(null);
   const screen = Dimensions.get('window');
   const [index, setIndex] = React.useState(0);
-  const {checkTime, maintenanceData} = useMaintenance();
+  const {notiMaintenance, maintenanceData} = useMaintenance();
 
   const guruKasetData = useMemo(() => {
-    if (checkTime) {
+    if (notiMaintenance) {
       return [
         {
           ...maintenanceData,
@@ -49,7 +42,8 @@ export default function GuruKasetCarousel({
     }
 
     return guruKaset.data;
-  }, [checkTime]);
+  }, [notiMaintenance]);
+  console.log(JSON.stringify(guruKasetData,null,2))
 
   return (
     <View>
@@ -137,7 +131,7 @@ export default function GuruKasetCarousel({
                   return (
                     <MaintenanceHeader
                       maintenance={maintenanceData}
-                      checkDateNoti={checkTime}
+                      checkDateNoti={notiMaintenance}
                       start={maintenanceData.dateStart}
                       end={maintenanceData.dateEnd}
                     />
