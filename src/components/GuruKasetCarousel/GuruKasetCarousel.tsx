@@ -43,7 +43,6 @@ export default function GuruKasetCarousel({
 
     return guruKaset.data;
   }, [notiMaintenance]);
-  console.log(JSON.stringify(guruKasetData,null,2))
 
   return (
     <View>
