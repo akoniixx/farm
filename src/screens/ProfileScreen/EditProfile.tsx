@@ -20,11 +20,9 @@ import {normalize} from '../../function/Normalize';
 import CustomHeader from '../../components/CustomHeader';
 import {MainButton} from '../../components/Button/MainButton';
 import {ScrollView} from 'react-native-gesture-handler';
-import {Avatar} from '@rneui/themed';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import {registerReducer} from '../../hooks/registerfield';
 import {Authentication, Register} from '../../datasource/AuthDatasource';
-import Geolocation from 'react-native-geolocation-service';
 import * as ImagePicker from 'react-native-image-picker';
 import Lottie from 'lottie-react-native';
 import CalendarCustom from '../../components/Calendar/Calendar';
@@ -37,6 +35,8 @@ import {ResizeImage} from '../../function/Resizing';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Text from '../../components/Text';
+import moment from 'moment';
+import AsyncButton from '../../components/Button/AsyncButton';
 
 const EditProfile: React.FC<any> = ({navigation}) => {
   const initialFormRegisterState = {
@@ -86,8 +86,12 @@ const EditProfile: React.FC<any> = ({navigation}) => {
     ProfileDatasource.getProfile(droner_id!)
       .then(async res => {
         const datetime = res.birthDate;
-        const date = datetime.split('T')[0];
-        setBirthday(date);
+        let date = '';
+        if (datetime) {
+          date = moment(datetime).format('DD/MM/YYYY');
+          setBirthday(date);
+        }
+
         setProvince({
           label: '',
           value: res.address.provinceId,
@@ -106,12 +110,12 @@ const EditProfile: React.FC<any> = ({navigation}) => {
           surname: res.lastname,
           birthDate: date,
           tel: res.telephoneNo,
-          no: res.address.address1,
-          address: res.address.address2,
+          no: res.address.address1 === '-' ? '' : res.address.address1,
+          address: res.address.address2 === '-' ? '' : res.address.address2,
           province: res.address.provinceId,
           district: res.address.districtId,
           subdistrict: res.address.subdistrictId,
-          postal: res.address.postcode,
+          postal: res?.address?.postcode === '-' ? '' : res?.address?.postcode,
         });
         const findProfileImage = res.file.find(
           (el: {category: string}) => el.category === 'PROFILE_IMAGE',
@@ -301,9 +305,10 @@ const EditProfile: React.FC<any> = ({navigation}) => {
         showBackBtn
         onPressBack={() => navigation.goBack()}
       />
-      <View style={styles.inner}>
-        <View style={styles.container}>
-          <ScrollView>
+
+      <ScrollView>
+        <View style={styles.inner}>
+          <View style={styles.container}>
             <View
               style={{
                 justifyContent: 'center',
@@ -345,20 +350,40 @@ const EditProfile: React.FC<any> = ({navigation}) => {
                       </SkeletonPlaceholder.Item>
                     </SkeletonPlaceholder>
                   ) : (
-                    <ProgressiveImage
-                      source={
-                        image
-                          ? {uri: image.assets[0].uri}
-                          : imagePreview
-                          ? {uri: imagePreview.uri}
-                          : icons.account
-                      }
-                      style={{
-                        width: normalize(116),
-                        height: normalize(116),
-                        borderRadius: normalize(58),
-                      }}
-                    />
+                    <>
+                      <ProgressiveImage
+                        source={
+                          image
+                            ? {uri: image.assets[0].uri}
+                            : imagePreview
+                            ? {uri: imagePreview.uri}
+                            : icons.account
+                        }
+                        style={{
+                          width: normalize(116),
+                          height: normalize(116),
+                          borderRadius: normalize(58),
+                        }}
+                      />
+                      {error && (
+                        <View
+                          style={{
+                            width: '100%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: 8,
+                          }}>
+                          <Text
+                            style={{
+                              fontFamily: font.medium,
+                              fontSize: normalize(14),
+                              color: colors.decreasePoint,
+                            }}>
+                            {error}
+                          </Text>
+                        </View>
+                      )}
+                    </>
                   )}
 
                   <View
@@ -654,133 +679,132 @@ const EditProfile: React.FC<any> = ({navigation}) => {
                   value={formState.postal}
                 />
               </View>
+              <View
+                style={{
+                  zIndex: -40,
+                  height: normalize(56),
+                }}
+              />
             </View>
-            <View
-              style={{
-                height: 150,
-                zIndex: -40,
+          </View>
+
+          <View style={{backgroundColor: colors.white, zIndex: -30}}>
+            <AsyncButton
+              title="ถัดไป"
+              disabled={isDisableMainButton}
+              onPress={async () => {
+                setLoading(true);
+                const payload = {
+                  address1: formState.no,
+                  address2: formState.address,
+                  districtId: formState.district,
+                  provinceId: formState.province,
+                  subdistrictId: formState.subdistrict,
+                  postcode: formState.postal,
+                  firstname: formState.name,
+                  lastname: formState.surname,
+                  telephoneNo: formState.tel,
+                  birthDate: formState.birthDate,
+                };
+
+                await Authentication.updateProfile(payload)
+                  .then(async () => {
+                    if (imagePreview?.path) {
+                      await Authentication.removeProfileImage({
+                        id: imagePreview?.id,
+                        path: imagePreview.path,
+                      });
+                    }
+                    if (image) {
+                      await Authentication.updateProfileImage(image);
+                    }
+                    navigation.goBack();
+                  })
+                  .catch(err => console.log(err))
+                  .finally(() => {
+                    setLoading(false);
+                  });
               }}
             />
-          </ScrollView>
-        </View>
-
-        <View style={{backgroundColor: colors.white}}>
-          <MainButton
-            label="ถัดไป"
-            disable={isDisableMainButton}
-            color={colors.orange}
-            onPress={async () => {
-              setLoading(true);
-              const payload = {
-                address1: formState.no,
-                address2: formState.address,
-                districtId: formState.district,
-                provinceId: formState.province,
-                subdistrictId: formState.subdistrict,
-                postcode: formState.postal,
-                firstname: formState.name,
-                lastname: formState.surname,
-                telephoneNo: formState.tel,
-                birthDate: formState.birthDate,
-              };
-
-              await Authentication.updateProfile(payload)
-                .then(async () => {
-                  if (imagePreview?.path) {
-                    await Authentication.removeProfileImage({
-                      id: imagePreview?.id,
-                      path: imagePreview.path,
-                    });
-                  }
-                  if (image) {
-                    await Authentication.updateProfileImage(image);
-                  }
-                  navigation.goBack();
-                })
-                .catch(err => console.log(err))
-                .finally(() => {
-                  setLoading(false);
-                });
-            }}
-          />
-        </View>
-        <Modal transparent={true} visible={loading}>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+          </View>
+          <Modal transparent={true} visible={loading}>
             <View
               style={{
-                backgroundColor: colors.white,
-                width: normalize(50),
-                height: normalize(50),
-                display: 'flex',
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.5)',
                 justifyContent: 'center',
                 alignItems: 'center',
-                borderRadius: normalize(8),
               }}>
-              <Lottie
-                source={img.loading}
-                autoPlay
-                loop
+              <View
                 style={{
+                  backgroundColor: colors.white,
                   width: normalize(50),
                   height: normalize(50),
-                }}
-              />
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: normalize(8),
+                }}>
+                <Lottie
+                  source={img.loading}
+                  autoPlay
+                  loop
+                  style={{
+                    width: normalize(50),
+                    height: normalize(50),
+                  }}
+                />
+              </View>
             </View>
-          </View>
-        </Modal>
-        <Modal transparent={true} visible={openCalendar}>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+          </Modal>
+          <Modal transparent={true} visible={openCalendar}>
             <View
               style={{
-                borderRadius: normalize(8),
-                backgroundColor: colors.white,
-                width: windowWidth * 0.9,
-                padding: normalize(20),
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
-              <CalendarCustom
-                value={birthday}
-                onHandleChange={day => {
-                  setBirthday(day.dateString);
-                  setOpenCalendar(false);
-                  dispatch({
-                    type: 'Handle Input',
-                    field: 'birthDate',
-                    payload: new Date(day.timestamp),
-                  });
-                }}
-              />
+              <View
+                style={{
+                  borderRadius: normalize(8),
+                  backgroundColor: colors.white,
+                  width: windowWidth * 0.9,
+                  padding: normalize(20),
+                }}>
+                <CalendarCustom
+                  value={birthday}
+                  onHandleChange={day => {
+                    setBirthday(day.dateString);
+                    setOpenCalendar(false);
+                    dispatch({
+                      type: 'Handle Input',
+                      field: 'birthDate',
+                      payload: new Date(day.timestamp),
+                    });
+                  }}
+                />
+              </View>
             </View>
-          </View>
-        </Modal>
-        <ModalUploadImage
-          onCloseModalSelect={() => {
-            setShowModalSelectImage(false);
-          }}
-          onFinishedTakePhoto={onFinishedTakePhoto}
-          onCancel={() => {
-            setShowModalSelectImage(false);
-          }}
-          onPressLibrary={() => {
-            onAddImageStorage();
-          }}
-          onPressCamera={() => {
-            onTakeImage();
-          }}
-          visible={showModalSelectImage}
-        />
-      </View>
+          </Modal>
+          <ModalUploadImage
+            onCloseModalSelect={() => {
+              setShowModalSelectImage(false);
+            }}
+            onFinishedTakePhoto={onFinishedTakePhoto}
+            onCancel={() => {
+              setShowModalSelectImage(false);
+            }}
+            onPressLibrary={() => {
+              onAddImageStorage();
+            }}
+            onPressCamera={() => {
+              onTakeImage();
+            }}
+            visible={showModalSelectImage}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

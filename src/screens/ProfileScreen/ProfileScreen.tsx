@@ -329,7 +329,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                       width: normalize(109),
                       height: normalize(24),
                       borderWidth: 1,
-                      borderColor: colors.greenDark,
+                      borderColor: StatusObject(profilestate.status).fontColor,
                       borderRadius: normalize(12),
                       display: 'flex',
                       justifyContent: 'center',
