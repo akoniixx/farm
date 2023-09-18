@@ -130,6 +130,7 @@ const AddPlantsScreen: React.FC<any> = ({navigation}) => {
           <View style={styles.input}>
             <TextInput
               value={addPlant}
+              allowFontScaling={false}
               placeholder="พืชอื่นๆ"
               placeholderTextColor={colors.disable}
               style={{

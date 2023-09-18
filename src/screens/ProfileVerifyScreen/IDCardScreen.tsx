@@ -190,6 +190,7 @@ const IDCardScreen: React.FC<any> = ({navigation}) => {
                 )}
               </TouchableOpacity>
               <TextInput
+                allowFontScaling={false}
                 defaultValue={idNo}
                 style={styles.input}
                 placeholder="เลขบัตรประชาชน"

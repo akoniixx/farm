@@ -251,6 +251,7 @@ const ServiceArea: React.FC<any> = ({navigation, route}) => {
                 </Text>
                 <TextInput
                   clearButtonMode={'always'}
+                  allowFontScaling={false}
                   style={[
                     styles.inputvalue,
                     {

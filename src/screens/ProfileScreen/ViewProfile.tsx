@@ -162,6 +162,7 @@ const ViewProfile: React.FC<any> = ({navigation}) => {
           <View style={[styles.input, {backgroundColor: colors.disable}]}>
             <Text style={styles.label}>ชื่อ</Text>
             <TextInput
+              allowFontScaling={false}
               style={styles.inputvalue}
               value={initProfile.firstname}
               editable={false}
@@ -172,6 +173,7 @@ const ViewProfile: React.FC<any> = ({navigation}) => {
             <Text style={styles.label}>นามสกุล</Text>
             <TextInput
               value={initProfile.lastname}
+              allowFontScaling={false}
               style={styles.inputvalue}
               editable={false}
               placeholderTextColor={colors.disable}
@@ -180,6 +182,7 @@ const ViewProfile: React.FC<any> = ({navigation}) => {
           <View style={[styles.input, {backgroundColor: colors.disable}]}>
             <Text style={styles.label}>วัน/เดือน/ปี เกิด</Text>
             <TextInput
+              allowFontScaling={false}
               value={initProfile.birthDate}
               style={styles.inputvalue}
               editable={false}
@@ -189,6 +192,7 @@ const ViewProfile: React.FC<any> = ({navigation}) => {
           <View style={[styles.input, {backgroundColor: colors.disable}]}>
             <Text style={styles.label}>โทรศัพท์</Text>
             <TextInput
+              allowFontScaling={false}
               value={initProfile.telephone}
               style={styles.inputvalue}
               editable={false}
@@ -201,6 +205,7 @@ const ViewProfile: React.FC<any> = ({navigation}) => {
             <TextInput
               value={initProfile.address1}
               style={styles.inputvalue}
+              allowFontScaling={false}
               editable={false}
               placeholderTextColor={colors.disable}
             />
@@ -211,6 +216,7 @@ const ViewProfile: React.FC<any> = ({navigation}) => {
               value={initProfile.address2}
               style={styles.inputvalue}
               editable={false}
+              allowFontScaling={false}
               placeholderTextColor={colors.disable}
             />
           </View>
@@ -220,6 +226,7 @@ const ViewProfile: React.FC<any> = ({navigation}) => {
               value={initProfile.province}
               style={styles.inputvalue}
               editable={false}
+              allowFontScaling={false}
               placeholderTextColor={colors.disable}
             />
           </View>
@@ -229,6 +236,7 @@ const ViewProfile: React.FC<any> = ({navigation}) => {
               value={initProfile.district}
               style={styles.inputvalue}
               editable={false}
+              allowFontScaling={false}
               placeholderTextColor={colors.disable}
             />
           </View>
@@ -238,6 +246,7 @@ const ViewProfile: React.FC<any> = ({navigation}) => {
               value={initProfile.subdistrict}
               style={styles.inputvalue}
               editable={false}
+              allowFontScaling={false}
               placeholderTextColor={colors.disable}
             />
           </View>
@@ -247,6 +256,7 @@ const ViewProfile: React.FC<any> = ({navigation}) => {
               value={initProfile.postal}
               style={styles.inputvalue}
               editable={false}
+              allowFontScaling={false}
               placeholderTextColor={colors.disable}
             />
           </View>

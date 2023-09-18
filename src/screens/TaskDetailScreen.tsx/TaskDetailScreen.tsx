@@ -1023,6 +1023,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
             ความคิดเห็นเพิ่มเติม
           </Text>
           <TextInput
+            allowFontScaling={false}
             style={{
               borderWidth: 1,
               borderRadius: normalize(8),

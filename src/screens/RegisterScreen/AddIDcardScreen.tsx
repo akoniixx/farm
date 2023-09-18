@@ -129,6 +129,7 @@ const AddIDcardScreen: React.FC<any> = ({route, navigation}) => {
                   )}
                 </TouchableOpacity>
                 <TextInput
+                  allowFontScaling={false}
                   style={styles.input}
                   placeholder="เลขบัตรประชาชน"
                   maxLength={13}
