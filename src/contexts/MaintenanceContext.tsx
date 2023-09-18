@@ -27,7 +27,7 @@ const MaintenanceContext = React.createContext<Context>({
 });
 export const MaintenanceProvider: React.FC<Props> = ({children}) => {
   const [checkTime, setCheckTime] = useState(false);
-  const [notiMaintenance, setNotiMaintenance] = useState<boolean>(true);
+  const [notiMaintenance, setNotiMaintenance] = useState<boolean>(false);
   const [popupMaintenance, setPopupMaintenance] = useState<boolean>(false);
   const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
     MaintenanceSystem_INIT,
