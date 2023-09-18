@@ -20,11 +20,11 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
   dateEnd,
   text,
 }) => {
-  const start = momentExtend.toBuddhistYear(dateStart, 'DD MMMM YYYY');
-  const end = momentExtend.toBuddhistYear(dateEnd, 'DD MMMM YYYY');
+  const sameDay = moment(dateStart).isSame(dateEnd, 'day');
+
   return (
     <>
-      {start !== end ? (
+      {!sameDay ? (
         <View
           style={{
             paddingHorizontal: 16,

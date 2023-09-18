@@ -4,49 +4,30 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {MainButton} from '../../components/Button/MainButton';
 import {colors, font, image} from '../../assets';
-import {SystemMaintenance} from '../../datasource/SystemMaintenanceDatasource';
-
 import RNExitApp from 'react-native-kill-app';
-import {
-  MaintenanceSystem,
-  MaintenanceSystem_INIT,
-} from '../../entities/MaintenanceApp';
 import DateTimeMaintenance from '../../components/dateTimeMaintenance';
+import {useMaintenance} from '../../contexts/MaintenanceContext';
 
-const MaintenanceScreen: React.FC<any> = ({navigation}) => {
-  const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
-    MaintenanceSystem_INIT,
-  );
-  useEffect(() => {
-    getMaintenance();
-  }, []);
-  const getMaintenance = async () => {
-    await SystemMaintenance.Maintenance('FARMER')
-      .then(res => {
-        if (res.responseData) {
-          setMaintenance(res.responseData);
-        }
-      })
-      .catch(err => console.log(err));
-  };
+const MaintenanceScreen: React.FC<any> = () => {
+  const {maintenanceData} = useMaintenance();
 
   return (
     <SafeAreaView style={stylesCentral.container}>
-      {maintenance !== undefined && (
+      {maintenanceData !== undefined && (
         <View
           style={{
             alignItems: 'center',
             marginTop: 180,
           }}>
           <Image
-            source={{uri: maintenance.imagePath}}
+            source={{uri: maintenanceData.imagePath}}
             style={{width: 156, height: 160}}
           />
           <DateTimeMaintenance
-            header={maintenance.header}
-            dateStart={maintenance.dateStart}
-            dateEnd={maintenance.dateEnd}
-            text={maintenance.text}
+            header={maintenanceData.header}
+            dateStart={maintenanceData.dateStart}
+            dateEnd={maintenanceData.dateEnd}
+            text={maintenanceData.text}
             footer={''}
           />
           <View

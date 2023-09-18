@@ -43,7 +43,6 @@ export default function GuruKasetCarousel({
 
     return guruKaset.data;
   }, [notiMaintenance]);
-
   return (
     <View>
       {allScreen ? (
@@ -119,7 +118,7 @@ export default function GuruKasetCarousel({
               autoplayDelay={5000}
               loop={true}
               ref={isCarousel}
-              data={guruKaset.data}
+              data={guruKasetData}
               sliderWidth={screen.width}
               itemWidth={screen.width}
               onSnapToItem={(idx: number) => setIndex(idx)}
