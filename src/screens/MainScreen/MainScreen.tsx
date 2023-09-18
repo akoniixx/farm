@@ -49,6 +49,7 @@ import CarouselMainScreen from './MainScreenComponent/CarouselMainScreen';
 import BookedDroner from './MainScreenComponent/BookedDroner';
 import DronerSuggestion from './MainScreenComponent/DronerSuggestion';
 import { SystemMaintenance } from '../../datasource/SystemMaintenanceDatasource';
+import { useMaintenance } from '../../contexts/MaintenanceContext';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const date = new Date();
@@ -91,17 +92,13 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   });
   const [reload, setReload] = useState(false);
   const [statusFav, setStatusFav] = useState<any[]>([]);
-  const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
-    MaintenanceSystem_INIT,
-  );
+
   const [index, setIndex] = React.useState(0);
   const isCarousel = React.useRef(null);
-  const [end, setEnd] = useState<any>();
-  const [start, setStart] = useState<any>();
   const [reason, setReason] = useState<any>('');
   const [point, setPoint] = useState<any>();
-  const dateNow = moment(Date.now());
-  const [checkTime, setCheckTime] = useState(false);
+  const { notiMaintenance, maintenanceData } = useMaintenance();
+
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
     const farmerId = await AsyncStorage.getItem('farmer_id');
@@ -214,31 +211,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           .catch(err => console.log(err));
       }
     };
-    const getMaintenance = async () => {
-      await SystemMaintenance.Maintenance('FARMER')
-        .then(res => {
-          if (res.responseData !== null) {
-            setMaintenance(res.responseData);
-            setStart(
-              momentExtend.toBuddhistYear(
-                maintenance.dateStart,
-                'DD MMMM YYYY',
-              ),
-            );
-            setEnd(
-              momentExtend.toBuddhistYear(maintenance.dateEnd, 'DD MMMM YYYY'),
-            );
-            setCheckTime(
-              checkTimeMaintance(
-                moment(res.responseData.dateNotiStart),
-                moment(res.responseData.dateNotiEnd),
-              ),
-            );
-          }
-        })
-        .catch(err => console.log(err));
-    };
-    getMaintenance();
     dronerSug();
     dronerSugUsed();
     if (user) {
@@ -318,9 +290,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     getPointFarmer();
   });
 
-  const checkTimeMaintance = (startDate: any, endDate: any) => {
-    return dateNow.isBetween(startDate, endDate, 'milliseconds');
-  };
   const sendProfilesToMixpanel = async (profiles: any) => {
     const options = {
       method: 'POST',
@@ -533,10 +502,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               </View>
               <View>
                 <MaintenanceHeader
-                  checkDateNoti={checkTime}
-                  end={end}
-                  start={start}
-                  maintenance={maintenance}
+                  checkDateNoti={notiMaintenance}
+                  end={maintenanceData.dateEnd}
+                  start={maintenanceData.dateStart}
+                  maintenance={maintenanceData}
                 />
                 <ProfileRenderByStatus
                   reason={reason}

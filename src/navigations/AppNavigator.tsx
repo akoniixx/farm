@@ -15,65 +15,14 @@ import moment from 'moment';
 import PopUpMaintenance from '../components/Modal/MaintenanceApp/PopUpMaintenance';
 import MaintenanceScreen from '../screens/MaintenanceScreen/MaintenanceScreen';
 import { useFocusEffect } from '@react-navigation/native';
+import { useMaintenance } from '../contexts/MaintenanceContext';
 
 const Stack = createStackNavigator();
 const AppNavigator: React.FC = () => {
-  const [checkTime, setCheckTime] = useState(false);
-  const [popupMaintenance, setPopupMaintenance] = useState<boolean>(false);
-  const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
-    MaintenanceSystem_INIT,
-  );
+  const { checkTime } = useMaintenance();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const checkDataMA = async () => {
-    const value = await AsyncStorage.getItem('Maintenance');
-    SystemMaintenance.Maintenance('FARMER').then(res => {
-      if (res.responseData !== null) {
-        setCheckTime(
-          checkTimeMaintance(
-            moment(res.responseData.dateStart),
-            moment(res.responseData.dateEnd),
-          ),
-        );
-        setMaintenance(res.responseData);
-        const isMaintenanceActive = checkTimeMaintenancePopUp(
-          moment(res.responseData.dateNotiStart),
-          moment(res.responseData.dateNotiEnd),
-        );
-        if (value !== 'read') {
-          setPopupMaintenance(isMaintenanceActive);
-        }
-      }
-    });
-  };
-  useFocusEffect(
-    React.useCallback(() => {
-      checkDataMA();
-    }, []),
-  );
-
-  const checkTimeMaintance = (startDate: any, endDate: any) => {
-    const dateNow = moment(Date.now());
-    return dateNow.isBetween(startDate, endDate, 'milliseconds');
-  };
-  const checkTimeMaintenancePopUp = (startDate: any, endDate: any) => {
-    const dateNow = moment(Date.now());
-    return dateNow.isBetween(startDate, endDate, 'milliseconds');
-  };
-  const renderMainTapNavigator = useCallback(
-    (props: any) => <MainNavigator {...props} checkDataMA={checkDataMA} />,
-    [checkDataMA], // dependencies
-  );
   return (
     <>
-      <PopUpMaintenance
-        show={popupMaintenance}
-        onClose={async () => {
-          await AsyncStorage.setItem('Maintenance', 'read');
-          setPopupMaintenance(!popupMaintenance);
-        }}
-        data={maintenance}
-      />
       <Stack.Navigator
         initialRouteName="initPage"
         screenOptions={{ headerShown: false, gestureEnabled: false }}>
@@ -98,7 +47,7 @@ const AppNavigator: React.FC = () => {
             />
 
             <Stack.Screen name="Auth" component={AppAuthNavigator} />
-            <Stack.Screen name="Main" component={renderMainTapNavigator} />
+            <Stack.Screen name="Main" component={MainNavigator} />
             <Stack.Screen name="ForceUpdate" component={ForceUpdateScreen} />
           </>
         )}

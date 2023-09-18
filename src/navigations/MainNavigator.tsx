@@ -96,17 +96,13 @@ export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
 
 const Stack = createStackNavigator<MainStackParamList>();
-const MainNavigator: React.FC<any> = ({ checkDataMA }) => {
-  const renderMainTapNavigator = useCallback(
-    (props: any) => <MainTapNavigator {...props} checkDataMA={checkDataMA} />,
-    [checkDataMA], // dependencies
-  );
+const MainNavigator: React.FC<any> = () => {
   return (
     <>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen
           name="MainScreen"
-          component={renderMainTapNavigator}
+          component={MainTapNavigator}
           options={{
             gestureEnabled: false,
             headerLeft: () => null,
