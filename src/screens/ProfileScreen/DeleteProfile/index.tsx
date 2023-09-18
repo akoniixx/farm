@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../../styles/StylesCentral';
@@ -16,6 +16,7 @@ import {Authentication} from '../../../datasource/AuthDatasource';
 import {MainButton} from '../../../components/Button/MainButton';
 import {StackNativeScreenProps} from '../../../navigations/MainNavigator';
 import {useAuth} from '../../../contexts/AuthContext';
+import Text from '../../../components/Text';
 
 type DeleteProfileScreenProps = StackNativeScreenProps<'DeleteProfileScreen'>;
 

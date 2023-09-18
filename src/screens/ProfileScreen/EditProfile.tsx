@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   Modal,
@@ -37,6 +36,7 @@ import ModalUploadImage from '../../components/Modal/ModalUploadImage';
 import {ResizeImage} from '../../function/Resizing';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import Text from '../../components/Text';
 
 const EditProfile: React.FC<any> = ({navigation}) => {
   const initialFormRegisterState = {

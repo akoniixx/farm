@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Linking,
-} from 'react-native';
+import {View, StyleSheet, Image, TouchableOpacity, Linking} from 'react-native';
 import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
@@ -16,6 +9,7 @@ import CustomHeader from '../../components/CustomHeader';
 import {ScrollView} from 'react-native-gesture-handler';
 import {condition} from '../../assets/constant/constant';
 import icons from '../../assets/icons/icons';
+import Text from '../../components/Text';
 
 const ConditionScreen: React.FC<any> = ({navigation}) => {
   const [checked1, setChecked1] = useState<boolean>(false);

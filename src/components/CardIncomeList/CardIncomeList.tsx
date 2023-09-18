@@ -1,4 +1,4 @@
-import {View, Text, Image, StyleSheet, ViewStyle, FlatList} from 'react-native';
+import {View, Image, StyleSheet, ViewStyle, FlatList} from 'react-native';
 import React from 'react';
 import colors from '../../assets/colors/colors';
 import {normalize} from '../../function/Normalize';
@@ -7,6 +7,7 @@ import {numberWithCommas} from '../../function/utility';
 import {font} from '../../assets';
 import {State} from '../../screens/IncomeScreen';
 import {checkDecimal} from '../../function/checkDecimal';
+import Text from '../Text';
 
 interface Props {
   data: State;

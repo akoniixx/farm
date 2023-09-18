@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   Modal,
   Dimensions,
   StyleSheet,
@@ -13,6 +12,7 @@ import {colors, icons} from '../../assets';
 import {MainButton} from '../Button/MainButton';
 import fonts from '../../assets/fonts';
 import image from '../../assets/images/image';
+import Text from '../Text';
 
 interface RegisterModalNotiFication {
   onClick?: () => void;

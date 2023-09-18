@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   Modal,
   Dimensions,
   StyleSheet,
@@ -17,6 +16,7 @@ import {
   callCenterDash,
   callcenterNumber,
 } from '../../definitions/callCenterNumber';
+import Text from '../Text';
 
 interface RegisterFailedModalNotiFication {
   onClick?: () => void;

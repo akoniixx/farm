@@ -1,13 +1,14 @@
 import {normalize} from '@rneui/themed';
 import React from 'react';
 import {useState} from 'react';
-import {View, useWindowDimensions, Text, StyleSheet} from 'react-native';
+import {View, useWindowDimensions, StyleSheet} from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import fonts from '../../assets/fonts';
 import {colors} from '../../assets';
 
 import UsedPointScreen from '../../screens/PointScreen/UsedPointScreen';
 import PendingPointScreen from '../../screens/PointScreen/PendingPointScreen';
+import Text from '../../components/Text';
 
 const renderTabBar = (props: any) => (
   <TabBar

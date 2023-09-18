@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
@@ -28,6 +27,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuth} from '../../../contexts/AuthContext';
 import * as RootNavigation from '../../../navigations/RootNavigation';
 import {FCMtokenDatasource} from '../../../datasource/FCMDatasource';
+import Text from '../../../components/Text';
 
 const CELL_COUNT = 6;
 interface props {

@@ -3,7 +3,6 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MainScreen from '../../screens/MainScreen/MainScreen';
 import messaging from '@react-native-firebase/messaging';
 import {colors, font, icons} from '../../assets';
-import {Text} from '@rneui/base';
 import fonts from '../../assets/fonts';
 import {normalize} from '@rneui/themed';
 import {
@@ -36,6 +35,7 @@ import {missionDatasource} from '../../datasource/MissionDatasource';
 import moment from 'moment';
 import analytics from '@react-native-firebase/analytics';
 import {useMaintenance} from '../../contexts/MaintenanceContext';
+import Text from '../../components/Text';
 
 export type TabNavigatorParamList = {
   mission: undefined;

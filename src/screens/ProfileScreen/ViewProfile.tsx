@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
@@ -16,6 +15,7 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {ScrollView} from 'react-native-gesture-handler';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import {momentExtend} from '../../function/utility';
+import Text from '../../components/Text';
 
 const ViewProfile: React.FC<any> = ({navigation}) => {
   const [initProfile, setInitProfile] = useState({

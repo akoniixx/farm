@@ -1,9 +1,10 @@
 import React from 'react';
-import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, Image, StyleSheet, View} from 'react-native';
 import {font, icons, image} from '../../assets';
 import colors from '../../assets/colors/colors';
 import {normalize} from '../../function/Normalize';
 import ProgressiveImage from '../ProgressingImage/ProgressingImage';
+import Text from '../Text';
 
 interface guruData {
   index: any;

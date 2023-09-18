@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  Text,
   Image,
   TouchableOpacity,
   SafeAreaView,
@@ -10,6 +9,7 @@ import {
 } from 'react-native';
 import {colors, font, icons} from '../assets';
 import {normalize} from '../function/Normalize';
+import Text from './Text';
 
 interface Prop {
   title?: string | JSX.Element;

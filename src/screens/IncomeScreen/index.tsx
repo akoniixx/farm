@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import React, {useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors} from '../../assets';
@@ -12,6 +12,7 @@ import {stylesCentral} from '../../styles/StylesCentral';
 import ContentList from './ContentList';
 import CustomHeader from '../../components/CustomHeader';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
+import Text from '../../components/Text';
 
 export interface DataType {
   price: any;

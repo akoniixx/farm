@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
@@ -15,6 +14,7 @@ import {QueryLocation} from '../../datasource/LocationDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
+import Text from '../../components/Text';
 
 export default function CustomAddressScreen({
   navigation,

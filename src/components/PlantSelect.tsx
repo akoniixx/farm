@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
+import {View, TouchableOpacity, Dimensions} from 'react-native';
 
 import {normalize} from '@rneui/themed';
 import colors from '../assets/colors/colors';

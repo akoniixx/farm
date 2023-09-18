@@ -1,7 +1,6 @@
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TextInput,
@@ -21,6 +20,7 @@ import {MainButton} from '../../components/Button/MainButton';
 import fonts from '../../assets/fonts';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
+import Text from '../../components/Text';
 
 interface AreaServiceEntity {
   area: string;

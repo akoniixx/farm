@@ -5,7 +5,6 @@ import {
   Image,
   Modal,
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
   RefreshControl,
@@ -20,7 +19,6 @@ import NewTask from '../../components/TaskList/NewTask';
 import Toast from 'react-native-toast-message';
 import icons from '../../assets/icons/icons';
 import fonts from '../../assets/fonts';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {momentExtend, socket} from '../../function/utility';
 import {ActionContext} from '../../../App';
 import {mixpanel} from '../../../mixpanel';
@@ -32,6 +30,7 @@ import {useAuth} from '../../contexts/AuthContext';
 import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import Text from '../../components/Text';
 
 interface Prop {
   isOpenReceiveTask: boolean;

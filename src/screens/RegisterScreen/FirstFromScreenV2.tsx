@@ -14,7 +14,6 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -26,6 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Lottie from 'lottie-react-native';
 import {Linking} from 'react-native';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
+import Text from '../../components/Text';
 
 const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
   const tele = route.params.tele;
@@ -123,9 +123,11 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                 style={styles.input}
                 editable={true}
                 placeholder={'ชื่อ'}
+                allowFontScaling={false}
                 placeholderTextColor={colors.disable}
               />
               <TextInput
+                allowFontScaling={false}
                 onChangeText={value => {
                   setFormState({
                     ...formState,
@@ -139,6 +141,7 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                 placeholderTextColor={colors.disable}
               />
               <TextInput
+                allowFontScaling={false}
                 value={tele}
                 style={[styles.input, {backgroundColor: colors.disable}]}
                 editable={false}
@@ -177,7 +180,6 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                 )
                   .then(async res => {
                     if (!image) {
-                      setLoading(false);
                       await AsyncStorage.setItem('droner_id', res.id);
                       navigation.navigate('SecondFormScreenV2', {
                         tele: route.params.telNumber,
@@ -186,7 +188,6 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                       });
                     } else {
                       Register.uploadProfileImage(image).then(async () => {
-                        setLoading(false);
                         await AsyncStorage.setItem('droner_id', res.id);
                         navigation.navigate('SecondFormScreenV2', {
                           tele: route.params.telNumber,

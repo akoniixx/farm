@@ -9,7 +9,6 @@ import StepTwo from './StepTwo';
 import AsyncButton from '../../Button/AsyncButton';
 import ModalImageExample from './ModalImageExample';
 import ModalUploadImage from '../ModalUploadImage';
-
 import Modal from '../Modal';
 import {ResizeImage} from '../../../function/Resizing';
 

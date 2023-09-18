@@ -7,7 +7,6 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -22,6 +21,7 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {Register} from '../../datasource/AuthDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Lottie from 'lottie-react-native';
+import Text from '../../components/Text';
 
 const IDCardScreen: React.FC<any> = ({navigation}) => {
   const [telNo, setTelNo] = useState<any>(null);

@@ -4,7 +4,6 @@ import {
   Pressable,
   SafeAreaView,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from 'react-native';
@@ -19,6 +18,7 @@ import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import {MainButton} from '../../components/Button/MainButton';
 import {Register} from '../../datasource/AuthDatasource';
+import Text from '../../components/Text';
 
 interface AreaServiceEntity {
   area: string;
@@ -316,6 +316,7 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
                     จังหวัด
                   </Text>
                   <TextInput
+                    allowFontScaling={false}
                     clearButtonMode={'always'}
                     style={[
                       styles.inputvalue,

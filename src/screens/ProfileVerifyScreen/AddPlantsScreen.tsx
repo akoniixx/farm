@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   TextInput,
   Modal,
-  Text,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
@@ -22,6 +21,7 @@ import {Register} from '../../datasource/AuthDatasource';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {cropDatasource} from '../../datasource/CropDatasource';
+import Text from '../../components/Text';
 
 const AddPlantsScreen: React.FC<any> = ({navigation}) => {
   const [plantListSelect, setPlantListSelect] = useState<
