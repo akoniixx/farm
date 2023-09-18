@@ -20,10 +20,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from '../../../mixpanel';
 import Text from '../../components/Text/Text';
 import PopUpMaintenance from '../../components/Modal/MaintenanceApp/PopUpMaintenance';
+import { useMaintenance } from '../../contexts/MaintenanceContext';
 
 const Tab = createBottomTabNavigator();
 
-const MainTapNavigator: React.FC<any> = ({ navigation, checkDataMA }) => {
+const MainTapNavigator: React.FC<any> = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [farmerRegisterSuccess, setFarmerRegisterSuccess] =
     useState<boolean>(false);
@@ -33,6 +34,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation, checkDataMA }) => {
   const [farmerPlotFailed, setFarmerPlotFailed] = useState<boolean>(false);
   const [messageNoti, setMessageNoti] = useState<string>('');
   const [initialRouteName, setInitialRouteName] = useState('หน้าแรก');
+  const { checkDataMA } = useMaintenance();
 
   useEffect(() => {
     messaging()
@@ -135,7 +137,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation, checkDataMA }) => {
           break;
         case 'NOTIFICATION_MAINTAIN_FARMER':
           checkDataMA();
-        break;
+          break;
       }
     });
 
