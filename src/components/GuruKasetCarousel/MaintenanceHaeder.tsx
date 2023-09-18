@@ -17,6 +17,8 @@ export default function MaintenanceHeader({
   start,
   end,
 }: Props) {
+  const sameDay = moment(start).isSame(end, 'day');
+
   return (
     <View>
       {checkDateNoti === true && (
@@ -43,7 +45,7 @@ export default function MaintenanceHeader({
                 />
               </View>
               <View style={{paddingHorizontal: 30}}>
-                {start !== end ? (
+                {!sameDay ? (
                   <View>
                     <Text
                       style={{
