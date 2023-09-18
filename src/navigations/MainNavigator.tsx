@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import MainTapNavigator from './bottomTabs/MainTapNavigator';
@@ -141,7 +141,7 @@ export type StackNativeScreenProps<T extends keyof StackParamList> =
   NativeStackScreenProps<StackParamList, T>;
 const Stack = createStackNavigator<StackParamList>();
 
-const MainNavigator: React.FC = () => {
+const MainNavigator: React.FC<any> = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen

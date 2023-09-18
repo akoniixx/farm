@@ -1,11 +1,13 @@
 import {Dimensions, TouchableOpacity, View} from 'react-native';
-import React, {useRef} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CardGuruKaset} from '../Carousel/CardGuruKaset';
 import {colors} from '../../assets';
 import {Carousel, Pagination} from 'react-native-snap-carousel';
 import {CardGuru} from '../Guru/CardGuru';
 import {momentExtend} from '../../function/utility';
+import MaintenanceHeader from './MaintenanceHaeder';
+import {useMaintenance} from '../../contexts/MaintenanceContext';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {normalize} from '../../function/Normalize';
 
@@ -26,6 +28,21 @@ export default function GuruKasetCarousel({
   const isCarousel = useRef(null);
   const screen = Dimensions.get('window');
   const [index, setIndex] = React.useState(0);
+  const {notiMaintenance, maintenanceData} = useMaintenance();
+
+  const guruKasetData = useMemo(() => {
+    if (notiMaintenance) {
+      return [
+        {
+          ...maintenanceData,
+          isMaintenance: true,
+        },
+        ...guruKaset.data,
+      ];
+    }
+
+    return guruKaset.data;
+  }, [notiMaintenance]);
 
   return (
     <View>
@@ -109,15 +126,26 @@ export default function GuruKasetCarousel({
               useScrollView={true}
               vertical={false}
               renderItem={({item}: any) => {
-                return (
-                  <TouchableOpacity
-                    onPress={async () => {
-                      await AsyncStorage.setItem('guruId', `${item.id}`);
-                      navigation.push('DetailGuruScreen');
-                    }}>
-                    <CardGuruKaset background={item.image_path} />
-                  </TouchableOpacity>
-                );
+                if (item?.isMaintenance) {
+                  return (
+                    <MaintenanceHeader
+                      maintenance={maintenanceData}
+                      checkDateNoti={notiMaintenance}
+                      start={maintenanceData.dateStart}
+                      end={maintenanceData.dateEnd}
+                    />
+                  );
+                } else {
+                  return (
+                    <TouchableOpacity
+                      onPress={async () => {
+                        await AsyncStorage.setItem('guruId', `${item.id}`);
+                        navigation.push('DetailGuruScreen');
+                      }}>
+                      <CardGuruKaset background={item.image_path} />
+                    </TouchableOpacity>
+                  );
+                }
               }}
             />
           )}
@@ -150,11 +178,11 @@ export default function GuruKasetCarousel({
         <View
           style={{
             position: 'absolute',
-            right: Dimensions.get('window').width / 2 - 72,
+            width: '100%',
             top: '60%',
           }}>
           <Pagination
-            dotsLength={guruKaset.data.length}
+            dotsLength={guruKasetData.length}
             activeDotIndex={index}
             carouselRef={isCarousel}
             dotStyle={{

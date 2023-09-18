@@ -30,6 +30,7 @@ import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {colors} from './src/assets';
 import {NetworkProvider} from './src/contexts/NetworkContext';
+import {MaintenanceProvider} from './src/contexts/MaintenanceContext';
 
 moment.updateLocale('th', {
   relativeTime: {
@@ -114,12 +115,13 @@ const App = () => {
             }>
             <AuthProvider>
               <>
-                <PointProvider>
-                  <SheetProvider>
-                    <AppNavigator />
-                  </SheetProvider>
-                </PointProvider>
-
+                <MaintenanceProvider>
+                  <PointProvider>
+                    <SheetProvider>
+                      <AppNavigator />
+                    </SheetProvider>
+                  </PointProvider>
+                </MaintenanceProvider>
                 <Toast config={toastConfig} />
               </>
             </AuthProvider>

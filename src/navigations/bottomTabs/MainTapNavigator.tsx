@@ -31,10 +31,11 @@ import MyProfileScreen from '../../screens/ProfileVerifyScreen/MyProfileScreen';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import {useAuth} from '../../contexts/AuthContext';
-import { rewardDatasource } from '../../datasource/RewardDatasource';
-import { missionDatasource } from '../../datasource/MissionDatasource';
+import {rewardDatasource} from '../../datasource/RewardDatasource';
+import {missionDatasource} from '../../datasource/MissionDatasource';
 import moment from 'moment';
 import analytics from '@react-native-firebase/analytics';
+import {useMaintenance} from '../../contexts/MaintenanceContext';
 
 export type TabNavigatorParamList = {
   mission: undefined;
@@ -61,7 +62,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   const isFocused = useIsFocused();
 
   const [campaignImage, setCampaignImage] = useState<string>('');
-
+  const {checkDataMA} = useMaintenance();
   useEffect(() => {
     const getProfile = async () => {
       const droner_id = await AsyncStorage.getItem('droner_id');
@@ -216,22 +217,28 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                 take: 10,
                 dronerId: dronerId || '',
               };
-              missionDatasource.getListMissions(payload).then(
-                res => {
-                  const mission = res.mission.filter((item : any) => item.id === message.data?.campaignId)
-                  const condition = mission[0].condition[parseInt(message.data?.index!)]
-                  const isComplete = condition.allRai >= condition.rai;
-                  const current = condition.allRai > condition.rai ? condition.rai : condition.allRai;
-                  const isExpired = moment().isAfter(mission.endDate);
-                  const isStatusComplete = condition.status === 'COMPLETE';
-                  RootNavigation.navigate('Main', {
-                    screen: 'MissionDetailScreen',
-                    params : { data : {
+              missionDatasource.getListMissions(payload).then(res => {
+                const mission = res.mission.filter(
+                  (item: any) => item.id === message.data?.campaignId,
+                );
+                const condition =
+                  mission[0].condition[parseInt(message.data?.index!)];
+                const isComplete = condition.allRai >= condition.rai;
+                const current =
+                  condition.allRai > condition.rai
+                    ? condition.rai
+                    : condition.allRai;
+                const isExpired = moment().isAfter(mission.endDate);
+                const isStatusComplete = condition.status === 'COMPLETE';
+                RootNavigation.navigate('Main', {
+                  screen: 'MissionDetailScreen',
+                  params: {
+                    data: {
                       ...condition,
                       isComplete,
                       current,
                       isExpired,
-                      isStatusComplete,                      
+                      isStatusComplete,
                       status: condition.status,
                       missionName: condition.missionName,
                       reward: condition.reward,
@@ -241,10 +248,10 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                       descriptionReward: condition.descriptionReward,
                       num: condition.num,
                       missionId: condition.missionId,
-                    }}
-                  });
-                }
-              )
+                    },
+                  },
+                });
+              });
               break;
             default:
               break;
@@ -330,22 +337,28 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
             take: 10,
             dronerId: dronerId || '',
           };
-          missionDatasource.getListMissions(payload).then(
-            res => {
-              const mission = res.mission.filter((item : any) => item.id === message.data?.campaignId)
-              const condition = mission[0].condition[parseInt(message.data?.index!)]
-              const isComplete = condition.allRai >= condition.rai;
-              const current = condition.allRai > condition.rai ? condition.rai : condition.allRai;
-              const isExpired = moment().isAfter(mission.endDate);
-              const isStatusComplete = condition.status === 'COMPLETE';
-              RootNavigation.navigate('Main', {
-                screen: 'MissionDetailScreen',
-                params : { data : {
+          missionDatasource.getListMissions(payload).then(res => {
+            const mission = res.mission.filter(
+              (item: any) => item.id === message.data?.campaignId,
+            );
+            const condition =
+              mission[0].condition[parseInt(message.data?.index!)];
+            const isComplete = condition.allRai >= condition.rai;
+            const current =
+              condition.allRai > condition.rai
+                ? condition.rai
+                : condition.allRai;
+            const isExpired = moment().isAfter(mission.endDate);
+            const isStatusComplete = condition.status === 'COMPLETE';
+            RootNavigation.navigate('Main', {
+              screen: 'MissionDetailScreen',
+              params: {
+                data: {
                   ...condition,
                   isComplete,
                   current,
                   isExpired,
-                  isStatusComplete,                      
+                  isStatusComplete,
                   status: condition.status,
                   missionName: condition.missionName,
                   reward: condition.reward,
@@ -355,12 +368,15 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                   descriptionReward: condition.descriptionReward,
                   num: condition.num,
                   missionId: condition.missionId,
-                }}
-              });
-            }
-          )
+                },
+              },
+            });
+          });
           break;
         default:
+          break;
+        case 'NOTIFICATION_MAINTAIN_DRONER':
+          checkDataMA();
           break;
       }
     });
@@ -568,28 +584,34 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
             take: 10,
             dronerId: dronerId || '',
           };
-          missionDatasource.getListMissions(payload).then(
-            res => {
-              const mission = res.mission.filter((item : any) => item.id === message.data?.campaignId)
-              const condition = mission[0].condition[parseInt(message.data?.index!)]
-              const isComplete = condition.allRai >= condition.rai;
-              const current = condition.allRai > condition.rai ? condition.rai : condition.allRai;
-              const isExpired = moment().isAfter(mission.endDate);
-              const isStatusComplete = condition.status === 'COMPLETE';
-              Toast.show({
-                type: 'missionDone',
-                topOffset: 40,
-                position: 'top',
-                text1: message.data?.message,
-                onPress() {
-                  RootNavigation.navigate('Main', {
-                    screen: 'MissionDetailScreen',
-                    params : { data : {
+          missionDatasource.getListMissions(payload).then(res => {
+            const mission = res.mission.filter(
+              (item: any) => item.id === message.data?.campaignId,
+            );
+            const condition =
+              mission[0].condition[parseInt(message.data?.index!)];
+            const isComplete = condition.allRai >= condition.rai;
+            const current =
+              condition.allRai > condition.rai
+                ? condition.rai
+                : condition.allRai;
+            const isExpired = moment().isAfter(mission.endDate);
+            const isStatusComplete = condition.status === 'COMPLETE';
+            Toast.show({
+              type: 'missionDone',
+              topOffset: 40,
+              position: 'top',
+              text1: message.data?.message,
+              onPress() {
+                RootNavigation.navigate('Main', {
+                  screen: 'MissionDetailScreen',
+                  params: {
+                    data: {
                       ...condition,
                       isComplete,
                       current,
                       isExpired,
-                      isStatusComplete,                      
+                      isStatusComplete,
                       status: condition.status,
                       missionName: condition.missionName,
                       reward: condition.reward,
@@ -599,15 +621,18 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                       descriptionReward: condition.descriptionReward,
                       num: condition.num,
                       missionId: condition.missionId,
-                    }}
-                  });
-                  Toast.hide();
-                },
-              });
-            }
-          )
+                    },
+                  },
+                });
+                Toast.hide();
+              },
+            });
+          });
           break;
         default:
+          break;
+        case 'NOTIFICATION_MAINTAIN_DRONER':
+          checkDataMA();
           break;
       }
     });
