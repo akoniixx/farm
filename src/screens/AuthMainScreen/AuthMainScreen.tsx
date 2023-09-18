@@ -21,67 +21,15 @@ import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { TaskSuggestion } from '../../datasource/TaskSuggestion';
 import Text from '../../components/Text/Text';
 import MaintenanceHeader from '../MainScreen/MainScreenComponent/MaintenanceHeader';
-import { momentExtend } from '../../utils/moment-buddha-year';
-import { SystemMaintenance } from '../../datasource/SystemMaintenanceDatasource';
-import {
-  MaintenanceSystem,
-  MaintenanceSystem_INIT,
-} from '../../entites/MaintenanceApp';
-import moment from 'moment';
+import { useMaintenance } from '../../contexts/MaintenanceContext';
 
 const AuthMainScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const { height, width } = Dimensions.get('window');
-  const [end, setEnd] = useState<any>();
-  const [start, setStart] = useState<any>();
-  const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
-    MaintenanceSystem_INIT,
-  );
-  const dateNow = moment(Date.now());
-  const [checkTime, setCheckTime] = useState(false);
-
+  const {notiMaintenance, maintenanceData } = useMaintenance();
   useEffect(() => {
     getProfile();
   }, []);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      getProfile();
-      const getMaintenance = async () => {
-        await SystemMaintenance.Maintenance('FARMER')
-          .then(res => {
-            console.log(res)
-            if (res.responseData !== null) {
-              setMaintenance(res.responseData);
-              setStart(
-                momentExtend.toBuddhistYear(
-                  maintenance.dateStart,
-                  'DD MMMM YYYY',
-                ),
-              );
-              setEnd(
-                momentExtend.toBuddhistYear(
-                  maintenance.dateEnd,
-                  'DD MMMM YYYY',
-                ),
-              );
-              setCheckTime(
-                checkTimeMaintance(
-                  moment(res.responseData.dateNotiStart),
-                  moment(res.responseData.dateNotiEnd),
-                ),
-              );
-            }
-          })
-          .catch(err => console.log(err));
-      };
-      getMaintenance();
-    }, []),
-  );
-
-  const checkTimeMaintance = (startDate: any, endDate: any) => {
-    return dateNow.isBetween(startDate, endDate, 'milliseconds');
-  };
 
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -211,10 +159,10 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                   </View>
                   <View>
                     <MaintenanceHeader
-                      checkDateNoti={checkTime}
-                      end={end}
-                      start={start}
-                      maintenance={maintenance}
+                      checkDateNoti={notiMaintenance}
+                      end={maintenanceData.dateEnd}
+                      start={maintenanceData.dateStart}
+                      maintenance={maintenanceData}
                     />
                   </View>
                   <View

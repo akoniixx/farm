@@ -24,6 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from './mixpanel';
 import { RecoilRoot } from 'recoil';
 import { NetworkProvider } from './src/contexts/NetworkContext';
+import { MaintenanceProvider } from './src/contexts/MaintenanceContext';
 
 const App = () => {
   useEffect(() => {
@@ -57,11 +58,13 @@ const App = () => {
           <NavigationContainer ref={navigationRef}>
             <PaperProvider>
               <AuthProvider>
-                <AutoBookingProvider>
-                  <SheetProvider>
-                    <AppNavigator />
-                  </SheetProvider>
-                </AutoBookingProvider>
+                <MaintenanceProvider>
+                  <AutoBookingProvider>
+                    <SheetProvider>
+                      <AppNavigator />
+                    </SheetProvider>
+                  </AutoBookingProvider>
+                </MaintenanceProvider>
               </AuthProvider>
             </PaperProvider>
             <Toast config={toastConfig} />

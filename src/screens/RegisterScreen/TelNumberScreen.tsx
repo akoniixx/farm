@@ -17,6 +17,7 @@ import { InputPhone } from '../../components/InputPhone';
 import { Authentication } from '../../datasource/AuthDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import Text from '../../components/Text/Text';
+import { useMaintenance } from '../../contexts/MaintenanceContext';
 
 const TelNumScreen: React.FC<any> = ({ navigation }) => {
   const [value, setValue] = useState<string>('');
@@ -24,8 +25,10 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
   const [message, setMessage] = useState<string>('');
   const [errMessage, setErrMessage] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  const { checkDataMA } = useMaintenance();
 
-  const login = () => {
+  const login = async () => {
+    await checkDataMA();
     Authentication.generateOtpRegister(value)
       .then(result => {
         setLoading(false);
