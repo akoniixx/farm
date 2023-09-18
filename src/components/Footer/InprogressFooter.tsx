@@ -1,9 +1,9 @@
 import {normalize} from '@rneui/themed';
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, font, icons} from '../../assets';
-import Icon from 'react-native-vector-icons/AntDesign';
+import Text from '../Text';
 
 interface InprogressProp {
   mainFunc: () => void;

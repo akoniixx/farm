@@ -1,6 +1,6 @@
 import {Switch} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
@@ -27,6 +27,7 @@ import GuruKasetCarousel from '../../components/GuruKasetCarousel/GuruKasetCarou
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 import {useNetwork} from '../../contexts/NetworkContext';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import Text from '../../components/Text';
 
 const MainScreen: React.FC<any> = ({navigation}) => {
   const {isConnected} = useNetwork();

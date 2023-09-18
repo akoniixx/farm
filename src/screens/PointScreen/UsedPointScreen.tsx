@@ -5,7 +5,6 @@ import {
   Image,
   RefreshControl,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import {getAllHistoryPoint} from '../../datasource/HistoryPointDatasource';
@@ -15,6 +14,7 @@ import {normalize} from '../../function/Normalize';
 import {HistoryPoint} from '../../components/point/HistoryPoint';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
+import Text from '../../components/Text';
 
 const UsedPointScreen: React.FC<any> = () => {
   const [dataAllPoint, setDataAllPoint] = useState<any>();

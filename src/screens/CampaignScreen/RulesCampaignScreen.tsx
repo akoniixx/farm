@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
 import CustomHeader from '../../components/CustomHeader';
 import {colors, font} from '../../assets';
-import {Image, SafeAreaView, Text, View} from 'react-native';
-import icons from '../../assets/icons/icons';
+import {SafeAreaView, View} from 'react-native';
 import {normalize} from '../../function/Normalize';
 import {mixpanel} from '../../../mixpanel';
+import Text from '../../components/Text';
 
 const RulesCampaignScreen: React.FC<any> = ({navigation, route}) => {
   let rules = route.params.rules;

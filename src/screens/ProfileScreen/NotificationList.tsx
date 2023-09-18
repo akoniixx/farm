@@ -1,7 +1,6 @@
 import {
   Image,
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
   Modal,
@@ -20,6 +19,7 @@ import {MainButton} from '../../components/Button/MainButton';
 import {useFocusEffect} from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {SwipeListView} from 'react-native-swipe-list-view';
+import Text from '../../components/Text';
 
 interface NotificationListTileParams {
   type: string;

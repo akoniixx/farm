@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   Platform,
   Animated,
@@ -17,6 +16,7 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+import Text from '../../components/Text';
 
 const PinScreen: React.FC<any> = () => {
   const [value, setValue] = useState<string>('');

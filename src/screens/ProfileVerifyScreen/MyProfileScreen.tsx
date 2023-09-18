@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
-import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Modal, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Image} from 'react-native';
 import {normalize} from '../../function/Normalize';
 import {colors, font} from '../../assets';
@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {Register} from '../../datasource/AuthDatasource';
+import Text from '../../components/Text';
 // import ProgressCircle from 'react-native-progress-circle'
 
 const MyProfileScreen: React.FC<any> = ({navigation}) => {
@@ -212,10 +213,12 @@ const MyProfileScreen: React.FC<any> = ({navigation}) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('ProfileScreen', {
-                  navbar: false,
-                });
                 setShowModal(false);
+                setTimeout(() => {
+                  navigation.navigate('ProfileScreen', {
+                    navbar: false,
+                  });
+                }, 400);
               }}
               style={{
                 height: 60,

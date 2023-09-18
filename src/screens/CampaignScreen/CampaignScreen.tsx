@@ -2,16 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   Image,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {Campaign} from '../../datasource/CampaignDatasource';
-import {Skeleton} from '@rneui/base';
 import LinearGradient from 'react-native-linear-gradient';
-import {height, normalize} from '../../function/Normalize';
+import {normalize} from '../../function/Normalize';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {CampaignEntitie, init_campaign} from '../../entities/CampaignEntitie';
 

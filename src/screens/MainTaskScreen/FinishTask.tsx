@@ -1,19 +1,19 @@
 import {normalize} from '@rneui/themed';
 import React, {useMemo, useState} from 'react';
-import {FlatList, Image, RefreshControl, Text, View} from 'react-native';
+import {FlatList, Image, RefreshControl, View} from 'react-native';
 import {colors, image} from '../../assets';
 import MainTasklist from '../../components/TaskList/MainTasklist';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import {stylesCentral} from '../../styles/StylesCentral';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {calTotalPrice} from '../../function/utility';
 import WarningDocumentBox from '../../components/WarningDocumentBox/WarningDocumentBox';
 import {useAuth} from '../../contexts/AuthContext';
 import Loading from '../../components/Loading/Loading';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import Text from '../../components/Text';
 const initialPage = 1;
 const limit = 10;
 const FinishTask: React.FC = () => {

@@ -5,19 +5,16 @@ import {
   Image,
   RefreshControl,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
-import {
-  getAllHistoryPoint,
-  getAllPendingPoint,
-} from '../../datasource/HistoryPointDatasource';
+import {getAllPendingPoint} from '../../datasource/HistoryPointDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {colors, font, image} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {PendingPoint} from '../../components/point/PendingPoint';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
+import Text from '../../components/Text';
 
 const PendingPointScreen: React.FC<any> = () => {
   const [dataAllPoint, setDataAllPoint] = useState<any>();

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Text, View} from 'react-native';
+import {Image, View} from 'react-native';
 import {colors, font, icons} from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import {normalize} from '../../function/Normalize';
@@ -8,6 +8,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import PointTapNavigator from '../../navigations/topTabs/PointTapNavigator';
 import {usePoint} from '../../contexts/PointContext';
 import {mixpanel} from '../../../mixpanel';
+import Text from '../../components/Text';
 
 const DetailPointScreen: React.FC<any> = ({navigation}) => {
   const {currentPoint} = usePoint();

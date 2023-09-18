@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
@@ -10,6 +10,7 @@ import {MainButton} from '../../components/Button/MainButton';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ProgressBar} from '../../components/ProgressBar';
 import * as ImagePicker from 'react-native-image-picker';
+import Text from '../../components/Text';
 
 const FirstFormScreen: React.FC<any> = ({navigation, route}) => {
   const progress = [1, 2, 3, 4];

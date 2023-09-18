@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Image, useWindowDimensions} from 'react-native';
+import {View, StyleSheet, Image, useWindowDimensions} from 'react-native';
 import React from 'react';
 import fonts from '../../../assets/fonts';
 import {normalize} from '../../../function/Normalize';
@@ -6,6 +6,7 @@ import colors from '../../../assets/colors/colors';
 import image from '../../../assets/images/image';
 import {MainButton} from '../../../components/Button/MainButton';
 import {callCenterDash} from '../../../definitions/callCenterNumber';
+import Text from '../../../components/Text';
 
 const DeleteSuccess: React.FC<any> = ({navigation}) => {
   const {width} = useWindowDimensions();

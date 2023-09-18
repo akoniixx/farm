@@ -1,9 +1,10 @@
-import {Image, Text, View} from 'react-native';
+import {Image, View} from 'react-native';
 import React from 'react';
 import {normalize} from '../../function/Normalize';
 import {colors, font} from '../../assets';
 import {momentExtend} from '../../function/utility';
 import moment from 'moment';
+import Text from '../Text';
 
 interface Props {
   maintenance: any;

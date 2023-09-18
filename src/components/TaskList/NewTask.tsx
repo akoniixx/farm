@@ -2,12 +2,13 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {normalize} from '@rneui/themed';
 import fonts from '../../assets/fonts';
 import {colors, image, icons} from '../../assets';
-import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {momentExtend, numberWithCommas} from '../../function/utility';
 import {useNavigation} from '@react-navigation/native';
 import {mixpanel} from '../../../mixpanel';
 import {useAuth} from '../../contexts/AuthContext';
 import {checkDecimal} from '../../function/checkDecimal';
+import Text from '../Text';
 
 const NewTask: React.FC<any> = (props: any) => {
   const onPressReceiveTask = props.receiveTask;

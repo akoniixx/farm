@@ -1,9 +1,10 @@
 import React from 'react';
-import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
-import {font, image} from '../../assets';
+import {Dimensions, StyleSheet, View} from 'react-native';
+import {font} from '../../assets';
 import colors from '../../assets/colors/colors';
 import {momentExtend, numberWithCommas} from '../../function/utility';
 import {normalize} from '../../function/Normalize';
+import Text from '../Text';
 
 interface guruData {
   index: any;

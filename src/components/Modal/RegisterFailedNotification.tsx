@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   Modal,
   StyleSheet,
   Image,
@@ -14,6 +13,7 @@ import {icons} from '../../assets';
 import fonts from '../../assets/fonts';
 import colors from '../../assets/colors/colors';
 import {callCenterDash} from '../../definitions/callCenterNumber';
+import Text from '../Text';
 
 interface RegisterFailedModalNotiFication {
   onClick?: () => void;

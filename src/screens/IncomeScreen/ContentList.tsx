@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
@@ -23,6 +22,7 @@ import image from '../../assets/images/image';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {DataType} from '.';
 import {checkDecimal} from '../../function/checkDecimal';
+import Text from '../../components/Text';
 
 interface Styles {
   isFocus?: boolean;

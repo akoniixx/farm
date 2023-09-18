@@ -1,5 +1,4 @@
 import {
-  Text,
   TouchableOpacity,
   TouchableOpacityProps,
   StyleSheet,
@@ -9,6 +8,7 @@ import {
 import React from 'react';
 import {colors, font} from '../../assets';
 import Loading from '../Loading/Loading';
+import Text from '../Text';
 
 interface TypeButton {
   primary: string;

@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   TouchableOpacity,
@@ -23,6 +22,7 @@ import InputTime from '../InputTime/InputTime';
 import TextInputArea from '../TextInputArea/TextInputArea';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import {momentExtend} from '../../function/utility';
+import Text from '../Text';
 
 interface Props {
   isVisible: boolean;

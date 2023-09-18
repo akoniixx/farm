@@ -18,7 +18,6 @@ import {normalize} from '../../function/Normalize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Authentication} from '../../datasource/AuthDatasource';
 import * as RootNavigation from '../../navigations/RootNavigation';
-import {Avatar} from '@rneui/base';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {initProfileState, profileReducer} from '../../hooks/profilefield';
 import DroneBrandingItem, {
@@ -30,7 +29,6 @@ import ActionSheet from 'react-native-actions-sheet';
 import Lottie from 'lottie-react-native';
 import {useAuth} from '../../contexts/AuthContext';
 import {numberWithCommas, socket} from '../../function/utility';
-import {useFocusEffect} from '@react-navigation/native';
 import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import {QueryLocation} from '../../datasource/LocationDatasource';
@@ -331,7 +329,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                       width: normalize(109),
                       height: normalize(24),
                       borderWidth: 1,
-                      borderColor: colors.greenDark,
+                      borderColor: StatusObject(profilestate.status).fontColor,
                       borderRadius: normalize(12),
                       display: 'flex',
                       justifyContent: 'center',
@@ -356,7 +354,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
               {profilestate.status != 'ACTIVE' ? (
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('ViewProfile');
+                    navigation.navigate('EditProfile');
                   }}>
                   <Text
                     style={{
@@ -1083,6 +1081,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: normalize(12),
     alignItems: 'center',
+    height: normalize(56),
   },
   appBarHeader: {
     fontFamily: font.bold,

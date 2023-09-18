@@ -6,7 +6,6 @@ import {
   Dimensions,
   Image,
   SafeAreaView,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -19,6 +18,7 @@ import {GuruKaset} from '../../datasource/GuruDatasource';
 import {momentExtend} from '../../function/utility';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
+import Text from '../../components/Text';
 
 const WinnerCampaignScreen: React.FC<any> = ({navigation, route}) => {
   const isFocused = useIsFocused();

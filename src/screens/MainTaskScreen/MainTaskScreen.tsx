@@ -1,12 +1,13 @@
 import {normalize} from '@rneui/themed';
 import React, {useEffect, useRef, useState} from 'react';
-import {Text, View} from 'react-native';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, font} from '../../assets';
 import MainTaskTapNavigator from '../../navigations/topTabs/MainTaskTapNavigator';
 import {stylesCentral} from '../../styles/StylesCentral';
 
 import RegisterNotification from '../../components/Modal/RegisterNotification';
+import Text from '../../components/Text';
 
 const MainTaskScreen: React.FC<any> = ({navigation}) => {
   const insets = useSafeAreaInsets();

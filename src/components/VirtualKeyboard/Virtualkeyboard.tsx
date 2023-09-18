@@ -1,8 +1,9 @@
 import React, {Component, useState} from 'react';
 
-import {Text, View, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 
 import {icons} from '../../assets';
+import Text from '../Text';
 
 const BACK = 'back';
 const CLEAR = 'clear';

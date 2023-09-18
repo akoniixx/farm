@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
@@ -28,6 +27,7 @@ import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
 import {getFCMToken} from '../../firebase/notification';
 import {mixpanel} from '../../../mixpanel';
 import {useAuth} from '../../contexts/AuthContext';
+import Text from '../../components/Text';
 
 const CELL_COUNT = 6;
 

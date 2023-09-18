@@ -1,9 +1,9 @@
 import {normalize} from '@rneui/themed';
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, font, icons} from '../../assets';
-const insets = useSafeAreaInsets();
+import Text from '../Text';
 
 interface WaitStartProp {
   mainFunc: () => void;
@@ -16,6 +16,8 @@ export const WaitStartFooter: React.FC<WaitStartProp> = ({
   togleModal,
   disable,
 }) => {
+  const insets = useSafeAreaInsets();
+
   return (
     <View style={[styles.footer, {paddingBottom: insets.bottom}]}>
       <TouchableOpacity

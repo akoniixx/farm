@@ -173,7 +173,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
       .then(() => {
         setFinishImg(null);
         setDefaultRating(0);
-        // setLoading(false);
+        setLoading(false);
       })
       .catch(err => {
         console.log(err.response);
@@ -185,7 +185,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
         });
       })
       .finally(() => {
-        // setLoading(false);
+        setLoading(false);
       });
   };
 
@@ -200,7 +200,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     )
       .then(res => {
         if (res !== undefined) {
-          // setData(res);
+          setData(res);
           setCheckResIsComplete(true);
           setLoading(false);
         }

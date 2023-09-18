@@ -37,6 +37,7 @@ export default function TextInputArea({label, ...props}: Props) {
       <ScrollView keyboardShouldPersistTaps="handled">
         <TextInput
           multiline
+          allowFontScaling={false}
           numberOfLines={4}
           blurOnSubmit
           style={[

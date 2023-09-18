@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React, {useEffect, useMemo} from 'react';
 import {colors, font, icons} from '../../assets';
 import {useAuth} from '../../contexts/AuthContext';
@@ -14,6 +14,7 @@ import {
   rewardDatasource,
 } from '../../datasource/RewardDatasource';
 import {usePoint} from '../../contexts/PointContext';
+import Text from '../../components/Text';
 
 interface AddressType {
   id: string;
