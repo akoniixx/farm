@@ -1,6 +1,6 @@
 import {stylesCentral} from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
-import {Avatar, normalize} from '@rneui/themed';
+import {normalize} from '@rneui/themed';
 import {colors, font, icons, image as img} from '../../assets';
 import {ProgressBarV2} from '../../components/ProgressBarV2';
 import Geolocation from 'react-native-geolocation-service';
@@ -14,7 +14,6 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -26,6 +25,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Lottie from 'lottie-react-native';
 import {Linking} from 'react-native';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
+import Text from '../../components/Text';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 
 const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
   const tele = route.params.tele;
@@ -50,8 +51,7 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
       {/* <View style={styles.container}> */}
       <KeyboardAvoidingView
         style={{flex: 1}}
-        keyboardVerticalOffset={100}
-        behavior={Platform.OS === 'ios' ? 'position' : 'height'}>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView>
           <CustomHeader
             title="ลงทะเบียนนักบินโดรน"
@@ -71,19 +71,33 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                   alignItems: 'center',
                   marginTop: normalize(40),
                 }}>
-                <TouchableOpacity onPress={onAddImage}>
+                <TouchableOpacity
+                  onPress={onAddImage}
+                  style={{
+                    shadowColor: '#000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    elevation: 5,
+                  }}>
                   <View
                     style={{
                       width: normalize(116),
                       height: normalize(116),
                       position: 'relative',
                     }}>
-                    <Avatar
-                      size={116}
-                      rounded
+                    <ProgressiveImage
                       source={
                         !image ? icons.account : {uri: image.assets[0].uri}
                       }
+                      style={{
+                        width: normalize(116),
+                        height: normalize(116),
+                        borderRadius: normalize(58),
+                      }}
                     />
                     <View
                       style={{
@@ -119,13 +133,17 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                     firstname: value,
                   });
                 }}
+                scrollEnabled={false}
                 value={formState.firstname}
                 style={styles.input}
                 editable={true}
                 placeholder={'ชื่อ'}
+                allowFontScaling={false}
                 placeholderTextColor={colors.disable}
               />
               <TextInput
+                scrollEnabled={false}
+                allowFontScaling={false}
                 onChangeText={value => {
                   setFormState({
                     ...formState,
@@ -139,6 +157,7 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                 placeholderTextColor={colors.disable}
               />
               <TextInput
+                allowFontScaling={false}
                 value={tele}
                 style={[styles.input, {backgroundColor: colors.disable}]}
                 editable={false}
@@ -177,30 +196,33 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                 )
                   .then(async res => {
                     if (!image) {
-                      setLoading(false);
                       await AsyncStorage.setItem('droner_id', res.id);
-                      navigation.navigate('SecondFormScreenV2', {
-                        tele: route.params.telNumber,
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                      });
-                    } else {
-                      Register.uploadProfileImage(image).then(async () => {
-                        setLoading(false);
-                        await AsyncStorage.setItem('droner_id', res.id);
+                      setLoading(false);
+                      setTimeout(() => {
                         navigation.navigate('SecondFormScreenV2', {
                           tele: route.params.telNumber,
                           latitude: position.coords.latitude,
                           longitude: position.coords.longitude,
                         });
-                      });
+                      }, 500);
+                    } else {
+                      Register.uploadProfileImage(image)
+                        .then(async () => {
+                          await AsyncStorage.setItem('droner_id', res.id);
+                          navigation.navigate('SecondFormScreenV2', {
+                            tele: route.params.telNumber,
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                          });
+                        })
+                        .finally(() => {
+                          setLoading(false);
+                        });
                     }
                   })
                   .catch(err => console.log(err));
               });
             } catch (err) {
-              setLoading(false);
-            } finally {
               setLoading(false);
             }
           }}

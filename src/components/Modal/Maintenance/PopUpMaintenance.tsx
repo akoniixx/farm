@@ -1,4 +1,4 @@
-import {View, Modal, TouchableOpacity, Image, Text} from 'react-native';
+import {View, Modal, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {momentExtend} from '../../../function/utility';
 import moment from 'moment';
@@ -7,6 +7,7 @@ import fonts from '../../../assets/fonts';
 import {colors, icons} from '../../../assets';
 import {ModalStyle} from './ModalStyle';
 import {MaintenanceEntity} from './ModalEntity';
+import Text from '../../Text';
 
 const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
   show,

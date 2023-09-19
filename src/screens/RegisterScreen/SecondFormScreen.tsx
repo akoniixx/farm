@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   TextInput,
@@ -32,6 +31,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import CalendarCustom from '../../components/Calendar/Calendar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {build12Year, CalendarMode} from '../../hooks/calendar';
+import Text from '../../components/Text';
 
 const SecondFormScreen: React.FC<any> = ({navigation, route}) => {
   const initialFormRegisterState = {
@@ -177,6 +177,7 @@ const SecondFormScreen: React.FC<any> = ({navigation, route}) => {
               <Text style={styles.h1}>ข้อมูลทั่วไป (โปรดระบุ)</Text>
             </View>
             <TextInput
+              allowFontScaling={false}
               onChangeText={value => {
                 dispatch({
                   type: 'Handle Input',
@@ -191,6 +192,7 @@ const SecondFormScreen: React.FC<any> = ({navigation, route}) => {
               placeholderTextColor={colors.disable}
             />
             <TextInput
+              allowFontScaling={false}
               onChangeText={value => {
                 dispatch({
                   type: 'Handle Input',
@@ -214,6 +216,7 @@ const SecondFormScreen: React.FC<any> = ({navigation, route}) => {
                   },
                 ]}>
                 <TextInput
+                  allowFontScaling={false}
                   value={
                     birthday != ''
                       ? `${birthday.split('-')[2]}/${birthday.split('-')[1]}/${
@@ -235,6 +238,7 @@ const SecondFormScreen: React.FC<any> = ({navigation, route}) => {
               </View>
             </TouchableOpacity>
             <TextInput
+              allowFontScaling={false}
               value={tele}
               style={[styles.input, {backgroundColor: colors.disable}]}
               editable={false}
@@ -245,6 +249,7 @@ const SecondFormScreen: React.FC<any> = ({navigation, route}) => {
               <Text style={styles.h1}>ที่อยู่</Text>
             </View>
             <TextInput
+              allowFontScaling={false}
               onChangeText={value => {
                 dispatch({
                   type: 'Handle Input',
@@ -259,6 +264,7 @@ const SecondFormScreen: React.FC<any> = ({navigation, route}) => {
               placeholderTextColor={colors.disable}
             />
             <TextInput
+              allowFontScaling={false}
               onChangeText={value => {
                 dispatch({
                   type: 'Handle Input',
@@ -394,6 +400,7 @@ const SecondFormScreen: React.FC<any> = ({navigation, route}) => {
               }}
             />
             <TextInput
+              allowFontScaling={false}
               value={formState.postal}
               style={[
                 styles.input,

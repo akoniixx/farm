@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {normalize} from '@rneui/themed';
 import {colors, font, icons} from '../../assets';
 import fonts from '../../assets/fonts';
@@ -20,6 +20,7 @@ import {TaskDatasource} from '../../datasource/TaskDatasource';
 import {useFocusEffect} from '@react-navigation/native';
 import {responsiveWidth} from '../../function/responsive';
 import {mixpanel} from '../../../mixpanel';
+import Text from '../Text';
 
 export const NewTaskModal = (
   props: SheetProps<{

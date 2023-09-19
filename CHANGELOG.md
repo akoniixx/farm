@@ -1,3 +1,10 @@
+## Fix [1.7.4] 2023-09-18
+- fix bug scroll Register StepOne 
+- fix bug Register Initial Image wrong ratio
+- fix edit profile info
+- fix fontScale all screen
+- fix button not on screen
+
 ## Improved [1.7.3] 2023-09-15
 
 - fixed maintenance

@@ -491,6 +491,7 @@ const Tasklists: React.FC<any> = (props: Props) => {
               placeholder="กรอกความคิดเห็นเพิ่มเติม"
               onChangeText={props.setComment}
               value={props.comment}
+              allowFontScaling={false}
             />
             <AsyncButton
               title="ยืนยัน"

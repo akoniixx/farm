@@ -2,15 +2,12 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Button,
-  TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font} from '../../assets';
@@ -18,13 +15,11 @@ import {normalize} from '../../function/Normalize';
 import CustomHeader from '../../components/CustomHeader';
 import {InputPhone} from '../../components/InputPhone';
 import {MainButton} from '../../components/Button/MainButton';
-import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import {Authentication} from '../../datasource/AuthDatasource';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {mixpanel} from '../../../mixpanel';
-import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {useMaintenance} from '../../contexts/MaintenanceContext';
 
 const LoginScreen: React.FC<any> = ({navigation}) => {

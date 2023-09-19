@@ -165,7 +165,7 @@ export default function NewAddIDCardScreen({navigation}: Props) {
   };
   return (
     <SafeAreaView
-      edges={['right', 'top', 'left']}
+      edges={['right', 'top', 'left', 'bottom']}
       style={{
         flex: 1,
       }}>
@@ -334,6 +334,7 @@ export default function NewAddIDCardScreen({navigation}: Props) {
             <View
               style={{
                 flex: 1,
+                paddingBottom: 40,
               }}>
               <AsyncButton
                 disabled={!isHaveValue}

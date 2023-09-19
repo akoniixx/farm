@@ -45,6 +45,7 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
           style={styles.numberText}
           keyboardType="number-pad"
           editable={true}
+          allowFontScaling={false}
           value={number}
           onChangeText={onTextChange}
           maxLength={maxLength}

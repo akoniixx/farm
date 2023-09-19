@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import HTML from 'react-native-render-html';
@@ -25,6 +23,7 @@ import {mixpanel} from '../../../mixpanel';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
 import {RefreshControl} from 'react-native';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import Text from '../../components/Text';
 
 const DetailGuruScreen: React.FC<any> = ({navigation}) => {
   const isFocused = useIsFocused();

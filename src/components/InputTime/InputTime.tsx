@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, TouchableOpacity, Image} from 'react-native';
 import React, {useState} from 'react';
 import {normalize} from '../../function/Normalize';
 import {font} from '../../assets';
@@ -8,6 +8,7 @@ import icons from '../../assets/icons/icons';
 
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import dayjs from 'dayjs';
+import Text from '../Text';
 
 interface Props {
   onChange?: (date: Date) => void;

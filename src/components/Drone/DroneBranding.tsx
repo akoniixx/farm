@@ -1,7 +1,8 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {normalize} from '../../function/Normalize';
 import {colors, font} from '../../assets';
+import Text from '../Text';
 
 interface DroneBranding {
   dronebrand: string;

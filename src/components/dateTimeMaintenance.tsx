@@ -1,10 +1,11 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import {momentExtend} from '../function/utility';
 import fonts from '../assets/fonts';
 import {normalize} from '../function/Normalize';
 import {colors} from '../assets';
 import moment from 'moment';
+import Text from './Text';
 
 interface MaintenanceProps {
   header: string;

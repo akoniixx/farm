@@ -1,7 +1,8 @@
-import {View, Text, StyleSheet, ImageBackground} from 'react-native';
+import {View, StyleSheet, ImageBackground} from 'react-native';
 import React from 'react';
 import {image} from '../../assets';
 import fonts from '../../assets/fonts';
+import Text from '../Text';
 
 export default function Banner() {
   return (

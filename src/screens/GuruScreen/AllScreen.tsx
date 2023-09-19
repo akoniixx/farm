@@ -17,7 +17,6 @@ import {font} from '../../assets/index';
 import {useIsFocused} from '@react-navigation/native';
 import {GuruKaset} from '../../datasource/GuruDatasource';
 
-import Spinner from 'react-native-loading-spinner-overlay/lib';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {normalize} from '../../function/Normalize';
 import {momentExtend} from '../../function/utility';

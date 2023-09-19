@@ -1,21 +1,12 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Platform,
-  Linking,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
+import {View, StyleSheet} from 'react-native';
 import {normalize} from '@rneui/themed';
 import {MainButton} from '../Button/MainButton';
 import {colors} from '../../assets';
 import {dialCall} from '../../function/utility';
 import ActionSheet, {SheetProps} from 'react-native-actions-sheet';
 import fonts from '../../assets/fonts';
+import Text from '../Text';
 
 export const CallingModal = (props: SheetProps<{tel: string}>) => {
   return (

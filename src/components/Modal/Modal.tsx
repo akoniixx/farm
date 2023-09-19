@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   Modal as RNModal,
   StyleSheet,
   TouchableOpacity,
@@ -9,6 +8,7 @@ import {
 import React, {useState} from 'react';
 import {colors, font, icons} from '../../assets';
 import AsyncButton from '../Button/AsyncButton';
+import Text from '../Text';
 
 interface Props {
   children?: React.ReactNode;

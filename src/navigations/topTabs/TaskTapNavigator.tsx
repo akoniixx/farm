@@ -1,13 +1,7 @@
 import {normalize} from '@rneui/themed';
 import React from 'react';
 import {useState} from 'react';
-import {
-  View,
-  useWindowDimensions,
-  Text,
-  StyleSheet,
-  Animated,
-} from 'react-native';
+import {useWindowDimensions, StyleSheet} from 'react-native';
 import {TabView, TabBar} from 'react-native-tab-view';
 import fonts from '../../assets/fonts';
 // import font from "../../../android/app/build/intermediates/assets/debug/mergeDebugAssets/fonts/font";
@@ -15,6 +9,7 @@ import {colors} from '../../assets';
 import NewTaskScreen from '../../screens/MainScreen/NewTaskScreen';
 import TaskScreen from '../../screens/MainScreen/TaskScreen';
 import {mixpanel} from '../../../mixpanel';
+import Text from '../../components/Text';
 
 const renderTabBar = (props: any) => (
   <TabBar

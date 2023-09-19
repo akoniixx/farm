@@ -1,10 +1,11 @@
 import {normalize} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {mixpanel} from '../../../mixpanel';
-import {colors, font, icons} from '../../assets';
+import {colors} from '../../assets';
 import fonts from '../../assets/fonts';
+import Text from '../Text';
 
 interface WaitReceiveProp {
   mainFunc: () => void;

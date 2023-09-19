@@ -1,17 +1,11 @@
 import React from 'react';
-import {
-  Text,
-  View,
-  SafeAreaView,
-  Image,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
+import {View, Image, StyleSheet, Dimensions} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import {font, image} from '../../assets';
 import {carouselItems} from '../../assets/constant/constant';
 import {normalize} from '../../function/Normalize';
 import {stylesCentral} from '../../styles/StylesCentral';
+import Text from '../Text';
 interface ItemProps {
   title: string;
   text: string;

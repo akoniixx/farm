@@ -1,4 +1,4 @@
-import {Text, SafeAreaView, StyleSheet} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import React, {useMemo} from 'react';
 import {colors} from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
@@ -8,7 +8,7 @@ import {TabBar, TabView} from 'react-native-tab-view';
 import ReadyToUseTab from './ReadyToUseTab';
 import HistoryTab from './HistoryTab';
 import {useFocusEffect} from '@react-navigation/native';
-import {ImageZoom} from '@likashefqet/react-native-image-zoom';
+import Text from '../../components/Text';
 
 export default function MyRewardScreen({
   navigation,

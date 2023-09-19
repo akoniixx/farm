@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo} from 'react';
 import {normalize} from '@rneui/themed';
 import fonts from '../../assets/fonts';
-import {colors, image, icons, font} from '../../assets';
+import {colors, icons, font} from '../../assets';
 import {View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {
   getStatusToText,
@@ -9,7 +9,6 @@ import {
   numberWithCommas,
 } from '../../function/utility';
 import * as RootNavigation from '../../navigations/RootNavigation';
-import {SheetManager} from 'react-native-actions-sheet';
 import Text from '../Text';
 import {useAuth} from '../../contexts/AuthContext';
 import BadgeStatus from '../BadgeStatus/BadgeStatus';

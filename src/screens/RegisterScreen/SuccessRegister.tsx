@@ -1,17 +1,19 @@
-import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
+import {View, StyleSheet, Image, Dimensions} from 'react-native';
 import React from 'react';
 import {colors, font, image} from '../../assets';
-import {MainButton} from '../../components/Button/MainButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {mixpanel} from '../../../mixpanel';
 import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
 import {getFCMToken} from '../../firebase/notification';
+import Text from '../../components/Text';
+import AsyncButton from '../../components/Button/AsyncButton';
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
 const SuccessRegister: React.FC<any> = () => {
+  const [loading, setLoading] = React.useState<boolean>(false);
   return (
     <View
       style={{
@@ -70,22 +72,32 @@ const SuccessRegister: React.FC<any> = () => {
           </Text>
         </View>
       </View>
-      <MainButton
-        label="เริ่มใช้งาน"
-        color={colors.orange}
+      <AsyncButton
+        style={{
+          minHeight: 48,
+        }}
+        isLoading={loading}
+        title="เริ่มต้นใช้งาน"
         onPress={async () => {
-          mixpanel.track('Account Create Success');
-          const token_register = await AsyncStorage.getItem('token_register');
-          getFCMToken();
-          const fcmtoken = await AsyncStorage.getItem('fcmtoken');
-          await AsyncStorage.setItem('token', token_register!);
-          FCMtokenDatasource.saveFCMtoken(fcmtoken!)
-            .then(() =>
-              RootNavigation.navigate('Main', {
-                screen: 'MainScreen',
-              }),
-            )
-            .catch(err => console.log(err));
+          try {
+            setLoading(true);
+            mixpanel.track('Account Create Success');
+            const token_register = await AsyncStorage.getItem('token_register');
+            await getFCMToken();
+            const fcmtoken = await AsyncStorage.getItem('fcmtoken');
+            await AsyncStorage.setItem('token', token_register!);
+            FCMtokenDatasource.saveFCMtoken(fcmtoken!)
+              .then(() =>
+                RootNavigation.navigate('Main', {
+                  screen: 'MainScreen',
+                }),
+              )
+              .catch(err => console.log(err));
+          } catch (err) {
+            console.log(err);
+          } finally {
+            setLoading(false);
+          }
         }}
       />
     </View>

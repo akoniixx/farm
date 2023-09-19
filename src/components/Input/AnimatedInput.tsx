@@ -78,6 +78,7 @@ const AnimatedInput = ({
         {label}
       </Animated.Text>
       <TextInput
+        allowFontScaling={false}
         editable={editable}
         style={[styles(isFocused).input, stylesInput]}
         value={value}

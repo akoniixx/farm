@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Linking,
-} from 'react-native';
+import {View, StyleSheet, Image, TouchableOpacity, Linking} from 'react-native';
 import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
@@ -16,6 +9,8 @@ import CustomHeader from '../../components/CustomHeader';
 import {ScrollView} from 'react-native-gesture-handler';
 import {condition} from '../../assets/constant/constant';
 import icons from '../../assets/icons/icons';
+import Text from '../../components/Text';
+import AsyncButton from '../../components/Button/AsyncButton';
 
 const ConditionScreen: React.FC<any> = ({navigation}) => {
   const [checked1, setChecked1] = useState<boolean>(false);
@@ -67,7 +62,6 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
         </View>
         <View
           style={{
-            flex: 1,
             paddingVertical: normalize(5),
             justifyContent: 'space-between',
           }}>
@@ -114,12 +108,17 @@ const ConditionScreen: React.FC<any> = ({navigation}) => {
               </Text>
             </View>
           </TouchableOpacity>
-          <MainButton
-            label="ถัดไป"
-            color={colors.orange}
-            disable={checked1 == false || checked2 == false}
-            onPress={() => navigation.navigate('TelNumberScreen')}
-          />
+          <View
+            style={{
+              marginBottom: 20,
+              marginTop: 10,
+            }}>
+            <AsyncButton
+              title="ถัดไป"
+              disabled={!(checked1 && checked2)}
+              onPress={() => navigation.navigate('TelNumberScreen')}
+            />
+          </View>
         </View>
       </View>
     </SafeAreaView>

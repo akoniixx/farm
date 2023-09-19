@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   Image,
   Platform,
@@ -36,6 +35,7 @@ import {QueryLocation} from '../../datasource/LocationDatasource';
 import Lottie from 'lottie-react-native';
 import DroneBrandingItem from '../../components/Drone/DroneBranding';
 import {mixpanel} from '../../../mixpanel';
+import Text from '../../components/Text';
 
 const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
   const windowWidth = Dimensions.get('window').width;
@@ -449,6 +449,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
               </View>
               <View style={styles.input}>
                 <TextInput
+                  allowFontScaling={false}
                   placeholder="พืชอื่นๆ"
                   placeholderTextColor={colors.disable}
                   style={{
@@ -706,6 +707,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                         }}
                       />
                       <TextInput
+                        allowFontScaling={false}
                         placeholderTextColor={colors.gray}
                         onChangeText={value => {
                           setdroneno(value);

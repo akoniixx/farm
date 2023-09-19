@@ -1,10 +1,4 @@
-import {
-  Animated,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  View,
-} from 'react-native';
+import {Animated, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 import React, {useState} from 'react';
 import colors from '../../assets/colors/colors';
 import Text from '../Text';

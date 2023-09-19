@@ -1,12 +1,6 @@
-import {View, Text, Dimensions, TouchableOpacity} from 'react-native';
+import {View, Dimensions, TouchableOpacity} from 'react-native';
 import {LocaleConfig, Calendar} from 'react-native-calendars';
-import React, {
-  createContext,
-  useEffect,
-  useMemo,
-  useReducer,
-  useState,
-} from 'react';
+import React, {useReducer} from 'react';
 import colors from '../../assets/colors/colors';
 import {normalize} from '@rneui/themed';
 import {font} from '../../assets';
@@ -19,6 +13,7 @@ import {
   buildDate,
 } from '../../hooks/calendar';
 import dayjs from 'dayjs';
+import Text from '../Text';
 
 LocaleConfig.locales.th = {
   monthNames: [
