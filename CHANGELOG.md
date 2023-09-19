@@ -15,10 +15,13 @@
 - improve maintenance
 
 ## Improvements [1.4.16] 2023-09-04
-
 - improve code
 - text scale fix
-
+- notification pagination 
+- main screen split component
+-  loading skeleton 
+- progressive image 
+- myJob screen pagination
 ## Enhance [1.4.15] 2023-08-30
 
 - improve code

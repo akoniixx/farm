@@ -19,8 +19,7 @@ import { useMaintenance } from '../contexts/MaintenanceContext';
 
 const Stack = createStackNavigator();
 const AppNavigator: React.FC = () => {
-  const {checkTime} = useMaintenance();
-
+  const { checkTime } = useMaintenance();
 
   return (
     <>

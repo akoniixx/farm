@@ -5,13 +5,11 @@ import {
   Image,
   Linking,
   LogBox,
-  Platform,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { mixpanel } from '../../../mixpanel';
 import { colors, font, icons, image } from '../../assets';
@@ -27,15 +25,16 @@ import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Text from '../../components/Text/Text';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import useTimeSpent from '../../hook/useTimeSpent';
 const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner;
   const profile = route.params.profile;
   const {
-    state: { plotDisable },
+    state: { plotDisable, taskData },
     autoBookingContext: { setTaskData, getLocationPrice, searchDroner },
   } = useAutoBookingContext();
   const scrollRef = React.createRef<KeyboardAwareScrollView>();
-  const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  const timeSpent = useTimeSpent();
   const [plotList, setPlotList] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
@@ -57,6 +56,13 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
       ...prev,
       farmerPlotId: selectedCard,
     }));
+    mixpanel.track('SelectPlotScreen_ButtonNext_tapped', {
+      ...taskData,
+      navigateTo: 'SelectTargetScreen',
+      timeSpent,
+      farmerPlotId: selectedCard,
+    });
+
     navigation.navigate('SelectTarget', {
       isSelectDroner: isSelectDroner,
       profile: profile,
@@ -113,7 +119,11 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
       <StepIndicatorHead
         currentPosition={1}
         onPressBack={() => {
-          mixpanel.track('Tab back from select plot screen');
+          mixpanel.track('SelectPlotScreen_ButtonBack_tapped', {
+            navigateTo: 'SelectDateScreen',
+            timeSpent,
+            ...taskData,
+          });
           navigation.goBack();
         }}
         label={'เลือกแปลงของคุณ'}
@@ -276,6 +286,7 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
                     renderItem={({ item }) => (
                       <PlotSelect
                         id={item.id}
+                        timeSpent={timeSpent}
                         isHaveDroner={item.isHaveDroner}
                         status={item.status}
                         plotName={item.plotName}
@@ -293,7 +304,10 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
                               farmerPlotId: item.id,
                             });
                             mixpanel.track(
-                              'Tab select plot from select plot screen',
+                              'SelectPlotScreen_SelectPlotCard_tapped',
+                              {
+                                ...item,
+                              },
                             );
                             handleCardPress(item.id);
                             setTaskData(prev => ({
@@ -356,7 +370,6 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
                     disable={selectedCard === null}
                     color={colors.greenLight}
                     onPress={() => {
-                      mixpanel.track('Tab submit from select plot screen');
                       onSubmit();
                     }}
                   />

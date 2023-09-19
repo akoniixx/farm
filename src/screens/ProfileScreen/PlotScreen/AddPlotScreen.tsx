@@ -41,6 +41,8 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { CropDatasource } from '../../../datasource/CropDatasource';
 import Text from '../../../components/Text/Text';
+import { mixpanel } from '../../../../mixpanel';
+import useTimeSpent from '../../../hook/useTimeSpent';
 
 export type PredictionType = {
   description: string;
@@ -73,6 +75,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
     latitudeDelta: 0.004757,
     longitudeDelta: 0.006866,
   });
+  const timeSpent = useTimeSpent();
   const [location, setLocation] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>();
   const [selectPlot, setSelectPlot] = useState<any>();
@@ -309,8 +312,13 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
           latitude: parseFloat(lat),
           longitude: parseFloat(lng),
         }));
+        mixpanel.track('AddPlotScreen_MapView_tapped', {
+          latitude: lat,
+          longitude: lng,
+        });
         setShowPredictions(false);
         setSearch({ term: description, fetchPredictions: false });
+
         mapSheet.current.hide();
       }
     } catch (e) {
@@ -392,6 +400,12 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 onChangeText={value => {
                   setplotName(value);
                 }}
+                onBlur={() => {
+                  mixpanel.track('AddPlotScreen_InputPlotName_typed', {
+                    plotName: plotName,
+                    timeSpent,
+                  });
+                }}
                 allowFontScaling={false}
                 clearTextOnFocus={true}
                 defaultValue={!plotName ? plantName : plotName}
@@ -408,6 +422,12 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 onChangeText={value => {
                   const newNumber = value.replace(/[^0-9]/g, '');
                   setraiAmount(newNumber);
+                }}
+                onBlur={() => {
+                  mixpanel.track('AddPlotScreen_InputRaiAmount_typed', {
+                    raiAmount: raiAmount,
+                    timeSpent,
+                  });
                 }}
                 allowFontScaling={false}
                 keyboardType={'numeric'}
@@ -575,6 +595,10 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                     maxZoomLevel={18}
                     style={styles.map}
                     onPress={async e => {
+                      mixpanel.track('AddPlotScreen_MapView_tapped', {
+                        latitude: e.nativeEvent.coordinate.latitude,
+                        longitude: e.nativeEvent.coordinate.longitude,
+                      });
                       setPosition({
                         ...position,
                         latitude: e.nativeEvent.coordinate.latitude,
@@ -615,6 +639,12 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
               <TextInput
                 onChangeText={value => {
                   setlandmark(value);
+                }}
+                onBlur={() => {
+                  mixpanel.track('AddPlotScreen_InputLandmark_typed', {
+                    landmark: landmark,
+                    timeSpent,
+                  });
                 }}
                 allowFontScaling={false}
                 value={landmark}
@@ -671,7 +701,19 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       search.term,
                       selectPlot.subdistrictId,
                     )
-                      .then(res => {
+                      .then(() => {
+                        mixpanel.track('AddPlotScreen_SavePlot_tapped', {
+                          plotName: plotNameNull,
+                          raiAmount: raiAmount,
+                          landmark: landmark,
+                          plantName: plantName,
+                          latitude: position.latitude,
+                          longitude: position.longitude,
+                          subSubdistrictId: selectPlot.subdistrictId,
+                          searchTerm: search.term,
+                          navigateTo: 'AllPlotScreen',
+                          timeSpent,
+                        });
                         setLoading(false);
                         navigation.navigate('AllPlotScreen');
                       })
@@ -690,8 +732,19 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       search.term,
                       selectPlot.subdistrictId,
                     )
-                      .then(res => {
-                        console.log(res);
+                      .then(() => {
+                        mixpanel.track('AddPlotScreen_SavePlot_tapped', {
+                          plotName: plotName,
+                          raiAmount: raiAmount,
+                          landmark: landmark,
+                          plantName: plantName,
+                          latitude: lat,
+                          longitude: long,
+                          subSubdistrictId: selectPlot.subdistrictId,
+                          term: search.term,
+                          navigateTo: 'AllPlotScreen',
+                          timeSpent,
+                        });
                         setLoading(false);
                         navigation.navigate('AllPlotScreen');
                       })
@@ -744,7 +797,12 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       key={i}
                       label={v.cropName}
                       id={v.id}
-                      onPress={() => selectPlants(v.cropName)}
+                      onPress={() => {
+                        selectPlants(v.cropName);
+                        mixpanel.track('AddPlotScreen_SelectPlant_tapped', {
+                          plantName: v.cropName,
+                        });
+                      }}
                     />
                   </TouchableOpacity>
                 ))}
@@ -858,6 +916,13 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                         label={v.area}
                         id={v}
                         onPress={() => {
+                          mixpanel.track(
+                            'AddPlotScreen_SelectPlotArea_tapped',
+                            {
+                              plotArea: v.area,
+                              timeSpent,
+                            },
+                          );
                           selectPlotArea(v);
                         }}
                       />

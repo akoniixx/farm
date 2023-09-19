@@ -43,6 +43,8 @@ import { PlotDatasource } from '../../../datasource/PlotDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { CropDatasource } from '../../../datasource/CropDatasource';
 import Text from '../../../components/Text/Text';
+import useTimeSpent from '../../../hook/useTimeSpent';
+import { mixpanel } from '../../../../mixpanel';
 
 export type PredictionType = {
   description: string;
@@ -64,6 +66,7 @@ interface AreaServiceEntity {
 }
 const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const [data, setData] = useState<any>();
+  const timeSpent = useTimeSpent();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
@@ -74,10 +77,8 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
     latitudeDelta: 0.004757,
     longitudeDelta: 0.006866,
   });
-  const telNo = route.params;
   const [location, setLocation] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>();
-  const debounceValue = useDebounceValue(searchValue, 800);
   const [selectPlot, setSelectPlot] = useState<any>();
   const [plantName, setPlantName] = useState<any>();
   const [raiAmount, setraiAmount] = useState<any>();
@@ -85,16 +86,13 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
     { id: string; cropName: string }[]
   >([]);
   const [landmark, setlandmark] = useState<any>('');
-  const [plotDataUI, setplotDataUI] = useState<any>([]);
-  const [plotData, setplotData] = useState<any>([]);
+
   const [lat, setlat] = useState<any>();
   const [long, setlong] = useState<any>();
   const [plotName, setplotName] = useState<any>(null);
   const plantSheet = useRef<any>();
-  const deTailPlot = useRef<any>();
   const mapSheet = useRef<any>();
   const plotArea = useRef<any>();
-  const [plotAreas, setPlotAreas] = useState<any>([]);
   const [page, setPage] = useState<number>(0);
 
   const [dataStore, setDataStore] = useState<AreaServiceEntity[]>([]);
@@ -365,6 +363,11 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
               <TextInput
                 allowFontScaling={false}
                 clearTextOnFocus={true}
+                onBlur={() => {
+                  mixpanel.track('EditPlotScreen_InputPlotName_typed', {
+                    plotName: plotName,
+                  });
+                }}
                 onChangeText={value => {
                   setplotName(value);
                 }}
@@ -390,6 +393,11 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 onChangeText={value => {
                   const newNumber = value.replace(/[^0-9]/g, '');
                   setraiAmount(newNumber);
+                }}
+                onBlur={() => {
+                  mixpanel.track('EditPlotScreen_InputRaiAmount_typed', {
+                    raiAmount: raiAmount,
+                  });
                 }}
                 keyboardType={'numeric'}
                 value={raiAmount}
@@ -561,6 +569,10 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                     maxZoomLevel={18}
                     style={styles.map}
                     onPress={async e => {
+                      mixpanel.track('EditPlotScreen_MapView_tapped', {
+                        latitude: e.nativeEvent.coordinate.latitude,
+                        longitude: e.nativeEvent.coordinate.longitude,
+                      });
                       setPosition({
                         ...position,
                         latitude: e.nativeEvent.coordinate.latitude,
@@ -626,6 +638,9 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                 borderColor={colors.gray}
                 fontColor={colors.fontBlack}
                 onPress={() => {
+                  mixpanel.track('EditPlotScreen_ButtonCancel_tapped', {
+                    navigateTo: 'AllPlotScreen',
+                  });
                   navigation.navigate('AllPlotScreen');
                 }}
               />
@@ -658,8 +673,20 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       selectPlot.subdistrictId,
                       'PENDING',
                     )
-                      .then(res => {
+                      .then(() => {
                         setLoading(false);
+                        mixpanel.track('EditPlotScreen_ButtonSave_tapped', {
+                          navigateTo: 'AllPlotScreen',
+                          plotName,
+                          raiAmount,
+                          landmark,
+                          plantName,
+                          latitude: position.latitude,
+                          longitude: position.longitude,
+                          locationName: search.term,
+                          subdistrictId: selectPlot.subdistrictId,
+                          status: 'PENDING',
+                        });
                         navigation.navigate('AllPlotScreen');
                       })
                       .catch(err => {
@@ -678,8 +705,19 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       search.term,
                       selectPlot.subdistrictId,
                     )
-                      .then(res => {
+                      .then(() => {
                         setLoading(false);
+                        mixpanel.track('EditPlotScreen_ButtonSave_tapped', {
+                          navigateTo: 'AllPlotScreen',
+                          plotName,
+                          raiAmount,
+                          landmark,
+                          plantName,
+                          latitude: position.latitude,
+                          longitude: position.longitude,
+                          locationName: search.term,
+                          subdistrictId: selectPlot.subdistrictId,
+                        });
                         navigation.navigate('AllPlotScreen');
                       })
                       .catch(err => {
@@ -804,6 +842,12 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                   allowFontScaling={false}
                   onChangeText={searchPlotArea}
                   value={searchValue}
+                  onBlur={() => {
+                    mixpanel.track('EditPlotScreen_InputPlotArea_typed', {
+                      plotArea: searchValue,
+                      timeSpent,
+                    });
+                  }}
                   defaultValue={searchValue}
                   style={[
                     {
@@ -845,6 +889,13 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
                         label={v.area}
                         id={v}
                         onPress={() => {
+                          mixpanel.track(
+                            'EditPlotScreen_SelectPlotArea_tapped',
+                            {
+                              plotArea: v.area,
+                              timeSpent,
+                            },
+                          );
                           selectPlotArea(v);
                           // setPosition(prev => ({
                           //   ...prev,

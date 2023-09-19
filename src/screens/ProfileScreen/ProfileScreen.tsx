@@ -1,7 +1,6 @@
 import React, { useMemo, useReducer, useRef, useState } from 'react';
 import {
   Dimensions,
-  FlatList,
   Image,
   Linking,
   Modal,
@@ -14,7 +13,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { normalize } from '../../functions/Normalize';
 import CustomHeader from '../../components/CustomHeader';
-import { Avatar } from '@rneui/themed';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import { ScrollView } from 'react-native';
 import { StatusObject } from '../../components/Plots/Plots';
@@ -25,17 +23,23 @@ import { initProfileState, profileReducer } from '../../hook/profilefield';
 import { useEffect } from 'react';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import PlotInProfile from '../../components/Plots/PlotsInProfile';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { useIsFocused } from '@react-navigation/native';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import Text from '../../components/Text/Text';
+import { Carousel, Pagination } from 'react-native-snap-carousel';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import { mixpanel } from '../../../mixpanel';
+import useTimeSpent from '../../hook/useTimeSpent';
 
 const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
+  const timeSpent = useTimeSpent();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [loading, setLoading] = useState(false);
-
+  const isCarousel = useRef(null);
   const [reason, setReason] = useState<any>('');
   const noti = route.params?.noti ?? false;
+  const [index, setIndex] = useState(0);
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const [showModalCall, setShowModalCall] = useState(false);
   const [countPlot, setCountPlot] = useState<any>();
@@ -123,6 +127,9 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   }, [isFocused]);
 
   const openGooglePlay = () => {
+    mixpanel.track('ProfileScreen_ButtonDownloadApp_tapped', {
+      timeSpent: timeSpent,
+    });
     if (Platform.OS === 'ios') {
       Linking.openURL(
         `https://apps.apple.com/th/app/iconkaset-droner/id6443516628?l=th`,
@@ -163,147 +170,198 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
       )}
       <ScrollView>
         <View style={styles.section1}>
-          <Avatar
-            size={normalize(80)}
-            source={
-              profilestate.image === ''
-                ? icons.avatar
-                : { uri: profilestate.image }
-            }
-            avatarStyle={{
+          <ProgressiveImage
+            source={{
+              uri: profilestate.image,
+            }}
+            borderRadius={50}
+            style={{
+              width: normalize(80),
+              height: normalize(80),
               borderRadius: normalize(40),
-              borderColor: colors.greenLight,
-              borderWidth: 1,
             }}
           />
           <View
             style={{
               flexDirection: 'row',
               width: screenWidth,
+              marginTop: 16,
             }}>
             <View
               style={{
-                flexDirection: 'column',
-                marginLeft: normalize(15),
+                marginLeft: 16,
               }}>
-              <Text style={[styles.text]}>{profilestate.name} </Text>
-              {StatusObject(profilestate.status).status === 'ไม่อนุมัติ' ? (
+              {loading ? (
                 <View
                   style={{
-                    marginTop: normalize(10),
-                    height: normalize(28),
-                    borderRadius: normalize(15),
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderWidth: 1,
-                    borderColor: StatusObject(profilestate.status).fontColor,
-                    backgroundColor: StatusObject(profilestate.status).colorBg,
-                    flexDirection: 'row',
+                    flex: 1,
+                    minWidth: 200,
                   }}>
-                  {StatusObject(profilestate.status).status ===
-                  'ตรวจสอบแล้ว' ? (
-                    <Image
-                      source={icons.correct}
-                      style={{ width: 16, height: 16, right: 5 }}
-                    />
-                  ) : StatusObject(profilestate.status).status ===
-                    'รอการตรวจสอบ' ? (
-                    <Image
-                      source={icons.warning}
-                      style={{ width: 16, height: 16, right: 5 }}
-                    />
-                  ) : StatusObject(profilestate.status).status ===
-                    'ไม่อนุมัติ' ? (
-                    <Image
-                      source={icons.wrong}
-                      style={{ width: 16, height: 16, right: 5 }}
-                    />
-                  ) : (
-                    <Image
-                      style={{
-                        width: 16,
-                        height: 16,
-                        right: 5,
-                        tintColor: colors.bg,
-                      }}
-                    />
-                  )}
-
-                  <Text
-                    style={{
-                      color: StatusObject(profilestate.status).fontColor,
-                      fontFamily: font.AnuphanBold,
-                      fontSize: normalize(14),
-                    }}>
-                    {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
-                      ? 'ยืนยันตัวตนสำเร็จ'
-                      : StatusObject(profilestate.status).status ===
-                        'รอการตรวจสอบ'
-                      ? 'รอการตรวจสอบ'
-                      : StatusObject(profilestate.status).status ===
-                        'ไม่อนุมัติ'
-                      ? 'ยืนยันตัวตนไม่สำเร็จ'
-                      : 'ปิดการใช้งาน'}
-                  </Text>
+                  <SkeletonPlaceholder
+                    speed={2000}
+                    borderRadius={8}
+                    backgroundColor={colors.skeleton}>
+                    <>
+                      <SkeletonPlaceholder.Item
+                        style={{
+                          width: '100%',
+                          marginBottom: 16,
+                        }}>
+                        <View
+                          style={{
+                            width: 150,
+                            height: 20,
+                          }}
+                        />
+                      </SkeletonPlaceholder.Item>
+                      <SkeletonPlaceholder.Item
+                        style={{
+                          width: '100%',
+                        }}>
+                        <View
+                          style={{
+                            width: 160,
+                            height: 20,
+                          }}
+                        />
+                      </SkeletonPlaceholder.Item>
+                    </>
+                  </SkeletonPlaceholder>
                 </View>
               ) : (
-                <View
-                  style={{
-                    marginTop: normalize(10),
-                    width: normalize(135),
-                    height: normalize(28),
-                    borderRadius: normalize(15),
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderWidth: 1,
-                    borderColor: StatusObject(profilestate.status).fontColor,
-                    backgroundColor: StatusObject(profilestate.status).colorBg,
-                    flexDirection: 'row',
-                  }}>
-                  {StatusObject(profilestate.status).status ===
-                  'ตรวจสอบแล้ว' ? (
-                    <Image
-                      source={icons.correct}
-                      style={{ width: 16, height: 16, right: 5 }}
-                    />
-                  ) : StatusObject(profilestate.status).status ===
-                    'รอการตรวจสอบ' ? (
-                    <Image
-                      source={icons.warning}
-                      style={{ width: 16, height: 16, right: 5 }}
-                    />
-                  ) : StatusObject(profilestate.status).status ===
-                    'ไม่อนุมัติ' ? (
-                    <Image
-                      source={icons.wrong}
-                      style={{ width: 16, height: 16, right: 5 }}
-                    />
-                  ) : null}
+                <>
+                  <Text style={[styles.text]}>{profilestate.name} </Text>
+                  {StatusObject(profilestate.status).status === 'ไม่อนุมัติ' ? (
+                    <View
+                      style={{
+                        marginTop: normalize(10),
+                        height: normalize(28),
+                        borderRadius: normalize(15),
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: StatusObject(profilestate.status)
+                          .fontColor,
+                        backgroundColor: StatusObject(profilestate.status)
+                          .colorBg,
+                        flexDirection: 'row',
+                      }}>
+                      {StatusObject(profilestate.status).status ===
+                      'ตรวจสอบแล้ว' ? (
+                        <Image
+                          source={icons.correct}
+                          style={{ width: 16, height: 16, right: 5 }}
+                        />
+                      ) : StatusObject(profilestate.status).status ===
+                        'รอการตรวจสอบ' ? (
+                        <Image
+                          source={icons.warning}
+                          style={{ width: 16, height: 16, right: 5 }}
+                        />
+                      ) : StatusObject(profilestate.status).status ===
+                        'ไม่อนุมัติ' ? (
+                        <Image
+                          source={icons.wrong}
+                          style={{ width: 16, height: 16, right: 5 }}
+                        />
+                      ) : (
+                        <Image
+                          style={{
+                            width: 16,
+                            height: 16,
+                            right: 5,
+                            tintColor: colors.bg,
+                          }}
+                        />
+                      )}
 
-                  <Text
-                    style={{
-                      color: StatusObject(profilestate.status).fontColor,
-                      fontFamily: font.AnuphanBold,
-                      fontSize: normalize(14),
-                    }}>
-                    {StatusObject(profilestate.status).status === 'ตรวจสอบแล้ว'
-                      ? 'ยืนยันตัวตนสำเร็จ'
-                      : StatusObject(profilestate.status).status ===
-                        'รอการตรวจสอบ'
-                      ? 'รอการตรวจสอบ'
-                      : StatusObject(profilestate.status).status ===
-                        'ไม่อนุมัติ'
-                      ? 'ยืนยันตัวตนไม่สำเร็จ'
-                      : 'ปิดการใช้งาน'}
-                  </Text>
-                </View>
+                      <Text
+                        style={{
+                          color: StatusObject(profilestate.status).fontColor,
+                          fontFamily: font.AnuphanBold,
+                          fontSize: normalize(14),
+                        }}>
+                        {StatusObject(profilestate.status).status ===
+                        'ตรวจสอบแล้ว'
+                          ? 'ยืนยันตัวตนสำเร็จ'
+                          : StatusObject(profilestate.status).status ===
+                            'รอการตรวจสอบ'
+                          ? 'รอการตรวจสอบ'
+                          : StatusObject(profilestate.status).status ===
+                            'ไม่อนุมัติ'
+                          ? 'ยืนยันตัวตนไม่สำเร็จ'
+                          : 'ปิดการใช้งาน'}
+                      </Text>
+                    </View>
+                  ) : (
+                    <View
+                      style={{
+                        marginTop: normalize(10),
+                        width: normalize(135),
+                        height: normalize(28),
+                        borderRadius: normalize(15),
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: StatusObject(profilestate.status)
+                          .fontColor,
+                        backgroundColor: StatusObject(profilestate.status)
+                          .colorBg,
+                        flexDirection: 'row',
+                      }}>
+                      {StatusObject(profilestate.status).status ===
+                      'ตรวจสอบแล้ว' ? (
+                        <Image
+                          source={icons.correct}
+                          style={{ width: 16, height: 16, right: 5 }}
+                        />
+                      ) : StatusObject(profilestate.status).status ===
+                        'รอการตรวจสอบ' ? (
+                        <Image
+                          source={icons.warning}
+                          style={{ width: 16, height: 16, right: 5 }}
+                        />
+                      ) : StatusObject(profilestate.status).status ===
+                        'ไม่อนุมัติ' ? (
+                        <Image
+                          source={icons.wrong}
+                          style={{ width: 16, height: 16, right: 5 }}
+                        />
+                      ) : null}
+
+                      <Text
+                        style={{
+                          color: StatusObject(profilestate.status).fontColor,
+                          fontFamily: font.AnuphanBold,
+                          fontSize: normalize(14),
+                        }}>
+                        {StatusObject(profilestate.status).status ===
+                        'ตรวจสอบแล้ว'
+                          ? 'ยืนยันตัวตนสำเร็จ'
+                          : StatusObject(profilestate.status).status ===
+                            'รอการตรวจสอบ'
+                          ? 'รอการตรวจสอบ'
+                          : StatusObject(profilestate.status).status ===
+                            'ไม่อนุมัติ'
+                          ? 'ยืนยันตัวตนไม่สำเร็จ'
+                          : 'ปิดการใช้งาน'}
+                      </Text>
+                    </View>
+                  )}
+                </>
               )}
             </View>
-            <View style={{ alignSelf: 'flex-start' }}>
+            <View>
               <TouchableOpacity
-                onPress={() => navigation.navigate('EditProfileScreen')}>
+                onPress={() => {
+                  navigation.navigate('EditProfileScreen');
+                  mixpanel.track('ProfileScreen_ButtonEditProfile_tapped', {
+                    navigateTo: 'EditProfileScreen',
+                    timeSpent: timeSpent,
+                  });
+                }}>
                 <Image
                   source={icons.edit}
                   style={{
@@ -548,117 +606,236 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
               justifyContent: 'space-between',
               paddingHorizontal: 15,
             }}>
-            <Text style={[styles.head]}>แปลงของคุณ ({countPlot})</Text>
+            <Text style={[styles.head]}>แปลงของคุณ</Text>
+            {/* <Text style={[styles.head]}>แปลงของคุณ ({countPlot})</Text> */}
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('AllPlotScreen');
+                mixpanel.track('ProfileScreen_ButtonSeeAllPlot_tapped', {
+                  navigateTo: 'AllPlotScreen',
+                  timeSpent: timeSpent,
+                });
               }}>
               <Text style={[styles.h1]}>ดูแปลงทั้งหมด</Text>
             </TouchableOpacity>
           </View>
-          {profilestate.plotItem.length === 0 ? (
-            <View>
-              <Image
-                source={image.empty_plot}
-                style={{
-                  width: normalize(138),
-                  height: normalize(120),
-                  alignSelf: 'center',
-                  top: '5%',
-                }}
-              />
-              <Text
-                style={{
-                  fontFamily: font.SarabunLight,
-                  fontSize: normalize(16),
-                  color: colors.gray,
-                  textAlign: 'center',
-                  paddingVertical: normalize(22),
-                }}>{`คุณไม่มีแปลงเกษตร
- กดเพิ่มแปลงเกษตรได้เลย!`}</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('AddPlotScreen');
-                }}>
-                <View style={{ paddingHorizontal: normalize(15) }}>
-                  <View style={[styles.buttonAdd]}>
-                    <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-          ) : (
+          {loading ? (
             <View
               style={{
-                flex: 1,
-                justifyContent: 'space-between',
-                backgroundColor: 'white',
-                alignSelf: 'center',
+                marginVertical: 8,
               }}>
-              <FlatList
-                pagingEnabled={false}
-                keyExtractor={item => item.id}
-                horizontal={true}
-                scrollEnabled={true}
-                contentContainerStyle={{
-                  justifyContent: 'center',
-                }}
-                ItemSeparatorComponent={({ highlighted }) => (
-                  <View style={[highlighted && { marginLeft: 0 }]} />
-                )}
-                showsVerticalScrollIndicator={true}
-                showsHorizontalScrollIndicator={false}
-                data={newPlotList}
-                renderItem={({ item, index }) => (
-                  <View style={{ minHeight: 300 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <View>
-                        <PlotInProfile
-                          key={index}
-                          plotName={
-                            !item[0].plotName
-                              ? 'แปลงที่' +
-                                ' ' +
-                                `${index + 1}` +
-                                ' ' +
-                                item[0].plantName
-                              : item[0].plotName
-                          }
-                          raiAmount={item[0].raiAmount}
-                          locationName={item[0].locationName}
-                          plantName={item[0].plantName}
-                          status={item[0].status}
-                          index={index}
-                        />
+              <SkeletonPlaceholder
+                speed={2000}
+                backgroundColor={colors.skeleton}
+                borderRadius={8}>
+                <>
+                  {[1, 2].map(el => {
+                    return (
+                      <SkeletonPlaceholder.Item
+                        style={{
+                          marginBottom: 10,
+                        }}>
+                        <View style={{ height: 160 }} />
+                      </SkeletonPlaceholder.Item>
+                    );
+                  })}
+                </>
+              </SkeletonPlaceholder>
+            </View>
+          ) : (
+            <>
+              {profilestate.plotItem.length === 0 ? (
+                <View>
+                  <Image
+                    source={image.empty_plot}
+                    style={{
+                      width: normalize(138),
+                      height: normalize(120),
+                      alignSelf: 'center',
+                      top: '5%',
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: font.SarabunLight,
+                      fontSize: normalize(16),
+                      color: colors.gray,
+                      textAlign: 'center',
+                      paddingVertical: normalize(22),
+                    }}>{`คุณไม่มีแปลงเกษตร
+ กดเพิ่มแปลงเกษตรได้เลย!`}</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('AddPlotScreen');
+                      mixpanel.track('ProfileScreen_ButtonAddPlot_tapped', {
+                        navigateTo: 'AddPlotScreen',
+                        timeSpent: timeSpent,
+                      });
+                    }}>
+                    <View style={{ paddingHorizontal: normalize(15) }}>
+                      <View style={[styles.buttonAdd]}>
+                        <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
                       </View>
                     </View>
-                    {item?.[1] && (
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: 'space-between',
+                      backgroundColor: 'white',
+                      alignSelf: 'center',
+                    }}>
+                    {/* <FlatList
+                  pagingEnabled={false}
+                  keyExtractor={item => item.id}
+                  horizontal={true}
+                  scrollEnabled={true}
+                  contentContainerStyle={{
+                    justifyContent: 'center',
+                  }}
+                  ItemSeparatorComponent={({ highlighted }) => (
+                    <View style={[highlighted && { marginLeft: 0 }]} />
+                  )}
+                  showsVerticalScrollIndicator={true}
+                  showsHorizontalScrollIndicator={false}
+                  data={newPlotList}
+                  renderItem={({ item, index }) => (
+                    <View style={{ minHeight: 300 }}>
                       <View style={{ flexDirection: 'row' }}>
                         <View>
                           <PlotInProfile
                             key={index}
                             plotName={
-                              !item[1].plotName
+                              !item[0].plotName
                                 ? 'แปลงที่' +
                                   ' ' +
                                   `${index + 1}` +
                                   ' ' +
-                                  item[1].plantName
-                                : item[1].plotName
+                                  item[0].plantName
+                                : item[0].plotName
                             }
-                            raiAmount={item[1].raiAmount}
-                            locationName={item[1].locationName}
-                            plantName={item[1].plantName}
-                            status={item[1].status}
+                            raiAmount={item[0].raiAmount}
+                            locationName={item[0].locationName}
+                            plantName={item[0].plantName}
+                            status={item[0].status}
                             index={index}
                           />
                         </View>
                       </View>
-                    )}
+                      {item?.[1] && (
+                        <View style={{ flexDirection: 'row' }}>
+                          <View>
+                            <PlotInProfile
+                              key={index}
+                              plotName={
+                                !item[1].plotName
+                                  ? 'แปลงที่' +
+                                    ' ' +
+                                    `${index + 1}` +
+                                    ' ' +
+                                    item[1].plantName
+                                  : item[1].plotName
+                              }
+                              raiAmount={item[1].raiAmount}
+                              locationName={item[1].locationName}
+                              plantName={item[1].plantName}
+                              status={item[1].status}
+                              index={index}
+                            />
+                          </View>
+                        </View>
+                      )}
+                    </View>
+                  )}
+                /> */}
+                    <Carousel
+                      ref={isCarousel}
+                      vertical={false}
+                      onSnapToItem={index => setIndex(index)}
+                      data={newPlotList}
+                      itemWidth={screenWidth - 30}
+                      sliderWidth={screenWidth}
+                      renderItem={({ item, index }: any) => {
+                        return (
+                          <View style={{ minHeight: 300 }}>
+                            <View style={{ flexDirection: 'row' }}>
+                              <View>
+                                <PlotInProfile
+                                  key={index}
+                                  plotName={
+                                    !item[0].plotName
+                                      ? 'แปลงที่' +
+                                        ' ' +
+                                        `${index + 1}` +
+                                        ' ' +
+                                        item[0].plantName
+                                      : item[0].plotName
+                                  }
+                                  raiAmount={item[0].raiAmount}
+                                  locationName={item[0].locationName}
+                                  plantName={item[0].plantName}
+                                  status={item[0].status}
+                                  index={index}
+                                />
+                              </View>
+                            </View>
+                            {item?.[1] && (
+                              <View style={{ flexDirection: 'row' }}>
+                                <View>
+                                  <PlotInProfile
+                                    key={index}
+                                    plotName={
+                                      !item[1].plotName
+                                        ? 'แปลงที่' +
+                                          ' ' +
+                                          `${index + 1}` +
+                                          ' ' +
+                                          item[1].plantName
+                                        : item[1].plotName
+                                    }
+                                    raiAmount={item[1].raiAmount}
+                                    locationName={item[1].locationName}
+                                    plantName={item[1].plantName}
+                                    status={item[1].status}
+                                    index={index}
+                                  />
+                                </View>
+                              </View>
+                            )}
+                          </View>
+                        );
+                      }}
+                    />
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        top: -5,
+                        marginVertical: -20,
+                      }}>
+                      <Pagination
+                        dotsLength={newPlotList.length}
+                        activeDotIndex={index}
+                        carouselRef={isCarousel}
+                        inactiveDotColor={colors.grey40}
+                        dotColor={colors.greenLight}
+                        dotStyle={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: 5,
+                          marginHorizontal: -2,
+                        }}
+                        inactiveDotOpacity={0.4}
+                        inactiveDotScale={0.9}
+                        tappableDots={true}
+                      />
+                    </View>
                   </View>
-                )}
-              />
-            </View>
+                </>
+              )}
+            </>
           )}
         </View>
         <View
@@ -696,6 +873,10 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
+                mixpanel.track('ProfileScreen_ButtonPrivacy_tapped', {
+                  timeSpent: timeSpent,
+                  navigateTo: 'PrivacyScreen',
+                });
                 navigation.navigate('PrivacyScreen');
               }}>
               <View style={styles.listTile}>
@@ -717,6 +898,10 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
+                mixpanel.track('ProfileScreen_ButtonDeleteProfile_tapped', {
+                  timeSpent: timeSpent,
+                  navigateTo: 'DeleteProfileScreen',
+                });
                 navigation.navigate('DeleteProfileScreen', {
                   tele: profilestate.id,
                 });
@@ -740,6 +925,10 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={async () => {
+                mixpanel.track('ProfileScreen_ButtonLogout_tapped', {
+                  timeSpent: timeSpent,
+                  navigateTo: 'LoginScreen',
+                });
                 await onLogout();
                 RootNavigation.navigate('Auth', {
                   screen: 'HomeScreen',
@@ -806,6 +995,10 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             }}>
             <TouchableOpacity
               onPress={() => {
+                mixpanel.track('ProfileScreen_ButtonCallCenter_tapped', {
+                  timeSpent: timeSpent,
+                  tel: callcenterNumber,
+                });
                 Linking.openURL(`tel:${callcenterNumber}`);
               }}
               style={{
@@ -875,11 +1068,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
           </View>
         </Modal>
       </ScrollView>
-      <Spinner
-        visible={loading}
-        textContent={'Loading...'}
-        textStyle={{ color: '#FFF' }}
-      />
     </SafeAreaView>
   );
 };
@@ -942,6 +1130,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     padding: 15,
     width: '100%',
+    minHeight: 120,
   },
   section2: {
     ...Platform.select({

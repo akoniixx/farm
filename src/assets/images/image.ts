@@ -51,4 +51,5 @@ export default {
   getPoint: require('./getPoint.png'),
   updateApp: require('./updateApp.png'),
   loaderImage: require('./loaderImage.png'),
+  couponHeader: require('./couponHeader.png'),
 };

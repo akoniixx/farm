@@ -91,7 +91,6 @@ export type MainStackParamList = {
   AllGuruScreen: undefined;
   DetailGuruScreen: undefined;
   DetailPointScreen: undefined;
-  
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;

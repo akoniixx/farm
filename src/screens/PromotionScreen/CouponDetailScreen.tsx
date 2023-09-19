@@ -59,7 +59,7 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
     <>
       <View style={styles.appBar}>
         <CustomHeader
-          backgroundColor={colors.greenLight}
+          backgroundColor={'transparent'}
           titleColor={colors.white}
           title="รายละเอียดของคูปอง"
           showBackBtn
@@ -259,7 +259,7 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   appBar: {
-    backgroundColor: colors.greenLight,
+    backgroundColor: colors.greenDark,
   },
   appBarCard: {
     paddingHorizontal: normalize(17),

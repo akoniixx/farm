@@ -343,6 +343,7 @@ const styles = StyleSheet.create({
     margin: normalize(10),
     borderRadius: normalize(10),
     padding: normalize(10),
+    minHeight: 160,
   },
   cardsPending: {
     width: Dimensions.get('window').width - normalize(40),
@@ -353,6 +354,7 @@ const styles = StyleSheet.create({
     margin: normalize(10),
     borderRadius: normalize(10),
     padding: normalize(10),
+    minHeight: 160,
   },
   cardsRejected: {
     width: Dimensions.get('window').width - normalize(40),
@@ -369,6 +371,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     borderRadius: normalize(8),
     width: normalize(343),
+    minHeight: 160,
   },
   headFont: {
     fontFamily: font.AnuphanBold,

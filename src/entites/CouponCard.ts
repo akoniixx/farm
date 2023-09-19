@@ -30,6 +30,7 @@ export interface CouponCardEntities {
   disabled?: boolean;
   expired?: boolean;
   callback?: () => void;
+  titleButtonKeep?: string;
 }
 
 export interface MyCouponCardEntities {

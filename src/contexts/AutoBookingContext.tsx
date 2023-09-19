@@ -91,6 +91,11 @@ interface Context {
   };
   state: State;
 }
+interface CacheDroner {
+  farmerId: string;
+  farmerPlotId: string;
+  dronerList: any[];
+}
 export const initialState: {
   taskData: TaskDataType;
   locationPrice: LocationPriceType;
@@ -184,6 +189,9 @@ export const AutoBookingProvider = ({
     }[]
   >([]);
   const [loading, setLoading] = React.useState(false);
+  const [cacheSearchDroner, setCacheSearchDroner] = React.useState<
+    CacheDroner[]
+  >([]);
 
   const { getLocationPrice, searchDroner, getCalculatePrice } =
     React.useMemo(() => {
@@ -198,6 +206,68 @@ export const AutoBookingProvider = ({
           console.log(e);
         }
       };
+      const checkIsAlreadyInCache = ({
+        farmerId,
+        farmerPlotId,
+      }: {
+        farmerId: string;
+        farmerPlotId: string;
+      }) => {
+        const findCache = cacheSearchDroner.find(el => {
+          return el.farmerId === farmerId && el.farmerPlotId === farmerPlotId;
+        });
+        return findCache;
+      };
+      const filterArrayDroner = (dronerList: any[]) => {
+        const newDronerFilter =
+          dronerList.filter((el: any) => {
+            return el.is_open_receive_task && el.distance < 60;
+          }) || [];
+        const newArray: any = [];
+        for (
+          let i = 0;
+          i < (newDronerFilter.length > 5 ? 5 : newDronerFilter.length);
+          i++
+        ) {
+          newArray.push({
+            dronerId: newDronerFilter[i].droner_id,
+            status: 'WAIT_RECEIVE',
+            distance: newDronerFilter[i].distance,
+            dronerDetail: [
+              JSON.stringify({
+                ...newDronerFilter[i],
+                isChecked: true,
+              }),
+            ],
+          });
+        }
+        return newArray;
+      };
+      const conditionMutate = (newArray: any[], farmerPlotId: string) => {
+        const isAlreadyInDisable = plotDisable.findIndex((el: any) => {
+          return el.plotId === farmerPlotId;
+        });
+        if (newArray.length <= 0 && isAlreadyInDisable === -1) {
+          setPlotDisable(prev => [
+            ...prev,
+            {
+              plotId: farmerPlotId,
+              isHaveDroner: false,
+            },
+          ]);
+          return;
+        }
+        if (isAlreadyInDisable !== -1 && newArray.length === 0) {
+          const newData = [...plotDisable];
+          newData[isAlreadyInDisable].isHaveDroner = false;
+          return;
+        }
+        setTaskData(prev => ({
+          ...prev,
+          taskDronerTemp: newArray,
+        }));
+      };
+
       const searchDroner = async ({
         farmerId,
         farmerPlotId,
@@ -206,8 +276,17 @@ export const AutoBookingProvider = ({
         farmerPlotId: string;
       }) => {
         try {
-          setLoading(true);
+          const isAlreadyInCache = checkIsAlreadyInCache({
+            farmerId,
+            farmerPlotId,
+          });
+          if (isAlreadyInCache) {
+            const newArray = filterArrayDroner(isAlreadyInCache.dronerList);
+            conditionMutate(newArray, farmerPlotId);
+            return;
+          }
 
+          setLoading(true);
           const res = await PlotDatasource.searchDroner({
             farmerId: farmerId,
             farmerPlotId: farmerPlotId,
@@ -217,50 +296,20 @@ export const AutoBookingProvider = ({
           });
 
           if (res && res.length > 0) {
-            const newDronerFilter = res.filter((el: any) => {
-              return el.is_open_receive_task && el.distance < 60;
-            });
-            const newArray: any = [];
-            for (
-              let i = 0;
-              i < (newDronerFilter.length > 5 ? 5 : newDronerFilter.length);
-              i++
-            ) {
-              newArray.push({
-                dronerId: newDronerFilter[i].droner_id,
-                status: 'WAIT_RECEIVE',
-                distance: newDronerFilter[i].distance,
-                dronerDetail: [
-                  JSON.stringify({
-                    ...newDronerFilter[i],
-                    isChecked: true,
-                  }),
-                ],
-              });
-            }
-            const isAlreadyInDisable = plotDisable.findIndex((el: any) => {
-              return el.plotId === farmerPlotId;
-            });
-            if (newArray.length <= 0 && isAlreadyInDisable === -1) {
-              setPlotDisable(prev => [
-                ...prev,
-                {
-                  plotId: farmerPlotId,
-                  isHaveDroner: false,
-                },
-              ]);
-              return;
-            }
-            if (isAlreadyInDisable !== -1 && newArray.length === 0) {
-              const newData = [...plotDisable];
-              newData[isAlreadyInDisable].isHaveDroner = false;
-              return;
-            }
+            const cachePayload: CacheDroner = {
+              farmerId: farmerId,
+              farmerPlotId: farmerPlotId,
+              dronerList: res,
+            };
+            setCacheSearchDroner(prev => [...prev, cachePayload]);
 
-            setTaskData(prev => ({
-              ...prev,
-              taskDronerTemp: newArray,
-            }));
+            const findCache = [...cacheSearchDroner, cachePayload].find(el => {
+              return (
+                el.farmerId === farmerId && el.farmerPlotId === farmerPlotId
+              );
+            });
+            const newArray = filterArrayDroner(findCache?.dronerList || []);
+            conditionMutate(newArray, farmerPlotId);
           }
         } catch (e) {
           console.log(e);
@@ -279,7 +328,7 @@ export const AutoBookingProvider = ({
         }
       };
       return { getLocationPrice, searchDroner, getCalculatePrice };
-    }, [taskData.dateAppointment, plotDisable]);
+    }, [taskData.dateAppointment, plotDisable, cacheSearchDroner]);
   return (
     <AutoBookingContext.Provider
       value={{

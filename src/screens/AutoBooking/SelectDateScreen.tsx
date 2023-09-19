@@ -24,10 +24,13 @@ import { normalize, width } from '../../functions/Normalize';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import HeadDronerCardForCreatTask from '../../components/HeadDronerCardForCreatTask';
 import Text from '../../components/Text/Text';
+import useTimeSpent from '../../hook/useTimeSpent';
 
 const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner;
   const profile = route.params.profile;
+
+  const timeSpent = useTimeSpent();
   const {
     state: { taskData },
     autoBookingContext: { setTaskData, setPlotDisable },
@@ -61,7 +64,12 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
       dateAppointment: newFormatDate,
       comment: note,
     }));
-
+    mixpanel.track('SelectDateScreen_SubmitButton_tapped', {
+      ...taskData,
+      date: momentExtend.toBuddhistYear(date, 'DD MMMM YYYY'),
+      hour: hour,
+      navigateTo: 'SelectPlotScreen',
+    });
     navigation.navigate('SelectPlotScreen', {
       isSelectDroner: isSelectDroner,
       profile: profile,
@@ -72,7 +80,9 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
       <StepIndicatorHead
         currentPosition={0}
         onPressBack={() => {
-          mixpanel.track('Tab back from select date screen');
+          mixpanel.track('SelectDateScreen_BackButton_Tabbed', {
+            timeSpent,
+          });
           navigation.goBack();
         }}
         label={'เลือกวันและเวลาฉีดพ่น'}
@@ -223,7 +233,9 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
                 multiline
                 blurOnSubmit={true}
                 onSubmitEditing={() => {
-                  mixpanel.track('Tab set note booking');
+                  mixpanel.track('SelectDateScreen_SubmitNote_typed', {
+                    note: note,
+                  });
                   const newNote = note.replace(/(\r\n|\n|\r)/gm, '');
                   setNote(newNote);
                   Keyboard.dismiss();
@@ -259,7 +271,12 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
                 borderColor={colors.fontGrey}
                 color={colors.white}
                 width={Dimensions.get('window').width * 0.47 - 16}
-                onPress={() => navigation.goBack()}
+                onPress={() => {
+                  mixpanel.track('SelectDateScreen_CancelButton_tapped', {
+                    timeSpent,
+                  });
+                  navigation.goBack();
+                }}
               />
               <MainButton
                 label="บันทึก"
@@ -339,7 +356,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
                 color={colors.white}
                 width={Dimensions.get('window').width * 0.45 - 32}
                 onPress={() => {
-                  mixpanel.track('Tab cancel calendar');
+                  mixpanel.track('SelectDateScreen_CancelCalendar_tapped');
                   setOpenCalendar(false);
                 }}
               />
@@ -349,7 +366,9 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
                 color={colors.greenLight}
                 width={Dimensions.get('window').width * 0.45 - 32}
                 onPress={() => {
-                  mixpanel.track('Tab submit calendar');
+                  mixpanel.track('SelectDateScreen_SubmitCalendar_tapped', {
+                    date: momentExtend.toBuddhistYear(date, 'DD MMMM YYYY'),
+                  });
                   setOpenCalendar(false);
                 }}
               />
@@ -424,7 +443,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
                 color={colors.white}
                 width={Dimensions.get('window').width * 0.45 - 32}
                 onPress={() => {
-                  mixpanel.track('Tab cancel time picker');
+                  mixpanel.track('SelectDateScreen_CancelTimePicker_tapped');
                   setopenTimePicker(false);
                 }}
               />
@@ -434,7 +453,10 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
                 color={colors.greenLight}
                 width={Dimensions.get('window').width * 0.45 - 32}
                 onPress={() => {
-                  mixpanel.track('Tab submit time picker');
+                  mixpanel.track('SelectDateScreen_SubmitTimePicker_tapped', {
+                    hour: hour,
+                    minute: minute,
+                  });
                   setopenTimePicker(false);
                 }}
               />

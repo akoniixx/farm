@@ -52,6 +52,7 @@ import { Switch } from '@rneui/base';
 import Counter from '../../components/Counter/Counter';
 import { useDebounceValue } from '../../hook/useDebounceValue';
 import Text from '../../components/Text/Text';
+import useTimeSpent from '../../hook/useTimeSpent';
 interface CampaignDetail {
   id: string;
   point: number;
@@ -67,6 +68,7 @@ interface CampaignDetail {
 
 const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const [isUsePoint, setIsUsePoint] = useState(false);
+  const timeSpent = useTimeSpent();
   const [disabled, setDisabled] = useState(false);
   const [currentCount, setCurrentCount] = useState(0);
   const [myPoint, setMyPoint] = useState(0);
@@ -137,7 +139,13 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       const res = await TaskDatasource.createTask(payload);
       if (res && res.success) {
         if (!couponInfo.name) {
-          mixpanel.track('Tab submit booking');
+          mixpanel.track('DetailTaskScreen_buttonSubmitBooking_tapped', {
+            couponId: couponInfo.id,
+            promotionId: couponInfo.promotionId,
+            promotionType: couponInfo.promotionType,
+            timeSpent,
+            ...payload,
+          });
           setLoading(false);
           await AsyncStorage.setItem('taskId', res.responseData.id);
           navigation.navigate('SlipWaitingScreen', {
@@ -147,8 +155,14 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         } else {
           if (couponInfo.promotionType === 'ONLINE') {
             usedCouponOnline(couponInfo.id, couponInfo.promotionId)
-              .then(async result => {
-                mixpanel.track('Tab submit booking');
+              .then(async () => {
+                mixpanel.track('DetailTaskScreen_buttonSubmitBooking_tapped', {
+                  couponId: couponInfo.id,
+                  promotionId: couponInfo.promotionId,
+                  promotionType: couponInfo.promotionType,
+                  timeSpent,
+                  ...payload,
+                });
                 setLoading(false);
 
                 await AsyncStorage.setItem('taskId', res.responseData.id);
@@ -160,8 +174,14 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               .catch(err => console.log(err));
           } else {
             usedCoupon(couponInfo.couponCode)
-              .then(async result => {
-                mixpanel.track('Tab submit booking');
+              .then(async () => {
+                mixpanel.track('DetailTaskScreen_buttonSubmitBooking_tapped', {
+                  couponId: couponInfo.id,
+                  promotionId: couponInfo.promotionId,
+                  promotionType: couponInfo.promotionType,
+                  timeSpent,
+                  ...payload,
+                });
                 setLoading(false);
 
                 await AsyncStorage.setItem('taskId', res.responseData.id);
@@ -331,14 +351,20 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         title="รายละเอียดการจอง"
         showBackBtn
         onPressBack={() => {
-          mixpanel.track('Tab back from booking detail screen');
+          mixpanel.track('TaskBookingScreen_buttonBack_tapped', {
+            timeSpent,
+            navigateTo: 'SelectTargetScreen',
+            ...taskData,
+          });
           navigation.goBack();
         }}
         headerRight={() => {
           return (
             <TouchableOpacity
               onPress={() => {
-                mixpanel.track('Tab callcenter from booking detail screen');
+                mixpanel.track('TaskBookingScreen_buttonCallCenter_tapped', {
+                  timeSpent,
+                });
                 Linking.openURL(`tel:${callcenterNumber}`);
               }}
               style={{
@@ -419,7 +445,11 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                mixpanel.track('Tab edit date time');
+                mixpanel.track('SelectDateScreen_ButtonEditDate_tapped', {
+                  timeSpent,
+                  navigateTo: 'SelectDateScreen',
+                  ...taskData,
+                });
                 navigation.navigate('SelectDateScreen', {
                   isSelectDroner,
                 });
@@ -476,7 +506,11 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                mixpanel.track('Tab edit select plot');
+                mixpanel.track('TaskBookingScreen_ButtonEditPlot_tapped', {
+                  timeSpent,
+                  navigateTo: 'SelectPlotScreen',
+                  ...taskData,
+                });
                 navigation.navigate('SelectPlotScreen', {
                   isSelectDroner,
                 });
@@ -543,7 +577,11 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                mixpanel.track('Tab edit select target');
+                mixpanel.track('SelectTargetScreen_ButtonEditTarget_tapped', {
+                  timeSpent,
+                  navigateTo: 'SelectTargetScreen',
+                  ...taskData,
+                });
                 navigation.navigate('SelectTarget', {
                   isSelectDroner,
                 });
@@ -861,8 +899,19 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               onChange={() => {
                 setIsUsePoint(prev => {
                   if (!prev) {
+                    mixpanel.track('TaskBookingScreen_ButtonUsePoint_tapped', {
+                      timeSpent,
+                      ...taskData,
+                    });
                     setCurrentCount(campaignDetail.minPoint);
                   } else {
+                    mixpanel.track(
+                      'TaskBookingScreen_ButtonNotUsePoint_tapped',
+                      {
+                        timeSpent,
+                        ...taskData,
+                      },
+                    );
                     getCalculateByCloseSwitch();
                     setCurrentCount(0);
                   }

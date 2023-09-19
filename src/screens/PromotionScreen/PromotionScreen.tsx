@@ -16,18 +16,30 @@ import { CouponCardEntities } from '../../entites/CouponCard';
 import { useIsFocused } from '@react-navigation/native';
 import { mixpanel } from '../../../mixpanel';
 import Text from '../../components/Text/Text';
+import LoadingSkeletonCoupon from './LoadingSkeletonCoupon';
+import { RefreshControl } from 'react-native-gesture-handler';
 
 const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
   const [data, setData] = useState<CouponCardEntities[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const isFocused = useIsFocused();
   const getData = async () => {
+    setLoading(true);
     getCouponUser(1, 5)
       .then(res => setData(res.data))
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   };
+
   useEffect(() => {
     getData();
   }, [isFocused]);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getData();
+    setRefreshing(false);
+  };
 
   return (
     <View
@@ -196,66 +208,96 @@ const PromotionScreen: React.FC<any> = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
       </View>
-      {data.length != 0 ? (
+
+      {loading ? (
         <View
           style={{
             backgroundColor: colors.bgGreen,
-            paddingHorizontal: normalize(17),
+            height: '100%',
           }}>
-          <FlatList
-            ListFooterComponent={<View style={{ height: normalize(450) }} />}
-            data={data}
-            renderItem={({ item }) => (
-              <CouponCard
-                id={item.id}
-                couponCode={item.couponCode}
-                couponName={item.couponName}
-                couponType={item.couponType}
-                promotionStatus={item.promotionStatus}
-                promotionType={item.promotionType}
-                discountType={item.discountType}
-                discount={item.discount}
-                count={item.count}
-                keep={item.keep}
-                used={item.used}
-                startDate={item.startDate}
-                expiredDate={item.expiredDate}
-                description={item.description}
-                condition={item.condition}
-                conditionSpecificFarmer={item.conditionSpecificFarmer}
-                couponConditionRai={item.couponConditionRai}
-                couponConditionRaiMin={item.couponConditionRaiMin}
-                couponConditionRaiMax={item.couponConditionRaiMax}
-                couponConditionService={item.couponConditionService}
-                couponConditionServiceMin={item.couponConditionServiceMin}
-                couponConditionServiceMax={item.couponConditionServiceMax}
-                couponConditionPlant={item.couponConditionPlant}
-                couponConditionPlantList={item.couponConditionPlantList}
-                couponConditionProvince={item.couponConditionProvince}
-                couponConditionProvinceList={item.couponConditionProvinceList}
-                keepthis={true}
-                disabled={false}
-              />
-            )}
-            keyExtractor={item => item.id}
-          />
+          <LoadingSkeletonCoupon />
         </View>
       ) : (
-        <View style={styles.empty}>
-          <Image
-            source={image.empty_coupon}
-            style={{ width: 130, height: 122 }}
-          />
-          <View
-            style={{
-              alignItems: 'center',
-              alignContent: 'center',
-              paddingVertical: 10,
-            }}>
-            <Text style={styles.textEmpty}>ติดตามคูปองและสิทธิพิเศษมากมาย</Text>
-            <Text style={styles.textEmpty}>ได้ที่หน้าโปรโมชั่น เร็วๆนี้ </Text>
-          </View>
-        </View>
+        <>
+          {data.length !== 0 ? (
+            <View
+              style={{
+                backgroundColor: colors.bgGreen,
+              }}>
+              <FlatList
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+                ListFooterComponent={
+                  <View style={{ height: normalize(450) }} />
+                }
+                data={data}
+                contentContainerStyle={{
+                  padding: 16,
+                }}
+                renderItem={({ item }) => (
+                  <CouponCard
+                    id={item.id}
+                    couponCode={item.couponCode}
+                    couponName={item.couponName}
+                    couponType={item.couponType}
+                    promotionStatus={item.promotionStatus}
+                    promotionType={item.promotionType}
+                    discountType={item.discountType}
+                    discount={item.discount}
+                    count={item.count}
+                    keep={item.keep}
+                    used={item.used}
+                    startDate={item.startDate}
+                    expiredDate={item.expiredDate}
+                    description={item.description}
+                    condition={item.condition}
+                    conditionSpecificFarmer={item.conditionSpecificFarmer}
+                    couponConditionRai={item.couponConditionRai}
+                    couponConditionRaiMin={item.couponConditionRaiMin}
+                    couponConditionRaiMax={item.couponConditionRaiMax}
+                    couponConditionService={item.couponConditionService}
+                    couponConditionServiceMin={item.couponConditionServiceMin}
+                    couponConditionServiceMax={item.couponConditionServiceMax}
+                    couponConditionPlant={item.couponConditionPlant}
+                    couponConditionPlantList={item.couponConditionPlantList}
+                    couponConditionProvince={item.couponConditionProvince}
+                    couponConditionProvinceList={
+                      item.couponConditionProvinceList
+                    }
+                    keepthis={true}
+                    disabled={false}
+                    titleButtonKeep="เก็บ"
+                  />
+                )}
+                keyExtractor={item => item.id}
+              />
+            </View>
+          ) : (
+            <View style={styles.empty}>
+              <Image
+                source={image.empty_coupon}
+                style={{ width: 130, height: 122 }}
+              />
+              <View
+                style={{
+                  alignItems: 'center',
+                  alignContent: 'center',
+                  paddingVertical: 10,
+                }}>
+                <Text style={styles.textEmpty}>
+                  ติดตามคูปองและสิทธิพิเศษมากมาย
+                </Text>
+                <Text style={styles.textEmpty}>
+                  ได้ที่หน้าโปรโมชั่น เร็วๆนี้{' '}
+                </Text>
+              </View>
+            </View>
+          )}
+        </>
       )}
     </View>
   );

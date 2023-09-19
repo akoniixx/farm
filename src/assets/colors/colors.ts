@@ -42,7 +42,7 @@ export default {
   fontGrey: '#353A3F',
   bg: '#E5E5E5',
   bgGreen: '#F2F9F5',
-  bgOrange: '#FFFDF6',
+  bgOrange: '#FFF2E3',
   Surface: '#F6F7F9',
   skeleton: '#E3E3E3',
 };
