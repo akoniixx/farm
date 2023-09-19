@@ -88,7 +88,7 @@ const EditProfile: React.FC<any> = ({navigation}) => {
         const datetime = res.birthDate;
         let date = null;
         if (datetime) {
-          date = moment(datetime).format('DD/MM/YYYY');
+          date = moment(datetime).format('YYYY-MM-DD');
           setBirthday(date);
         }
 
@@ -698,7 +698,7 @@ const EditProfile: React.FC<any> = ({navigation}) => {
 
           <View style={{backgroundColor: colors.white, zIndex: -30}}>
             <AsyncButton
-              title="ถัดไป"
+              title="บันทึก"
               disabled={isDisableMainButton}
               onPress={async () => {
                 setLoading(true);
@@ -724,11 +724,17 @@ const EditProfile: React.FC<any> = ({navigation}) => {
                       });
                     }
                     if (image) {
-                      await Authentication.updateProfileImage(image);
+                      try {
+                        await Authentication.updateProfileImage(image);
+                      } catch (err) {
+                        console.log(err);
+                      }
                     }
                     navigation.goBack();
                   })
-                  .catch(err => console.log(err))
+                  .catch(err => {
+                    console.log(err);
+                  })
                   .finally(() => {
                     setLoading(false);
                   });
