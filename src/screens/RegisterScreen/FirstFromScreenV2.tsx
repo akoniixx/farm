@@ -224,6 +224,9 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
               });
             } catch (err) {
               setLoading(false);
+              setAllowLoca(true);
+            } finally {
+              setLoading(false);
             }
           }}
         />
