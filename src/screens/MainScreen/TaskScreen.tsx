@@ -34,6 +34,8 @@ interface Prop {
 const initialPage = 1;
 const limit = 10;
 const TaskScreen: React.FC<Prop> = (props: Prop) => {
+  const isFetching = React.useRef(false);
+
   const dronerStatus = props.dronerStatus;
   const {
     state: {isDoneAuth},
@@ -90,6 +92,11 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     setRefreshing(false);
   }, []);
   const onEndReached = async () => {
+    if (isFetching.current) {
+      return;
+    }
+    isFetching.current = true;
+
     if (data.data.length < data.count) {
       setLoadingInfinite(true);
       setPage(page + 1);
@@ -113,6 +120,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
           console.log(err);
         })
         .finally(() => {
+          isFetching.current = false;
           setLoadingInfinite(false);
         });
     }

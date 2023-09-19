@@ -86,7 +86,7 @@ const EditProfile: React.FC<any> = ({navigation}) => {
     ProfileDatasource.getProfile(droner_id!)
       .then(async res => {
         const datetime = res.birthDate;
-        let date = '';
+        let date = null;
         if (datetime) {
           date = moment(datetime).format('DD/MM/YYYY');
           setBirthday(date);
@@ -233,9 +233,12 @@ const EditProfile: React.FC<any> = ({navigation}) => {
   useEffect(() => {
     getProfile();
     QueryLocation.QueryProvince().then(res => {
-      const Province = res.map((item: any) => {
-        return {label: item.provinceName, value: item.provinceId};
-      });
+      const Province = res
+        .map((item: any) => {
+          return {label: item.provinceName, value: item.provinceId};
+        })
+        .sort((a: any, b: any) => a.label.localeCompare(b.label));
+
       setItems(Province);
     });
   }, []);
@@ -243,9 +246,12 @@ const EditProfile: React.FC<any> = ({navigation}) => {
   useEffect(() => {
     if (province != null) {
       QueryLocation.QueryDistrict(province.value).then(res => {
-        const District = res.map((item: any) => {
-          return {label: item.districtName, value: item.districtId};
-        });
+        const District = res
+          .map((item: any) => {
+            return {label: item.districtName, value: item.districtId};
+          })
+          .sort((a: any, b: any) => a.label.localeCompare(b.label));
+
         setItemDistrict(District);
       });
     }
@@ -255,13 +261,16 @@ const EditProfile: React.FC<any> = ({navigation}) => {
     if (province != null && district != null) {
       QueryLocation.QuerySubDistrict(district.value, district.label).then(
         res => {
-          const SubDistrict = res.map((item: any) => {
-            return {
-              label: item.subdistrictName,
-              value: item.subdistrictId,
-              postcode: item.postcode,
-            };
-          });
+          const SubDistrict = res
+            .map((item: any) => {
+              return {
+                label: item.subdistrictName,
+                value: item.subdistrictId,
+                postcode: item.postcode,
+              };
+            })
+            .sort((a: any, b: any) => a.label.localeCompare(b.label));
+
           setItemSubDistrict(SubDistrict);
         },
       );
@@ -354,7 +363,7 @@ const EditProfile: React.FC<any> = ({navigation}) => {
                       <ProgressiveImage
                         source={
                           image
-                            ? {uri: image.assets[0].uri}
+                            ? {uri: image?.assets?.[0].uri}
                             : imagePreview
                             ? {uri: imagePreview.uri}
                             : icons.account
@@ -385,7 +394,6 @@ const EditProfile: React.FC<any> = ({navigation}) => {
                       )}
                     </>
                   )}
-
                   <View
                     style={{
                       position: 'absolute',
@@ -709,7 +717,7 @@ const EditProfile: React.FC<any> = ({navigation}) => {
 
                 await Authentication.updateProfile(payload)
                   .then(async () => {
-                    if (imagePreview?.path) {
+                    if (imagePreview?.path && image) {
                       await Authentication.removeProfileImage({
                         id: imagePreview?.id,
                         path: imagePreview.path,

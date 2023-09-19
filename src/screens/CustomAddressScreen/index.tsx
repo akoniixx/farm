@@ -118,9 +118,11 @@ export default function CustomAddressScreen({
 
     QueryLocation.QueryProvince()
       .then(res => {
-        const Province = (res || []).map((item: any) => {
-          return {label: item.provinceName, value: item.provinceId};
-        });
+        const Province = (res || [])
+          .map((item: any) => {
+            return {label: item.provinceName, value: item.provinceId};
+          })
+          .sort((a: any, b: any) => a.label.localeCompare(b.label));
         setProvinces(Province);
       })
       .catch(err => {
@@ -132,9 +134,11 @@ export default function CustomAddressScreen({
     if (objInput.province.value) {
       QueryLocation.QueryDistrict(+objInput.province.value)
         .then(res => {
-          const District = (res || []).map((item: any) => {
-            return {label: item.districtName, value: item.districtId};
-          });
+          const District = (res || [])
+            .map((item: any) => {
+              return {label: item.districtName, value: item.districtId};
+            })
+            .sort((a: any, b: any) => a.label.localeCompare(b.label));
           setDistricts(District);
         })
         .catch(err => {
@@ -156,9 +160,11 @@ export default function CustomAddressScreen({
     if (objInput.district.value) {
       QueryLocation.QuerySubDistrict(+objInput.district.value)
         .then(res => {
-          const SubDistrict = (res || []).map((item: any) => {
-            return {label: item.subdistrictName, value: item.subdistrictId};
-          });
+          const SubDistrict = (res || [])
+            .map((item: any) => {
+              return {label: item.subdistrictName, value: item.subdistrictId};
+            })
+            .sort((a: any, b: any) => a.label.localeCompare(b.label));
           setSubDistricts(SubDistrict);
           setPostCode(res);
         })
@@ -177,7 +183,7 @@ export default function CustomAddressScreen({
         onPressBack={() => {
           navigation.goBack();
         }}
-        title="สรุปรายละเอียดการแลก"
+        title="ที่อยู่จัดส่ง"
       />
       <ScrollView>
         <View style={styles.container}>
