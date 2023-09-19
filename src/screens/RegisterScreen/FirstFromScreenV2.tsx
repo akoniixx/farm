@@ -182,11 +182,17 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
             setLoading(true);
             try {
               if (Platform.OS === 'ios') {
-                await Geolocation.requestAuthorization('always');
+                const result = await Geolocation.requestAuthorization('always');
+                if (result !== 'granted') {
+                  setAllowLoca(true);
+                }
               } else if (Platform.OS === 'android') {
-                await PermissionsAndroid.request(
+                const result = await PermissionsAndroid.request(
                   PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
                 );
+                if (result !== 'granted') {
+                  setAllowLoca(true);
+                }
               }
               Geolocation.getCurrentPosition(position => {
                 Register.registerStep1V2(
