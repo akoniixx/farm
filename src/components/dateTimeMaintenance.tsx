@@ -38,6 +38,7 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
               style={{
                 marginTop: 20,
                 alignItems: 'center',
+                paddingHorizontal: 30,
               }}>
               <Text
                 style={{
@@ -50,6 +51,7 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
                 <Text
                   style={{
                     color: '#FB8705',
+                    fontSize: normalize(24),
                   }}>
                   {momentExtend.toBuddhistYear(dateStart, ' DD MMMM YYYY')}
                 </Text>
@@ -80,6 +82,7 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
                 <Text
                   style={{
                     color: '#FB8705',
+                    fontSize: normalize(24),
                   }}>
                   {momentExtend.toBuddhistYear(dateEnd, ' DD MMMM YYYY')}
                 </Text>
@@ -127,7 +130,7 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
             </View>
             <View
               style={{
-                // paddingHorizontal: 30,
+                paddingHorizontal: 30,
                 marginTop: 20,
                 alignItems: 'center',
               }}>
