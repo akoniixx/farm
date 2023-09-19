@@ -38,7 +38,6 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
               style={{
                 marginTop: 20,
                 alignItems: 'center',
-                paddingHorizontal: 30,
               }}>
               <Text
                 style={{
@@ -103,17 +102,8 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
                   .format('HH.mm น.')}
               </Text>
               <View style={{marginTop: 20}}>
-                <Text
-                  style={{
-                    fontFamily: fonts.light,
-                    fontSize: normalize(18),
-                    color: colors.fontBlack,
-                    marginBottom: 2,
-                    lineHeight: 30,
-                    paddingHorizontal: 30,
-                  }}>
-                  {text}
-                </Text>
+                <Text style={styles.fontMA}>{text.split(' ')[0]} </Text>
+                <Text style={styles.fontMA}>{text.split(' ')[1]} </Text>
               </View>
             </View>
           </View>
@@ -130,7 +120,6 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
             </View>
             <View
               style={{
-                paddingHorizontal: 30,
                 marginTop: 20,
                 alignItems: 'center',
               }}>
@@ -169,15 +158,12 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
               </Text>
               <View style={{marginTop: 20}}>
                 <Text
-                  style={{
-                    fontFamily: fonts.medium,
-                    fontSize: normalize(18),
-                    color: colors.fontBlack,
-                    marginBottom: 2,
-                    lineHeight: 30,
-                    paddingHorizontal: 30,
-                  }}>
-                  {text}
+                  style={styles.fontMA}>
+                  {text.split(' ')[0]}
+                </Text>
+                <Text
+                  style={styles.fontMA}>
+                  {text.split(' ')[1]}
                 </Text>
               </View>
             </View>
@@ -199,5 +185,14 @@ const styles = StyleSheet.create({
     fontFamily: fonts.light,
     fontSize: normalize(18),
     color: colors.fontBlack,
+  },
+  fontMA: {
+    alignSelf: 'center',
+    fontFamily: fonts.medium,
+    fontSize: normalize(18),
+    color: colors.fontBlack,
+    marginBottom: 2,
+    lineHeight: 30,
+    paddingHorizontal: 30,
   },
 });
