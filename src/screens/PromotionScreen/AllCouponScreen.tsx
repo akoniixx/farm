@@ -154,7 +154,7 @@ const AllCouponScreen: React.FC<any> = ({ navigation, route }) => {
                 couponConditionProvinceList={item.couponConditionProvinceList}
                 keepthis={true}
                 disabled={false}
-                titleButtonKeep="เก็บไว้"
+                titleButtonKeep="เก็บ"
               />
             )}
             keyExtractor={item => item.id}
