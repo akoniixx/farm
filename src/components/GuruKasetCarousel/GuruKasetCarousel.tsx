@@ -42,7 +42,7 @@ export default function GuruKasetCarousel({
     }
 
     return guruKaset.data;
-  }, [notiMaintenance]);
+  }, [notiMaintenance, guruKaset.data, maintenanceData]);
   return (
     <View>
       {allScreen ? (
