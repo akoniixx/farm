@@ -38,7 +38,6 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
               style={{
                 marginTop: 20,
                 alignItems: 'center',
-                paddingHorizontal: 30,
               }}>
               <Text
                 style={{
@@ -132,7 +131,6 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
             </View>
             <View
               style={{
-                paddingHorizontal: 30,
                 marginTop: 20,
                 alignItems: 'center',
               }}>
@@ -203,5 +201,14 @@ const styles = StyleSheet.create({
     fontFamily: fonts.SarabunLight,
     fontSize: normalize(18),
     color: colors.fontBlack,
+  },
+  fonstMA: {
+    alignSelf: 'center',
+    fontFamily: fonts.SarabunLight,
+    fontSize: normalize(18),
+    color: colors.fontBlack,
+    marginBottom: 2,
+    lineHeight: 30,
+    paddingHorizontal: 30,
   },
 });
