@@ -139,8 +139,8 @@ android {
         applicationId "com.iconkaset.farmer"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1014
-        versionName "1.4.15"
+        versionCode 1015
+        versionName "1.4.20"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
