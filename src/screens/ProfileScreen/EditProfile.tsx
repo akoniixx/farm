@@ -88,7 +88,7 @@ const EditProfile: React.FC<any> = ({navigation}) => {
         const datetime = res.birthDate;
         let date = null;
         if (datetime) {
-          date = moment(datetime).format('YYYY-MM-DD');
+          date = moment(datetime).toISOString();
           setBirthday(date);
         }
 
@@ -712,7 +712,7 @@ const EditProfile: React.FC<any> = ({navigation}) => {
                   firstname: formState.name,
                   lastname: formState.surname,
                   telephoneNo: formState.tel,
-                  birthDate: formState.birthDate,
+                  birthDate: formState.birthDate ? formState.birthDate : null,
                 };
 
                 await Authentication.updateProfile(payload)
