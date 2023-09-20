@@ -102,7 +102,8 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
                   .locale('th')
                   .format('HH.mm น.')}
               </Text>
-              <View style={{ marginTop: 20 }}>
+              <View
+                style={{ marginTop: 20, width: '100%', alignItems: 'center' }}>
                 <Text
                   style={{
                     fontFamily: fonts.SarabunLight,
@@ -111,6 +112,7 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
                     marginBottom: 2,
                     lineHeight: 30,
                     paddingHorizontal: 30,
+                    textAlign: 'center',
                   }}>
                   {text}
                 </Text>
@@ -167,7 +169,8 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
                 {moment(dateEnd).add(543, 'year').locale('th').format('HH.mm')}
                 {' น.'}
               </Text>
-              <View style={{ marginTop: 20 }}>
+              <View
+                style={{ marginTop: 20, alignItems: 'center', width: '100%' }}>
                 <Text
                   style={{
                     fontFamily: fonts.SarabunLight,
@@ -176,6 +179,7 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
                     marginBottom: 2,
                     lineHeight: 30,
                     paddingHorizontal: 30,
+                    textAlign: 'center',
                   }}>
                   {text}
                 </Text>

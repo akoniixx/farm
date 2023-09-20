@@ -24,6 +24,9 @@ export const MainButton: React.FC<MainButtonProps> = props => {
     <Button
       disabled={props.disable}
       title={props.label}
+      titleProps={{
+        allowFontScaling: false,
+      }}
       titleStyle={{
         color: props.fontColor ? props.fontColor : colors.white,
         fontSize: props.fontSize ?? normalize(20),
