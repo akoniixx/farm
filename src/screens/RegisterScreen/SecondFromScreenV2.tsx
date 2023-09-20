@@ -40,7 +40,7 @@ interface AreaServiceEntity {
 
 const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
   const [searchActive, setSearchActive] = useState<string>('');
-  const [allowLoca, setAllowLoca] = useState(false);
+  const [allowLocal, setAllowLocal] = useState(false);
   const [permission, setPermission] = useState<
     | 'denied'
     | 'granted'
@@ -109,7 +109,7 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
           {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
         );
       } else {
-        setAllowLoca(true);
+        setAllowLocal(true);
       }
     };
     if (permission) {
@@ -407,7 +407,7 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
           )}
         </View>
       </View>
-      <Modal transparent={true} visible={allowLoca}>
+      <Modal transparent={true} visible={allowLocal}>
         <View
           style={{
             flex: 1,
@@ -472,7 +472,7 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
               color={colors.orange}
               onPress={() => {
                 Linking.openSettings();
-                setAllowLoca(false);
+                setAllowLocal(false);
               }}
             />
           </View>
