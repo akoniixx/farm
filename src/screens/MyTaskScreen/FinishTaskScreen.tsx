@@ -68,7 +68,7 @@ const FinishScreen: React.FC<any> = ({}) => {
 
   const onLoadMore = async () => {
     try {
-      if (taskList.data.length >= taskList.total) {
+      if (taskList?.data.length >= taskList.total) {
         return;
       }
       const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -154,7 +154,7 @@ const FinishScreen: React.FC<any> = ({}) => {
               />
             </View>
             <View style={{ flex: 1 }}>
-              {taskList.data.length > 0 ? (
+              {taskList?.data.length > 0 ? (
                 <FlatList
                   onEndReached={onLoadMore}
                   refreshControl={

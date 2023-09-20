@@ -175,7 +175,7 @@ const InprogressScreen: React.FC<any> = ({}) => {
               />
             </View>
             <View style={{ flex: 1 }}>
-              {taskList.data.length > 0 ? (
+              {taskList?.data?.length > 0 ? (
                 <FlatList
                   onEndReached={onLoadMore}
                   refreshControl={

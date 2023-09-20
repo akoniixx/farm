@@ -92,11 +92,13 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
               changeTo: 'DronerUsedScreen',
             },
           );
-          RootNavigation.navigate('DronerUsedScreen', {
-            isSelectDroner: true,
-            profile: {},
-          });
           setModal(false);
+          setTimeout(() => {
+            RootNavigation.navigate('DronerUsedScreen', {
+              isSelectDroner: true,
+              profile: {},
+            });
+          }, 400);
         }}
         onBottomClick={() => {
           mixpanel.track(
@@ -105,11 +107,13 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
               changeTo: 'SelectDateScreen',
             },
           );
-          RootNavigation.navigate('SelectDateScreen', {
-            isSelectDroner: false,
-            profile: {},
-          });
           setModal(false);
+          setTimeout(() => {
+            RootNavigation.navigate('SelectDateScreen', {
+              isSelectDroner: false,
+              profile: {},
+            });
+          }, 400);
         }}
       />
       {loading ? (

@@ -32,25 +32,36 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
   const [refresh, setRefresh] = useState<boolean>(false);
 
   useEffect(() => {
-    getProfile();
-  }, [isFocused]);
-  const getProfile = async () => {
-    const value = await AsyncStorage.getItem('token');
-    if (value) {
+    const getProfile = async () => {
+      const value = await AsyncStorage.getItem('token');
+      if (value) {
+        const farmer_id = await AsyncStorage.getItem('farmer_id');
+        ProfileDatasource.getProfile(farmer_id!)
+          .then(async res => {
+            await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
+            dispatch({
+              type: 'InitProfile',
+              name: `${res.firstname}`,
+              plotItem: res.farmerPlot,
+              status: res.status,
+            });
+          })
+          .catch(err => console.log(err));
+      }
+    };
+    const getFavDroner = async () => {
       const farmer_id = await AsyncStorage.getItem('farmer_id');
-      ProfileDatasource.getProfile(farmer_id!)
-        .then(async res => {
-          await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
-          dispatch({
-            type: 'InitProfile',
-            name: `${res.firstname}`,
-            plotItem: res.farmerPlot,
-            status: res.status,
-          });
+      const plot_id = await AsyncStorage.getItem('plot_id');
+      FavoriteDroner.findAllFav(farmer_id!, plot_id!)
+        .then(res => {
+          setStatusFav(res);
         })
         .catch(err => console.log(err));
-    }
-  };
+    };
+    getProfile();
+    getFavDroner();
+  }, [isFocused]);
+
   useEffect(() => {
     const dronerSug = async () => {
       const value = await AsyncStorage.getItem('token');
@@ -91,22 +102,8 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
     };
     dronerSug();
     dronerSugUsed();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profilestate.plotItem]);
-
-  useEffect(() => {
-    const getFavDroner = async () => {
-      setLoading(true);
-      const farmer_id = await AsyncStorage.getItem('farmer_id');
-      const plot_id = await AsyncStorage.getItem('plot_id');
-      FavoriteDroner.findAllFav(farmer_id!, plot_id!)
-        .then(res => {
-          setStatusFav(res);
-        })
-        .catch(err => console.log(err))
-        .finally(() => setLoading(false));
-    };
-    getFavDroner();
-  }, []);
 
   return (
     <SafeAreaView
