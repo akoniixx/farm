@@ -43,6 +43,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const [showModalCall, setShowModalCall] = useState(false);
   const [countPlot, setCountPlot] = useState<any>();
+  console.log(JSON.stringify(profilestate, null, 2));
 
   const isFocused = useIsFocused();
   const onLogout = async () => {
@@ -98,7 +99,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
               type: 'InitProfile',
               name: `${res.firstname} ${res.lastname}`,
               id: res.farmerCode,
-              image: '',
+              image: null,
               plotItem: res.farmerPlot,
               status: res.status,
             });
@@ -171,14 +172,21 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
       <ScrollView>
         <View style={styles.section1}>
           <ProgressiveImage
-            source={{
-              uri: profilestate.image,
-            }}
+            source={
+              profilestate?.image ? { uri: profilestate?.image } : icons.avatar
+            }
             borderRadius={50}
             style={{
               width: normalize(80),
               height: normalize(80),
               borderRadius: normalize(40),
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 0.84,
             }}
           />
           <View
@@ -1127,7 +1135,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#F7FFF0',
     display: 'flex',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     padding: 15,
     width: '100%',
     minHeight: 120,

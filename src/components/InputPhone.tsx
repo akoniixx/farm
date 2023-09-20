@@ -61,7 +61,7 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
           <TouchableOpacity
             style={styles.clearBtn}
             onPress={() => setNumber('')}>
-            <Icon name="close" />
+            <Icon name="close" size={20} />
           </TouchableOpacity>
         ) : null}
       </View>
