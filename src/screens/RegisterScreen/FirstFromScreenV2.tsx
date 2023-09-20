@@ -264,7 +264,7 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                   navigation.navigate('SecondFormScreenV2', {
                     tele: route.params.telNumber,
                   });
-                }, 500);
+                }, 100);
               } else {
                 await Register.uploadProfileImage(image).then(async () => {
                   await AsyncStorage.setItem('droner_id', res.id);
@@ -273,7 +273,7 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                     navigation.navigate('SecondFormScreenV2', {
                       tele: route.params.telNumber,
                     });
-                  }, 500);
+                  }, 100);
                 });
               }
             } catch (err) {
