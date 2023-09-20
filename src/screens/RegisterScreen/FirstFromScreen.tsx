@@ -289,7 +289,13 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                         setOpenModal(false);
                       }}>
                       <View style={{ alignSelf: 'flex-end' }}>
-                        <Image source={icons.close} />
+                        <Image
+                          source={icons.close}
+                          style={{
+                            width: normalize(20),
+                            height: normalize(20),
+                          }}
+                        />
                       </View>
                     </TouchableOpacity>
 

@@ -466,6 +466,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                         style={{
                           fontFamily: font.SarabunLight,
                           color: colors.disable,
+                          fontSize: normalize(20),
                         }}>
                         เลือกพืช
                       </Text>
@@ -474,6 +475,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                         style={{
                           fontFamily: font.SarabunLight,
                           color: colors.fontGrey,
+                          fontSize: normalize(20),
                         }}>
                         {plantName}
                       </Text>
@@ -527,6 +529,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                         style={{
                           fontFamily: font.SarabunLight,
                           color: colors.disable,
+                          fontSize: normalize(20),
                         }}>
                         ระบุตำบล / อำเภอ / จังหวัด
                       </Text>
@@ -535,6 +538,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                         style={{
                           fontFamily: font.SarabunLight,
                           color: colors.fontGrey,
+                          fontSize: normalize(20),
                         }}>
                         {selectPlot.area}
                       </Text>
@@ -566,12 +570,14 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                       fontSize: normalize(20),
                       color: colors.gray,
                       lineHeight: 35,
+                      width: '80%',
                     }}>
                     {!search.term ? (
                       <Text
                         style={{
                           fontFamily: font.SarabunLight,
                           color: colors.disable,
+                          fontSize: normalize(20),
                         }}>
                         เช่น วัด, โรงเรียน, ร้านค้า
                       </Text>
@@ -580,6 +586,7 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
                         style={{
                           fontFamily: font.SarabunLight,
                           color: colors.fontGrey,
+                          fontSize: normalize(20),
                         }}>
                         {search.term}
                       </Text>

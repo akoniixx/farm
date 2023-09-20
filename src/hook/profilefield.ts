@@ -10,7 +10,7 @@ export const initProfileState = {
   district: '',
   postcode: '',
   id: '',
-  image: '',
+  image: null,
   plotItem: [],
   status: '',
 };

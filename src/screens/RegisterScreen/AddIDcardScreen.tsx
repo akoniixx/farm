@@ -289,7 +289,13 @@ const AddIDcardScreen: React.FC<any> = ({ navigation, route }) => {
                       setOpenModalCard(false);
                     }}>
                     <View style={{ alignSelf: 'flex-end' }}>
-                      <Image source={icons.close} />
+                      <Image
+                        source={icons.close}
+                        style={{
+                          width: 20,
+                          height: 20,
+                        }}
+                      />
                     </View>
                   </TouchableOpacity>
                   {/* <MainButton
