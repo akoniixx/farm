@@ -116,14 +116,18 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
     ]).finally(() => setLoadingProfile(false));
   };
   const onRefresh = async () => {
-    setRefreshing(true);
-    await getInitialData();
-    setRefreshing(false);
+    try {
+      setRefreshing(true);
+      await getInitialData();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   useEffect(() => {
     getInitialData();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reload]);
 
@@ -252,19 +256,22 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
     <SafeAreaView
       style={[stylesCentral.container]}
       edges={['right', 'top', 'left']}>
-      {backbotton ? (
-        <View style={styles.appBar}>
-          <Text style={styles.appBarHeader}>โปรไฟล์ของฉัน</Text>
-        </View>
-      ) : (
-        <View style={styles.appBarBack}>
+      <View style={styles.appBarBack}>
+        {backbotton ? (
+          <View
+            style={{
+              width: 24,
+            }}
+          />
+        ) : (
           <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
             <Image source={icons.arrowLeft} style={styles.listTileIcon} />
           </TouchableOpacity>
-          <Text style={[styles.appBarHeader]}>โปรไฟล์ของฉัน</Text>
-          <View style={styles.listTileIcon} />
-        </View>
-      )}
+        )}
+        <Text style={[styles.appBarHeader]}>โปรไฟล์ของฉัน</Text>
+        <View style={styles.listTileIcon} />
+      </View>
+
       <NetworkLost onPress={onRefresh}>
         <View style={[styles.body]}>
           <ScrollView
