@@ -1,12 +1,6 @@
 import {Button} from '@rneui/themed';
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {StyleSheet, ViewStyle} from 'react-native';
 import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
 
@@ -27,6 +21,9 @@ export const MainButton: React.FC<MainButtonProps> = props => {
     <Button
       disabled={props.disable}
       title={props.label}
+      titleProps={{
+        allowFontScaling: false,
+      }}
       titleStyle={{
         color: props.fontColor ? props.fontColor : colors.white,
         fontSize: props.fontSize ?? normalize(18),

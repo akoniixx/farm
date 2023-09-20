@@ -101,7 +101,8 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                   .locale('th')
                   .format('HH.mm น.')}
               </Text>
-              <View style={{marginTop: 20, alignItems: 'center'}}>
+              <View
+                style={{marginTop: 20, alignItems: 'center', width: '100%'}}>
                 <Text
                   style={{
                     fontFamily: fonts.light,
@@ -109,6 +110,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                     color: colors.fontBlack,
                     lineHeight: 30,
                     paddingHorizontal: 20,
+                    textAlign: 'center',
                   }}>
                   {data.text}
                 </Text>
@@ -168,7 +170,8 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                   .format('HH.mm')}
                 {' น.'}
               </Text>
-              <View style={{marginTop: 20}}>
+              <View
+                style={{marginTop: 20, alignItems: 'center', width: '100%'}}>
                 <Text
                   style={{
                     fontFamily: fonts.light,
@@ -176,7 +179,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
                     color: colors.fontBlack,
                     lineHeight: 30,
                     paddingHorizontal: 20,
-                    alignItems: 'center',
+                    textAlign: 'center',
                   }}>
                   {data.text}
                 </Text>

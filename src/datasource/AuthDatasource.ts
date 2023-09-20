@@ -22,7 +22,7 @@ export class Authentication {
   }: {
     firstname: string;
     lastname: string;
-    birthDate: Date;
+    birthDate: string | null;
     telephoneNo: string;
     address1: string;
     address2: string;
@@ -46,7 +46,7 @@ export class Authentication {
           subdistrictId: subdistrictId,
           postcode: postcode,
         },
-        birthDate: birthDate,
+        birthDate,
       })
       .then(response => {
         return response.data;

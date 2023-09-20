@@ -116,14 +116,18 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
     ]).finally(() => setLoadingProfile(false));
   };
   const onRefresh = async () => {
-    setRefreshing(true);
-    await getInitialData();
-    setRefreshing(false);
+    try {
+      setRefreshing(true);
+      await getInitialData();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   useEffect(() => {
     getInitialData();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reload]);
 
@@ -252,19 +256,22 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
     <SafeAreaView
       style={[stylesCentral.container]}
       edges={['right', 'top', 'left']}>
-      {backbotton ? (
-        <View style={styles.appBar}>
-          <Text style={styles.appBarHeader}>โปรไฟล์ของฉัน</Text>
-        </View>
-      ) : (
-        <View style={styles.appBarBack}>
+      <View style={styles.appBarBack}>
+        {backbotton ? (
+          <View
+            style={{
+              width: 24,
+            }}
+          />
+        ) : (
           <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
             <Image source={icons.arrowLeft} style={styles.listTileIcon} />
           </TouchableOpacity>
-          <Text style={[styles.appBarHeader]}>โปรไฟล์ของฉัน</Text>
-          <View style={styles.listTileIcon} />
-        </View>
-      )}
+        )}
+        <Text style={[styles.appBarHeader]}>โปรไฟล์ของฉัน</Text>
+        <View style={styles.listTileIcon} />
+      </View>
+
       <NetworkLost onPress={onRefresh}>
         <View style={[styles.body]}>
           <ScrollView
@@ -351,38 +358,44 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                   </View>
                 </View>
               </View>
-              {profilestate.status != 'ACTIVE' ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('EditProfile');
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: font.medium,
-                      fontSize: normalize(14),
-                      paddingTop: normalize(8),
-                      color: colors.fontBlack,
+              <View
+                style={{
+                  marginTop: 4,
+                }}>
+                {profilestate.status != 'ACTIVE' ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('EditProfile');
                     }}>
-                    ดูข้อมูล
-                  </Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('EditProfile');
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: font.medium,
-                      fontSize: normalize(14),
-                      paddingTop: normalize(8),
-                      color: colors.fontBlack,
+                    <Text
+                      style={{
+                        fontFamily: font.medium,
+                        fontSize: normalize(14),
+                        paddingTop: normalize(8),
+                        color: colors.fontBlack,
+                      }}>
+                      ดูข้อมูล
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('EditProfile');
                     }}>
-                    ดูข้อมูล
-                  </Text>
-                </TouchableOpacity>
-              )}
+                    <Text
+                      style={{
+                        fontFamily: font.medium,
+                        fontSize: normalize(14),
+                        paddingTop: normalize(8),
+                        color: colors.fontBlack,
+                      }}>
+                      ดูข้อมูล
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
+
             {profilestate.status === 'REJECTED' ? (
               <View style={styles.commentBg}>
                 <Text style={styles.commentFront}>
@@ -1076,7 +1089,6 @@ const styles = StyleSheet.create({
     height: normalize(56),
   },
   appBarBack: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: normalize(12),
@@ -1091,20 +1103,23 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     paddingTop: normalize(10),
-    paddingHorizontal: normalize(17),
+    paddingHorizontal: normalize(16),
     color: colors.fontBlack,
   },
   profile: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
     color: colors.fontBlack,
+    width: '100%',
   },
   profileDescription: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     color: colors.fontBlack,
+    flex: 1,
   },
   profileName: {
     padding: normalize(10),

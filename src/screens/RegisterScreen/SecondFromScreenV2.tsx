@@ -1,12 +1,17 @@
 import {
   FlatList,
   Image,
+  Modal,
+  PermissionsAndroid,
+  Platform,
   Pressable,
   SafeAreaView,
   StyleSheet,
   TextInput,
   View,
 } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
+
 import {stylesCentral} from '../../styles/StylesCentral';
 import CustomHeader from '../../components/CustomHeader';
 import {normalize} from '../../function/Normalize';
@@ -16,10 +21,13 @@ import React, {useEffect, useState} from 'react';
 import fonts from '../../assets/fonts';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {QueryLocation} from '../../datasource/LocationDatasource';
-import {MainButton} from '../../components/Button/MainButton';
 import {Register} from '../../datasource/AuthDatasource';
 import Text from '../../components/Text';
-
+import AsyncButton from '../../components/Button/AsyncButton';
+import {Linking} from 'react-native';
+import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
+import {MainButton} from '../../components/Button/MainButton';
+import {useNetwork} from '../../contexts/NetworkContext';
 interface AreaServiceEntity {
   area: string;
   latitude: number;
@@ -32,6 +40,16 @@ interface AreaServiceEntity {
 
 const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
   const [searchActive, setSearchActive] = useState<string>('');
+  const [allowLocal, setAllowLocal] = useState(false);
+  const [permission, setPermission] = useState<
+    | 'denied'
+    | 'granted'
+    | 'disabled'
+    | 'restricted'
+    | 'never_ask_again'
+    | undefined
+  >();
+  const {appState} = useNetwork();
 
   const [edit, setEdit] = useState<boolean>(false);
   const [data, setData] = useState<AreaServiceEntity[]>([]);
@@ -40,34 +58,68 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
   const [page, setPage] = useState<number>(0);
   const [searchResult, setSearchResult] = useState<string>('');
   const [position, setPosition] = useState({
-    latitude: route.params.latitude,
-    longitude: route.params.longitude,
+    latitude: 0,
+    longitude: 0,
     latitudeDelta: 0,
     longitudeDelta: 0,
   });
 
   const [positionForm, setPositionForm] = useState<AreaServiceEntity>({
     area: '',
-    latitude: route.params.latitude,
-    longitude: route.params.longitude,
+    latitude: 0,
+    longitude: 0,
     provinceId: 0,
     districtId: 0,
     subdistrictId: 0,
     locationName: '',
   });
+  const requestLocationPermission = async () => {
+    if (Platform.OS === 'ios') {
+      const result = await Geolocation.requestAuthorization('always');
+      return result;
+    } else if (Platform.OS === 'android') {
+      const result = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      return result;
+    }
+  };
 
   useEffect(() => {
-    setPosition({
-      latitude: route.params.latitude,
-      longitude: route.params.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    });
-  }, [route.params.latitude, route.params.longitude]);
+    if (appState === 'active') {
+      requestLocationPermission().then(res => setPermission(res));
+    }
+  }, [appState]);
 
   useEffect(() => {
-    // getNameFormLat();
-  }, [position]);
+    const getCurrentLocation = async () => {
+      if (permission === 'granted') {
+        Geolocation.getCurrentPosition(
+          position => {
+            setPosition({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            });
+          },
+          error => {
+            console.log(error.code, error.message);
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        );
+      } else {
+        setAllowLocal(true);
+      }
+    };
+    if (permission) {
+      getCurrentLocation();
+    }
+  }, [permission]);
+
+  // useEffect(() => {
+  //   // getNameFormLat();
+  // }, [position]);
 
   useEffect(() => {
     QueryLocation.getSubdistrictArea(0, '').then(res => {
@@ -102,180 +154,6 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
     setDataRender(arr);
   }, [data, searchActive]);
 
-  // const hasPermissionIOS = async () => {
-  //   const openSetting = () => {
-  //     Linking.openSettings().catch(() => {
-  //       Alert.alert('Unable to open settings');
-  //     });
-  //   };
-  //   const status = await Geolocation.requestAuthorization('whenInUse');
-
-  //   if (status === 'granted') {
-  //     return true;
-  //   }
-
-  //   if (status === 'denied') {
-  //     Alert.alert('Location permission denied');
-  //   }
-
-  //   if (status === 'disabled') {
-  //     Alert.alert(
-  //       'Turn on Location Services to allow  to determine your location.',
-  //       '',
-  //       [
-  //         {text: 'Go to Settings', onPress: openSetting},
-  //         {text: "Don't Use Location", onPress: () => {}},
-  //       ],
-  //     );
-  //   }
-
-  //   return false;
-  // };
-
-  // const hasLocationPermission = async () => {
-  //   if (Platform.OS === 'ios') {
-  //     const hasPermission = await hasPermissionIOS();
-  //     return hasPermission;
-  //   }
-
-  //   if (Platform.OS === 'android' && Platform.Version < 23) {
-  //     return true;
-  //   }
-
-  //   const hasPermission = await PermissionsAndroid.check(
-  //     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-  //   );
-
-  //   if (hasPermission) {
-  //     return true;
-  //   }
-
-  //   const status = await PermissionsAndroid.request(
-  //     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-  //   );
-
-  //   if (status === PermissionsAndroid.RESULTS.GRANTED) {
-  //     return true;
-  //   }
-
-  //   if (status === PermissionsAndroid.RESULTS.DENIED) {
-  //     ToastAndroid.show(
-  //       'Location permission denied by user.',
-  //       ToastAndroid.LONG,
-  //     );
-  //   } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-  //     ToastAndroid.show(
-  //       'Location permission revoked by user.',
-  //       ToastAndroid.LONG,
-  //     );
-  //   }
-
-  //   return false;
-  // };
-
-  // const getLocation = async () => {
-  //   const hasPermission = await hasLocationPermission();
-  //   if (hasPermission) {
-  //     Geolocation.getCurrentPosition(
-  //       pos => {
-  //         setPosition({
-  //           latitude: pos.coords.latitude,
-  //           longitude: pos.coords.longitude,
-  //           latitudeDelta: 0.0922,
-  //           longitudeDelta: 0.0421,
-  //         });
-  //       },
-  //       error => {
-  //         // See error code charts below.
-  //         console.log(error.code, error.message);
-  //       },
-  //       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-  //     );
-  //   }
-  // };
-
-  // const getNameFormLat = () => {
-  //   let myApiKey = 'AIzaSyDg4BI3Opn-Bo2Pnr40Z7PKlC6MOv8T598';
-  //   let myLat = position.latitude;
-  //   let myLon = position.longitude;
-  //   fetch(
-  //     'https://maps.googleapis.com/maps/api/geocode/json?address=' +
-  //       myLat +
-  //       ',' +
-  //       myLon +
-  //       '&key=' +
-  //       myApiKey,
-  //   )
-  //     .then(response => response.json())
-  //     .then(responseJson => {
-  //       setlat(responseJson.results[0].geometry.location.lat);
-  //       setlong(responseJson.results[0].geometry.location.lng);
-  //       setAddress(
-  //         responseJson.results[0].address_components[0].long_name +
-  //           ' ' +
-  //           responseJson.results[0].address_components[2].long_name +
-  //           ' ' +
-  //           responseJson.results[0].address_components[3].long_name +
-  //           ' ' +
-  //           responseJson.results[0].address_components[4].long_name,
-  //       );
-  //       QueryLocation.QueryProvince()
-  //         .then(item => {
-  //           item.map((Province: any) => {
-  //             if (
-  //               Province.provinceName ==
-  //               `จังหวัด${responseJson.results[0].address_components[3].long_name}`
-  //             ) {
-  //               setProvinceId(Province.provinceId);
-  //               QueryLocation.QueryDistrict(Province.provinceId)
-  //                 .then((itemDistrict: any) => {
-  //                   itemDistrict.map((District: any) => {
-  //                     if (
-  //                       District.districtName ===
-  //                       `${
-  //                         responseJson.results[0].address_components[2].long_name.split(
-  //                           ' ',
-  //                         )[0]
-  //                       }${
-  //                         responseJson.results[0].address_components[2].long_name.split(
-  //                           ' ',
-  //                         )[1]
-  //                       }`
-  //                     ) {
-  //                       setDistrictId(District.districtId);
-  //                       QueryLocation.QuerySubDistrict(
-  //                         District.districtId,
-  //                         District.districtName,
-  //                       )
-  //                         .then(itemSubDistrict => {
-  //                           itemSubDistrict.map((SubDistrict: any) => {
-  //                             if (
-  //                               SubDistrict.districtName ===
-  //                               `${
-  //                                 responseJson.results[0].address_components[2].long_name.split(
-  //                                   ' ',
-  //                                 )[0]
-  //                               }${
-  //                                 responseJson.results[0].address_components[2].long_name.split(
-  //                                   ' ',
-  //                                 )[1]
-  //                               }`
-  //                             ) {
-  //                               setSubdistrictId(SubDistrict.subdistrictId);
-  //                             }
-  //                           });
-  //                         })
-  //                         .catch(err => console.log(err));
-  //                     }
-  //                   });
-  //                 })
-  //                 .catch(err => console.log(err));
-  //             }
-  //           });
-  //         })
-  //         .catch(err => console.log(err));
-  //     });
-  // };
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
@@ -504,10 +382,11 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
           ) : (
             <View
               style={{
-                marginBottom: normalize(20),
+                marginBottom: 18,
               }}>
-              <MainButton
-                disable={positionForm.provinceId === 0}
+              <AsyncButton
+                disabled={positionForm.provinceId === 0}
+                title="ถัดไป"
                 onPress={() => {
                   Register.registerStep2V2(
                     positionForm.latitude.toString(),
@@ -523,13 +402,82 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
                     )
                     .catch(err => console.log(err));
                 }}
-                label="ถัดไป"
-                color={colors.orange}
               />
             </View>
           )}
         </View>
       </View>
+      <Modal transparent={true} visible={allowLocal}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              backgroundColor: colors.white,
+              width: responsiveWidth(344),
+              paddingHorizontal: normalize(20),
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: normalize(8),
+              paddingVertical: normalize(20),
+            }}>
+            <Text
+              style={{
+                fontFamily: font.bold,
+                fontSize: normalize(19),
+              }}>
+              กรุณาเปิดการตั้งค่า
+            </Text>
+            <Text
+              style={{
+                fontFamily: font.bold,
+                fontSize: normalize(19),
+              }}>
+              การเข้าถึงตำแหน่งหรือโลเคชั่น
+            </Text>
+            <Text
+              style={{
+                fontFamily: font.bold,
+                fontSize: normalize(19),
+              }}>
+              ในโทรศัพท์
+            </Text>
+            <Text
+              style={{
+                fontFamily: font.light,
+                fontSize: normalize(14),
+                paddingTop: normalize(10),
+              }}>
+              เพื่อเปิดการค้นหาเกษตรกรที่อยู่ใกล้
+            </Text>
+            <Text
+              style={{
+                fontFamily: font.light,
+                fontSize: normalize(14),
+              }}>
+              พื้นที่ให้บริการของคุณ
+            </Text>
+            <MainButton
+              style={{
+                width: responsiveWidth(312),
+                height: responsiveHeigth(53),
+                marginTop: normalize(20),
+              }}
+              label="ตกลง"
+              color={colors.orange}
+              onPress={() => {
+                Linking.openSettings();
+                setAllowLocal(false);
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

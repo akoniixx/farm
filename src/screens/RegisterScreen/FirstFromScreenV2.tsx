@@ -3,13 +3,11 @@ import CustomHeader from '../../components/CustomHeader';
 import {normalize} from '@rneui/themed';
 import {colors, font, icons, image as img} from '../../assets';
 import {ProgressBarV2} from '../../components/ProgressBarV2';
-import Geolocation from 'react-native-geolocation-service';
 import * as ImagePicker from 'react-native-image-picker';
 import {
   Image,
   KeyboardAvoidingView,
   Modal,
-  PermissionsAndroid,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -19,24 +17,24 @@ import {
   View,
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
-import {MainButton} from '../../components/Button/MainButton';
+
 import {Register} from '../../datasource/AuthDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Lottie from 'lottie-react-native';
-import {Linking} from 'react-native';
-import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
+
 import Text from '../../components/Text';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import AsyncButton from '../../components/Button/AsyncButton';
 
 const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
   const tele = route.params.tele;
   const [loading, setLoading] = useState(false);
+  const [loadingDisableButton, setLoadingDisableButton] = useState(false);
   const [formState, setFormState] = useState<any>({
     firstname: '',
     lastname: '',
   });
   const [image, setImage] = useState<any>(null);
-  const [allowLoca, setAllowLoca] = useState<boolean>(false);
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.launchImageLibrary({
       mediaType: 'photo',
@@ -174,57 +172,112 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
           zIndex: 0,
           margin: normalize(17),
         }}>
-        <MainButton
-          disable={!formState.firstname || !formState.lastname}
-          color={colors.orange}
-          label="ถัดไป"
+        <AsyncButton
+          disabled={
+            !formState.firstname || !formState.lastname || loadingDisableButton
+          }
+          title="ถัดไป"
+          isLoading={loadingDisableButton}
+          // onPress={async () => {
+          //   setLoading(true);
+          //   setLoadingDisableButton(true);
+          //   try {
+          //     if (Platform.OS === 'ios') {
+          //       const result = await Geolocation.requestAuthorization(
+          //         'always',
+          //       ).catch(() => {
+          //         setAllowLoca(true);
+          //         setLoading(false);
+          //       });
+          //       if (result !== 'granted') {
+          //         setAllowLoca(true);
+          //       }
+          //     } else if (Platform.OS === 'android') {
+          //       const result = await PermissionsAndroid.request(
+          //         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          //       ).catch(() => {
+          //         setAllowLoca(true);
+          //         setLoading(false);
+          //       });
+          //       if (result !== 'granted') {
+          //         setAllowLoca(true);
+          //       }
+          //     }
+          //     Geolocation.getCurrentPosition(position => {
+          //       Register.registerStep1V2(
+          //         formState.firstname,
+          //         formState.lastname,
+          //         tele,
+          //       )
+          //         .then(async res => {
+          //           if (!image) {
+          //             await AsyncStorage.setItem('droner_id', res.id);
+          //             setLoading(false);
+          //             setLoadingDisableButton(false);
+
+          //             setTimeout(() => {
+          //               navigation.navigate('SecondFormScreenV2', {
+          //                 tele: route.params.telNumber,
+          //                 latitude: position.coords.latitude,
+          //                 longitude: position.coords.longitude,
+          //               });
+          //             }, 500);
+          //           } else {
+          //             await Register.uploadProfileImage(image).then(
+          //               async () => {
+          //                 await AsyncStorage.setItem('droner_id', res.id);
+          //                 setLoading(false);
+          //                 setLoadingDisableButton(false);
+          //                 setTimeout(() => {
+          //                   navigation.navigate('SecondFormScreenV2', {
+          //                     tele: route.params.telNumber,
+          //                     latitude: position.coords.latitude,
+          //                     longitude: position.coords.longitude,
+          //                   });
+          //                 }, 500);
+          //               },
+          //             );
+          //           }
+          //         })
+          //         .catch(err => console.log(err));
+          //     });
+          //   } catch (err) {
+          //     setAllowLoca(true);
+          //     setLoading(false);
+          //   } finally {
+          //     setLoading(false);
+          //   }
+          // }}
           onPress={async () => {
             setLoading(true);
             try {
-              if (Platform.OS === 'ios') {
-                await Geolocation.requestAuthorization('always');
-              } else if (Platform.OS === 'android') {
-                await PermissionsAndroid.request(
-                  PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                );
+              const res = await Register.registerStep1V2(
+                formState.firstname,
+                formState.lastname,
+                tele,
+              );
+              if (!image) {
+                await AsyncStorage.setItem('droner_id', res.id);
+                setLoading(false);
+                setLoadingDisableButton(false);
+                setTimeout(() => {
+                  navigation.navigate('SecondFormScreenV2', {
+                    tele: route.params.telNumber,
+                  });
+                }, 100);
+              } else {
+                await Register.uploadProfileImage(image).then(async () => {
+                  await AsyncStorage.setItem('droner_id', res.id);
+                  setLoading(false);
+                  setTimeout(() => {
+                    navigation.navigate('SecondFormScreenV2', {
+                      tele: route.params.telNumber,
+                    });
+                  }, 100);
+                });
               }
-              Geolocation.getCurrentPosition(position => {
-                Register.registerStep1V2(
-                  formState.firstname,
-                  formState.lastname,
-                  tele,
-                )
-                  .then(async res => {
-                    if (!image) {
-                      await AsyncStorage.setItem('droner_id', res.id);
-                      setLoading(false);
-                      setTimeout(() => {
-                        navigation.navigate('SecondFormScreenV2', {
-                          tele: route.params.telNumber,
-                          latitude: position.coords.latitude,
-                          longitude: position.coords.longitude,
-                        });
-                      }, 500);
-                    } else {
-                      Register.uploadProfileImage(image)
-                        .then(async () => {
-                          await AsyncStorage.setItem('droner_id', res.id);
-                          navigation.navigate('SecondFormScreenV2', {
-                            tele: route.params.telNumber,
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude,
-                          });
-                        })
-                        .finally(() => {
-                          setLoading(false);
-                        });
-                    }
-                  })
-                  .catch(err => console.log(err));
-              });
             } catch (err) {
-              setLoading(false);
-              setAllowLoca(true);
+              console.log(err);
             } finally {
               setLoading(false);
             }
@@ -256,77 +309,6 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
               style={{
                 width: normalize(50),
                 height: normalize(50),
-              }}
-            />
-          </View>
-        </View>
-      </Modal>
-      <Modal transparent={true} visible={allowLoca}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              backgroundColor: colors.white,
-              width: responsiveWidth(344),
-              paddingHorizontal: normalize(20),
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: normalize(8),
-              paddingVertical: normalize(20),
-            }}>
-            <Text
-              style={{
-                fontFamily: font.bold,
-                fontSize: normalize(19),
-              }}>
-              กรุณาเปิดการตั้งค่า
-            </Text>
-            <Text
-              style={{
-                fontFamily: font.bold,
-                fontSize: normalize(19),
-              }}>
-              การเข้าถึงตำแหน่งหรือโลเคชั่น
-            </Text>
-            <Text
-              style={{
-                fontFamily: font.bold,
-                fontSize: normalize(19),
-              }}>
-              ในโทรศัพท์
-            </Text>
-            <Text
-              style={{
-                fontFamily: font.light,
-                fontSize: normalize(14),
-                paddingTop: normalize(10),
-              }}>
-              เพื่อเปิดการค้นหาเกษตรกรที่อยู่ใกล้
-            </Text>
-            <Text
-              style={{
-                fontFamily: font.light,
-                fontSize: normalize(14),
-              }}>
-              พื้นที่ให้บริการของคุณ
-            </Text>
-            <MainButton
-              style={{
-                width: responsiveWidth(312),
-                height: responsiveHeigth(53),
-                marginTop: normalize(20),
-              }}
-              label="ตกลง"
-              color={colors.orange}
-              onPress={() => {
-                Linking.openSettings();
-                setAllowLoca(false);
               }}
             />
           </View>

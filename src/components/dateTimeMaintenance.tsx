@@ -156,15 +156,14 @@ export const DateTimeMaintenance: React.FC<MaintenanceProps> = ({
                 {moment(dateEnd).add(543, 'year').locale('th').format('HH.mm')}
                 {' น.'}
               </Text>
-              <View style={{marginTop: 20}}>
-                <Text
-                  style={styles.fontMA}>
-                  {text.split(' ')[0]}
-                </Text>
-                <Text
-                  style={styles.fontMA}>
-                  {text.split(' ')[1]}
-                </Text>
+              <View
+                style={{
+                  marginTop: 20,
+                  width: '100%',
+                  alignItems: 'center',
+                  paddingHorizontal: 32,
+                }}>
+                <Text style={styles.fontMA}>{text}</Text>
               </View>
             </View>
           </View>
@@ -187,12 +186,12 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
   },
   fontMA: {
-    alignSelf: 'center',
     fontFamily: fonts.medium,
     fontSize: normalize(18),
     color: colors.fontBlack,
     marginBottom: 2,
     lineHeight: 30,
     paddingHorizontal: 30,
+    textAlign: 'center',
   },
 });
