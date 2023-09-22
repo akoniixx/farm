@@ -5,6 +5,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -16,6 +17,7 @@ import { MainButton } from '../../components/Button/MainButton';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { normalize } from '../../functions/Normalize';
 import Text from '../../components/Text/Text';
+import image from '../../assets/images/image';
 
 const LoginScreen: React.FC<any> = ({ navigation }) => {
   const [value, setValue] = useState<string>('');
@@ -36,7 +38,16 @@ const LoginScreen: React.FC<any> = ({ navigation }) => {
           />
           <View style={styles.inner}>
             <View style={styles.containerTopCard}>
-              <Text style={styles.headText}>ระบุหมายเลขโทรศัพท์ของคุณ</Text>
+              <Image
+                source={image.loginImage}
+                style={{
+                  width: normalize(116),
+                  height: normalize(116),
+                  resizeMode: 'contain',
+                  marginBottom: normalize(8),
+                }}
+              />
+              <Text style={styles.headText}>ยืนยันหมายเลขโทรศัพท์ของคุณ</Text>
               <InputPhone
                 value={value}
                 onChangeText={(e: string) => setValue(e)}
@@ -91,8 +102,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   headText: {
-    fontFamily: font.AnuphanMedium,
-    fontSize: normalize(20),
+    fontFamily: font.AnuphanSemiBold,
+    fontSize: normalize(18),
+    color: colors.fontBlack,
     marginBottom: normalize(24),
   },
   label: {

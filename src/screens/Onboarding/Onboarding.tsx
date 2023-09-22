@@ -6,19 +6,51 @@ import { normalize } from '../../functions/Normalize';
 import { MainButton } from '../../components/Button/MainButton';
 import HomeCarousel from '../../components/Carousel/HomeCarousel';
 import { colors, font } from '../../assets';
+const mappingStep = {
+  0: {
+    title: 'ถัดไป',
+    icon: '',
+  },
+  1: {
+    title: 'ถัดไป',
+    icon: '',
+  },
+  2: {
+    title: 'เริ่มใช้งาน',
+    icon: '',
+  },
+};
 
 const Onboarding: React.FC<any> = ({ navigation }) => {
+  const [step, setStep] = React.useState<number>(0);
+  const ref = React.createRef<any>();
+
+  const onPressNext = (index: number) => {
+    if (index === 2) {
+      navigation.navigate('HomeScreen');
+    } else {
+      if (ref.current) {
+        ref.current.next();
+      }
+      setStep(index + 1);
+    }
+  };
+  const onSnapToItem = (index: number) => {
+    setStep(index);
+  };
   return (
     <SafeAreaView style={stylesCentral.container}>
       <View style={styles.inner}>
         <View style={{ flex: 1, alignItems: 'center' }}>
-          <HomeCarousel />
+          <HomeCarousel step={step} onSnapToItem={onSnapToItem} ref={ref} />
         </View>
         <View>
           <MainButton
-            label="เริ่มใช้งาน"
+            label={mappingStep[step as keyof typeof mappingStep].title}
             color={colors.greenLight}
-            onPress={() => navigation.navigate('HomeScreen')}
+            onPress={() => {
+              onPressNext(step);
+            }}
           />
         </View>
       </View>

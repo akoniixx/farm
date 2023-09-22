@@ -10,7 +10,7 @@ import {
 import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../styles/StylesCentral';
-import { colors, font } from '../../assets';
+import { colors, font, image } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { normalize } from '../../functions/Normalize';
@@ -27,6 +27,7 @@ import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import messaging from '@react-native-firebase/messaging';
 import Text from '../../components/Text/Text';
+import { Image } from 'react-native';
 
 const CELL_COUNT = 6;
 
@@ -171,6 +172,15 @@ const OtpScreen: React.FC<any> = ({ navigation, route }) => {
       }
     }
   };
+  const insertHypenTel = (value: string) => {
+    let newValue = value;
+    for (let i = 0; i < value.length; i++) {
+      if (i === 3 || i === 7) {
+        newValue = [newValue.slice(0, i), '-', newValue.slice(i)].join('');
+      }
+    }
+    return newValue;
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -184,17 +194,29 @@ const OtpScreen: React.FC<any> = ({ navigation, route }) => {
           />
           <View style={styles.inner}>
             <View style={styles.headContainer}>
+              <Image
+                source={image.otpImage}
+                style={{
+                  width: normalize(116),
+                  height: normalize(116),
+                  resizeMode: 'contain',
+                  marginBottom: normalize(8),
+                }}
+              />
               <View>
-                <Text style={[styles.text, { bottom: '5%' }]}>
-                  เลขยืนยัน 6 หลัก (OTP)
-                </Text>
-                <Text style={[styles.text, { bottom: '5%' }]}>
-                  ถูกส่งไปที่กล่องข้อความของคุณ
-                </Text>
                 <Text style={[styles.text, { bottom: '2%' }]}>
-                  เบอร์{' '}
-                  <Text style={[styles.text, { color: colors.greenLight }]}>
-                    {route.params.telNumber}
+                  รหัส OTP ถูกส่งไปยัง{' '}
+                  <Text
+                    style={[
+                      styles.text,
+                      {
+                        color: colors.greenLight,
+                        fontFamily: font.AnuphanMedium,
+                      },
+                    ]}>
+                    {route.params.telNumber
+                      ? insertHypenTel(route.params.telNumber)
+                      : null}
                   </Text>
                 </Text>
                 <Text style={[styles.textpass, { color: colors.gray }]}>
@@ -261,7 +283,15 @@ const OtpScreen: React.FC<any> = ({ navigation, route }) => {
                   </Text>
                 </TouchableOpacity>
               ) : (
-                <Text style={styles.text}>รหัสจะหมดอายุใน {time} นาที</Text>
+                <Text
+                  style={[
+                    styles.text,
+                    {
+                      color: colors.grey40,
+                    },
+                  ]}>
+                  รหัสจะหมดอายุใน {time} นาที
+                </Text>
               )}
             </View>
           </View>
@@ -313,7 +343,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalize(15),
   },
   headContainer: {
-    marginVertical: normalize(38),
+    marginBottom: normalize(38),
     alignItems: 'center',
   },
   otpQuestion: {

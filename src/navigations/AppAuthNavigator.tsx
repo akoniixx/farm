@@ -18,6 +18,8 @@ import MyPlotScreen from '../screens/MyPlotScreen/MyPlotScreen';
 import EditFarmerPlot from '../screens/RegisterScreen/EditFarmerPlot';
 import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 import PrivacyScreen from '../screens/ProfileScreen/PrivacyScreen';
+import AllGuruScreen from '../screens/GuruScreen/AllGuruScreen';
+import BeforeLoginScreen from '../screens/BeforeLoginScreen';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +28,9 @@ const AppAuthNavigator: React.FC = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Onboarding" component={Onboarding} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="BeforeLoginScreen" component={BeforeLoginScreen} />
+      <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
+
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="ConditionScreen" component={ConditionScreen} />
       <Stack.Screen name="OtpScreen" component={OtpScreen} />

@@ -54,7 +54,7 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
           onChangeText={onTextChange}
           maxLength={maxLength}
           autoFocus={autoFocus}
-          placeholder={'หมายเลขโทรศัพท์'}
+          placeholder={'ระบุหมายเลขโทรศัพท์'}
           placeholderTextColor={colors.gray}
         />
         {number ? (
@@ -73,6 +73,7 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
+    width: '100%',
   },
   boder: {
     alignItems: 'center',
