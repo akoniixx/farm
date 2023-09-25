@@ -167,7 +167,6 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   };
 
   const onFinishTask = async () => {
-    setLoading(true);
     const payload = {
       taskId: idUpload,
       updateBy: updateBy,
@@ -176,24 +175,18 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
       file: imageFile?.file,
       fileDrug: imageFile?.fileDrug,
     };
-
     await TaskDatasource.finishTask(payload)
       .then(() => {
         setFinishImg(null);
         setDefaultRating(0);
-        setLoading(false);
       })
       .catch(err => {
-        console.log(err.response);
+        console.log('error', err.response.data);
         // setLoading(false);
-
         Toast.show({
           type: 'error',
           text1: 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
         });
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
 

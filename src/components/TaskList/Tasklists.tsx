@@ -66,7 +66,7 @@ const Tasklists: React.FC<any> = (props: Props) => {
   const isProblem = props.isProblem;
 
   const [visible, setVisible] = useState(false);
-
+  const [isFocus, setIsFocus] = useState(false);
   const ReviewBar = () => {
     return (
       <View style={styles.reviewBar}>
@@ -485,13 +485,21 @@ const Tasklists: React.FC<any> = (props: Props) => {
               style={{
                 borderWidth: 1,
                 borderRadius: normalize(8),
-                borderColor: colors.greyWhite,
+                borderColor: isFocus ? colors.orange : colors.greyWhite,
                 height: normalize(45),
+                marginBottom: 16,
+                paddingHorizontal: normalize(10),
               }}
               placeholder="กรอกความคิดเห็นเพิ่มเติม"
               onChangeText={props.setComment}
               value={props.comment}
               allowFontScaling={false}
+              onBlur={() => {
+                setIsFocus(false);
+              }}
+              onFocus={() => {
+                setIsFocus(true);
+              }}
             />
             <AsyncButton
               title="ยืนยัน"
@@ -500,50 +508,23 @@ const Tasklists: React.FC<any> = (props: Props) => {
               onPress={async () => {
                 mixpanel.track('Task success');
                 setLoading(true);
-                await props.onFinishTask().finally(() => {
-                  setLoading(false);
-                  setToggleModalReview(false);
-                  setTimeout(() => {
-                    setToggleModalSuccess(true);
-                  }, 500);
-                });
+                await props
+                  .onFinishTask()
+                  .then(() => {
+                    setToggleModalReview(false);
+                    setTimeout(() => {
+                      setToggleModalSuccess(true);
+                    }, 500);
+                  })
+                  .finally(() => {
+                    setLoading(false);
+                    setToggleModalReview(false);
+                  });
               }}
             />
           </View>
         </Modal>
-        <Modal isVisible={toggleModalSuccess}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              justifyContent: 'center',
-              padding: normalize(15),
-              borderRadius: 12,
-            }}>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-              <Text
-                style={{
-                  fontFamily: font.bold,
-                  fontSize: normalize(19),
-                  color: 'black',
-                  marginBottom: normalize(10),
-                }}>
-                รีวิวสำเร็จ
-              </Text>
-              <Image
-                source={image.reviewSuccess}
-                style={{width: normalize(170), height: normalize(168)}}
-              />
-            </View>
-            <MainButton
-              label="ตกลง"
-              color={colors.orange}
-              onPress={() => {
-                setToggleModalSuccess(false);
-                props.onCloseSuccessModal();
-              }}
-            />
-          </View>
-        </Modal>
+
         <ExtendModal
           isVisible={visible}
           onCloseModal={() => setVisible(false)}
@@ -579,6 +560,39 @@ const Tasklists: React.FC<any> = (props: Props) => {
           </Text>
         </View>
       )}
+      <Modal isVisible={toggleModalSuccess}>
+        <View
+          style={{
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            padding: normalize(15),
+            borderRadius: 12,
+          }}>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text
+              style={{
+                fontFamily: font.bold,
+                fontSize: normalize(19),
+                color: 'black',
+                marginBottom: normalize(10),
+              }}>
+              รีวิวสำเร็จ
+            </Text>
+            <Image
+              source={image.reviewSuccess}
+              style={{width: normalize(170), height: normalize(168)}}
+            />
+          </View>
+          <MainButton
+            label="ตกลง"
+            color={colors.orange}
+            onPress={() => {
+              setToggleModalSuccess(false);
+              props.onCloseSuccessModal();
+            }}
+          />
+        </View>
+      </Modal>
     </View>
   );
 };
