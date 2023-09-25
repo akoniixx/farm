@@ -18,6 +18,7 @@ import {missionDatasource} from '../../datasource/MissionDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SkeletonLoading from '../../components/SkeletonLoading/SkeletonLoading';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
+import {useFocusEffect} from '@react-navigation/native';
 
 interface Props {
   navigation: BottomTabNavigationProp<TabNavigatorParamList, 'mission'>;
@@ -121,9 +122,11 @@ export default function Body({navigation}: Props) {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    getAllMission();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      getAllMission();
+    }, []),
+  );
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     await getAllMission();

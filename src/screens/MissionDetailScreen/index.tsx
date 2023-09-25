@@ -6,7 +6,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import React, {useEffect, useMemo} from 'react';
-import {RouteProp} from '@react-navigation/native';
+import {RouteProp, useIsFocused} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';
 import CustomHeader from '../../components/CustomHeader';
 import {colors, font} from '../../assets';
@@ -42,6 +42,7 @@ const mappingStatusColor = {
 export default function MissionDetailScreen({navigation, route}: Props) {
   const {data} = route.params;
   const [refreshing, setRefreshing] = React.useState(false);
+  const focused = useIsFocused();
 
   const [currentStatus, setCurrentStatus] = React.useState<string>('');
   const [dronerTransactionId, setDronerTransactionId] =
@@ -89,7 +90,7 @@ export default function MissionDetailScreen({navigation, route}: Props) {
   useEffect(() => {
     getStatusRewardMission();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.missionId, data.reward.id]);
+  }, [data.missionId, data.reward.id, focused]);
 
   const isWaitRequest = useMemo(() => {
     if (!data.isStatusComplete && data.isComplete) {
