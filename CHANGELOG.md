@@ -1,3 +1,6 @@
+## Fix [1.7.5] 2023-09-19
+- fix bug skeleton task-done not working correctly
+
 ## Fix [1.7.4] 2023-09-18
 - fix bug scroll Register StepOne 
 - fix bug Register Initial Image wrong ratio
