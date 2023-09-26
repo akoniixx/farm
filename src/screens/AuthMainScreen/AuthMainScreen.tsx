@@ -26,7 +26,7 @@ import { useMaintenance } from '../../contexts/MaintenanceContext';
 const AuthMainScreen: React.FC<any> = ({ navigation }) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const { height, width } = Dimensions.get('window');
-  const {notiMaintenance, maintenanceData } = useMaintenance();
+  const { notiMaintenance, maintenanceData } = useMaintenance();
   useEffect(() => {
     getProfile();
   }, []);
