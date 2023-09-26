@@ -1,8 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { normalize } from '@rneui/themed';
 import moment from 'moment';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
+  Dimensions,
   Image,
   KeyboardAvoidingView,
   Linking,
@@ -53,6 +60,8 @@ import Counter from '../../components/Counter/Counter';
 import { useDebounceValue } from '../../hook/useDebounceValue';
 import Text from '../../components/Text/Text';
 import useTimeSpent from '../../hook/useTimeSpent';
+import ActionSheet from 'react-native-actions-sheet';
+import ConfirmBooking from '../../components/ConfirmBooking/ConfirmBooking';
 interface CampaignDetail {
   id: string;
   point: number;
@@ -84,6 +93,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
 
   const isSelectDroner = route.params.isSelectDroner;
   const profile = route.params.profile;
+
   const {
     state: { taskData, locationPrice, calPrice },
     autoBookingContext: { getCalculatePrice, setTaskData },
@@ -92,6 +102,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
     authContext: { getProfileAuth },
     state: { user },
   } = useAuth();
+  const confirmBooking = useRef<any>();
 
   const [coupon, setCoupon] = useRecoilState(couponState);
   const couponInfo = useRecoilValue(couponState);
@@ -107,6 +118,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const [showListPrice, setShowListPrice] = useState(false);
 
   const onSubmit = async () => {
+    confirmBooking.current.hide();
     try {
       setLoading(true);
       const dateAppointment = moment(taskData.dateAppointment).toISOString();
@@ -1315,7 +1327,9 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           <MainButton
             disable={disabled}
             label="ยืนยันการจอง"
-            onPress={onSubmit}
+            onPress={() => {
+              confirmBooking.current.show();
+            }}
             color={colors.greenLight}
             style={{
               height: 54,
@@ -1404,6 +1418,34 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
       </Modal>
+      <ActionSheet ref={confirmBooking}>
+        <ConfirmBooking
+          plotName={taskData?.plotName}
+          raiAmount={taskData?.farmAreaAmount}
+          isSelectDrone={
+            isSelectDroner ? (
+              <>
+                <DronerCard
+                  name={profile.firstname + ' ' + profile.lastname}
+                  profile={profile.image_droner}
+                  confirmBook={true}
+                />
+              </>
+            ) : (
+              'ระบบค้นหานักบินอัตโนมัติ'
+            )
+          }
+          price={(calPrice.netPrice - couponInfo.discount).toString()}
+          totalPrice={calPrice.priceBefore.toString()}
+          submit={onSubmit}
+          close={() => confirmBooking.current.hide()}
+          isUsePoint={isUsePoint}
+          couponInfo={couponInfo.name}
+          discountPoint={calPrice.discountPoint.toString()}
+          discountCoupon={couponInfo.discount.toString()}
+          campaignPoint={currentCount}
+        />
+      </ActionSheet>
       <Spinner
         visible={loading}
         textContent={'Loading...'}
@@ -1485,5 +1527,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     padding: 8,
     borderRadius: 8,
+  },
+  textConfirm: {
+    fontSize: normalize(18),
+    fontFamily: font.SarabunMedium,
   },
 });
