@@ -10,10 +10,16 @@ import ProgressiveImage from '../ProgressingImage/ProgressingImage';
 interface props {
   name: string;
   profile: string | null;
-  telnumber: string;
+  telnumber?: string;
+  confirmBook?: boolean;
 }
 
-export const DronerCard: React.FC<props> = ({ name, profile, telnumber }) => {
+export const DronerCard: React.FC<props> = ({
+  name,
+  profile,
+  telnumber,
+  confirmBook,
+}) => {
   return (
     <View
       style={{
@@ -39,20 +45,22 @@ export const DronerCard: React.FC<props> = ({ name, profile, telnumber }) => {
               borderRadius: normalize(28),
               borderColor: colors.white,
               borderWidth: 1,
-              width: normalize(56),
-              height: normalize(56),
+              width: confirmBook !== true ? normalize(56) : normalize(44),
+              height: confirmBook !== true ? normalize(56) : normalize(44),
             }}
           />
         </View>
 
         <Text style={styles.name}>{name}</Text>
       </View>
-      <TouchableOpacity onPress={() => dialCall(telnumber)}>
-        <Image
-          source={icons.telephon}
-          style={{ width: normalize(40), height: normalize(40) }}
-        />
-      </TouchableOpacity>
+      {confirmBook !== true ? (
+        <TouchableOpacity onPress={() => dialCall(telnumber)}>
+          <Image
+            source={icons.telephon}
+            style={{ width: normalize(40), height: normalize(40) }}
+          />
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };
@@ -61,6 +69,12 @@ const styles = StyleSheet.create({
     fontFamily: fonts.SarabunMedium,
     fontSize: normalize(18),
     color: colors.fontBlack,
+    lineHeight: 30,
+  },
+  fullname: {
+    fontFamily: fonts.SarabunMedium,
+    fontSize: normalize(16),
+    color: colors.grey60,
     lineHeight: 30,
   },
 });

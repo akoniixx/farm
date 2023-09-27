@@ -395,7 +395,7 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
                           fontSize: 20,
                           fontFamily: font.SarabunMedium,
                           color: colors.fontBlack,
-                          lineHeight: 30
+                          lineHeight: 30,
                         }}>
                         {el.title}
                       </Text>

@@ -113,4 +113,5 @@ export default {
   infoCircle: require('./infoCircle.png'),
   myLocationGreen: require('./myLocationGreen.png'),
   topLeft: require('./topLeft.png'),
+  drone_auto: require('./drone-auto.png'),
 };
