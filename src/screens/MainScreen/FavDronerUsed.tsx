@@ -76,19 +76,21 @@ const FavDronerUsed: React.FC<any> = ({ navigation }) => {
                         status_used={item.status_ever_used}
                         status={item.status_favorite}
                         callBack={async () => {
-                          const farmer_id = await AsyncStorage.getItem(
-                            'farmer_id',
-                          );
-                          const droner_id = statusFav.map(x => x.droner_id);
-                          await FavoriteDroner.addUnaddFav(
-                            farmer_id !== null ? farmer_id : '',
-                            droner_id[index],
-                          )
-                            .then(res => {
-                              setRefresh(!refresh);
-                            })
-                            .catch(err => console.log(err))
-                            .finally(() => setLoading(false));
+                          setTimeout(async () => {
+                            const farmer_id = await AsyncStorage.getItem(
+                              'farmer_id',
+                            );
+                            const droner_id = statusFav.map(x => x.droner_id);
+                            await FavoriteDroner.addUnaddFav(
+                              farmer_id !== null ? farmer_id : '',
+                              droner_id[index],
+                            )
+                              .then(res => {
+                                setRefresh(!refresh);
+                              })
+                              .catch(err => console.log(err))
+                              .finally(() => setLoading(false));
+                          }, 500);
                         }}
                       />
                     </TouchableOpacity>

@@ -142,34 +142,35 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
                         distance={item.distance}
                         status={item.favorite_status}
                         callBack={async () => {
-                          setLoading(true);
-                          const farmer_id = await AsyncStorage.getItem(
-                            'farmer_id',
-                          );
-                          const droner_id = taskSugUsed.map(x => x.droner_id);
-                          await FavoriteDroner.addUnaddFav(
-                            farmer_id !== null ? farmer_id : '',
-                            droner_id[index],
-                          )
-                            .then(res => {
-                              setRefresh(!refresh);
-                              let newTaskSugUsed = taskSugUsed.map((x, i) => {
-                                let result = {};
-                                if (x.droner_id === item.droner_id) {
-                                  let a =
-                                    x.favorite_status === 'ACTIVE'
-                                      ? 'INACTIVE'
-                                      : 'ACTIVE';
-                                  result = { ...x, favorite_status: a };
-                                } else {
-                                  result = { ...x };
-                                }
-                                return result;
-                              });
-                              setTaskSugUsed(newTaskSugUsed);
-                            })
-                            .catch(err => console.log(err))
-                            .finally(() => setLoading(false));
+                          setTimeout(async () => {
+                            const farmer_id = await AsyncStorage.getItem(
+                              'farmer_id',
+                            );
+                            const droner_id = taskSugUsed.map(x => x.droner_id);
+                            await FavoriteDroner.addUnaddFav(
+                              farmer_id !== null ? farmer_id : '',
+                              droner_id[index],
+                            )
+                              .then(res => {
+                                setRefresh(!refresh);
+                                let newTaskSugUsed = taskSugUsed.map((x, i) => {
+                                  let result = {};
+                                  if (x.droner_id === item.droner_id) {
+                                    let a =
+                                      x.favorite_status === 'ACTIVE'
+                                        ? 'INACTIVE'
+                                        : 'ACTIVE';
+                                    result = { ...x, favorite_status: a };
+                                  } else {
+                                    result = { ...x };
+                                  }
+                                  return result;
+                                });
+                                setTaskSugUsed(newTaskSugUsed);
+                              })
+                              .catch(err => console.log(err))
+                              .finally(() => setLoading(false));
+                          }, 500);
                         }}
                       />
                     </TouchableOpacity>

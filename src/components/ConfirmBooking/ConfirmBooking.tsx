@@ -81,12 +81,12 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
               style={{
                 backgroundColor: '#B05E03',
                 borderRadius: 50,
-                padding: 7,
-                paddingHorizontal: 20,
+                padding: 9,
+                marginHorizontal: 4,
               }}>
               <Image
                 source={icons.drone_auto}
-                style={{ width: normalize(20), height: normalize(20) }}
+                style={{ width: normalize(24), height: normalize(24) }}
               />
             </View>
           )}
