@@ -28,10 +28,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Stack = createStackNavigator();
 
 const AppAuthNavigator: React.FC = () => {
-  const [isOnboarding, setIsOnboarding] = React.useState<boolean>(false);
+  const [isOnboarding, setIsOnboarding] = React.useState<boolean>(true);
   useEffect(() => {
     const checkOnboarding = async () => {
       const onBoarding = await AsyncStorage.getItem('onBoarding');
+      console.log('onBoarding', onBoarding);
       if (onBoarding) {
         setIsOnboarding(true);
       } else {
@@ -44,8 +45,8 @@ const AppAuthNavigator: React.FC = () => {
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
       initialRouteName={isOnboarding ? 'HomeScreen' : 'Onboarding'}>
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="Onboarding" component={Onboarding} />
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="BeforeLoginScreen" component={BeforeLoginScreen} />
       <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
       <Stack.Screen name="CameraScreen" component={CameraScreen} />

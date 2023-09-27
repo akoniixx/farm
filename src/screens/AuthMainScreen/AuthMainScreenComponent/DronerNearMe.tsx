@@ -3,9 +3,7 @@ import React from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from '../../../../mixpanel';
-import DronerSugg from '../../../components/Carousel/DronerCarousel';
-import { FavoriteDroner } from '../../../datasource/FavoriteDroner';
-import Text from '../../../components/Text/Text';
+import DronerNearMeList from '../../../components/Carousel/DronerNearMeList';
 
 interface Props {
   navigation: any;
@@ -21,14 +19,20 @@ export default function DronerNearMe({ navigation, isLoading, data }: Props) {
             <TouchableOpacity
               key={index}
               onPress={async () => {
-                await AsyncStorage.setItem('droner_id', `${item.droner_id}`);
-                mixpanel.track('MainScreen_ButtonDronerSuggest_Press', {
-                  dronerId: item.droner_id,
-                  navigateTo: 'DronerDetailScreen',
-                });
-                navigation.push('DronerDetail');
+                navigation.navigate('BeforeLoginScreen');
               }}>
-              <Text>test</Text>
+              <DronerNearMeList
+                isLoading={isLoading}
+                index={index}
+                profile={item.image_droner}
+                background={item.task_image}
+                name={item.firstname + ' ' + item.lastname}
+                rate={item.rating_avg}
+                total_task={item.count_rating}
+                province={item.province_name}
+                distance={item.street_distance}
+                status={item.favorite_status}
+              />
             </TouchableOpacity>
           ))}
       </ScrollView>

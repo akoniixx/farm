@@ -15,7 +15,7 @@ export default function BeforeLoginScreen({ navigation }: any) {
     <>
       <SafeAreaView style={stylesCentral.container}>
         <CustomHeader
-          title="โปรโมชั่น"
+          title="จ้างโดรนเกษตร"
           showBackBtn
           onPressBack={() => navigation.goBack()}
         />

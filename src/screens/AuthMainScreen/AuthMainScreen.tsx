@@ -33,11 +33,19 @@ import ModalRequestPermission from '../../components/Modal/ModalRequestPermissio
 import CarouselMainScreen from './AuthMainScreenComponent/CarouselMainScreen';
 import { mixpanel } from '../../../mixpanel';
 import DronerNearMe from './AuthMainScreenComponent/DronerNearMe';
+import { DronerDatasource } from '../../datasource/DronerDatasource';
 
 const AuthMainScreen: React.FC<any> = ({ navigation }) => {
   const { notiMaintenance, maintenanceData } = useMaintenance();
   const [loading, setLoading] = useState<boolean>(false);
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  const [dronerNearMe, setDronerNearMe] = useState<{
+    count: number;
+    data: any[];
+  }>({
+    count: 0,
+    data: [],
+  });
   const [showModalPermission, setShowModalPermission] =
     useState<boolean>(false);
   const [isConfirm, setIsConfirm] = useState<boolean | null>(null);
@@ -108,6 +116,18 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
       return result;
     }
   };
+  const getDronerNearMe = async () => {
+    if (position.latitude && position.longitude) {
+      DronerDatasource.getDronerNearMe({
+        lat: position.latitude,
+        long: position.longitude,
+      })
+        .then(res => {
+          setDronerNearMe(res);
+        })
+        .catch(err => console.log(err));
+    }
+  };
 
   useEffect(() => {
     getProfile();
@@ -150,7 +170,12 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
       getCurrentLocation();
     }
   }, [permission]);
-
+  useEffect(() => {
+    if (position.latitude && position.longitude) {
+      getDronerNearMe();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [position.latitude, position.longitude]);
   return (
     <View
       style={{
@@ -313,20 +338,23 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                     />
                   </View>
 
-                  <View style={{ paddingHorizontal: 16 }}>
-                    <Text
-                      style={{
-                        fontFamily: font.AnuphanSemiBold,
-                        fontSize: 20,
-                      }}>
-                      นักบินโดรนใกล้คุณ
-                    </Text>
-                    <DronerNearMe
-                      data={[1, 2, 3]}
-                      isLoading={false}
-                      navigation={navigation}
-                    />
-                  </View>
+                  {dronerNearMe.data.length > 0 && (
+                    <View style={{ paddingHorizontal: 16 }}>
+                      <Text
+                        style={{
+                          fontFamily: font.AnuphanSemiBold,
+                          fontSize: 20,
+                        }}>
+                        นักบินโดรนใกล้คุณ
+                      </Text>
+                      <DronerNearMe
+                        data={dronerNearMe.data}
+                        isLoading={false}
+                        navigation={navigation}
+                      />
+                    </View>
+                  )}
+
                   <View
                     style={{
                       alignItems: 'center',
