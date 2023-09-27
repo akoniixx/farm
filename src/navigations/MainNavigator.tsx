@@ -78,8 +78,13 @@ export type MainStackParamList = {
     navigation: StackNavigationHelpers;
     route: RouteProp<{ params: { id: string } }, 'params'>;
   };
-  AddPlotScreen: undefined;
-  EditPlotScreen: undefined;
+  AddPlotScreen: {
+    fromRegister: boolean;
+  };
+  EditPlotScreen: {
+    plotId: string;
+    fromRegister: boolean;
+  };
   DeleteSuccess: undefined;
   FullScreenTaskImg: undefined;
   AllReviewDroner: undefined;
@@ -110,7 +115,13 @@ const MainNavigator: React.FC<any> = () => {
         />
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         <Stack.Screen name="AllPlotScreen" component={AllPlotScreen} />
-        <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
+        <Stack.Screen
+          name="AddPlotScreen"
+          component={AddPlotScreen}
+          initialParams={{
+            fromRegister: false,
+          }}
+        />
         <Stack.Screen name="SelectDateScreen" component={SelectDateScreen} />
         <Stack.Screen name="SelectPlotScreen" component={SelectPlotScreen} />
         <Stack.Screen name="SelectTarget" component={SelectTarget} />
@@ -149,7 +160,14 @@ const MainNavigator: React.FC<any> = () => {
         <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
         <Stack.Screen name="DeleteProfileScreen" component={DeleteProfile} />
         <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
-        <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
+        <Stack.Screen
+          name="EditPlotScreen"
+          component={EditPlotScreen}
+          initialParams={{
+            plotId: '',
+            fromRegister: false,
+          }}
+        />
         <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
         <Stack.Screen name="CouponDetail" component={CouponDetailScreen} />
         <Stack.Screen name="MyCouponScreen" component={MyCouponScreen} />

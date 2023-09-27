@@ -337,7 +337,11 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                                       plotId: item.id,
                                     },
                                   );
-                                  navigation.navigate('EditPlotScreen');
+                                  navigation.navigate('EditPlotScreen', {
+                                    plotId: item.id,
+                                    fromRegister: false,
+                                    data: item,
+                                  });
                                 }}>
                                 <PlotsItemEdit
                                   key={index}

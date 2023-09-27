@@ -55,4 +55,5 @@ export default {
   locationModal: require('./locationModal.png'),
   loginImage: require('./loginImage.png'),
   otpImage: require('./otpImage.png'),
+  emptyPlacePlot: require('./emptyPlacePlot.png'),
 };

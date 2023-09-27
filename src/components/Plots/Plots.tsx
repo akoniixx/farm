@@ -1,4 +1,10 @@
-import { Image, StyleSheet, View, Platform } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  View,
+  Platform,
+  TouchableOpacity,
+} from 'react-native';
 import React from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons } from '../../assets';
@@ -12,6 +18,10 @@ interface AddPlot {
   plantName: string;
   status: string;
   locationName: string;
+  navigation: any;
+  plotId: string;
+  fromRegister: boolean;
+  data: any;
 }
 
 export function StatusObject(status: string) {
@@ -55,16 +65,25 @@ export function StatusObject(status: string) {
 }
 
 const PlotsItem: React.FC<AddPlot> = ({
-  index,
   plotName,
   raiAmount,
   plantName,
   status,
   locationName,
+  navigation,
+  fromRegister,
+  plotId,
+  data,
 }) => {
   return (
-    <View
-      key={index}
+    <TouchableOpacity
+      onPress={() => {
+        navigation?.navigate('EditPlotScreen', {
+          plotId: plotId,
+          fromRegister: fromRegister,
+          data,
+        });
+      }}
       style={{
         ...Platform.select({
           ios: {
@@ -104,41 +123,57 @@ const PlotsItem: React.FC<AddPlot> = ({
         }}>
         <View>
           <Text style={styles.title}>{plotName}</Text>
-          <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
-            <Image
-              source={icons.plot}
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: normalize(10),
+              justifyContent: 'space-between',
+            }}>
+            <View
               style={{
-                width: normalize(18),
-                height: normalize(20),
+                flexDirection: 'row',
                 marginRight: normalize(10),
-              }}
-            />
-            <Text
-              style={{
-                fontFamily: fonts.SarabunMedium,
-                fontSize: normalize(16),
-                color: colors.fontGrey,
-                marginRight: '40%',
               }}>
-              {raiAmount + ' ' + 'ไร่'}
-            </Text>
-            <Image
-              source={icons.plant}
+              <Image
+                source={icons.plot}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                }}>
+                {raiAmount + ' ' + 'ไร่'}
+              </Text>
+            </View>
+            <View
               style={{
-                width: normalize(18),
-                height: normalize(20),
+                flexDirection: 'row',
                 marginRight: normalize(10),
-              }}
-            />
-            <Text
-              style={{
-                fontFamily: fonts.SarabunMedium,
-                fontSize: normalize(16),
-                color: colors.fontGrey,
-                marginRight: '10%',
               }}>
-              {plantName}
-            </Text>
+              <Image
+                source={icons.plant}
+                style={{
+                  width: normalize(18),
+                  height: normalize(20),
+                  marginRight: normalize(10),
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: fonts.SarabunMedium,
+                  fontSize: normalize(16),
+                  color: colors.fontGrey,
+                  marginRight: '10%',
+                }}>
+                {plantName}
+              </Text>
+            </View>
           </View>
           <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
             <Image
@@ -181,7 +216,7 @@ const PlotsItem: React.FC<AddPlot> = ({
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -190,6 +225,7 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunBold,
     fontSize: normalize(18),
     color: '#0D381F',
+    lineHeight: normalize(28),
   },
   label: {
     fontFamily: font.AnuphanLight,

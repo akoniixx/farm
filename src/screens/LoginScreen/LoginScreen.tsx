@@ -34,7 +34,9 @@ const LoginScreen: React.FC<any> = ({ navigation }) => {
           <CustomHeader
             title="เข้าสู่ระบบ"
             showBackBtn
-            onPressBack={() => navigation.goBack()}
+            onPressBack={() => {
+              navigation.navigate('HomeScreen');
+            }}
           />
           <View style={styles.inner}>
             <View style={styles.containerTopCard}>

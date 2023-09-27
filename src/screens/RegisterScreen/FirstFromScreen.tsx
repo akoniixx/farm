@@ -6,8 +6,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Button,
-  Dimensions,
   Image,
 } from 'react-native';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
@@ -17,47 +15,119 @@ import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import { MainButton } from '../../components/Button/MainButton';
 import { normalize, width } from '../../functions/Normalize';
-import { Authentication, Register } from '../../datasource/AuthDatasource';
 import { ProgressBar } from '../../components/ProgressBar';
 import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import { Avatar } from '@rneui/base';
 import { registerReducer } from '../../hook/registerfield';
-import * as ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
+
 import icons from '../../assets/icons/icons';
-import { momentExtend } from '../../utils/moment-buddha-year';
-import { Modal } from 'react-native';
-import DatePickerCustom from '../../components/Calendar/Calendar';
+
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import moment from 'moment';
 import { mixpanel } from '../../../mixpanel';
 import Text from '../../components/Text/Text';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import InputTextLabel from '../../components/InputText/InputTextLabel';
+import ModalUploadImage from '../../components/Modal/ModalUploadImage';
+import { ResizeImage } from '../../functions/Resizing';
+import { Register } from '../../datasource/AuthDatasource';
 
 const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
   const initialFormRegisterState = {
     name: '',
     surname: '',
-    birthDate: '',
     tel: route.params.tele,
+    nickname: '',
   };
   const tele = route.params.tele;
-  const windowWidth = Dimensions.get('window').width;
   const [image, setImage] = useState<any>(null);
-  const [openCalendar, setOpenCalendar] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [date, setDate] = useState<string | null>(null);
 
   const onAddImage = useCallback(async () => {
-    const result = await ImagePicker.launchImageLibrary({
+    const result = await ImagePicker.openPicker({
       mediaType: 'photo',
+      width: 200,
+      height: 200,
+      maxFiles: 1,
+      multiple: false,
+      cropping: true,
     });
-    if (!result.didCancel) {
-      setImage(result);
+    if (result) {
+      setImage({
+        ...result,
+        assets: [
+          {
+            fileSize: result.size,
+            type: result.mime,
+            fileName: result?.filename,
+            uri: result.path,
+          },
+        ],
+      });
       setOpenModal(false);
     }
-  }, [image]);
+  }, []);
+
+  const onPressCamera = useCallback(async () => {
+    const result = await ImagePicker.openCamera({
+      mediaType: 'photo',
+      maxWidth: 200,
+      maxHeight: 200,
+      cropping: true,
+    });
+    if (result) {
+      setImage({
+        ...result,
+        assets: [
+          {
+            fileSize: result.size,
+            type: result.mime,
+            fileName: result?.filename,
+            uri: result.path,
+          },
+        ],
+      });
+      setOpenModal(false);
+    }
+  }, []);
+  const onFinishedTakePhotoAndroid = useCallback(async (value: any) => {
+    if (value) {
+      setImage(value);
+      setOpenModal(false);
+    }
+  }, []);
+
+  const onSubmit = async () => {
+    mixpanel.track('Tab next first form register');
+    setLoading(true);
+    await Register.register1({
+      firstname: formState.name,
+      lastname: formState.surname,
+      telephoneNo: tele,
+      nickname: formState.nickname,
+    });
+    if (!image) {
+      setLoading(false);
+      navigation.navigate('SecondFormScreen', {
+        formState,
+      });
+    } else {
+      await Register.uploadProfileImage(image)
+        .then(async () => {
+          setLoading(false);
+          setTimeout(() => {
+            navigation.navigate('SecondFormScreen', {
+              formState,
+            });
+          }, 400);
+        })
+        .catch(err => {
+          console.log(err);
+          setLoading(false);
+        });
+    }
+  };
 
   // const onCamera = useCallback(async () => {
   //   const result = await ImagePicker.launchCamera({
@@ -94,7 +164,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
               <View style={{ marginBottom: normalize(10) }}>
                 <ProgressBar index={1} />
               </View>
-              <Text style={styles.h3}>ขั้นตอนที่ 1 จาก 4</Text>
+              <Text style={styles.h3}>ขั้นตอนที่ 1 จาก 2</Text>
               <Text style={styles.h1}>ระบุข้อมูลส่วนตัว</Text>
               <ScrollView>
                 <View
@@ -114,9 +184,12 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                         height: normalize(116),
                         position: 'relative',
                       }}>
-                      <Avatar
-                        size={116}
-                        rounded
+                      <ProgressiveImage
+                        style={{
+                          width: normalize(116),
+                          height: normalize(116),
+                          borderRadius: normalize(58),
+                        }}
                         source={
                           !image ? icons.avatar : { uri: image.assets[0].uri }
                         }
@@ -124,8 +197,8 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                       <View
                         style={{
                           position: 'absolute',
-                          left: normalize(70.7),
-                          top: normalize(70.7),
+                          bottom: 0,
+                          right: 0,
                           width: normalize(32),
                           height: normalize(32),
                           borderRadius: normalize(16),
@@ -133,6 +206,14 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                           flex: 1,
                           justifyContent: 'center',
                           alignItems: 'center',
+                          shadowColor: '#000',
+                          shadowOffset: {
+                            width: 0,
+                            height: 2,
+                          },
+                          shadowOpacity: 0.25,
+                          shadowRadius: 3.84,
+                          elevation: 5,
                         }}>
                         <Image
                           source={icons.camera}
@@ -145,9 +226,10 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                     </View>
                   </TouchableOpacity>
                 </View>
-                <Text style={styles.head}>ชื่อ*</Text>
-                <TextInput
-                  allowFontScaling={false}
+
+                <InputTextLabel
+                  label="ชื่อ"
+                  required
                   onChangeText={value => {
                     dispatch({
                       type: 'Handle Input',
@@ -159,10 +241,10 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   style={styles.input}
                   editable={true}
                   placeholder={' ระบุชื่อ'}
-                  placeholderTextColor={colors.gray}
                 />
-                <Text style={styles.head}>นามสกุล*</Text>
-                <TextInput
+                <InputTextLabel
+                  label="นามสกุล"
+                  required
                   onChangeText={value => {
                     dispatch({
                       type: 'Handle Input',
@@ -177,47 +259,24 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   placeholder={' ระบุนามสกุล'}
                   placeholderTextColor={colors.gray}
                 />
+                <InputTextLabel
+                  label="ชื่อเล่น"
+                  optional
+                  onChangeText={value => {
+                    dispatch({
+                      type: 'Handle Input',
+                      field: 'nickname',
+                      payload: value,
+                    });
+                  }}
+                  allowFontScaling={false}
+                  value={formState.nickname}
+                  style={styles.input}
+                  editable={true}
+                  placeholder={' ระบุนามสกุล'}
+                  placeholderTextColor={colors.gray}
+                />
 
-                <Text style={styles.head}>วันเกิด*</Text>
-                <TouchableOpacity onPress={() => setOpenCalendar(true)}>
-                  <View
-                    style={[
-                      styles.input,
-                      {
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                      },
-                    ]}>
-                    <TextInput
-                      allowFontScaling={false}
-                      value={
-                        date
-                          ? momentExtend.toBuddhistYear(date, 'DD MMMM YYYY')
-                          : ''
-                      }
-                      editable={false}
-                      placeholder={' ระบุวัน เดือน ปี'}
-                      placeholderTextColor={colors.gray}
-                      style={{
-                        height: 60,
-                        justifyContent: 'center',
-                        lineHeight: 19,
-                        fontSize: 20,
-                        flex: 1,
-                        width: '100%',
-                        color: colors.fontBlack,
-                        fontFamily: font.SarabunLight,
-                      }}
-                    />
-                    <Image
-                      source={icons.calendar}
-                      style={{
-                        width: normalize(25),
-                        height: normalize(30),
-                      }}
-                    />
-                  </View>
-                </TouchableOpacity>
                 <Text style={styles.head}>เบอร์โทรศัพท์</Text>
                 <TextInput
                   allowFontScaling={false}
@@ -230,184 +289,10 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
               <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
                 <MainButton
                   label="ถัดไป"
-                  disable={
-                    !formState.name || !formState.surname || !date || !date
-                      ? true
-                      : false
-                  }
                   color={colors.greenLight}
-                  onPress={() => {
-                    mixpanel.track('Tab next first form register');
-                    setLoading(true);
-                    Register.register1(
-                      formState.name,
-                      formState.surname,
-                      date,
-                      formState.tel,
-                    )
-                      .then(async res => {
-                        setLoading(false);
-                        if (!image) {
-                          setLoading(false);
-                          navigation.navigate('SecondFormScreen', {
-                            formState,
-                          });
-                        } else {
-                          Register.uploadProfileImage(image)
-                            .then(async res => {
-                              setLoading(false);
-                              navigation.navigate('SecondFormScreen', {
-                                formState,
-                              });
-                            })
-                            .catch(err => console.log(err));
-                        }
-                      })
-                      .catch(err => console.log(err));
-                  }}
+                  onPress={onSubmit}
                 />
               </View>
-              <Modal transparent={true} visible={openModal}>
-                <View
-                  style={{
-                    flex: 1,
-                    backgroundColor: 'rgba(0,0,0,0.5)',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <View
-                    style={{
-                      padding: normalize(20),
-                      backgroundColor: colors.white,
-                      width: width * 0.9,
-                      display: 'flex',
-                      justifyContent: 'center',
-                      borderRadius: normalize(3),
-                    }}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setOpenModal(false);
-                      }}>
-                      <View style={{ alignSelf: 'flex-end' }}>
-                        <Image
-                          source={icons.close}
-                          style={{
-                            width: normalize(20),
-                            height: normalize(20),
-                          }}
-                        />
-                      </View>
-                    </TouchableOpacity>
-
-                    {/* <MainButton
-                      fontFamily={font.SarabunLight}
-                      label="ถ่ายภาพ"
-                      fontColor={colors.fontBlack}
-                      color={colors.white}
-                      onPress={onCamera}
-                      width={100}
-                    /> */}
-                    <MainButton
-                      fontFamily={font.SarabunLight}
-                      label="เลือกรูปถ่าย"
-                      fontColor={colors.fontBlack}
-                      color={colors.white}
-                      onPress={onAddImage}
-                      width={120}
-                    />
-                  </View>
-                </View>
-              </Modal>
-              <Modal transparent={true} visible={openCalendar}>
-                <View
-                  style={{
-                    flex: 1,
-                    backgroundColor: 'rgba(0,0,0,0.5)',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <View
-                    style={{
-                      padding: normalize(20),
-                      backgroundColor: colors.white,
-                      width: width * 0.9,
-                      display: 'flex',
-                      justifyContent: 'center',
-                      borderRadius: normalize(8),
-                    }}>
-                    <Text
-                      style={[
-                        styles.h1,
-                        {
-                          textAlign: 'center',
-                          bottom: '5%',
-                          color: colors.fontBlack,
-                        },
-                      ]}>
-                      เลือกวันเกิด
-                    </Text>
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        color: colors.greenLight,
-                        fontFamily: font.SarabunLight,
-                        fontSize: normalize(16),
-                      }}>
-                      เลื่อนขึ้นลงเพื่อเลือกวันเกิดของคุณ
-                    </Text>
-                    <View>
-                      <DatePickerCustom
-                        value={
-                          date
-                            ? date
-                            : moment()
-                                .set({
-                                  day: 0,
-                                  month: 0,
-                                })
-                                .subtract(35, 'years')
-                        }
-                        startYear={
-                          moment().subtract(76, 'years').get('year') + 543
-                        }
-                        endYear={moment().add(0, 'year').get('year') + 543}
-                        onHandleChange={(d: string) => {
-                          setDate(d);
-                        }}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-around',
-                        top: 10,
-                      }}>
-                      <View style={{ right: 10 }}>
-                        <MainButton
-                          label="ยกเลิก"
-                          fontColor={colors.fontBlack}
-                          borderColor={colors.fontGrey}
-                          color={colors.white}
-                          width={150}
-                          onPress={() => setOpenCalendar(false)}
-                        />
-                      </View>
-                      <View style={{ left: 10 }}>
-                        <MainButton
-                          label="บันทึก"
-                          fontColor={colors.white}
-                          color={colors.greenLight}
-                          width={150}
-                          onPress={() => {
-                            setOpenCalendar(false);
-                          }}
-                        />
-                      </View>
-                      {}
-                    </View>
-                  </View>
-                </View>
-              </Modal>
             </View>
           </View>
           <Spinner
@@ -417,6 +302,83 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
           />
         </SafeAreaView>
       </TouchableWithoutFeedback>
+      <ModalUploadImage
+        visible={openModal}
+        onPressLibrary={onAddImage}
+        onPressCamera={onPressCamera}
+        onFinishedTakePhotoAndroid={onFinishedTakePhotoAndroid}
+        onCloseModalSelect={() => setOpenModal(false)}
+        onCancel={() => setOpenModal(false)}
+      />
+      {/* <Modal transparent={true} visible={openCalendar}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              padding: normalize(20),
+              backgroundColor: colors.white,
+              width: width * 0.9,
+              display: 'flex',
+              justifyContent: 'center',
+              borderRadius: normalize(8),
+            }}>
+            <Text
+              style={[
+                styles.h1,
+                {
+                  textAlign: 'center',
+                  bottom: '5%',
+                  color: colors.fontBlack,
+                },
+              ]}>
+              เลือกวันเกิด
+            </Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: colors.greenLight,
+                fontFamily: font.SarabunLight,
+                fontSize: normalize(16),
+              }}>
+              เลื่อนขึ้นลงเพื่อเลือกวันเกิดของคุณ
+            </Text>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                top: 10,
+              }}>
+              <View style={{ right: 10 }}>
+                <MainButton
+                  label="ยกเลิก"
+                  fontColor={colors.fontBlack}
+                  borderColor={colors.fontGrey}
+                  color={colors.white}
+                  width={150}
+                  onPress={() => setOpenCalendar(false)}
+                />
+              </View>
+              <View style={{ left: 10 }}>
+                <MainButton
+                  label="บันทึก"
+                  fontColor={colors.white}
+                  color={colors.greenLight}
+                  width={150}
+                  onPress={() => {
+                    setOpenCalendar(false);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal> */}
     </KeyboardAvoidingView>
   );
 };
@@ -464,8 +426,8 @@ const styles = StyleSheet.create({
     marginTop: normalize(24),
   },
   h3: {
-    fontFamily: font.AnuphanMedium,
-    fontSize: normalize(14),
+    fontFamily: font.AnuphanSemiBold,
+    fontSize: normalize(16),
     color: colors.gray,
   },
   container: {
@@ -475,7 +437,8 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunLight,
     height: normalize(56),
     marginVertical: 12,
-    padding: 5,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
     borderColor: colors.disable,
     borderWidth: 1,
     borderRadius: normalize(10),

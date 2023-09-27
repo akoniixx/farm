@@ -18,6 +18,17 @@ export interface PayloadCal {
   couponCode: string;
   usePoint?: number;
 }
+export interface UpdatePlot {
+  plotName: string;
+  raiAmount: number;
+  landmark: string;
+  plantName: string;
+  lat: string;
+  long: string;
+  locationName: string;
+  plotAreaId: any;
+  status?: string;
+}
 
 export class PlotDatasource {
   static async getPlotlist(farmer_id: string): Promise<any> {
@@ -156,31 +167,19 @@ export class PlotDatasource {
         console.log(error);
       });
   }
-  static async updateFarmerPlot(
-    plotName: string,
-    raiAmount: number,
-    landmark: string,
-    plantName: string,
-    lat: string,
-    long: string,
-    locationName: string,
-    plotAreaId: any,
-    status?: string,
-  ): Promise<any> {
+  static async updateFarmerPlot({
+    plantName,
+    plotName,
+    ...payload
+  }: UpdatePlot): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const plotId = await AsyncStorage.getItem('plot_id');
     const index = 0;
     if (!plotName) {
       return httpClient
         .patch(BASE_URL + `/farmer-plot/${plotId}`, {
+          ...payload,
           plotName: `แปลงที่ ${index + 1} ${plantName}`,
-          raiAmount: raiAmount,
-          landmark: landmark,
-          plantName: plantName,
-          lat: lat,
-          long: long,
-          locationName: locationName,
-          plotAreaId: plotAreaId,
           farmerId: farmer_id,
         })
         .then(response => {
@@ -192,16 +191,10 @@ export class PlotDatasource {
     } else {
       return httpClient
         .patch(BASE_URL + `/farmer-plot/${plotId}`, {
+          ...payload,
           plotName: plotName,
-          raiAmount: raiAmount,
-          landmark: landmark,
           plantName: plantName,
-          lat: lat,
-          long: long,
-          locationName: locationName,
-          plotAreaId: plotAreaId,
           farmerId: farmer_id,
-          status: status,
         })
         .then(response => {
           return response.data;

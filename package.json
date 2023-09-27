@@ -14,6 +14,7 @@
     "clean:ios": "cd ios && xcodebuild clean && cd ../"
   },
   "dependencies": {
+    "@bam.tech/react-native-image-resizer": "^3.0.7",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-native-fontawesome": "^0.3.0",
@@ -55,6 +56,7 @@
     "react-native-gesture-handler": "^2.8.0",
     "react-native-google-maps": "^1.0.0",
     "react-native-google-places-autocomplete": "^2.5.1",
+    "react-native-image-crop-picker": "^0.40.0",
     "react-native-image-picker": "^4.10.1",
     "react-native-image-slider-banner": "^1.0.3",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
@@ -82,6 +84,7 @@
     "react-native-toast-message": "^2.1.5",
     "react-native-vector-icons": "^9.2.0",
     "react-native-version-check": "^3.4.7",
+    "react-native-vision-camera": "^2.16.1",
     "react-native-windows": "^0.70.6",
     "react-navigation": "^4.4.4",
     "recoil": "^0.7.7",

@@ -6,7 +6,6 @@ import {
   registerClient,
   uploadFileClient,
 } from '../config/develop-config';
-import { NavigationActions } from 'react-navigation';
 import { CommonActions } from '@react-navigation/native';
 import { FCMtokenDatasource } from './FCMDatasource';
 
@@ -78,7 +77,18 @@ export class Authentication {
     FCMtokenDatasource.deleteFCMtoken(fcmtoken!).then(async () => {
       const resetActionNavigate = CommonActions.reset({
         index: 1,
-        routes: [{ name: 'Auth' }],
+        routes: [
+          {
+            name: 'Auth',
+            state: {
+              routes: [
+                {
+                  name: 'HomeScreen',
+                },
+              ],
+            },
+          },
+        ],
       });
       await AsyncStorage.multiRemove([
         'token',
@@ -115,56 +125,17 @@ export class Authentication {
   }
 }
 export class Register {
-  static async register1(
-    firstname: string,
-    lastname: string,
-    birthDate: string | null,
-    telephoneNo: string,
-  ): Promise<any> {
+  static async register1(payload: {
+    firstname: string;
+    lastname: string;
+    telephoneNo: string;
+    nickname?: string;
+  }): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     if (!farmer_id) {
-      if (!birthDate) {
-        return registerClient
-          .post(BASE_URL + `/auth/farmer/register`, {
-            firstname: firstname,
-            lastname: lastname,
-            telephoneNo: telephoneNo,
-            status: 'OPEN',
-          })
-          .then(async response => {
-            const farmer_id = response.data.id;
-            await AsyncStorage.setItem('farmer_id', farmer_id);
-            return response.data;
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      } else {
-        return registerClient
-          .post(BASE_URL + `/auth/farmer/register`, {
-            firstname: firstname,
-            lastname: lastname,
-            birthDate: birthDate,
-            telephoneNo: telephoneNo,
-            status: 'OPEN',
-          })
-          .then(async response => {
-            const farmer_id = response.data.id;
-            await AsyncStorage.setItem('farmer_id', farmer_id);
-            return response.data;
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      }
-    } else {
       return registerClient
         .post(BASE_URL + `/auth/farmer/register`, {
-          id: farmer_id,
-          firstname: firstname,
-          lastname: lastname,
-          birthDate: birthDate,
-          telephoneNo: telephoneNo,
+          ...payload,
           status: 'OPEN',
         })
         .then(async response => {

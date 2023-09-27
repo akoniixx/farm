@@ -43,7 +43,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const [showModalCall, setShowModalCall] = useState(false);
   const [countPlot, setCountPlot] = useState<any>();
-  console.log(JSON.stringify(profilestate, null, 2));
 
   const isFocused = useIsFocused();
   const onLogout = async () => {
@@ -938,9 +937,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   navigateTo: 'LoginScreen',
                 });
                 await onLogout();
-                RootNavigation.navigate('Auth', {
-                  screen: 'HomeScreen',
-                });
               }}>
               <View style={styles.listTile}>
                 <View
@@ -962,6 +958,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 />
               </View>
             </TouchableOpacity>
+
             {profilestate.plotItem.length > 1 ? (
               <View
                 style={{
@@ -989,6 +986,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 }}
               />
             )}
+            <View style={{ height: 20 }} />
           </View>
         </View>
         <Modal animationType="fade" transparent={true} visible={showModalCall}>

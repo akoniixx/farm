@@ -6,6 +6,7 @@ import { normalize } from '../../functions/Normalize';
 import { MainButton } from '../../components/Button/MainButton';
 import HomeCarousel from '../../components/Carousel/HomeCarousel';
 import { colors, font } from '../../assets';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const mappingStep = {
   0: {
     title: 'ถัดไป',
@@ -25,9 +26,10 @@ const Onboarding: React.FC<any> = ({ navigation }) => {
   const [step, setStep] = React.useState<number>(0);
   const ref = React.createRef<any>();
 
-  const onPressNext = (index: number) => {
+  const onPressNext = async (index: number) => {
     if (index === 2) {
       navigation.navigate('HomeScreen');
+      await AsyncStorage.setItem('onBoarding', 'true');
     } else {
       if (ref.current) {
         ref.current.next();

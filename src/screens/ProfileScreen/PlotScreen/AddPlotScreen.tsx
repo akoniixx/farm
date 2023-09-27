@@ -1,48 +1,36 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react';
-import {
-  Image,
-  View,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  TextInput,
-  Dimensions,
-  TouchableOpacity,
-  Linking,
-  Alert,
-  PermissionsAndroid,
-  ToastAndroid,
-  ScrollView,
-} from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, font, image } from '../../../assets';
-import { MainButton } from '../../../components/Button/MainButton';
+import { colors, font } from '../../../assets';
 import CustomHeader from '../../../components/CustomHeader';
 import { normalize } from '../../../functions/Normalize';
-import { initProfileState, profileReducer } from '../../../hook/profilefield';
 import { stylesCentral } from '../../../styles/StylesCentral';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
-import { plant } from '../../../definitions/plants';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
+// import { plant } from '../../../definitions/plants';
 import PredictionType from '../../RegisterScreen/ThirdFormScreen';
-import fonts from '../../../assets/fonts';
-import icons from '../../../assets/icons/icons';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import ActionSheet from 'react-native-actions-sheet';
-import { PlantSelect } from '../../../components/PlantSelect/PlantSelect';
-import SearchBarWithAutocomplete from '../../../components/SearchBarWithAutocomplete';
-import Geolocation from 'react-native-geolocation-service';
-import axios from 'axios';
-import { useDebounce } from '../../../hook/useDebounce';
-import { QueryLocation } from '../../../datasource/LocationDatasource';
-import { LAT_LNG_BANGKOK } from '../../../definitions/location';
-import { PlotDatasource } from '../../../datasource/PlotDatasource';
+// import fonts from '../../../assets/fonts';
+// import icons from '../../../assets/icons/icons';
+// import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+// import ActionSheet from 'react-native-actions-sheet';
+// import { PlantSelect } from '../../../components/PlantSelect/PlantSelect';
+// import SearchBarWithAutocomplete from '../../../components/SearchBarWithAutocomplete';
+// import Geolocation from 'react-native-geolocation-service';
+// import axios from 'axios';
+// import { useDebounce } from '../../../hook/useDebounce';
+// import { QueryLocation } from '../../../datasource/LocationDatasource';
+// import { LAT_LNG_BANGKOK } from '../../../definitions/location';
+// import { PlotDatasource } from '../../../datasource/PlotDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import Icon from 'react-native-vector-icons/AntDesign';
-import { CropDatasource } from '../../../datasource/CropDatasource';
-import Text from '../../../components/Text/Text';
+import PlotForm from './PlotForm';
+import { PlotDatasource } from '../../../datasource/PlotDatasource';
 import { mixpanel } from '../../../../mixpanel';
-import useTimeSpent from '../../../hook/useTimeSpent';
+// import Icon from 'react-native-vector-icons/AntDesign';
+// import { CropDatasource } from '../../../datasource/CropDatasource';
+// import Text from '../../../components/Text/Text';
+// import { mixpanel } from '../../../../mixpanel';
+// import useTimeSpent from '../../../hook/useTimeSpent';
+// import InputTextLabel from '../../../components/InputText/InputTextLabel';
 
 export type PredictionType = {
   description: string;
@@ -53,332 +41,120 @@ export type PredictionType = {
   terms: Object[];
   types: string[];
 };
-
-interface AreaServiceEntity {
-  area: string;
-  latitude: number;
-  longitude: number;
-  provinceId: number;
-  districtId: number;
-  subdistrictId: number;
-  locationName: string;
+export interface SubmitPlotType {
+  plotName: string;
+  raiAmount: number;
+  landmark: string;
+  plantName: string;
+  lat: string;
+  long: string;
+  search: {
+    term: string;
+    prediction: PredictionType[];
+  };
+  selectPlot: any;
+  position: any;
+  timeSpent: number;
+  plotLength: number;
 }
 
 const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
-  const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
-  const windowWidth = Dimensions.get('window').width;
-  const windowHeight = Dimensions.get('window').height;
+  const { fromRegister } = route.params;
+
   const [loading, setLoading] = useState(false);
-  const [position, setPosition] = useState({
-    latitude: LAT_LNG_BANGKOK.lat,
-    longitude: LAT_LNG_BANGKOK.lng,
-    latitudeDelta: 0.004757,
-    longitudeDelta: 0.006866,
-  });
-  const timeSpent = useTimeSpent();
-  const [location, setLocation] = useState<any[]>([]);
-  const [searchValue, setSearchValue] = useState<string>();
-  const [selectPlot, setSelectPlot] = useState<any>();
-  const [plantName, setPlantName] = useState<any>();
-  const [raiAmount, setraiAmount] = useState<any>();
-  const [plantListSelect, setPlantListSelect] = useState<
-    { id: string; cropName: string }[]
-  >([]);
-  const [landmark, setlandmark] = useState<any>('');
-  const [lat, setlat] = useState<any>();
-  const [long, setlong] = useState<any>();
-  const [plotName, setplotName] = useState<any>(null);
-  const plantSheet = useRef<any>();
-  const mapSheet = useRef<any>();
-  const plotArea = useRef<any>();
-  const [page, setPage] = useState<number>(0);
-  const [dataStore, setDataStore] = useState<AreaServiceEntity[]>([]);
-  const [dataRender, setDataRender] = useState<AreaServiceEntity[]>([]);
-  const [search, setSearch] = useState<any>({
-    term: '',
-    fetchPredictions: false,
-  });
-  const [showPredictions, setShowPredictions] = useState(false);
-  const [predictions, setPredictions] = useState<PredictionType[]>([]);
-  const GOOGLE_PACES_API_BASE_URL =
-    'https://maps.googleapis.com/maps/api/place';
-  const API_KEY = 'AIzaSyAymsbEe0NVhDL8iHd8oabbr5xG0TFn8Jc';
-  const { container, inputStyle } = styles;
-  const inputBottomRadius = showPredictions
-    ? {
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
-      }
-    : {
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
-      };
 
-  useEffect(() => {
-    getProfile();
-  }, []);
-  const getProfile = async () => {
+  const onSubmitCreatePlot = async ({
+    plotName,
+    raiAmount,
+    landmark,
+    plantName,
+    lat,
+    long,
+    search,
+    selectPlot,
+    position,
+    timeSpent,
+    plotLength,
+  }: SubmitPlotType) => {
     setLoading(true);
-    const farmer_id = await AsyncStorage.getItem('farmer_id');
-    ProfileDatasource.getProfile(farmer_id!)
-      .then(res => {
-        const imgPath = res.file.filter((item: any) => {
-          if (item.category === 'PROFILE_IMAGE') {
-            return item;
-          }
-        });
-        if (imgPath.length === 0) {
-          dispatch({
-            type: 'InitProfile',
-            name: `${res.firstname} ${res.lastname}`,
-            id: res.farmerCode,
-            image: '',
-            plotItem: res.farmerPlot,
-            status: res.status,
+    if (!plotName) {
+      const plotNameNull = 'แปลงที่ ' + `${plotLength + 1} ${plantName}`;
+      PlotDatasource.addFarmerPlot(
+        plotNameNull,
+        raiAmount,
+        landmark,
+        plantName,
+        position.latitude,
+        position.longitude,
+        search.term,
+        selectPlot.subdistrictId,
+      )
+        .then(() => {
+          mixpanel.track('AddPlotScreen_SavePlot_tapped', {
+            plotName: plotNameNull,
+            raiAmount: raiAmount,
+            landmark: landmark,
+            plantName: plantName,
+            latitude: position.latitude,
+            longitude: position.longitude,
+            subSubdistrictId: selectPlot.subdistrictId,
+            searchTerm: search.term,
+            navigateTo: fromRegister ? 'SecondFormScreen' : 'AllPlotScreen',
+
+            timeSpent,
           });
-        } else {
-          ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
-            .then(resImg => {
-              dispatch({
-                type: 'InitProfile',
-                name: `${res.firstname} ${res.lastname}`,
-                id: res.farmerCode,
-                image: resImg.url,
-                plotItem: res.farmerPlot,
-                status: res.status,
-              });
-            })
-            .catch(err => console.log(err))
-            .finally(() => setLoading(false));
-        }
-      })
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false));
-  };
-  const getAllCropName = async () => {
-    try {
-      const result = await CropDatasource.getAllCrop();
-      setPlantListSelect(result);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  useEffect(() => {
-    getLocation();
-    getAllCropName();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const hasPermissionIOS = async () => {
-    const openSetting = () => {
-      Linking.openSettings().catch(() => {
-        Alert.alert('Unable to open settings');
-      });
-    };
-    const status = await Geolocation.requestAuthorization('whenInUse');
-
-    if (status === 'granted') {
-      return true;
-    }
-
-    if (status === 'denied') {
-      Alert.alert('Location permission denied');
-    }
-
-    if (status === 'disabled') {
-      Alert.alert(
-        'Turn on Location Services to allow  to determine your location.',
-        '',
-        [
-          { text: 'Go to Settings', onPress: openSetting },
-          { text: "Don't Use Location", onPress: () => {} },
-        ],
-      );
-    }
-
-    return false;
-  };
-  const hasLocationPermission = async () => {
-    if (Platform.OS === 'ios') {
-      const hasPermission = await hasPermissionIOS();
-      return hasPermission;
-    }
-
-    if (Platform.OS === 'android' && Platform.Version < 23) {
-      return true;
-    }
-
-    const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-
-    if (hasPermission) {
-      return true;
-    }
-
-    const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-
-    if (status === PermissionsAndroid.RESULTS.GRANTED) {
-      return true;
-    }
-
-    if (status === PermissionsAndroid.RESULTS.DENIED) {
-      ToastAndroid.show(
-        'Location permission denied by user.',
-        ToastAndroid.LONG,
-      );
-    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-      ToastAndroid.show(
-        'Location permission revoked by user.',
-        ToastAndroid.LONG,
-      );
-    }
-
-    return false;
-  };
-  const getLocation = async () => {
-    const hasPermission = await hasLocationPermission();
-    if (hasPermission) {
-      Geolocation.getCurrentPosition(
-        pos => {
-          setPosition({
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude,
-            latitudeDelta: 0.004757,
-            longitudeDelta: 0.006866,
-          });
-        },
-        error => {
-          console.log(error.code, error.message);
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-      );
-    }
-  };
-  const selectPlants = (value: any) => {
-    setPlantName(value);
-    plantSheet.current.hide();
-  };
-  const selectPlotArea = (value: any) => {
-    setSelectPlot(value);
-    plotArea.current.hide();
-  };
-
-  const onChangeText = async () => {
-    if (search.term.trim() === '') return null;
-    if (!search.fetchPredictions) return;
-    const apiUrl = `${GOOGLE_PACES_API_BASE_URL}/autocomplete/json?key=${API_KEY}&input=${search.term}`;
-    try {
-      const result = await axios.request({
-        method: 'post',
-        url: apiUrl,
-      });
-      if (result) {
-        const {
-          data: { predictions },
-        } = result;
-        setPredictions(predictions);
-        setShowPredictions(true);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  useDebounce(onChangeText, 0, [search.term]);
-
-  const onPredictionTapped = async (placeId: string, description: string) => {
-    const apiUrl = `${GOOGLE_PACES_API_BASE_URL}/details/json?key=${API_KEY}&place_id=${placeId}`;
-    try {
-      const result = await axios.request({
-        method: 'post',
-        url: apiUrl,
-      });
-      if (result) {
-        const {
-          data: {
-            result: {
-              geometry: { location },
-            },
-          },
-        } = result;
-        const { lat, lng } = location;
-        setlat(lat);
-        setlong(lng);
-        setPosition(prev => ({
-          ...prev,
-          latitude: parseFloat(lat),
-          longitude: parseFloat(lng),
-        }));
-        mixpanel.track('AddPlotScreen_MapView_tapped', {
-          latitude: lat,
-          longitude: lng,
+          setLoading(false);
+          setTimeout(() => {
+            if (fromRegister) {
+              navigation.goBack();
+            } else {
+              navigation.navigate('AllPlotScreen');
+            }
+          }, 500);
+        })
+        .catch(err => {
+          setLoading(false);
+          console.log(err);
         });
-        setShowPredictions(false);
-        setSearch({ term: description, fetchPredictions: false });
-
-        mapSheet.current.hide();
-      }
-    } catch (e) {
-      console.log(e);
+    } else {
+      PlotDatasource.addFarmerPlot(
+        plotName,
+        raiAmount,
+        landmark,
+        plantName,
+        lat,
+        long,
+        search.term,
+        selectPlot.subdistrictId,
+      )
+        .then(() => {
+          mixpanel.track('AddPlotScreen_SavePlot_tapped', {
+            plotName: plotName,
+            raiAmount: raiAmount,
+            landmark: landmark,
+            plantName: plantName,
+            latitude: lat,
+            longitude: long,
+            subSubdistrictId: selectPlot.subdistrictId,
+            term: search.term,
+            navigateTo: fromRegister ? 'SecondFormScreen' : 'AllPlotScreen',
+            timeSpent,
+          });
+          setLoading(false);
+          setTimeout(() => {
+            if (fromRegister) {
+              navigation.goBack();
+            } else {
+              navigation.navigate('AllPlotScreen');
+            }
+          }, 500);
+        })
+        .catch(err => {
+          setLoading(false);
+          console.log(err);
+        });
     }
   };
-
-  useEffect(() => {
-    QueryLocation.getSubdistrict(0, '').then(res => {
-      let all = res.map((item: any) => {
-        return {
-          area: `${item.subdistrictName}/${item.districtName}/${item.provinceName}`,
-          latitude: item.lat,
-          longitude: item.long,
-          provinceId: item.provinceId,
-          districtId: item.districtId,
-          subdistrictId: item.subdistrictId,
-        };
-      });
-      setLocation(all);
-    });
-  }, []);
-
-  useEffect(() => {
-    setPage(0);
-    let filter = location.filter(str => str.area.includes(searchValue));
-    let arr = [];
-    for (let i = 0; i < 10; i++) {
-      if (!!filter[i]) {
-        arr.push(filter[i]);
-      }
-    }
-    setDataStore(filter);
-    setDataRender(arr);
-  }, [searchValue, location]);
-
-  useEffect(() => {
-    let arr = [];
-    let skip = dataStore.length;
-    for (
-      let i = 10 * page;
-      i < (10 + 10 * page > skip ? skip : 10 + 10 * page);
-      i++
-    ) {
-      arr.push(dataStore[i]);
-    }
-    let newarr = dataRender.concat(arr);
-    setDataRender(newarr);
-  }, [page]);
-
-  const searchPlotArea = (value: string) => {
-    setSearchValue(value);
-  };
-  const [defaultNamePlot, setDefaultNamePlot] = useState(
-    !plotName
-      ? `แปลงที่ ${profilestate.plotItem.length + 1} ${
-          plantName !== null && plantName !== undefined ? plantName : ''
-        }`
-      : plotName,
-  );
 
   return (
     <>
@@ -388,601 +164,13 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
           showBackBtn
           onPressBack={() => navigation.goBack()}
         />
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.inner}>
-          <View style={{ justifyContent: 'space-around' }}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <Text style={[styles.head, { marginTop: normalize(15) }]}>
-                ชื่อแปลงเกษตร
-              </Text>
-              <TextInput
-                onChangeText={value => {
-                  setplotName(value);
-                }}
-                onBlur={() => {
-                  mixpanel.track('AddPlotScreen_InputPlotName_typed', {
-                    plotName: plotName,
-                    timeSpent,
-                  });
-                }}
-                allowFontScaling={false}
-                clearTextOnFocus={true}
-                defaultValue={!plotName ? plantName : plotName}
-                style={[styles.input, { borderColor: colors.disable }]}
-                editable={true}
-                placeholder={defaultNamePlot}
-                placeholderTextColor={colors.fontGrey}
-              />
-              <Text style={styles.head}>
-                จำนวนไร่{' '}
-                <Text style={{ fontSize: normalize(16) }}>(โดยประมาณ)</Text>
-              </Text>
-              <TextInput
-                onChangeText={value => {
-                  const newNumber = value.replace(/[^0-9]/g, '');
-                  setraiAmount(newNumber);
-                }}
-                onBlur={() => {
-                  mixpanel.track('AddPlotScreen_InputRaiAmount_typed', {
-                    raiAmount: raiAmount,
-                    timeSpent,
-                  });
-                }}
-                allowFontScaling={false}
-                keyboardType={'numeric'}
-                value={raiAmount}
-                style={[styles.input, { borderColor: colors.disable }]}
-                editable={true}
-                placeholder={'ระบุจำนวนไร่'}
-                placeholderTextColor={colors.disable}
-              />
+        <PlotForm
+          navigation={navigation}
+          onSubmitCreatePlot={onSubmitCreatePlot}
+          setLoading={setLoading}
+          fromRegister={fromRegister}
+        />
 
-              <Text style={styles.head}>พืชที่ปลูก</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  plantSheet.current.show();
-                }}>
-                <View
-                  style={{
-                    borderColor: colors.disable,
-                    borderWidth: 1,
-                    padding: 10,
-                    borderRadius: 10,
-                    marginVertical: 20,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    height: normalize(55),
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: fonts.AnuphanMedium,
-                      fontSize: normalize(20),
-                      color: colors.gray,
-                    }}>
-                    {!plantName ? (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.disable,
-                          fontSize: normalize(20),
-                        }}>
-                        เลือกพืช
-                      </Text>
-                    ) : (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.fontGrey,
-                          fontSize: normalize(20),
-                        }}>
-                        {plantName}
-                      </Text>
-                    )}
-                  </Text>
-                  <Image
-                    source={icons.down}
-                    style={{
-                      width: normalize(24),
-                      height: normalize(22),
-                      marginRight: 10,
-                      tintColor: colors.disable,
-                    }}
-                  />
-                </View>
-              </TouchableOpacity>
-              <Text style={styles.head}>พื้นที่แปลงเกษตร</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  plotArea.current.show();
-                }}>
-                <View
-                  style={{
-                    borderColor: colors.disable,
-                    borderWidth: 1,
-                    padding: 10,
-                    borderRadius: 10,
-                    marginVertical: 20,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    height: normalize(55),
-                  }}>
-                  <Image
-                    source={icons.search}
-                    style={{
-                      width: normalize(22),
-                      height: normalize(22),
-                      marginRight: 10,
-                      tintColor: colors.disable,
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: fonts.AnuphanMedium,
-                      fontSize: normalize(20),
-                      color: colors.gray,
-                      lineHeight: 35,
-                    }}>
-                    {!selectPlot ? (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.disable,
-                          fontSize: normalize(20),
-                        }}>
-                        ระบุตำบล / อำเภอ / จังหวัด
-                      </Text>
-                    ) : (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.fontGrey,
-                          fontSize: normalize(20),
-                        }}>
-                        {selectPlot.area}
-                      </Text>
-                    )}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              <Text style={styles.head}>สถานที่ใกล้แปลง</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  mapSheet.current.show();
-                }}>
-                <View
-                  style={{
-                    borderColor: colors.disable,
-                    borderWidth: 1,
-                    padding: 10,
-                    borderRadius: 10,
-                    marginVertical: 20,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    height: normalize(55),
-                  }}>
-                  <Image source={image.map} style={styles.imageStyle} />
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      fontFamily: fonts.AnuphanMedium,
-                      fontSize: normalize(20),
-                      color: colors.gray,
-                      lineHeight: 35,
-                      width: '80%',
-                    }}>
-                    {!search.term ? (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.disable,
-                          fontSize: normalize(20),
-                        }}>
-                        เช่น วัด, โรงเรียน, ร้านค้า
-                      </Text>
-                    ) : (
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.fontGrey,
-                          fontSize: normalize(20),
-                        }}>
-                        {search.term}
-                      </Text>
-                    )}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              {position.latitude && position.longitude ? (
-                <View style={{ flex: 1 }}>
-                  <MapView.Animated
-                    mapType="satellite"
-                    minZoomLevel={14}
-                    maxZoomLevel={18}
-                    style={styles.map}
-                    onPress={async e => {
-                      mixpanel.track('AddPlotScreen_MapView_tapped', {
-                        latitude: e.nativeEvent.coordinate.latitude,
-                        longitude: e.nativeEvent.coordinate.longitude,
-                      });
-                      setPosition({
-                        ...position,
-                        latitude: e.nativeEvent.coordinate.latitude,
-                        longitude: e.nativeEvent.coordinate.longitude,
-                      });
-                      const res = await QueryLocation.getLocationNameByLatLong({
-                        lat: e.nativeEvent.coordinate.latitude,
-                        long: e.nativeEvent.coordinate.longitude,
-                      });
-                      setSearch({
-                        term: res.results[0].formatted_address,
-                        fetchPredictions: true,
-                      });
-                    }}
-                    provider={PROVIDER_GOOGLE}
-                    region={{
-                      latitude: position.latitude,
-                      latitudeDelta: 0.0922,
-                      longitudeDelta: 0.042,
-                      longitude: position.longitude,
-                    }}
-                    showsUserLocation={true}
-                    showsMyLocationButton={true}>
-                    <Marker
-                      image={image.mark}
-                      coordinate={{
-                        latitude: position?.latitude,
-                        longitude: position?.longitude,
-                      }}
-                    />
-                  </MapView.Animated>
-                </View>
-              ) : (
-                <View />
-              )}
-
-              <Text style={styles.head}>จุดสังเกต</Text>
-              <TextInput
-                onChangeText={value => {
-                  setlandmark(value);
-                }}
-                onBlur={() => {
-                  mixpanel.track('AddPlotScreen_InputLandmark_typed', {
-                    landmark: landmark,
-                    timeSpent,
-                  });
-                }}
-                allowFontScaling={false}
-                value={landmark}
-                style={[styles.input, { borderColor: colors.disable }]}
-                editable={true}
-                placeholder={'ระบุจุดสังเกต'}
-                placeholderTextColor={colors.disable}
-              />
-              <View style={{ height: normalize(10) }} />
-            </ScrollView>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <MainButton
-                style={styles.button}
-                label="ยกเลิก"
-                color={colors.white}
-                borderColor={colors.gray}
-                fontColor={colors.fontBlack}
-                onPress={() => {
-                  navigation.navigate('AllPlotScreen');
-                }}
-              />
-              <MainButton
-                style={styles.button}
-                label="บันทึก"
-                disable={
-                  !raiAmount ||
-                  !plantName ||
-                  !position.latitude ||
-                  !position.longitude ||
-                  !search.term ||
-                  !landmark ||
-                  !selectPlot.subdistrictId
-                    ? true
-                    : false
-                }
-                color={colors.greenLight}
-                onPress={() => {
-                  setLoading(true);
-                  if (!plotName) {
-                    const plotNameNull =
-                      'แปลงที่ ' +
-                      `${profilestate.plotItem.length + 1} ${plantName}`;
-                    PlotDatasource.addFarmerPlot(
-                      plotNameNull,
-                      raiAmount,
-                      landmark,
-                      plantName,
-                      position.latitude,
-                      position.longitude,
-                      search.term,
-                      selectPlot.subdistrictId,
-                    )
-                      .then(() => {
-                        mixpanel.track('AddPlotScreen_SavePlot_tapped', {
-                          plotName: plotNameNull,
-                          raiAmount: raiAmount,
-                          landmark: landmark,
-                          plantName: plantName,
-                          latitude: position.latitude,
-                          longitude: position.longitude,
-                          subSubdistrictId: selectPlot.subdistrictId,
-                          searchTerm: search.term,
-                          navigateTo: 'AllPlotScreen',
-                          timeSpent,
-                        });
-                        setLoading(false);
-                        navigation.navigate('AllPlotScreen');
-                      })
-                      .catch(err => {
-                        setLoading(false);
-                        console.log(err);
-                      });
-                  } else {
-                    PlotDatasource.addFarmerPlot(
-                      plotName,
-                      raiAmount,
-                      landmark,
-                      plantName,
-                      lat,
-                      long,
-                      search.term,
-                      selectPlot.subdistrictId,
-                    )
-                      .then(() => {
-                        mixpanel.track('AddPlotScreen_SavePlot_tapped', {
-                          plotName: plotName,
-                          raiAmount: raiAmount,
-                          landmark: landmark,
-                          plantName: plantName,
-                          latitude: lat,
-                          longitude: long,
-                          subSubdistrictId: selectPlot.subdistrictId,
-                          term: search.term,
-                          navigateTo: 'AllPlotScreen',
-                          timeSpent,
-                        });
-                        setLoading(false);
-                        navigation.navigate('AllPlotScreen');
-                      })
-                      .catch(err => {
-                        setLoading(false);
-                        console.log(err);
-                      });
-                  }
-                }}
-              />
-            </View>
-          </View>
-        </KeyboardAvoidingView>
-
-        <ActionSheet ref={plantSheet}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              paddingVertical: normalize(30),
-              paddingHorizontal: normalize(20),
-              width: windowWidth,
-              height: windowHeight * 0.8,
-              borderRadius: normalize(20),
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
-                พืชที่ปลูก
-              </Text>
-              <Text
-                style={{
-                  color: colors.greenLight,
-                  fontFamily: font.SarabunMedium,
-                  fontSize: normalize(18),
-                }}
-                onPress={() => {
-                  plantSheet.current.hide();
-                }}>
-                ยกเลิก
-              </Text>
-            </View>
-            <View style={styles.container}>
-              <ScrollView>
-                {plantListSelect.map((v, i) => (
-                  <TouchableOpacity>
-                    <PlantSelect
-                      key={i}
-                      label={v.cropName}
-                      id={v.id}
-                      onPress={() => {
-                        selectPlants(v.cropName);
-                        mixpanel.track('AddPlotScreen_SelectPlant_tapped', {
-                          plantName: v.cropName,
-                        });
-                      }}
-                    />
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
-          </View>
-        </ActionSheet>
-
-        <ActionSheet ref={plotArea}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              paddingVertical: normalize(30),
-              paddingHorizontal: normalize(20),
-              width: windowWidth,
-              height: windowHeight,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
-                พื้นที่แปลงเกษตร
-              </Text>
-              <Text
-                style={{
-                  color: colors.greenLight,
-                  fontFamily: font.SarabunMedium,
-                  fontSize: normalize(16),
-                }}
-                onPress={() => {
-                  plotArea.current.hide();
-                }}>
-                ยกเลิก
-              </Text>
-            </View>
-            <View>
-              <Text
-                style={{
-                  fontFamily: fonts.SarabunMedium,
-                  fontSize: normalize(16),
-                  color: colors.gray,
-                }}>
-                กรุณาพิมพ์ชื่อตำบลแปลงเกษตรของคุณ
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fonts.SarabunMedium,
-                  marginBottom: normalize(10),
-                  fontSize: normalize(16),
-                  color: colors.darkOrange,
-                }}>
-                ไม่ต้องพิมพ์คำนำหน้าชื่อคำว่า ต. หรือ ตำบล
-              </Text>
-            </View>
-            <View style={styles.container}>
-              <View
-                style={{
-                  borderColor: colors.disable,
-                  borderWidth: 1,
-                  padding: 10,
-                  borderRadius: 10,
-                  marginVertical: 20,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  height: normalize(55),
-                  justifyContent: 'space-between',
-                }}>
-                <TextInput
-                  allowFontScaling={false}
-                  onChangeText={searchPlotArea}
-                  value={searchValue}
-                  defaultValue={searchValue}
-                  style={[
-                    {
-                      marginLeft: 5,
-                      height: 60,
-                      justifyContent: 'center',
-                      lineHeight: 25,
-                      fontSize: 19,
-                      flex: 1,
-                      width: '100%',
-                      color: colors.fontBlack,
-                      fontFamily: font.SarabunLight,
-                    },
-                  ]}
-                  editable={true}
-                  placeholder={'ระบุพื้นที่แปลงเกษตร'}
-                  placeholderTextColor={colors.disable}
-                />
-                {searchValue ? (
-                  <TouchableOpacity
-                    style={styles.clearBtn}
-                    onPress={() => setSearchValue('')}>
-                    <Icon name="close" />
-                  </TouchableOpacity>
-                ) : null}
-              </View>
-              <ScrollView
-                onScrollEndDrag={() => {
-                  if (dataStore.length > dataRender.length) {
-                    setPage(page + 1);
-                  }
-                }}>
-                {dataRender !== undefined &&
-                  dataRender.map((v: any, i: any) => (
-                    <TouchableOpacity>
-                      <PlantSelect
-                        key={i}
-                        label={v.area}
-                        id={v}
-                        onPress={() => {
-                          mixpanel.track(
-                            'AddPlotScreen_SelectPlotArea_tapped',
-                            {
-                              plotArea: v.area,
-                              timeSpent,
-                            },
-                          );
-                          selectPlotArea(v);
-                        }}
-                      />
-                    </TouchableOpacity>
-                  ))}
-              </ScrollView>
-            </View>
-          </View>
-        </ActionSheet>
-
-        <ActionSheet ref={mapSheet}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              paddingVertical: normalize(30),
-              paddingHorizontal: normalize(20),
-              width: windowWidth,
-              height: windowHeight * 0.7,
-              borderRadius: normalize(20),
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <Text style={[styles.head, { marginBottom: normalize(10) }]}>
-                สถานที่ใกล้แปลง
-              </Text>
-              <Text
-                style={{
-                  color: colors.greenLight,
-                  fontFamily: font.SarabunMedium,
-                  fontSize: normalize(16),
-                }}
-                onPress={() => {
-                  mapSheet.current.hide();
-                }}>
-                ยกเลิก
-              </Text>
-            </View>
-            <View style={styles.container}>
-              <SearchBarWithAutocomplete
-                value={search.term}
-                onChangeText={(text: any) => {
-                  setSearch({ term: text, fetchPredictions: true });
-                }}
-                showPredictions={showPredictions}
-                predictions={predictions}
-                onPredictionTapped={onPredictionTapped}
-              />
-            </View>
-          </View>
-        </ActionSheet>
         <Spinner
           visible={loading}
           textContent={'Loading...'}

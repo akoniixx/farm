@@ -84,7 +84,7 @@ const FourthFormScreen: React.FC<any> = ({ route, navigation }) => {
                 onPress={() => {
                   mixpanel.track('Tab skip to add id card form register');
                   Register.registerSkip4()
-                    .then(async res => navigation.navigate('SuccessRegister'))
+                    .then(() => navigation.navigate('SuccessRegister'))
                     .catch(err => console.log(err));
                 }}>
                 <View style={{ paddingVertical: 30 }}>
