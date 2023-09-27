@@ -1,3 +1,8 @@
+## Fix [v1.4.22] 2023-09-27
+
+- fix bug ui
+- set timeout favorite droner
+
 ## Enhance [1.4.21] 2023-09-26
 
 - action sheet confirm booking

@@ -817,29 +817,33 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                         );
                       }}
                     />
-                    <View
-                      style={{
-                        alignItems: 'center',
-                        top: -5,
-                        marginVertical: -20,
-                      }}>
-                      <Pagination
-                        dotsLength={newPlotList.length}
-                        activeDotIndex={index}
-                        carouselRef={isCarousel}
-                        inactiveDotColor={colors.grey40}
-                        dotColor={colors.greenLight}
-                        dotStyle={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: 5,
-                          marginHorizontal: -2,
-                        }}
-                        inactiveDotOpacity={0.4}
-                        inactiveDotScale={0.9}
-                        tappableDots={true}
-                      />
-                    </View>
+                    {newPlotList.length >= 2 ? (
+                      <View
+                        style={{
+                          alignItems: 'center',
+                          top: -5,
+                          marginVertical: -20,
+                        }}>
+                        <Pagination
+                          dotsLength={newPlotList.length}
+                          activeDotIndex={index}
+                          carouselRef={isCarousel}
+                          inactiveDotColor={colors.grey40}
+                          dotColor={colors.greenLight}
+                          dotStyle={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: 5,
+                            marginHorizontal: -2,
+                          }}
+                          inactiveDotOpacity={0.4}
+                          inactiveDotScale={0.9}
+                          tappableDots={true}
+                        />
+                      </View>
+                    ) : (
+                      <View style={{ marginVertical: 2 }} />
+                    )}
                   </View>
                 </>
               )}

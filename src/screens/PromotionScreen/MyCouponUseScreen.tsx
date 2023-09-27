@@ -129,6 +129,7 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
           {data.length !== 0 ? (
             <View>
               <FlatList
+                scrollIndicatorInsets={{ right: 1 }}
                 refreshControl={
                   <RefreshControl
                     refreshing={refreshing}

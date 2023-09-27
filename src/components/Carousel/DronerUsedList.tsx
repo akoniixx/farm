@@ -29,6 +29,7 @@ interface dronerUsedData {
   callBack: () => Promise<void>;
   dronerId: string;
   isLoading?: boolean;
+  card: any;
 }
 
 const DronerUsedList: React.FC<dronerUsedData> = ({
@@ -44,6 +45,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
   callBack,
   dronerId,
   isLoading,
+  card,
 }) => {
   const [disabled, setDisabled] = useState(false);
   // const onFavorite = async () => {
@@ -81,7 +83,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
     </View>
   ) : (
     <View style={{ paddingHorizontal: 8 }}>
-      <View style={[styles.cards]}>
+      <View style={card !== 'taskSug' ? [styles.cards] : [styles.cardsTaskSug]}>
         <ImageBackground
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
@@ -213,26 +215,28 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                     : `0 กม.`}
                 </Text>
               </View>
-              <View
-                style={{
-                  borderWidth: 1,
-                  borderRadius: 15,
-                  borderColor: colors.greenLight,
-                  backgroundColor: '#fff',
-                  height: 26,
-                  width: 60,
-                  marginLeft: 6,
-                }}>
-                <Text
+              {card !== 'taskSug' && (
+                <View
                   style={{
-                    fontFamily: font.AnuphanMedium,
-                    fontSize: normalize(14),
-                    color: colors.greenDark,
-                    alignSelf: 'center',
+                    borderWidth: 1,
+                    borderRadius: 15,
+                    borderColor: colors.greenLight,
+                    backgroundColor: '#fff',
+                    height: 26,
+                    width: 60,
+                    marginLeft: 6,
                   }}>
-                  เคยจ้าง
-                </Text>
-              </View>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanMedium,
+                      fontSize: normalize(14),
+                      color: colors.greenDark,
+                      alignSelf: 'center',
+                    }}>
+                    เคยจ้าง
+                  </Text>
+                </View>
+              )}
             </View>
           </View>
         </ImageBackground>
@@ -271,6 +275,27 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: colors.bg,
+      },
+    }),
+  },
+  cardsTaskSug: {
+    ...Platform.select({
+      ios: {
+        backgroundColor: colors.white,
+        height: normalize(205),
+        width: normalize(160),
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: colors.bg,
+      },
+      android: {
+        backgroundColor: colors.white,
+        height: normalize(240),
+        width: normalize(160),
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: colors.bg,
+        marginBottom: 10,
       },
     }),
   },

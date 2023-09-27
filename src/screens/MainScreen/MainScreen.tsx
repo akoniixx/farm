@@ -312,7 +312,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
 
       .catch(err => console.error(err));
   };
-
   return (
     <SafeAreaView
       edges={['left', 'right']}
@@ -321,6 +320,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         flex: 1,
       }}>
       <ScrollView
+        showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
         }>
