@@ -62,6 +62,7 @@ import Text from '../../components/Text/Text';
 import useTimeSpent from '../../hook/useTimeSpent';
 import ActionSheet from 'react-native-actions-sheet';
 import ConfirmBooking from '../../components/ConfirmBooking/ConfirmBooking';
+import { getPointCampaign } from '../../datasource/HistoryPointDatasource';
 interface CampaignDetail {
   id: string;
   point: number;
@@ -108,7 +109,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const couponInfo = useRecoilValue(couponState);
 
   const [modalCoupon, setModalCoupon] = useState<boolean>(false);
-
+  const [point, setPoint] = useState<any>();
   const [disableEdit, setDisableEdit] = useState(false);
   const [currentTel] = useState('');
   const [showModalCall, setShowModalCall] = useState(false);
@@ -116,9 +117,20 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const debouncePoint = useDebounceValue(currentCount, 1000);
 
   const [showListPrice, setShowListPrice] = useState(false);
+  useEffect(()=> {
+    const getPointCamp = () => {
+      getPointCampaign.getPoint().then((res)=> {
+        if(res){
+          const filterCondition = res.data.map((x:any)=> x.condition[0])
+          setPoint(filterCondition[0].point);
+        }
+      })
 
+    }
+getPointCamp()
+  },[])
   const onSubmit = async () => {
-    confirmBooking.current.hide();
+    // confirmBooking.current.hide();
     try {
       setLoading(true);
       const dateAppointment = moment(taskData.dateAppointment).toISOString();
@@ -1443,7 +1455,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           couponInfo={couponInfo.name}
           discountPoint={calPrice.discountPoint.toString()}
           discountCoupon={couponInfo.discount.toString()}
-          campaignPoint={currentCount}
+          campaignPoint={parseFloat(taskData?.farmAreaAmount) * parseFloat(point)}
         />
       </ActionSheet>
       <Spinner

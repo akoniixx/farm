@@ -34,7 +34,7 @@ const FavDronerUsed: React.FC<any> = ({ navigation }) => {
     const plot_id = await AsyncStorage.getItem('plot_id');
     FavoriteDroner.findAllFav(farmer_id!, plot_id!)
       .then(res => {
-        setStatusFav(res);
+        setStatusFav(res.data);
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
@@ -49,7 +49,7 @@ const FavDronerUsed: React.FC<any> = ({ navigation }) => {
       }}>
       <ScrollView>
         <View style={{ paddingVertical: 10 }}>
-          {statusFav.length != 0 ? (
+          {statusFav.length !== 0 ? (
             <View>
               <ScrollView>
                 {statusFav.length != undefined &&
@@ -76,19 +76,22 @@ const FavDronerUsed: React.FC<any> = ({ navigation }) => {
                         status_used={item.status_ever_used}
                         status={item.status_favorite}
                         callBack={async () => {
-                          const farmer_id = await AsyncStorage.getItem(
-                            'farmer_id',
-                          );
-                          const droner_id = statusFav.map(x => x.droner_id);
-                          await FavoriteDroner.addUnaddFav(
-                            farmer_id !== null ? farmer_id : '',
-                            droner_id[index],
-                          )
-                            .then(res => {
-                              setRefresh(!refresh);
-                            })
-                            .catch(err => console.log(err))
-                            .finally(() => setLoading(false));
+                          setTimeout(async () => {
+                            const farmer_id = await AsyncStorage.getItem(
+                              'farmer_id',
+                            );
+                            const droner_id = statusFav.map(x => x.droner_id);
+                            await FavoriteDroner.addUnaddFav(
+                              farmer_id !== null ? farmer_id : '',
+                              droner_id[index],
+                              item.street_distance,
+                            )
+                              .then(res => {
+                                setRefresh(!refresh);
+                              })
+                              .catch(err => console.log(err))
+                              .finally(() => setLoading(false));
+                          }, 500);
                         }}
                       />
                     </TouchableOpacity>

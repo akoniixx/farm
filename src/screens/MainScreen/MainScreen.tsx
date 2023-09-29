@@ -339,6 +339,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         flex: 1,
       }}>
       <ScrollView
+        showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
         }>

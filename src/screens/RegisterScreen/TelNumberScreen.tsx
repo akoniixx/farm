@@ -59,7 +59,6 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
         }
       });
   };
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -86,7 +85,13 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
               <Text style={styles.headText}>ยืนยันหมายเลขโทรศัพท์ของคุณ</Text>
               <InputPhone
                 value={value}
-                onChangeText={(e: string) => setValue(e)}
+                onChangeText={(e: string) => {
+                  if (/^(09|08|06)\d{8}$/.test(e)) {
+                    setValue(e);
+                  } else {
+                    setValue('');
+                  }
+                }}
                 maxLength={10}
                 autoFocus={true}
                 onError={isError}
@@ -117,7 +122,7 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
               <MainButton
                 label="ถัดไป"
                 color={colors.greenLight}
-                disable={value.length != 10}
+                disable={value.length !== 10}
                 onPress={() => {
                   setLoading(true);
                   login();

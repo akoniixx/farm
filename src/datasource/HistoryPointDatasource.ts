@@ -34,3 +34,12 @@ export const getAllHistoryPoint = async (
       console.log(err, 'err getAllPoint');
     });
 };
+export class getPointCampaign {
+  static async getPoint(): Promise<any> {
+    return axios
+      .get(BASE_URL + `/promotion/campaign/find-all-campaign?application=FARMER&campaignType=POINT&status=ACTIVE`)
+      .then(res => {
+        return res.data;
+      });
+  }
+}

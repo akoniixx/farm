@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from '../../../../mixpanel';
 import DronerSugg from '../../../components/Carousel/DronerCarousel';
 import { FavoriteDroner } from '../../../datasource/FavoriteDroner';
+import DronerUsedList from '../../../components/Carousel/DronerUsedList';
 
 interface Props {
   navigation: any;
@@ -35,7 +36,8 @@ export default function DronerSuggestion({
                 });
                 navigation.push('DronerDetail');
               }}>
-              <DronerSugg
+              <DronerUsedList
+                card="taskSug"
                 key={index}
                 index={index}
                 profile={item.image_droner}
@@ -49,30 +51,35 @@ export default function DronerSuggestion({
                 isLoading={isLoading}
                 dronerId={item.droner_id}
                 callBack={async () => {
-                  const farmer_id = await AsyncStorage.getItem('farmer_id');
-                  const droner_id = taskSug.map(x => x.droner_id);
-                  await FavoriteDroner.addUnaddFav(
-                    farmer_id !== null ? farmer_id : '',
-                    droner_id[index],
-                  )
-                    .then(() => {
-                      setRefresh(prev => !prev);
-                      let newTaskSug = taskSug.map(x => {
-                        let result = {};
-                        if (x.droner_id === item.droner_id) {
-                          let a =
-                            x.favorite_status === 'ACTIVE'
-                              ? 'INACTIVE'
-                              : 'ACTIVE';
-                          result = { ...x, favorite_status: a };
-                        } else {
-                          result = { ...x };
-                        }
-                        return result;
-                      });
-                      setTaskSug(newTaskSug);
-                    })
-                    .catch(err => console.log(err));
+                  setTimeout(async () => {
+                    const farmer_id = await AsyncStorage.getItem('farmer_id');
+                    const droner_id = taskSug.map(x => x.droner_id);
+                    await FavoriteDroner.addUnaddFav(
+                      farmer_id !== null ? farmer_id : '',
+                      droner_id[index],
+                      item.street_distance
+                    )
+                      .then(() => {
+                        setRefresh(prev => !prev);
+                        let newTaskSug = taskSug.map(x => {
+                          let result = {};
+                          if (x.droner_id === item.droner_id) {
+                            let a =
+                              x.favorite_status === 'ACTIVE'
+                                ? 'INACTIVE'
+                                : 'ACTIVE';
+                            result = { ...x, favorite_status: a };
+                          } else {
+                            result = { ...x };
+                          }
+                          return result;
+                        });
+                        console.log(newTaskSug);
+                        setTaskSug(newTaskSug);
+                      })
+                      .catch(err => console.log(err))
+                      .finally();
+                  }, 500);
                 }}
               />
             </TouchableOpacity>

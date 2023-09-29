@@ -63,6 +63,7 @@ export default function BookedDroner({
                     navigation.push('DronerDetail');
                   }}>
                   <DronerUsedList
+                    card="taskSugUsed"
                     isLoading={isLoading}
                     key={index}
                     index={index}
@@ -76,31 +77,36 @@ export default function BookedDroner({
                     distance={item.street_distance}
                     status={item.favorite_status}
                     callBack={async () => {
-                      const farmer_id = await AsyncStorage.getItem('farmer_id');
-                      const droner_id = taskSugUsed.map(x => x.droner_id);
-                      await FavoriteDroner.addUnaddFav(
-                        farmer_id !== null ? farmer_id : '',
-                        droner_id[index],
-                      )
-                        .then(() => {
-                          setRefresh(prev => !prev);
-                          let newTaskSugUsed = taskSugUsed.map(x => {
-                            let result = {};
-                            if (x.droner_id === item.droner_id) {
-                              let a =
-                                x.favorite_status === 'ACTIVE'
-                                  ? 'INACTIVE'
-                                  : 'ACTIVE';
-                              result = { ...x, favorite_status: a };
-                            } else {
-                              result = { ...x };
-                            }
-                            return result;
-                          });
-                          setTaskSugUsed(newTaskSugUsed);
-                        })
-                        .catch(err => console.log(err))
-                        .finally();
+                      setTimeout(async () => {
+                        const farmer_id = await AsyncStorage.getItem(
+                          'farmer_id',
+                        );
+                        const droner_id = taskSugUsed.map(x => x.droner_id);
+                        await FavoriteDroner.addUnaddFav(
+                          farmer_id !== null ? farmer_id : '',
+                          droner_id[index],
+                          item.street_distance
+                        )
+                          .then(() => {
+                            setRefresh(prev => !prev);
+                            let newTaskSugUsed = taskSugUsed.map(x => {
+                              let result = {};
+                              if (x.droner_id === item.droner_id) {
+                                let a =
+                                  x.favorite_status === 'ACTIVE'
+                                    ? 'INACTIVE'
+                                    : 'ACTIVE';
+                                result = { ...x, favorite_status: a };
+                              } else {
+                                result = { ...x };
+                              }
+                              return result;
+                            });
+                            setTaskSugUsed(newTaskSugUsed);
+                          })
+                          .catch(err => console.log(err))
+                          .finally();
+                      }, 500);
                     }}
                   />
                 </TouchableOpacity>
