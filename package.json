@@ -1,6 +1,6 @@
 {
   "name": "farmer",
-  "version": "1.4.22",
+  "version": "1.4.23",
   "private": true,
   "scripts": {
     "android": "react-native run-android",

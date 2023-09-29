@@ -1,3 +1,8 @@
+## Fix [v1.4.23] 2023-09-29
+- fix bug ui
+- fix bug some flow register
+- tooltip flow create Task 
+- new flow about manual create task
 ## Fix [v1.4.22] 2023-09-27
 
 - fix bug ui
