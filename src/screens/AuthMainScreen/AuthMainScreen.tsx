@@ -133,7 +133,9 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
     getProfile();
     findAllNews();
     if (isConfirm === null) {
-      setShowModalPermission(true);
+      setTimeout(() => {
+        setShowModalPermission(true);
+      }, 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

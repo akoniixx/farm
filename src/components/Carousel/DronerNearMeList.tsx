@@ -38,10 +38,8 @@ const DronerNearMeList: React.FC<dronerUsedData> = ({
   total_task,
   province,
   distance,
-  status,
   isLoading,
 }) => {
-  const [disabled, setDisabled] = useState(false);
   // const onFavorite = async () => {
   //   setDisabled(true);
   //   const farmer_id = await AsyncStorage.getItem('farmer_id');

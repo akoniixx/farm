@@ -7,5 +7,7 @@ registerSheet('sheet-select-injection', SelectInjectionSheet);
 registerSheet('CallingSheet', CallingModal);
 registerSheet('placePlot', InfoSheet);
 registerSheet('positionPlot', InfoSheet);
+registerSheet('targetSpray', InfoSheet);
+registerSheet('injectTime', InfoSheet);
 
 export {};

@@ -4,7 +4,7 @@ import { icons } from '../../assets';
 import { SheetManager } from 'react-native-actions-sheet';
 
 interface Props {
-  sheetId: 'placePlot' | 'positionPlot';
+  sheetId: 'placePlot' | 'positionPlot' | 'targetSpray' | 'injectTime';
 }
 
 export default function InfoCircleButton({ sheetId }: Props) {

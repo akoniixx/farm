@@ -32,12 +32,7 @@ import { mixpanel, mixpanel_token } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
-import { momentExtend } from '../../utils/moment-buddha-year';
-import PopUpMaintenance from '../../components/Modal/MaintenanceApp/PopUpMaintenance';
-import {
-  MaintenanceSystem,
-  MaintenanceSystem_INIT,
-} from '../../entites/MaintenanceApp';
+
 import { GuruKaset } from '../../datasource/GuruDatasource';
 import { historyPoint } from '../../datasource/HistoryPointDatasource';
 import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
@@ -48,8 +43,8 @@ import ProfileRenderByStatus from './MainScreenComponent/ProfileRenderByStatus';
 import CarouselMainScreen from './MainScreenComponent/CarouselMainScreen';
 import BookedDroner from './MainScreenComponent/BookedDroner';
 import DronerSuggestion from './MainScreenComponent/DronerSuggestion';
-import { SystemMaintenance } from '../../datasource/SystemMaintenanceDatasource';
 import { useMaintenance } from '../../contexts/MaintenanceContext';
+import ModalSelectHiring from '../../components/Modal/ModalSelectHiring';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const date = new Date();
@@ -72,7 +67,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [refresh, setRefresh] = useState<boolean>(false);
   const [guruKaset, setGuruKaset] = useState<any>();
   const [refreshing, setRefreshing] = useState(false);
-  const screen = Dimensions.get('window');
+  const [visibleSelectHire, setVisibleSelectHire] = useState(false);
   const [dataFinding, setDataFinding] = useState({
     id: '',
     taskNo: '',
@@ -93,8 +88,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [reload, setReload] = useState(false);
   const [statusFav, setStatusFav] = useState<any[]>([]);
 
-  const [index, setIndex] = React.useState(0);
-  const isCarousel = React.useRef(null);
   const [reason, setReason] = useState<any>('');
   const [point, setPoint] = useState<any>();
   const { notiMaintenance, maintenanceData } = useMaintenance();
@@ -144,6 +137,27 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         .catch(err => console.log(err));
     }
   };
+  const onPressAutoBooking = async () => {
+    if (disableBooking) {
+      setVisibleSelectHire(false);
+      setTimeout(() => {
+        setShowModalCantBooking(true);
+      }, 200);
+    } else {
+      mixpanel.track('MainScreen_ButtonBookingTask_Press', {
+        navigateTo: 'SelectDateScreen',
+        type: 'auto-booking',
+      });
+      setVisibleSelectHire(false);
+      setTimeout(() => {
+        navigation.navigate('SelectDateScreen', {
+          isSelectDroner: false,
+          profile: {},
+        });
+      }, 200);
+    }
+  };
+
   const getInitialData = async () => {
     const getTaskId = async () => {
       const value = await AsyncStorage.getItem('taskId');
@@ -312,6 +326,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
 
       .catch(err => console.error(err));
   };
+  const onPressManualBooking = async () => {
+    setVisibleSelectHire(false);
+    navigation.navigate('DronerHiredScreen');
+  };
 
   return (
     <SafeAreaView
@@ -443,18 +461,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 }}>
                 <TouchableOpacity
                   onPress={() => {
-                    if (disableBooking) {
-                      setShowModalCantBooking(true);
-                    } else {
-                      mixpanel.track('MainScreen_ButtonBookingTask_Press', {
-                        navigateTo: 'SelectDateScreen',
-                        type: 'auto-booking',
-                      });
-                      navigation.navigate('SelectDateScreen', {
-                        isSelectDroner: false,
-                        profile: {},
-                      });
-                    }
+                    mixpanel.track('MainScreen_ButtonHireDroner_Press', {
+                      navigateTo: 'HireDronerScreen',
+                    });
+                    setVisibleSelectHire(true);
                   }}>
                   <LinearGradient
                     colors={['#61E097', '#3B996E']}
@@ -575,7 +585,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   </Text>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate('DronerUsedScreen');
+                      navigation.navigate('DronerHiredScreen');
                     }}>
                     <Text
                       style={{
@@ -611,7 +621,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       color: colors.fontGrey,
                       paddingHorizontal: 20,
                     }}>
-                    นักบินโดรนที่แนะนำ
+                    นักบินโดรนที่ใกล้คุณ
                   </Text>
                 </View>
                 <DronerSuggestion
@@ -789,6 +799,13 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           }}
         />
       </Modal>
+      <ModalSelectHiring
+        visible={visibleSelectHire}
+        taskSugUsed={taskSugUsed}
+        setVisible={setVisibleSelectHire}
+        onPressAutoBooking={onPressAutoBooking}
+        onPressManualBooking={onPressManualBooking}
+      />
     </SafeAreaView>
   );
 };

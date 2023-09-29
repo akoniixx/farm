@@ -6,23 +6,41 @@ import { colors, font } from '../../assets';
 import { MainButton } from '../Button/MainButton';
 
 interface Props {
-  sheetId: 'placePlot' | 'positionPlot';
+  sheetId: 'placePlot' | 'positionPlot' | 'targetSpray' | 'injectTime';
   payload: {
-    type: 'placePlot' | 'positionPlot';
+    type: 'placePlot' | 'positionPlot' | 'targetSpray' | 'injectTime';
   };
 }
+
 const mappingObj = {
   placePlot: {
     title: 'พื้นที่แปลงเกษตร คืออะไร?',
-    description:
-      'การระบุตำบลที่ตั้งแปลง \n เกษตรของท่าน โดยมีผลต่อการค้นหาและรับงาน \n ของนักบินโดรนในพื้นที่ที่ท่านอยู่',
-    height: '33%',
+    description: [
+      'คือ การระบุ “ตำบล” ที่ตั้งของแปลงเกษตรของคุณ',
+      'โดยไม่ต้องพิมพ์คำนำหน้าชื่อคำว่า ต. หรือ ตำบล',
+      'เช่น ห้วยกรด, คูคต, บางเสาธง',
+      ' การระบุหัวข้อนี้ มีผลต่อการจ้างนักบินโดรน',
+      'ในพื้นที่ที่คุณอยู่',
+    ],
+    height: '40%',
   },
   positionPlot: {
     title: 'ตำแหน่งแปลง คืออะไร?',
     description:
-      'การระบุสถานที่ หรือตำแหน่ง \n แปลงเกษตรของท่านให้นักบินโดรนทราบ \n เพื่อให้นักบินโดรนเดินทางมาที่แปลงเกษตรได้ \n อย่างถูกต้อง',
-    height: '36%',
+      'คือ การระบุตำแหน่งที่ตั้งแปลงเกษตร 2 ขั้นตอน \n 1. ระบุสถานที่ใกล้แปลง เช่น วัด โรงเรียน \n 2. เลื่อนหมุดแผนที่ เพื่อไปหาตำแหน่งแปลง \n \n เพื่อให้นักบินโดรนทราบถึงตำแหน่งที่ตั้ง และ \n เดินทางมาที่แปลงเกษตรได้ถูกต้อง',
+    height: '45%',
+  },
+  targetSpray: {
+    title: 'เป้าหมาย คืออะไร?',
+    description:
+      'คือ สิ่งที่คุณต้องการให้นักบินโดรนทำ\nในแปลงเกษตรของคุณครั้งนี้\nเช่น ฆ่าหญ้า, กำจัดแมลง, ให้ฮอร์โมน, \n ป้องกันเชื้อรา',
+    height: '38%',
+  },
+  injectTime: {
+    title: 'ช่วงเวลา คืออะไร?',
+    description:
+      'คือ การระบุช่วงเวลา หรือ \nอายุของพืชที่ปลูกให้นักบินโดรนทราบ \nเช่น คุมเลน, คุมฆ่า, แตกกอ, ตั้งท้อง',
+    height: '33%',
   },
 };
 export default function InfoSheet({ sheetId, payload }: Props) {
@@ -40,9 +58,61 @@ export default function InfoSheet({ sheetId, payload }: Props) {
           <Text style={styles.h1}>
             {mappingObj[type as keyof typeof mappingObj].title}
           </Text>
-          <Text style={styles.h3}>
-            {mappingObj[type as keyof typeof mappingObj].description}
-          </Text>
+          {type === 'placePlot' ? (
+            <>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontFamily: font.SarabunLight,
+                  textAlign: 'center',
+                  lineHeight: 28,
+                }}>
+                {mappingObj[type as keyof typeof mappingObj].description[0]}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontFamily: font.SarabunLight,
+                  textAlign: 'center',
+                  lineHeight: 28,
+                  color: colors.errorText,
+                }}>
+                {mappingObj[type as keyof typeof mappingObj].description[1]}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontFamily: font.SarabunLight,
+                  textAlign: 'center',
+                  lineHeight: 28,
+                  marginBottom: 16,
+                }}>
+                {mappingObj[type as keyof typeof mappingObj].description[2]}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontFamily: font.SarabunLight,
+                  textAlign: 'center',
+                  lineHeight: 28,
+                }}>
+                {mappingObj[type as keyof typeof mappingObj].description[3]}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontFamily: font.SarabunLight,
+                  textAlign: 'center',
+                  lineHeight: 28,
+                }}>
+                {mappingObj[type as keyof typeof mappingObj].description[4]}
+              </Text>
+            </>
+          ) : (
+            <Text style={styles.h3}>
+              {mappingObj[type as keyof typeof mappingObj].description}
+            </Text>
+          )}
         </View>
         <MainButton
           color={colors.greenLight}

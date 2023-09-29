@@ -463,6 +463,8 @@ PODS:
   - React-jsinspector (0.70.5)
   - React-logger (0.70.5):
     - glog
+  - react-native-color-matrix-image-filters (6.0.3):
+    - React-Core
   - react-native-date-picker (4.2.6):
     - React-Core
   - react-native-geolocation-service (5.3.1):
@@ -693,6 +695,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-color-matrix-image-filters (from `../node_modules/react-native-color-matrix-image-filters`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
@@ -820,6 +823,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-color-matrix-image-filters:
+    :path: "../node_modules/react-native-color-matrix-image-filters"
   react-native-date-picker:
     :path: "../node_modules/react-native-date-picker"
   react-native-geolocation-service:
@@ -954,6 +959,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 31564fa6912459921568e8b0e49024285a4d584b
   React-jsinspector: badd81696361249893a80477983e697aab3c1a34
   React-logger: fdda34dd285bdb0232e059b19d9606fa0ec3bb9c
+  react-native-color-matrix-image-filters: c945260077dabac82d8e25af937c18fff4021707
   react-native-date-picker: 93e43b3084cea595b4d68b1405d6d99849663bd6
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
   react-native-google-maps: 035ad2f9b4974f22af3d4d4c6993960a181b0aaf
@@ -1001,4 +1007,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 123f85ad0afea4890f356faa72f574f526c37584
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1

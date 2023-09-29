@@ -246,38 +246,40 @@ export const TargetSpray: React.FC<TargetSprayProp> = ({
         backgroundColor: '#E8F6FF',
         borderRadius: 10,
       }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'baseline',
-          justifyContent: 'space-between',
-        }}>
-        <View>
+      <View>
+        <View style={styles.containerRow}>
           <Text style={[styles.h2, { marginBottom: normalize(10) }]}>
             ช่วงเวลาการพ่น
           </Text>
+          <View style={styles.rightContainer}>
+            <Text
+              style={[styles.h1, { marginBottom: normalize(10) }]}
+              numberOfLines={1}>
+              {periodSpray}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.containerRow}>
           <Text style={[styles.h2, { marginBottom: normalize(10) }]}>
             เป้าหมายการพ่น
           </Text>
+          <View style={styles.rightContainer}>
+            <Text
+              style={[styles.h1, { marginBottom: normalize(10) }]}
+              numberOfLines={1}>
+              {target}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.containerRow}>
           <Text style={[styles.h2, { marginBottom: normalize(10) }]}>
             ยาที่ต้องใช้
           </Text>
-        </View>
-        <View style={{ alignItems: 'flex-end' }}>
-          <Text style={[styles.h1, { marginBottom: normalize(10) }]}>
-            {periodSpray}
-          </Text>
-          <Text
-            numberOfLines={1}
-            style={[
-              styles.h1,
-              { marginBottom: normalize(10), width: 180, textAlign: 'right' },
-            ]}>
-            {target}
-          </Text>
-          <Text style={[styles.h1, { marginBottom: normalize(10) }]}>
-            {preparationBy}
-          </Text>
+          <View style={styles.rightContainer}>
+            <Text style={[styles.h1, { marginBottom: normalize(10) }]}>
+              {preparationBy}
+            </Text>
+          </View>
         </View>
       </View>
     </View>
@@ -300,5 +302,16 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: font.SarabunMedium,
     fontSize: normalize(19),
+  },
+  containerRow: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+  },
+  rightContainer: {
+    alignSelf: 'flex-start',
+    marginLeft: normalize(10),
+    width: Dimensions.get('screen').width * 0.5,
+    alignItems: 'flex-end',
   },
 });

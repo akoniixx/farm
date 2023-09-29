@@ -291,6 +291,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   label="ถัดไป"
                   color={colors.greenLight}
                   onPress={onSubmit}
+                  disable={formState.name === '' || formState.surname === ''}
                 />
               </View>
             </View>

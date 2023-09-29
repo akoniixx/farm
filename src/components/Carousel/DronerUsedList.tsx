@@ -42,7 +42,6 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
   distance,
   status,
   callBack,
-  dronerId,
   isLoading,
 }) => {
   const [disabled, setDisabled] = useState(false);

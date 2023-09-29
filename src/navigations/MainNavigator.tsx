@@ -47,6 +47,7 @@ import AllCouponScreen from '../screens/PromotionScreen/AllCouponScreen';
 import AllGuruScreen from '../screens/GuruScreen/AllGuruScreen';
 import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
 import DetailPointScreen from '../screens/PointScreen/DetailPointScreen';
+import { DronerHiredScreen } from '../screens/DronerHiredScreen';
 
 export type MainStackParamList = {
   MainScreen: undefined;
@@ -96,6 +97,7 @@ export type MainStackParamList = {
   AllGuruScreen: undefined;
   DetailGuruScreen: undefined;
   DetailPointScreen: undefined;
+  DronerHiredScreen: undefined;
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
@@ -181,6 +183,7 @@ const MainNavigator: React.FC<any> = () => {
         <Stack.Screen name="DetailPointScreen" component={DetailPointScreen} />
         <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
         <Stack.Screen name="DetailGuruScreen" component={DetailGuruScreen} />
+        <Stack.Screen name="DronerHiredScreen" component={DronerHiredScreen} />
       </Stack.Navigator>
     </>
   );
