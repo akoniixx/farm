@@ -128,9 +128,11 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   const favorite = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const droner_id = profile.droner_id;
+    const streetDistance = profile.street_distance;
     await FavoriteDroner.addUnaddFav(
       farmer_id !== null ? farmer_id : '',
       droner_id !== null ? droner_id : '',
+      streetDistance
     )
       .then(res => {
         setRefresh(!refresh);

@@ -148,8 +148,6 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
           </Text>
         </View>
         <View>
-          {isUsePoint && (
-            <>
               <View
                 style={{
                   justifyContent: 'space-between',
@@ -162,8 +160,6 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
                   {`≈ ${numberWithCommas(campaignPoint, true)} แต้ม`}
                 </Text>
               </View>
-            </>
-          )}
         </View>
       </View>
 

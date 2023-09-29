@@ -150,6 +150,7 @@ const AllDronerUsed: React.FC<any> = ({ navigation }) => {
                             await FavoriteDroner.addUnaddFav(
                               farmer_id !== null ? farmer_id : '',
                               droner_id[index],
+                              item.street_distance
                             )
                               .then(res => {
                                 setRefresh(!refresh);
