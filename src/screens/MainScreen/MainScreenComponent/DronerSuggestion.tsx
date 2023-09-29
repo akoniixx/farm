@@ -57,6 +57,7 @@ export default function DronerSuggestion({
                     await FavoriteDroner.addUnaddFav(
                       farmer_id !== null ? farmer_id : '',
                       droner_id[index],
+                      item.street_distance
                     )
                       .then(() => {
                         setRefresh(prev => !prev);

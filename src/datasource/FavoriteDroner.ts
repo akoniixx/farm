@@ -2,11 +2,16 @@ import axios from 'axios';
 import { BASE_URL, httpClient } from '../config/develop-config';
 
 export class FavoriteDroner {
-  static async addUnaddFav(farmerId: string, dronerId: string): Promise<any> {
+  static async addUnaddFav(
+    farmerId: string,
+    dronerId: string,
+    streetDistance?: string,
+  ): Promise<any> {
     return axios
       .post(BASE_URL + `/tasks/favorite/add-unadd-favorite`, {
         farmerId: farmerId,
         dronerId: dronerId,
+        streetDistance: streetDistance,
       })
       .then(res => {
         return res.data;

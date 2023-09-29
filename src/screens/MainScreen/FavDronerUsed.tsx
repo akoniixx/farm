@@ -34,7 +34,7 @@ const FavDronerUsed: React.FC<any> = ({ navigation }) => {
     const plot_id = await AsyncStorage.getItem('plot_id');
     FavoriteDroner.findAllFav(farmer_id!, plot_id!)
       .then(res => {
-        setStatusFav(res);
+        setStatusFav(res.data);
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
@@ -49,7 +49,7 @@ const FavDronerUsed: React.FC<any> = ({ navigation }) => {
       }}>
       <ScrollView>
         <View style={{ paddingVertical: 10 }}>
-          {statusFav.length != 0 ? (
+          {statusFav.length !== 0 ? (
             <View>
               <ScrollView>
                 {statusFav.length != undefined &&
@@ -84,6 +84,7 @@ const FavDronerUsed: React.FC<any> = ({ navigation }) => {
                             await FavoriteDroner.addUnaddFav(
                               farmer_id !== null ? farmer_id : '',
                               droner_id[index],
+                              item.street_distance,
                             )
                               .then(res => {
                                 setRefresh(!refresh);
