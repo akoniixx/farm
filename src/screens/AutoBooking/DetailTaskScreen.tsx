@@ -130,7 +130,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
 getPointCamp()
   },[])
   const onSubmit = async () => {
-    // confirmBooking.current.hide();
+    confirmBooking.current.hide();
     try {
       setLoading(true);
       const dateAppointment = moment(taskData.dateAppointment).toISOString();
