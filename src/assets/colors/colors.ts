@@ -32,6 +32,7 @@ export default {
   greyDivider: '#F2F3F4',
   surface: '#F6F7F9',
   grey60: '#5F6872',
+  grey50: '#747F8B',
   grey40: '#8D96A0',
   grey30: '#A7AEB5',
   grey20: '#C0C5CA',

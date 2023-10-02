@@ -9,7 +9,6 @@ import React, {
   useState,
 } from 'react';
 import {
-  Dimensions,
   Image,
   KeyboardAvoidingView,
   Linking,
@@ -117,20 +116,18 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const debouncePoint = useDebounceValue(currentCount, 1000);
 
   const [showListPrice, setShowListPrice] = useState(false);
-  useEffect(()=> {
+  useEffect(() => {
     const getPointCamp = () => {
-      getPointCampaign.getPoint().then((res)=> {
-        if(res){
-          const filterCondition = res.data.map((x:any)=> x.condition[0])
+      getPointCampaign.getPoint().then(res => {
+        if (res) {
+          const filterCondition = res.data.map((x: any) => x.condition[0]);
           setPoint(filterCondition[0].point);
         }
-      })
-
-    }
-getPointCamp()
-  },[])
+      });
+    };
+    getPointCamp();
+  }, []);
   const onSubmit = async () => {
-    confirmBooking.current.hide();
     try {
       setLoading(true);
       const dateAppointment = moment(taskData.dateAppointment).toISOString();
@@ -161,7 +158,10 @@ getPointCamp()
         statusRemark: '',
       };
       const res = await TaskDatasource.createTask(payload);
+
       if (res && res.success) {
+        confirmBooking.current.hide();
+
         if (!couponInfo.name) {
           mixpanel.track('DetailTaskScreen_buttonSubmitBooking_tapped', {
             couponId: couponInfo.id,
@@ -1455,7 +1455,9 @@ getPointCamp()
           couponInfo={couponInfo.name}
           discountPoint={calPrice.discountPoint.toString()}
           discountCoupon={couponInfo.discount.toString()}
-          campaignPoint={parseFloat(taskData?.farmAreaAmount) * parseFloat(point)}
+          campaignPoint={
+            parseFloat(taskData?.farmAreaAmount) * parseFloat(point)
+          }
         />
       </ActionSheet>
       <Spinner

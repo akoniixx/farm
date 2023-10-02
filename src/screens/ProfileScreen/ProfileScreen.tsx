@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { normalize } from '../../functions/Normalize';
 import CustomHeader from '../../components/CustomHeader';
-import * as RootNavigation from '../../navigations/RootNavigation';
+// import * as RootNavigation from '../../navigations/RootNavigation';
 import { ScrollView } from 'react-native';
 import { StatusObject } from '../../components/Plots/Plots';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -42,7 +42,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [index, setIndex] = useState(0);
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const [showModalCall, setShowModalCall] = useState(false);
-  const [countPlot, setCountPlot] = useState<any>();
 
   const isFocused = useIsFocused();
   const onLogout = async () => {
@@ -60,7 +59,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
       sttPlot.splice(index);
     }
 
-    setCountPlot(sttPlot.length);
+    // setCountPlot(sttPlot.length);
     const findPlot = profilestate.plotItem.filter(
       (x: any) => x.status !== 'INACTIVE',
     );

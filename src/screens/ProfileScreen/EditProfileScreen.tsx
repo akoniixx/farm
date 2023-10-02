@@ -7,7 +7,7 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../styles/StylesCentral';
 import { colors, font, icons } from '../../assets';
@@ -15,7 +15,6 @@ import CustomHeader from '../../components/CustomHeader';
 import { MainButton } from '../../components/Button/MainButton';
 import { normalize } from '../../functions/Normalize';
 import { Avatar } from '@rneui/themed';
-import { _monthName } from '../../definitions/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { momentExtend } from '../../utils/moment-buddha-year';
@@ -26,6 +25,9 @@ import {
   LocationSelect,
 } from '../../components/Location/Location';
 import Text from '../../components/Text/Text';
+import ImagePicker from 'react-native-image-crop-picker';
+import ModalUploadImage from '../../components/Modal/ModalUploadImage';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 
 const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [initProfile, setInitProfile] = useState({
@@ -50,15 +52,14 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [itemsSubDistrict, setItemSubDistrict] = useState([]);
   const [province, setProvince] = useState<any>([]);
   const [district, setDistrict] = useState<any>([]);
-  const [subdistrict, setSubdistrict] = useState<any>([]);
-  const [loading, setLoading] = useState(false);
-  const [bottompadding, setBottomPadding] = useState(0);
   const provinceSheet = useRef<any>();
   const DistriSheet = useRef<any>();
   const SubDistriSheet = useRef<any>();
   const [address, setAddress] = useState<any>([]);
   const [addr, setAddr] = useState<any>([]);
-  const [images, setImages] = useState<any>([]);
+  const [image, setImage] = useState<any>(null);
+
+  const [openModal, setOpenModal] = useState(false);
   useEffect(() => {
     getProfile();
   }, []);
@@ -66,42 +67,49 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const getProfile = async () => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     ProfileDatasource.getProfile(farmer_id!)
-      .then(res => {
-        const imgPath = res.file.filter((item: any) => {
+      .then(async res => {
+        const imgPath = res.file.find((item: any) => {
           if (item.category === 'PROFILE_IMAGE') {
             return item;
           }
         });
         setValue(res);
-        setAddress(res.address);
-        if (imgPath.length === 0) {
-          QueryLocation.QueryProfileSubDistrict(res.address.districtId).then(
-            resSub => {
+        setAddress(res?.address);
+        if (imgPath === undefined) {
+          if (!res?.address?.subdistrictId) {
+            return setImage(null);
+          }
+          const resSub = await QueryLocation.QueryProfileSubDistrict(
+            res.address.districtId,
+          );
+          const address = resSub.filter((item: any) => {
+            if (item.subdistrictId === res.address.subdistrictId) {
+              return item;
+            }
+          });
+          setAddr(address[0]);
+          setImage(null);
+        } else {
+          try {
+            const resImg = await ProfileDatasource.getImgePathProfile(
+              farmer_id!,
+              imgPath.path,
+            );
+            if (res?.address?.subdistrictId) {
+              const resSub = await QueryLocation.QueryProfileSubDistrict(
+                res.address.districtId,
+              );
               const address = resSub.filter((item: any) => {
-                if (item.subdistrictId === res.address.subdistrictId) {
+                if (item.subdistrictId === res?.address?.subdistrictId) {
                   return item;
                 }
               });
               setAddr(address[0]);
-            },
-          );
-          setImages('');
-        } else {
-          ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
-            .then(resImg => {
-              QueryLocation.QueryProfileSubDistrict(
-                res.address.districtId,
-              ).then(resSub => {
-                const address = resSub.filter((item: any) => {
-                  if (item.subdistrictId === res.address.subdistrictId) {
-                    return item;
-                  }
-                });
-                setAddr(address[0]);
-              });
-              setImages(resImg);
-            })
-            .catch(err => console.log(err));
+            }
+            setImage(resImg);
+          } catch (err) {
+            console.log(err);
+          }
         }
       })
       .catch(err => console.log(err));
@@ -109,11 +117,67 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
   useEffect(() => {
     getProfile();
     QueryLocation.QueryProvince().then(res => {
-      const Province = res.map((item: any) => {
+      const Province = (res || []).map((item: any) => {
         return { label: item.provinceName, value: item.provinceId };
       });
       setItems(Province);
     });
+  }, []);
+
+  console.log(image);
+
+  const onAddImage = useCallback(async () => {
+    const result = await ImagePicker.openPicker({
+      mediaType: 'photo',
+      width: 200,
+      height: 200,
+      maxFiles: 1,
+      multiple: false,
+      cropping: true,
+    });
+    if (result) {
+      setImage({
+        ...result,
+        assets: [
+          {
+            fileSize: result.size,
+            type: result.mime,
+            fileName: result?.filename,
+            uri: result.path,
+          },
+        ],
+      });
+      setOpenModal(false);
+    }
+  }, []);
+
+  const onPressCamera = useCallback(async () => {
+    const result = await ImagePicker.openCamera({
+      mediaType: 'photo',
+      maxWidth: 200,
+      maxHeight: 200,
+      cropping: true,
+    });
+    if (result) {
+      setImage({
+        ...result,
+        assets: [
+          {
+            fileSize: result.size,
+            type: result.mime,
+            fileName: result?.filename,
+            uri: result.path,
+          },
+        ],
+      });
+      setOpenModal(false);
+    }
+  }, []);
+  const onFinishedTakePhotoAndroid = useCallback(async (value: any) => {
+    if (value) {
+      setImage(value);
+      setOpenModal(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -165,20 +229,27 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   height: normalize(116),
                   position: 'relative',
                 }}>
-                <Avatar
-                  size={normalize(109)}
+                <ProgressiveImage
+                  borderRadius={60}
                   source={
-                    images.url === undefined
-                      ? icons.avatar
-                      : { uri: images.url }
+                    image?.assets
+                      ? {
+                          uri: image?.assets[0].uri,
+                        }
+                      : image?.url
+                      ? { uri: image.url }
+                      : icons.avatar
                   }
-                  avatarStyle={{
+                  style={{
                     borderRadius: normalize(60),
                     borderColor: colors.greenLight,
                     borderWidth: 1,
+                    width: normalize(109),
+                    height: normalize(109),
                   }}
                 />
-                <View
+                <TouchableOpacity
+                  onPress={() => setOpenModal(true)}
                   style={{
                     borderWidth: 0.3,
                     position: 'absolute',
@@ -199,7 +270,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                       height: normalize(20),
                     }}
                   />
-                </View>
+                </TouchableOpacity>
               </View>
             </View>
             <Text style={styles.head}>ชื่อ*</Text>
@@ -231,10 +302,14 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 },
               ]}>
               <TextInput
-                value={momentExtend.toBuddhistYear(
-                  value.birthDate,
-                  'DD MMMM YYYY',
-                )}
+                value={
+                  value.birthDate
+                    ? momentExtend.toBuddhistYear(
+                        value.birthDate,
+                        'DD MMMM YYYY',
+                      )
+                    : ''
+                }
                 allowFontScaling={false}
                 editable={false}
                 placeholder={'ระบุวัน เดือน ปี'}
@@ -267,7 +342,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             <Text style={styles.head}>บ้านเลขที่</Text>
             <TextInput
               allowFontScaling={false}
-              value={address.address1}
+              value={address?.address1}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'-'}
@@ -276,7 +351,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             <Text style={styles.head}>รายละเอียดที่อยู่</Text>
             <TextInput
               allowFontScaling={false}
-              value={address.address2}
+              value={address?.address2}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'-'}
@@ -285,7 +360,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             <Text style={styles.head}>จังหวัด</Text>
             <TextInput
               allowFontScaling={false}
-              value={addr.provinceName}
+              value={addr?.provinceName}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'-'}
@@ -294,7 +369,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             <Text style={styles.head}>อำเภอ</Text>
             <TextInput
               allowFontScaling={false}
-              value={addr.districtName}
+              value={addr?.districtName}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'-'}
@@ -303,7 +378,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             <Text style={styles.head}>ตำบล</Text>
             <TextInput
               allowFontScaling={false}
-              value={addr.subdistrictName}
+              value={addr?.subdistrictName}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'-'}
@@ -312,7 +387,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             <Text style={styles.head}>รหัสไปรษณีย์</Text>
             <TextInput
               allowFontScaling={false}
-              value={address.postcode}
+              value={address?.postcode}
               style={[styles.input, { backgroundColor: colors.greyDivider }]}
               editable={false}
               placeholder={'-'}
@@ -478,6 +553,14 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
           </View>
         </ActionSheet>
       </View>
+      <ModalUploadImage
+        onCancel={() => setOpenModal(false)}
+        onCloseModalSelect={() => setOpenModal(false)}
+        visible={openModal}
+        onPressCamera={onPressCamera}
+        onFinishedTakePhotoAndroid={onFinishedTakePhotoAndroid}
+        onPressLibrary={onAddImage}
+      />
     </SafeAreaView>
   );
 };
@@ -548,14 +631,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   input: {
-    fontFamily: font.SarabunLight,
+    fontFamily: font.SarabunMedium,
     height: normalize(56),
     marginVertical: 12,
-    padding: 5,
-    borderColor: colors.disable,
+    paddingVertical: 5,
+    paddingHorizontal: 16,
+    borderColor: colors.grey5,
     borderWidth: 1,
     borderRadius: normalize(10),
-    color: colors.fontBlack,
+    color: colors.grey50,
     fontSize: normalize(16),
   },
   datePickerStyle: {

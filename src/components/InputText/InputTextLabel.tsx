@@ -21,7 +21,7 @@ export default function InputTextLabel({
       <Text style={styles.label}>
         {label}{' '}
         {required ? (
-          <Text style={{ color: colors.errorText }}>*</Text>
+          <Text style={{ color: colors.errorText, fontSize: 24 }}>*</Text>
         ) : optional ? (
           <Text style={{ color: colors.grey30 }}> (ไม่ระบุก็ได้)</Text>
         ) : null}

@@ -8,13 +8,13 @@ import {
   Platform,
   Image,
 } from 'react-native';
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useReducer, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../styles/StylesCentral';
 import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import { MainButton } from '../../components/Button/MainButton';
-import { normalize, width } from '../../functions/Normalize';
+import { normalize } from '../../functions/Normalize';
 import { ProgressBar } from '../../components/ProgressBar';
 import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
@@ -29,7 +29,6 @@ import Text from '../../components/Text/Text';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 import InputTextLabel from '../../components/InputText/InputTextLabel';
 import ModalUploadImage from '../../components/Modal/ModalUploadImage';
-import { ResizeImage } from '../../functions/Resizing';
 import { Register } from '../../datasource/AuthDatasource';
 
 const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
@@ -40,9 +39,9 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
     nickname: '',
   };
   const tele = route.params.tele;
-  const [image, setImage] = useState<any>(null);
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState<any>(null);
 
   const onAddImage = useCallback(async () => {
     const result = await ImagePicker.openPicker({
