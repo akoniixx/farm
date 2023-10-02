@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   Dimensions,
   TouchableOpacity,
   Image,
@@ -26,6 +25,7 @@ import ActionSheet, { ActionSheetRef } from 'react-native-actions-sheet';
 import SearchBarWithAutocomplete from '../../SearchBarWithAutocomplete';
 import { useDebounceValue } from '../../../hook/useDebounceValue';
 import { mixpanel } from '../../../../mixpanel';
+import Text from '../../Text/Text';
 
 interface Props {
   visible: boolean;

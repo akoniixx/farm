@@ -109,9 +109,11 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
     });
     if (!image) {
       setLoading(false);
-      navigation.navigate('SecondFormScreen', {
-        formState,
-      });
+      setTimeout(() => {
+        navigation.navigate('SecondFormScreen', {
+          formState,
+        });
+      }, 1000);
     } else {
       await Register.uploadProfileImage(image)
         .then(async () => {

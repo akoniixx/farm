@@ -19,6 +19,7 @@ import { Authentication } from '../../datasource/AuthDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import Text from '../../components/Text/Text';
 import { useMaintenance } from '../../contexts/MaintenanceContext';
+import LottiePhoneNo from '../../components/LottiesRender/LottiePhoneNo';
 
 const TelNumScreen: React.FC<any> = ({ navigation }) => {
   const [value, setValue] = useState<string>('');
@@ -73,15 +74,7 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
 
           <View style={styles.inner}>
             <View style={styles.containerTopCard}>
-              <Image
-                source={image.loginImage}
-                style={{
-                  width: normalize(116),
-                  height: normalize(116),
-                  resizeMode: 'contain',
-                  marginBottom: normalize(8),
-                }}
-              />
+              <LottiePhoneNo />
               <Text style={styles.headText}>ยืนยันหมายเลขโทรศัพท์ของคุณ</Text>
               <InputPhone
                 value={value}

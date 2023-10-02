@@ -1,13 +1,8 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TextInputProps,
-  StyleSheet,
-} from 'react-native';
+import { View, TextInput, TextInputProps, StyleSheet } from 'react-native';
 import React from 'react';
 import { colors, font } from '../../assets';
 import { normalize } from '../../functions/Normalize';
+import Text from '../Text/Text';
 
 interface Props extends TextInputProps {
   label: string;
@@ -37,6 +32,10 @@ export default function InputTextLabel({
         placeholderTextColor={colors.gray}
         style={[styles.input, style]}
         {...props}
+        onChangeText={text => {
+          const newTextRemoveSpace = text.replace(/\s+/g, '');
+          props.onChangeText?.(newTextRemoveSpace);
+        }}
       />
     </View>
   );

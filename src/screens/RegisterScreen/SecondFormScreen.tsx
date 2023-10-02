@@ -81,6 +81,7 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
             <View
               style={{
                 paddingHorizontal: 16,
+                height: normalize(100),
               }}>
               <View style={{ marginBottom: normalize(10) }}>
                 <ProgressBar index={2} />
@@ -129,7 +130,6 @@ const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
                   <Text style={{ fontFamily: font.SarabunLight, fontSize: 18 }}>
                     {`แปลงของคุณอาจใช้เวลารอการตรวจสอบ
 จากเจ้าหน้าที`}
-                    ่
                   </Text>
                 </View>
                 {plotData.map((item: any, index: number) => (
@@ -274,6 +274,7 @@ const styles = StyleSheet.create({
     fontFamily: font.AnuphanBold,
     fontSize: normalize(20),
     color: colors.greenLight,
+    lineHeight: normalize(28),
   },
   h2: {
     fontFamily: font.SarabunMedium,

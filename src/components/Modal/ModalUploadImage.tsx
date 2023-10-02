@@ -97,6 +97,13 @@ export default function ModalUploadImage({
         onPressLibrary();
       },
     },
+    {
+      id: 3,
+      label: 'ยกเลิก',
+      onPress: () => {
+        onCancel();
+      },
+    },
   ];
 
   return (
@@ -113,33 +120,42 @@ export default function ModalUploadImage({
             paddingVertical: 8,
           }}>
           {staticSelect.map((el, idx) => {
-            // const isLast = idx === staticSelect.length - 1;
-            // if (isLast) {
-            //   return (
-            //     <TouchableOpacity
-            //       key={el.id}
-            //       onPress={el.onPress}
-            //       style={{
-            //         backgroundColor: 'white',
-            //         flexDirection: 'row',
-            //         alignItems: 'center',
-            //         justifyContent: 'center',
-            //         padding: 16,
-            //         borderBottomColor: colors.disable,
-            //         borderBottomWidth: isLast ? 0 : 1,
-            //         width: '100%',
-            //       }}>
-            //       <Text
-            //         style={{
-            //           fontFamily: font.AnuphanBold,
-            //           fontSize: 20,
-            //           color: colors.orange,
-            //         }}>
-            //         {el.label}
-            //       </Text>
-            //     </TouchableOpacity>
-            //   );
-            // }
+            const isLast = idx === staticSelect.length - 1;
+            if (isLast) {
+              return (
+                <TouchableOpacity
+                  key={el.id}
+                  onPress={el.onPress}
+                  style={{
+                    backgroundColor: 'white',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: 16,
+                    //   borderBottomColor: colors.disable,
+                    //   borderBottomWidth: isLast ? 0 : 1,
+                    width: '100%',
+                    height: 80,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.SarabunMedium,
+                      fontSize: 24,
+                    }}>
+                    {el.label}
+                  </Text>
+                  {/* {el.icon && (
+                  <Image
+                    source={el.icon}
+                    style={{
+                      width: 28,
+                      height: 28,
+                    }}
+                  />
+                )} */}
+                </TouchableOpacity>
+              );
+            }
 
             return (
               <TouchableOpacity

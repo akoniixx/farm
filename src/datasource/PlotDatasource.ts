@@ -28,6 +28,7 @@ export interface UpdatePlot {
   locationName: string;
   plotAreaId: any;
   status?: string;
+  plotId: string;
 }
 
 export class PlotDatasource {
@@ -170,10 +171,11 @@ export class PlotDatasource {
   static async updateFarmerPlot({
     plantName,
     plotName,
+    plotId,
     ...payload
   }: UpdatePlot): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-    const plotId = await AsyncStorage.getItem('plot_id');
+
     const index = 0;
     if (!plotName) {
       return httpClient

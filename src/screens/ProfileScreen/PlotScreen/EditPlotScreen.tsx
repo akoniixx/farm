@@ -72,6 +72,7 @@ const EditPlotScreen: React.FC<any> = ({ navigation, route }) => {
       long: position.longitude.toString(),
       plotAreaId: selectPlot.subdistrictId,
       locationName: search.term,
+      plotId: data.id,
     };
     if (data.status === 'REJECTED') {
       setLoading(true);

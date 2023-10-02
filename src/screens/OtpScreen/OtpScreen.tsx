@@ -28,6 +28,7 @@ import * as RootNavigation from '../../navigations/RootNavigation';
 import messaging from '@react-native-firebase/messaging';
 import Text from '../../components/Text/Text';
 import { Image } from 'react-native';
+import LottieOTP from '../../components/LottiesRender/LottieOTP';
 
 const CELL_COUNT = 6;
 
@@ -194,15 +195,7 @@ const OtpScreen: React.FC<any> = ({ navigation, route }) => {
           />
           <View style={styles.inner}>
             <View style={styles.headContainer}>
-              <Image
-                source={image.otpImage}
-                style={{
-                  width: normalize(116),
-                  height: normalize(116),
-                  resizeMode: 'contain',
-                  marginBottom: normalize(8),
-                }}
-              />
+              <LottieOTP />
               <View>
                 <Text style={[styles.text, { bottom: '2%' }]}>
                   รหัส OTP ถูกส่งไปยัง{' '}

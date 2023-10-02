@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -37,6 +36,7 @@ import { PlantSelect } from '../../../components/PlantSelect/PlantSelect';
 import InfoCircleButton from '../../../components/InfoCircleButton';
 import { Modal } from 'react-native-paper';
 import ModalMapLocation from '../../../components/Modal/ModalMapLocation';
+import Text from '../../../components/Text/Text';
 interface PlotArea {
   subdistrictId: number;
   subdistrictName: string;
@@ -695,7 +695,6 @@ export default function PlotForm({
                 !position.latitude ||
                 !position.longitude ||
                 !search.term ||
-                !landmark ||
                 !selectPlot.subdistrictId
               }
               color={colors.greenLight}
@@ -1165,7 +1164,7 @@ const styles = StyleSheet.create({
   },
   currentMyLocation: {
     backgroundColor: colors.white,
-    width: 175,
+    minWidth: 175,
     minHeight: 40,
     position: 'absolute',
     right: 16,
