@@ -122,7 +122,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
       getPointCampaign.getPoint().then((res)=> {
         if(res){
           const filterCondition = res.data.map((x:any)=> x.condition[0])
-          console.log(filterCondition)
           setPoint(filterCondition[0].point);
         }
       })
