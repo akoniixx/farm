@@ -146,6 +146,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
           title="บัญชีของฉัน"
           showBackBtn
           onPressBack={() => navigation.goBack()}
+          backgroundColor="transparent"
         />
       ) : (
         <View

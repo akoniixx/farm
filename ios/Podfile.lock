@@ -14,6 +14,8 @@ PODS:
     - ReactCommon/turbomodule/core (= 0.70.5)
   - Firebase (10.3.0):
     - Firebase/Core (= 10.3.0)
+  - Firebase/Analytics (10.3.0):
+    - Firebase/Core
   - Firebase/Core (10.3.0):
     - Firebase/CoreOnly
     - FirebaseAnalytics (~> 10.3.0)
@@ -575,6 +577,10 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
+  - RNFBAnalytics (16.7.0):
+    - Firebase/Analytics (= 10.3.0)
+    - React-Core
+    - RNFBApp
   - RNFBApp (16.7.0):
     - Firebase/CoreOnly (= 10.3.0)
     - React-Core
@@ -726,6 +732,7 @@ DEPENDENCIES:
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNFastImage (from `../node_modules/react-native-fast-image`)
+  - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -885,6 +892,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNFastImage:
     :path: "../node_modules/react-native-fast-image"
+  RNFBAnalytics:
+    :path: "../node_modules/@react-native-firebase/analytics"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
@@ -990,6 +999,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNDateTimePicker: 0530a73a6f3a1a85814cbde0802736993b9e675e
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
+  RNFBAnalytics: 4cd20dd7d8332ee4560e522c60b38d4a7e53a005
   RNFBApp: 1ee535dcb7773ca612d3a2e53a1f78f8f2fb6abf
   RNFBMessaging: 04ecf12bae7543cd8df145f1b26d89d867594be7
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39

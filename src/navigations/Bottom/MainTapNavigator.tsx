@@ -19,8 +19,8 @@ import MainScreen from '../../screens/MainScreen/MainScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mixpanel } from '../../../mixpanel';
 import Text from '../../components/Text/Text';
-import PopUpMaintenance from '../../components/Modal/MaintenanceApp/PopUpMaintenance';
 import { useMaintenance } from '../../contexts/MaintenanceContext';
+import analytics from '@react-native-firebase/analytics';
 
 const Tab = createBottomTabNavigator();
 
@@ -39,9 +39,13 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
   useEffect(() => {
     messaging()
       .getInitialNotification()
-      .then(message => {
+      .then(async message => {
         if (message) {
           const type = message.data?.type;
+          await analytics().logEvent('notification_opened', {
+            type: type,
+            ...message.data,
+          });
           switch (type) {
             case 'RECEIVE_TASK_SUCCESS':
               TaskDatasource.getTaskByTaskId(message.data?.taskId!)
@@ -92,6 +96,11 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
     messaging().onNotificationOpenedApp(async message => {
       const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
       const type = message.data?.type;
+      await analytics().logEvent('notification_opened', {
+        type: type,
+        ...message.data,
+      });
+
       switch (type) {
         case 'RECEIVE_TASK_SUCCESS':
           TaskDatasource.getTaskByTaskId(message.data?.taskId!)
@@ -143,6 +152,11 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
 
     messaging().onMessage(async message => {
       const type = message.data?.type;
+      await analytics().logEvent('notification_received', {
+        type: type,
+        ...message.data,
+      });
+
       switch (type) {
         case 'RECEIVE_TASK_SUCCESS':
           await AsyncStorage.removeItem('taskId');

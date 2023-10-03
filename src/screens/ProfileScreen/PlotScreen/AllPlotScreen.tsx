@@ -20,7 +20,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
 
 import PlotsItemEdit from '../../../components/Plots/PlotsItemEdit';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {
   callCenterNumberWithHyphens,
   callcenterNumber,

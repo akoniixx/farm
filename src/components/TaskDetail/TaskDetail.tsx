@@ -1,15 +1,9 @@
 import moment from 'moment';
 import React from 'react';
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { colors, font, icons } from '../../assets';
 import { normalize } from '../../functions/Normalize';
+import Text from '../Text/Text';
 
 interface DateTimeProp {
   date: string;

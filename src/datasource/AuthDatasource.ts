@@ -137,6 +137,15 @@ export class Register {
         .post(BASE_URL + `/auth/farmer/register`, {
           ...payload,
           status: 'OPEN',
+          address: {
+            address1: '',
+            address2: '',
+            address3: '',
+            provinceId: 0,
+            districtId: 0,
+            subdistrictId: 0,
+            postcode: '',
+          },
         })
         .then(async response => {
           const farmer_id = response.data.id;

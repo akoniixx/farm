@@ -92,6 +92,7 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
             style={{
               display: 'flex',
               justifyContent: 'space-between',
+              width: '100%',
             }}>
             <View>
               <View
@@ -244,6 +245,7 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
             style={{
               display: 'flex',
               justifyContent: 'space-between',
+              width: '100%',
             }}>
             <View>
               <View
@@ -395,6 +397,7 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
             style={{
               display: 'flex',
               justifyContent: 'space-between',
+              width: '100%',
             }}>
             <View>
               <View

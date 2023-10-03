@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import React, { useEffect, useState } from 'react';
@@ -74,6 +75,8 @@ export default function ModalMapLocation({
   defaultLocation,
 }: Props) {
   const mapRef = React.useRef<MapView>(null);
+  const [heightView, setHeightView] = useState(0);
+
   const refPress = React.useRef(false);
   const [currentPosition, setCurrentPosition] =
     useState<PositionType>(initialPosition);
@@ -237,11 +240,15 @@ export default function ModalMapLocation({
           </View>
           <>
             <View
+              onLayout={event => {
+                const { height } = event.nativeEvent.layout;
+                setHeightView(height);
+              }}
               style={[
-                styles.container,
                 {
                   paddingHorizontal: 16,
-                  flex: 0.15,
+                  marginBottom: 16,
+                  height: 'auto',
                 },
               ]}>
               <Text
@@ -268,19 +275,12 @@ export default function ModalMapLocation({
                 }}>
                 2. เลื่อนหมุดแผนที่เพื่อไปหาตำแหน่งแปลง
               </Text>
-
-              {/* <SearchBarWithAutocomplete
-              value={search.term}
-              onChangeText={(text: any) => {
-                setSearch({ term: text, fetchPredictions: true });
-              }}
-              showPredictions={showPredictions}
-              predictions={predictions}
-              onPredictionTapped={onPredictionTapped}
-            /> */}
             </View>
             {currentPosition.latitude && currentPosition.longitude ? (
-              <View style={{ flex: 0.78 }}>
+              <View
+                style={{
+                  height: Dimensions.get('screen').height - heightView - 280,
+                }}>
                 <TouchableOpacity
                   onPress={() => {
                     mapSheet?.current?.show();

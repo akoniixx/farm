@@ -82,12 +82,17 @@ export const CardTask: React.FC<taskListProps> = ({ task }) => {
           alignItems: 'center',
           marginTop: normalize(10),
         }}>
-        <View style={{ width: '70%' }}>
+        <View style={{ flex: 0.6 }}>
           <Text numberOfLines={1} style={styles.plant}>
             {task.plant_name + ' | ' + task.purpose_spray_name}
           </Text>
         </View>
-        <View>
+        <View
+          style={{
+            flex: 0.4,
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+          }}>
           <Text style={styles.price}>
             {numberWithCommas(task.total_price, true) + ' ' + 'บาท'}
           </Text>

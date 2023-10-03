@@ -3,7 +3,6 @@ import {
   Image,
   RefreshControl,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
@@ -16,6 +15,7 @@ import { CouponCardEntities } from '../../entites/CouponCard';
 import { useFocusEffect } from '@react-navigation/native';
 import { mixpanel } from '../../../mixpanel';
 import LoadingSkeletonCoupon from './LoadingSkeletonCoupon';
+import Text from '../../components/Text/Text';
 
 const AllCouponScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);

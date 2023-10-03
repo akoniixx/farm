@@ -152,6 +152,9 @@ const AddPlotScreen: React.FC<any> = ({ navigation, route }) => {
         .catch(err => {
           setLoading(false);
           console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }
   };

@@ -86,10 +86,10 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
           mixpanel.track(
             'MyCouponUsedScreen_SelectDronerCouponModalMainButton_tapped',
             {
-              changeTo: 'DronerUsedScreen',
+              changeTo: 'DronerHiredScreen',
             },
           );
-          RootNavigation.navigate('DronerUsedScreen', {
+          RootNavigation.navigate('DronerHiredScreen', {
             isSelectDroner: true,
             profile: {},
           });

@@ -235,6 +235,7 @@ export default function PlotForm({
               status: res.status,
             });
             setDefaultNamePlot('แปลงที่ ' + (res.farmerPlot.length + 1));
+            setLoading(false);
           } else {
             ProfileDatasource.getImgePathProfile(farmer_id!, imgPath[0].path)
               .then(resImg => {
@@ -382,7 +383,7 @@ export default function PlotForm({
               onChangeText={value => {
                 const cleaned = value.replace(/[^0-9.]/g, '');
                 const newNumberWithDot = (
-                  cleaned.match(/(\d+)(\.\d{0,2})?|./)?.[0] ?? ''
+                  cleaned.match(/(\d+)(\.\d{0,1})?|./)?.[0] ?? ''
                 ).toString();
 
                 setRaiAmount(newNumberWithDot);
@@ -404,7 +405,7 @@ export default function PlotForm({
 
             <Text style={styles.head}>
               พืชที่ปลูก
-              <Text style={{ color: colors.errorText }}> *</Text>
+              <Text style={{ color: colors.errorText, fontSize: 26 }}> *</Text>
             </Text>
             <TouchableOpacity
               onPress={() => {
@@ -470,7 +471,10 @@ export default function PlotForm({
               }}>
               <Text style={styles.head}>
                 พื้นที่แปลงเกษตร
-                <Text style={{ color: colors.errorText }}> *</Text>
+                <Text style={{ color: colors.errorText, fontSize: 26 }}>
+                  {' '}
+                  *
+                </Text>
               </Text>
               <InfoCircleButton sheetId="placePlot" />
             </View>
@@ -539,7 +543,10 @@ export default function PlotForm({
               }}>
               <Text style={styles.head}>
                 ตำแหน่งแปลง
-                <Text style={{ color: colors.errorText }}> *</Text>
+                <Text style={{ color: colors.errorText, fontSize: 26 }}>
+                  {' '}
+                  *
+                </Text>
               </Text>
               <InfoCircleButton sheetId="positionPlot" />
             </View>

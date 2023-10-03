@@ -274,7 +274,7 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   value={formState.nickname}
                   style={styles.input}
                   editable={true}
-                  placeholder={' ระบุนามสกุล'}
+                  placeholder={' ระบุชื่อเล่น'}
                   placeholderTextColor={colors.gray}
                 />
 

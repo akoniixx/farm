@@ -85,7 +85,7 @@ const MyCouponExpiredScreen: React.FC<any> = ({ navigation, route }) => {
         show={modal}
         onClose={() => setModal(false)}
         onMainClick={() => {
-          RootNavigation.navigate('DronerUsedScreen', {
+          RootNavigation.navigate('DronerHiredScreen', {
             isSelectDroner: true,
             profile: {},
           });

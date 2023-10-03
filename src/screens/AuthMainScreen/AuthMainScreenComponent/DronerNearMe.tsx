@@ -2,7 +2,6 @@ import { View, ScrollView, TouchableOpacity } from 'react-native';
 import React from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { mixpanel } from '../../../../mixpanel';
 import DronerNearMeList from '../../../components/Carousel/DronerNearMeList';
 
 interface Props {
