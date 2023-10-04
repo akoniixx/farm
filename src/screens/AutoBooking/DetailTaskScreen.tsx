@@ -117,18 +117,16 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const debouncePoint = useDebounceValue(currentCount, 1000);
 
   const [showListPrice, setShowListPrice] = useState(false);
-  useEffect(()=> {
+  useEffect(() => {
     const getPointCamp = () => {
-      getPointCampaign.getPoint().then((res)=> {
-        if(res){
-          const filterCondition = res.data.map((x:any)=> x.condition[0])
-          setPoint(filterCondition[0].point);
+      getPointCampaign.getPoint().then(res => {
+        if (res) {
+          setPoint(res.data[0].condition[0].point);
         }
-      })
-
-    }
-getPointCamp()
-  },[])
+      });
+    };
+    getPointCamp();
+  }, []);
   const onSubmit = async () => {
     confirmBooking.current.hide();
     try {
@@ -328,7 +326,6 @@ getPointCamp()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   const maximumPointCal = useMemo(() => {
     const netPrice = calPrice.priceBefore - calPrice.discountPromotion;
     const amounts = campaignDetail.amounts;
@@ -1455,7 +1452,9 @@ getPointCamp()
           couponInfo={couponInfo.name}
           discountPoint={calPrice.discountPoint.toString()}
           discountCoupon={couponInfo.discount.toString()}
-          campaignPoint={parseFloat(taskData?.farmAreaAmount) * parseFloat(point)}
+          campaignPoint={
+            parseFloat(taskData?.farmAreaAmount) * parseFloat(point)
+          }
         />
       </ActionSheet>
       <Spinner
