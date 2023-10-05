@@ -58,10 +58,7 @@ const LoadingNavigator: React.FC<any> = ({ navigation, route }) => {
         currentVersion,
         latestVersion: remote,
       });
-      console.log({
-        currentVersion,
-        remote,
-      });
+
       const updateLater = await AsyncStorage.getItem('updateLater');
       const isDev = false;
 

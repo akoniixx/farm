@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL, httpClient } from '../config/develop-config';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export const usedCouponOnline = async (id: string, promotionId: string) => {
   const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -13,6 +14,15 @@ export const usedCouponOnline = async (id: string, promotionId: string) => {
       return response.data;
     })
     .catch(error => {
+      crashlytics().recordError(error);
+      crashlytics().setAttributes({
+        url: BASE_URL + `/promotion/farmer-promotions/used`,
+        payload: JSON.stringify({
+          id: id,
+          promotionId: promotionId,
+          farmerId: farmer_id,
+        }),
+      });
       console.log(error);
     });
 };
@@ -24,6 +34,13 @@ export const usedCoupon = async (couponCode: string) => {
       return response.data;
     })
     .catch(error => {
+      crashlytics().recordError(error);
+      crashlytics().setAttributes({
+        url: BASE_URL + `/promotion/promotions/usedoffline/${couponCode}`,
+        payload: JSON.stringify({
+          couponCode: couponCode,
+        }),
+      });
       console.log(error);
     });
 };
@@ -43,6 +60,11 @@ export const addHistoryPoint = async (payload: {
       return response.data;
     })
     .catch(error => {
+      crashlytics().recordError(error);
+      crashlytics().setAttributes({
+        url: BASE_URL + `/promotion/historypoint-quota/addhistory`,
+        payload: JSON.stringify(payload),
+      });
       console.log(error);
     });
 };
@@ -54,6 +76,13 @@ export const checkCouponByCode = async (couponCode: string) => {
       return response.data;
     })
     .catch(error => {
+      crashlytics().recordError(error);
+      crashlytics().setAttributes({
+        url: BASE_URL + `/promotion/promotions/getbycode/${couponCode}`,
+        payload: JSON.stringify({
+          couponCode: couponCode,
+        }),
+      });
       console.log(error);
     });
 };
@@ -66,6 +95,13 @@ export const getPointByFarmerId = async (farmerId: string) => {
       return response.data;
     })
     .catch(error => {
+      crashlytics().recordError(error);
+      crashlytics().setAttributes({
+        url: BASE_URL + '/promotion/historypoint-quota/getpoint',
+        payload: JSON.stringify({
+          farmerId: farmerId,
+        }),
+      });
       throw error;
     });
 };
@@ -76,6 +112,10 @@ export const getDetailCampaign = async () => {
       return res.data;
     })
     .catch(e => {
+      crashlytics().recordError(e);
+      crashlytics().setAttributes({
+        url: BASE_URL + '/promotion/point',
+      });
       throw e;
     });
 };
@@ -106,6 +146,11 @@ export const getCoupons = async (
       return response.data;
     })
     .catch(err => {
+      crashlytics().recordError(err);
+      crashlytics().setAttributes({
+        url: BASE_URL + '/promotion/promotions',
+        payload: JSON.stringify(params),
+      });
       console.log(err, 'err getCoupon');
     });
 };
@@ -125,6 +170,11 @@ export const getCouponUser = async (page: number, take: number) => {
     })
     .catch(err => {
       console.log(err, 'err getCoupon');
+      crashlytics().recordError(err);
+      crashlytics().setAttributes({
+        url: BASE_URL + '/promotion/farmer-promotions/query',
+        payload: JSON.stringify(params),
+      });
     });
 };
 
@@ -146,6 +196,11 @@ export const getMyCoupon = async (
       return response.data;
     })
     .catch(err => {
+      crashlytics().recordError(err);
+      crashlytics().setAttributes({
+        url: BASE_URL + '/promotion/farmer-promotions',
+        payload: JSON.stringify(params),
+      });
       console.log(err, 'err getCoupon');
     });
 };
@@ -176,6 +231,15 @@ export const keepCoupon = async (promotionId: string, couponCode?: string) => {
         return response.data;
       })
       .catch(err => {
+        crashlytics().recordError(err);
+        crashlytics().setAttributes({
+          url: BASE_URL + '/promotion/farmer-promotions/keepoffline',
+          payload: JSON.stringify({
+            farmerId: farmerId,
+            promotionId: promotionId,
+            offlineCode: couponCode,
+          }),
+        });
         console.log(err, 'err getCoupon');
       });
   }
@@ -183,9 +247,7 @@ export const keepCoupon = async (promotionId: string, couponCode?: string) => {
 
 export const checkMyCoupon = async (couponCode: string) => {
   const farmer_id = await AsyncStorage.getItem('farmer_id');
-  console.log(
-    BASE_URL + `/promotion/farmer-promotions/check/${farmer_id}/${couponCode}`,
-  );
+
   return httpClient
     .get(
       BASE_URL +
@@ -196,5 +258,13 @@ export const checkMyCoupon = async (couponCode: string) => {
     })
     .catch(err => {
       console.log(err, 'err getCoupon');
+      crashlytics().recordError(err);
+      crashlytics().setAttributes({
+        url:
+          BASE_URL +
+          `/promotion/farmer-promotions/check/${farmer_id}/${couponCode}`,
+        farmer_id: farmer_id ? farmer_id : 'none',
+        couponCode: couponCode,
+      });
     });
 };

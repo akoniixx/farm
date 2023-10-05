@@ -101,6 +101,9 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
                 }}>
                 <HTML
                   source={{ html: data.details }}
+                  defaultTextProps={{
+                    allowFontScaling: false,
+                  }}
                   contentWidth={Dimensions.get('screen').width}
                   tagsStyles={{
                     strong: {

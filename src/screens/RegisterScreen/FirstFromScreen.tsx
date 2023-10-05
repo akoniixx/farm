@@ -30,6 +30,7 @@ import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage
 import InputTextLabel from '../../components/InputText/InputTextLabel';
 import ModalUploadImage from '../../components/Modal/ModalUploadImage';
 import { Register } from '../../datasource/AuthDatasource';
+import { mixValidator } from '../../utils/inputValidate';
 
 const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
   const initialFormRegisterState = {
@@ -232,10 +233,11 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   label="ชื่อ"
                   required
                   onChangeText={value => {
+                    const newValue = mixValidator(value);
                     dispatch({
                       type: 'Handle Input',
                       field: 'name',
-                      payload: value,
+                      payload: newValue,
                     });
                   }}
                   value={formState.name}
@@ -247,10 +249,12 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   label="นามสกุล"
                   required
                   onChangeText={value => {
+                    const newValue = mixValidator(value);
+
                     dispatch({
                       type: 'Handle Input',
                       field: 'surname',
-                      payload: value,
+                      payload: newValue,
                     });
                   }}
                   allowFontScaling={false}
@@ -264,10 +268,11 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
                   label="ชื่อเล่น"
                   optional
                   onChangeText={value => {
+                    const newValue = mixValidator(value);
                     dispatch({
                       type: 'Handle Input',
                       field: 'nickname',
-                      payload: value,
+                      payload: newValue,
                     });
                   }}
                   allowFontScaling={false}

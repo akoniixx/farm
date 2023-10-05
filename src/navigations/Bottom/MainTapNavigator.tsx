@@ -39,7 +39,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
   useEffect(() => {
     messaging()
       .getInitialNotification()
-      .then(async message => {
+      .then(async (message: any) => {
         if (message) {
           const type = message.data?.type;
           await analytics().logEvent('notification_opened', {
@@ -93,7 +93,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
         }
         setLoading(false);
       });
-    messaging().onNotificationOpenedApp(async message => {
+    messaging().onNotificationOpenedApp(async (message: any) => {
       const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
       const type = message.data?.type;
       await analytics().logEvent('notification_opened', {
@@ -103,7 +103,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
 
       switch (type) {
         case 'RECEIVE_TASK_SUCCESS':
-          TaskDatasource.getTaskByTaskId(message.data?.taskId!)
+          TaskDatasource.getTaskByTaskId(message?.data?.taskId!)
             .then(async res => {
               await AsyncStorage.removeItem('taskId');
               RootNavigation.navigate('Main', {

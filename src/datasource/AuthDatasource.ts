@@ -132,6 +132,7 @@ export class Register {
     nickname?: string;
   }): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
+
     if (!farmer_id) {
       return registerClient
         .post(BASE_URL + `/auth/farmer/register`, {
@@ -154,6 +155,20 @@ export class Register {
         })
         .catch(error => {
           console.log(error);
+        });
+    } else {
+      return registerClient
+        .patch(BASE_URL + `/farmer/${farmer_id}`, {
+          ...payload,
+          status: 'OPEN',
+        })
+        .then(async response => {
+          const farmer_id = response.data.id;
+          await AsyncStorage.setItem('farmer_id', farmer_id);
+          return response.data;
+        })
+        .catch(error => {
+          console.log('error_patch', error);
         });
     }
   }

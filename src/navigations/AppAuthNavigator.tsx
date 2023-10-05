@@ -32,7 +32,6 @@ const AppAuthNavigator: React.FC = () => {
   useEffect(() => {
     const checkOnboarding = async () => {
       const onBoarding = await AsyncStorage.getItem('onBoarding');
-      console.log('onBoarding', onBoarding);
       if (onBoarding) {
         setIsOnboarding(true);
       } else {

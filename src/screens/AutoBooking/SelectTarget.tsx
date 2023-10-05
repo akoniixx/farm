@@ -22,6 +22,7 @@ import { PURPOSE_SPRAY_CHECKBOX } from '../../definitions/timeSpray';
 import Text from '../../components/Text/Text';
 import useTimeSpent from '../../hook/useTimeSpent';
 import InfoCircleButton from '../../components/InfoCircleButton';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const PrepareByLists = [
   {
@@ -100,8 +101,8 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
         setLoading(false);
       })
       .catch(err => {
-        console.log(err);
         setLoading(false);
+        crashlytics().recordError(err);
       });
   };
 

@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL, httpClient } from '../config/develop-config';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export interface PayloadDronerSearch {
   farmerId?: string;
@@ -83,6 +84,7 @@ export class PlotDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().recordError(error);
         console.log(error);
       });
   }
@@ -93,6 +95,7 @@ export class PlotDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().recordError(error);
         console.log(error);
       });
   }
@@ -107,7 +110,7 @@ export class PlotDatasource {
     plotAreaId: any,
   ): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-    let count = 0;
+
     // if (!plotName) {
     return httpClient
       .post(BASE_URL + `/farmer-plot`, {
@@ -126,6 +129,7 @@ export class PlotDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().recordError(error);
         console.log(error);
       });
     // } else {
@@ -165,6 +169,7 @@ export class PlotDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().recordError(error);
         console.log(error);
       });
   }
@@ -202,6 +207,7 @@ export class PlotDatasource {
           return response.data;
         })
         .catch(error => {
+          crashlytics().recordError(error);
           console.log(error);
         });
     }

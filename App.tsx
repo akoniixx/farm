@@ -9,7 +9,10 @@ import Toast from 'react-native-toast-message';
 import { SheetProvider } from 'react-native-actions-sheet';
 import { toastConfig } from './src/config/toast-config';
 import { BackHandler, Platform } from 'react-native';
-import { Provider as PaperProvider } from 'react-native-paper';
+import {
+  ActivityIndicator,
+  Provider as PaperProvider,
+} from 'react-native-paper';
 import 'moment/locale/th';
 import {
   firebaseInitialize,
@@ -28,17 +31,25 @@ import { MaintenanceProvider } from './src/contexts/MaintenanceContext';
 
 const App = () => {
   useEffect(() => {
+    const firebaseInit = async () => {
+      try {
+        if (Platform.OS === 'ios') {
+          if (firebase.apps.length === 0) {
+            firebaseInitialize();
+          } else {
+            firebase.app();
+          }
+          registerDeviceForRemoteMessages();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
     mixpanel.track('App open');
     BackHandler.addEventListener('hardwareBackPress', () => true);
     SplashScreen.hide();
-    if (Platform.OS === 'ios') {
-      if (firebase.apps.length === 0) {
-        firebaseInitialize();
-      } else {
-        firebase.app();
-      }
-      registerDeviceForRemoteMessages();
-    }
+    firebaseInit();
+
     requestUserPermission();
     getToken();
     AsyncStorage.getAllKeys().then(keys => console.log(keys));

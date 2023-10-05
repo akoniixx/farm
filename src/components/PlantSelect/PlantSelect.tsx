@@ -16,17 +16,17 @@ export const PlantSelect: React.FC<PrantSelectProps> = ({
 }) => {
   const width = Dimensions.get('window').width;
   return (
-    <View
-      style={{
-        marginRight: (width - normalize(40) - 3 * normalize(103)) / 3,
-        width: '100%',
-        minHeight: normalize(60),
-        borderTopWidth: 0.5,
-        borderColor: colors.disable,
-        justifyContent: 'center',
-        paddingVertical: 16,
-      }}>
-      <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress}>
+      <View
+        style={{
+          marginRight: (width - normalize(40) - 3 * normalize(103)) / 3,
+          width: '100%',
+          minHeight: normalize(60),
+          borderTopWidth: 0.5,
+          borderColor: colors.disable,
+          justifyContent: 'center',
+          paddingVertical: 16,
+        }}>
         <Text
           style={{
             fontFamily: font.SarabunLight,
@@ -36,7 +36,7 @@ export const PlantSelect: React.FC<PrantSelectProps> = ({
           }}>
           {label}
         </Text>
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 };

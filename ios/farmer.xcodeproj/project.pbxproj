@@ -18,7 +18,6 @@
 		25CF6150BC874D98B80FDC7E /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF83F8BDB28F4FCAA12DCD39 /* Entypo.ttf */; };
 		2BC7B07EC9034DAAAB6366B2 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9603BDE0B1F8417FBE9CE02A /* Ionicons.ttf */; };
 		306A7BD0E8C74767B59CFA0D /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B61B979E6E7A4D8FBB33C734 /* FontAwesome5_Regular.ttf */; };
-		350B0960CDD7457D8DC4E862 /* receivetasksuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = D18E7E29A0F34983BE96F780 /* receivetasksuccess.wav */; };
 		4E0E688E542C429A8E49A91D /* Sarabun-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3CB3D555E4984153AE4BA2D5 /* Sarabun-Medium.ttf */; };
 		5074541692BF49118BE96830 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E354E12A922F4E29915ECEC5 /* EvilIcons.ttf */; };
 		60F1F01829266B65007549EB /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 60F1F01729266B63007549EB /* fonts */; };
@@ -26,7 +25,6 @@
 		6D8D1046338E437AB06BD36F /* libPods-farmer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1D988025A77D758AF25144 /* libPods-farmer.a */; };
 		6E53E75379834B1BA3A7D41E /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D825E13E2910472ABD4CC80B /* MaterialCommunityIcons.ttf */; };
 		7249DA0B3AD847568EF7FF2F /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F74FFD5E50E64D30A149CE0C /* Foundation.ttf */; };
-		7E6FBB5BFDEC44A8A487B939 /* iconkaset.wav in Resources */ = {isa = PBXBuildFile; fileRef = DFE751E1DA03441F864019BA /* iconkaset.wav */; };
 		7EEF520FEAC748719C0D4AE2 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C65D6DA68D104371B1AF607F /* MaterialIcons.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8202680272B84FBF9BCBB4EE /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6625B2D94D2454AB6DCDE21 /* FontAwesome.ttf */; };
@@ -39,6 +37,7 @@
 		D2A29406BA87492A95CA8BA4 /* Anuphan-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 828C0E280D604EFE8C155856 /* Anuphan-Light.otf */; };
 		D2D981DE0F334CA5987D66DB /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F1C865AEF1074351B752CE88 /* SimpleLineIcons.ttf */; };
 		DB0C1D99B0174AD2A12538DF /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 26E973754BE244C08A903311 /* Feather.ttf */; };
+		E113ACA92ACC193900000525 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E113ACA82ACC193900000525 /* GoogleService-Info.plist */; };
 		E138B9AA2A70D7BA000A08B8 /* iconkaset.wav in Resources */ = {isa = PBXBuildFile; fileRef = E138B9A92A70D7BA000A08B8 /* iconkaset.wav */; };
 		E138B9AC2A70D7C9000A08B8 /* receivetasksuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = E138B9AB2A70D7C9000A08B8 /* receivetasksuccess.wav */; };
 		FF11CFA2DF534E158972B845 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F4087F42B2843228EE8D8D8 /* Octicons.ttf */; };
@@ -68,7 +67,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = farmer/main.m; sourceTree = "<group>"; };
 		21B86FBDE532CEE75CBF6A20 /* libPods-farmer-farmerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-farmer-farmerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		26E973754BE244C08A903311 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = ../src/assets/fonts/Feather.ttf; sourceTree = "<group>"; };
-		2F34C825585D4F1793462504 /* Anuphan-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Anuphan-SemiBold.ttf"; path = "../src/assets/fonts/Anuphan-SemiBold.ttf"; sourceTree = "<group>"; };
+		2F34C825585D4F1793462504 /* Anuphan-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Anuphan-SemiBold.ttf"; path = "../src/assets/fonts/Anuphan-SemiBold.ttf"; sourceTree = "<group>"; };
 		2FE69C8B24DA43A3A19E6C72 /* Sarabun-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Bold.ttf"; path = "../src/assets/fonts/Sarabun-Bold.ttf"; sourceTree = "<group>"; };
 		3CB3D555E4984153AE4BA2D5 /* Sarabun-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Medium.ttf"; path = "../src/assets/fonts/Sarabun-Medium.ttf"; sourceTree = "<group>"; };
 		4230E2C5E05F42A28CAB7E2C /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = ../src/assets/fonts/AntDesign.ttf; sourceTree = "<group>"; };
@@ -94,6 +93,7 @@
 		D1F2C604491F47C6A563A689 /* Sarabun-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Light.ttf"; path = "../src/assets/fonts/Sarabun-Light.ttf"; sourceTree = "<group>"; };
 		D825E13E2910472ABD4CC80B /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = ../src/assets/fonts/MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
 		DFE751E1DA03441F864019BA /* iconkaset.wav */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = iconkaset.wav; path = ../src/assets/sound/iconkaset.wav; sourceTree = "<group>"; };
+		E113ACA82ACC193900000525 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "farmer/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E138B9A92A70D7BA000A08B8 /* iconkaset.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = iconkaset.wav; path = ../src/assets/sound/iconkaset.wav; sourceTree = "<group>"; };
 		E138B9AB2A70D7C9000A08B8 /* receivetasksuccess.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = receivetasksuccess.wav; path = ../src/assets/sound/receivetasksuccess.wav; sourceTree = "<group>"; };
 		E354E12A922F4E29915ECEC5 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = ../src/assets/fonts/EvilIcons.ttf; sourceTree = "<group>"; };
@@ -206,6 +206,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				E113ACA82ACC193900000525 /* GoogleService-Info.plist */,
 				E138B9A92A70D7BA000A08B8 /* iconkaset.wav */,
 				E138B9AB2A70D7C9000A08B8 /* receivetasksuccess.wav */,
 				60F1F01729266B63007549EB /* fonts */,
@@ -279,6 +280,7 @@
 				88053DE0E64F8B39FEFBE90B /* [CP] Embed Pods Frameworks */,
 				176B9F1D86A8A258131BB8EF /* [CP] Copy Pods Resources */,
 				BFF2988602F9B46CA739659F /* [CP-User] [RNFB] Core Configuration */,
+				B5469360C1EFBE258DB87DF6 /* [CP-User] [RNFB] Crashlytics Configuration */,
 			);
 			buildRules = (
 			);
@@ -354,6 +356,7 @@
 				10279EFD61A64239982BF31F /* FontAwesome5_Solid.ttf in Resources */,
 				990F5E42EB1A4D3485349652 /* Fontisto.ttf in Resources */,
 				7249DA0B3AD847568EF7FF2F /* Foundation.ttf in Resources */,
+				E113ACA92ACC193900000525 /* GoogleService-Info.plist in Resources */,
 				2BC7B07EC9034DAAAB6366B2 /* Ionicons.ttf in Resources */,
 				6E53E75379834B1BA3A7D41E /* MaterialCommunityIcons.ttf in Resources */,
 				7EEF520FEAC748719C0D4AE2 /* MaterialIcons.ttf in Resources */,
@@ -364,8 +367,6 @@
 				E138B9AC2A70D7C9000A08B8 /* receivetasksuccess.wav in Resources */,
 				D2D981DE0F334CA5987D66DB /* SimpleLineIcons.ttf in Resources */,
 				24841A7F6BB64F00AB0F0900 /* Zocial.ttf in Resources */,
-				7E6FBB5BFDEC44A8A487B939 /* iconkaset.wav in Resources */,
-				350B0960CDD7457D8DC4E862 /* receivetasksuccess.wav in Resources */,
 				0839E6B6B16B4DE79F0376FC /* Anuphan-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -483,6 +484,20 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		B5469360C1EFBE258DB87DF6 /* [CP-User] [RNFB] Crashlytics Configuration */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "[CP-User] [RNFB] Crashlytics Configuration";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/usr/bin/env bash\n#\n# Copyright (c) 2016-present Invertase Limited & Contributors\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this library except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#   http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\nset -e\n\nif [[ ${PODS_ROOT} ]]; then\n  echo \"info: Exec FirebaseCrashlytics Run from Pods\"\n  \"${PODS_ROOT}/FirebaseCrashlytics/run\"\nelse\n  echo \"info: Exec FirebaseCrashlytics Run from framework\"\n  \"${PROJECT_DIR}/FirebaseCrashlytics.framework/run\"\nfi\n";
 		};
 		B9DB399DB6A9EA60ADE17C1D /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

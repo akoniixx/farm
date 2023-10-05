@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import * as RootNavigation from '../navigations/RootNavigation';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export const BASE_URL = 'https://api-dnds-dev.iconkaset.com';
 // export const BASE_URL = 'https://api-dnds.iconkaset.com';
@@ -23,6 +24,8 @@ axios.interceptors.response.use(
     return response;
   },
   async function (error) {
+    // crashlytics().recordError(error);
+
     /*  if (500 === error.response.status) {
         RootNavigation.navigate('Auth', {
           screen: 'InternalServerError',
@@ -43,6 +46,7 @@ axios.interceptors.response.use(
         screen: 'HomeScreen',
       });
     } */
+
     return Promise.reject(error);
   },
 );

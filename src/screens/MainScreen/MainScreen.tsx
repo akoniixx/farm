@@ -308,17 +308,15 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     const options = {
       method: 'POST',
       headers: { accept: 'text/plain', 'content-type': 'application/json' },
-      body: JSON.stringify([
-        {
-          $token: mixpanel_token,
-          $distinct_id: await mixpanel.getDistinctId(),
-          $set: profiles,
-          $name: `${profiles.firstname} ${profiles.lastname}`,
-          $telephoneNo: profiles.telephoneNo,
-          $farmerId: profiles.id,
-          $email: profiles.email ? profiles.email : 'NONE',
-        },
-      ]),
+      body: JSON.stringify({
+        $token: mixpanel_token,
+        $distinct_id: await mixpanel.getDistinctId(),
+        $set: profiles,
+        $name: `${profiles.firstname} ${profiles.lastname}`,
+        $telephoneNo: profiles.telephoneNo,
+        $farmerId: profiles.id,
+        $email: profiles.email ? profiles.email : 'NONE',
+      }),
     };
 
     fetch('https://api.mixpanel.com/engage#profile-set', options)

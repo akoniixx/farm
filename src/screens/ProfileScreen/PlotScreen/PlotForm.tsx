@@ -164,33 +164,40 @@ export default function PlotForm({
   }, [page]);
 
   useEffect(() => {
-    setPage(0);
-    let filter = location.filter(str => str.area.includes(searchValue));
-    let arr = [];
-    for (let i = 0; i < 10; i++) {
-      if (filter[i]) {
-        arr.push(filter[i]);
+    const filterLocation = () => {
+      setPage(0);
+      let filter = location.filter(str => str.area.includes(searchValue));
+      let arr = [];
+      for (let i = 0; i < 10; i++) {
+        if (filter[i]) {
+          arr.push(filter[i]);
+        }
       }
+      setDataStore(filter);
+      setDataRender(arr);
+    };
+    if (searchValue && location.length > 0) {
+      filterLocation();
     }
-    setDataStore(filter);
-    setDataRender(arr);
   }, [searchValue, location]);
-
+  // console.log('dataRender', dataRender.length, searchValue, location.length);
   useEffect(() => {
     const getDistrict = async () => {
-      QueryLocation.getSubdistrict(0, '').then(res => {
-        let all = res.map((item: any) => {
-          return {
-            area: `${item.subdistrictName}/${item.districtName}/${item.provinceName}`,
-            latitude: item.lat,
-            longitude: item.long,
-            provinceId: item.provinceId,
-            districtId: item.districtId,
-            subdistrictId: item.subdistrictId,
-          };
-        });
-        setLocation(all);
-      });
+      QueryLocation.getSubdistrict(0, '')
+        .then(res => {
+          let all = res.map((item: any) => {
+            return {
+              area: `${item.subdistrictName}/${item.districtName}/${item.provinceName}`,
+              latitude: item.lat,
+              longitude: item.long,
+              provinceId: item.provinceId,
+              districtId: item.districtId,
+              subdistrictId: item.subdistrictId,
+            };
+          });
+          setLocation(all);
+        })
+        .catch(err => console.log(err));
     };
     const getLocation = async () => {
       const hasPermission = await LocationPermission.hasLocationPermission();
@@ -266,12 +273,20 @@ export default function PlotForm({
         console.log(e);
       }
     };
-    getProfile();
-    if (!initialData) {
-      getDistrict();
-      getLocation();
-    }
-    getAllCropName();
+
+    const initilize = async () => {
+      try {
+        await Promise.all([
+          getDistrict(),
+          getLocation(),
+          getProfile(),
+          getAllCropName(),
+        ]);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    initilize();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

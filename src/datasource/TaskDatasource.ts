@@ -1,4 +1,5 @@
 import { BASE_URL, httpClient } from '../config/develop-config';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export interface PayloadCreateTask {
   farmerId: string;
@@ -30,6 +31,11 @@ const createTask = async (payload: PayloadCreateTask) => {
       return response.data;
     })
     .catch(error => {
+      crashlytics().recordError(error);
+      crashlytics().setAttributes({
+        url: BASE_URL + '/tasks/task',
+        payload: JSON.stringify(payload),
+      });
       console.log(error);
     });
 };
@@ -40,6 +46,11 @@ const getTaskByTaskId = async (taskId: string) => {
       return response.data;
     })
     .catch(error => {
+      crashlytics().recordError(error);
+      crashlytics().setAttributes({
+        url: BASE_URL + '/tasks/task',
+        taskId: taskId,
+      });
       throw error;
     });
 };
@@ -66,6 +77,11 @@ const extendFindingDroner = async ({
       return response.data;
     })
     .catch(error => {
+      crashlytics().recordError(error);
+      crashlytics().setAttributes({
+        url: BASE_URL + '/tasks/task/extend-finding',
+        payload: JSON.stringify(payload),
+      });
       throw error;
     });
 };
@@ -86,6 +102,15 @@ const cancelTask = async ({
       return response.data;
     })
     .catch(error => {
+      crashlytics().recordError(error);
+      crashlytics().setAttributes({
+        url: BASE_URL + '/tasks/task/' + taskId,
+        payload: JSON.stringify({
+          id: taskId,
+          status: 'CANCELED',
+          statusRemark: reason,
+        }),
+      });
       throw error;
     });
 };
