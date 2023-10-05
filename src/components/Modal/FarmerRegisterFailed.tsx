@@ -1,5 +1,7 @@
-import { View, Modal, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity, Image } from 'react-native';
 import React from 'react';
+import {Modal} from 'react-native-paper';
+
 import { ModalEntity } from './ModalEntity';
 import { ModalStyle } from './ModalStyle';
 import { MainButton } from '../Button/MainButton';
@@ -16,7 +18,7 @@ const FarmerRegisterFailed: React.FC<ModalEntity> = ({
   text,
 }) => {
   return (
-    <Modal visible={show} transparent={true}>
+    <Modal visible={show} >
       <View style={ModalStyle.modal}>
         <View style={ModalStyle.modalBg}>
           <View style={ModalStyle.close}>

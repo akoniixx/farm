@@ -412,30 +412,6 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             navigation.dispatch(jumpAction);
           }}
         />
-        <FarmerPlotSuccess
-          text={messageNoti}
-          show={farmerPlotSuccess}
-          onClose={() => {
-            setFarmerPlotSuccess(false);
-          }}
-          onMainClick={() => {
-            setFarmerPlotSuccess(false);
-            const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
-            navigation.dispatch(jumpAction);
-          }}
-        />
-        <FarmerPlotFailed
-          text={messageNoti}
-          show={farmerPlotFailed}
-          onClose={() => {
-            setFarmerPlotFailed(false);
-          }}
-          onMainClick={() => {
-            setFarmerPlotFailed(false);
-            const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
-            navigation.dispatch(jumpAction);
-          }}
-        />
       </>
     );
   }

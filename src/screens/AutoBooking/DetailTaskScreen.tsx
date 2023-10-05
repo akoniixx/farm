@@ -120,8 +120,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
     const getPointCamp = () => {
       getPointCampaign.getPoint().then(res => {
         if (res) {
-          const filterCondition = res.data.map((x: any) => x.condition[0]);
-          setPoint(filterCondition[0].point);
+          setPoint(res.data[0].condition[0].point);
         }
       });
     };
@@ -328,7 +327,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   const maximumPointCal = useMemo(() => {
     const netPrice = calPrice.priceBefore - calPrice.discountPromotion;
     const amounts = campaignDetail.amounts;
