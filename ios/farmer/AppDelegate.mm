@@ -8,6 +8,7 @@
 #import <React/RCTAppSetupUtils.h>
 #import <React/RCTRootView.h>
 
+#import <Firebase.h>
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
@@ -18,6 +19,7 @@
 
 #import <react/config/ReactNativeConfig.h>
 #import <UserNotifications/UserNotifications.h>
+
 #import <Firebase/Firebase.h>
 #import <FirebaseMessaging/FirebaseMessaging.h>
 
@@ -46,6 +48,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   UNNotificationCategory *category = [UNNotificationCategory categoryWithIdentifier:@"yourCategory" actions:@[] intentIdentifiers:@[] options:UNNotificationCategoryOptionNone];
   NSSet *categories = [NSSet setWithObjects:category, nil];
   [center setNotificationCategories:categories];
+  [FIRApp configure];
 
     [GMSServices provideAPIKey:@"AIzaSyAymsbEe0NVhDL8iHd8oabbr5xG0TFn8Jc"];
   RCTAppSetupPrepareApp(application);

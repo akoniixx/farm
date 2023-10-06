@@ -114,4 +114,6 @@ export default {
   myLocationGreen: require('./myLocationGreen.png'),
   topLeft: require('./topLeft.png'),
   drone_auto: require('./drone-auto.png'),
+  selectImage: require('./selectImage.png'),
+  locationOrange: require('./locationOrange.png'),
 };

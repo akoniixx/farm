@@ -15,7 +15,7 @@ import { callcenterNumber } from '../../definitions/callCenterNumber';
 interface Props {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  taskSugUsed: any[];
+  taskSugUsed?: any[];
   onPressAutoBooking: () => void;
   onPressManualBooking: () => void;
 }
@@ -24,7 +24,7 @@ export default function ModalSelectHiring({
   setVisible,
   onPressAutoBooking,
   onPressManualBooking,
-  taskSugUsed,
+  taskSugUsed = [],
 }: Props) {
   const { listButtons, isDisableTaskSugUsed } = useMemo(() => {
     const list = [

@@ -5,7 +5,16 @@ import {
   uploadFileClient,
   uploadFileProfile,
 } from '../config/develop-config';
-
+interface PayloadUpdateFarmer {
+  address: {
+    address1: string;
+    address2: string;
+    provinceId: number;
+    districtId: number;
+    subdistrictId: number;
+    postcode: string;
+  };
+}
 export class ProfileDatasource {
   static async getProfile(farmer_id: string): Promise<any> {
     return httpClient
@@ -43,7 +52,7 @@ export class ProfileDatasource {
       });
   }
   static async uploadProfileImage(image: any): Promise<any> {
-    const farmer_id = await AsyncStorage.getItem('farmer)id');
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
     const data = new FormData();
     data.append('file', {
       uri: image.assets[0].uri,
@@ -104,6 +113,28 @@ export class ProfileDatasource {
         // console.log('droner', response);
         // await AsyncStorage.setItem('droner_id', droner_id);
         // return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  static async updateFarmerProfile(payload: PayloadUpdateFarmer): Promise<any> {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    return httpClient.patch(BASE_URL + `/farmer/${farmer_id}`, {
+      ...payload,
+    });
+  }
+  static async removeProfileImage({
+    id,
+    path,
+  }: {
+    path: string;
+    id: string;
+  }): Promise<any> {
+    return httpClient
+      .delete(BASE_URL + '/file/delete' + `?id=${id}&path=${path}`)
+      .then(response => {
+        return response.data;
       })
       .catch(error => {
         console.log(error);

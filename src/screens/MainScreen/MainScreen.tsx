@@ -219,8 +219,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           limit,
           offset,
         )
-          .then(res => {
+          .then(async res => {
             setTaskSugUsed(res);
+            await AsyncStorage.setItem('taskSugUsed', JSON.stringify(res));
           })
           .catch(err => console.log(err));
       }

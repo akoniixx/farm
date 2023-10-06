@@ -1,9 +1,10 @@
-import { StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import React from 'react';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import Text from '../Text/Text';
-import { colors, font } from '../../assets';
+import { colors, font, icons } from '../../assets';
 import { MainButton } from '../Button/MainButton';
+import { normalize } from '../../functions/Normalize';
 
 interface Props {
   sheetId: 'placePlot' | 'positionPlot' | 'targetSpray' | 'injectTime';
@@ -106,6 +107,54 @@ export default function InfoSheet({ sheetId, payload }: Props) {
                   lineHeight: 28,
                 }}>
                 {mappingObj[type as keyof typeof mappingObj].description[4]}
+              </Text>
+            </>
+          ) : type === 'positionPlot' ? (
+            <>
+              <Text
+                style={{
+                  fontFamily: font.SarabunLight,
+                  fontSize: 18,
+                  lineHeight: 28,
+                }}>
+                ขั้นตอนในการหาตำแหน่งแปลง มีดังนี้
+              </Text>
+              <Text
+                style={{
+                  fontFamily: font.SarabunLight,
+                  fontSize: 18,
+                  lineHeight: 28,
+                }}>
+                1. ให้พิมพ์ค้นหาสถานที่ใกล้แปลง (เช่น วัด, โรงเรียน)
+              </Text>
+              <Text
+                style={{
+                  fontFamily: font.SarabunLight,
+                  fontSize: 18,
+                  lineHeight: 28,
+                }}>
+                2. เลื่อนหาตำแหน่งแปลงเกษตรบนแผนที่ {'\n'} และกดปักหมุด {'\t'}
+                <Image
+                  source={icons.locationOrange}
+                  style={{
+                    width: normalize(18),
+                    height: normalize(18),
+                    marginRight: -20,
+                  }}
+                  resizeMode="contain"
+                />
+                แปลงของคุณ แล้วกดปุ่ม “บันทึก”
+              </Text>
+              <Text
+                style={{
+                  fontFamily: font.SarabunLight,
+                  fontSize: 18,
+                  lineHeight: 28,
+                  marginTop: 16,
+                  textAlign: 'center',
+                }}>
+                เพื่อให้นักบินโดรนทราบถึงตำแหน่งที่ตั้ง และ
+                เดินทางมาที่แปลงเกษตรได้ถูกต้อง
               </Text>
             </>
           ) : (

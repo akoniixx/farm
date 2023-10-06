@@ -1,6 +1,6 @@
-import { View, TouchableOpacity, Platform, Linking } from 'react-native';
+import { View, TouchableOpacity, Platform, Linking, Image } from 'react-native';
 import React from 'react';
-import { colors, font } from '../../assets';
+import { colors, font, icons } from '../../assets';
 import { Camera, PhotoFile } from 'react-native-vision-camera';
 import { navigate } from '../../navigations/RootNavigation';
 import Text from '../Text/Text';
@@ -89,6 +89,7 @@ export default function ModalUploadImage({
         Platform.OS === 'android' ? onOpenCamera() : onPressCamera();
       },
       id: 1,
+      icon: icons.camera,
     },
     {
       id: 2,
@@ -96,14 +97,15 @@ export default function ModalUploadImage({
       onPress: () => {
         onPressLibrary();
       },
+      icon: icons.selectImage,
     },
-    // {
-    //   id: 3,
-    //   label: 'ยกเลิก',
-    //   onPress: () => {
-    //     onCancel();
-    //   },
-    // },
+    {
+      id: 3,
+      label: 'ยกเลิก',
+      onPress: () => {
+        onCancel();
+      },
+    },
   ];
 
   return (
@@ -120,42 +122,42 @@ export default function ModalUploadImage({
             paddingVertical: 8,
           }}>
           {staticSelect.map((el, idx) => {
-            // const isLast = idx === staticSelect.length - 1;
-            // if (isLast) {
-            //   return (
-            //     <TouchableOpacity
-            //       key={el.id}
-            //       onPress={el.onPress}
-            //       style={{
-            //         backgroundColor: 'white',
-            //         flexDirection: 'row',
-            //         alignItems: 'center',
-            //         justifyContent: 'space-between',
-            //         padding: 16,
-            //         //   borderBottomColor: colors.disable,
-            //         //   borderBottomWidth: isLast ? 0 : 1,
-            //         width: '100%',
-            //         height: 80,
-            //       }}>
-            //       <Text
-            //         style={{
-            //           fontFamily: font.SarabunMedium,
-            //           fontSize: 24,
-            //         }}>
-            //         {el.label}
-            //       </Text>
-            //       {/* {el.icon && (
-            //       <Image
-            //         source={el.icon}
-            //         style={{
-            //           width: 28,
-            //           height: 28,
-            //         }}
-            //       />
-            //     )} */}
-            //     </TouchableOpacity>
-            //   );
-            // }
+            const isLast = idx === staticSelect.length - 1;
+            if (isLast) {
+              return (
+                <TouchableOpacity
+                  key={el.id}
+                  onPress={el.onPress}
+                  style={{
+                    backgroundColor: 'white',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: 16,
+                    //   borderBottomColor: colors.disable,
+                    //   borderBottomWidth: isLast ? 0 : 1,
+                    width: '100%',
+                    height: 70,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: font.AnuphanMedium,
+                      fontSize: 24,
+                    }}>
+                    {el.label}
+                  </Text>
+                  {/* {el.icon && (
+                  <Image
+                    source={el.icon}
+                    style={{
+                      width: 28,
+                      height: 28,
+                    }}
+                  />
+                )} */}
+                </TouchableOpacity>
+              );
+            }
 
             return (
               <TouchableOpacity
@@ -170,24 +172,26 @@ export default function ModalUploadImage({
                   //   borderBottomColor: colors.disable,
                   //   borderBottomWidth: isLast ? 0 : 1,
                   width: '100%',
-                  height: 80,
+                  height: 70,
                 }}>
                 <Text
                   style={{
-                    fontFamily: font.SarabunMedium,
+                    fontFamily: font.AnuphanMedium,
                     fontSize: 24,
+                    lineHeight: 36,
                   }}>
                   {el.label}
                 </Text>
-                {/* {el.icon && (
+                {el.icon && (
                   <Image
+                    resizeMode="contain"
                     source={el.icon}
                     style={{
-                      width: 28,
-                      height: 28,
+                      width: el.id === 1 ? 28 : 24,
+                      height: el.id === 1 ? 28 : 24,
                     }}
                   />
-                )} */}
+                )}
               </TouchableOpacity>
             );
           })}

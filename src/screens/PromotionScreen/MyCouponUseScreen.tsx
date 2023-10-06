@@ -22,6 +22,7 @@ import VerifyStatus from '../../components/Modal/VerifyStatus';
 import { mixpanel } from '../../../mixpanel';
 import Text from '../../components/Text/Text';
 import LoadingSkeletonCoupon from './LoadingSkeletonCoupon';
+import ModalSelectHiring from '../../components/Modal/ModalSelectHiring';
 
 const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
@@ -32,9 +33,15 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
   const [status, setStatus] = useState();
   const [loading, setLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [visibleSelectHire, setVisibleSelectHire] = useState<boolean>(false);
+  const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
 
   const getData = async (page: number, take: number, used?: boolean) => {
     setLoading(true);
+    const taskSugData = await AsyncStorage.getItem('taskSugUsed');
+    if (taskSugData) {
+      setTaskSugUsed(JSON.parse(taskSugData));
+    }
     getMyCoupon(page, take, used)
       .then(res => {
         setCount(res.count);
@@ -82,40 +89,12 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
         height: '100%',
         backgroundColor: colors.bgGreen,
       }}>
-      <SelectDronerCouponModal
+      {/* <SelectDronerCouponModal
         show={modal}
         onClose={() => setModal(false)}
-        onMainClick={() => {
-          mixpanel.track(
-            'MyCouponUseScreen_SelectDronerCouponModalMainButton_tapped',
-            {
-              changeTo: 'DronerHiredScreen',
-            },
-          );
-          setModal(false);
-          setTimeout(() => {
-            RootNavigation.navigate('DronerHiredScreen', {
-              isSelectDroner: true,
-              profile: {},
-            });
-          }, 400);
-        }}
-        onBottomClick={() => {
-          mixpanel.track(
-            'MyCouponUseScreen_SelectDronerCouponModalOnBottomButton_tapped',
-            {
-              changeTo: 'SelectDateScreen',
-            },
-          );
-          setModal(false);
-          setTimeout(() => {
-            RootNavigation.navigate('SelectDateScreen', {
-              isSelectDroner: false,
-              profile: {},
-            });
-          }, 400);
-        }}
-      />
+        onMainClick={}
+        onBottomClick={}
+      /> */}
       {loading ? (
         <View
           style={{
@@ -243,7 +222,9 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
             mixpanel.track('MyCouponUseScreen_MainButtonTask_tapped', {
               status,
             });
-            status !== 'ACTIVE' ? setModalVerify(true) : setModal(true);
+            status !== 'ACTIVE'
+              ? setModalVerify(true)
+              : setVisibleSelectHire(true);
           }}
         />
       </View>
@@ -262,6 +243,41 @@ const MyCouponUseScreen: React.FC<any> = ({ navigation, route }) => {
           }}
         />
       </Modal>
+      <ModalSelectHiring
+        visible={visibleSelectHire}
+        taskSugUsed={taskSugUsed}
+        setVisible={setVisibleSelectHire}
+        onPressManualBooking={() => {
+          mixpanel.track(
+            'MyCouponUseScreen_SelectDronerCouponModalMainButton_tapped',
+            {
+              changeTo: 'DronerHiredScreen',
+            },
+          );
+          setVisibleSelectHire(false);
+          setTimeout(() => {
+            RootNavigation.navigate('DronerHiredScreen', {
+              isSelectDroner: true,
+              profile: {},
+            });
+          }, 400);
+        }}
+        onPressAutoBooking={() => {
+          mixpanel.track(
+            'MyCouponUseScreen_SelectDronerCouponModalOnBottomButton_tapped',
+            {
+              changeTo: 'SelectDateScreen',
+            },
+          );
+          setVisibleSelectHire(false);
+          setTimeout(() => {
+            RootNavigation.navigate('SelectDateScreen', {
+              isSelectDroner: false,
+              profile: {},
+            });
+          }, 400);
+        }}
+      />
     </View>
   );
 };

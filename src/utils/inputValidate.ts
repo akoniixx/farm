@@ -9,11 +9,9 @@ export function containsSpecialCharacter(str: string) {
 
 export function mixValidator(str: string) {
   if (containsEmoji(str)) {
-    console.log('containsEmoji');
     return '';
   }
   if (containsSpecialCharacter(str)) {
-    console.log('containsSpecialCharacter');
     return '';
   }
   return str;

@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  ScrollView,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import React, { useEffect, useState } from 'react';
@@ -254,7 +253,8 @@ export default function ModalMapLocation({
               <Text
                 style={{
                   fontFamily: font.SarabunLight,
-                  fontSize: 16,
+                  fontSize: 18,
+
                   lineHeight: 28,
                 }}>
                 ขั้นตอนในการหาตำแหน่งแปลง มีดังนี้
@@ -262,18 +262,29 @@ export default function ModalMapLocation({
               <Text
                 style={{
                   fontFamily: font.SarabunLight,
-                  fontSize: 16,
+                  fontSize: 18,
+
                   lineHeight: 28,
                 }}>
-                1. ให้พิมพ์ค้นหาสถานที่ใกล้แปลง (เช่น วัด, โรงเรียน) มีดังนี้
+                1. ให้พิมพ์ค้นหาสถานที่ใกล้แปลง (เช่น วัด, โรงเรียน)
               </Text>
               <Text
                 style={{
                   fontFamily: font.SarabunLight,
-                  fontSize: 16,
+                  fontSize: 18,
                   lineHeight: 28,
                 }}>
-                2. เลื่อนหมุดแผนที่เพื่อไปหาตำแหน่งแปลง
+                2. เลื่อนหาตำแหน่งแปลงเกษตรบนแผนที่ {'\n'} และกดปักหมุด {'\t'}
+                <Image
+                  source={icons.locationOrange}
+                  style={{
+                    width: normalize(18),
+                    height: normalize(18),
+                    marginRight: -20,
+                  }}
+                  resizeMode="contain"
+                />
+                แปลงของคุณ แล้วกดปุ่ม “บันทึก”
               </Text>
             </View>
             {currentPosition.latitude && currentPosition.longitude ? (
