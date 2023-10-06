@@ -1,4 +1,10 @@
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, { useMemo, useState } from 'react';
 import { DronerHired } from '.';
 import { colors, font, image } from '../../assets';
@@ -24,7 +30,7 @@ export default function DronerItem({
   firstname,
   lastname,
   total_task,
-  rating_avg: rate,
+  nickname,
   favorite_status: status,
   province_name: province,
   distance,
@@ -126,24 +132,26 @@ export default function DronerItem({
                   flex: 1,
                   justifyContent: 'space-between',
                   flexDirection: 'row',
+                  marginBottom: -8,
                 }}>
                 <Text
                   style={{
-                    color: colors.primary60,
+                    color: colors.primary70,
                     fontFamily: font.SarabunBold,
                     fontSize: 18,
                     lineHeight: 28,
                   }}>
                   {firstname} {lastname}
                 </Text>
+
                 <View
                   style={{
                     backgroundColor: colors.white,
                     borderColor: colors.bg,
                     borderWidth: 1,
-                    width: 30,
-                    height: 30,
-                    borderRadius: 15,
+                    width: 36,
+                    height: 36,
+                    borderRadius: 18,
                   }}>
                   {disabled ? (
                     <View
@@ -166,8 +174,8 @@ export default function DronerItem({
                         }
                         style={{
                           alignSelf: 'center',
-                          width: 20,
-                          height: 20,
+                          width: 26,
+                          height: 26,
                           top: 4,
                         }}
                       />
@@ -175,100 +183,111 @@ export default function DronerItem({
                   )}
                 </View>
               </View>
+              {nickname && (
+                <View
+                  style={{
+                    marginLeft: 10,
+                    flex: 1,
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                    marginTop: 4,
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginLeft: 6,
+                    }}>
+                    <Text
+                      style={{
+                        color: colors.grey40,
+                        fontFamily: font.SarabunBold,
+                        fontSize: 18,
+                        lineHeight: 28,
+                      }}>
+                      {nickname}
+                    </Text>
+                  </View>
+                </View>
+              )}
+
               <View
                 style={{
-                  marginLeft: 16,
-                  flex: 1,
-                  justifyContent: 'space-between',
                   flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginLeft: 10,
                   marginTop: 4,
                 }}>
                 <View
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    marginLeft: 6,
-                    marginBottom: 8,
+                    alignSelf: 'flex-start',
+                    flex: 0.95,
                   }}>
                   <Image
-                    source={icons.star}
+                    source={icons.location}
                     style={{ width: 20, height: 20, marginRight: 10 }}
                   />
-                  <Text style={styles({}).label}>
-                    {rate !== null
-                      ? `${parseFloat(rate).toFixed(1)} คะแนน  `
-                      : `0 คะแนน`}
-                  </Text>
-                  <Text style={[styles({}).label, { color: colors.gray }]}>
-                    {total_task ? `(${total_task})` : ``}{' '}
+                  <Text
+                    numberOfLines={1}
+                    style={[
+                      styles({}).label,
+                      {
+                        width: Dimensions.get('window').width / 4,
+                      },
+                    ]}>
+                    {province !== null ? 'จ.' + ' ' + province : 'จ.' + '  -'}
                   </Text>
                 </View>
                 <View
                   style={{
-                    borderWidth: 1,
-                    borderRadius: 15,
-                    borderColor: colors.greenLight,
-                    backgroundColor: '#fff',
-                    height: 26,
-                    width: 60,
-                    marginLeft: 6,
+                    flexDirection: 'row',
+                    alignItems: 'flex-start',
+                    alignSelf: 'flex-start',
+                    flex: 0.95,
                   }}>
+                  <Image
+                    source={icons.distance}
+                    style={{ width: 20, height: 20, marginRight: 10 }}
+                  />
                   <Text
-                    style={{
-                      fontFamily: font.AnuphanMedium,
-                      fontSize: normalize(14),
-                      color: colors.greenDark,
-                      alignSelf: 'center',
-                    }}>
-                    เคยจ้าง
+                    style={[
+                      styles({}).label,
+                      {
+                        width: Dimensions.get('window').width / 3 - 16,
+                      },
+                    ]}>
+                    {distance !== null
+                      ? `ห่างคุณ ${distance.toFixed(1)} กม.`
+                      : `0 กม.`}
                   </Text>
                 </View>
               </View>
-            </View>
-          </View>
-          <View
-            style={{
-              width: '100%',
-              height: 1,
-              backgroundColor: colors.greyDivider,
-              marginVertical: 6,
-            }}
-          />
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={icons.location}
-                style={{ width: 20, height: 20, marginRight: 10 }}
-              />
-              <Text
-                numberOfLines={1}
-                style={[styles({}).label, { width: 120 }]}>
-                {province !== null ? 'จ.' + ' ' + province : 'จ.' + '  -'}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={icons.distance}
-                style={{ width: 20, height: 20, marginRight: 10 }}
-              />
-              <Text style={styles({}).label}>
-                {distance !== null
-                  ? `ห่างคุณ ${distance.toFixed(1)} กม.`
-                  : `0 กม.`}
-              </Text>
+              <View
+                style={{
+                  borderWidth: 1,
+                  borderRadius: 15,
+                  borderColor: colors.greenLight,
+                  backgroundColor: '#fff',
+                  height: 26,
+                  width: 'auto',
+                  alignSelf: 'flex-start',
+                  paddingHorizontal: 10,
+                  marginLeft: 6,
+                  marginTop: 8,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: font.AnuphanMedium,
+                    fontSize: normalize(16),
+                    color: colors.greenDark,
+                    alignSelf: 'center',
+                  }}>
+                  เคยจ้าง
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -298,8 +317,7 @@ const styles = ({ closedHired }: any) =>
       fontFamily: font.SarabunLight,
       fontSize: normalize(16),
       color: colors.fontBlack,
-      justifyContent: 'center',
-      alignItems: 'center',
+      alignSelf: 'flex-start',
     },
     maskedView: closedHired
       ? {

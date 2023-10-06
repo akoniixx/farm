@@ -14,6 +14,7 @@ interface PayloadUpdateFarmer {
     subdistrictId: number;
     postcode: string;
   };
+  nickname: string;
 }
 export class ProfileDatasource {
   static async getProfile(farmer_id: string): Promise<any> {

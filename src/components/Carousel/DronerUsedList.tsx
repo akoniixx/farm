@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Platform,
   ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import React, { useState } from 'react';
 import { normalize } from '../../functions/Normalize';
@@ -30,6 +31,7 @@ interface dronerUsedData {
   dronerId: string;
   isLoading?: boolean;
   card: any;
+  nickname?: string;
 }
 
 const DronerUsedList: React.FC<dronerUsedData> = ({
@@ -38,13 +40,13 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
   background,
   name,
   rate,
-  total_task,
   province,
   distance,
   status,
   callBack,
   isLoading,
   card,
+  nickname = '',
 }) => {
   const [disabled, setDisabled] = useState(false);
   // const onFavorite = async () => {
@@ -61,7 +63,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
   return isLoading ? (
     <View
       style={{
-        width: normalize(160),
+        width: Dimensions.get('window').width * 0.6 - 32,
       }}>
       <SkeletonPlaceholder
         borderRadius={10}
@@ -81,12 +83,16 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
       </SkeletonPlaceholder>
     </View>
   ) : (
-    <View style={{ paddingHorizontal: 8 }}>
+    <View style={{ paddingHorizontal: 8, marginBottom: 4 }}>
       <View style={card !== 'taskSug' ? [styles.cards] : [styles.cardsTaskSug]}>
         <ImageBackground
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
-          style={{ height: normalize(60) }}
+          style={{
+            height: normalize(50),
+            paddingVertical: 4,
+            paddingHorizontal: 12,
+          }}
           source={background === null ? image.bg_droner : { uri: background }}>
           <View key={index}>
             <Image
@@ -94,81 +100,101 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
             />
             <View
               style={{
-                backgroundColor: colors.white,
-                borderColor: colors.bg,
-                borderWidth: 1,
-                width: 30,
-                height: 30,
-                borderRadius: 15,
-                alignSelf: 'flex-end',
-                margin: 10,
+                flexDirection: 'row',
+                marginTop: 8,
+                justifyContent: 'space-between',
               }}>
-              {disabled ? (
-                <View
+              <View>
+                <ProgressiveImage
+                  borderRadius={28}
+                  source={
+                    profile === null ? image.empty_plot : { uri: profile }
+                  }
                   style={{
-                    backgroundColor: colors.white,
-
-                    borderRadius: 15,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    padding: 4,
-                  }}>
-                  <ActivityIndicator />
-                </View>
-              ) : (
-                <TouchableOpacity
-                  disabled={disabled}
-                  onPress={async () => {
-                    try {
-                      setDisabled(true);
-                      await callBack();
-                    } catch (err) {
-                      console.log(err);
-                    } finally {
-                      setDisabled(false);
-                    }
-                  }}>
-                  <Image
-                    source={
-                      status === 'ACTIVE' ? icons.heart_active : icons.heart
-                    }
+                    borderRadius: normalize(28),
+                    borderColor: colors.white,
+                    borderWidth: 1,
+                    width: normalize(56),
+                    height: normalize(56),
+                  }}
+                />
+              </View>
+              <View>
+                {card !== 'taskSug' && (
+                  <View
                     style={{
-                      alignSelf: 'center',
-                      width: 20,
-                      height: 20,
-                      top: 4,
-                    }}
-                  />
-                </TouchableOpacity>
-              )}
+                      backgroundColor: colors.white,
+                      borderColor: colors.bg,
+                      borderWidth: 1,
+                      width: 30,
+                      height: 30,
+                      borderRadius: 15,
+                      alignSelf: 'flex-end',
+                    }}>
+                    {disabled ? (
+                      <View
+                        style={{
+                          backgroundColor: colors.white,
+
+                          borderRadius: 15,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          padding: 4,
+                        }}>
+                        <ActivityIndicator />
+                      </View>
+                    ) : (
+                      <TouchableOpacity
+                        disabled={disabled}
+                        onPress={async () => {
+                          try {
+                            setDisabled(true);
+                            await callBack();
+                          } catch (err) {
+                            console.log(err);
+                          } finally {
+                            setDisabled(false);
+                          }
+                        }}>
+                        <Image
+                          source={
+                            status === 'ACTIVE'
+                              ? icons.heart_active
+                              : icons.heart
+                          }
+                          style={{
+                            alignSelf: 'center',
+                            width: 20,
+                            height: 20,
+                            top: 4,
+                          }}
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                )}
+              </View>
             </View>
-            <View style={{ alignSelf: 'center', bottom: 15 }}>
-              <ProgressiveImage
-                borderRadius={28}
-                source={profile === null ? image.empty_plot : { uri: profile }}
+
+            <View
+              style={{
+                marginTop: 8,
+              }}>
+              <View
                 style={{
-                  borderRadius: normalize(28),
-                  borderColor: colors.white,
-                  borderWidth: 1,
-                  width: normalize(56),
-                  height: normalize(56),
-                }}
-              />
-            </View>
-            <View style={{ paddingLeft: 5, bottom: 15 }}>
-              <Text
-                numberOfLines={1}
-                style={[
-                  styles.h1,
-                  { width: 150, lineHeight: 40, marginLeft: 6 },
-                ]}>
-                {name}
-              </Text>
+                  minHeight: 50,
+                }}>
+                <Text numberOfLines={1} style={[styles.h1]}>
+                  {name}
+                </Text>
+                <Text numberOfLines={1} style={[styles.h2]}>
+                  {nickname}
+                </Text>
+              </View>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  marginLeft: 6,
                 }}>
                 <Image
                   source={icons.star}
@@ -179,21 +205,17 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                     ? `${parseFloat(rate).toFixed(1)} คะแนน  `
                     : `0 คะแนน`}
                 </Text>
-                <Text style={[styles.label, { color: colors.gray }]}>
-                  {total_task !== null ? `(${total_task})` : `  (0)`}{' '}
-                </Text>
               </View>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  marginLeft: 6,
                 }}>
                 <Image
                   source={icons.location}
                   style={{ width: 20, height: 20, marginRight: 10 }}
                 />
-                <Text numberOfLines={1} style={[styles.label, { width: 120 }]}>
+                <Text numberOfLines={1} style={[styles.label]}>
                   {province !== null ? 'จ.' + ' ' + province : 'จ.' + '  -'}
                 </Text>
               </View>
@@ -202,7 +224,6 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                   flexDirection: 'row',
                   alignItems: 'center',
                   paddingBottom: 3,
-                  marginLeft: 6,
                 }}>
                 <Image
                   source={icons.distance}
@@ -222,8 +243,10 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                     borderColor: colors.greenLight,
                     backgroundColor: '#fff',
                     height: 26,
-                    width: 60,
-                    marginLeft: 6,
+                    width: 'auto',
+                    marginTop: 8,
+                    paddingHorizontal: 4,
+                    alignSelf: 'flex-start',
                   }}>
                   <Text
                     style={{
@@ -251,52 +274,49 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
     justifyContent: 'center',
     alignItems: 'center',
+    lineHeight: 26,
   },
   h1: {
     color: colors.primary,
     fontFamily: font.SarabunBold,
     fontSize: normalize(18),
   },
+  h2: {
+    color: colors.grey40,
+    fontFamily: font.SarabunBold,
+    fontSize: normalize(14),
+  },
   cards: {
-    ...Platform.select({
-      ios: {
-        backgroundColor: '#F7FFF0',
-        height: normalize(229),
-        width: normalize(160),
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: colors.bg,
-      },
-      android: {
-        backgroundColor: '#F7FFF0',
-        height: normalize(250),
-        width: normalize(160),
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: colors.bg,
-      },
-    }),
+    height: normalize(240),
+    width: Dimensions.get('window').width * 0.6 - 32,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.bg,
+    backgroundColor: '#F7FFF0',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    elevation: 1,
+    shadowOpacity: 0.12,
+    shadowRadius: 0.22,
   },
   cardsTaskSug: {
-    ...Platform.select({
-      ios: {
-        backgroundColor: colors.white,
-        height: normalize(205),
-        width: normalize(160),
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: colors.bg,
-      },
-      android: {
-        backgroundColor: colors.white,
-        height: normalize(240),
-        width: normalize(160),
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: colors.bg,
-        marginBottom: 10,
-      },
-    }),
+    height: normalize(210),
+    width: Dimensions.get('window').width * 0.6 - 32,
+    borderRadius: 10,
+    borderWidth: 1,
+    backgroundColor: colors.white,
+    borderColor: colors.bg,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    elevation: 1,
+    shadowOpacity: 0.12,
+    shadowRadius: 0.22,
   },
 });
 

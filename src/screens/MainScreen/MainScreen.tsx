@@ -306,24 +306,32 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   });
 
   const sendProfilesToMixpanel = async (profiles: any) => {
-    const options = {
-      method: 'POST',
-      headers: { accept: 'text/plain', 'content-type': 'application/json' },
-      body: JSON.stringify({
-        $token: mixpanel_token,
-        $distinct_id: await mixpanel.getDistinctId(),
-        $set: profiles,
-        $name: `${profiles.firstname} ${profiles.lastname}`,
-        $telephoneNo: profiles.telephoneNo,
-        $farmerId: profiles.id,
-        $email: profiles.email ? profiles.email : 'NONE',
-      }),
-    };
+    // const options = {
+    //   method: 'POST',
+    //   headers: { accept: 'text/plain', 'content-type': 'application/json' },
+    //   body: JSON.stringify({
+    //     $token: mixpanel_token,
+    //     $distinct_id: await mixpanel.getDistinctId(),
+    //     $set: profiles,
+    //     $name: `${profiles.firstname} ${profiles.lastname}`,
+    //     $telephoneNo: profiles.telephoneNo,
+    //     $farmerId: profiles.id,
+    //     $email: profiles.email ? profiles.email : 'NONE',
+    //   }),
+    // };
 
-    fetch('https://api.mixpanel.com/engage#profile-set', options)
-      .then(response => response.json())
+    // fetch('https://api.mixpanel.com/engage#profile-set', options)
+    //   .then(response => response.json())
 
-      .catch(err => console.error(err));
+    //   .catch(err => console.error(err));
+    mixpanel.identify(profiles.id);
+    mixpanel.getPeople().set({
+      $name: `${profiles.firstname} ${profiles.lastname}`,
+      $telephoneNo: profiles.telephoneNo,
+      $farmerId: profiles.id,
+      $email: profiles.email ? profiles.email : 'NONE',
+      $distinct_id: mixpanel.getDistinctId(),
+    });
   };
   const onPressManualBooking = async () => {
     setVisibleSelectHire(false);

@@ -24,6 +24,7 @@ export default function BookedDroner({
   isLoading = false,
   setRefresh,
 }: Props) {
+  console.log('taskSugUsed', JSON.stringify(taskSugUsed, null, 2));
   return (
     <>
       {taskSugUsed.length < 1 && !isLoading ? (
@@ -51,7 +52,7 @@ export default function BookedDroner({
       ) : (
         <View style={{ height: 'auto' }}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {(isLoading ? [1, 2, 3] : taskSugUsed).map(
+            {(isLoading ? [1, 2] : taskSugUsed).map(
               (item: any, index: number) => (
                 <TouchableOpacity
                   key={index}

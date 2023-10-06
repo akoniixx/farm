@@ -18,14 +18,14 @@ export default function DronerSuggestion({
   navigation,
   isLoading,
   setTaskSug,
-  taskSug,
+  taskSug = [],
   setRefresh,
 }: Props) {
   return (
     <View style={{ height: 'auto' }}>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         {taskSug.length !== undefined &&
-          (isLoading ? [1, 2, 3] : taskSug).map((item: any, index: any) => (
+          (isLoading ? [1, 2] : taskSug).map((item: any, index: any) => (
             <TouchableOpacity
               key={index}
               onPress={async () => {
@@ -40,6 +40,7 @@ export default function DronerSuggestion({
                 card="taskSug"
                 key={index}
                 index={index}
+                nickname={item.nickname}
                 profile={item.image_droner}
                 background={item.task_image}
                 name={item.firstname + ' ' + item.lastname}
@@ -57,7 +58,7 @@ export default function DronerSuggestion({
                     await FavoriteDroner.addUnaddFav(
                       farmer_id !== null ? farmer_id : '',
                       droner_id[index],
-                      item.street_distance
+                      item.street_distance,
                     )
                       .then(() => {
                         setRefresh(prev => !prev);

@@ -16,6 +16,7 @@ import { useAuth } from '../../contexts/AuthContext';
 export interface DronerHired {
   droner_id: string;
   droner_code: string;
+  nickname: string;
   firstname: string;
   lastname: string;
   telephone_no: string;
