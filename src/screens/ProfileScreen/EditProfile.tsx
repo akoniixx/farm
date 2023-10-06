@@ -18,7 +18,6 @@ import {stylesCentral} from '../../styles/StylesCentral';
 import {colors, font, icons, image as img} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import CustomHeader from '../../components/CustomHeader';
-import {MainButton} from '../../components/Button/MainButton';
 import {ScrollView} from 'react-native-gesture-handler';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import {registerReducer} from '../../hooks/registerfield';
