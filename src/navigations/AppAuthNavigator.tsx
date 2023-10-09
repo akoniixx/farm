@@ -24,6 +24,7 @@ import CameraScreen from '../screens/CameraScreen';
 import AddPlotScreen from '../screens/ProfileScreen/PlotScreen/AddPlotScreen';
 import EditPlotScreen from '../screens/ProfileScreen/PlotScreen/EditPlotScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
 
 const Stack = createStackNavigator();
 
@@ -65,6 +66,7 @@ const AppAuthNavigator: React.FC = () => {
       <Stack.Screen name="EditFarmerPlot" component={EditFarmerPlot} />
       <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
       <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
+      <Stack.Screen name="DetailGuruScreen" component={DetailGuruScreen} />
       <Stack.Screen
         name="AddPlotScreen"
         component={AddPlotScreen}

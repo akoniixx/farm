@@ -31,6 +31,7 @@ import { normalize } from '../../functions/Normalize';
 import { getStatusToText, numberWithCommas } from '../../functions/utility';
 import Banner from '../../components/Banner/Banner';
 import Text from '../../components/Text/Text';
+import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
 
 interface Campaign {
   id: string;
@@ -296,6 +297,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             }}>
             <Text style={styles.label}>นักบินโดรน</Text>
             <DronerCard
+              nickname={task.droner.nickname}
               name={task.droner.firstname + ' ' + task.droner.lastname}
               profile={task.droner.image_profile}
               telnumber={task.droner.telephone_no}
@@ -311,7 +313,10 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                 borderRadius: 16,
               }}>
               <Text style={styles.plot}>อัตราค่าจ้าง</Text>
-              <Text style={styles.unitPrice}>{task.unit_price} บาท/ไร่</Text>
+              <Text style={styles.unitPrice}>
+                {formatNumberWithComma(parseFloat(task.unit_price).toFixed(2))}
+                บาท/ไร่
+              </Text>
             </View>
           </View>
         )}
@@ -355,7 +360,10 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               justifyContent: 'space-between',
             }}>
             <Text style={styles.totalPrice}>ราคาต่อไร่</Text>
-            <Text style={styles.totalPrice}>{task.unit_price} บาท/ไร่</Text>
+            <Text style={styles.totalPrice}>
+              {formatNumberWithComma(parseFloat(task.unit_price).toFixed(2)) +
+                ' บาท/ไร่'}
+            </Text>
           </View>
           <View
             style={{

@@ -7,7 +7,7 @@ import { colors, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize, width } from '../../functions/Normalize';
 import Text from '../Text/Text';
-import {Modal} from 'react-native-paper';
+import { Modal } from 'react-native-paper';
 
 const FarmerRegisterSuccess: React.FC<ModalEntity> = ({
   show,

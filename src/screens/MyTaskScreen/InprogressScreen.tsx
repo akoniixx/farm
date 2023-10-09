@@ -71,6 +71,7 @@ const InprogressScreen: React.FC<any> = ({}) => {
       page: 1,
       take: limit,
     };
+    console.log(params);
     MyJobDatasource.getMyJobsList(params)
       .then(res => {
         setTaskList({

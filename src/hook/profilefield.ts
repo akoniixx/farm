@@ -60,6 +60,7 @@ export const detailDronerReducer = (state: any, action: any) => {
     case 'InitDroner':
       return {
         name: action.name,
+        nickname: action.nickname,
         id: action.id,
         imagePro: action.imagePro,
         imageTask: action.imageTask,

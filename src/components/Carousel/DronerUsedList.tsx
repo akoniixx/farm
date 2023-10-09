@@ -184,12 +184,20 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                 style={{
                   minHeight: 50,
                 }}>
-                <Text numberOfLines={1} style={[styles.h1]}>
-                  {name}
-                </Text>
-                <Text numberOfLines={1} style={[styles.h2]}>
-                  {nickname}
-                </Text>
+                {nickname ? (
+                  <>
+                    <Text numberOfLines={1} style={[styles.h1]}>
+                      {nickname}
+                    </Text>
+                    <Text numberOfLines={1} style={[styles.h2]}>
+                      {name}
+                    </Text>
+                  </>
+                ) : (
+                  <Text numberOfLines={1} style={[styles.h1]}>
+                    {name}
+                  </Text>
+                )}
               </View>
               <View
                 style={{
@@ -280,11 +288,13 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontFamily: font.SarabunBold,
     fontSize: normalize(18),
+    lineHeight: 30,
   },
   h2: {
     color: colors.grey40,
     fontFamily: font.SarabunBold,
     fontSize: normalize(14),
+    lineHeight: 30,
   },
   cards: {
     height: normalize(240),

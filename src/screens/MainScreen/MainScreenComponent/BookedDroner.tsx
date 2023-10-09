@@ -24,7 +24,6 @@ export default function BookedDroner({
   isLoading = false,
   setRefresh,
 }: Props) {
-  console.log('taskSugUsed', JSON.stringify(taskSugUsed, null, 2));
   return (
     <>
       {taskSugUsed.length < 1 && !isLoading ? (
@@ -77,6 +76,7 @@ export default function BookedDroner({
                     province={item.province_name}
                     distance={item.street_distance}
                     status={item.favorite_status}
+                    nickname={item.nickname}
                     callBack={async () => {
                       setTimeout(async () => {
                         const farmer_id = await AsyncStorage.getItem(

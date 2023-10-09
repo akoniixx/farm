@@ -148,18 +148,18 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
           </Text>
         </View>
         <View>
-              <View
-                style={{
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                }}>
-                <Text style={[styles.textDiscount, { color: colors.grey20 }]}>
-                  ได้รับแต้มโดยประมาณ
-                </Text>
-                <Text style={[styles.textDiscount, { color: colors.grey20 }]}>
-                  {`≈ ${numberWithCommas(campaignPoint, true)} แต้ม`}
-                </Text>
-              </View>
+          <View
+            style={{
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+            }}>
+            <Text style={[styles.textDiscount, { color: colors.grey20 }]}>
+              ได้รับแต้มโดยประมาณ
+            </Text>
+            <Text style={[styles.textDiscount, { color: colors.grey20 }]}>
+              {`≈ ${numberWithCommas(campaignPoint, true)} แต้ม`}
+            </Text>
+          </View>
         </View>
       </View>
 
