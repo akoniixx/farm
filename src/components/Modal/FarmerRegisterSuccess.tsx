@@ -17,7 +17,7 @@ const FarmerRegisterSuccess: React.FC<ModalEntity> = ({
   text,
 }) => {
   return (
-    <Modal visible={show}>
+    <Modal visible={show} onDismiss={onClose}>
       <View style={ModalStyle.modal}>
         <View style={ModalStyle.modalBg}>
           <View style={ModalStyle.close}>
