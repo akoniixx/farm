@@ -21,7 +21,19 @@ import { CropDatasource } from '../../datasource/CropDatasource';
 import { PURPOSE_SPRAY_CHECKBOX } from '../../definitions/timeSpray';
 import Text from '../../components/Text/Text';
 import useTimeSpent from '../../hook/useTimeSpent';
+import InfoCircleButton from '../../components/InfoCircleButton';
+import crashlytics from '@react-native-firebase/crashlytics';
 
+const PrepareByLists = [
+  {
+    id: 1,
+    label: 'เกษตรกรเตรียมยาเอง',
+  },
+  {
+    id: 2,
+    label: 'นักบินโดรนเตรียมให้',
+  },
+];
 const SelectTarget: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner;
   const timeSpent = useTimeSpent();
@@ -89,8 +101,8 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
         setLoading(false);
       })
       .catch(err => {
-        console.log(err);
         setLoading(false);
+        crashlytics().recordError(err);
       });
   };
 
@@ -128,9 +140,23 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
           }}>
           <ScrollView>
             <View>
-              <Text style={[styles.label, { marginTop: normalize(20) }]}>
-                เป้าหมาย
-              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  alignItems: 'center',
+                }}>
+                <Text style={[styles.label, { marginTop: normalize(20) }]}>
+                  เป้าหมาย
+                </Text>
+                <View
+                  style={{
+                    marginTop: normalize(20),
+                  }}>
+                  <InfoCircleButton sheetId="targetSpray" />
+                </View>
+              </View>
               <View
                 style={{
                   flexDirection: 'row',
@@ -169,7 +195,8 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
                     <Text
                       style={{
                         fontSize: 18,
-
+                        fontFamily: fonts.SarabunLight,
+                        lineHeight: 28,
                         color:
                           option.label &&
                           selectedOption.includes(option?.label.toString())
@@ -186,7 +213,7 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
                   marginTop: 16,
                 }}
                 value={otherPlant}
-                placeholder="เป้าหมายอื่นๆ"
+                placeholder="เป้าหมายอื่นๆ เช่น เพลีย หนอน"
                 onChangeText={text => {
                   const removeSpaceFront = text.replace(/^\s+/, '');
                   setOtherPlant(removeSpaceFront);
@@ -231,9 +258,21 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
                 }
               />
 
-              <Text style={[styles.label, { marginTop: normalize(20) }]}>
-                ช่วงเวลาการพ่น
-              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  alignItems: 'center',
+                  marginBottom: 4,
+                }}>
+                <Text style={[styles.label, { marginTop: normalize(20) }]}>
+                  ช่วงเวลาการพ่น
+                </Text>
+                <View style={{ marginTop: normalize(20) }}>
+                  <InfoCircleButton sheetId="injectTime" />
+                </View>
+              </View>
               <TouchableOpacity
                 style={styles.injectionInput}
                 onPress={async () => {
@@ -287,80 +326,71 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
               <Text style={[styles.label, { marginTop: normalize(20) }]}>
                 ยาที่ต้องใช้
               </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  mixpanel.track(
-                    'SelectTargetScreen_SelectPreparationBy_tabbed',
-                    {
-                      preparationBy: 'เกษตรกรเตรียมยาเอง',
-                    },
-                  );
-                  setSelectedCheckbox('เกษตรกรเตรียมยาเอง');
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    marginTop: normalize(10),
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={
-                      selectedCheckbox === 'เกษตรกรเตรียมยาเอง'
-                        ? icons.checked
-                        : icons.check
-                    }
-                    style={{ width: normalize(20), height: normalize(20) }}
-                  />
+              {PrepareByLists.map(el => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      mixpanel.track(
+                        'SelectTargetScreen_SelectPreparationBy_tabbed',
+                        {
+                          preparationBy: el.label,
+                        },
+                      );
+                      setSelectedCheckbox(el.label);
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        marginTop: normalize(10),
+                        alignItems: 'center',
+                      }}>
+                      {selectedCheckbox === el.label ? (
+                        <View
+                          style={{
+                            width: 24,
+                            height: 24,
+                            borderRadius: 12,
+                            borderWidth: 2,
+                            borderColor: colors.greenLight,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          <View
+                            style={{
+                              width: 12,
+                              height: 12,
+                              borderRadius: 6,
+                              backgroundColor: colors.greenLight,
+                            }}
+                          />
+                        </View>
+                      ) : (
+                        <View
+                          style={{
+                            width: 24,
+                            height: 24,
+                            borderRadius: 12,
+                            borderWidth: 2,
+                            borderColor: colors.grey20,
+                          }}
+                        />
+                      )}
+                      <Text
+                        style={[
+                          {
+                            color: colors.fontBlack,
+                            fontSize: 20,
+                            fontFamily: fonts.SarabunLight,
 
-                  <Text
-                    style={[
-                      {
-                        color: colors.fontBlack,
-                        fontSize: 20,
-                        marginLeft: normalize(10),
-                      },
-                    ]}>
-                    เกษตรกรเตรียมยาเอง
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  mixpanel.track(
-                    'SelectTargetScreen_SelectPreparationBy_tabbed',
-                    {
-                      preparationBy: 'นักบินโดรนเตรียมให้',
-                    },
-                  );
-                  setSelectedCheckbox('นักบินโดรนเตรียมให้');
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    marginTop: normalize(10),
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={
-                      selectedCheckbox === 'นักบินโดรนเตรียมให้'
-                        ? icons.checked
-                        : icons.check
-                    }
-                    style={{ width: normalize(20), height: normalize(20) }}
-                  />
-
-                  <Text
-                    style={[
-                      {
-                        color: colors.fontBlack,
-                        fontSize: 20,
-                        marginLeft: normalize(10),
-                      },
-                    ]}>
-                    นักบินโดรนเตรียมให้
-                  </Text>
-                </View>
-              </TouchableOpacity>
+                            marginLeft: normalize(10),
+                          },
+                        ]}>
+                        {el.label}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
             <View
               style={{

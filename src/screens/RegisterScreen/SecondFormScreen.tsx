@@ -1,706 +1,303 @@
 import {
   View,
   StyleSheet,
-  TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  Dimensions,
   Image,
-  PermissionsAndroid,
+  TouchableOpacity,
+  Linking,
 } from 'react-native';
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../styles/StylesCentral';
 import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import { MainButton } from '../../components/Button/MainButton';
 import { normalize } from '../../functions/Normalize';
-import { Register } from '../../datasource/AuthDatasource';
+
 import { ProgressBar } from '../../components/ProgressBar';
 import { ScrollView } from 'react-native';
-import { TouchableOpacity } from 'react-native';
-import { registerReducer } from '../../hook/registerfield';
+
 import icons from '../../assets/icons/icons';
-import { QueryLocation } from '../../datasource/LocationDatasource';
-import fonts from '../../assets/fonts';
-import Geolocation from 'react-native-geolocation-service';
-import ActionSheet from 'react-native-actions-sheet';
-import {
-  LocationInPostcodeSelect,
-  LocationSelect,
-} from '../../components/Location/Location';
+
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { mixpanel } from '../../../mixpanel';
 import Text from '../../components/Text/Text';
+import image from '../../assets/images/image';
+import fonts from '../../assets/fonts';
+import PlotsItem from '../../components/Plots/Plots';
+import { callcenterNumber } from '../../definitions/callCenterNumber';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ProfileDatasource } from '../../datasource/ProfileDatasource';
+import { useIsFocused } from '@react-navigation/native';
+import { Register } from '../../datasource/AuthDatasource';
 
 const SecondFormScreen: React.FC<any> = ({ navigation, route }) => {
-  const initialFormRegisterState = {
-    no: '',
-    address: '',
-    province: '',
-    district: '',
-    subdistrict: '',
-    postal: '',
-  };
-  const windowWidth = Dimensions.get('window').width;
-  const windowHeight = Dimensions.get('window').height;
-  const telNo = route.params.tele;
-  const [items, setItems] = useState<any>([]);
-  const [itemsDistrict, setItemDistrict] = useState([]);
-  const [itemsSubDistrict, setItemSubDistrict] = useState([]);
-  const [proVince, setProVince] = useState<any>([]);
-  const [disTrict, setDisTrict] = useState<any>([]);
-  const [subDistrict, setSubDistrict] = useState<any>([]);
   const [loading, setLoading] = useState(false);
-  const [bottompadding, setBottomPadding] = useState(0);
-  const [getPermiss, setGetPermiss] = useState(false);
-  const provinceSheet = useRef<any>();
-  const DistriSheet = useRef<any>();
-  const SubDistriSheet = useRef<any>();
+  const [plotData, setPlotData] = useState<any>([]);
+  const focused = useIsFocused();
 
   useEffect(() => {
-    const getPermission = async () => {
-      const currentPermiss = await PermissionsAndroid.check(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      );
-      setGetPermiss(currentPermiss);
-    };
-    getPermission();
-
-    QueryLocation.QueryProvince().then(res => {
-      const filteredProvinces = res.filter(
-        (province: any) => province.provinceName,
-      );
-
-      const sortedProvinces = filteredProvinces.sort(
-        (a: { provinceName: string }, b: { provinceName: any }) =>
-          a.provinceName.localeCompare(b.provinceName),
-      );
-      setItems(sortedProvinces);
-    });
-  }, []);
-  useEffect(() => {
-    if (proVince != null) {
-      QueryLocation.QueryDistrict(proVince.value).then(res => {
-        const District = res.map((item: any) => {
-          return { label: item.districtName, value: item.districtId };
+    const getFarmerPlot = async () => {
+      setLoading(true);
+      const farmer_id = await AsyncStorage.getItem('farmer_id');
+      await ProfileDatasource.getProfile(farmer_id!)
+        .then(async res => {
+          setPlotData(res.farmerPlot);
+        })
+        .catch(err => console.log(err))
+        .finally(() => {
+          setLoading(false);
         });
-        setItemDistrict(District);
-      });
+    };
+    getFarmerPlot();
+  }, [focused]);
+  const onSubmit = async () => {
+    try {
+      mixpanel.track('Tab next second form register');
+      setLoading(true);
+      await Register.registerSkip4();
+      setLoading(false);
+      setTimeout(() => {
+        navigation.navigate('SuccessRegister');
+      }, 500);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
     }
-  }, [proVince]);
-  useEffect(() => {
-    if (proVince != null && disTrict != null) {
-      QueryLocation.QuerySubDistrict(disTrict.value, disTrict.label).then(
-        res => {
-          const SubDistrict = res.map((item: any) => {
-            return {
-              label: item.subdistrictName,
-              value: item.subdistrictId,
-              postcode: item.postcode,
-            };
-          });
-          setItemSubDistrict(SubDistrict);
-        },
-      );
-    }
-  }, [proVince, disTrict]);
-
-  const [formState, dispatch] = useReducer(
-    registerReducer,
-    initialFormRegisterState,
-  );
-  const selectProvince = (value: any, label: any) => {
-    dispatch({
-      type: 'Handle Input',
-      field: 'province',
-      payload: value,
-    });
-    setProVince(value);
-    provinceSheet.current.hide();
   };
-
-  const selectDistrict = (value: any, label: any) => {
-    dispatch({
-      type: 'Handle Input',
-      field: 'district',
-      payload: value,
-    });
-    setDisTrict(value);
-    DistriSheet.current.hide();
-  };
-  const selectSubDistrict = (value: any, label: any) => {
-    dispatch({
-      type: 'Handle Input',
-      field: 'subdistrict',
-      payload: value,
-    });
-    dispatch({
-      type: 'Handle Input',
-      field: 'postal',
-      payload: value.postcode,
-    });
-    setSubDistrict(value);
-    SubDistriSheet.current.hide();
-  };
-
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1 }}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <SafeAreaView style={stylesCentral.container}>
-          <CustomHeader
-            title="ลงทะเบียนเกษตรกร"
-            showBackBtn
-            onPressBack={() => {
-              mixpanel.track('Tab back second form register');
-              navigation.goBack();
-            }}
-          />
-          <View style={styles.inner}>
-            <View style={styles.containerTopCard}>
+    <SafeAreaView style={stylesCentral.container}>
+      <CustomHeader
+        title="ลงทะเบียนเกษตรกร"
+        showBackBtn
+        onPressBack={() => {
+          mixpanel.track('Tab back second form register');
+          navigation.goBack();
+        }}
+      />
+      <ScrollView>
+        <View style={styles.inner}>
+          <View style={styles.containerTopCard}>
+            <View
+              style={{
+                paddingHorizontal: 16,
+                height: normalize(100),
+              }}>
               <View style={{ marginBottom: normalize(10) }}>
                 <ProgressBar index={2} />
               </View>
-              <Text style={styles.h3}>ขั้นตอนที่ 2 จาก 4</Text>
+              <Text style={styles.h3}>ขั้นตอนที่ 2 จาก 2</Text>
               <Text style={[styles.h1]}>
-                ระบุที่อยู่
+                สร้างแปลงเกษตร
                 <Text style={{ fontSize: normalize(18), color: '#A7AEB5' }}>
                   {`  (ไม่จำเป็นต้องระบุ)`}
                 </Text>
               </Text>
-              <ScrollView style={{ top: '5%' }}>
-                <Text style={styles.head}>บ้านเลขที่</Text>
-                <TextInput
-                  allowFontScaling={false}
-                  onChangeText={value => {
-                    dispatch({
-                      type: 'Handle Input',
-                      field: 'no',
-                      payload: value,
-                    });
-                  }}
-                  value={formState.no}
-                  style={[styles.input]}
-                  editable={true}
-                  placeholder={'บ้านเลขที่'}
-                  placeholderTextColor={colors.gray}
-                />
-                <Text style={styles.head}>รายละเอียดที่อยู่</Text>
-                <TextInput
-                  allowFontScaling={false}
-                  onChangeText={value => {
-                    dispatch({
-                      type: 'Handle Input',
-                      field: 'address',
-                      payload: value,
-                    });
-                  }}
-                  value={formState.address}
-                  style={styles.input}
-                  editable={true}
-                  placeholder={'รายละเอียดที่อยู่ (หมู่, ถนน)'}
-                  placeholderTextColor={colors.gray}
-                />
-                <Text style={styles.head}>จังหวัด</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    provinceSheet.current.show();
-                  }}>
-                  <View
-                    style={{
-                      borderColor: colors.disable,
-                      borderWidth: 1,
-                      padding: 10,
-                      borderRadius: 10,
-                      marginVertical: 10,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      height: normalize(55),
-                      justifyContent: 'space-between',
-                    }}>
-                    <Text
-                      style={{
-                        fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(20),
-                        color: colors.gray,
-                      }}>
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.disable,
-                        }}>
-                        {!proVince.label ? (
-                          <Text
-                            style={{
-                              fontFamily: font.SarabunLight,
-                              color: colors.gray,
-                            }}>
-                            จังหวัด
-                          </Text>
-                        ) : (
-                          <TextInput
-                            allowFontScaling={false}
-                            style={{
-                              fontFamily: font.SarabunLight,
-                              color: colors.fontGrey,
-                            }}>
-                            {proVince.label}
-                          </TextInput>
-                        )}
-                      </Text>
-                    </Text>
-                    <Image
-                      source={icons.down}
-                      style={{
-                        width: normalize(24),
-                        height: normalize(22),
-                        marginRight: 10,
-                        tintColor: colors.disable,
-                      }}
-                    />
-                  </View>
-                </TouchableOpacity>
-                <Text style={styles.head}>อำเภอ</Text>
-                <TouchableOpacity
-                  disabled={!proVince.label ? true : false}
-                  onPress={() => {
-                    DistriSheet.current.show();
-                  }}>
-                  <View
-                    style={{
-                      backgroundColor: !proVince.label
-                        ? '#F2F3F4'
-                        : colors.white,
-                      borderColor: colors.disable,
-                      borderWidth: 1,
-                      padding: 10,
-                      borderRadius: 10,
-                      marginVertical: 10,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      height: normalize(55),
-                      justifyContent: 'space-between',
-                    }}>
-                    <Text
-                      style={{
-                        fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(20),
-                        color: colors.gray,
-                      }}>
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.disable,
-                        }}>
-                        {!disTrict.label ? (
-                          <Text
-                            style={{
-                              fontFamily: font.SarabunLight,
-                              color: colors.gray,
-                            }}>
-                            อำเภอ
-                          </Text>
-                        ) : (
-                          <Text
-                            style={{
-                              fontFamily: font.SarabunLight,
-                              color: colors.fontGrey,
-                            }}>
-                            {disTrict.label}
-                          </Text>
-                        )}
-                      </Text>
-                    </Text>
-                    <Image
-                      source={icons.down}
-                      style={{
-                        width: normalize(24),
-                        height: normalize(22),
-                        marginRight: 10,
-                        tintColor: colors.disable,
-                      }}
-                    />
-                  </View>
-                </TouchableOpacity>
-                <Text style={styles.head}>ตำบล</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    SubDistriSheet.current.show();
-                  }}>
-                  <View
-                    style={{
-                      backgroundColor: !disTrict.label
-                        ? '#F2F3F4'
-                        : colors.white,
-                      borderColor: colors.disable,
-                      borderWidth: 1,
-                      padding: 10,
-                      borderRadius: 10,
-                      marginVertical: 10,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      height: normalize(55),
-                      justifyContent: 'space-between',
-                    }}>
-                    <Text
-                      style={{
-                        fontFamily: fonts.AnuphanMedium,
-                        fontSize: normalize(20),
-                        color: colors.gray,
-                      }}>
-                      <Text
-                        style={{
-                          fontFamily: font.SarabunLight,
-                          color: colors.disable,
-                        }}>
-                        {!subDistrict.label ? (
-                          <Text
-                            style={{
-                              fontFamily: font.SarabunLight,
-                              color: colors.gray,
-                            }}>
-                            ตำบล
-                          </Text>
-                        ) : (
-                          <Text
-                            style={{
-                              fontFamily: font.SarabunLight,
-                              color: colors.fontGrey,
-                            }}>
-                            {subDistrict.label}
-                          </Text>
-                        )}
-                      </Text>
-                    </Text>
-                    <Image
-                      source={icons.down}
-                      style={{
-                        width: normalize(24),
-                        height: normalize(22),
-                        marginRight: 10,
-                        tintColor: colors.disable,
-                      }}
-                    />
-                  </View>
-                </TouchableOpacity>
-                <Text style={styles.head}>รหัสไปรษณีย์</Text>
-                <TextInput
-                  allowFontScaling={false}
-                  value={subDistrict.postcode}
+            </View>
+            {plotData.length === 0 ? (
+              <View
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  width: '100%',
+                  alignItems: 'center',
+                }}>
+                <View style={[styles.rectangleFixed]}>
+                  <Image style={styles.rectangle} source={image.rectangle} />
+                </View>
+                <Text style={styles.h2}>กดเพื่อเพิ่มแปลงเกษตรของคุณ</Text>
+              </View>
+            ) : (
+              <View
+                style={{
+                  marginTop: normalize(10),
+                  display: 'flex',
+                  justifyContent: 'center',
+                  paddingHorizontal: normalize(15),
+                }}>
+                <Text
                   style={[
-                    styles.input,
-                    {
-                      backgroundColor: '#F2F3F4',
-                      marginBottom: normalize(bottompadding),
-                    },
-                  ]}
-                  editable={false}
-                  placeholder={'รหัสไปรษณีย์'}
-                  placeholderTextColor={colors.gray}
-                />
-              </ScrollView>
-              <View style={{ height: 40 }}></View>
-            </View>
-            <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
-              <MainButton
-                label="ถัดไป"
-                color={colors.greenLight}
-                onPress={() => {
-                  mixpanel.track('Tab next second form register');
-                  setLoading(true);
-                  Register.register2(
-                    telNo,
-                    formState.no,
-                    formState.address,
-                    formState.province.value,
-                    formState.district.value,
-                    formState.subdistrict.value,
-                    formState.postal,
-                  )
-                    .then(async res => {
-                      if (Platform.OS === 'ios' && getPermiss === false) {
-                        await Geolocation.requestAuthorization('always');
-                      } else if (
-                        Platform.OS === 'android' &&
-                        getPermiss === false
-                      ) {
-                        await PermissionsAndroid.request(
-                          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                        );
-                      }
-                      setLoading(false);
-                      navigation.navigate('ThirdFormScreen', {
-                        tele: formState.tel,
-                        latitude: 0,
-                        longitude: 0,
-                      });
-                      Geolocation.getCurrentPosition(
-                        position => {
-                          setLoading(false);
-                          navigation.navigate('ThirdFormScreen', {
-                            tele: formState.tel,
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude,
-                          });
-                        },
-                        error => {
-                          console.log(error.code, error.message);
-                        },
-                        {
-                          enableHighAccuracy: false,
-                          timeout: 15000,
-                          maximumAge: 10000,
-                        },
-                      );
-                    })
-                    .catch(err => console.log(err));
-                }}
-              />
-            </View>
-            <ActionSheet ref={provinceSheet}>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  paddingVertical: normalize(30),
-                  paddingHorizontal: normalize(20),
-                  width: windowWidth,
-                  height: windowHeight * 0.7,
-                  borderRadius: normalize(20),
-                }}>
+                    styles.h1,
+                    { color: colors.fontGrey, margin: normalize(10) },
+                  ]}>
+                  แปลงของคุณ
+                </Text>
+                <View style={[styles.textPending]}>
+                  <Image
+                    source={icons.warning}
+                    style={{ width: 25, height: 25, right: 10 }}
+                  />
+                  <Text style={{ fontFamily: font.SarabunLight, fontSize: 18 }}>
+                    {`แปลงของคุณอาจใช้เวลารอการตรวจสอบ
+จากเจ้าหน้าที`}
+                  </Text>
+                </View>
+                {plotData.map((item: any, index: number) => (
+                  <PlotsItem
+                    data={item}
+                    plotId={item.id}
+                    fromRegister={true}
+                    navigation={navigation}
+                    index={index}
+                    key={index}
+                    plotName={
+                      !item.plotName
+                        ? 'แปลงที่' +
+                          ' ' +
+                          `${index + 1}` +
+                          ' ' +
+                          item.plantName
+                        : item.plotName
+                    }
+                    raiAmount={item.raiAmount}
+                    locationName={item.locationName}
+                    plantName={item.plantName}
+                    status={item.status}
+                  />
+                ))}
+              </View>
+            )}
+            <TouchableOpacity
+              onPress={() => {
+                mixpanel.track('Tab add plot second form register');
+                navigation.navigate('AddPlotScreen', {
+                  fromRegister: true,
+                });
+              }}
+              style={{ paddingHorizontal: normalize(15) }}>
+              <View style={[styles.buttonAdd]}>
+                <Text style={styles.textaddplot}>+ เพิ่มแปลงเกษตร</Text>
+              </View>
+            </TouchableOpacity>
+            {plotData.length < 1 ? (
+              <View style={styles.containerWarning}>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
+                    backgroundColor: '#FFF9F2',
+                    padding: 16,
+                    borderRadius: 12,
                   }}>
-                  <Text style={[styles.head, { marginBottom: normalize(10) }]}>
-                    จังหวัด
-                  </Text>
-                  <Text
+                  <View
                     style={{
-                      color: colors.greenLight,
-                      fontFamily: font.SarabunMedium,
-                      fontSize: normalize(16),
-                    }}
-                    onPress={() => {
-                      provinceSheet.current.hide();
+                      flexDirection: 'row',
                     }}>
-                    ยกเลิก
-                  </Text>
-                </View>
-                <View style={styles.container}>
-                  <ScrollView>
-                    {items.map((value: any, index: any) => (
-                      <TouchableOpacity>
-                        <LocationSelect
-                          key={index}
-                          label={value.provinceName}
-                          value={value.provinceName}
-                          onPress={() => selectProvince(value, index)}
-                        />
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
+                    <Image
+                      source={icons.warningIcon}
+                      style={{
+                        marginTop: 4,
+                        width: 18,
+                        height: 18,
+                        marginRight: 8,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: font.SarabunLight,
+                        fontSize: 18,
+                        paddingRight: 16,
+                        alignSelf: 'flex-start',
+                      }}>
+                      หากติดปัญหาเรื่องการเพิ่มแปลงเกษตร กรุณาติดต่อเจ้าหน้าที่
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      mixpanel.track('Tab callcenter from select plot screen');
+                      Linking.openURL(`tel:${callcenterNumber}`);
+                    }}
+                    style={{
+                      backgroundColor: colors.white,
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      borderColor: colors.blueBorder,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: 50,
+                      marginTop: 16,
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
+                      <Image
+                        style={{
+                          width: 20,
+                          height: 20,
+                          marginRight: 8,
+                        }}
+                        source={icons.callingDarkblue}
+                      />
+                      <Text
+                        style={{
+                          fontFamily: font.AnuphanMedium,
+                          color: colors.blueDark,
+                          fontSize: 20,
+                        }}>
+                        โทรหาเจ้าหน้าที่
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
                 </View>
               </View>
-            </ActionSheet>
-            <ActionSheet ref={DistriSheet}>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  paddingVertical: normalize(30),
-                  paddingHorizontal: normalize(20),
-                  width: windowWidth,
-                  height: windowHeight * 0.7,
-                  borderRadius: normalize(20),
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text style={[styles.head, { marginBottom: normalize(10) }]}>
-                    อำเภอ
-                  </Text>
-                  <Text
-                    style={{
-                      color: colors.greenLight,
-                      fontFamily: font.SarabunMedium,
-                      fontSize: normalize(16),
-                    }}
-                    onPress={() => {
-                      DistriSheet.current.hide();
-                    }}>
-                    ยกเลิก
-                  </Text>
-                </View>
-                <View style={styles.container}>
-                  <ScrollView>
-                    {itemsDistrict.map(
-                      (
-                        v: { label: any; value: any },
-                        i: any | null | undefined,
-                      ) => (
-                        <TouchableOpacity>
-                          <LocationSelect
-                            key={i}
-                            label={v.label}
-                            value={v.value}
-                            onPress={() => selectDistrict(v, i)}
-                          />
-                        </TouchableOpacity>
-                      ),
-                    )}
-                  </ScrollView>
-                </View>
-              </View>
-            </ActionSheet>
-            <ActionSheet ref={SubDistriSheet}>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  paddingVertical: normalize(30),
-                  paddingHorizontal: normalize(20),
-                  width: windowWidth,
-                  height: windowHeight * 0.7,
-                  borderRadius: normalize(20),
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text style={[styles.head, { marginBottom: normalize(10) }]}>
-                    ตำบล
-                  </Text>
-                  <Text
-                    style={{
-                      color: colors.greenLight,
-                      fontFamily: font.SarabunMedium,
-                      fontSize: normalize(16),
-                    }}
-                    onPress={() => {
-                      SubDistriSheet.current.hide();
-                    }}>
-                    ยกเลิก
-                  </Text>
-                </View>
-                <View style={styles.container}>
-                  <ScrollView>
-                    {itemsSubDistrict.map(
-                      (
-                        v: { label: any; value: any; postcode: any },
-                        i: any | null | undefined,
-                      ) => (
-                        <TouchableOpacity>
-                          <LocationInPostcodeSelect
-                            key={i}
-                            label={v.label}
-                            value={v.value}
-                            postcode={v.postcode}
-                            onPress={() => selectSubDistrict(v, i)}
-                          />
-                        </TouchableOpacity>
-                      ),
-                    )}
-                  </ScrollView>
-                </View>
-              </View>
-            </ActionSheet>
+            ) : (
+              <View style={{ height: 16 }} />
+            )}
           </View>
-          <Spinner
-            visible={loading}
-            textContent={'Loading...'}
-            textStyle={{ color: '#FFF' }}
-          />
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+          <View
+            style={{
+              backgroundColor: colors.white,
+              zIndex: 2,
+              paddingHorizontal: 16,
+            }}>
+            <MainButton
+              label="ถัดไป"
+              color={colors.greenLight}
+              onPress={onSubmit}
+            />
+          </View>
+        </View>
+      </ScrollView>
+
+      <Spinner
+        visible={loading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
+    </SafeAreaView>
   );
 };
 export default SecondFormScreen;
 
 const styles = StyleSheet.create({
-  carlendar: {
-    height: '50%',
-    borderWidth: 1,
-    borderColor: colors.disable,
-    borderRadius: 10,
-  },
-  date: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '60%',
-  },
-  datePart: {
-    width: 100,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '200',
-    marginBottom: 5,
-  },
-  digit: {
-    fontSize: 20,
-  },
-
-  head: {
-    fontFamily: font.AnuphanBold,
-    fontSize: normalize(20),
-    color: colors.fontBlack,
-  },
   h1: {
     fontFamily: font.AnuphanBold,
     fontSize: normalize(20),
     color: colors.greenLight,
+    lineHeight: normalize(28),
   },
   h2: {
-    fontFamily: font.AnuphanMedium,
-    fontSize: normalize(16),
+    fontFamily: font.SarabunMedium,
+    fontSize: normalize(18),
     color: colors.fontBlack,
-    marginTop: normalize(24),
+    marginBottom: 14,
+    marginTop: 16,
+    lineHeight: 28,
   },
   h3: {
-    fontFamily: font.AnuphanMedium,
+    fontFamily: font.AnuphanSemiBold,
     fontSize: normalize(14),
     color: colors.gray,
   },
   container: {
     flex: 1,
   },
-  input: {
-    fontFamily: font.SarabunLight,
-    height: normalize(56),
-    marginVertical: 12,
-    padding: 5,
-    borderColor: colors.disable,
-    borderWidth: 1,
-    borderRadius: normalize(10),
-    color: colors.fontBlack,
-    fontSize: normalize(20),
-  },
-  datePickerStyle: {
-    width: 200,
-    marginTop: 20,
-  },
-  addImg: {
-    fontFamily: font.SarabunLight,
-    fontSize: normalize(16),
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
+
   image: {
     marginVertical: 24,
     alignItems: 'center',
   },
   inner: {
-    paddingHorizontal: normalize(17),
     flex: 1,
     justifyContent: 'space-around',
   },
@@ -710,6 +307,18 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
     marginBottom: normalize(24),
   },
+  textPending: {
+    width: normalize(350),
+    height: normalize(70),
+    backgroundColor: '#FFF9F2',
+    borderRadius: normalize(12),
+    paddingVertical: normalize(10),
+    paddingHorizontal: normalize(20),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: normalize(10),
+  },
   label: {
     fontFamily: font.AnuphanLight,
     fontSize: normalize(14),
@@ -718,5 +327,46 @@ const styles = StyleSheet.create({
   },
   containerTopCard: {
     flex: 1,
+  },
+  textaddplot: {
+    fontFamily: fonts.AnuphanMedium,
+    fontSize: normalize(20),
+    color: colors.primary,
+    textAlign: 'center',
+    top: '30%',
+    width: '100%',
+  },
+  rectangleFixed: {
+    width: '100%',
+    height: normalize(160),
+    marginTop: 16,
+  },
+  buttonAdd: {
+    borderColor: colors.greenLight,
+    borderWidth: 1,
+    borderRadius: 10,
+    height: normalize(80),
+    width: '100%',
+    borderStyle: 'dashed',
+
+    alignSelf: 'center',
+  },
+  btAdd: {
+    top: normalize(100),
+    borderRadius: 10,
+    height: normalize(80),
+    width: normalize(340),
+    borderStyle: 'dashed',
+    position: 'relative',
+  },
+  rectangle: {
+    height: normalize(170),
+    width: '100%',
+    bottom: '15%',
+    alignSelf: 'center',
+  },
+  containerWarning: {
+    padding: 16,
+    backgroundColor: colors.white,
   },
 });

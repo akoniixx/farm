@@ -92,59 +92,91 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
             style={{
               display: 'flex',
               justifyContent: 'space-between',
+              width: '100%',
             }}>
             <View>
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  paddingRight: 30,
                 }}>
-                <Text style={styles.title}>{plotName}</Text>
-                <Image
-                  source={icons.arrowRigth}
+                <View
                   style={{
-                    width: normalize(20),
-                    height: normalize(20),
-                    alignSelf: 'center',
-                  }}
-                />
+                    width: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      flex: 0.8,
+                    }}>
+                    <Text style={[styles.title]} numberOfLines={1}>
+                      {plotName}
+                    </Text>
+                  </View>
+                  <View style={{ flex: 0.2, alignItems: 'flex-end' }}>
+                    <Image
+                      source={icons.arrowRigth}
+                      style={{
+                        width: normalize(20),
+                        height: normalize(20),
+                      }}
+                    />
+                  </View>
+                </View>
               </View>
-              <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
-                <Image
-                  source={icons.plot}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: normalize(10),
+                  justifyContent: 'space-between',
+                }}>
+                <View
                   style={{
-                    width: normalize(18),
-                    height: normalize(20),
-                    marginRight: normalize(10),
-                  }}
-                />
-                <Text
-                  style={{
-                    fontFamily: fonts.SarabunMedium,
-                    fontSize: normalize(16),
-                    color: colors.fontGrey,
-                    marginRight: '40%',
+                    flexDirection: 'row',
+                    alignItems: 'center',
                   }}>
-                  {raiAmount + ' ' + 'ไร่'}
-                </Text>
-                <Image
-                  source={icons.plant}
+                  <Image
+                    source={icons.plot}
+                    style={{
+                      width: normalize(18),
+                      height: normalize(20),
+                      marginRight: normalize(10),
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: fonts.SarabunMedium,
+                      fontSize: normalize(16),
+                      color: colors.fontGrey,
+                    }}>
+                    {raiAmount + ' ' + 'ไร่'}
+                  </Text>
+                </View>
+                <View
                   style={{
-                    width: normalize(18),
-                    height: normalize(20),
-                    marginRight: normalize(10),
-                  }}
-                />
-                <Text
-                  style={{
-                    fontFamily: fonts.SarabunMedium,
-                    fontSize: normalize(16),
-                    color: colors.fontGrey,
-                    marginRight: '10%',
+                    flexDirection: 'row',
+                    alignItems: 'center',
                   }}>
-                  {plantName}
-                </Text>
+                  <Image
+                    source={icons.plant}
+                    style={{
+                      width: normalize(18),
+                      height: normalize(20),
+                      marginRight: normalize(10),
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: fonts.SarabunMedium,
+                      fontSize: normalize(16),
+                      color: colors.fontGrey,
+                      marginRight: '10%',
+                    }}>
+                    {plantName}
+                  </Text>
+                </View>
               </View>
               <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
                 <Image
@@ -167,6 +199,27 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
                   {locationName}
                 </Text>
               </View>
+              {/* <View
+                style={{
+                  marginTop: 10,
+                  width: normalize(109),
+                  height: normalize(24),
+                  borderRadius: normalize(12),
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: StatusObject(status).colorBg,
+                  borderColor: StatusObject(status).borderColor,
+                  borderWidth: 0.5,
+                }}>
+                <Text
+                  style={[
+                    styles.label,
+                    { color: StatusObject(status).fontColor },
+                  ]}>
+                  {StatusObject(status).status}
+                </Text>
+              </View> */}
             </View>
           </View>
         </View>
@@ -192,65 +245,91 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
             style={{
               display: 'flex',
               justifyContent: 'space-between',
+              width: '100%',
             }}>
             <View>
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  paddingRight: 30,
                 }}>
-                <View>
+                <View
+                  style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      flex: 0.8,
+                    }}>
+                    <Text style={[styles.title]} numberOfLines={1}>
+                      {plotName}
+                    </Text>
+                  </View>
+                  <View style={{ flex: 0.2, alignItems: 'flex-end' }}>
+                    <Image
+                      source={icons.arrowRigth}
+                      style={{
+                        width: normalize(20),
+                        height: normalize(20),
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: normalize(10),
+                  justifyContent: 'space-between',
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={icons.plot}
+                    style={{
+                      width: normalize(18),
+                      height: normalize(20),
+                      marginRight: normalize(10),
+                    }}
+                  />
                   <Text
-                    style={[styles.title, { width: normalize(200) }]}
-                    numberOfLines={1}>
-                    {plotName}
+                    style={{
+                      fontFamily: fonts.SarabunMedium,
+                      fontSize: normalize(16),
+                      color: colors.fontGrey,
+                    }}>
+                    {raiAmount + ' ' + 'ไร่'}
                   </Text>
                 </View>
-                <Image
-                  source={icons.arrowRigth}
+                <View
                   style={{
-                    width: normalize(20),
-                    height: normalize(20),
-                    alignSelf: 'center',
-                  }}
-                />
-              </View>
-              <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
-                <Image
-                  source={icons.plot}
-                  style={{
-                    width: normalize(18),
-                    height: normalize(20),
-                    marginRight: normalize(10),
-                  }}
-                />
-                <Text
-                  style={{
-                    fontFamily: fonts.SarabunMedium,
-                    fontSize: normalize(16),
-                    color: colors.fontGrey,
-                    marginRight: '40%',
+                    flexDirection: 'row',
+                    alignItems: 'center',
                   }}>
-                  {raiAmount + ' ' + 'ไร่'}
-                </Text>
-                <Image
-                  source={icons.plant}
-                  style={{
-                    width: normalize(18),
-                    height: normalize(20),
-                    marginRight: normalize(10),
-                  }}
-                />
-                <Text
-                  style={{
-                    fontFamily: fonts.SarabunMedium,
-                    fontSize: normalize(16),
-                    color: colors.fontGrey,
-                    marginRight: '10%',
-                  }}>
-                  {plantName}
-                </Text>
+                  <Image
+                    source={icons.plant}
+                    style={{
+                      width: normalize(18),
+                      height: normalize(20),
+                      marginRight: normalize(10),
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: fonts.SarabunMedium,
+                      fontSize: normalize(16),
+                      color: colors.fontGrey,
+                      marginRight: '10%',
+                    }}>
+                    {plantName}
+                  </Text>
+                </View>
               </View>
               <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
                 <Image
@@ -309,8 +388,7 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
             borderRadius: normalize(12),
             paddingVertical: normalize(10),
             paddingHorizontal: normalize(20),
-            display: 'flex',
-            flexDirection: 'row',
+
             justifyContent: 'space-between',
             alignItems: 'center',
             marginBottom: normalize(10),
@@ -319,146 +397,174 @@ const PlotsItemEdit: React.FC<AddPlot> = ({
             style={{
               display: 'flex',
               justifyContent: 'space-between',
+              width: '100%',
             }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingRight: 30,
-              }}>
-              <View>
-                <Text
-                  style={[styles.title, { width: normalize(200) }]}
-                  numberOfLines={1}>
-                  {plotName}
-                </Text>
-              </View>
-              <Image
-                source={icons.arrowRigth}
+            <View>
+              <View
                 style={{
-                  width: normalize(20),
-                  height: normalize(20),
-                  alignSelf: 'center',
-                }}
-              />
-            </View>
-            <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
-              <Image
-                source={icons.plot}
-                style={{
-                  width: normalize(18),
-                  height: normalize(20),
-                  marginRight: normalize(10),
-                }}
-              />
-              <Text
-                style={{
-                  fontFamily: fonts.SarabunMedium,
-                  fontSize: normalize(16),
-                  color: colors.fontGrey,
-                  marginRight: '40%',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
                 }}>
-                {raiAmount + ' ' + 'ไร่'}
-              </Text>
-              <Image
-                source={icons.plant}
-                style={{
-                  width: normalize(18),
-                  height: normalize(20),
-                  marginRight: normalize(10),
-                }}
-              />
-              <Text
-                style={{
-                  fontFamily: fonts.SarabunMedium,
-                  fontSize: normalize(16),
-                  color: colors.fontGrey,
-                  marginRight: '10%',
-                }}>
-                {plantName}
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
-              <Image
-                source={icons.location}
-                style={{
-                  width: normalize(18),
-                  height: normalize(20),
-                  marginRight: normalize(10),
-                }}
-              />
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontFamily: fonts.SarabunMedium,
-                  fontSize: normalize(16),
-                  color: colors.fontGrey,
-                  marginRight: '10%',
-                  width: normalize(270),
-                }}>
-                {locationName}
-              </Text>
-            </View>
-            <View
-              style={{
-                marginTop: 10,
-                width: normalize(150),
-                height: normalize(24),
-                borderRadius: normalize(12),
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: StatusObject(status).colorBg,
-                borderColor: StatusObject(status).borderColor,
-                borderWidth: 0.5,
-              }}>
-              <Text
-                style={[
-                  styles.label,
-                  { color: StatusObject(status).fontColor },
-                ]}>
-                ไม่ผ่านการตรววจสอบ
-              </Text>
-            </View>
-            <View style={styles.warning}>
-              <Text style={styles.labelWarning}>หมายเหตุ : {reason}</Text>
-              <Text style={styles.labelWarning}>
-                กรุณาติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข
-              </Text>
-              <View>
-                <TouchableOpacity
-                  onPress={onClick}
+                <View
                   style={{
-                    marginTop: 10,
-                    paddingVertical: 8,
-                    backgroundColor: colors.white,
-                    borderRadius: 10,
-                    marginBottom: 8,
+                    width: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                   }}>
                   <View
                     style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      alignSelf: 'center',
+                      flex: 0.8,
                     }}>
-                    <Image
-                      style={{
-                        width: 24,
-                        height: 24,
-                        marginRight: 16,
-                      }}
-                      source={icons.calling}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: font.AnuphanMedium,
-                        color: colors.blueBorder,
-                        fontSize: 20,
-                      }}>
-                      โทรหาเจ้าหน้าที่
+                    <Text style={[styles.title]} numberOfLines={1}>
+                      {plotName}
                     </Text>
                   </View>
-                </TouchableOpacity>
+                  <View style={{ flex: 0.2, alignItems: 'flex-end' }}>
+                    <Image
+                      source={icons.arrowRigth}
+                      style={{
+                        width: normalize(20),
+                        height: normalize(20),
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: normalize(10),
+                  justifyContent: 'space-between',
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={icons.plot}
+                    style={{
+                      width: normalize(18),
+                      height: normalize(20),
+                      marginRight: normalize(10),
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: fonts.SarabunMedium,
+                      fontSize: normalize(16),
+                      color: colors.fontGrey,
+                    }}>
+                    {raiAmount + ' ' + 'ไร่'}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={icons.plant}
+                    style={{
+                      width: normalize(18),
+                      height: normalize(20),
+                      marginRight: normalize(10),
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: fonts.SarabunMedium,
+                      fontSize: normalize(16),
+                      color: colors.fontGrey,
+                      marginRight: '10%',
+                    }}>
+                    {plantName}
+                  </Text>
+                </View>
+              </View>
+              <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
+                <Image
+                  source={icons.location}
+                  style={{
+                    width: normalize(18),
+                    height: normalize(20),
+                    marginRight: normalize(10),
+                  }}
+                />
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    fontFamily: fonts.SarabunMedium,
+                    fontSize: normalize(16),
+                    color: colors.fontGrey,
+                    marginRight: '10%',
+                    width: normalize(270),
+                  }}>
+                  {locationName}
+                </Text>
+              </View>
+              <View
+                style={{
+                  marginTop: 10,
+                  width: normalize(150),
+                  height: normalize(24),
+                  borderRadius: normalize(12),
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: StatusObject(status).colorBg,
+                  borderColor: StatusObject(status).borderColor,
+                  borderWidth: 0.5,
+                }}>
+                <Text
+                  style={[
+                    styles.label,
+                    { color: StatusObject(status).fontColor },
+                  ]}>
+                  ไม่ผ่านการตรววจสอบ
+                </Text>
+              </View>
+              <View style={styles.warning}>
+                <Text style={styles.labelWarning}>หมายเหตุ : {reason}</Text>
+                <Text style={styles.labelWarning}>
+                  กรุณาติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข
+                </Text>
+                <View>
+                  <TouchableOpacity
+                    onPress={onClick}
+                    style={{
+                      marginTop: 10,
+                      paddingVertical: 8,
+                      backgroundColor: colors.white,
+                      borderRadius: 10,
+                      marginBottom: 8,
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                      }}>
+                      <Image
+                        style={{
+                          width: 24,
+                          height: 24,
+                          marginRight: 16,
+                        }}
+                        source={icons.calling}
+                      />
+                      <Text
+                        style={{
+                          fontFamily: font.AnuphanMedium,
+                          color: colors.blueBorder,
+                          fontSize: 20,
+                        }}>
+                        โทรหาเจ้าหน้าที่
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </View>
@@ -473,6 +579,7 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunBold,
     fontSize: normalize(18),
     color: '#0D381F',
+    lineHeight: normalize(28),
   },
   label: {
     fontSize: normalize(14),

@@ -110,5 +110,10 @@ export default {
   location_inactive: require('./location_inactive.png'),
   plot_inactive: require('./plot_inactive.png'),
   pin: require('./pin.png'),
+  infoCircle: require('./infoCircle.png'),
+  myLocationGreen: require('./myLocationGreen.png'),
+  topLeft: require('./topLeft.png'),
   drone_auto: require('./drone-auto.png'),
+  selectImage: require('./selectImage.png'),
+  locationOrange: require('./locationOrange.png'),
 };

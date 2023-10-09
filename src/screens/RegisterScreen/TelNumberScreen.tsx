@@ -5,11 +5,12 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { stylesCentral } from '../../styles/StylesCentral';
-import { colors, font } from '../../assets';
+import { colors, font, image } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import { MainButton } from '../../components/Button/MainButton';
 import { normalize } from '../../functions/Normalize';
@@ -18,6 +19,7 @@ import { Authentication } from '../../datasource/AuthDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import Text from '../../components/Text/Text';
 import { useMaintenance } from '../../contexts/MaintenanceContext';
+import LottiePhoneNo from '../../components/LottiesRender/LottiePhoneNo';
 
 const TelNumScreen: React.FC<any> = ({ navigation }) => {
   const [value, setValue] = useState<string>('');
@@ -72,7 +74,8 @@ const TelNumScreen: React.FC<any> = ({ navigation }) => {
 
           <View style={styles.inner}>
             <View style={styles.containerTopCard}>
-              <Text style={styles.headText}>ระบุหมายเลขโทรศัพท์ของคุณ</Text>
+              <LottiePhoneNo />
+              <Text style={styles.headText}>ยืนยันหมายเลขโทรศัพท์ของคุณ</Text>
               <InputPhone
                 value={value}
                 onChangeText={(e: string) => {
@@ -139,8 +142,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   headText: {
-    fontFamily: font.AnuphanBold,
-    fontSize: normalize(20),
+    fontFamily: font.AnuphanSemiBold,
+    fontSize: normalize(18),
     color: colors.fontBlack,
     marginBottom: normalize(24),
   },
@@ -152,6 +155,7 @@ const styles = StyleSheet.create({
   },
   containerTopCard: {
     flex: 1,
-    paddingTop: normalize(70),
+    paddingTop: normalize(16),
+    alignItems: 'center',
   },
 });

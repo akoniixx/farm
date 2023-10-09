@@ -31,6 +31,7 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
   const [number, setNumber] = React.useState(value ? value : '');
   const onTextChange = (text: string) => {
     setNumber(text);
+
     if (onChangeText) {
       onChangeText(text);
     }
@@ -51,10 +52,13 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
           editable={true}
           value={number}
           allowFontScaling={false}
-          onChangeText={onTextChange}
+          onChangeText={t => {
+            const startWithZero = t.startsWith('0');
+            onTextChange(startWithZero ? t : '');
+          }}
           maxLength={maxLength}
           autoFocus={autoFocus}
-          placeholder={'หมายเลขโทรศัพท์'}
+          placeholder={'ระบุหมายเลขโทรศัพท์'}
           placeholderTextColor={colors.gray}
         />
         {number ? (
@@ -73,6 +77,7 @@ export const InputPhone: React.FC<InputPhoneProps> = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
+    width: '100%',
   },
   boder: {
     alignItems: 'center',

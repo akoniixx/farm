@@ -48,7 +48,7 @@ export default function InputWithSuffix({
           refInput.current?.blur();
           Keyboard.dismiss();
         }}
-        placeholderTextColor={colors.grey30}
+        placeholderTextColor={colors.disable}
         style={[styles({ allowClear }).input, style]}
       />
       {isShowClear && (

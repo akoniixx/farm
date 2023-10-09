@@ -8,36 +8,39 @@ import Text from '../Text/Text';
 interface LocationSelectProps {
   label: any;
   value: any;
-  onPress?: () => void;
+  onPress?: (v: any) => void;
+  item: any;
 }
 export const LocationSelect: React.FC<LocationSelectProps> = ({
   label,
-  value,
   onPress,
+  item,
 }) => {
-  const width = Dimensions.get('window').width;
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => {
+        onPress && onPress(item);
+      }}
       style={{
-        marginRight: (width - normalize(40) - 3 * normalize(103)) / 3,
-        marginBottom: (width - normalize(40) - 3 * normalize(103)) / 3,
+        marginLeft: 8,
         width: '100%',
-        height: normalize(60),
+        height: normalize(70),
         borderBottomWidth: 0.2,
         borderColor: colors.disable,
+        justifyContent: 'center',
       }}>
-      <TouchableOpacity onPress={onPress}>
+      <View>
         <Text
           style={{
             fontFamily: font.SarabunLight,
-            fontSize: normalize(16),
-            marginTop: normalize(15),
+            fontSize: normalize(20),
             color: colors.fontBlack,
+            lineHeight: normalize(30),
           }}>
           {label}
         </Text>
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 interface LocationInPostcodeSelectProps {

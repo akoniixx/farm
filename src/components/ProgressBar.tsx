@@ -6,7 +6,7 @@ interface ProgressBarProps {
   index: number;
 }
 export const ProgressBar: React.FC<ProgressBarProps> = ({ index }) => {
-  const progress = [1, 2, 3, 4];
+  const progress = [1, 2];
 
   return (
     <View
@@ -19,8 +19,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ index }) => {
         <View
           key={i}
           style={{
-            width: normalize(80),
-            height: 4,
+            width: '49%',
+            height: 6,
             backgroundColor: i <= index ? colors.greenLight : colors.disable,
             borderRadius: normalize(20),
           }}

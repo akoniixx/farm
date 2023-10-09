@@ -6,30 +6,78 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
+  Platform,
+  PermissionsAndroid,
+  Modal,
 } from 'react-native';
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import icons from '../../assets/icons/icons';
-import { useFocusEffect } from '@react-navigation/native';
+
 import { normalize } from '../../functions/Normalize';
 import image from '../../assets/images/image';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { initProfileState, profileReducer } from '../../hook/profilefield';
-import { TaskSuggestion } from '../../datasource/TaskSuggestion';
+
 import Text from '../../components/Text/Text';
 import MaintenanceHeader from '../MainScreen/MainScreenComponent/MaintenanceHeader';
 import { useMaintenance } from '../../contexts/MaintenanceContext';
+import Geolocation from 'react-native-geolocation-service';
+import { GuruKaset } from '../../datasource/GuruDatasource';
+import { useNetwork } from '../../contexts/NetworkContext';
+import { MainButton } from '../../components/Button/MainButton';
+import ModalRequestPermission from '../../components/Modal/ModalRequestPermission';
+import CarouselMainScreen from './AuthMainScreenComponent/CarouselMainScreen';
+import { mixpanel } from '../../../mixpanel';
+import DronerNearMe from './AuthMainScreenComponent/DronerNearMe';
+import { DronerDatasource } from '../../datasource/DronerDatasource';
 
 const AuthMainScreen: React.FC<any> = ({ navigation }) => {
-  const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
-  const { height, width } = Dimensions.get('window');
   const { notiMaintenance, maintenanceData } = useMaintenance();
-  useEffect(() => {
-    getProfile();
-  }, []);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
+  const [dronerNearMe, setDronerNearMe] = useState<{
+    count: number;
+    data: any[];
+  }>({
+    count: 0,
+    data: [],
+  });
+  const [showModalPermission, setShowModalPermission] =
+    useState<boolean>(false);
+  const [isConfirm, setIsConfirm] = useState<boolean | null>(null);
+  const { height, width } = Dimensions.get('window');
+  const [guruKaset, setGuruKaset] = useState<{
+    data: any[];
+    count: number;
+  }>({
+    data: [],
+    count: 0,
+  });
+  const [allowLocal, setAllowLocal] = useState<boolean>(false);
+  const { appState } = useNetwork();
+  const [permission, setPermission] = useState<
+    | 'denied'
+    | 'granted'
+    | 'disabled'
+    | 'restricted'
+    | 'never_ask_again'
+    | undefined
+  >();
+  const [position, setPosition] = useState<{
+    latitude: number | null;
+    longitude: number | null;
+    latitudeDelta: number;
+    longitudeDelta: number;
+  }>({
+    latitude: null,
+    longitude: null,
+    latitudeDelta: 0,
+    longitudeDelta: 0,
+  });
 
   const getProfile = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -47,7 +95,89 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
         .catch(err => console.log(err));
     }
   };
+  const findAllNews = async () => {
+    setLoading(true);
+    GuruKaset.findAllNewsPin('ACTIVE', 'FARMER', 5, 0, 'MAIN')
+      .then(res => {
+        setGuruKaset(res);
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
+  };
 
+  const requestLocationPermission = async () => {
+    if (Platform.OS === 'ios') {
+      const result = await Geolocation.requestAuthorization('always');
+      return result;
+    } else if (Platform.OS === 'android') {
+      const result = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      return result;
+    }
+  };
+  const getDronerNearMe = async () => {
+    if (position.latitude && position.longitude) {
+      DronerDatasource.getDronerNearMe({
+        lat: position.latitude,
+        long: position.longitude,
+      })
+        .then(res => {
+          setDronerNearMe(res);
+        })
+        .catch(err => console.log(err));
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+    findAllNews();
+    if (isConfirm === null) {
+      setTimeout(() => {
+        setShowModalPermission(true);
+      }, 1000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    if (appState === 'active' && isConfirm) {
+      requestLocationPermission().then(async result => {
+        setPermission(result);
+      });
+    }
+  }, [appState, isConfirm]);
+  useEffect(() => {
+    const getCurrentLocation = async () => {
+      if (permission === 'granted') {
+        Geolocation.getCurrentPosition(
+          position => {
+            setPosition({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            });
+          },
+          error => {
+            console.log(error.code, error.message);
+          },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+        );
+      } else {
+        setAllowLocal(true);
+        setPermission(undefined);
+      }
+    };
+    if (permission) {
+      getCurrentLocation();
+    }
+  }, [permission]);
+  useEffect(() => {
+    if (position.latitude && position.longitude) {
+      getDronerNearMe();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [position.latitude, position.longitude]);
   return (
     <View
       style={{
@@ -165,6 +295,68 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                       maintenance={maintenanceData}
                     />
                   </View>
+
+                  <View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginTop: 0,
+                        paddingVertical: 10,
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: font.AnuphanBold,
+                          fontSize: normalize(20),
+                          color: colors.fontGrey,
+                          paddingHorizontal: 20,
+                        }}>
+                        กูรูเกษตร
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          mixpanel.track('MainScreen_ButtonAllGuru_Press', {
+                            navigateTo: 'AllGuruScreen',
+                          });
+                          navigation.navigate('AllGuruScreen');
+                        }}>
+                        <Text
+                          style={{
+                            fontFamily: font.SarabunLight,
+                            fontSize: normalize(16),
+                            color: colors.fontGrey,
+                            height: 30,
+                            lineHeight: 32,
+                            paddingHorizontal: 10,
+                          }}>
+                          ดูทั้งหมด
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    <CarouselMainScreen
+                      data={guruKaset}
+                      isLoading={loading}
+                      navigation={navigation}
+                    />
+                  </View>
+
+                  {dronerNearMe.data.length > 0 && (
+                    <View style={{ paddingHorizontal: 16 }}>
+                      <Text
+                        style={{
+                          fontFamily: font.AnuphanSemiBold,
+                          fontSize: 20,
+                        }}>
+                        นักบินโดรนใกล้คุณ
+                      </Text>
+                      <DronerNearMe
+                        data={dronerNearMe.data}
+                        isLoading={false}
+                        navigation={navigation}
+                      />
+                    </View>
+                  )}
+
                   <View
                     style={{
                       alignItems: 'center',
@@ -186,13 +378,8 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                     </Text>
                     <TouchableOpacity
                       style={{ margin: '3%' }}
-                      onPress={async () => {
-                        const value = await AsyncStorage.getItem('PDPA');
-                        if (value === 'read') {
-                          navigation.navigate('TelNumScreen');
-                        } else {
-                          navigation.navigate('ConditionScreen');
-                        }
+                      onPress={() => {
+                        navigation.navigate('BeforeLoginScreen');
                       }}>
                       <Text
                         style={[
@@ -212,12 +399,95 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
+      <ModalRequestPermission
+        visible={allowLocal}
+        onRequestClose={() => {
+          setAllowLocal(false);
+        }}
+      />
+      <Modal visible={showModalPermission} transparent={true}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 16,
+          }}>
+          <View
+            style={{
+              backgroundColor: colors.white,
+              width: '100%',
+              paddingHorizontal: 16,
+              paddingTop: 24,
+              paddingBottom: 16,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderRadius: 8,
+            }}>
+            <Image
+              source={image.locationModal}
+              style={{
+                width: 80,
+                height: 80,
+              }}
+            />
+            <View
+              style={{
+                marginTop: 16,
+                width: '100%',
+                alignItems: 'center',
+              }}>
+              <Text style={styles.textTitle}>ยินยอมให้แอปพลิเคชัน</Text>
+              <Text style={styles.textTitle}>“เรียกโดรน - ไอคอนเกษตร”</Text>
+              <Text style={styles.textTitle}>เข้าถึงตำแหน่งของคุณ</Text>
+            </View>
+            <View
+              style={{
+                marginTop: 8,
+              }}>
+              <MainButton
+                color={colors.greenLight}
+                style={{
+                  width: Dimensions.get('window').width - 64,
+                  height: 54,
+                }}
+                onPress={async () => {
+                  setIsConfirm(true);
+                  setShowModalPermission(false);
+                }}
+                label="ยินยอม"
+              />
+              <MainButton
+                color={'transparent'}
+                style={{
+                  width: Dimensions.get('window').width - 64,
+                  height: 54,
+                  borderWidth: 1,
+                }}
+                fontColor={colors.fontBlack}
+                onPress={async () => {
+                  setIsConfirm(false);
+                  setShowModalPermission(false);
+                }}
+                label="ไม่ยินยอม"
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
 export default AuthMainScreen;
 
 const styles = StyleSheet.create({
+  textTitle: {
+    fontFamily: font.AnuphanMedium,
+    fontSize: normalize(22),
+    color: colors.fontBlack,
+  },
   textEmpty: {
     fontFamily: font.SarabunLight,
     fontSize: normalize(18),

@@ -9,7 +9,6 @@ import React, {
   useState,
 } from 'react';
 import {
-  Dimensions,
   Image,
   KeyboardAvoidingView,
   Linking,
@@ -128,7 +127,6 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
     getPointCamp();
   }, []);
   const onSubmit = async () => {
-    confirmBooking.current.hide();
     try {
       setLoading(true);
       const dateAppointment = moment(taskData.dateAppointment).toISOString();
@@ -159,7 +157,10 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         statusRemark: '',
       };
       const res = await TaskDatasource.createTask(payload);
+
       if (res && res.success) {
+        confirmBooking.current.hide();
+
         if (!couponInfo.name) {
           mixpanel.track('DetailTaskScreen_buttonSubmitBooking_tapped', {
             couponId: couponInfo.id,

@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, icons, image } from '../../assets';
 import { normalize } from '../../functions/Normalize';
 import CustomHeader from '../../components/CustomHeader';
-import * as RootNavigation from '../../navigations/RootNavigation';
+// import * as RootNavigation from '../../navigations/RootNavigation';
 import { ScrollView } from 'react-native';
 import { StatusObject } from '../../components/Plots/Plots';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -42,8 +42,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [index, setIndex] = useState(0);
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const [showModalCall, setShowModalCall] = useState(false);
-  const [countPlot, setCountPlot] = useState<any>();
-  console.log(JSON.stringify(profilestate, null, 2));
 
   const isFocused = useIsFocused();
   const onLogout = async () => {
@@ -61,7 +59,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
       sttPlot.splice(index);
     }
 
-    setCountPlot(sttPlot.length);
+    // setCountPlot(sttPlot.length);
     const findPlot = profilestate.plotItem.filter(
       (x: any) => x.status !== 'INACTIVE',
     );
@@ -148,6 +146,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
           title="บัญชีของฉัน"
           showBackBtn
           onPressBack={() => navigation.goBack()}
+          backgroundColor="transparent"
         />
       ) : (
         <View
@@ -171,195 +170,213 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
       )}
       <ScrollView>
         <View style={styles.section1}>
-          <ProgressiveImage
-            source={
-              profilestate?.image ? { uri: profilestate?.image } : icons.avatar
-            }
-            borderRadius={50}
-            style={{
-              width: normalize(80),
-              height: normalize(80),
-              borderRadius: normalize(40),
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 0.84,
-            }}
-          />
           <View
             style={{
               flexDirection: 'row',
-              width: screenWidth,
-              marginTop: 16,
+              justifyContent: 'space-between',
+              paddingHorizontal: 16,
+              alignItems: 'center',
+              marginBottom: 16,
             }}>
             <View
               style={{
-                marginLeft: 16,
+                flexDirection: 'row',
+                flex: 0.9,
               }}>
-              {loading ? (
+              <ProgressiveImage
+                source={
+                  profilestate?.image
+                    ? { uri: profilestate?.image }
+                    : icons.avatar
+                }
+                borderRadius={50}
+                style={{
+                  width: normalize(80),
+                  height: normalize(80),
+                  borderRadius: normalize(40),
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 0.84,
+                }}
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}>
                 <View
                   style={{
-                    flex: 1,
-                    minWidth: 200,
+                    marginLeft: 16,
                   }}>
-                  <SkeletonPlaceholder
-                    speed={2000}
-                    borderRadius={8}
-                    backgroundColor={colors.skeleton}>
-                    <>
-                      <SkeletonPlaceholder.Item
-                        style={{
-                          width: '100%',
-                          marginBottom: 16,
-                        }}>
-                        <View
-                          style={{
-                            width: 150,
-                            height: 20,
-                          }}
-                        />
-                      </SkeletonPlaceholder.Item>
-                      <SkeletonPlaceholder.Item
-                        style={{
-                          width: '100%',
-                        }}>
-                        <View
-                          style={{
-                            width: 160,
-                            height: 20,
-                          }}
-                        />
-                      </SkeletonPlaceholder.Item>
-                    </>
-                  </SkeletonPlaceholder>
-                </View>
-              ) : (
-                <>
-                  <Text style={[styles.text]}>{profilestate.name} </Text>
-                  {StatusObject(profilestate.status).status === 'ไม่อนุมัติ' ? (
+                  {loading ? (
                     <View
                       style={{
-                        marginTop: normalize(10),
-                        height: normalize(28),
-                        borderRadius: normalize(15),
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderWidth: 1,
-                        borderColor: StatusObject(profilestate.status)
-                          .fontColor,
-                        backgroundColor: StatusObject(profilestate.status)
-                          .colorBg,
-                        flexDirection: 'row',
+                        flex: 1,
+                        minWidth: 200,
                       }}>
-                      {StatusObject(profilestate.status).status ===
-                      'ตรวจสอบแล้ว' ? (
-                        <Image
-                          source={icons.correct}
-                          style={{ width: 16, height: 16, right: 5 }}
-                        />
-                      ) : StatusObject(profilestate.status).status ===
-                        'รอการตรวจสอบ' ? (
-                        <Image
-                          source={icons.warning}
-                          style={{ width: 16, height: 16, right: 5 }}
-                        />
-                      ) : StatusObject(profilestate.status).status ===
-                        'ไม่อนุมัติ' ? (
-                        <Image
-                          source={icons.wrong}
-                          style={{ width: 16, height: 16, right: 5 }}
-                        />
-                      ) : (
-                        <Image
-                          style={{
-                            width: 16,
-                            height: 16,
-                            right: 5,
-                            tintColor: colors.bg,
-                          }}
-                        />
-                      )}
-
-                      <Text
-                        style={{
-                          color: StatusObject(profilestate.status).fontColor,
-                          fontFamily: font.AnuphanBold,
-                          fontSize: normalize(14),
-                        }}>
-                        {StatusObject(profilestate.status).status ===
-                        'ตรวจสอบแล้ว'
-                          ? 'ยืนยันตัวตนสำเร็จ'
-                          : StatusObject(profilestate.status).status ===
-                            'รอการตรวจสอบ'
-                          ? 'รอการตรวจสอบ'
-                          : StatusObject(profilestate.status).status ===
-                            'ไม่อนุมัติ'
-                          ? 'ยืนยันตัวตนไม่สำเร็จ'
-                          : 'ปิดการใช้งาน'}
-                      </Text>
+                      <SkeletonPlaceholder
+                        speed={2000}
+                        borderRadius={8}
+                        backgroundColor={colors.skeleton}>
+                        <>
+                          <SkeletonPlaceholder.Item
+                            style={{
+                              width: '100%',
+                              marginBottom: 16,
+                            }}>
+                            <View
+                              style={{
+                                width: 150,
+                                height: 20,
+                              }}
+                            />
+                          </SkeletonPlaceholder.Item>
+                          <SkeletonPlaceholder.Item
+                            style={{
+                              width: '100%',
+                            }}>
+                            <View
+                              style={{
+                                width: 160,
+                                height: 20,
+                              }}
+                            />
+                          </SkeletonPlaceholder.Item>
+                        </>
+                      </SkeletonPlaceholder>
                     </View>
                   ) : (
-                    <View
-                      style={{
-                        marginTop: normalize(10),
-                        width: normalize(135),
-                        height: normalize(28),
-                        borderRadius: normalize(15),
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderWidth: 1,
-                        borderColor: StatusObject(profilestate.status)
-                          .fontColor,
-                        backgroundColor: StatusObject(profilestate.status)
-                          .colorBg,
-                        flexDirection: 'row',
-                      }}>
+                    <>
+                      <Text style={[styles.text]}>{profilestate.name} </Text>
                       {StatusObject(profilestate.status).status ===
-                      'ตรวจสอบแล้ว' ? (
-                        <Image
-                          source={icons.correct}
-                          style={{ width: 16, height: 16, right: 5 }}
-                        />
-                      ) : StatusObject(profilestate.status).status ===
-                        'รอการตรวจสอบ' ? (
-                        <Image
-                          source={icons.warning}
-                          style={{ width: 16, height: 16, right: 5 }}
-                        />
-                      ) : StatusObject(profilestate.status).status ===
-                        'ไม่อนุมัติ' ? (
-                        <Image
-                          source={icons.wrong}
-                          style={{ width: 16, height: 16, right: 5 }}
-                        />
-                      ) : null}
+                      'ไม่อนุมัติ' ? (
+                        <View
+                          style={{
+                            marginTop: normalize(10),
+                            height: normalize(28),
+                            borderRadius: normalize(15),
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderWidth: 1,
+                            borderColor: StatusObject(profilestate.status)
+                              .fontColor,
+                            backgroundColor: StatusObject(profilestate.status)
+                              .colorBg,
+                            flexDirection: 'row',
+                          }}>
+                          {StatusObject(profilestate.status).status ===
+                          'ตรวจสอบแล้ว' ? (
+                            <Image
+                              source={icons.correct}
+                              style={{ width: 16, height: 16, right: 5 }}
+                            />
+                          ) : StatusObject(profilestate.status).status ===
+                            'รอการตรวจสอบ' ? (
+                            <Image
+                              source={icons.warning}
+                              style={{ width: 16, height: 16, right: 5 }}
+                            />
+                          ) : StatusObject(profilestate.status).status ===
+                            'ไม่อนุมัติ' ? (
+                            <Image
+                              source={icons.wrong}
+                              style={{ width: 16, height: 16, right: 5 }}
+                            />
+                          ) : (
+                            <Image
+                              style={{
+                                width: 16,
+                                height: 16,
+                                right: 5,
+                                tintColor: colors.bg,
+                              }}
+                            />
+                          )}
 
-                      <Text
-                        style={{
-                          color: StatusObject(profilestate.status).fontColor,
-                          fontFamily: font.AnuphanBold,
-                          fontSize: normalize(14),
-                        }}>
-                        {StatusObject(profilestate.status).status ===
-                        'ตรวจสอบแล้ว'
-                          ? 'ยืนยันตัวตนสำเร็จ'
-                          : StatusObject(profilestate.status).status ===
-                            'รอการตรวจสอบ'
-                          ? 'รอการตรวจสอบ'
-                          : StatusObject(profilestate.status).status ===
-                            'ไม่อนุมัติ'
-                          ? 'ยืนยันตัวตนไม่สำเร็จ'
-                          : 'ปิดการใช้งาน'}
-                      </Text>
-                    </View>
+                          <Text
+                            style={{
+                              color: StatusObject(profilestate.status)
+                                .fontColor,
+                              fontFamily: font.AnuphanBold,
+                              fontSize: normalize(14),
+                            }}>
+                            {StatusObject(profilestate.status).status ===
+                            'ตรวจสอบแล้ว'
+                              ? 'ยืนยันตัวตนสำเร็จ'
+                              : StatusObject(profilestate.status).status ===
+                                'รอการตรวจสอบ'
+                              ? 'รอการตรวจสอบ'
+                              : StatusObject(profilestate.status).status ===
+                                'ไม่อนุมัติ'
+                              ? 'ยืนยันตัวตนไม่สำเร็จ'
+                              : 'ปิดการใช้งาน'}
+                          </Text>
+                        </View>
+                      ) : (
+                        <View
+                          style={{
+                            marginTop: normalize(10),
+                            width: normalize(135),
+                            height: normalize(28),
+                            borderRadius: normalize(15),
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderWidth: 1,
+                            borderColor: StatusObject(profilestate.status)
+                              .fontColor,
+                            backgroundColor: StatusObject(profilestate.status)
+                              .colorBg,
+                            flexDirection: 'row',
+                          }}>
+                          {StatusObject(profilestate.status).status ===
+                          'ตรวจสอบแล้ว' ? (
+                            <Image
+                              source={icons.correct}
+                              style={{ width: 16, height: 16, right: 5 }}
+                            />
+                          ) : StatusObject(profilestate.status).status ===
+                            'รอการตรวจสอบ' ? (
+                            <Image
+                              source={icons.warning}
+                              style={{ width: 16, height: 16, right: 5 }}
+                            />
+                          ) : StatusObject(profilestate.status).status ===
+                            'ไม่อนุมัติ' ? (
+                            <Image
+                              source={icons.wrong}
+                              style={{ width: 16, height: 16, right: 5 }}
+                            />
+                          ) : null}
+
+                          <Text
+                            style={{
+                              color: StatusObject(profilestate.status)
+                                .fontColor,
+                              fontFamily: font.AnuphanBold,
+                              fontSize: normalize(14),
+                            }}>
+                            {StatusObject(profilestate.status).status ===
+                            'ตรวจสอบแล้ว'
+                              ? 'ยืนยันตัวตนสำเร็จ'
+                              : StatusObject(profilestate.status).status ===
+                                'รอการตรวจสอบ'
+                              ? 'รอการตรวจสอบ'
+                              : StatusObject(profilestate.status).status ===
+                                'ไม่อนุมัติ'
+                              ? 'ยืนยันตัวตนไม่สำเร็จ'
+                              : 'ปิดการใช้งาน'}
+                          </Text>
+                        </View>
+                      )}
+                    </>
                   )}
-                </>
-              )}
+                </View>
+              </View>
             </View>
             <View>
               <TouchableOpacity
@@ -381,225 +398,226 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           </View>
+          {profilestate.status === 'REJECTED' && (
+            <View style={{ paddingHorizontal: 25, paddingBottom: 15 }}>
+              <View style={styles.card}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={[styles.textVerify, { fontWeight: '800' }]}>
+                    หมายเหตุ :
+                  </Text>
+                  <Text style={styles.textVerify}> {reason}</Text>
+                </View>
+
+                <Text style={styles.textVerify}>
+                  กรุณาติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข
+                </Text>
+                <View style={{ paddingTop: 15 }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowModalCall(true);
+                    }}
+                    style={{
+                      ...Platform.select({
+                        ios: {
+                          height: 60,
+                          backgroundColor: colors.white,
+                          justifyContent: 'center',
+                          alignItems: 'flex-start',
+                          borderRadius: 12,
+                          borderWidth: 1,
+                          borderColor: colors.blueBorder,
+                        },
+                        android: {
+                          height: 60,
+                          paddingVertical: 8,
+                          paddingHorizontal: 16,
+                          backgroundColor: colors.white,
+                          justifyContent: 'center',
+                          alignItems: 'flex-start',
+                          width: '100%',
+                          borderRadius: 12,
+                          marginBottom: 8,
+                          borderWidth: 1,
+                          borderColor: colors.blueBorder,
+                          bottom: 15,
+                        },
+                      }),
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                      }}>
+                      <Image
+                        style={{
+                          width: 24,
+                          height: 24,
+                          marginRight: 16,
+                        }}
+                        source={icons.calling}
+                      />
+                      <Text
+                        style={{
+                          fontFamily: font.AnuphanMedium,
+                          color: colors.blueBorder,
+                          fontSize: 20,
+                        }}>
+                        โทรหาเจ้าหน้าที่
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          )}
+          {profilestate.status === 'INACTIVE' && (
+            <View style={{ paddingHorizontal: 25, paddingBottom: 15 }}>
+              <View style={styles.card}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={[styles.textVerify, { fontWeight: '800' }]}>
+                    หมายเหตุ :
+                  </Text>
+                  <Text style={styles.textVerify}>
+                    {' '}
+                    บัญชีของท่านถูกปิดการใช้งาน
+                  </Text>
+                </View>
+
+                <Text style={styles.textVerify}>
+                  หากต้องการเปิดใช้งานบัญชี กรุณาติดต่อ เจ้าหน้าที่
+                </Text>
+                <View style={{ paddingTop: 15 }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowModalCall(true);
+                    }}
+                    style={{
+                      ...Platform.select({
+                        ios: {
+                          height: 60,
+                          backgroundColor: colors.white,
+                          justifyContent: 'center',
+                          alignItems: 'flex-start',
+                          borderRadius: 12,
+                          borderWidth: 1,
+                          borderColor: colors.blueBorder,
+                        },
+                        android: {
+                          height: 60,
+                          paddingVertical: 8,
+                          paddingHorizontal: 16,
+                          backgroundColor: colors.white,
+                          justifyContent: 'center',
+                          alignItems: 'flex-start',
+                          width: '100%',
+                          borderRadius: 12,
+                          marginBottom: 8,
+                          borderWidth: 1,
+                          borderColor: colors.blueBorder,
+                          bottom: 15,
+                        },
+                      }),
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                      }}>
+                      <Image
+                        style={{
+                          width: 24,
+                          height: 24,
+                          marginRight: 16,
+                        }}
+                        source={icons.calling}
+                      />
+                      <Text
+                        style={{
+                          fontFamily: font.AnuphanMedium,
+                          color: colors.blueBorder,
+                          fontSize: 20,
+                        }}>
+                        โทรหาเจ้าหน้าที่
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          )}
+          {profilestate.status === 'PENDING' && (
+            <View style={{ paddingHorizontal: 25, paddingBottom: 15 }}>
+              <View style={styles.card}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={styles.textVerify}>
+                    ขณะนี้เจ้าหน้าที่กำลังตรวจสอบเอกสารยืนยันของคุณอยู่
+                    สอบถามข้อมูลเพิ่มเติม กรุณาติดต่อเจ้าหน้าที่
+                  </Text>
+                </View>
+                <View style={{ paddingTop: 15 }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowModalCall(true);
+                    }}
+                    style={{
+                      ...Platform.select({
+                        ios: {
+                          height: 60,
+                          backgroundColor: colors.white,
+                          justifyContent: 'center',
+                          alignItems: 'flex-start',
+                          borderRadius: 12,
+                          borderWidth: 1,
+                          borderColor: colors.blueBorder,
+                        },
+                        android: {
+                          height: 60,
+                          paddingVertical: 8,
+                          paddingHorizontal: 16,
+                          backgroundColor: colors.white,
+                          justifyContent: 'center',
+                          alignItems: 'flex-start',
+                          width: '100%',
+                          borderRadius: 12,
+                          marginBottom: 8,
+                          borderWidth: 1,
+                          borderColor: colors.blueBorder,
+                          bottom: 15,
+                        },
+                      }),
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                      }}>
+                      <Image
+                        style={{
+                          width: 24,
+                          height: 24,
+                          marginRight: 16,
+                        }}
+                        source={icons.calling}
+                      />
+                      <Text
+                        style={{
+                          fontFamily: font.AnuphanMedium,
+                          color: colors.blueBorder,
+                          fontSize: 20,
+                        }}>
+                        โทรหาเจ้าหน้าที่
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          )}
         </View>
-        {profilestate.status === 'REJECTED' && (
-          <View style={{ paddingHorizontal: 25, paddingBottom: 15 }}>
-            <View style={styles.card}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={[styles.textVerify, { fontWeight: '800' }]}>
-                  หมายเหตุ :
-                </Text>
-                <Text style={styles.textVerify}> {reason}</Text>
-              </View>
 
-              <Text style={styles.textVerify}>
-                กรุณาติดต่อเจ้าหน้าที่ เพื่อดำเนินการแก้ไข
-              </Text>
-              <View style={{ paddingTop: 15 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setShowModalCall(true);
-                  }}
-                  style={{
-                    ...Platform.select({
-                      ios: {
-                        height: 60,
-                        backgroundColor: colors.white,
-                        justifyContent: 'center',
-                        alignItems: 'flex-start',
-                        borderRadius: 12,
-                        borderWidth: 1,
-                        borderColor: colors.blueBorder,
-                      },
-                      android: {
-                        height: 60,
-                        paddingVertical: 8,
-                        paddingHorizontal: 16,
-                        backgroundColor: colors.white,
-                        justifyContent: 'center',
-                        alignItems: 'flex-start',
-                        width: '100%',
-                        borderRadius: 12,
-                        marginBottom: 8,
-                        borderWidth: 1,
-                        borderColor: colors.blueBorder,
-                        bottom: 15,
-                      },
-                    }),
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                    }}>
-                    <Image
-                      style={{
-                        width: 24,
-                        height: 24,
-                        marginRight: 16,
-                      }}
-                      source={icons.calling}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: font.AnuphanMedium,
-                        color: colors.blueBorder,
-                        fontSize: 20,
-                      }}>
-                      โทรหาเจ้าหน้าที่
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        )}
-        {profilestate.status === 'INACTIVE' && (
-          <View style={{ paddingHorizontal: 25, paddingBottom: 15 }}>
-            <View style={styles.card}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={[styles.textVerify, { fontWeight: '800' }]}>
-                  หมายเหตุ :
-                </Text>
-                <Text style={styles.textVerify}>
-                  {' '}
-                  บัญชีของท่านถูกปิดการใช้งาน
-                </Text>
-              </View>
-
-              <Text style={styles.textVerify}>
-                หากต้องการเปิดใช้งานบัญชี กรุณาติดต่อ เจ้าหน้าที่
-              </Text>
-              <View style={{ paddingTop: 15 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setShowModalCall(true);
-                  }}
-                  style={{
-                    ...Platform.select({
-                      ios: {
-                        height: 60,
-                        backgroundColor: colors.white,
-                        justifyContent: 'center',
-                        alignItems: 'flex-start',
-                        borderRadius: 12,
-                        borderWidth: 1,
-                        borderColor: colors.blueBorder,
-                      },
-                      android: {
-                        height: 60,
-                        paddingVertical: 8,
-                        paddingHorizontal: 16,
-                        backgroundColor: colors.white,
-                        justifyContent: 'center',
-                        alignItems: 'flex-start',
-                        width: '100%',
-                        borderRadius: 12,
-                        marginBottom: 8,
-                        borderWidth: 1,
-                        borderColor: colors.blueBorder,
-                        bottom: 15,
-                      },
-                    }),
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                    }}>
-                    <Image
-                      style={{
-                        width: 24,
-                        height: 24,
-                        marginRight: 16,
-                      }}
-                      source={icons.calling}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: font.AnuphanMedium,
-                        color: colors.blueBorder,
-                        fontSize: 20,
-                      }}>
-                      โทรหาเจ้าหน้าที่
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        )}
-        {profilestate.status === 'PENDING' && (
-          <View style={{ paddingHorizontal: 25, paddingBottom: 15 }}>
-            <View style={styles.card}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.textVerify}>
-                  ขณะนี้เจ้าหน้าที่กำลังตรวจสอบเอกสารยืนยันของคุณอยู่
-                  สอบถามข้อมูลเพิ่มเติม กรุณาติดต่อเจ้าหน้าที่
-                </Text>
-              </View>
-              <View style={{ paddingTop: 15 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setShowModalCall(true);
-                  }}
-                  style={{
-                    ...Platform.select({
-                      ios: {
-                        height: 60,
-                        backgroundColor: colors.white,
-                        justifyContent: 'center',
-                        alignItems: 'flex-start',
-                        borderRadius: 12,
-                        borderWidth: 1,
-                        borderColor: colors.blueBorder,
-                      },
-                      android: {
-                        height: 60,
-                        paddingVertical: 8,
-                        paddingHorizontal: 16,
-                        backgroundColor: colors.white,
-                        justifyContent: 'center',
-                        alignItems: 'flex-start',
-                        width: '100%',
-                        borderRadius: 12,
-                        marginBottom: 8,
-                        borderWidth: 1,
-                        borderColor: colors.blueBorder,
-                        bottom: 15,
-                      },
-                    }),
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                    }}>
-                    <Image
-                      style={{
-                        width: 24,
-                        height: 24,
-                        marginRight: 16,
-                      }}
-                      source={icons.calling}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: font.AnuphanMedium,
-                        color: colors.blueBorder,
-                        fontSize: 20,
-                      }}>
-                      โทรหาเจ้าหน้าที่
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        )}
         <View
           style={{
             paddingHorizontal: 2,
@@ -942,9 +960,6 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   navigateTo: 'LoginScreen',
                 });
                 await onLogout();
-                RootNavigation.navigate('Auth', {
-                  screen: 'HomeScreen',
-                });
               }}>
               <View style={styles.listTile}>
                 <View
@@ -966,6 +981,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 />
               </View>
             </TouchableOpacity>
+
             {profilestate.plotItem.length > 1 ? (
               <View
                 style={{
@@ -993,6 +1009,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 }}
               />
             )}
+            <View style={{ height: 20 }} />
           </View>
         </View>
         <Modal animationType="fade" transparent={true} visible={showModalCall}>
@@ -1136,10 +1153,9 @@ const styles = StyleSheet.create({
     width: 200,
   },
   section1: {
-    flexDirection: 'row',
     backgroundColor: '#F7FFF0',
     display: 'flex',
-    alignItems: 'center',
+
     padding: 15,
     width: '100%',
     minHeight: 120,

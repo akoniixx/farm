@@ -4,6 +4,83 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AppState } from 'react-native';
 import { ProfileDatasource } from '../datasource/ProfileDatasource';
 
+interface File {
+  id: string;
+  fileName: string;
+  fileType: string;
+  resource: string;
+  category: string;
+  path: string;
+}
+interface FarmerResponse {
+  id: string;
+  farmerCode: string;
+  pin: string;
+  firstname: string;
+  lastname: string;
+  nickname: string | null;
+  idNo: string;
+  telephoneNo: string;
+  status: string;
+  reason: string;
+  birthDate: string;
+  addressId: string;
+  createdAt: string;
+  updatedAt: string;
+  address: Address;
+  farmerPlot: FarmerPlot[];
+  file: File[];
+}
+
+interface Address {
+  id: string;
+  address1: string;
+  address2: string;
+  address3: string | null;
+  provinceId: number;
+  districtId: number;
+  subdistrictId: number;
+  postcode: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface FarmerPlot {
+  id: string;
+  plotName: string;
+  raiAmount: string;
+  landmark: string;
+  plantName: string;
+  plantNature: string;
+  mapUrl: string;
+  lat: string;
+  long: string;
+  locationName: string;
+  farmerId: string;
+  plotAreaId: number;
+  isActive: boolean;
+  status: string;
+  plotArea: PlotArea;
+  comment: string | null;
+  reason: string | null;
+  plantCharacteristics: string | null;
+  dateWaitPending: string;
+}
+
+interface PlotArea {
+  subdistrictId: number;
+  subdistrictName: string;
+  districtId: number;
+  districtName: string;
+  provinceId: number;
+  provinceName: string;
+  lat: string;
+  long: string;
+  postcode: string;
+}
+
+// If this is part of the FarmerResponse object, you can update it as:
+
 interface Props {
   children: JSX.Element;
 }
@@ -11,7 +88,7 @@ interface Props {
 interface State {
   isLoading: boolean;
 
-  user: null | any;
+  user: FarmerResponse | null;
 }
 
 interface Action {

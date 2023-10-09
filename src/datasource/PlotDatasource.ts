@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL, httpClient } from '../config/develop-config';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export interface PayloadDronerSearch {
   farmerId?: string;
@@ -17,6 +18,18 @@ export interface PayloadCal {
   raiAmount: number;
   couponCode: string;
   usePoint?: number;
+}
+export interface UpdatePlot {
+  plotName: string;
+  raiAmount: number;
+  landmark: string;
+  plantName: string;
+  lat: string;
+  long: string;
+  locationName: string;
+  plotAreaId: any;
+  status?: string;
+  plotId: string;
 }
 
 export class PlotDatasource {
@@ -71,6 +84,7 @@ export class PlotDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().recordError(error);
         console.log(error);
       });
   }
@@ -81,6 +95,7 @@ export class PlotDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().recordError(error);
         console.log(error);
       });
   }
@@ -95,7 +110,7 @@ export class PlotDatasource {
     plotAreaId: any,
   ): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-    let count = 0;
+
     // if (!plotName) {
     return httpClient
       .post(BASE_URL + `/farmer-plot`, {
@@ -114,6 +129,7 @@ export class PlotDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().recordError(error);
         console.log(error);
       });
     // } else {
@@ -153,34 +169,24 @@ export class PlotDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().recordError(error);
         console.log(error);
       });
   }
-  static async updateFarmerPlot(
-    plotName: string,
-    raiAmount: number,
-    landmark: string,
-    plantName: string,
-    lat: string,
-    long: string,
-    locationName: string,
-    plotAreaId: any,
-    status?: string,
-  ): Promise<any> {
+  static async updateFarmerPlot({
+    plantName,
+    plotName,
+    plotId,
+    ...payload
+  }: UpdatePlot): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-    const plotId = await AsyncStorage.getItem('plot_id');
+
     const index = 0;
     if (!plotName) {
       return httpClient
         .patch(BASE_URL + `/farmer-plot/${plotId}`, {
+          ...payload,
           plotName: `แปลงที่ ${index + 1} ${plantName}`,
-          raiAmount: raiAmount,
-          landmark: landmark,
-          plantName: plantName,
-          lat: lat,
-          long: long,
-          locationName: locationName,
-          plotAreaId: plotAreaId,
           farmerId: farmer_id,
         })
         .then(response => {
@@ -192,21 +198,16 @@ export class PlotDatasource {
     } else {
       return httpClient
         .patch(BASE_URL + `/farmer-plot/${plotId}`, {
+          ...payload,
           plotName: plotName,
-          raiAmount: raiAmount,
-          landmark: landmark,
           plantName: plantName,
-          lat: lat,
-          long: long,
-          locationName: locationName,
-          plotAreaId: plotAreaId,
           farmerId: farmer_id,
-          status: status,
         })
         .then(response => {
           return response.data;
         })
         .catch(error => {
+          crashlytics().recordError(error);
           console.log(error);
         });
     }

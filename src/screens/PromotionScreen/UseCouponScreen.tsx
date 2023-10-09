@@ -513,6 +513,8 @@ const UseCouponScreen: React.FC<any> = ({ navigation, route }) => {
                       cropName: conditionCheck.cropName,
                       raiAmount: conditionCheck.raiAmount,
                     }).then(res => {
+                      console.log('callback', JSON.stringify(res, null, 2));
+
                       mixpanel.track('UseCouponScreen_UseCouponButton_tapped', {
                         couponCode: item.promotion.couponCode,
                         type: item.promotion.promotionType,

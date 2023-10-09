@@ -15,13 +15,14 @@ import { colors, font, image } from '../../assets';
 import CouponCard from '../../components/CouponCard/CouponCard';
 import { MainButton } from '../../components/Button/MainButton';
 import * as RootNavigation from '../../navigations/RootNavigation';
-import SelectDronerCouponModal from '../../components/Modal/SelectDronerCoupon';
+// import SelectDronerCouponModal from '../../components/Modal/SelectDronerCoupon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import VerifyStatus from '../../components/Modal/VerifyStatus';
 import { mixpanel } from '../../../mixpanel';
 import Text from '../../components/Text/Text';
 import LoadingSkeletonCoupon from './LoadingSkeletonCoupon';
+import ModalSelectHiring from '../../components/Modal/ModalSelectHiring';
 
 const MyCouponExpiredScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
@@ -29,12 +30,17 @@ const MyCouponExpiredScreen: React.FC<any> = ({ navigation, route }) => {
   const [data, setData] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [visibleSelectHire, setVisibleSelectHire] = useState<boolean>(false);
+  const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
 
-  const [modal, setModal] = useState<boolean>(false);
   const [modalVerify, setModalVerify] = useState<boolean>(false);
   const [status, setStatus] = useState();
   const getData = async (page: number, take: number) => {
     setLoading(true);
+    const taskSugData = await AsyncStorage.getItem('taskSugUsed');
+    if (taskSugData) {
+      setTaskSugUsed(JSON.parse(taskSugData));
+    }
     getMyCoupon(page, take)
       .then(res => {
         setCount(res.count);
@@ -81,11 +87,11 @@ const MyCouponExpiredScreen: React.FC<any> = ({ navigation, route }) => {
         height: '100%',
         backgroundColor: colors.bgGreen,
       }}>
-      <SelectDronerCouponModal
+      {/* <SelectDronerCouponModal
         show={modal}
         onClose={() => setModal(false)}
         onMainClick={() => {
-          RootNavigation.navigate('DronerUsedScreen', {
+          RootNavigation.navigate('DronerHiredScreen', {
             isSelectDroner: true,
             profile: {},
           });
@@ -98,7 +104,7 @@ const MyCouponExpiredScreen: React.FC<any> = ({ navigation, route }) => {
           });
           setModal(false);
         }}
-      />
+      /> */}
       {loading ? (
         <View
           style={{
@@ -210,7 +216,6 @@ const MyCouponExpiredScreen: React.FC<any> = ({ navigation, route }) => {
           )}
         </>
       )}
-
       <View
         style={{
           width: Dimensions.get('screen').width,
@@ -223,7 +228,9 @@ const MyCouponExpiredScreen: React.FC<any> = ({ navigation, route }) => {
           label="จ้างนักบินโดรน"
           color={colors.greenLight}
           onPress={() =>
-            status !== 'ACTIVE' ? setModalVerify(true) : setModal(true)
+            status !== 'ACTIVE'
+              ? setModalVerify(true)
+              : setVisibleSelectHire(true)
           }
         />
       </View>
@@ -245,6 +252,41 @@ const MyCouponExpiredScreen: React.FC<any> = ({ navigation, route }) => {
           }}
         />
       </Modal>
+      <ModalSelectHiring
+        visible={visibleSelectHire}
+        taskSugUsed={taskSugUsed}
+        setVisible={setVisibleSelectHire}
+        onPressManualBooking={() => {
+          mixpanel.track(
+            'MyCouponExpiredScreen_SelectDronerCouponModalMainButton_tapped',
+            {
+              changeTo: 'DronerHiredScreen',
+            },
+          );
+          setVisibleSelectHire(false);
+          setTimeout(() => {
+            RootNavigation.navigate('DronerHiredScreen', {
+              isSelectDroner: true,
+              profile: {},
+            });
+          }, 400);
+        }}
+        onPressAutoBooking={() => {
+          mixpanel.track(
+            'MyCouponExpiredScreen_SelectDronerCouponModalOnBottomButton_tapped',
+            {
+              changeTo: 'SelectDateScreen',
+            },
+          );
+          setVisibleSelectHire(false);
+          setTimeout(() => {
+            RootNavigation.navigate('SelectDateScreen', {
+              isSelectDroner: false,
+              profile: {},
+            });
+          }, 400);
+        }}
+      />
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import LoginScreen from '../screens/LoginScreen/LoginScreen';
@@ -18,14 +18,37 @@ import MyPlotScreen from '../screens/MyPlotScreen/MyPlotScreen';
 import EditFarmerPlot from '../screens/RegisterScreen/EditFarmerPlot';
 import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 import PrivacyScreen from '../screens/ProfileScreen/PrivacyScreen';
+import AllGuruScreen from '../screens/GuruScreen/AllGuruScreen';
+import BeforeLoginScreen from '../screens/BeforeLoginScreen';
+import CameraScreen from '../screens/CameraScreen';
+import AddPlotScreen from '../screens/ProfileScreen/PlotScreen/AddPlotScreen';
+import EditPlotScreen from '../screens/ProfileScreen/PlotScreen/EditPlotScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 
 const AppAuthNavigator: React.FC = () => {
+  const [isOnboarding, setIsOnboarding] = React.useState<boolean>(true);
+  useEffect(() => {
+    const checkOnboarding = async () => {
+      const onBoarding = await AsyncStorage.getItem('onBoarding');
+      if (onBoarding) {
+        setIsOnboarding(true);
+      } else {
+        setIsOnboarding(false);
+      }
+    };
+    checkOnboarding();
+  }, []);
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={isOnboarding ? 'HomeScreen' : 'Onboarding'}>
       <Stack.Screen name="Onboarding" component={Onboarding} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="BeforeLoginScreen" component={BeforeLoginScreen} />
+      <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
+      <Stack.Screen name="CameraScreen" component={CameraScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="ConditionScreen" component={ConditionScreen} />
       <Stack.Screen name="OtpScreen" component={OtpScreen} />
@@ -42,6 +65,19 @@ const AppAuthNavigator: React.FC = () => {
       <Stack.Screen name="EditFarmerPlot" component={EditFarmerPlot} />
       <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
       <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
+      <Stack.Screen
+        name="AddPlotScreen"
+        component={AddPlotScreen}
+        initialParams={{ fromRegister: true }}
+      />
+      <Stack.Screen
+        name="EditPlotScreen"
+        component={EditPlotScreen}
+        initialParams={{
+          plotId: '',
+          fromRegister: true,
+        }}
+      />
     </Stack.Navigator>
   );
 };

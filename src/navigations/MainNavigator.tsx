@@ -47,6 +47,7 @@ import AllCouponScreen from '../screens/PromotionScreen/AllCouponScreen';
 import AllGuruScreen from '../screens/GuruScreen/AllGuruScreen';
 import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
 import DetailPointScreen from '../screens/PointScreen/DetailPointScreen';
+import { DronerHiredScreen } from '../screens/DronerHiredScreen';
 
 export type MainStackParamList = {
   MainScreen: undefined;
@@ -78,8 +79,13 @@ export type MainStackParamList = {
     navigation: StackNavigationHelpers;
     route: RouteProp<{ params: { id: string } }, 'params'>;
   };
-  AddPlotScreen: undefined;
-  EditPlotScreen: undefined;
+  AddPlotScreen: {
+    fromRegister: boolean;
+  };
+  EditPlotScreen: {
+    plotId: string;
+    fromRegister: boolean;
+  };
   DeleteSuccess: undefined;
   FullScreenTaskImg: undefined;
   AllReviewDroner: undefined;
@@ -91,6 +97,7 @@ export type MainStackParamList = {
   AllGuruScreen: undefined;
   DetailGuruScreen: undefined;
   DetailPointScreen: undefined;
+  DronerHiredScreen: undefined;
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
@@ -110,7 +117,13 @@ const MainNavigator: React.FC<any> = () => {
         />
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         <Stack.Screen name="AllPlotScreen" component={AllPlotScreen} />
-        <Stack.Screen name="AddPlotScreen" component={AddPlotScreen} />
+        <Stack.Screen
+          name="AddPlotScreen"
+          component={AddPlotScreen}
+          initialParams={{
+            fromRegister: false,
+          }}
+        />
         <Stack.Screen name="SelectDateScreen" component={SelectDateScreen} />
         <Stack.Screen name="SelectPlotScreen" component={SelectPlotScreen} />
         <Stack.Screen name="SelectTarget" component={SelectTarget} />
@@ -149,7 +162,14 @@ const MainNavigator: React.FC<any> = () => {
         <Stack.Screen name="DeleteSuccess" component={DeleteSuccess} />
         <Stack.Screen name="DeleteProfileScreen" component={DeleteProfile} />
         <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
-        <Stack.Screen name="EditPlotScreen" component={EditPlotScreen} />
+        <Stack.Screen
+          name="EditPlotScreen"
+          component={EditPlotScreen}
+          initialParams={{
+            plotId: '',
+            fromRegister: false,
+          }}
+        />
         <Stack.Screen name="AllReviewDroner" component={AllReviewDroner} />
         <Stack.Screen name="CouponDetail" component={CouponDetailScreen} />
         <Stack.Screen name="MyCouponScreen" component={MyCouponScreen} />
@@ -163,6 +183,7 @@ const MainNavigator: React.FC<any> = () => {
         <Stack.Screen name="DetailPointScreen" component={DetailPointScreen} />
         <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
         <Stack.Screen name="DetailGuruScreen" component={DetailGuruScreen} />
+        <Stack.Screen name="DronerHiredScreen" component={DronerHiredScreen} />
       </Stack.Navigator>
     </>
   );

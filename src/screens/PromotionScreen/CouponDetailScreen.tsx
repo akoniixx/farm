@@ -1,5 +1,5 @@
 import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import { normalize } from '@rneui/themed';
@@ -152,9 +152,15 @@ const CouponDetailScreen: React.FC<any> = ({ navigation, route }) => {
             source={{ html: detail.description }}
             contentWidth={Dimensions.get('screen').width}
             tagsStyles={htmlStyle}
+            defaultTextProps={{
+              allowFontScaling: false,
+            }}
           />
           <Text style={styles.header}>เงื่อนไข</Text>
           <HTML
+            defaultTextProps={{
+              allowFontScaling: false,
+            }}
             source={{ html: detail.condition }}
             contentWidth={Dimensions.get('screen').width}
             tagsStyles={htmlStyle}

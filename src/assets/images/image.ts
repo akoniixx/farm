@@ -52,4 +52,13 @@ export default {
   updateApp: require('./updateApp.png'),
   loaderImage: require('./loaderImage.png'),
   couponHeader: require('./couponHeader.png'),
+  locationModal: require('./locationModal.png'),
+  loginImage: require('./loginImage.png'),
+  otpImage: require('./otpImage.png'),
+  emptyPlacePlot: require('./emptyPlacePlot.png'),
+  autoBookingHire: require('./autoBookingHire.png'),
+  manualBookingHire: require('./manualBookingHire.png'),
+  disableManualBooking: require('./disableManualBooking.png'),
+  closedHired: require('./closedHired.png'),
+  emptyDronerList: require('./emptyDronerList.png'),
 };

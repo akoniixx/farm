@@ -1,6 +1,6 @@
 {
   "name": "farmer",
-  "version": "1.4.22",
+  "version": "1.4.23",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -11,9 +11,11 @@
     "start:no-cache": "react-native start --reset-cache",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc.js",
     "clean:android": "cd android && ./gradlew clean && cd ../",
-    "clean:ios": "cd ios && xcodebuild clean && cd ../"
+    "clean:ios": "cd ios && xcodebuild clean && cd ../",
+    "ios:IPhone12": "react-native run-ios --simulator='iPhone 12'"
   },
   "dependencies": {
+    "@bam.tech/react-native-image-resizer": "^3.0.7",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-native-fontawesome": "^0.3.0",
@@ -21,8 +23,10 @@
     "@react-native-async-storage/async-storage": "^1.17.10",
     "@react-native-community/datetimepicker": "^6.7.1",
     "@react-native-community/netinfo": "^9.4.1",
-    "@react-native-firebase/app": "^16.4.1",
-    "@react-native-firebase/messaging": "^16.4.1",
+    "@react-native-firebase/app": "^18.5.0",
+    "@react-native-firebase/analytics": "^18.5.0",
+    "@react-native-firebase/crashlytics": "^18.5.0",
+    "@react-native-firebase/messaging": "^18.5.0",
     "@react-native-masked-view/masked-view": "^0.2.9",
     "@react-navigation/bottom-tabs": "^6.4.0",
     "@react-navigation/material-top-tabs": "^6.5.2",
@@ -44,6 +48,7 @@
     "react-native-actions-sheet-picker": "^0.3.5",
     "react-native-asset": "^2.0.1",
     "react-native-calendars": "^1.1291.1",
+    "react-native-color-matrix-image-filters": "^6.0.3",
     "react-native-confirmation-code-field": "^7.3.0",
     "react-native-dashed-line": "^1.1.0",
     "react-native-date-picker": "^4.2.6",
@@ -55,6 +60,7 @@
     "react-native-gesture-handler": "^2.8.0",
     "react-native-google-maps": "^1.0.0",
     "react-native-google-places-autocomplete": "^2.5.1",
+    "react-native-image-crop-picker": "^0.40.0",
     "react-native-image-picker": "^4.10.1",
     "react-native-image-slider-banner": "^1.0.3",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
@@ -82,6 +88,7 @@
     "react-native-toast-message": "^2.1.5",
     "react-native-vector-icons": "^9.2.0",
     "react-native-version-check": "^3.4.7",
+    "react-native-vision-camera": "^2.16.1",
     "react-native-windows": "^0.70.6",
     "react-navigation": "^4.4.4",
     "recoil": "^0.7.7",

@@ -1,4 +1,4 @@
-import { Text as TextRN, TextProps, StyleSheet } from 'react-native';
+import { Text as TextRN, TextProps, StyleSheet, TextStyle } from 'react-native';
 import React from 'react';
 import { colors } from '../../assets';
 import fonts from '../../assets/fonts';

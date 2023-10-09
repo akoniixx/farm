@@ -20,7 +20,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../../datasource/ProfileDatasource';
 
 import PlotsItemEdit from '../../../components/Plots/PlotsItemEdit';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {
   callCenterNumberWithHyphens,
   callcenterNumber,
@@ -337,7 +336,11 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                                       plotId: item.id,
                                     },
                                   );
-                                  navigation.navigate('EditPlotScreen');
+                                  navigation.navigate('EditPlotScreen', {
+                                    plotId: item.id,
+                                    fromRegister: false,
+                                    data: item,
+                                  });
                                 }}>
                                 <PlotsItemEdit
                                   key={index}

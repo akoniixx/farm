@@ -21,6 +21,7 @@ import VerifyStatus from '../../components/Modal/VerifyStatus';
 import { mixpanel } from '../../../mixpanel';
 import Text from '../../components/Text/Text';
 import LoadingSkeletonCoupon from './LoadingSkeletonCoupon';
+import ModalSelectHiring from '../../components/Modal/ModalSelectHiring';
 
 const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
   const [count, setCount] = useState<number>(0);
@@ -30,11 +31,19 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [modalVerify, setModalVerify] = useState<boolean>(false);
+  const [visibleSelectHire, setVisibleSelectHire] = useState<boolean>(false);
+  const [taskSugUsed, setTaskSugUsed] = useState<any[]>([]);
   const [status, setStatus] = useState();
   const getData = async (page: number, take: number, used?: boolean) => {
     setLoading(true);
+    const taskSugData = await AsyncStorage.getItem('taskSugUsed');
+    if (taskSugData) {
+      const taskSug = JSON.parse(taskSugData);
+      setTaskSugUsed(taskSug);
+    }
     await getMyCoupon(page, take, used)
       .then(res => {
+        console.log(res);
         setCount(res.count);
         setData(res.data);
       })
@@ -54,7 +63,7 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
   const onScrollEnd = () => {
     let pageNow = page;
     if (data.length < count) {
-      getMyCoupon(pageNow + 1, 5, false).then(res => {
+      getMyCoupon(pageNow + 1, 5, true).then(res => {
         let newData = data.concat(res.data);
         setPage(pageNow + 1);
         setData(newData);
@@ -79,17 +88,17 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
         height: '100%',
         backgroundColor: colors.bgGreen,
       }}>
-      <SelectDronerCouponModal
+      {/* <SelectDronerCouponModal
         show={modal}
         onClose={() => setModal(false)}
         onMainClick={() => {
           mixpanel.track(
             'MyCouponUsedScreen_SelectDronerCouponModalMainButton_tapped',
             {
-              changeTo: 'DronerUsedScreen',
+              changeTo: 'DronerHiredScreen',
             },
           );
-          RootNavigation.navigate('DronerUsedScreen', {
+          RootNavigation.navigate('DronerHiredScreen', {
             isSelectDroner: true,
             profile: {},
           });
@@ -108,7 +117,7 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
           });
           setModal(false);
         }}
-      />
+      /> */}
       {loading ? (
         <View
           style={{
@@ -257,6 +266,41 @@ const MyCouponUsedScreen: React.FC<any> = ({ navigation, route }) => {
           }}
         />
       </Modal>
+      <ModalSelectHiring
+        visible={visibleSelectHire}
+        taskSugUsed={taskSugUsed}
+        setVisible={setVisibleSelectHire}
+        onPressManualBooking={() => {
+          mixpanel.track(
+            'MyCouponUsedScreen_SelectDronerCouponModalMainButton_tapped',
+            {
+              changeTo: 'DronerHiredScreen',
+            },
+          );
+          setVisibleSelectHire(false);
+          setTimeout(() => {
+            RootNavigation.navigate('DronerHiredScreen', {
+              isSelectDroner: true,
+              profile: {},
+            });
+          }, 400);
+        }}
+        onPressAutoBooking={() => {
+          mixpanel.track(
+            'MyCouponUsedScreen_SelectDronerCouponModalOnBottomButton_tapped',
+            {
+              changeTo: 'SelectDateScreen',
+            },
+          );
+          setVisibleSelectHire(false);
+          setTimeout(() => {
+            RootNavigation.navigate('SelectDateScreen', {
+              isSelectDroner: false,
+              profile: {},
+            });
+          }, 400);
+        }}
+      />
     </View>
   );
 };

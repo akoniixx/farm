@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useMemo, useReducer, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -26,6 +26,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Text from '../../components/Text/Text';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import useTimeSpent from '../../hook/useTimeSpent';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useAuth } from '../../contexts/AuthContext';
+import moment from 'moment';
 const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner;
   const profile = route.params.profile;
@@ -33,7 +36,9 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
     state: { plotDisable, taskData },
     autoBookingContext: { setTaskData, getLocationPrice, searchDroner },
   } = useAutoBookingContext();
-  const scrollRef = React.createRef<KeyboardAwareScrollView>();
+  const {
+    state: { user },
+  } = useAuth();
   const timeSpent = useTimeSpent();
   const [plotList, setPlotList] = useState<any>([]);
   const [loading, setLoading] = useState(false);
@@ -50,7 +55,9 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
     setSelectedCard(id);
   };
   const onSubmit = () => {
-    if (selectedCard === null) return;
+    if (selectedCard === null) {
+      return;
+    }
 
     setTaskData(prev => ({
       ...prev,
@@ -84,7 +91,16 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
         setPlotList(filterPlot);
         setTimeout(() => setLoading(false), 200);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        crashlytics().recordError(err);
+        crashlytics().setAttributes({
+          screen: 'SelectPlotScreen',
+          time: moment().format('DD/MM/YYYY HH:mm:ss'),
+          error: JSON.stringify(err),
+          user: JSON.stringify(user),
+        });
+      });
   };
   useEffect(() => {
     LogBox.ignoreAllLogs();

@@ -8,6 +8,9 @@ export default function LoadingPagination() {
     <View
       style={{
         marginTop: 16,
+        height: 100,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
       }}>
       <ActivityIndicator size={'large'} color={colors.greenLight} />
     </View>
