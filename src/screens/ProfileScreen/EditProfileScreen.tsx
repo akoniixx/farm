@@ -33,6 +33,7 @@ import Text from '../../components/Text/Text';
 import ImagePicker from 'react-native-image-crop-picker';
 import ModalUploadImage from '../../components/Modal/ModalUploadImage';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import { mixValidator } from '../../utils/inputValidate';
 
 interface AddressFarmerType {
   id: string;
@@ -292,6 +293,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
     try {
       setLoading(true);
       await ProfileDatasource.updateFarmerProfile({
+        nickname: value.nickname,
         address: {
           address1: address.address1,
           address2: address.address2,
@@ -423,6 +425,10 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   value={value.nickname}
                   style={[styles.inputEdit]}
                   placeholder={'ชื่อเล่น'}
+                  onChangeText={v => {
+                    const newValue = mixValidator(v);
+                    setValue(prev => ({ ...prev, nickname: newValue }));
+                  }}
                   placeholderTextColor={colors.disable}
                 />
                 <Text style={styles.head}>วันเดือนปีเกิด</Text>
