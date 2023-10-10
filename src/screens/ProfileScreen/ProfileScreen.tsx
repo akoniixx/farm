@@ -220,6 +220,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                 droneitem: res.dronerDrone,
                 status: res.status,
                 totalRevenue: resRev.totalRevenue,
+                nickname: res.nickname,
                 rating: !resRev.ratingAvg
                   ? '0.0'
                   : parseFloat(resRev.ratingAvg).toFixed(1).toString(),
@@ -239,6 +240,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                     droneitem: res.dronerDrone,
                     status: res.status,
                     totalRevenue: resRev.totalRevenue,
+                    nickname: res.nickname,
                     rating: !resRev.ratingAvg
                       ? '0.0'
                       : parseFloat(resRev.ratingAvg).toFixed(1).toString(),
@@ -306,6 +308,15 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                   </Text>
                   <Text
                     style={{
+                      fontFamily: font.medium,
+                      fontSize: normalize(16),
+                      color: colors.fontBlack,
+                      paddingBottom: normalize(5),
+                    }}>
+                    {profilestate.nickname}
+                  </Text>
+                  <Text
+                    style={{
                       fontFamily: font.light,
                       fontSize: normalize(12),
                       color: colors.gray,
@@ -313,84 +324,87 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                     }}>
                     {profilestate.id}
                   </Text>
-                  <View style={styles.review}>
-                    <Text
-                      style={{
-                        fontFamily: font.medium,
-                        color: colors.white,
-                        fontSize: normalize(11),
-                      }}>
-                      {profilestate.rating}
-                    </Text>
-                    <Image
-                      source={icons.review}
-                      style={{
-                        width: normalize(12),
-                        height: normalize(12),
-                      }}
-                    />
-                  </View>
                   <View
                     style={{
-                      marginTop: normalize(10),
-                      width: normalize(109),
-                      height: normalize(24),
-                      borderWidth: 1,
-                      borderColor: StatusObject(profilestate.status).fontColor,
-                      borderRadius: normalize(12),
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: StatusObject(profilestate.status)
-                        .colorBg,
+                      flexDirection: 'row',
                     }}>
-                    <Text
+                    <View style={styles.review}>
+                      <Text
+                        style={{
+                          fontFamily: font.medium,
+                          color: colors.white,
+                          fontSize: normalize(11),
+                        }}>
+                        {profilestate.rating}
+                      </Text>
+                      <Image
+                        source={icons.review}
+                        style={{
+                          width: normalize(12),
+                          height: normalize(12),
+                        }}
+                      />
+                    </View>
+                    <View
                       style={{
-                        color: StatusObject(profilestate.status).fontColor,
-                        fontFamily: font.semiBold,
-                        fontSize: normalize(14),
+                        width: normalize(109),
+                        height: normalize(24),
+                        borderWidth: 1,
+                        borderColor: StatusObject(profilestate.status)
+                          .fontColor,
+                        borderRadius: normalize(12),
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: StatusObject(profilestate.status)
+                          .colorBg,
                       }}>
-                      {StatusObject(profilestate.status).status ===
-                      'ตรวจสอบแล้ว'
-                        ? 'ยืนยันตัวตนแล้ว'
-                        : StatusObject(profilestate.status).status}
-                    </Text>
+                      <Text
+                        style={{
+                          color: StatusObject(profilestate.status).fontColor,
+                          fontFamily: font.semiBold,
+                          fontSize: normalize(14),
+                        }}>
+                        {StatusObject(profilestate.status).status ===
+                        'ตรวจสอบแล้ว'
+                          ? 'ยืนยันตัวตนแล้ว'
+                          : StatusObject(profilestate.status).status}
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </View>
               <View
                 style={{
-                  marginTop: 4,
+                  marginTop: 16,
                 }}>
                 {profilestate.status != 'ACTIVE' ? (
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate('EditProfile');
                     }}>
-                    <Text
+                    <Image
+                      source={icons.editProfile}
                       style={{
-                        fontFamily: font.medium,
-                        fontSize: normalize(14),
-                        paddingTop: normalize(8),
-                        color: colors.fontBlack,
-                      }}>
-                      ดูข้อมูล
-                    </Text>
+                        width: normalize(22),
+                        height: normalize(22),
+                      }}
+                      resizeMode="contain"
+                    />
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate('EditProfile');
                     }}>
-                    <Text
+                    <Image
+                      source={icons.editProfile}
                       style={{
-                        fontFamily: font.medium,
-                        fontSize: normalize(14),
-                        paddingTop: normalize(8),
-                        color: colors.fontBlack,
-                      }}>
-                      ดูข้อมูล
-                    </Text>
+                        width: normalize(22),
+                        height: normalize(22),
+                      }}
+                      resizeMode="contain"
+                    />
                   </TouchableOpacity>
                 )}
               </View>
@@ -1126,14 +1140,15 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
   },
   review: {
-    width: normalize(52),
-    height: normalize(20),
-    borderRadius: normalize(10),
+    width: normalize(54),
+    height: normalize(24),
+    borderRadius: normalize(14),
     backgroundColor: colors.fontBlack,
     display: 'flex',
     justifyContent: 'space-evenly',
     alignItems: 'center',
     flexDirection: 'row',
+    marginRight: normalize(10),
   },
   listTile: {
     paddingVertical: normalize(20),

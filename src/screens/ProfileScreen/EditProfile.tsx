@@ -304,7 +304,7 @@ const EditProfile: React.FC<any> = ({navigation}) => {
           isEditable: false,
         },
         {
-          label: 'ชื่อเล่น',
+          label: 'ชื่อเล่น (ชื่อที่เกษตรเรียก)',
           value: formState.nickname ? formState.nickname : '',
           isEditable: true,
         },

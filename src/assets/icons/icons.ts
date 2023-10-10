@@ -92,4 +92,5 @@ export default {
   upload: require('./upload.png'),
   requireBankBook: require('./requireBankBook.png'),
   infoCircleOrange: require('./infoCircleOrange.png'),
+  editProfile: require('./editProfile.png'),
 };

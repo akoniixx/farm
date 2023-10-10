@@ -164,7 +164,7 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                 stylesInput={{
                   borderRadius: normalize(10),
                 }}
-                label={'ชื่อเล่น'}
+                label={'ชื่อเล่น (ชื่อที่เกษตรเรียก)'}
                 suffixPosition={18}
                 value={formState.nickname}
                 onChangeText={value => {

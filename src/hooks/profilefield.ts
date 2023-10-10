@@ -19,6 +19,7 @@ export const profileReducer = (state: any, action: any) => {
         status: action.status,
         totalRevenue: action.totalRevenue,
         rating: action.rating,
+        nickname: action.nickname,
       };
 
     default:
