@@ -1,3 +1,6 @@
+## Enhance [1.4.25] 2023-10-10
+- new style card droner near me 
+- edit user profile 
 ## Enhance [1.4.24] 2023-10-09
 
 - display nickname droner
