@@ -653,6 +653,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             <>
               <DronerCard
                 name={profile.firstname + ' ' + profile.lastname}
+                nickname={profile.nickname}
                 profile={profile.image_droner}
                 telnumber={profile.telephone_no}
               />
@@ -1437,6 +1438,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
               <>
                 <DronerCard
                   name={profile.firstname + ' ' + profile.lastname}
+                  nickname={profile.nickname}
                   profile={profile.image_droner}
                   confirmBook={true}
                 />

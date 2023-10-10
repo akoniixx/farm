@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Platform,
   ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import React, { useState } from 'react';
 import { normalize } from '../../functions/Normalize';
@@ -27,6 +28,7 @@ interface dronerUsedData {
   distance: any;
   status: any;
   isLoading?: boolean;
+  nickname?: string;
 }
 
 const DronerNearMeList: React.FC<dronerUsedData> = ({
@@ -39,22 +41,12 @@ const DronerNearMeList: React.FC<dronerUsedData> = ({
   province,
   distance,
   isLoading,
+  nickname,
 }) => {
-  // const onFavorite = async () => {
-  //   setDisabled(true);
-  //   const farmer_id = await AsyncStorage.getItem('farmer_id');
-  //   await FavoriteDroner.addUnaddFav(
-  //     farmer_id !== null ? farmer_id : '',
-  //     dronerId,
-  //   )
-  //     .catch((err: any) => console.log(err))
-  //     .finally(() => setDisabled(false));
-  // };
-
   return isLoading ? (
     <View
       style={{
-        width: normalize(160),
+        width: Dimensions.get('window').width * 0.6 - 32,
       }}>
       <SkeletonPlaceholder
         borderRadius={10}
@@ -67,53 +59,78 @@ const DronerNearMeList: React.FC<dronerUsedData> = ({
           <View
             style={{
               width: '100%',
-              height: 210,
+              height: 200,
             }}
           />
         </SkeletonPlaceholder.Item>
       </SkeletonPlaceholder>
     </View>
   ) : (
-    <View style={{ paddingHorizontal: 8, marginTop: 8 }}>
+    <View style={{ paddingHorizontal: 8, marginBottom: 4 }}>
       <View style={[styles.cards]}>
         <ImageBackground
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
-          style={{ height: normalize(60) }}
+          style={{
+            height: normalize(50),
+            paddingVertical: 4,
+            paddingHorizontal: 12,
+          }}
           source={background === null ? image.bg_droner : { uri: background }}>
           <View key={index}>
             <Image
               source={profile === '' ? image.empty_plot : { uri: profile }}
             />
-
-            <View style={{ alignSelf: 'center', marginTop: 32 }}>
-              <ProgressiveImage
-                borderRadius={28}
-                source={profile === null ? image.empty_plot : { uri: profile }}
-                style={{
-                  borderRadius: normalize(28),
-                  borderColor: colors.white,
-                  borderWidth: 1,
-                  width: normalize(56),
-                  height: normalize(56),
-                }}
-              />
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 8,
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <ProgressiveImage
+                  borderRadius={28}
+                  source={
+                    profile === null ? image.empty_plot : { uri: profile }
+                  }
+                  style={{
+                    borderRadius: normalize(28),
+                    borderColor: colors.white,
+                    borderWidth: 1,
+                    width: normalize(56),
+                    height: normalize(56),
+                  }}
+                />
+              </View>
             </View>
-            <View style={{ paddingLeft: 5 }}>
-              <Text
-                numberOfLines={1}
-                style={[
-                  styles.h1,
-                  { width: 150, lineHeight: 40, marginLeft: 6 },
-                ]}>
-                {name}
-              </Text>
+
+            <View
+              style={{
+                marginTop: 8,
+              }}>
+              <View
+                style={{
+                  minHeight: 50,
+                }}>
+                {nickname ? (
+                  <>
+                    <Text numberOfLines={1} style={[styles.h1]}>
+                      {nickname}
+                    </Text>
+                    <Text numberOfLines={1} style={[styles.h2]}>
+                      {name}
+                    </Text>
+                  </>
+                ) : (
+                  <Text numberOfLines={1} style={[styles.h1]}>
+                    {name}
+                  </Text>
+                )}
+              </View>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  marginLeft: 6,
-                  marginBottom: 4,
                 }}>
                 <Image
                   source={icons.star}
@@ -124,22 +141,17 @@ const DronerNearMeList: React.FC<dronerUsedData> = ({
                     ? `${parseFloat(rate).toFixed(1)} คะแนน  `
                     : `0 คะแนน`}
                 </Text>
-                <Text style={[styles.label, { color: colors.gray }]}>
-                  {total_task !== null ? `(${total_task})` : `  (0)`}{' '}
-                </Text>
               </View>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  marginLeft: 6,
-                  marginBottom: 4,
                 }}>
                 <Image
                   source={icons.location}
                   style={{ width: 20, height: 20, marginRight: 10 }}
                 />
-                <Text numberOfLines={1} style={[styles.label, { width: 120 }]}>
+                <Text numberOfLines={1} style={[styles.label]}>
                   {province !== null ? 'จ.' + ' ' + province : 'จ.' + '  -'}
                 </Text>
               </View>
@@ -147,8 +159,7 @@ const DronerNearMeList: React.FC<dronerUsedData> = ({
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  paddingBottom: 0,
-                  marginLeft: 6,
+                  paddingBottom: 3,
                 }}>
                 <Image
                   source={icons.distance}
@@ -180,6 +191,13 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontFamily: font.SarabunBold,
     fontSize: normalize(18),
+    lineHeight: 30,
+  },
+  h2: {
+    color: colors.grey40,
+    fontFamily: font.SarabunBold,
+    fontSize: normalize(14),
+    lineHeight: 30,
   },
   cards: {
     ...Platform.select({

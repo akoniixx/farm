@@ -91,6 +91,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           price: `${res[0].price_per_rai}`,
           dronerQueue: res[0].droner_queue,
           review: `${res[0].review}`,
+          nickname: res[0].nickname,
         });
       })
       .catch(err => console.log(err))
@@ -149,7 +150,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   return (
     <SafeAreaView style={stylesCentral.container}>
       <CustomHeader
-        title={`${detailState.name}`}
+        title={'ข้อมูลนักบิน'}
         showBackBtn
         onPressBack={() => navigation.goBack()}
         image={() => (
@@ -161,8 +162,8 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           </TouchableOpacity>
         )}
       />
-      <ScrollView>
-        <View>
+      <ScrollView style={{ backgroundColor: '#F8F9FA' }}>
+        {/* <View>
           {detailState.imageTask != null ? (
             <Text style={[styles.text, { paddingHorizontal: normalize(15) }]}>
               ภาพผลงานนักบิน
@@ -210,7 +211,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
               }}
             />
           )}
-        </View>
+        </View> */}
         {/* <View
             style={{
               flexDirection: 'row',
@@ -294,6 +295,49 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
               </Text>
             </View>
           )} */}
+        <View style={{ height: 2, backgroundColor: '#F8F9FA' }} />
+        <View style={[styles.section]}>
+          <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
+            <Avatar
+              size={normalize(68)}
+              source={
+                detailState.imagePro !== null
+                  ? { uri: detailState.imagePro }
+                  : image.empty_droner
+              }
+              avatarStyle={{
+                borderRadius: normalize(40),
+                borderColor: colors.bg,
+                borderWidth: 1,
+              }}
+            />
+            {detailState.nickname !== null ? (
+              <View style={{ left: 20, alignSelf: 'center' }}>
+                <Text style={[styles.droner]}>{detailState.nickname}</Text>
+                <Text style={[styles.dronerName]}>{detailState.name}</Text>
+              </View>
+            ) : (
+              <View style={{ left: 20, alignSelf: 'center' }}>
+                <Text style={[styles.droner]}>{detailState.name}</Text>
+              </View>
+            )}
+          </View>
+          <View style={{ paddingVertical: 14 }}>
+            <Text style={[styles.droner]}>
+              ยี่ห้อโดรน :
+              <Text
+                style={{
+                  fontFamily: font.SarabunLight,
+                  fontSize: normalize(18),
+                  color: colors.fontBlack,
+                }}>
+                {detailState.droneBand !== null
+                  ? `  ${detailState.droneBand}`
+                  : ' -'}
+              </Text>
+            </Text>
+          </View>
+        </View>
         <View style={{ height: 10, backgroundColor: '#F8F9FA' }} />
         <View style={[styles.section]}>
           <Text style={[styles.text, { marginBottom: '3%' }]}>
@@ -483,66 +527,6 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
             </View>
           )}
         </View>
-        <View style={{ height: 10, backgroundColor: '#F8F9FA' }} />
-        <View style={[styles.section]}>
-          <Text style={[styles.text]}>ข้อมูลนักบิน</Text>
-          <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
-            <Avatar
-              size={normalize(56)}
-              source={
-                detailState.imagePro !== null
-                  ? { uri: detailState.imagePro }
-                  : image.empty_droner
-              }
-              avatarStyle={{
-                borderRadius: normalize(40),
-                borderColor: colors.bg,
-                borderWidth: 1,
-              }}
-            />
-            <View style={{ left: 20 }}>
-              <Text style={[styles.droner]}>{detailState.name}</Text>
-              <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                <Image
-                  source={icons.done_academy}
-                  style={{ width: 24, height: 24, right: 5 }}
-                />
-                <Text
-                  style={{
-                    color: colors.gray,
-                    fontFamily: font.SarabunLight,
-                    fontSize: normalize(16),
-                  }}>
-                  ผ่านการยืนยันจาก ICP Academy
-                </Text>
-              </View>
-            </View>
-          </View>
-          <View>
-            <Text style={[styles.droner]}>
-              ยี่ห้อโดรน :
-              <Text
-                style={{
-                  fontFamily: font.SarabunLight,
-                  fontSize: normalize(18),
-                  color: colors.fontBlack,
-                }}>
-                {detailState.droneBand !== null
-                  ? `  ${detailState.droneBand}`
-                  : ' -'}
-              </Text>
-            </Text>
-            <Text
-              style={{
-                fontFamily: font.SarabunLight,
-                fontSize: normalize(18),
-                color: colors.fontBlack,
-              }}>
-              ICP รับประกันคุณภาพการฉีดพ่นและยา 100%
-            </Text>
-          </View>
-        </View>
-        <View style={{ height: 20, backgroundColor: '#F8F9FA' }} />
         <Modal transparent={true} visible={modalVerify}>
           <VerifyStatus
             text={statusFarm}
@@ -585,13 +569,21 @@ const styles = StyleSheet.create({
   },
   droner: {
     fontFamily: font.SarabunMedium,
-    fontSize: normalize(18),
+    fontSize: normalize(20),
     textAlign: 'left',
     color: colors.fontBlack,
+    lineHeight: 32,
+  },
+  dronerName: {
+    fontFamily: font.SarabunLight,
+    fontSize: normalize(18),
+    textAlign: 'left',
+    color: colors.gray,
   },
   section: {
     display: 'flex',
     padding: normalize(15),
+    backgroundColor: colors.white,
   },
   text: {
     fontFamily: font.AnuphanMedium,

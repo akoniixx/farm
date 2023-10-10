@@ -1,6 +1,6 @@
 import { View, TouchableOpacity, Image } from 'react-native';
 import React from 'react';
-import {Modal} from 'react-native-paper';
+import { Modal } from 'react-native-paper';
 import { ModalEntity } from './ModalEntity';
 import { ModalStyle } from './ModalStyle';
 import { MainButton } from '../Button/MainButton';

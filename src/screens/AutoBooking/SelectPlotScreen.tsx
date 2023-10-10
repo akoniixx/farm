@@ -176,7 +176,11 @@ const SelectPlotScreen: React.FC<any> = ({ navigation, route }) => {
             <HeadDronerCardForCreatTask
               navigation={navigation}
               image={profile.image_droner}
-              name={profile.firstname + ' ' + profile.lastname}
+              name={
+                profile.nickname
+                  ? profile.nickname
+                  : profile.firstname + ' ' + profile.lastname
+              }
             />
           )}
 

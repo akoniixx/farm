@@ -23,6 +23,7 @@ interface taskListProps {
       image_profile: string;
       firstname: string;
       lastname: string;
+      nickname?: string;
       telephone_no: string;
     };
     purpose_spray_name: string;
@@ -170,6 +171,7 @@ export const CardTask: React.FC<taskListProps> = ({ task }) => {
           ) : (
             <DronerCard
               name={task.droner.firstname + ' ' + task.droner.lastname}
+              nickname={task.droner.nickname}
               profile={task.droner.image_profile}
               telnumber={task.droner.telephone_no}
             />

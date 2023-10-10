@@ -116,7 +116,7 @@ export default function DronerItem({
         <View>
           <View style={{ flexDirection: 'row', width: '100%' }}>
             <ProgressiveImage
-              borderRadius={24}
+              borderRadius={26}
               resizeMode="cover"
               style={{
                 width: 56,
@@ -148,7 +148,7 @@ export default function DronerItem({
                     fontSize: 18,
                     lineHeight: 28,
                   }}>
-                  {firstname} {lastname}
+                  {nickname ? nickname : firstname + ' ' + lastname}
                 </Text>
 
                 <View
@@ -211,10 +211,10 @@ export default function DronerItem({
                       style={{
                         color: colors.grey40,
                         fontFamily: font.SarabunBold,
-                        fontSize: 18,
+                        fontSize: 16,
                         lineHeight: 28,
                       }}>
-                      {nickname}
+                      {firstname} {lastname}
                     </Text>
                   </View>
                 </View>

@@ -9,6 +9,7 @@ import ProgressiveImage from '../ProgressingImage/ProgressingImage';
 
 interface props {
   name: string;
+  nickname?: string;
   profile: string | null;
   telnumber?: string;
   confirmBook?: boolean;
@@ -16,6 +17,7 @@ interface props {
 
 export const DronerCard: React.FC<props> = ({
   name,
+  nickname,
   profile,
   telnumber,
   confirmBook,
@@ -50,8 +52,16 @@ export const DronerCard: React.FC<props> = ({
             }}
           />
         </View>
-
-        <Text style={styles.name}>{name}</Text>
+        {nickname ? (
+          <View style={{ alignSelf: 'center' }}>
+            <Text style={styles.name}>{nickname}</Text>
+            <Text style={styles.fullname}>{name}</Text>
+          </View>
+        ) : (
+          <View style={{ alignSelf: 'center' }}>
+            <Text style={styles.name}>{name}</Text>
+          </View>
+        )}
       </View>
       {confirmBook !== true ? (
         <TouchableOpacity onPress={() => dialCall(telnumber)}>
@@ -72,7 +82,7 @@ const styles = StyleSheet.create({
     lineHeight: 30,
   },
   fullname: {
-    fontFamily: fonts.SarabunMedium,
+    fontFamily: fonts.SarabunLight,
     fontSize: normalize(16),
     color: colors.grey60,
     lineHeight: 30,

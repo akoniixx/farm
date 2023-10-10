@@ -1,8 +1,17 @@
+## Enhance [1.4.24] 2023-10-09
+
+- display nickname droner
+- fixed guru kaset in AuthMain
+- fixed style modal approve farmer
+- hide & fixed task image in info droner page
+
 ## Fix [v1.4.23] 2023-09-29
+
 - fix bug ui
 - fix bug some flow register
-- tooltip flow create Task 
+- tooltip flow create Task
 - new flow about manual create task
+
 ## Fix [v1.4.22] 2023-09-27
 
 - fix bug ui

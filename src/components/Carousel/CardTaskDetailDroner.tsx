@@ -20,7 +20,13 @@ export const CardDetailDroner: React.FC<DetailData> = ({
   convenient,
 }) => {
   return (
-    <View style={{ flex: 1, paddingHorizontal: 10 }}>
+    <View
+      style={{
+        flex: 1,
+        paddingHorizontal: 10,
+        backgroundColor: colors.white,
+        paddingVertical: 12,
+      }}>
       {convenient == 'สะดวก' ? (
         <View>
           <View key={index} style={[styles.cardYes]}>
