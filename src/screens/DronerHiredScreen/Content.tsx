@@ -1,4 +1,4 @@
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList } from 'react-native';
 import React from 'react';
 import { DronerHired } from '.';
 import DronerItem from './DronerItem';
@@ -95,6 +95,7 @@ export default function Content({
               <DronerItem
                 {...item}
                 setData={setData}
+                // data={data}
                 navigation={navigation}
                 favorite_status={
                   item.favorite_status

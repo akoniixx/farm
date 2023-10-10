@@ -167,7 +167,7 @@ const DronerNearMeList: React.FC<dronerUsedData> = ({
                 />
                 <Text style={styles.label}>
                   {distance !== null
-                    ? `ห่างคุณ ${parseFloat(distance).toFixed(1)} กม.`
+                    ? `ห่าง ${parseFloat(distance).toFixed(1)} กม.`
                     : `0 กม.`}
                 </Text>
               </View>

@@ -17,6 +17,7 @@ interface ProgressiveImageProps extends ImageProps {
   style?: ImageStyle;
   resizeMode?: ImageProps['resizeMode'];
   borderRadius?: number;
+  noLoadingAgain?: boolean;
 }
 
 const ProgressiveImage: React.FC<ProgressiveImageProps> = ({

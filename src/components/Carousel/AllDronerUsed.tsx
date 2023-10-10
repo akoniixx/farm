@@ -206,7 +206,7 @@ const AllDronerUsed: React.FC<data> = ({
                 lineHeight: 30,
               }}>
               {distance !== null
-                ? `ห่างคุณ ${parseFloat(distance).toFixed(1)} กม.`
+                ? `ห่าง ${parseFloat(distance).toFixed(1)} กม.`
                 : `0 กม.`}{' '}
             </Text>
           </View>

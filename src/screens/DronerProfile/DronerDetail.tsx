@@ -412,7 +412,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                 </SkeletonPlaceholder>
               ) : (
                 <Text style={[styles.label]}>
-                  ห่างคุณ{' '}
+                  ห่าง{' '}
                   {detailState.distance !== null
                     ? `${parseFloat(detailState.distance || 0).toFixed(1)}`
                     : 0}{' '}
