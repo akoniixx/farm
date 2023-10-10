@@ -11,7 +11,7 @@ interface Props {
 }
 export default function DronerNearMe({ navigation, isLoading, data }: Props) {
   return (
-    <View style={{ height: 'auto' }}>
+    <View style={{ height: 'auto', marginVertical: 16 }}>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         {data.length !== undefined &&
           (isLoading ? [1, 2, 3] : data).map((item: any, index: any) => (
@@ -31,6 +31,7 @@ export default function DronerNearMe({ navigation, isLoading, data }: Props) {
                 province={item.province_name}
                 distance={item.street_distance}
                 status={item.favorite_status}
+                nickname={item.nickname}
               />
             </TouchableOpacity>
           ))}

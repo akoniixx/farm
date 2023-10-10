@@ -7,8 +7,7 @@ const width = Dimensions.get('screen').width;
 
 export const ModalStyle = StyleSheet.create({
   modal: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    flex: 0,
     justifyContent: 'center',
     alignItems: 'center',
   },
