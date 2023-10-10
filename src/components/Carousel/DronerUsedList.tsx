@@ -195,9 +195,16 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                     </Text>
                   </>
                 ) : (
-                  <Text numberOfLines={1} style={[styles.h1]}>
-                    {name}
-                  </Text>
+                  <View>
+                    <Text numberOfLines={1} style={[styles.h1]}>
+                      {name}
+                    </Text>
+                    <View
+                      style={{
+                        height: 30,
+                      }}
+                    />
+                  </View>
                 )}
               </View>
               <View
