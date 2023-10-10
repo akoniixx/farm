@@ -1,3 +1,6 @@
+## Enhance [1.7.6] 2023-10-10
+- nickname field in register & edit profile
+- mission point display
 ## Fix [1.7.5] 2023-09-19
 - fix bug skeleton task-done not working correctly
 
