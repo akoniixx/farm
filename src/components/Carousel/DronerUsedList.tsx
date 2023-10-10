@@ -16,6 +16,7 @@ import { Avatar } from '@rneui/base';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Text from '../Text/Text';
 import ProgressiveImage from '../ProgressingImage/ProgressingImage';
+import ProgressingBackground from '../ProgressingImage/ProgressingBackground';
 
 interface dronerUsedData {
   index: any;
@@ -231,7 +232,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                 />
                 <Text style={styles.label}>
                   {distance !== null
-                    ? `ห่างคุณ ${parseFloat(distance).toFixed(1)} กม.`
+                    ? `ห่าง ${parseFloat(distance).toFixed(1)} กม.`
                     : `0 กม.`}
                 </Text>
               </View>

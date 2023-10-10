@@ -102,7 +102,15 @@ export const DronerHiredScreen: React.FC<
           isNewResponse: true,
         };
         const res = await DronerDatasource.getMyFavoriteDroner(payload);
-        setData(res);
+        setData({
+          ...res,
+          data: res.data.map((item: any) => {
+            return {
+              ...item,
+              favorite_status: item.status_favorite,
+            };
+          }),
+        });
       } catch (e) {
         console.log(e);
       } finally {
@@ -135,73 +143,97 @@ export const DronerHiredScreen: React.FC<
       console.log('no more data');
       return;
     }
-    if (routes[index].key === 'favorite') {
-      try {
-        const payload = {
-          limit,
-          offset: page + 1,
-          farmerId: user?.id || '',
-          farmerPlotId: user?.farmerPlot[0].id || '',
-          isNewResponse: true,
+
+    try {
+      const payload = {
+        limit,
+        offset: page + 1,
+        farmerId: user?.id || '',
+        farmerPlotId: user?.farmerPlot[0].id || '',
+        isShowAll: true,
+      };
+      const res = await DronerDatasource.getDronerNearMeLogged(payload);
+      setData(prev => {
+        return {
+          ...res,
+          data: [...prev.data, ...res.data],
         };
-        const res = await DronerDatasource.getMyFavoriteDroner(payload);
-        setData(prev => {
-          return {
-            ...res,
-            data: [...prev.data, ...res.data],
-          };
-        });
-        setPage(prev => prev + 1);
-      } catch (e) {
-        console.log(e);
-      }
-    } else {
-      try {
-        const payload = {
-          limit,
-          offset: page + 1,
-          farmerId: user?.id || '',
-          farmerPlotId: user?.farmerPlot[0].id || '',
-          isShowAll: true,
-        };
-        const res = await DronerDatasource.getDronerNearMeLogged(payload);
-        setData(prev => {
-          return {
-            ...res,
-            data: [...prev.data, ...res.data],
-          };
-        });
-        setPage(prev => prev + 1);
-      } catch (e) {
-        console.log(e);
-      }
+      });
+      setPage(prev => prev + 1);
+    } catch (e) {
+      console.log(e);
     }
-  }, [
-    index,
-    routes,
-    page,
-    data.count,
-    user?.farmerPlot,
-    user?.id,
-    data.data.length,
-  ]);
+  }, [page, data.count, user?.farmerPlot, user?.id, data.data.length]);
+
+  const loadMoreFavorite = useCallback(async () => {
+    if (data.count <= data.data.length) {
+      console.log('no more data');
+      return;
+    }
+    try {
+      const payload = {
+        limit,
+        offset: page + 1,
+        farmerId: user?.id || '',
+        farmerPlotId: user?.farmerPlot[0].id || '',
+        isNewResponse: true,
+      };
+      const res = await DronerDatasource.getMyFavoriteDroner(payload);
+      setData(prev => {
+        return {
+          ...res,
+          data: [
+            ...prev.data,
+            ...res.data.map((item: any) => {
+              return {
+                ...item,
+                favorite_status: item.status_favorite,
+              };
+            }),
+          ],
+        };
+      });
+      setPage(prev => prev + 1);
+    } catch (e) {
+      console.log(e);
+    }
+  }, [page, user?.farmerPlot, user?.id, data.count, data.data.length]);
   const renderScene = useMemo(() => {
     return () => {
       return (
         <Content
           navigation={navigation}
-          data={data}
+          data={
+            index === 1
+              ? {
+                  ...data,
+                  data: data.data.filter((item: any) => {
+                    return item.favorite_status === 'ACTIVE';
+                  }),
+                }
+              : data
+          }
           loading={loading}
           setData={setData}
-          loadMore={loadMore}
+          loadMore={index === 1 ? loadMoreFavorite : loadMore}
           getDronerHiredList={getDronerHiredList}
         />
       );
     };
-  }, [data, loading, navigation, setData, getDronerHiredList, loadMore]);
+  }, [
+    data,
+    loading,
+    navigation,
+    setData,
+    getDronerHiredList,
+    loadMore,
+    index,
+    loadMoreFavorite,
+  ]);
 
   useEffect(() => {
     getDronerHiredList();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index]);
 

@@ -24,7 +24,6 @@ export default function BookedDroner({
   isLoading = false,
   setRefresh,
 }: Props) {
-  console.log('taskSugUsed', JSON.stringify(taskSugUsed, null, 2));
   return (
     <>
       {taskSugUsed.length < 1 && !isLoading ? (

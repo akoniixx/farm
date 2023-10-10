@@ -132,7 +132,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
     await FavoriteDroner.addUnaddFav(
       farmer_id !== null ? farmer_id : '',
       droner_id !== null ? droner_id : '',
-      streetDistance
+      streetDistance,
     )
       .then(res => {
         setRefresh(!refresh);
@@ -368,7 +368,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
                 </SkeletonPlaceholder>
               ) : (
                 <Text style={[styles.label]}>
-                  ห่างคุณ{' '}
+                  ห่าง{' '}
                   {detailState.distance !== null
                     ? `${parseFloat(detailState.distance || 0).toFixed(1)}`
                     : 0}{' '}

@@ -29,9 +29,9 @@ export default function DronerItem({
   image_droner,
   firstname,
   lastname,
-  total_task,
+
   nickname,
-  favorite_status: status,
+  favorite_status,
   province_name: province,
   distance,
   droner_id: dronerId,
@@ -40,6 +40,8 @@ export default function DronerItem({
   is_open_receive_task,
 }: Props) {
   const [disabled, setDisabled] = useState(false);
+  const [viewHeight, setViewHeight] = useState(0);
+
   const { closedHired } = useMemo(() => {
     return {
       closedHired: is_open_receive_task === false ? true : false,
@@ -83,12 +85,17 @@ export default function DronerItem({
   return (
     <TouchableOpacity
       disabled={closedHired}
+      onLayout={event => {
+        const layout = event.nativeEvent.layout;
+        setViewHeight(layout.height);
+      }}
       style={styles({}).container}
       onPress={onPressDronerItem}>
       <View
         style={
           styles({
-            closedHired,
+            closedHired: closedHired,
+            viewHeight: viewHeight,
           }).maskedView
         }>
         {closedHired && (
@@ -98,10 +105,10 @@ export default function DronerItem({
             style={{
               position: 'absolute',
               alignSelf: 'center',
-              width: 150,
-              height: 150,
-
+              width: 130,
+              height: 130,
               zIndex: 1,
+              marginTop: viewHeight / 2 - 65,
             }}
           />
         )}
@@ -170,7 +177,9 @@ export default function DronerItem({
                       disabled={closedHired}>
                       <Image
                         source={
-                          status === 'ACTIVE' ? icons.heart_active : icons.heart
+                          favorite_status === 'ACTIVE'
+                            ? icons.heart_active
+                            : icons.heart
                         }
                         style={{
                           alignSelf: 'center',
@@ -218,6 +227,7 @@ export default function DronerItem({
                   justifyContent: 'space-between',
                   marginLeft: 10,
                   marginTop: 4,
+                  width: '100%',
                 }}>
                 <View
                   style={{
@@ -228,14 +238,14 @@ export default function DronerItem({
                   }}>
                   <Image
                     source={icons.location}
-                    style={{ width: 20, height: 20, marginRight: 10 }}
+                    style={{ width: 22, height: 22, marginRight: 10 }}
                   />
                   <Text
                     numberOfLines={1}
                     style={[
                       styles({}).label,
                       {
-                        width: Dimensions.get('window').width / 4,
+                        width: Dimensions.get('window').width / 3 - 20,
                       },
                     ]}>
                     {province !== null ? 'จ.' + ' ' + province : 'จ.' + '  -'}
@@ -244,25 +254,30 @@ export default function DronerItem({
                 <View
                   style={{
                     flexDirection: 'row',
-                    alignItems: 'flex-start',
-                    alignSelf: 'flex-start',
-                    flex: 0.95,
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                    width: '100%',
                   }}>
-                  <Image
-                    source={icons.distance}
-                    style={{ width: 20, height: 20, marginRight: 10 }}
-                  />
-                  <Text
-                    style={[
-                      styles({}).label,
-                      {
-                        width: Dimensions.get('window').width / 3 - 16,
-                      },
-                    ]}>
-                    {distance !== null
-                      ? `ห่างคุณ ${distance.toFixed(1)} กม.`
-                      : `0 กม.`}
-                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                    }}>
+                    <Image
+                      source={icons.distance}
+                      style={{ width: 20, height: 20, marginRight: 10 }}
+                    />
+                    <Text
+                      style={[
+                        styles({}).label,
+                        {
+                          width: Dimensions.get('window').width / 3 - 30,
+                        },
+                      ]}>
+                      {distance !== null
+                        ? `ห่าง ${distance.toFixed(1)} กม.`
+                        : '0 กม.'}
+                    </Text>
+                  </View>
                 </View>
               </View>
               <View
@@ -295,7 +310,7 @@ export default function DronerItem({
     </TouchableOpacity>
   );
 }
-const styles = ({ closedHired }: any) =>
+const styles = ({ closedHired, viewHeight }: any) =>
   StyleSheet.create({
     container: {
       borderWidth: 1,
