@@ -21,6 +21,7 @@
     "@react-native-firebase/analytics": "^16.4.0",
     "@react-native-firebase/app": "^16.4.0",
     "@react-native-firebase/messaging": "^16.4.0",
+    "@react-native-firebase/crashlytics": "^16.4.0",
     "@react-native-masked-view/masked-view": "^0.2.9",
     "@react-navigation/bottom-tabs": "^6.3.2",
     "@react-navigation/material-top-tabs": "^6.2.2",

@@ -36,6 +36,8 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Text from '../../components/Text';
 import moment from 'moment';
 import AsyncButton from '../../components/Button/AsyncButton';
+import InfoCircle from '../../components/InfoCircle';
+import {mixValidator} from '../../function/inputValidate';
 
 const EditProfile: React.FC<any> = ({navigation}) => {
   const initialFormRegisterState = {
@@ -90,7 +92,6 @@ const EditProfile: React.FC<any> = ({navigation}) => {
           date = moment(datetime).toISOString();
           setBirthday(date);
         }
-
         setProvince({
           label: '',
           value: res.address.provinceId,
@@ -115,6 +116,7 @@ const EditProfile: React.FC<any> = ({navigation}) => {
           district: res.address.districtId,
           subdistrict: res.address.subdistrictId,
           postal: res?.address?.postcode === '-' ? '' : res?.address?.postcode,
+          nickname: res.nickname,
         });
         const findProfileImage = res.file.find(
           (el: {category: string}) => el.category === 'PROFILE_IMAGE',
@@ -286,21 +288,30 @@ const EditProfile: React.FC<any> = ({navigation}) => {
       !formState.province ||
       !formState.district ||
       !formState.subdistrict ||
-      !formState.postal;
+      !formState.postal ||
+      !formState.nickname;
     return {
       isDisableMainButton,
       disableInputList: [
         {
           label: 'ชื่อ',
           value: formState.name,
+          isEditable: false,
         },
         {
           label: 'นามสกุล',
           value: formState.surname,
+          isEditable: false,
+        },
+        {
+          label: 'ชื่อเล่น',
+          value: formState.nickname ? formState.nickname : '',
+          isEditable: true,
         },
         {
           label: 'เบอร์โทรศัพท์',
           value: formState.tel,
+          isEditable: false,
         },
       ],
     };
@@ -429,6 +440,32 @@ const EditProfile: React.FC<any> = ({navigation}) => {
               <Text style={styles.h1}>ข้อมูลทั่วไป (โปรดระบุ)</Text>
             </View>
             {disableInputList.map(el => {
+              if (el.isEditable) {
+                return (
+                  <AnimatedInput
+                    blurPosition={5}
+                    maxLength={50}
+                    label={el.label}
+                    value={el.value}
+                    onChangeText={value => {
+                      const newValue = mixValidator(value);
+                      dispatch({
+                        type: 'Handle Input',
+                        field: 'nickname',
+                        payload: newValue,
+                      });
+                    }}
+                    style={{
+                      marginBottom: 0,
+                    }}
+                    stylesInput={{
+                      borderRadius: normalize(10),
+                      height: normalize(56),
+                    }}
+                    suffix={<InfoCircle sheetId="nicknameSheet" />}
+                  />
+                );
+              }
               return (
                 <View
                   style={[styles.input, {backgroundColor: colors.softGrey2}]}>
@@ -712,6 +749,7 @@ const EditProfile: React.FC<any> = ({navigation}) => {
                   lastname: formState.surname,
                   telephoneNo: formState.tel,
                   birthDate: formState.birthDate ? formState.birthDate : null,
+                  nickname: formState.nickname,
                 };
 
                 await Authentication.updateProfile(payload)

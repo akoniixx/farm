@@ -17,7 +17,8 @@ interface Props {
   total: number;
   current: number;
   missionName: string;
-  imagePath: string;
+  imagePath: any;
+  isMissionPoint?: boolean;
 }
 export default function CardDetail({
   disabled = false,
@@ -27,6 +28,7 @@ export default function CardDetail({
   total,
   missionName,
   imagePath,
+  isMissionPoint = false,
 }: Props) {
   const isSuccess = useMemo(() => {
     return current / total >= 1;
@@ -43,28 +45,52 @@ export default function CardDetail({
       <View style={styles.row}>
         {disabled ? (
           <Grayscale>
-            <ProgressiveImage
-              source={{
-                uri: imagePath,
-              }}
-              style={{
-                width: 68,
-                height: 68,
-                borderRadius: 34,
-              }}
-            />
+            {isMissionPoint ? (
+              <Image
+                source={imagePath}
+                style={{
+                  width: 68,
+                  height: 68,
+                  borderRadius: 34,
+                }}
+              />
+            ) : (
+              <ProgressiveImage
+                source={{
+                  uri: imagePath,
+                }}
+                style={{
+                  width: 68,
+                  height: 68,
+                  borderRadius: 34,
+                }}
+              />
+            )}
           </Grayscale>
         ) : (
-          <ProgressiveImage
-            source={{
-              uri: imagePath,
-            }}
-            style={{
-              width: 68,
-              height: 68,
-              borderRadius: 34,
-            }}
-          />
+          <>
+            {isMissionPoint ? (
+              <Image
+                source={imagePath}
+                style={{
+                  width: 68,
+                  height: 68,
+                  borderRadius: 34,
+                }}
+              />
+            ) : (
+              <ProgressiveImage
+                source={{
+                  uri: imagePath,
+                }}
+                style={{
+                  width: 68,
+                  height: 68,
+                  borderRadius: 34,
+                }}
+              />
+            )}
+          </>
         )}
 
         <View

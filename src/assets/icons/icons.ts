@@ -91,4 +91,5 @@ export default {
   profileActiveNotDoneDoc: require('./profileActiveNotDoneDoc.png'),
   upload: require('./upload.png'),
   requireBankBook: require('./requireBankBook.png'),
+  infoCircleOrange: require('./infoCircleOrange.png'),
 };

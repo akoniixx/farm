@@ -398,7 +398,7 @@ const MainScreen: React.FC<any> = ({navigation}) => {
         </View>
       </View>
 
-      {isConnected && (
+      {isConnected && campaignImage && (
         <View
           style={{
             display: showCampaign,

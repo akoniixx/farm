@@ -12,6 +12,7 @@ export const registerReducer = (state: any, action: any) => {
         district: action.district,
         subdistrict: action.subdistrict,
         postal: action.postal,
+        nickname: action.nickname,
       };
     case 'Handle Input':
       return {

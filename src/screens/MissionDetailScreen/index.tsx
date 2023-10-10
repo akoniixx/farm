@@ -9,12 +9,13 @@ import React, {useEffect, useMemo} from 'react';
 import {RouteProp, useIsFocused} from '@react-navigation/native';
 import {StackParamList} from '../../navigations/MainNavigator';
 import CustomHeader from '../../components/CustomHeader';
-import {colors, font} from '../../assets';
+import {colors, font, image} from '../../assets';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import CardDetail from './CardDetail';
 import Text from '../../components/Text';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {numberWithCommas} from '../../function/utility';
 interface Props {
   navigation: any;
   route: RouteProp<StackParamList, 'MissionDetailScreen'>;
@@ -72,6 +73,9 @@ export default function MissionDetailScreen({navigation, route}: Props) {
 
   const getStatusRewardMission = async () => {
     try {
+      if (!data?.reward?.id) {
+        return;
+      }
       const dronerId = await AsyncStorage.getItem('droner_id');
       const result = await rewardDatasource.getRewardStatus({
         missionId: data.missionId,
@@ -90,7 +94,7 @@ export default function MissionDetailScreen({navigation, route}: Props) {
   useEffect(() => {
     getStatusRewardMission();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.missionId, data.reward.id, focused]);
+  }, [data.missionId, data?.reward?.id, focused]);
 
   const isWaitRequest = useMemo(() => {
     if (!data.isStatusComplete && data.isComplete) {
@@ -106,6 +110,7 @@ export default function MissionDetailScreen({navigation, route}: Props) {
     ) {
       return true;
     }
+    return false;
   }, [currentStatus, data.isComplete, data.isStatusComplete]);
 
   return (
@@ -140,15 +145,33 @@ export default function MissionDetailScreen({navigation, route}: Props) {
             style={{
               flex: 1,
             }}>
-            <CardDetail
-              cardData={data.reward}
-              current={data.current}
-              dateEnd={data.endDate}
-              total={data.total}
-              missionName={data.missionName}
-              disabled={data.isExpired}
-              imagePath={data.reward.imagePath}
-            />
+            {data.isMissionPoint ? (
+              <CardDetail
+                cardData={{
+                  rewardName: `รับแต้มจำนวน ${numberWithCommas(
+                    data.missionPointDetail.point.toString(),
+                    true,
+                  )} แต้ม`,
+                }}
+                current={data.current}
+                dateEnd={data.endDate}
+                total={data.total}
+                missionName={`บินสะสมครบ ${data.total} ไร่`}
+                disabled={data.isExpired}
+                imagePath={image.missionPointImage}
+                isMissionPoint
+              />
+            ) : (
+              <CardDetail
+                cardData={data.reward}
+                current={data.current}
+                dateEnd={data.endDate}
+                total={data.total}
+                missionName={data.missionName}
+                disabled={data.isExpired}
+                imagePath={data.reward.imagePath}
+              />
+            )}
 
             {/* <TouchableOpacity
               onPress={() => {
@@ -303,7 +326,9 @@ export default function MissionDetailScreen({navigation, route}: Props) {
                   fontFamily: font.light,
                   color: colors.gray,
                 }}>
-                {data.descriptionReward}
+                {data?.missionPointDetail
+                  ? data?.missionPointDetail.descriptionReward
+                  : data.descriptionReward}
               </Text>
             </View>
             <View
@@ -323,7 +348,9 @@ export default function MissionDetailScreen({navigation, route}: Props) {
                   fontFamily: font.light,
                   color: colors.gray,
                 }}>
-                {data.conditionReward}
+                {data?.missionPointDetail
+                  ? data?.missionPointDetail.conditionReward
+                  : data.conditionReward}
               </Text>
             </View>
           </View>

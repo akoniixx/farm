@@ -114,6 +114,7 @@ export default function Body({navigation}: Props) {
         dronerId: dronerId || '',
       };
       const res = await missionDatasource.getListMissions(payload);
+      console.log(JSON.stringify(res, null, 2));
       setMissionList(res);
       setLoading(false);
     } catch (err) {

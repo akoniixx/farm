@@ -1,10 +1,9 @@
 import {
   BASE_URL,
   httpClient,
-  registerClient,
   taskFormDataClient,
-  uploadFileClient,
 } from '../config/develop-config';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 interface PayloadTask {
   taskId: string;
@@ -32,11 +31,17 @@ export class TaskDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().log('getTaskById');
+        crashlytics().recordError(error);
+        crashlytics().setAttributes({
+          dronerId: dronerID,
+          taskStatus: taskStatusString,
+        });
         throw error;
       });
   }
 
-  static getTaskDetail(taskId: string, dronerId: string): Promise<any> {
+  static async getTaskDetail(taskId: string, dronerId: string): Promise<any> {
     return httpClient
       .post(
         BASE_URL +
@@ -46,11 +51,17 @@ export class TaskDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().log('getTaskDetail');
+        crashlytics().recordError(error);
+        crashlytics().setAttributes({
+          taskId: taskId,
+          dronerId: dronerId,
+        });
         throw error;
       });
   }
 
-  static updateTaskStatus(
+  static async updateTaskStatus(
     id: string,
     dronerId: string,
     status: string,
@@ -70,11 +81,20 @@ export class TaskDatasource {
         return response.data;
       })
       .catch(err => {
+        crashlytics().log('updateTaskStatus');
+        crashlytics().recordError(err);
+        crashlytics().setAttributes({
+          id: id,
+          dronerId: dronerId,
+          status: status,
+          statusRemark: statusRemark ? statusRemark : '',
+          updateBy: updateBy,
+        });
         throw err;
       });
   }
 
-  static receiveTask(
+  static async receiveTask(
     taskId: string,
     dronerId: string,
     receive: boolean,
@@ -91,6 +111,13 @@ export class TaskDatasource {
         return response.data;
       })
       .catch(err => {
+        crashlytics().log('receiveTask');
+        crashlytics().recordError(err);
+        crashlytics().setAttributes({
+          taskId: taskId,
+          dronerId: dronerId,
+          receive: receive ? 'true' : 'false',
+        });
         throw err;
       });
   }
@@ -118,7 +145,16 @@ export class TaskDatasource {
         return response.data;
       })
       .catch(err => {
-        console.log('catch', err.response.data);
+        crashlytics().log('finishTask');
+        crashlytics().recordError(err);
+        crashlytics().setAttributes({
+          taskId: payload.taskId,
+          reviewFarmerScore: payload.reviewFarmerScore
+            ? payload.reviewFarmerScore.toString()
+            : '',
+          reviewFarmerComment: payload.reviewFarmerComment,
+          updateBy: payload.updateBy,
+        });
         throw err;
       });
   }
@@ -141,10 +177,18 @@ export class TaskDatasource {
         return response.data;
       })
       .catch(err => {
+        crashlytics().log('onExtendTaskRequest');
+        crashlytics().recordError(err);
+        crashlytics().setAttributes({
+          taskId: payload.taskId,
+          dateDelay: payload.dateDelay,
+          statusDelay: statusDelay,
+          delayRemark: payload.delayRemark,
+        });
         throw err;
       });
   }
-  static openReceiveTask(id: string, isOpen: boolean): Promise<any> {
+  static async openReceiveTask(id: string, isOpen: boolean): Promise<any> {
     const data = {id, isOpen};
 
     return httpClient
@@ -153,6 +197,12 @@ export class TaskDatasource {
         return response.data;
       })
       .catch(err => {
+        crashlytics().log('openReceiveTask');
+        crashlytics().recordError(err);
+        crashlytics().setAttributes({
+          id: id,
+          isOpen: isOpen ? 'true' : 'false',
+        });
         throw err;
       });
   }

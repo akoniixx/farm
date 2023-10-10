@@ -56,4 +56,5 @@ export default {
   loaderImage: require('./loaderImage.png'),
   lostNetwork: require('./lostNetwork.png'),
   refresh: require('./refresh.png'),
+  missionPointImage: require('./missionPointImage.png'),
 };

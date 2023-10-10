@@ -19,6 +19,7 @@ export class Authentication {
     subdistrictId,
     postcode,
     birthDate,
+    nickname,
   }: {
     firstname: string;
     lastname: string;
@@ -30,6 +31,7 @@ export class Authentication {
     districtId: string;
     subdistrictId: string;
     postcode: string;
+    nickname?: string;
   }) {
     const droner_id = await AsyncStorage.getItem('droner_id');
     return httpClient
@@ -47,6 +49,7 @@ export class Authentication {
           postcode: postcode,
         },
         birthDate,
+        nickname,
       })
       .then(response => {
         return response.data;
@@ -589,11 +592,17 @@ export class Register {
       });
   }
 
-  static async registerStep1V2(
-    firstname: string,
-    lastname: string,
-    telephoneNo: string,
-  ) {
+  static async registerStep1V2({
+    firstname,
+    lastname,
+    telephoneNo,
+    nickname,
+  }: {
+    firstname: string;
+    lastname: string;
+    telephoneNo: string;
+    nickname?: string;
+  }) {
     const droner_id = await AsyncStorage.getItem('droner_id');
     if (!droner_id) {
       return registerClient
@@ -601,6 +610,7 @@ export class Register {
           firstname: firstname,
           lastname: lastname,
           telephoneNo: telephoneNo,
+          nickname: nickname,
           status: 'OPEN',
           address: {
             address1: '-',
