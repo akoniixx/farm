@@ -253,6 +253,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                 });
               });
               break;
+            case 'MISSION_POINT':
+              RootNavigation.navigate('Main', {
+                screen: 'MissionScreen',
+              });
+              break;
             default:
               break;
           }
@@ -371,6 +376,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                 },
               },
             });
+          });
+          break;
+        case 'MISSION_POINT':
+          RootNavigation.navigate('Main', {
+            screen: 'MissionScreen',
           });
           break;
         default:
@@ -627,6 +637,20 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                 Toast.hide();
               },
             });
+          });
+          break;
+        case 'MISSION_POINT':
+          Toast.show({
+            type: 'missionPointDone',
+            topOffset: 40,
+            position: 'top',
+            text1: message.data?.message,
+            onPress() {
+              RootNavigation.navigate('Main', {
+                screen: 'MissionScreen',
+              });
+              Toast.hide();
+            },
           });
           break;
         default:

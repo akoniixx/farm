@@ -313,7 +313,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
                       color: colors.fontBlack,
                       paddingBottom: normalize(5),
                     }}>
-                    {profilestate.nickname}
+                    {profilestate.nickname ? profilestate.nickname : '-'}
                   </Text>
                   <Text
                     style={{

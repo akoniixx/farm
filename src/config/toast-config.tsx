@@ -957,6 +957,47 @@ export const toastConfig = {
       </View>
     </TouchableOpacity>
   ),
+  missionPointDone: ({onPress, text1, text2, props}: any) => {
+    return (
+      <TouchableOpacity onPress={onPress}>
+        <View style={styles.modalBgSuccess}>
+          <View
+            style={{
+              flexDirection: 'row',
+            }}>
+            <Image
+              source={icons.success}
+              style={{
+                width: normalize(30),
+                height: normalize(30),
+              }}
+            />
+            <View
+              style={{
+                width: '87%',
+                paddingLeft: normalize(12),
+              }}>
+              <Text style={styles.info}>{text1}</Text>
+            </View>
+          </View>
+          <View style={styles.closePosition}>
+            <TouchableOpacity
+              onPress={() => {
+                Toast.hide();
+              }}>
+              <Image
+                source={icons.closewhite}
+                style={{
+                  width: normalize(12),
+                  height: normalize(12),
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  },
 };
 
 const styles = StyleSheet.create({
