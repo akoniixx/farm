@@ -198,7 +198,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         TaskSuggestion.searchDroner(
           farmer_id !== null ? farmer_id : '',
           profilestate.plotItem[0].id,
-          date.toDateString(),
+          moment().toISOString(),
         )
           .then(res => {
             setTaskSug(res);
@@ -211,15 +211,17 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       if (value) {
         const farmer_id = await AsyncStorage.getItem('farmer_id');
         const limit = 8;
-        const offset = 0;
+        const offset = 1;
         TaskSuggestion.DronerUsed(
           farmer_id !== null ? farmer_id : '',
           profilestate.plotItem[0].id,
-          date.toDateString(),
+          moment().toISOString(),
           limit,
           offset,
         )
           .then(async res => {
+            console.log(JSON.stringify(res, null, 2));
+
             setTaskSugUsed(res);
             await AsyncStorage.setItem('taskSugUsed', JSON.stringify(res));
           })

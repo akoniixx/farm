@@ -206,7 +206,6 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
       setOpenModal(false);
     }
   }, []);
-
   const onPressCamera = useCallback(async () => {
     const result = await ImagePicker.openCamera({
       mediaType: 'photo',
@@ -288,7 +287,6 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
     address.address2,
     value.nickname,
   ]);
-
   const onPressSave = async () => {
     try {
       setLoading(true);
@@ -310,8 +308,16 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             id: alreadyHasImage.id,
             path: alreadyHasImage.path,
           });
+          await ProfileDatasource.uploadProfileImage(image);
+          setLoading(false);
+          navigation.goBack();
+          return;
         }
         await ProfileDatasource.uploadProfileImage(image);
+        setLoading(false);
+        navigation.goBack();
+        return;
+      } else {
         setLoading(false);
         navigation.goBack();
       }
@@ -335,7 +341,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
         <View
           style={{
             flex: 1,
-            padding: normalize(16),
+            paddingHorizontal: normalize(16),
           }}>
           <View style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -601,7 +607,12 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
               />
             </ScrollView>
           </View>
-          <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
+          <View
+            style={{
+              backgroundColor: colors.white,
+              zIndex: 0,
+              paddingVertical: normalize(20),
+            }}>
             <MainButton
               label="บันทึก"
               color={colors.greenLight}

@@ -4,19 +4,16 @@ import {
   View,
   ImageBackground,
   TouchableOpacity,
-  Platform,
   ActivityIndicator,
   Dimensions,
 } from 'react-native';
 import React, { useState } from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
-import { Avatar } from '@rneui/base';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Text from '../Text/Text';
 import ProgressiveImage from '../ProgressingImage/ProgressingImage';
-import ProgressingBackground from '../ProgressingImage/ProgressingBackground';
 
 interface dronerUsedData {
   index: any;
@@ -305,7 +302,7 @@ const styles = StyleSheet.create({
     lineHeight: 30,
   },
   cards: {
-    height: normalize(240),
+    minHeight: normalize(250),
     width: Dimensions.get('window').width * 0.6 - 32,
     borderRadius: 10,
     borderWidth: 1,
@@ -321,7 +318,7 @@ const styles = StyleSheet.create({
     shadowRadius: 0.22,
   },
   cardsTaskSug: {
-    height: normalize(210),
+    minHeight: normalize(210),
     width: Dimensions.get('window').width * 0.6 - 32,
     borderRadius: 10,
     borderWidth: 1,

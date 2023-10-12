@@ -109,14 +109,14 @@ export default function CameraScreen({
                 setCurrentImage(null);
               }}
               style={{
-                padding: 16,
+                padding: 8,
                 borderRadius: 200,
               }}>
               <Image
-                source={icons.closeIcon}
+                source={icons.closeImg}
                 style={{
-                  width: 24,
-                  height: 24,
+                  width: 20,
+                  height: 20,
                 }}
               />
             </TouchableOpacity>
@@ -130,10 +130,10 @@ export default function CameraScreen({
                 borderRadius: 200,
               }}>
               <Image
-                source={icons.checked}
+                source={icons.correct}
                 style={{
-                  width: 46,
-                  height: 46,
+                  width: 40,
+                  height: 40,
                 }}
               />
             </TouchableOpacity>

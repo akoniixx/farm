@@ -31,6 +31,8 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 import { mixpanel } from '../../../mixpanel';
 import useTimeSpent from '../../hook/useTimeSpent';
+import moment from 'moment';
+import FastImage from 'react-native-fast-image';
 
 const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const timeSpent = useTimeSpent();
@@ -183,13 +185,15 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 flexDirection: 'row',
                 flex: 0.9,
               }}>
-              <ProgressiveImage
+              <FastImage
                 source={
                   profilestate?.image
-                    ? { uri: profilestate?.image }
+                    ? {
+                        uri: profilestate?.image,
+                        cache: FastImage.cacheControl.web,
+                      }
                     : icons.avatar
                 }
-                borderRadius={50}
                 style={{
                   width: normalize(80),
                   height: normalize(80),

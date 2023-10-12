@@ -6,7 +6,7 @@ import CustomHeader from '../../components/CustomHeader';
 import { TabBar, TabView } from 'react-native-tab-view';
 import Text from '../../components/Text/Text';
 import { colors } from '../../assets';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { Dimensions, StyleSheet, useWindowDimensions } from 'react-native';
 import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
 import { mixpanel } from '../../../mixpanel';
@@ -58,6 +58,8 @@ const renderTabBar = (props: any) => (
             color: focused ? '#1F8449' : colors.gray,
             lineHeight: 30,
             fontFamily: focused ? fonts.AnuphanSemiBold : fonts.AnuphanMedium,
+            width: Dimensions.get('window').width / 2,
+            textAlign: 'center',
           },
         ]}>
         {route.title}
@@ -179,6 +181,7 @@ export const DronerHiredScreen: React.FC<
         isNewResponse: true,
       };
       const res = await DronerDatasource.getMyFavoriteDroner(payload);
+
       setData(prev => {
         return {
           ...res,
@@ -204,7 +207,7 @@ export const DronerHiredScreen: React.FC<
         <Content
           navigation={navigation}
           data={
-            index === 1
+            routes[index].key === 'favorite'
               ? {
                   ...data,
                   data: data.data.filter((item: any) => {
@@ -215,7 +218,9 @@ export const DronerHiredScreen: React.FC<
           }
           loading={loading}
           setData={setData}
-          loadMore={index === 1 ? loadMoreFavorite : loadMore}
+          loadMore={
+            routes[index].key === 'favorite' ? loadMoreFavorite : loadMore
+          }
           getDronerHiredList={getDronerHiredList}
         />
       );
@@ -229,6 +234,7 @@ export const DronerHiredScreen: React.FC<
     loadMore,
     index,
     loadMoreFavorite,
+    routes,
   ]);
 
   useEffect(() => {
@@ -267,5 +273,6 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: fonts.AnuphanMedium,
     fontSize: normalize(20),
+    width: '100%',
   },
 });
