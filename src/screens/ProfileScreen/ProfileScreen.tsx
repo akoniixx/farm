@@ -190,7 +190,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                   profilestate?.image
                     ? {
                         uri: profilestate?.image,
-                        cache: FastImage.cacheControl.web,
+                        cache: FastImage.cacheControl.immutable,
                       }
                     : icons.avatar
                 }

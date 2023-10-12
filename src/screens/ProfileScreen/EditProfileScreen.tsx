@@ -467,6 +467,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                       fontFamily: font.SarabunMedium,
                       justifyContent: 'center',
                       alignItems: 'center',
+                      lineHeight: 28,
                     }}
                   />
                   <Image
