@@ -189,7 +189,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
       height: 200,
       maxFiles: 1,
       multiple: false,
-      cropping: true,
+      cropping: false,
     });
     if (result) {
       setImage({
@@ -211,7 +211,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
       mediaType: 'photo',
       maxWidth: 200,
       maxHeight: 200,
-      cropping: true,
+      cropping: false,
     });
     if (result) {
       setImage({
