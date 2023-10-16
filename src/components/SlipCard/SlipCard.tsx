@@ -25,6 +25,7 @@ export interface TaskDataTypeSlip {
   totalPrice: string;
   firstname?: string;
   lastname?: string;
+  nickname?: string;
   telNo?: string;
   img?: string;
   rating?: string;

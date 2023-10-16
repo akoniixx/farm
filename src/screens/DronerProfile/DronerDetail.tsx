@@ -46,6 +46,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
     detailDronerReducer,
     initDetailDronerState,
   );
+  const [droner, setDroner] = useState<any>();
   const [refresh, setRefresh] = useState<boolean>(false);
   const { width } = Dimensions.get('window');
   const height = width * 0.6;
@@ -57,6 +58,11 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       const statusFarmer = await AsyncStorage.getItem('farmer_status');
       setStatusFarm(statusFarmer);
     };
+    const dronerTaskSuggest = async () => {
+      const dronerSuggestion = await AsyncStorage.getItem('droner_suggestion');
+      setDroner(dronerSuggestion);
+    };
+    dronerTaskSuggest();
     dronerDetails();
     statusFarmer();
   }, [isFocused]);
@@ -153,14 +159,20 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
         title={'ข้อมูลนักบิน'}
         showBackBtn
         onPressBack={() => navigation.goBack()}
-        image={() => (
-          <TouchableOpacity onPress={favorite}>
-            <Image
-              source={statusFav === 'ACTIVE' ? icons.heart_active : icons.heart}
-              style={{ width: 25, height: 25 }}
-            />
-          </TouchableOpacity>
-        )}
+        image={() =>
+          droner === 'droner_used' ? (
+            <TouchableOpacity onPress={favorite}>
+              <Image
+                source={
+                  statusFav === 'ACTIVE' ? icons.heart_active : icons.heart
+                }
+                style={{ width: 25, height: 25 }}
+              />
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )
+        }
       />
       <ScrollView style={{ backgroundColor: '#F8F9FA' }}>
         {/* <View>

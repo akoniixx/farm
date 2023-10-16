@@ -20,7 +20,7 @@ interface Prop {
   headerRight?: () => React.ReactNode;
   headerLeft?: () => JSX.Element;
   style?: ViewProps;
-  image?: () => JSX.Element;
+  image?: (() => JSX.Element) | (() => boolean);
 }
 
 const CustomHeader: React.FC<Prop> = ({
