@@ -28,10 +28,8 @@ import { callcenterNumber } from '../../definitions/callCenterNumber';
 import Text from '../../components/Text/Text';
 import { Carousel, Pagination } from 'react-native-snap-carousel';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 import { mixpanel } from '../../../mixpanel';
 import useTimeSpent from '../../hook/useTimeSpent';
-import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 
 const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
@@ -185,12 +183,13 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 flexDirection: 'row',
                 flex: 0.9,
               }}>
-              <FastImage
+              <Image
                 source={
                   profilestate?.image
                     ? {
-                        uri: profilestate?.image,
-                        cache: FastImage.cacheControl.immutable,
+                        uri: `${
+                          profilestate?.image
+                        }&time=${new Date().getTime()}`,
                       }
                     : icons.avatar
                 }
