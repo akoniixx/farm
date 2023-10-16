@@ -42,7 +42,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [reason, setReason] = useState<any>('');
   const noti = route.params?.noti ?? false;
   const [index, setIndex] = useState(0);
-  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+  const { width: screenWidth } = Dimensions.get('window');
   const [showModalCall, setShowModalCall] = useState(false);
 
   const isFocused = useIsFocused();

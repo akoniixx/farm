@@ -201,41 +201,30 @@ export const DronerHiredScreen: React.FC<
       console.log(e);
     }
   }, [page, user?.farmerPlot, user?.id, data.count, data.data.length]);
-  const renderScene = useMemo(() => {
-    return () => {
-      return (
-        <Content
-          navigation={navigation}
-          data={
-            routes[index].key === 'favorite'
-              ? {
-                  ...data,
-                  data: data.data.filter((item: any) => {
-                    return item.favorite_status === 'ACTIVE';
-                  }),
-                }
-              : data
-          }
-          loading={loading}
-          setData={setData}
-          loadMore={
-            routes[index].key === 'favorite' ? loadMoreFavorite : loadMore
-          }
-          getDronerHiredList={getDronerHiredList}
-        />
-      );
-    };
-  }, [
-    data,
-    loading,
-    navigation,
-    setData,
-    getDronerHiredList,
-    loadMore,
-    index,
-    loadMoreFavorite,
-    routes,
-  ]);
+
+  const renderScene = () => {
+    return (
+      <Content
+        navigation={navigation}
+        data={
+          routes[index].key === 'favorite'
+            ? {
+                ...data,
+                data: data.data.filter((item: any) => {
+                  return item.favorite_status === 'ACTIVE';
+                }),
+              }
+            : data
+        }
+        loading={loading}
+        setData={setData}
+        loadMore={
+          routes[index].key === 'favorite' ? loadMoreFavorite : loadMore
+        }
+        getDronerHiredList={getDronerHiredList}
+      />
+    );
+  };
 
   useEffect(() => {
     getDronerHiredList();
