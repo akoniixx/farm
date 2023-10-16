@@ -1,4 +1,4 @@
-import { View, Image, TouchableOpacity } from 'react-native';
+import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
 import { ModalEntity } from './ModalEntity';
 import { ModalStyle } from './ModalStyle';
@@ -18,7 +18,7 @@ const FarmerRegisterSuccess: React.FC<ModalEntity> = ({
 }) => {
   return (
     <Modal visible={show} onDismiss={onClose}>
-      <View style={ModalStyle.modal}>
+      <View style={ModalVerifyStyle.modalVerify}>
         <View style={ModalStyle.modalBg}>
           <View style={ModalStyle.close}>
             <TouchableOpacity onPress={onClose}>
@@ -52,5 +52,11 @@ const FarmerRegisterSuccess: React.FC<ModalEntity> = ({
     </Modal>
   );
 };
-
+const ModalVerifyStyle = StyleSheet.create({
+  modalVerify: {
+    flex: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 export default FarmerRegisterSuccess;

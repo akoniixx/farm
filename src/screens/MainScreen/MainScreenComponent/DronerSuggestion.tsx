@@ -29,6 +29,11 @@ export default function DronerSuggestion({
             <TouchableOpacity
               key={index}
               onPress={async () => {
+                await AsyncStorage.setItem(
+                  'droner_suggestion',
+                  'droner_suggestion',
+                );
+
                 await AsyncStorage.setItem('droner_id', `${item.droner_id}`);
                 mixpanel.track('MainScreen_ButtonDronerSuggest_Press', {
                   dronerId: item.droner_id,

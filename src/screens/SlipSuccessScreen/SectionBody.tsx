@@ -60,26 +60,19 @@ export default function SectionBody(props: TaskDataTypeSlip) {
                     fontFamily: fonts.SarabunMedium,
                     fontSize: 18,
                   }}>
-                  {props.firstname + ' ' + props.lastname}
+                  {props.nickname}
                 </Text>
                 <View
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
                   }}>
-                  <Image
-                    source={icons.star}
-                    style={{
-                      width: 16,
-                      height: 16,
-                    }}
-                  />
                   <Text
                     style={{
                       marginLeft: 4,
                       color: colors.gray,
                     }}>
-                    {`${props.rating} คะแนน (${props.totalTaskReview})`}
+                    {props.firstname + ' ' + props.lastname}
                   </Text>
                 </View>
               </View>
