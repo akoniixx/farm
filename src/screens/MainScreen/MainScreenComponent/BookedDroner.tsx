@@ -57,6 +57,10 @@ export default function BookedDroner({
                   key={index}
                   onPress={async () => {
                     await AsyncStorage.setItem(
+                      'droner_suggestion',
+                      'droner_used',
+                    );
+                    await AsyncStorage.setItem(
                       'droner_id',
                       `${item.droner_id}`,
                     );

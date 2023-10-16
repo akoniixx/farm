@@ -40,6 +40,7 @@ export default function SlipSuccessScreen({
     countResend: null,
     firstname: '',
     lastname: '',
+    nickname: '',
     telNo: '',
     img: '',
     rating: '',
@@ -65,6 +66,7 @@ export default function SlipSuccessScreen({
                         res.data.purposeSpray.purposeSprayName || '',
                       firstname: res.data.droner.firstname,
                       lastname: res.data.droner.lastname,
+                      nickname: res.data.droner.nickname,
                       telNo: res.data.droner.telephoneNo,
                       img: resImg,
                       rating: parseFloat(resRating.ratingAvg)

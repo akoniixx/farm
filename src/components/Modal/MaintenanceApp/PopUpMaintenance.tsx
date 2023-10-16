@@ -1,4 +1,4 @@
-import { View, Modal, TouchableOpacity, Image } from 'react-native';
+import { View, Modal, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import React from 'react';
 import { MaintenanceEntity } from '../ModalEntity';
 import { ModalStyle } from '../ModalStyle';
@@ -18,7 +18,7 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
 
   return (
     <Modal visible={show} transparent={true}>
-      <View style={ModalStyle.modal}>
+      <View style={ModalPopUpStyle.modalPopUp}>
         <View style={ModalStyle.modalBg}>
           <View style={ModalStyle.close}>
             <TouchableOpacity onPress={onClose}>
@@ -203,5 +203,11 @@ const PopUpMaintenance: React.FC<MaintenanceEntity> = ({
     </Modal>
   );
 };
-
+const ModalPopUpStyle = StyleSheet.create({
+  modalPopUp: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 export default PopUpMaintenance;
