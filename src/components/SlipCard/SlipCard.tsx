@@ -30,6 +30,7 @@ export interface TaskDataTypeSlip {
   img?: string;
   rating?: string;
   totalTaskReview?: string;
+  taskDronerTemp?: string[];
 }
 interface Props extends TaskDataTypeSlip {}
 
