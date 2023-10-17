@@ -1,3 +1,8 @@
+## Log [1.4.26] 2023-10-17 
+- disable button when fire api  Droner Detail (Force Create Task)
+- crashlytics log
+- profile image enable cropping
+
 ## Enhance [1.4.25] 2023-10-10
 - new style card droner near me 
 - edit user profile 
