@@ -30,7 +30,6 @@ import { Carousel, Pagination } from 'react-native-snap-carousel';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { mixpanel } from '../../../mixpanel';
 import useTimeSpent from '../../hook/useTimeSpent';
-import FastImage from 'react-native-fast-image';
 
 const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const timeSpent = useTimeSpent();
@@ -139,6 +138,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
       );
     }
   };
+  // console.log(profilestate.image);
   return (
     <SafeAreaView style={{ backgroundColor: '#F7FFF0' }}>
       {noti ? (

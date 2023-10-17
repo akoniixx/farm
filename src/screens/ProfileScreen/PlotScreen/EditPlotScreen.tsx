@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, font } from '../../../assets';
 import CustomHeader from '../../../components/CustomHeader';
-import { normalize } from '../../../functions/Normalize';
 import { stylesCentral } from '../../../styles/StylesCentral';
 import PredictionType from '../../RegisterScreen/ThirdFormScreen';
 import { PlotDatasource, UpdatePlot } from '../../../datasource/PlotDatasource';

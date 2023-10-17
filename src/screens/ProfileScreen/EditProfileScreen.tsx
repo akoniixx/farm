@@ -22,7 +22,6 @@ import { colors, font, icons } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import { MainButton } from '../../components/Button/MainButton';
 import { normalize } from '../../functions/Normalize';
-import { Avatar } from '@rneui/themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { momentExtend } from '../../utils/moment-buddha-year';
@@ -34,6 +33,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import ModalUploadImage from '../../components/Modal/ModalUploadImage';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 import { mixValidator } from '../../utils/inputValidate';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 interface AddressFarmerType {
   id: string;
@@ -94,6 +94,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
   } as ProfileType);
   const [items, setItems] = useState<any>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [alreadyHasImage, setAlreadyHasImage] = useState<TypeFile | undefined>(
     undefined,
   );
@@ -189,9 +190,21 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
       height: 200,
       maxFiles: 1,
       multiple: false,
-      cropping: false,
+      cropping: true,
+    }).catch(err => {
+      crashlytics().log('EditProfileScreen_onAddImage_tapped');
+      crashlytics().recordError(err);
     });
+
+    setError('');
     if (result) {
+      const fileSize = result.size / 1024 / 1024;
+      const isMoreThan4MB = fileSize > 4;
+      if (isMoreThan4MB) {
+        setError('รูปภาพมีขนาดใหญ่เกิน 4 MB');
+        return;
+      }
+
       setImage({
         ...result,
         assets: [
@@ -211,9 +224,19 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
       mediaType: 'photo',
       maxWidth: 200,
       maxHeight: 200,
-      cropping: false,
+      cropping: true,
+    }).catch(err => {
+      crashlytics().log('EditProfileScreen_onPressCamera_tapped');
+      crashlytics().recordError(err);
     });
+    setError('');
     if (result) {
+      const fileSize = result.size / 1024 / 1024;
+      const isMoreThan4MB = fileSize > 4;
+      if (isMoreThan4MB) {
+        setError('รูปภาพมีขนาดใหญ่เกิน 4 MB');
+        return;
+      }
       setImage({
         ...result,
         assets: [
@@ -400,6 +423,17 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                       />
                     </TouchableOpacity>
                   </View>
+                  {error && (
+                    <Text
+                      style={{
+                        color: colors.error,
+                        fontFamily: font.SarabunMedium,
+                        fontSize: normalize(16),
+                        marginTop: normalize(10),
+                      }}>
+                      {error}
+                    </Text>
+                  )}
                 </View>
                 <Text style={styles.head}>ชื่อ</Text>
                 <TextInput
@@ -604,7 +638,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 style={[styles.inputEdit]}
                 editable={false}
                 placeholder={'รหัสไปรษณีย์'}
-                placeholderTextColor={colors.gray}
+                placeholderTextColor={colors.grey10}
               />
             </ScrollView>
           </View>
