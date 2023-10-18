@@ -13,7 +13,6 @@ interface Props {
   mission: Mission;
 }
 export default function CollapseItem({navigation, mission}: Props) {
-  console.log(JSON.stringify(mission, null, 2));
   const isMissionPoint = useMemo(() => {
     return mission.campaignType === 'MISSION_POINT';
   }, [mission.campaignType]);
@@ -154,6 +153,7 @@ export default function CollapseItem({navigation, mission}: Props) {
             const current = el.allRai > el.rai ? el.rai : el.allRai;
             const isExpired = moment().isAfter(mission.endDate);
             const isStatusComplete = el.status === 'COMPLETE';
+
             return (
               <CardMission
                 isComplete={isComplete}

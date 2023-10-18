@@ -279,7 +279,7 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
             try {
               const res = await Register.registerStep1V2({
                 ...formState,
-                tele,
+                telephoneNo: tele,
               });
               if (!image) {
                 await AsyncStorage.setItem('droner_id', res.id);

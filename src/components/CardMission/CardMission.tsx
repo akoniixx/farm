@@ -99,7 +99,9 @@ export default function CardMission({
                   point ? point : '0',
                   true,
                 )} แต้ม`
-              : description}
+              : description
+              ? description
+              : '-'}
           </Text>
 
           <ProgressBarAnimated

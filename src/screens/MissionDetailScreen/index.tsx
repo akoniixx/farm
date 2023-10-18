@@ -169,7 +169,7 @@ export default function MissionDetailScreen({navigation, route}: Props) {
                 total={data.total}
                 missionName={data.missionName}
                 disabled={data.isExpired}
-                imagePath={data.reward.imagePath}
+                imagePath={data?.reward?.imagePath}
               />
             )}
 

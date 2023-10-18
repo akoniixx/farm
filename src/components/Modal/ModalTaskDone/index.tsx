@@ -1,6 +1,7 @@
 import {View, StyleSheet, Image, Platform} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
-import * as ImagePicker from 'react-native-image-picker';
+// import * as ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import Text from '../../Text';
 import {colors, font, icons} from '../../../assets';
 import {normalize} from '../../../function/Normalize';
@@ -11,6 +12,7 @@ import ModalImageExample from './ModalImageExample';
 import ModalUploadImage from '../ModalUploadImage';
 import Modal from '../Modal';
 import {ResizeImage} from '../../../function/Resizing';
+import {ImagePickerResponse} from 'react-native-image-picker';
 
 interface Props {
   visible: boolean;
@@ -42,9 +44,9 @@ export default function ModalTaskDone({
   taskId,
 }: Props) {
   const [imgController, setImgController] =
-    useState<ImagePicker.ImagePickerResponse | null>(null);
+    useState<ImagePickerResponse | null>(null);
   const [imgFertilizer, setImgFertilizer] =
-    useState<ImagePicker.ImagePickerResponse | null>(null);
+    useState<ImagePickerResponse | null>(null);
   const [showModalSelectImage, setShowModalSelectImage] = useState(false);
   const [error, setError] = useState<string>('');
   const [step, setStep] = useState(0);
@@ -55,19 +57,32 @@ export default function ModalTaskDone({
     setDemoModal(true);
   }, [onClose]);
   const onAddImageController = async () => {
-    const result = await ImagePicker.launchImageLibrary({
+    const result = await ImagePicker.openPicker({
       mediaType: 'photo',
-      quality: 0.8,
+      cropping: true,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth: 800,
+      compressImageMaxHeight: 800,
     });
-    if (!result.didCancel) {
-      const fileSize = result?.assets?.[0]?.fileSize;
+    if (result) {
+      const fileSize = result?.size;
       if (!fileSize) {
         setError('รูปภาพไม่ถูกต้อง');
         return;
       }
       const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
-      const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
-      let newResult: any = result;
+      // const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
+      const newResult = {
+        ...result,
+        assets: [
+          {
+            fileSize: result.size,
+            type: result.mime,
+            fileName: result?.filename,
+            uri: result.path,
+          },
+        ],
+      };
 
       if (isFileMoreThan20MB) {
         setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
@@ -80,21 +95,7 @@ export default function ModalTaskDone({
         });
         return false;
       }
-      if (isFileMoreThan3MB) {
-        const newImage: any = await ResizeImage({
-          uri: result?.assets ? result?.assets?.[0].uri : '',
-        });
-        newResult = {
-          assets: [
-            {
-              ...newImage,
-              fileSize: newImage.size,
-              type: 'image/jpeg',
-              fileName: newImage?.name ? `${newImage.name}`.toLowerCase() : '',
-            },
-          ],
-        };
-      }
+
       if (step === 0) {
         setImgController(newResult);
         setStep(0);
@@ -111,19 +112,29 @@ export default function ModalTaskDone({
     return;
   };
   const onTakeImageController = async () => {
-    const result = await ImagePicker.launchCamera({
+    const result = await ImagePicker.openCamera({
       mediaType: 'photo',
-      maxHeight: 800,
-      maxWidth: 800,
-      cameraType: 'back',
-      quality: 0.8,
+      cropping: true,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth: 800,
+      compressImageMaxHeight: 800,
     });
 
-    if (!result.didCancel) {
-      const fileSize = result?.assets?.[0]?.fileSize || 0;
+    if (result) {
+      const fileSize = result?.size;
       const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
-      const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
-      let newResult: any = result;
+      // const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
+      const newResult = {
+        ...result,
+        assets: [
+          {
+            fileSize: result.size,
+            type: result.mime,
+            fileName: result?.filename,
+            uri: result.path,
+          },
+        ],
+      };
 
       if (isFileMoreThan20MB) {
         setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
@@ -137,21 +148,21 @@ export default function ModalTaskDone({
 
         return false;
       }
-      if (isFileMoreThan3MB) {
-        const newImage: any = await ResizeImage({
-          uri: result?.assets ? result?.assets?.[0].uri : '',
-        });
-        newResult = {
-          assets: [
-            {
-              ...newImage,
-              fileSize: newImage.size,
-              type: 'image/jpeg',
-              fileName: newImage.name,
-            },
-          ],
-        };
-      }
+      // if (isFileMoreThan3MB) {
+      //   const newImage: any = await ResizeImage({
+      //     uri: result?.assets ? result?.assets?.[0].uri : '',
+      //   });
+      //   newResult = {
+      //     assets: [
+      //       {
+      //         ...newImage,
+      //         fileSize: newImage.size,
+      //         type: 'image/jpeg',
+      //         fileName: newImage.name,
+      //       },
+      //     ],
+      //   };
+      // }
 
       if (step === 0) {
         setImgController(newResult);

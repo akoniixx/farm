@@ -22,7 +22,8 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import {registerReducer} from '../../hooks/registerfield';
 import {Authentication, Register} from '../../datasource/AuthDatasource';
-import * as ImagePicker from 'react-native-image-picker';
+// import * as ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import Lottie from 'lottie-react-native';
 import CalendarCustom from '../../components/Calendar/Calendar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -38,6 +39,7 @@ import moment from 'moment';
 import AsyncButton from '../../components/Button/AsyncButton';
 import InfoCircle from '../../components/InfoCircle';
 import {mixValidator} from '../../function/inputValidate';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const EditProfile: React.FC<any> = ({navigation}) => {
   const initialFormRegisterState = {
@@ -149,87 +151,150 @@ const EditProfile: React.FC<any> = ({navigation}) => {
     setShowModalSelectImage(false);
   }, []);
   const onAddImageStorage = async () => {
-    const result = await ImagePicker.launchImageLibrary({
+    const result = await ImagePicker.openPicker({
       mediaType: 'photo',
-      quality: 0.8,
+      cropping: true,
+      multiple: false,
+      maxFiles: 1,
     });
-    if (!result.didCancel) {
-      const fileSize = result?.assets?.[0]?.fileSize;
-      if (!fileSize) {
-        setError('รูปภาพไม่ถูกต้อง');
+    setError('');
+    if (result) {
+      const fileSize = result.size / 1024 / 1024;
+      const isMoreThan4MB = fileSize > 4;
+      if (isMoreThan4MB) {
+        setError('รูปภาพมีขนาดใหญ่เกิน 4 MB');
         return;
       }
-      const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
-      const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
-      let newResult: any = result;
 
-      if (isFileMoreThan20MB) {
-        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
-
-        return false;
-      }
-      if (isFileMoreThan3MB) {
-        const newImage: any = await ResizeImage({
-          uri: result?.assets ? result?.assets?.[0].uri : '',
-        });
-        newResult = {
-          assets: [
-            {
-              ...newImage,
-              fileSize: newImage.size,
-              type: 'image/jpeg',
-              fileName: newImage?.name ? `${newImage.name}`.toLowerCase() : '',
-            },
-          ],
-        };
-      }
-      setImage(newResult);
-
-      setError('');
+      setImage({
+        ...result,
+        assets: [
+          {
+            fileSize: result.size,
+            type: result.mime,
+            fileName: result?.filename,
+            uri: result.path,
+          },
+        ],
+      });
       setShowModalSelectImage(false);
     }
     return;
   };
-  const onTakeImage = async () => {
-    const result = await ImagePicker.launchCamera({
+  // const onAddImageStorage = async () => {
+  //   const result = await ImagePicker.launchImageLibrary({
+  //     mediaType: 'photo',
+  //     quality: 0.8,
+  //   });
+  //   if (!result.didCancel) {
+  //     const fileSize = result?.assets?.[0]?.fileSize;
+  //     if (!fileSize) {
+  //       setError('รูปภาพไม่ถูกต้อง');
+  //       return;
+  //     }
+  //     const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
+  //     const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
+  //     let newResult: any = result;
+
+  //     if (isFileMoreThan20MB) {
+  //       setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
+
+  //       return false;
+  //     }
+  //     if (isFileMoreThan3MB) {
+  //       const newImage: any = await ResizeImage({
+  //         uri: result?.assets ? result?.assets?.[0].uri : '',
+  //       });
+  //       newResult = {
+  //         assets: [
+  //           {
+  //             ...newImage,
+  //             fileSize: newImage.size,
+  //             type: 'image/jpeg',
+  //             fileName: newImage?.name ? `${newImage.name}`.toLowerCase() : '',
+  //           },
+  //         ],
+  //       };
+  //     }
+  //     setImage(newResult);
+
+  //     setError('');
+  //     setShowModalSelectImage(false);
+  //   }
+  //   return;
+  // };
+  // const onTakeImage = async () => {
+  //   const result = await ImagePicker.launchCamera({
+  //     mediaType: 'photo',
+  //     maxHeight: 800,
+  //     maxWidth: 800,
+  //     cameraType: 'back',
+  //     quality: 0.8,
+  //   });
+
+  //   if (!result.didCancel) {
+  //     const fileSize = result?.assets?.[0]?.fileSize || 0;
+  //     const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
+  //     const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
+  //     let newResult: any = result;
+
+  //     if (isFileMoreThan20MB) {
+  //       setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
+  //       return false;
+  //     }
+  //     if (isFileMoreThan3MB) {
+  //       const newImage: any = await ResizeImage({
+  //         uri: result?.assets ? result?.assets?.[0].uri : '',
+  //       });
+  //       newResult = {
+  //         assets: [
+  //           {
+  //             ...newImage,
+  //             fileSize: newImage.size,
+  //             type: 'image/jpeg',
+  //             fileName: newImage.name,
+  //           },
+  //         ],
+  //       };
+  //     }
+  //     setImage(newResult);
+
+  //     setError('');
+  //     setShowModalSelectImage(false);
+  //   }
+  // };
+  const onTakeImage = useCallback(async () => {
+    const result = await ImagePicker.openCamera({
       mediaType: 'photo',
-      maxHeight: 800,
-      maxWidth: 800,
-      cameraType: 'back',
-      quality: 0.8,
+      maxWidth: 200,
+      maxHeight: 200,
+      cropping: true,
+    }).catch(err => {
+      crashlytics().log('EditProfileScreen_onPressCamera_tapped');
+      crashlytics().recordError(err);
     });
-
-    if (!result.didCancel) {
-      const fileSize = result?.assets?.[0]?.fileSize || 0;
-      const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
-      const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
-      let newResult: any = result;
-
-      if (isFileMoreThan20MB) {
-        setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
-        return false;
+    setError('');
+    if (result) {
+      const fileSize = result.size / 1024 / 1024;
+      const isMoreThan4MB = fileSize > 4;
+      if (isMoreThan4MB) {
+        setError('รูปภาพมีขนาดใหญ่เกิน 4 MB');
+        return;
       }
-      if (isFileMoreThan3MB) {
-        const newImage: any = await ResizeImage({
-          uri: result?.assets ? result?.assets?.[0].uri : '',
-        });
-        newResult = {
-          assets: [
-            {
-              ...newImage,
-              fileSize: newImage.size,
-              type: 'image/jpeg',
-              fileName: newImage.name,
-            },
-          ],
-        };
-      }
-      setImage(newResult);
-
-      setError('');
+      setImage({
+        ...result,
+        assets: [
+          {
+            fileSize: result.size,
+            type: result.mime,
+            fileName: result?.filename,
+            uri: result.path,
+          },
+        ],
+      });
       setShowModalSelectImage(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     getProfile();
