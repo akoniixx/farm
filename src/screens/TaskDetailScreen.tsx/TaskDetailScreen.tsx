@@ -181,6 +181,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     TaskDatasource.getTaskDetail(taskId, droner_Id)
       .then(res => {
         if (res.success) {
+          console.log('res', JSON.stringify(res.responseData.data, null, 2));
           setData(res.responseData.data);
           let date = new Date(res.responseData.data.dateAppointment);
           setDateAppointment(date);

@@ -153,7 +153,7 @@ const MainTasklists: React.FC<any> = (props: any) => {
                       fontFamily: font.light,
                       fontSize: normalize(12),
                       color: 'black',
-                    }}>{`${momentExtend.toBuddhistYear(
+                    }}>{` ${momentExtend.toBuddhistYear(
                     finishDate,
                     'DD MMM YYYY HH:mm',
                   )} น.`}</Text>

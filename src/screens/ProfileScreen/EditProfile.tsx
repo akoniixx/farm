@@ -281,6 +281,7 @@ const EditProfile: React.FC<any> = ({navigation}) => {
         setError('รูปภาพมีขนาดใหญ่เกิน 4 MB');
         return;
       }
+
       setImage({
         ...result,
         assets: [

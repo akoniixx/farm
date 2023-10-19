@@ -125,17 +125,27 @@ export class TaskDatasource {
   static async finishTask(payload: PayloadTask) {
     const data = new FormData();
 
+    const [fileName, fileNameDrug] = [payload.file, payload.fileDrug].map(
+      el => {
+        const filePathSplit = el.assets[0].uri.split('/');
+        const fileName = el.assets[0].fileName
+          ? el.assets[0].fileName
+          : filePathSplit[filePathSplit.length - 1];
+        return fileName;
+      },
+    );
+
     data.append('taskId', payload.taskId);
     data.append('reviewFarmerScore', payload.reviewFarmerScore);
     data.append('reviewFarmerComment', payload.reviewFarmerComment);
     data.append('file', {
       uri: payload.file.assets[0].uri,
-      name: payload.file.assets[0].fileName,
+      name: fileName,
       type: payload.file.assets[0].type,
     });
     data.append('fileDrug', {
       uri: payload.fileDrug.assets[0].uri,
-      name: payload.fileDrug.assets[0].fileName,
+      name: fileNameDrug,
       type: payload.fileDrug.assets[0].type,
     });
     data.append('updateBy', payload.updateBy);

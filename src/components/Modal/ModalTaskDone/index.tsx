@@ -60,9 +60,8 @@ export default function ModalTaskDone({
     const result = await ImagePicker.openPicker({
       mediaType: 'photo',
       cropping: true,
-      compressImageQuality: 0.8,
-      compressImageMaxWidth: 800,
-      compressImageMaxHeight: 800,
+      compressImageMaxWidth: 1200,
+      compressImageMaxHeight: 1200,
     });
     if (result) {
       const fileSize = result?.size;
@@ -115,9 +114,8 @@ export default function ModalTaskDone({
     const result = await ImagePicker.openCamera({
       mediaType: 'photo',
       cropping: true,
-      compressImageQuality: 0.8,
-      compressImageMaxWidth: 800,
-      compressImageMaxHeight: 800,
+      compressImageMaxWidth: 1200,
+      compressImageMaxHeight: 1200,
     });
 
     if (result) {

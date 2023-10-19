@@ -61,9 +61,13 @@ export class Authentication {
   static async updateProfileImage(image: any): Promise<any> {
     const droner_id = await AsyncStorage.getItem('droner_id');
     const data = new FormData();
+    const imageSplit = image.assets[0].uri.split('/');
+    const fileName = image.assets[0].fileName
+      ? image.assets[0].fileName
+      : imageSplit[imageSplit.length - 1];
     data.append('file', {
       uri: image.assets[0].uri,
-      name: image.assets[0].fileName,
+      name: fileName,
       type: image.assets[0].type,
     });
     data.append('resourceId', droner_id);

@@ -176,7 +176,8 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
       fileDrug: imageFile?.fileDrug,
     };
     await TaskDatasource.finishTask(payload)
-      .then(() => {
+      .then(res => {
+        console.log('finishTask', JSON.stringify(res, null, 2));
         setFinishImg(null);
         setDefaultRating(0);
       })
