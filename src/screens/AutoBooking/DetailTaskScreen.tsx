@@ -1450,6 +1450,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           price={(calPrice.netPrice - couponInfo.discount).toString()}
           totalPrice={calPrice.priceBefore.toString()}
           submit={onSubmit}
+          loading={loading}
           close={() => confirmBooking.current.hide()}
           isUsePoint={isUsePoint}
           couponInfo={couponInfo.name}

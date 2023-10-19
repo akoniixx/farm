@@ -315,17 +315,18 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
         <View style={{ height: 2, backgroundColor: '#F8F9FA' }} />
         <View style={[styles.section]}>
           <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
-            <Avatar
-              size={normalize(68)}
+            <ProgressiveImage
               source={
                 detailState.imagePro !== null
                   ? { uri: detailState.imagePro }
                   : image.empty_droner
               }
-              avatarStyle={{
+              style={{
                 borderRadius: normalize(40),
                 borderColor: colors.bg,
                 borderWidth: 1,
+                width: normalize(80),
+                height: normalize(80),
               }}
             />
             {detailState.nickname !== null ? (

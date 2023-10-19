@@ -19,6 +19,7 @@ interface ConfirmBookingProps {
   couponInfo: any;
   discountCoupon: any;
   campaignPoint: any;
+  loading?: boolean;
 }
 const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
   plotName,
@@ -33,6 +34,7 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
   couponInfo,
   discountCoupon,
   campaignPoint,
+  loading,
 }) => {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
@@ -167,6 +169,7 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
         <MainButton
           label="ยืนยัน"
           onPress={submit}
+          disable={loading}
           color={colors.greenLight}
           style={{
             height: 54,
