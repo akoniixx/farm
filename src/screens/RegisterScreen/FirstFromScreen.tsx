@@ -71,10 +71,8 @@ const FirstFormScreen: React.FC<any> = ({ navigation, route }) => {
 
   const onPressCamera = useCallback(async () => {
     const result = await ImagePicker.openCamera({
+      forceJpg: true,
       mediaType: 'photo',
-      maxWidth: 200,
-      maxHeight: 200,
-      cropping: true,
     });
     if (result) {
       setImage({

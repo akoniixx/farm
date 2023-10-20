@@ -9,10 +9,7 @@ import Toast from 'react-native-toast-message';
 import { SheetProvider } from 'react-native-actions-sheet';
 import { toastConfig } from './src/config/toast-config';
 import { BackHandler, Platform } from 'react-native';
-import {
-  ActivityIndicator,
-  Provider as PaperProvider,
-} from 'react-native-paper';
+import { Provider as PaperProvider } from 'react-native-paper';
 import 'moment/locale/th';
 import {
   firebaseInitialize,
@@ -28,7 +25,9 @@ import { mixpanel } from './mixpanel';
 import { RecoilRoot } from 'recoil';
 import { NetworkProvider } from './src/contexts/NetworkContext';
 import { MaintenanceProvider } from './src/contexts/MaintenanceContext';
+import crashlytics from '@react-native-firebase/crashlytics';
 
+crashlytics().setCrashlyticsCollectionEnabled(true);
 const App = () => {
   useEffect(() => {
     const firebaseInit = async () => {

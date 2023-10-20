@@ -39,6 +39,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
   const [data, setData] = useState<any[]>([]);
   const [review, setReview] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isReady, setIsReady] = useState<boolean>(false);
   const [statusFav, setStatusFav] = useState<any>();
   const [profile, setProfile] = useState<any>();
   const [statusFarm, setStatusFarm] = useState<any>();
@@ -71,6 +72,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const droner_id = await AsyncStorage.getItem('droner_id');
     const plot_id = await AsyncStorage.getItem('plot_id');
+    setIsReady(false);
     TaskSuggestion.DronerDetail(
       farmer_id!,
       plot_id!,
@@ -78,7 +80,6 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
       date.toLocaleDateString(),
     )
       .then(res => {
-        console.log('res', JSON.stringify(res, null, 2));
         setStatusFav(res[0].favorite_status);
         setProfile(res[0]);
         setReview(res[0].review);
@@ -99,9 +100,13 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           review: `${res[0].review}`,
           nickname: res[0].nickname,
         });
+        setIsReady(true);
       })
       .catch(err => console.log(err))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        setIsReady(true);
+      });
   };
   const baseDate = new Date();
   const nextDay = new Date(baseDate);
@@ -310,17 +315,18 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
         <View style={{ height: 2, backgroundColor: '#F8F9FA' }} />
         <View style={[styles.section]}>
           <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
-            <Avatar
-              size={normalize(68)}
+            <ProgressiveImage
               source={
                 detailState.imagePro !== null
                   ? { uri: detailState.imagePro }
                   : image.empty_droner
               }
-              avatarStyle={{
+              style={{
                 borderRadius: normalize(40),
                 borderColor: colors.bg,
                 borderWidth: 1,
+                width: normalize(80),
+                height: normalize(80),
               }}
             />
             {detailState.nickname !== null ? (
@@ -557,6 +563,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           label="จ้างงาน"
           color={colors.greenLight}
           style={styles.button}
+          disable={isReady ? false : true}
           onPress={() =>
             statusFarm !== 'ACTIVE'
               ? setModalVerify(true)

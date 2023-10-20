@@ -28,7 +28,6 @@ import { callcenterNumber } from '../../definitions/callCenterNumber';
 import Text from '../../components/Text/Text';
 import { Carousel, Pagination } from 'react-native-snap-carousel';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 import { mixpanel } from '../../../mixpanel';
 import useTimeSpent from '../../hook/useTimeSpent';
 
@@ -40,7 +39,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
   const [reason, setReason] = useState<any>('');
   const noti = route.params?.noti ?? false;
   const [index, setIndex] = useState(0);
-  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+  const { width: screenWidth } = Dimensions.get('window');
   const [showModalCall, setShowModalCall] = useState(false);
 
   const isFocused = useIsFocused();
@@ -139,6 +138,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
       );
     }
   };
+
   return (
     <SafeAreaView style={{ backgroundColor: '#F7FFF0' }}>
       {noti ? (
@@ -183,13 +183,19 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 flexDirection: 'row',
                 flex: 0.9,
               }}>
-              <ProgressiveImage
+              <Image
                 source={
                   profilestate?.image
-                    ? { uri: profilestate?.image }
+                    ? {
+                        uri:
+                          Platform.OS === 'ios'
+                            ? `${
+                                profilestate?.image
+                              }&time=${new Date().getTime()}`
+                            : profilestate.image,
+                      }
                     : icons.avatar
                 }
-                borderRadius={50}
                 style={{
                   width: normalize(80),
                   height: normalize(80),
@@ -548,7 +554,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </View>
           )}
           {profilestate.status === 'PENDING' && (
-            <View style={{ paddingHorizontal: 25, paddingBottom: 15 }}>
+            <View style={{ paddingHorizontal: 16, paddingBottom: 15 }}>
               <View style={styles.card}>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textVerify}>

@@ -15,6 +15,7 @@ interface Context {
   checkTime: boolean;
   notiMaintenance: boolean;
   checkDataMA: () => Promise<void>;
+  popUpIsClose: boolean;
 }
 interface Props {
   children: JSX.Element;
@@ -24,9 +25,11 @@ const MaintenanceContext = React.createContext<Context>({
   checkTime: false,
   notiMaintenance: false,
   maintenanceData: {} as MaintenanceSystem,
+  popUpIsClose: false,
 });
 export const MaintenanceProvider: React.FC<Props> = ({ children }) => {
   const [checkTime, setCheckTime] = useState(false);
+  const [fetchingMa, setFetchingMa] = useState<boolean>(true);
   const [notiMaintenance, setNotiMaintenance] = useState<boolean>(false);
   const [popupMaintenance, setPopupMaintenance] = useState<boolean>(false);
   const [maintenance, setMaintenance] = useState<MaintenanceSystem>(
@@ -57,7 +60,10 @@ export const MaintenanceProvider: React.FC<Props> = ({ children }) => {
   };
   useFocusEffect(
     React.useCallback(() => {
-      checkDataMA();
+      setFetchingMa(true);
+      checkDataMA().finally(() => {
+        setFetchingMa(false);
+      });
     }, []),
   );
 
@@ -76,6 +82,7 @@ export const MaintenanceProvider: React.FC<Props> = ({ children }) => {
         checkTime,
         maintenanceData: maintenance,
         notiMaintenance,
+        popUpIsClose: !popupMaintenance && !fetchingMa,
       }}>
       <PopUpMaintenance
         show={popupMaintenance}

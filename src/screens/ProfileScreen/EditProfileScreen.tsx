@@ -22,7 +22,6 @@ import { colors, font, icons } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
 import { MainButton } from '../../components/Button/MainButton';
 import { normalize } from '../../functions/Normalize';
-import { Avatar } from '@rneui/themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import { momentExtend } from '../../utils/moment-buddha-year';
@@ -34,6 +33,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import ModalUploadImage from '../../components/Modal/ModalUploadImage';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 import { mixValidator } from '../../utils/inputValidate';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 interface AddressFarmerType {
   id: string;
@@ -94,6 +94,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
   } as ProfileType);
   const [items, setItems] = useState<any>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [alreadyHasImage, setAlreadyHasImage] = useState<TypeFile | undefined>(
     undefined,
   );
@@ -190,8 +191,20 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
       maxFiles: 1,
       multiple: false,
       cropping: true,
+    }).catch(err => {
+      crashlytics().log('EditProfileScreen_onAddImage_tapped');
+      crashlytics().recordError(err);
     });
+
+    setError('');
     if (result) {
+      const fileSize = result.size / 1024 / 1024;
+      const isMoreThan4MB = fileSize > 4;
+      if (isMoreThan4MB) {
+        setError('รูปภาพมีขนาดใหญ่เกิน 4 MB');
+        return;
+      }
+
       setImage({
         ...result,
         assets: [
@@ -206,15 +219,24 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
       setOpenModal(false);
     }
   }, []);
-
   const onPressCamera = useCallback(async () => {
     const result = await ImagePicker.openCamera({
       mediaType: 'photo',
       maxWidth: 200,
       maxHeight: 200,
       cropping: true,
+    }).catch(err => {
+      crashlytics().log('EditProfileScreen_onPressCamera_tapped');
+      crashlytics().recordError(err);
     });
+    setError('');
     if (result) {
+      const fileSize = result.size / 1024 / 1024;
+      const isMoreThan4MB = fileSize > 4;
+      if (isMoreThan4MB) {
+        setError('รูปภาพมีขนาดใหญ่เกิน 4 MB');
+        return;
+      }
       setImage({
         ...result,
         assets: [
@@ -288,7 +310,6 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
     address.address2,
     value.nickname,
   ]);
-
   const onPressSave = async () => {
     try {
       setLoading(true);
@@ -310,8 +331,16 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
             id: alreadyHasImage.id,
             path: alreadyHasImage.path,
           });
+          await ProfileDatasource.uploadProfileImage(image);
+          setLoading(false);
+          navigation.goBack();
+          return;
         }
         await ProfileDatasource.uploadProfileImage(image);
+        setLoading(false);
+        navigation.goBack();
+        return;
+      } else {
         setLoading(false);
         navigation.goBack();
       }
@@ -335,7 +364,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
         <View
           style={{
             flex: 1,
-            padding: normalize(16),
+            paddingHorizontal: normalize(16),
           }}>
           <View style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -394,6 +423,17 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                       />
                     </TouchableOpacity>
                   </View>
+                  {error && (
+                    <Text
+                      style={{
+                        color: colors.error,
+                        fontFamily: font.SarabunMedium,
+                        fontSize: normalize(16),
+                        marginTop: normalize(10),
+                      }}>
+                      {error}
+                    </Text>
+                  )}
                 </View>
                 <Text style={styles.head}>ชื่อ</Text>
                 <TextInput
@@ -461,6 +501,7 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                       fontFamily: font.SarabunMedium,
                       justifyContent: 'center',
                       alignItems: 'center',
+                      lineHeight: 28,
                     }}
                   />
                   <Image
@@ -597,11 +638,16 @@ const EditProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 style={[styles.inputEdit]}
                 editable={false}
                 placeholder={'รหัสไปรษณีย์'}
-                placeholderTextColor={colors.gray}
+                placeholderTextColor={colors.grey10}
               />
             </ScrollView>
           </View>
-          <View style={{ backgroundColor: colors.white, zIndex: 0 }}>
+          <View
+            style={{
+              backgroundColor: colors.white,
+              zIndex: 0,
+              paddingVertical: normalize(20),
+            }}>
             <MainButton
               label="บันทึก"
               color={colors.greenLight}

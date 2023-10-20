@@ -53,11 +53,16 @@ export class ProfileDatasource {
       });
   }
   static async uploadProfileImage(image: any): Promise<any> {
+    const imagePathSplit = image.assets[0].uri.split('/');
+
+    const fileName = image.assets[0].fileName
+      ? image.assets[0].fileName
+      : imagePathSplit[imagePathSplit.length - 1];
     const farmer_id = await AsyncStorage.getItem('farmer_id');
     const data = new FormData();
     data.append('file', {
       uri: image.assets[0].uri,
-      name: image.assets[0].fileName,
+      name: fileName,
       type: image.assets[0].type,
     });
     data.append('resourceId', farmer_id);
@@ -138,7 +143,7 @@ export class ProfileDatasource {
         return response.data;
       })
       .catch(error => {
-        console.log(error);
+        console.log('removeProfileImage', error);
       });
   }
 }

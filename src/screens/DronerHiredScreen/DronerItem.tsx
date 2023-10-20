@@ -146,7 +146,7 @@ export default function DronerItem({
                     color: colors.primary70,
                     fontFamily: font.SarabunBold,
                     fontSize: 18,
-                    lineHeight: 28,
+                    lineHeight: 32,
                   }}>
                   {nickname ? nickname : firstname + ' ' + lastname}
                 </Text>
@@ -192,7 +192,7 @@ export default function DronerItem({
                   )}
                 </View>
               </View>
-              {nickname && (
+              {firstname && (
                 <View
                   style={{
                     marginLeft: 10,

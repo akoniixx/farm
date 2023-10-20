@@ -246,7 +246,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              alignItems: 'center',
+              alignItems: 'flex-start',
               marginTop: normalize(10),
             }}>
             <Text style={styles.plant}>
@@ -1000,6 +1000,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.AnuphanMedium,
     fontSize: normalize(20),
     color: colors.fontBlack,
+    width: '70%',
   },
   plot: {
     fontFamily: fonts.SarabunLight,
