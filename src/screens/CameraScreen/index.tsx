@@ -36,6 +36,32 @@ export default function CameraScreen({
       return;
     }
 
+    const payload = {
+      uri: photo.path,
+      width: 2000,
+      height: 2000,
+      rotation: 0,
+    };
+    if (photo.metadata) {
+      const orientation = photo.metadata.Orientation;
+      switch (orientation) {
+        case 1:
+          payload.rotation = 0;
+          break;
+        case 3:
+          payload.rotation = 180;
+          break;
+        case 6:
+          payload.rotation = 90;
+          break;
+        case 8:
+          payload.rotation = 270;
+          break;
+        default:
+          payload.rotation = 0;
+      }
+    }
+
     const newResult = await ResizeImage(payload);
 
     setCurrentImage({
