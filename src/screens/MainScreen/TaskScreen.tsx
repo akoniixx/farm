@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {normalize} from '@rneui/themed';
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {FlatList} from 'react-native-gesture-handler';
@@ -81,11 +81,14 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
   const starImgFilled = icons.starfill;
   const starImgCorner = icons.starCorner;
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getData();
-    }, []),
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     getData();
+  //   }, []),
+  // );
+  useEffect(() => {
+    getData();
+  }, []);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getData();
@@ -177,7 +180,6 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     };
     await TaskDatasource.finishTask(payload)
       .then(res => {
-        console.log('finishTask', JSON.stringify(res, null, 2));
         setFinishImg(null);
         setDefaultRating(0);
       })

@@ -1,5 +1,4 @@
 import ImageResizer, {ResizeFormat} from '@bam.tech/react-native-image-resizer';
-import {Options} from '@bam.tech/react-native-image-resizer/lib/typescript/src/types';
 
 const ResizeImage = async ({
   uri,
@@ -18,7 +17,7 @@ const ResizeImage = async ({
   rotation?: number;
   outputPath?: string;
   keepMeta?: boolean;
-  options?: Options;
+  options?: any;
 }) => {
   return await ImageResizer.createResizedImage(
     uri,

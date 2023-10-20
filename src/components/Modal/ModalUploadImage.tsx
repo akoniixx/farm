@@ -86,7 +86,7 @@ export default function ModalUploadImage({
     {
       label: 'ถ่ายภาพ',
       onPress: () => {
-        onPressCamera();
+        Platform.OS === 'android' ? onOpenCamera() : onPressCamera();
       },
       icon: icons.cameraGray,
       id: 1,

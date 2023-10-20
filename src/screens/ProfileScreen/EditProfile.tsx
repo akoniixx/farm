@@ -31,7 +31,6 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import AnimatedInput from '../../components/Input/AnimatedInput';
 import Dropdown from '../../components/Dropdown/Dropdown';
 import ModalUploadImage from '../../components/Modal/ModalUploadImage';
-import {ResizeImage} from '../../function/Resizing';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Text from '../../components/Text';
@@ -798,7 +797,12 @@ const EditProfile: React.FC<any> = ({navigation}) => {
             </View>
           </View>
 
-          <View style={{backgroundColor: colors.white, zIndex: -30}}>
+          <View
+            style={{
+              backgroundColor: colors.white,
+              zIndex: -30,
+              paddingBottom: 16,
+            }}>
             <AsyncButton
               title="บันทึก"
               disabled={isDisableMainButton}

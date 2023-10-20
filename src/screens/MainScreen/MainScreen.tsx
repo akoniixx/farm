@@ -67,7 +67,7 @@ const MainScreen: React.FC<any> = ({navigation}) => {
 
   useEffect(() => {
     findAllNews();
-  }, [isFocused]);
+  }, []);
   const findAllNews = async () => {
     setLoading(true);
     GuruKaset.findAllNews({

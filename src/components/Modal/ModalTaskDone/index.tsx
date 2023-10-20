@@ -59,11 +59,13 @@ export default function ModalTaskDone({
   const onAddImageController = async () => {
     const result = await ImagePicker.openPicker({
       mediaType: 'photo',
-      cropping: true,
-      compressImageMaxWidth: 1200,
-      compressImageMaxHeight: 1200,
+      compressImageMaxWidth: 1000,
+      compressImageMaxHeight: 1000,
+      compressImageQuality: 0.8,
+      forceJpg: true,
     });
     if (result) {
+      console.log('result', JSON.stringify(result, null, 2));
       const fileSize = result?.size;
       if (!fileSize) {
         setError('รูปภาพไม่ถูกต้อง');
