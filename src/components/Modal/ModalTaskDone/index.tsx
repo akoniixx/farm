@@ -11,7 +11,6 @@ import AsyncButton from '../../Button/AsyncButton';
 import ModalImageExample from './ModalImageExample';
 import ModalUploadImage from '../ModalUploadImage';
 import Modal from '../Modal';
-import {ResizeImage} from '../../../function/Resizing';
 import {ImagePickerResponse} from 'react-native-image-picker';
 
 interface Props {
@@ -65,7 +64,6 @@ export default function ModalTaskDone({
       forceJpg: true,
     });
     if (result) {
-      console.log('result', JSON.stringify(result, null, 2));
       const fileSize = result?.size;
       if (!fileSize) {
         setError('รูปภาพไม่ถูกต้อง');
@@ -115,9 +113,10 @@ export default function ModalTaskDone({
   const onTakeImageController = async () => {
     const result = await ImagePicker.openCamera({
       mediaType: 'photo',
-      cropping: true,
-      compressImageMaxWidth: 1200,
-      compressImageMaxHeight: 1200,
+      compressImageMaxWidth: 1000,
+      compressImageMaxHeight: 1000,
+      compressImageQuality: 0.8,
+      forceJpg: true,
     });
 
     if (result) {

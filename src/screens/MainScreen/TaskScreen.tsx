@@ -179,7 +179,7 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
       fileDrug: imageFile?.fileDrug,
     };
     await TaskDatasource.finishTask(payload)
-      .then(res => {
+      .then(async () => {
         setFinishImg(null);
         setDefaultRating(0);
       })

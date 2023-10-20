@@ -586,9 +586,10 @@ const Tasklists: React.FC<any> = (props: Props) => {
           <MainButton
             label="ตกลง"
             color={colors.orange}
-            onPress={() => {
+            onPress={async () => {
               setToggleModalSuccess(false);
               props.onCloseSuccessModal();
+              await props.fetchTask();
             }}
           />
         </View>
