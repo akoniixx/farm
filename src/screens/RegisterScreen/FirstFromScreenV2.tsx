@@ -25,6 +25,9 @@ import Lottie from 'lottie-react-native';
 import Text from '../../components/Text';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 import AsyncButton from '../../components/Button/AsyncButton';
+import AnimatedInput from '../../components/Input/AnimatedInput';
+import {mixValidator} from '../../function/inputValidate';
+import InfoCircle from '../../components/InfoCircle';
 
 const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
   const tele = route.params.tele;
@@ -33,6 +36,7 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
   const [formState, setFormState] = useState<any>({
     firstname: '',
     lastname: '',
+    nickname: '',
   });
   const [image, setImage] = useState<any>(null);
   const onAddImage = useCallback(async () => {
@@ -124,36 +128,55 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
               <View style={{marginTop: normalize(40)}}>
                 <Text style={styles.h1}>ข้อมูลทั่วไป (โปรดระบุ)</Text>
               </View>
-              <TextInput
+              <AnimatedInput
+                stylesInput={{
+                  borderRadius: normalize(10),
+                }}
+                label="ชื่อ"
                 onChangeText={value => {
+                  const newValue = mixValidator(value);
                   setFormState({
                     ...formState,
-                    firstname: value,
+                    firstname: newValue,
                   });
                 }}
-                scrollEnabled={false}
+                style={{
+                  marginTop: 16,
+                }}
                 value={formState.firstname}
-                style={styles.input}
-                editable={true}
-                placeholder={'ชื่อ'}
-                allowFontScaling={false}
-                placeholderTextColor={colors.disable}
               />
-              <TextInput
-                scrollEnabled={false}
-                allowFontScaling={false}
+              <AnimatedInput
+                label="นามสกุล"
+                stylesInput={{
+                  borderRadius: normalize(10),
+                }}
                 onChangeText={value => {
+                  const newValue = mixValidator(value);
                   setFormState({
                     ...formState,
-                    lastname: value,
+                    lastname: newValue,
                   });
                 }}
-                value={formState.surname}
-                style={styles.input}
-                editable={true}
-                placeholder={'นามสกุล'}
-                placeholderTextColor={colors.disable}
+                value={formState.lastname}
               />
+              <AnimatedInput
+                maxLength={50}
+                stylesInput={{
+                  borderRadius: normalize(10),
+                }}
+                label={'ชื่อเล่น (ชื่อที่เกษตรเรียก)'}
+                suffixPosition={18}
+                value={formState.nickname}
+                onChangeText={value => {
+                  const newValue = mixValidator(value);
+                  setFormState({
+                    ...formState,
+                    nickname: newValue,
+                  });
+                }}
+                suffix={<InfoCircle sheetId="nicknameSheet" />}
+              />
+
               <TextInput
                 allowFontScaling={false}
                 value={tele}
@@ -174,7 +197,10 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
         }}>
         <AsyncButton
           disabled={
-            !formState.firstname || !formState.lastname || loadingDisableButton
+            !formState.firstname ||
+            !formState.lastname ||
+            !formState.nickname ||
+            loadingDisableButton
           }
           title="ถัดไป"
           isLoading={loadingDisableButton}
@@ -251,11 +277,10 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
           onPress={async () => {
             setLoading(true);
             try {
-              const res = await Register.registerStep1V2(
-                formState.firstname,
-                formState.lastname,
-                tele,
-              );
+              const res = await Register.registerStep1V2({
+                ...formState,
+                telephoneNo: tele,
+              });
               if (!image) {
                 await AsyncStorage.setItem('droner_id', res.id);
                 setLoading(false);
@@ -346,7 +371,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: normalize(56),
-    marginVertical: 12,
+    marginBottom: 12,
     padding: 10,
     borderColor: colors.disable,
     borderWidth: 1,

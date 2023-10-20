@@ -1,6 +1,6 @@
 {
   "name": "droner",
-  "version": "1.7.5",
+  "version": "1.7.7",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -20,6 +20,7 @@
     "@react-native-community/netinfo": "^9.4.1",
     "@react-native-firebase/analytics": "^16.4.0",
     "@react-native-firebase/app": "^16.4.0",
+    "@react-native-firebase/crashlytics": "^16.4.0",
     "@react-native-firebase/messaging": "^16.4.0",
     "@react-native-masked-view/masked-view": "^0.2.9",
     "@react-navigation/bottom-tabs": "^6.3.2",
@@ -51,6 +52,7 @@
     "react-native-fbsdk-next": "^11.2.1",
     "react-native-geolocation-service": "^5.3.0",
     "react-native-gesture-handler": "^2.6.0",
+    "react-native-image-crop-picker": "^0.40.0",
     "react-native-image-picker": "^4.8.5",
     "react-native-kill-app": "^1.0.4",
     "react-native-linear-gradient": "^2.8.3",

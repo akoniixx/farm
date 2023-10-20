@@ -22,9 +22,11 @@ interface Props {
   total?: number;
   imageSource?: any;
   missionName?: string;
-  description?: string;
+  description?: string | null;
   isStatusComplete?: boolean;
   isStatusRequest?: boolean;
+  isMissionPoint?: boolean;
+  point?: string | null;
 }
 export default function CardMission({
   isComplete = false,
@@ -37,7 +39,9 @@ export default function CardMission({
   missionName,
   description,
   isStatusComplete = false,
+  isMissionPoint = false,
   onPress,
+  point = '0',
 }: Props) {
   return (
     <TouchableOpacity
@@ -50,14 +54,25 @@ export default function CardMission({
       activeOpacity={0.8}
       onPress={onPress}>
       <View>
-        <Text
-          numberOfLines={2}
-          style={{
-            fontSize: 16,
-            fontFamily: font.bold,
-          }}>
-          {missionName}
-        </Text>
+        {isMissionPoint ? (
+          <Text
+            numberOfLines={2}
+            style={{
+              fontSize: 16,
+              fontFamily: font.bold,
+            }}>
+            {`บินสะสมครบ ${total} ไร่`}
+          </Text>
+        ) : (
+          <Text
+            numberOfLines={2}
+            style={{
+              fontSize: 16,
+              fontFamily: font.bold,
+            }}>
+            {missionName}
+          </Text>
+        )}
       </View>
       <View
         style={{
@@ -79,7 +94,14 @@ export default function CardMission({
               fontSize: 14,
               fontFamily: font.light,
             }}>
-            {description}
+            {isMissionPoint
+              ? `รับแต้มจำนวน ${numberWithCommas(
+                  point ? point : '0',
+                  true,
+                )} แต้ม`
+              : description
+              ? description
+              : '-'}
           </Text>
 
           <ProgressBarAnimated
@@ -165,50 +187,104 @@ export default function CardMission({
               </View>
             </>
           )}
-          {isExpired || isFullQuota ? (
-            <Grayscale>
-              <ImageBackground
-                source={{
-                  uri: imageSource,
-                }}
-                imageStyle={{
-                  borderRadius: 34,
-                }}
-                style={{
-                  width: 68,
-                  height: 68,
-                  borderRadius: 34,
-                }}>
-                {isFullQuota && (
-                  <>
+
+          <>
+            {isExpired || isFullQuota ? (
+              <Grayscale>
+                <ImageBackground
+                  source={
+                    isMissionPoint
+                      ? image.missionPointImage
+                      : {
+                          uri: imageSource,
+                        }
+                  }
+                  imageStyle={{
+                    borderRadius: 34,
+                  }}
+                  style={{
+                    width: 68,
+                    height: 68,
+                    borderRadius: 34,
+                  }}>
+                  {isFullQuota && (
+                    <>
+                      <View
+                        style={{
+                          width: 68,
+                          height: 68,
+                          zIndex: 1,
+                          opacity: 0.6,
+                          position: 'absolute',
+                          borderRadius: 34,
+                          backgroundColor: colors.fontGrey,
+
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      />
+                      <Image
+                        source={image.fullQuota}
+                        style={{
+                          width: 50,
+                          height: 24,
+                          position: 'absolute',
+                          zIndex: 2,
+                          top: 16,
+                          left: 14,
+                        }}
+                      />
+                    </>
+                  )}
+
+                  {isDouble && (
                     <View
                       style={{
-                        width: 68,
-                        height: 68,
-                        zIndex: 1,
-                        opacity: 0.6,
                         position: 'absolute',
-                        borderRadius: 34,
-                        backgroundColor: colors.fontGrey,
-
+                        bottom: 0,
+                        right: 0,
+                        width: 24,
+                        height: 24,
+                        zIndex: 10,
+                        borderRadius: 12,
+                        backgroundColor: colors.disable,
                         alignItems: 'center',
                         justifyContent: 'center',
-                      }}
-                    />
-                    <Image
-                      source={image.fullQuota}
-                      style={{
-                        width: 50,
-                        height: 24,
-                        position: 'absolute',
-                        zIndex: 2,
-                        top: 16,
-                        left: 14,
-                      }}
-                    />
-                  </>
-                )}
-
+                        borderWidth: 1,
+                        borderColor: colors.white,
+                      }}>
+                      <Text
+                        style={{
+                          color: colors.white,
+                          fontSize: 14,
+                          fontFamily: font.bold,
+                          lineHeight: 14,
+                        }}>
+                        x2
+                      </Text>
+                    </View>
+                  )}
+                </ImageBackground>
+              </Grayscale>
+            ) : (
+              <>
+                <ImageBackground
+                  source={
+                    isMissionPoint
+                      ? image.missionPointImage
+                      : {
+                          uri: imageSource,
+                        }
+                  }
+                  imageStyle={{
+                    borderRadius: 34,
+                  }}
+                  style={{
+                    width: 68,
+                    height: 68,
+                    borderRadius: 34,
+                  }}
+                />
                 {isDouble && (
                   <View
                     style={{
@@ -219,7 +295,7 @@ export default function CardMission({
                       height: 24,
                       zIndex: 10,
                       borderRadius: 12,
-                      backgroundColor: colors.disable,
+                      backgroundColor: colors.orange,
                       alignItems: 'center',
                       justifyContent: 'center',
                       borderWidth: 1,
@@ -236,52 +312,9 @@ export default function CardMission({
                     </Text>
                   </View>
                 )}
-              </ImageBackground>
-            </Grayscale>
-          ) : (
-            <>
-              <ImageBackground
-                source={{
-                  uri: imageSource,
-                }}
-                imageStyle={{
-                  borderRadius: 34,
-                }}
-                style={{
-                  width: 68,
-                  height: 68,
-                  borderRadius: 34,
-                }}
-              />
-              {isDouble && (
-                <View
-                  style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    right: 0,
-                    width: 24,
-                    height: 24,
-                    zIndex: 10,
-                    borderRadius: 12,
-                    backgroundColor: colors.orange,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderWidth: 1,
-                    borderColor: colors.white,
-                  }}>
-                  <Text
-                    style={{
-                      color: colors.white,
-                      fontSize: 14,
-                      fontFamily: font.bold,
-                      lineHeight: 14,
-                    }}>
-                    x2
-                  </Text>
-                </View>
-              )}
-            </>
-          )}
+              </>
+            )}
+          </>
         </View>
       </View>
     </TouchableOpacity>

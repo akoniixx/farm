@@ -92,6 +92,7 @@ interface Reward {
   updateAt: string;
 }
 
+const take = 10;
 export default function Body({navigation}: Props) {
   const height = Dimensions.get('window').height;
   const [missionList, setMissionList] = React.useState<{
@@ -110,7 +111,7 @@ export default function Body({navigation}: Props) {
       const dronerId = await AsyncStorage.getItem('droner_id');
       const payload = {
         page: 1,
-        take: 10,
+        take,
         dronerId: dronerId || '',
       };
       const res = await missionDatasource.getListMissions(payload);
@@ -150,7 +151,7 @@ export default function Body({navigation}: Props) {
         const dronerId = await AsyncStorage.getItem('droner_id');
         const payload = {
           page: Math.ceil(missionList.mission.length / 10) + 1,
-          take: 10,
+          take,
           dronerId: dronerId || '',
         };
         const res = await missionDatasource.getListMissions(payload);

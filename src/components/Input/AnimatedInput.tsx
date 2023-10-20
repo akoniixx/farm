@@ -16,14 +16,20 @@ interface Props extends TextInputProps {
   editable?: boolean;
   style?: ViewStyle;
   stylesInput?: TextInputProps['style'];
+  suffix?: React.ReactNode;
+  blurPosition?: number;
+  suffixPosition?: number;
 }
 const AnimatedInput = ({
   label,
   onChangeText,
-  value,
+  value = '',
   editable = true,
   style,
+  suffix,
   stylesInput,
+  blurPosition = 0,
+  suffixPosition = 20,
   ...props
 }: Props) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -62,12 +68,12 @@ const AnimatedInput = ({
     setIsFocused(false);
 
     if (value?.trim() === '') {
-      animateLabel(0, 1);
+      animateLabel(blurPosition, 1);
     }
   };
 
   return (
-    <View style={[styles(isFocused).container, style]}>
+    <View style={[styles(isFocused, !!suffix).container, style]}>
       <Animated.Text
         style={[
           styles(isFocused || value?.length > 0).label,
@@ -80,7 +86,7 @@ const AnimatedInput = ({
       <TextInput
         allowFontScaling={false}
         editable={editable}
-        style={[styles(isFocused).input, stylesInput]}
+        style={[styles(isFocused, !!suffix).input, stylesInput]}
         value={value}
         focusable={isFocused}
         returnKeyType="done"
@@ -93,12 +99,22 @@ const AnimatedInput = ({
         onBlur={handleBlur}
         {...props}
       />
+      {suffix && (
+        <View
+          style={{
+            position: 'absolute',
+            right: 16,
+            top: style?.height ? +style.height / 2 - 12 : suffixPosition,
+          }}>
+          {suffix}
+        </View>
+      )}
     </View>
   );
 };
 
-const styles = (isFocused?: boolean) =>
-  StyleSheet.create({
+const styles = (isFocused?: boolean, suffix?: boolean) => {
+  return StyleSheet.create({
     container: {
       marginBottom: 16,
     },
@@ -122,7 +138,10 @@ const styles = (isFocused?: boolean) =>
       color: colors.fontBlack,
       fontFamily: font.light,
       minHeight: 56,
+      width: '100%',
+      paddingRight: suffix ? 50 : 16,
     },
   });
+};
 
 export default AnimatedInput;

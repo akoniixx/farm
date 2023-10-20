@@ -4,6 +4,7 @@ import {
   httpClient,
   uploadFileProfile,
 } from '../config/develop-config';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export class ProfileDatasource {
   static async getProfile(dronerID: string): Promise<any> {
@@ -14,10 +15,16 @@ export class ProfileDatasource {
       })
       .catch(error => {
         console.log(error);
+        crashlytics().log('getProfile');
+        crashlytics().recordError(error);
+        crashlytics().setAttributes({
+          dronerId: dronerID,
+        });
+        throw error;
       });
   }
 
-  static deleteAccount(dronerID: string): Promise<any> {
+  static async deleteAccount(dronerID: string): Promise<any> {
     return httpClient
       .delete(BASE_URL + `/droner/${dronerID}`)
       .then(response => {
@@ -25,6 +32,11 @@ export class ProfileDatasource {
       })
       .catch(error => {
         console.log(error);
+        crashlytics().log('deleteAccount');
+        crashlytics().recordError(error);
+        crashlytics().setAttributes({
+          dronerId: dronerID,
+        });
       });
   }
 
@@ -35,7 +47,12 @@ export class ProfileDatasource {
         return response.data;
       })
       .catch(error => {
-        console.log(error);
+        crashlytics().log('getImagePath');
+        crashlytics().recordError(error);
+        crashlytics().setAttributes({
+          dronerId: dronerID,
+          imagePath: imagePath,
+        });
       });
   }
 
@@ -56,6 +73,11 @@ export class ProfileDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().log('getDroneBrandType');
+        crashlytics().recordError(error);
+        crashlytics().setAttributes({
+          id: id,
+        });
         console.log(error);
       });
   }
@@ -67,6 +89,11 @@ export class ProfileDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().log('addDronerDrone');
+        crashlytics().recordError(error);
+        crashlytics().setAttributes({
+          dronedata: dronedata,
+        });
         console.log(error);
       });
   }
@@ -88,6 +115,12 @@ export class ProfileDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().log('uploadDronerLicense');
+        crashlytics().recordError(error);
+        crashlytics().setAttributes({
+          droner_id: droner_id ? droner_id : '',
+          file: file,
+        });
         console.log(error);
       });
   }
@@ -109,6 +142,12 @@ export class ProfileDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().log('uploadIDCard');
+        crashlytics().recordError(error);
+        crashlytics().setAttributes({
+          droner_id: droner_id ? droner_id : '',
+          file: file,
+        });
         console.log(error);
       });
   }
@@ -129,6 +168,12 @@ export class ProfileDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().log('uploadDroneLicense');
+        crashlytics().recordError(error);
+        crashlytics().setAttributes({
+          drone_id: drone_id ? drone_id : '',
+          file: file,
+        });
         console.log(error);
       });
   }
@@ -141,6 +186,11 @@ export class ProfileDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().log('getTaskrevenuedroner');
+        crashlytics().recordError(error);
+        crashlytics().setAttributes({
+          drone_id: drone_id ? drone_id : '',
+        });
         console.log(error);
       });
   }
@@ -162,6 +212,12 @@ export class ProfileDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().log('uploadDronerIDCard');
+        crashlytics().recordError(error);
+        crashlytics().setAttributes({
+          droner_id: droner_id ? droner_id : '',
+          file: file,
+        });
         console.log(error);
       });
   }
@@ -183,6 +239,12 @@ export class ProfileDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().log('uploadProfileImage');
+        crashlytics().recordError(error);
+        crashlytics().setAttributes({
+          droner_id: droner_id ? droner_id : '',
+          image: image,
+        });
         console.log(error);
       });
   }
@@ -197,6 +259,12 @@ export class ProfileDatasource {
         return response.data;
       })
       .catch(error => {
+        crashlytics().log('addIdCard');
+        crashlytics().recordError(error);
+        crashlytics().setAttributes({
+          droner_id: droner_id ? droner_id : '',
+          idcard: idcard,
+        });
         console.log(error);
       });
   }
@@ -216,14 +284,22 @@ export class ProfileDatasource {
     data: [];
   }> {
     const drone_id = await AsyncStorage.getItem('droner_id');
-    // const drone_id = '480cca3a-f5c8-4df5-aeae-765c6aadf13d';
     return httpClient
       .get(
         BASE_URL +
           `/tasks/task-revenue/get-history-revenue?dronerId=${drone_id}&dateAppointmentStart=${start}&dateAppointmentEnd=${end}&page=${page}&take=${take}`,
       )
       .then(res => res.data)
-      .catch(err => console.log(err));
+      .catch(err => {
+        crashlytics().log('getListTaskInProgress');
+        crashlytics().recordError(err);
+        crashlytics().setAttributes({
+          drone_id: drone_id ? drone_id : '',
+          start: start,
+          end: end,
+        });
+        console.log(err);
+      });
   }
 
   static async editServiceArea(
@@ -297,7 +373,20 @@ export class ProfileDatasource {
         ...payload,
       })
       .then(res => res.data)
-      .catch(err => console.log(err));
+      .catch(err => {
+        crashlytics().log('postAddressList');
+        crashlytics().recordError(err);
+        crashlytics().setAttributes({
+          dronerId: dronerId,
+          provinceId: payload.provinceId,
+          districtId: payload.districtId,
+          subdistrictId: payload.subdistrictId,
+          postcode: payload.postcode,
+          address1: payload.address1,
+          address2: payload.address2,
+        });
+        console.log(err);
+      });
   }
   static async editAddressList({
     addressId,
@@ -317,6 +406,19 @@ export class ProfileDatasource {
         ...payload,
       })
       .then(res => res.data)
-      .catch(err => console.log(err));
+      .catch(err => {
+        crashlytics().log('editAddressList');
+        crashlytics().recordError(err);
+        crashlytics().setAttributes({
+          addressId: addressId,
+          provinceId: payload.provinceId,
+          districtId: payload.districtId,
+          subdistrictId: payload.subdistrictId,
+          postcode: payload.postcode,
+          address1: payload.address1,
+          address2: payload.address2,
+        });
+        console.log(err);
+      });
   }
 }

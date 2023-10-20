@@ -1,5 +1,5 @@
 import {View, StyleSheet, Animated, Pressable} from 'react-native';
-import React, {useRef} from 'react';
+import React, {useMemo, useRef} from 'react';
 import Text from '../../components/Text';
 
 import moment from 'moment';
@@ -13,6 +13,9 @@ interface Props {
   mission: Mission;
 }
 export default function CollapseItem({navigation, mission}: Props) {
+  const isMissionPoint = useMemo(() => {
+    return mission.campaignType === 'MISSION_POINT';
+  }, [mission.campaignType]);
   const [isCollapse, setIsCollapse] = React.useState<boolean>(true);
   const animatedValue = useRef(new Animated.Value(1)).current;
   const rai = mission.condition[0].allRai;
@@ -106,7 +109,7 @@ export default function CollapseItem({navigation, mission}: Props) {
 
       {isCollapse && (
         <>
-          {rai > 0 ? (
+          {rai > -1 ? (
             <View style={styles.boxOrange}>
               <View style={styles.row}>
                 <Text
@@ -150,17 +153,22 @@ export default function CollapseItem({navigation, mission}: Props) {
             const current = el.allRai > el.rai ? el.rai : el.allRai;
             const isExpired = moment().isAfter(mission.endDate);
             const isStatusComplete = el.status === 'COMPLETE';
+
             return (
               <CardMission
                 isComplete={isComplete}
                 current={current}
                 isStatusComplete={isStatusComplete}
-                imageSource={el.reward.imagePath}
+                imageSource={el?.reward?.imagePath}
                 isExpired={isExpired}
+                isMissionPoint={isMissionPoint}
                 total={el.rai}
                 isDouble={false}
+                point={el.point}
                 missionName={el.missionName}
-                description={`รับ${el.reward.rewardName}`}
+                description={
+                  el?.reward?.rewardName ? `รับ${el.reward.rewardName}` : null
+                }
                 isFullQuota={false}
                 key={el.num}
                 onPress={() => {
@@ -181,6 +189,8 @@ export default function CollapseItem({navigation, mission}: Props) {
                       descriptionReward: el.descriptionReward,
                       num: el.num,
                       missionId: el.missionId,
+                      isMissionPoint,
+                      missionPointDetail: el,
                     },
                   });
                 }}

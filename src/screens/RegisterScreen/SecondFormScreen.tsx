@@ -32,6 +32,7 @@ import CalendarCustom from '../../components/Calendar/Calendar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {build12Year, CalendarMode} from '../../hooks/calendar';
 import Text from '../../components/Text';
+import AnimatedInput from '../../components/Input/AnimatedInput';
 
 const SecondFormScreen: React.FC<any> = ({navigation, route}) => {
   const initialFormRegisterState = {
@@ -176,8 +177,8 @@ const SecondFormScreen: React.FC<any> = ({navigation, route}) => {
             <View style={{marginTop: normalize(40)}}>
               <Text style={styles.h1}>ข้อมูลทั่วไป (โปรดระบุ)</Text>
             </View>
-            <TextInput
-              allowFontScaling={false}
+            <AnimatedInput
+              label="ชื่อ"
               onChangeText={value => {
                 dispatch({
                   type: 'Handle Input',
@@ -186,11 +187,8 @@ const SecondFormScreen: React.FC<any> = ({navigation, route}) => {
                 });
               }}
               value={formState.name}
-              style={styles.input}
-              editable={true}
-              placeholder={'ชื่อ'}
-              placeholderTextColor={colors.disable}
             />
+
             <TextInput
               allowFontScaling={false}
               onChangeText={value => {

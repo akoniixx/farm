@@ -7,6 +7,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <React/RCTLinkingManager.h> // <- Add This Import
 #import <FBAEMKit/FBAEMKit.h>
+#import <Firebase.h>
+ 
 
 #import "RNSplashScreen.h"
 
@@ -53,7 +55,6 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 [FBAEMReporter handleURL:url];
 
 
-
   if ([[FBSDKApplicationDelegate sharedInstance] application:app openURL:url options:options]) {
     return YES;
   }
@@ -74,6 +75,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
                        
   [GMSServices provideAPIKey:@"AIzaSyDg4BI3Opn-Bo2Pnr40Z7PKlC6MOv8T598"];
   RCTAppSetupPrepareApp(application);
+ [FIRApp configure];
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
 
@@ -109,6 +111,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
   [RNSplashScreen show];
   [[FBSDKApplicationDelegate sharedInstance] application:application
                        didFinishLaunchingWithOptions:launchOptions];

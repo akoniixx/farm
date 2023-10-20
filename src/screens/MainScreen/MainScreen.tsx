@@ -28,10 +28,15 @@ import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage
 import {useNetwork} from '../../contexts/NetworkContext';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Text from '../../components/Text';
+import {useAuth} from '../../contexts/AuthContext';
 
 const MainScreen: React.FC<any> = ({navigation}) => {
   const {isConnected} = useNetwork();
   const socketSheetRef = React.useRef(false);
+  const {
+    state: {user},
+  } = useAuth();
+
   const insets = useSafeAreaInsets();
   const [profile, setProfile] = useState({
     name: '',
@@ -62,7 +67,7 @@ const MainScreen: React.FC<any> = ({navigation}) => {
 
   useEffect(() => {
     findAllNews();
-  }, [isFocused]);
+  }, []);
   const findAllNews = async () => {
     setLoading(true);
     GuruKaset.findAllNews({
@@ -83,34 +88,41 @@ const MainScreen: React.FC<any> = ({navigation}) => {
   useEffect(() => {
     fetchImage();
     getProfile();
-    openSocket();
     getCurrentPoint();
-    return () => {
-      socketSheetRef.current = false;
-    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const openSocket = async () => {
-    const dronerId = await AsyncStorage.getItem('droner_id');
-    await socket.connect();
 
-    socket.on(`send-task-${dronerId!}`, ({data, image_profile_url}) => {
-      if (socketSheetRef.current) {
-        return;
-      }
-      socketSheetRef.current = true;
-      SheetManager.show('NewTaskSheet', {
-        payload: {
-          data,
-          dronerId,
-          image_profile_url,
-          onHide: () => {
-            socketSheetRef.current = false;
-          },
-        },
+  useEffect(() => {
+    const openSocket = async () => {
+      !socket.connected && socket.connect();
+      socket.on(`send-task-${user?.id}`, async ({data, image_profile_url}) => {
+        if (socketSheetRef.current) {
+          return;
+        }
+        socketSheetRef.current = true;
+        try {
+          await SheetManager.show('NewTaskSheet', {
+            payload: {
+              data,
+              dronerId: user?.id,
+              image_profile_url,
+              onHide: () => {
+                socketSheetRef.current = false;
+              },
+            },
+          });
+        } catch (err) {
+          console.log(err);
+        } finally {
+          socketSheetRef.current = false;
+        }
       });
-    });
-  };
+    };
+    if (user?.id) {
+      openSocket();
+    }
+  }, [user?.id]);
 
   const fetchImage = async () => {
     await Campaign.getImage('DRONER', 'QUATA', 'ACTIVE')
@@ -386,7 +398,7 @@ const MainScreen: React.FC<any> = ({navigation}) => {
         </View>
       </View>
 
-      {isConnected && (
+      {isConnected && campaignImage && (
         <View
           style={{
             display: showCampaign,

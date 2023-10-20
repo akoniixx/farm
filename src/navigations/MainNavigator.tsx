@@ -122,6 +122,16 @@ export type StackParamList = {
       num: number;
       missionId: string;
       status: string;
+      isMissionPoint: boolean;
+      missionPointDetail: {
+        num: number;
+        rai: number;
+        point: number;
+        conditionReward: string;
+        descriptionReward: string;
+        allRai: number;
+        status: string;
+      };
     };
   };
   MyProfileScreen: any;

@@ -19,6 +19,9 @@ export default function RenderHTML(props: Props) {
       {...props}
       enableExperimentalBRCollapsing
       tagsStyles={htmlCss}
+      defaultTextProps={{
+        allowFontScaling: false,
+      }}
       systemFonts={[font.light, font.semiBold, font.medium, font.bold]}
     />
   );

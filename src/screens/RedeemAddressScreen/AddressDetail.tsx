@@ -283,19 +283,7 @@ export default function AddressDetail({
       ) : (
         <View>
           <TouchableOpacity
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 10,
-              margin: 8,
-              width: 'auto',
-              alignSelf: 'flex-start',
-              borderWidth: 1,
-              borderColor: '#FB8705',
-              borderRadius: 8,
-            }}
+            style={styles.buttonAddNewAddress}
             onPress={() => {
               navigation.navigate('CustomAddressScreen', {data: null});
             }}>
@@ -392,19 +380,7 @@ export default function AddressDetail({
         {notHaveAddress ? (
           <View>
             <TouchableOpacity
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: 10,
-                margin: 8,
-                width: 'auto',
-                alignSelf: 'flex-start',
-                borderWidth: 1,
-                borderColor: '#FB8705',
-                borderRadius: 8,
-              }}
+              style={styles.buttonAddNewAddress}
               onPress={() => {
                 navigation.navigate('CustomAddressScreen', {
                   data: null,
@@ -619,5 +595,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: font.bold,
     color: colors.fontBlack,
+  },
+  buttonAddNewAddress: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 8,
+    padding: 8,
+    height: 54,
+    width: 'auto',
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: '#FB8705',
+    borderRadius: 8,
   },
 });

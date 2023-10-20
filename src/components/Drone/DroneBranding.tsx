@@ -95,6 +95,7 @@ const DroneBrandingItem: React.FC<DroneBranding> = ({
             backgroundColor: StatusObject(status).colorBg,
             borderWidth: 1,
             borderColor: StatusObject(status).fontColor,
+            paddingHorizontal: normalize(10),
           }}>
           <Text style={[styles.label, {color: StatusObject(status).fontColor}]}>
             {StatusObject(status).status}
