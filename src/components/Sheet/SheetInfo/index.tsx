@@ -17,7 +17,7 @@ export default function SheetInfo({sheetId}: SheetProps) {
       safeAreaInsets={{bottom: 0, top: 0, left: 0, right: 0}}
       useBottomSafeAreaPadding={false}
       containerStyle={{
-        height: '33%',
+        height: 330,
       }}>
       <View style={styles.container}>
         <NicknameSheet />
