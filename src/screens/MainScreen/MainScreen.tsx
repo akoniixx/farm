@@ -125,7 +125,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         .then(async res => {
           setReason(res.reason);
           await sendProfilesToMixpanel(res);
-          await AsyncStorage.setItem('plot_id', `${res.farmerPlot[0].id}`);
+          await AsyncStorage.setItem('plot_id', `${res?.farmerPlot[0]?.id}`);
           dispatch({
             type: 'InitProfile',
             name: `${res.firstname}`,

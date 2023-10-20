@@ -192,7 +192,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                             ? `${
                                 profilestate?.image
                               }&time=${new Date().getTime()}`
-                            : profilestate?.image,
+                            : profilestate.image,
                       }
                     : icons.avatar
                 }
@@ -554,7 +554,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
             </View>
           )}
           {profilestate.status === 'PENDING' && (
-            <View style={{ paddingHorizontal: 25, paddingBottom: 15 }}>
+            <View style={{ paddingHorizontal: 16, paddingBottom: 15 }}>
               <View style={styles.card}>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textVerify}>
