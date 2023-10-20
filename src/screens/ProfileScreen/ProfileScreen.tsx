@@ -138,7 +138,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
       );
     }
   };
-  // console.log(profilestate.image);
+
   return (
     <SafeAreaView style={{ backgroundColor: '#F7FFF0' }}>
       {noti ? (
@@ -187,9 +187,12 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                 source={
                   profilestate?.image
                     ? {
-                        uri: `${
-                          profilestate?.image
-                        }&time=${new Date().getTime()}`,
+                        uri:
+                          Platform.OS === 'ios'
+                            ? `${
+                                profilestate?.image
+                              }&time=${new Date().getTime()}`
+                            : profilestate?.image,
                       }
                     : icons.avatar
                 }
