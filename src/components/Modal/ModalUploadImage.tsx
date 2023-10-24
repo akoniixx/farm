@@ -1,4 +1,11 @@
-import {View, Image, TouchableOpacity, Platform, Linking} from 'react-native';
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  Platform,
+  Linking,
+  PermissionsAndroid,
+} from 'react-native';
 import React from 'react';
 import Modal from './Modal';
 import {colors, font, icons} from '../../assets';
@@ -94,8 +101,25 @@ export default function ModalUploadImage({
     {
       id: 2,
       label: 'เลือกจากคลังภาพ',
-      onPress: () => {
-        onPressLibrary();
+      onPress: async () => {
+        if (Platform.OS === 'android') {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+            {
+              title: 'ขออนุญาติเข้าถึงไฟล์',
+              message: 'แอปต้องการเข้าถึงไฟล์ของคุณ',
+              buttonPositive: 'ตกลง',
+              buttonNegative: 'ยกเลิก',
+            },
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            onPressLibrary();
+          } else {
+            onCancel();
+          }
+        } else {
+          onPressLibrary();
+        }
       },
       icon: icons.imageStorage,
     },
