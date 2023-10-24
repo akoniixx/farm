@@ -140,8 +140,8 @@ android {
         applicationId "com.iconkaset.farmer"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1015
-        versionName "1.4.20"
+        versionCode 1016
+        versionName "1.4.26"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
         vectorDrawables.useSupportLibrary = true
 
