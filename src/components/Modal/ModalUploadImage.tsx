@@ -113,10 +113,11 @@ export default function ModalUploadImage({
               buttonNegative: 'ยกเลิก',
             },
           );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          if (
+            granted === PermissionsAndroid.RESULTS.GRANTED ||
+            granted === 'never_ask_again'
+          ) {
             onPressLibrary();
-          } else {
-            onCancel();
           }
         } else {
           onPressLibrary();
