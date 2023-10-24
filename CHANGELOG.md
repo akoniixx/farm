@@ -1,4 +1,4 @@
-## Fix [1.7.8] 2023-10-24
+## Fix [1.8.0] 2023-10-24
 - request permission media-image & crashlytics log
 
 ## Log [1.7.7] 2023-10-18 
