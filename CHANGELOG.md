@@ -1,3 +1,5 @@
+## Fix [1.4.27] 2023-10-24
+- request permission media-image & crashlytics log
 ## Log [1.4.26] 2023-10-17 
 - disable button when fire api  Droner Detail (Force Create Task)
 - crashlytics log

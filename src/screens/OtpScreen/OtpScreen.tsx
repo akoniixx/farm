@@ -29,6 +29,7 @@ import messaging from '@react-native-firebase/messaging';
 import Text from '../../components/Text/Text';
 import { Image } from 'react-native';
 import LottieOTP from '../../components/LottiesRender/LottieOTP';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const CELL_COUNT = 6;
 
@@ -147,11 +148,19 @@ const OtpScreen: React.FC<any> = ({ navigation, route }) => {
               setErrOTP(false);
               await AsyncStorage.setItem('token', result.accessToken);
               await AsyncStorage.setItem('farmer_id', result.data.id);
+
               const fcmToken =
                 (await AsyncStorage.getItem('fcmtoken')) ??
-                (await messaging().getToken());
+                (await messaging()
+                  .getToken()
+                  .catch(err => {
+                    crashlytics().log('FCM token error');
+                    crashlytics().log(err);
+                    crashlytics().recordError(err);
+                    return '';
+                  }));
               FCMtokenDatasource.saveFCMtoken(fcmToken)
-                .then(async result => {
+                .then(async () => {
                   await RootNavigation.navigate('Main', {
                     screen: 'MainScreen',
                   });
