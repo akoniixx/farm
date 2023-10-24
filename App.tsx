@@ -12,7 +12,7 @@ import buddhaEra from 'dayjs/plugin/buddhistEra';
 import dayjs from 'dayjs';
 import {AuthProvider} from './src/contexts/AuthContext';
 import {Settings} from 'react-native-fbsdk-next';
-import {check, request} from 'react-native-permissions';
+import {check, request, requestMultiple} from 'react-native-permissions';
 dayjs.extend(buddhaEra);
 import {
   firebaseInitialize,
@@ -54,6 +54,12 @@ const App = () => {
     prefixes: ['dronerapp://'],
   };
   const [actiontaskId, setActiontaskId] = useState<string | null>('');
+  const requestPermissionMedia = async () => {
+    const status = await requestMultiple([
+      'android.permission.READ_EXTERNAL_STORAGE',
+    ]);
+    console.log('status', status);
+  };
   const requestTracking = async () => {
     const status = await request('ios.permission.APP_TRACKING_TRANSPARENCY');
     const trackingStatus = await check(
@@ -101,6 +107,7 @@ const App = () => {
   }, []);
   useEffect(() => {
     requestTracking();
+    requestPermissionMedia();
   }, []);
 
   return (
