@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen; 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 
@@ -47,7 +48,8 @@ public class MainActivity extends ReactActivity {
        NotificationManager manager = getSystemService(NotificationManager.class);
        manager.createNotificationChannel(notificationChannel);
      }
-
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
+        FirebaseCrashlytics.getInstance().log("Setting up Crashlytics");
         SplashScreen.show(this);  // here
         super.onCreate(null); // set null for oppo
     }
