@@ -12,6 +12,7 @@ import ModalImageExample from './ModalImageExample';
 import ModalUploadImage from '../ModalUploadImage';
 import Modal from '../Modal';
 import {ImagePickerResponse} from 'react-native-image-picker';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 interface Props {
   visible: boolean;
@@ -62,6 +63,13 @@ export default function ModalTaskDone({
       compressImageMaxHeight: 1000,
       compressImageQuality: 0.8,
       forceJpg: true,
+    }).catch(e => {
+      console.log(e);
+      crashlytics().log('onAddImageController');
+      crashlytics().recordError(e);
+      crashlytics().setAttribute('message', e);
+
+      return null;
     });
     if (result) {
       const fileSize = result?.size;
