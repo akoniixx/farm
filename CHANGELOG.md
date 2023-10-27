@@ -1,3 +1,6 @@
+## Enhance [1.4.25] 2023-10-09
+- show iframe in news guru
+
 ## Enhance [1.4.24] 2023-10-09
 
 - display nickname droner
