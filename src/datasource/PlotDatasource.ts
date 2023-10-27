@@ -110,7 +110,7 @@ export class PlotDatasource {
     plotAreaId: any,
   ): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-
+    console.log("create")
     // if (!plotName) {
     return httpClient
       .post(BASE_URL + `/farmer-plot`, {
@@ -180,8 +180,11 @@ export class PlotDatasource {
     ...payload
   }: UpdatePlot): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
-
+    console.log("update")
     const index = 0;
+    console.log({
+      ...payload
+    })
     if (!plotName) {
       return httpClient
         .patch(BASE_URL + `/farmer-plot/${plotId}`, {
