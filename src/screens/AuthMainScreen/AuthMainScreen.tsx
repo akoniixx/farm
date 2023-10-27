@@ -37,6 +37,7 @@ import { DronerDatasource } from '../../datasource/DronerDatasource';
 
 const AuthMainScreen: React.FC<any> = ({ navigation }) => {
   const { notiMaintenance, maintenanceData } = useMaintenance();
+  const { popUpIsClose } = useMaintenance();
   const [loading, setLoading] = useState<boolean>(false);
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [dronerNearMe, setDronerNearMe] = useState<{
@@ -132,11 +133,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
   useEffect(() => {
     getProfile();
     findAllNews();
-    if (isConfirm === null) {
-      setTimeout(() => {
-        setShowModalPermission(true);
-      }, 1000);
-    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
@@ -146,6 +143,14 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
       });
     }
   }, [appState, isConfirm]);
+
+  useEffect(() => {
+    if (isConfirm === null && popUpIsClose) {
+      setTimeout(() => {
+        setShowModalPermission(true);
+      }, 1500);
+    }
+  }, [popUpIsClose, isConfirm]);
   useEffect(() => {
     const getCurrentLocation = async () => {
       if (permission === 'granted') {

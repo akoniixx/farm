@@ -1,4 +1,11 @@
-import { View, TouchableOpacity, Platform, Linking, Image } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Platform,
+  Linking,
+  Image,
+  PermissionsAndroid,
+} from 'react-native';
 import React from 'react';
 import { colors, font, icons } from '../../assets';
 import { Camera, PhotoFile } from 'react-native-vision-camera';
@@ -87,6 +94,7 @@ export default function ModalUploadImage({
       label: 'ถ่ายภาพ',
       onPress: () => {
         Platform.OS === 'android' ? onOpenCamera() : onPressCamera();
+        // onPressCamera();
       },
       id: 1,
       icon: icons.camera,
@@ -94,8 +102,26 @@ export default function ModalUploadImage({
     {
       id: 2,
       label: 'เลือกรูปภาพ',
-      onPress: () => {
-        onPressLibrary();
+      onPress: async () => {
+        if (Platform.OS === 'android') {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+            {
+              title: 'ขออนุญาติเข้าถึงไฟล์',
+              message: 'แอปต้องการเข้าถึงไฟล์ของคุณ',
+              buttonPositive: 'ตกลง',
+              buttonNegative: 'ยกเลิก',
+            },
+          );
+          if (
+            granted === PermissionsAndroid.RESULTS.GRANTED ||
+            granted === 'never_ask_again'
+          ) {
+            onPressLibrary();
+          }
+        } else {
+          onPressLibrary();
+        }
       },
       icon: icons.selectImage,
     },

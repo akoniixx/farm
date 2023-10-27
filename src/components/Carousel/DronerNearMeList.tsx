@@ -3,15 +3,12 @@ import {
   StyleSheet,
   View,
   ImageBackground,
-  TouchableOpacity,
   Platform,
-  ActivityIndicator,
   Dimensions,
 } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import { normalize } from '../../functions/Normalize';
 import { colors, font, icons, image } from '../../assets';
-import { Avatar } from '@rneui/base';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Text from '../Text/Text';
@@ -211,7 +208,7 @@ const styles = StyleSheet.create({
       },
       android: {
         backgroundColor: colors.white,
-        height: normalize(210),
+        height: normalize(220),
         width: normalize(160),
         borderRadius: 10,
         borderWidth: 1,

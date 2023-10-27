@@ -348,10 +348,14 @@ export class Register {
   }
   static async uploadProfileImage(image: any): Promise<any> {
     const farmer_id = await AsyncStorage.getItem('farmer_id');
+    const imageSplit = image.assets[0].uri.split('/');
+    const fileName = image.assets[0].fileName
+      ? image.assets[0].fileName
+      : imageSplit[imageSplit.length - 1];
     const data = new FormData();
     data.append('file', {
       uri: image.assets[0].uri,
-      name: image.assets[0].fileName,
+      name: fileName,
       type: image.assets[0].type,
     });
     data.append('resourceId', farmer_id);

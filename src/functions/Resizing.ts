@@ -8,7 +8,7 @@ const ResizeImage = async ({
   height = 1000,
   format = 'JPEG',
   quality = 90,
-  rotation = 90,
+  rotation = 0,
   outputPath,
 }: {
   uri: any;

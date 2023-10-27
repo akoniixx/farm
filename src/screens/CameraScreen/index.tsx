@@ -1,10 +1,4 @@
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import {
   Camera,
@@ -36,17 +30,39 @@ export default function CameraScreen({
     const photo = await cameraRef.current?.takePhoto({
       flash: 'auto',
       qualityPrioritization: 'speed',
-      skipMetadata: Platform.OS === 'android',
+      // skipMetadata: Platform.OS === 'android',
     });
     if (!photo) {
       return;
     }
 
-    const newResult = await ResizeImage({
+    const payload = {
       uri: photo.path,
       width: 2000,
       height: 2000,
-    });
+      rotation: 0,
+    };
+    if (photo.metadata) {
+      const orientation = photo.metadata.Orientation;
+      switch (orientation) {
+        case 1:
+          payload.rotation = 0;
+          break;
+        case 3:
+          payload.rotation = 180;
+          break;
+        case 6:
+          payload.rotation = 90;
+          break;
+        case 8:
+          payload.rotation = 270;
+          break;
+        default:
+          payload.rotation = 0;
+      }
+    }
+
+    const newResult = await ResizeImage(payload);
 
     setCurrentImage({
       height: newResult.height,
@@ -109,14 +125,14 @@ export default function CameraScreen({
                 setCurrentImage(null);
               }}
               style={{
-                padding: 16,
+                padding: 8,
                 borderRadius: 200,
               }}>
               <Image
-                source={icons.closeIcon}
+                source={icons.closeImg}
                 style={{
-                  width: 24,
-                  height: 24,
+                  width: 20,
+                  height: 20,
                 }}
               />
             </TouchableOpacity>
@@ -130,10 +146,10 @@ export default function CameraScreen({
                 borderRadius: 200,
               }}>
               <Image
-                source={icons.checked}
+                source={icons.correct}
                 style={{
-                  width: 46,
-                  height: 46,
+                  width: 40,
+                  height: 40,
                 }}
               />
             </TouchableOpacity>

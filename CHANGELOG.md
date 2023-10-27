@@ -1,6 +1,13 @@
-## Enhance [1.4.25] 2023-10-09
-- show iframe in news guru
+## Fix [1.5.0] 2023-10-24
+- request permission media-image & crashlytics log
+## Log [1.4.26] 2023-10-17 
+- disable button when fire api  Droner Detail (Force Create Task)
+- crashlytics log
+- profile image enable cropping
 
+## Enhance [1.4.25] 2023-10-10
+- new style card droner near me 
+- edit user profile 
 ## Enhance [1.4.24] 2023-10-09
 
 - display nickname droner

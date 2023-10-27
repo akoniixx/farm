@@ -140,9 +140,10 @@ android {
         applicationId "com.iconkaset.farmer"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1015
-        versionName "1.4.20"
+        versionCode 1016
+        versionName "1.4.26"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+        vectorDrawables.useSupportLibrary = true
 
         if (isNewArchitectureEnabled()) {
             // We configure the CMake build only if you decide to opt-in for the New Architecture.
@@ -269,6 +270,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
     //splash screen
     implementation project(':react-native-splash-screen')
+    implementation 'com.google.firebase:firebase-crashlytics'
   
 
     //noinspection GradleDynamicVersion

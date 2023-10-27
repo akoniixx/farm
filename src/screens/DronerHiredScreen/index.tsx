@@ -6,7 +6,7 @@ import CustomHeader from '../../components/CustomHeader';
 import { TabBar, TabView } from 'react-native-tab-view';
 import Text from '../../components/Text/Text';
 import { colors } from '../../assets';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { Dimensions, StyleSheet, useWindowDimensions } from 'react-native';
 import fonts from '../../assets/fonts';
 import { normalize } from '../../functions/Normalize';
 import { mixpanel } from '../../../mixpanel';
@@ -58,6 +58,8 @@ const renderTabBar = (props: any) => (
             color: focused ? '#1F8449' : colors.gray,
             lineHeight: 30,
             fontFamily: focused ? fonts.AnuphanSemiBold : fonts.AnuphanMedium,
+            width: Dimensions.get('window').width / 2,
+            textAlign: 'center',
           },
         ]}>
         {route.title}
@@ -179,6 +181,7 @@ export const DronerHiredScreen: React.FC<
         isNewResponse: true,
       };
       const res = await DronerDatasource.getMyFavoriteDroner(payload);
+
       setData(prev => {
         return {
           ...res,
@@ -198,38 +201,30 @@ export const DronerHiredScreen: React.FC<
       console.log(e);
     }
   }, [page, user?.farmerPlot, user?.id, data.count, data.data.length]);
-  const renderScene = useMemo(() => {
-    return () => {
-      return (
-        <Content
-          navigation={navigation}
-          data={
-            index === 1
-              ? {
-                  ...data,
-                  data: data.data.filter((item: any) => {
-                    return item.favorite_status === 'ACTIVE';
-                  }),
-                }
-              : data
-          }
-          loading={loading}
-          setData={setData}
-          loadMore={index === 1 ? loadMoreFavorite : loadMore}
-          getDronerHiredList={getDronerHiredList}
-        />
-      );
-    };
-  }, [
-    data,
-    loading,
-    navigation,
-    setData,
-    getDronerHiredList,
-    loadMore,
-    index,
-    loadMoreFavorite,
-  ]);
+
+  const renderScene = () => {
+    return (
+      <Content
+        navigation={navigation}
+        data={
+          routes[index].key === 'favorite'
+            ? {
+                ...data,
+                data: data.data.filter((item: any) => {
+                  return item.favorite_status === 'ACTIVE';
+                }),
+              }
+            : data
+        }
+        loading={loading}
+        setData={setData}
+        loadMore={
+          routes[index].key === 'favorite' ? loadMoreFavorite : loadMore
+        }
+        getDronerHiredList={getDronerHiredList}
+      />
+    );
+  };
 
   useEffect(() => {
     getDronerHiredList();
@@ -267,5 +262,6 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: fonts.AnuphanMedium,
     fontSize: normalize(20),
+    width: '100%',
   },
 });

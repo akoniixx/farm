@@ -95,7 +95,6 @@ export default function Content({
               <DronerItem
                 {...item}
                 setData={setData}
-                // data={data}
                 navigation={navigation}
                 favorite_status={
                   item.favorite_status
