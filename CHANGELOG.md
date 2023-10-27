@@ -1,3 +1,6 @@
+## Enhance [1.9.0] 2023-10-24
+- show iframe in news guru
+
 ## Fix [1.8.0] 2023-10-24
 - request permission media-image & crashlytics log
 
