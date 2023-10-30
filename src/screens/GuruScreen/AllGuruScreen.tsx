@@ -78,18 +78,15 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
       const res = await GuruKaset.findAllNews({
         status: 'ACTIVE',
         application: 'FARMER',
-        sortDirection: 'DESC',
         pageType: 'ALL',
-        sortField: 'created_at',
         offset: 1,
         limit: 5,
       });
-      setPinAll(res.data);
+      setPinAll(res.data.filter((el: any) => el.pin_all));
     } catch (err) {
       console.log(err);
     }
   };
-  console.log('length', data.data.length);
   const findAllNews = async () => {
     setLoading(true);
     GuruKaset.findAllNews({
