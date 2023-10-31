@@ -28,6 +28,7 @@ import AsyncButton from '../../components/Button/AsyncButton';
 import AnimatedInput from '../../components/Input/AnimatedInput';
 import {mixValidator} from '../../function/inputValidate';
 import InfoCircle from '../../components/InfoCircle';
+import {mixpanel} from '../../../mixpanel';
 
 const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
   const tele = route.params.tele;
@@ -133,6 +134,11 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                   borderRadius: normalize(10),
                 }}
                 label="ชื่อ"
+                onBlur={() => {
+                  mixpanel.track('RegisterScreenStepOne_InputFirstName_typed', {
+                    firstname: formState.firstname,
+                  });
+                }}
                 onChangeText={value => {
                   const newValue = mixValidator(value);
                   setFormState({
@@ -150,6 +156,11 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                 stylesInput={{
                   borderRadius: normalize(10),
                 }}
+                onBlur={() => {
+                  mixpanel.track('RegisterScreenStepOne_InputLastName_typed', {
+                    lastname: formState.lastname,
+                  });
+                }}
                 onChangeText={value => {
                   const newValue = mixValidator(value);
                   setFormState({
@@ -163,6 +174,11 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
                 maxLength={50}
                 stylesInput={{
                   borderRadius: normalize(10),
+                }}
+                onBlur={() => {
+                  mixpanel.track('RegisterScreenStepOne_InputNickName_typed', {
+                    nickname: formState.nickname,
+                  });
                 }}
                 label={'ชื่อเล่น (ชื่อที่เกษตรเรียก)'}
                 suffixPosition={18}
@@ -279,6 +295,12 @@ const FirstFormScreenV2: React.FC<any> = ({navigation, route}) => {
             try {
               const res = await Register.registerStep1V2({
                 ...formState,
+                telephoneNo: tele,
+              });
+              mixpanel.track('RegisterScreenStepOne', {
+                firstname: formState.firstname,
+                lastname: formState.lastname,
+                nickname: formState.nickname,
                 telephoneNo: tele,
               });
               if (!image) {

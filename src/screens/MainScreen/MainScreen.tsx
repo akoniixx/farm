@@ -313,7 +313,11 @@ const MainScreen: React.FC<any> = ({navigation}) => {
               <View>
                 <TouchableOpacity
                   onPress={() => {
-                    mixpanel.track('กดดูประวัติการได้รับแต้ม/ใช้แต้ม');
+                    mixpanel.track('MainScreen_ButtonPointHistory_Press', {
+                      screen: 'MainScreen',
+                      to: 'PointHistoryScreen',
+                      currentPoint: currentPoint,
+                    });
                     navigation.navigate('PointHistoryScreen');
                   }}>
                   <LinearGradient
@@ -368,6 +372,10 @@ const MainScreen: React.FC<any> = ({navigation}) => {
               </Text>
               <TouchableOpacity
                 onPress={() => {
+                  mixpanel.track('MainScreen_ButtonSeeAllGuruKaset_Press', {
+                    screen: 'MainScreen',
+                    to: 'AllGuruScreen',
+                  });
                   navigation.navigate('AllGuruScreen');
                 }}>
                 <Text
@@ -410,7 +418,9 @@ const MainScreen: React.FC<any> = ({navigation}) => {
           <View style={{width: 10}}>
             <TouchableOpacity
               onPress={() => {
-                mixpanel.track('กดปิดแคมเปญทอง');
+                mixpanel.track('MainScreen_CloseCampaign_Press', {
+                  hide: true,
+                });
                 setShowCampaign('none');
               }}>
               <Image
@@ -423,7 +433,9 @@ const MainScreen: React.FC<any> = ({navigation}) => {
           {campaignImage && (
             <TouchableOpacity
               onPress={() => {
-                mixpanel.track('กดแคมเปญทองจากหน้าแรก');
+                mixpanel.track('MainScreen_Campaign_Press', {
+                  to: 'CampaignScreen',
+                });
                 navigation.navigate('CampaignScreen');
               }}>
               <ProgressiveImage

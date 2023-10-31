@@ -10,6 +10,7 @@ import MaintenanceHeader from './MaintenanceHaeder';
 import {useMaintenance} from '../../contexts/MaintenanceContext';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {normalize} from '../../function/Normalize';
+import {mixpanel} from '../../../mixpanel';
 
 interface Props {
   navigation?: any;
@@ -70,6 +71,13 @@ export default function GuruKasetCarousel({
                   }}
                   onPress={async () => {
                     await AsyncStorage.setItem('guruId', `${item.id}`);
+                    mixpanel.track('GuruKasetCarousel_CardGuru_Press', {
+                      guruId: item.id,
+                      guruTitle: item.title,
+                      guruDate: item.created_at,
+                      guruRead: item.read,
+                      to: 'DetailGuruScreen',
+                    });
                     navigation.push('DetailGuruScreen');
                   }}>
                   <CardGuru

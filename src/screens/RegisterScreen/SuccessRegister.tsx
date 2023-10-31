@@ -83,15 +83,18 @@ const SuccessRegister: React.FC<any> = () => {
             setLoading(true);
             mixpanel.track('Account Create Success');
             const token_register = await AsyncStorage.getItem('token_register');
-            await getFCMToken();
+            await getFCMToken().catch(err => console.log(err));
             const fcmtoken = await AsyncStorage.getItem('fcmtoken');
             await AsyncStorage.setItem('token', token_register!);
             FCMtokenDatasource.saveFCMtoken(fcmtoken!)
-              .then(() =>
+              .then(() => {
+                mixpanel.track('SuccessRegisterScreen_StartButton_Pressed', {
+                  to: 'MainScreen',
+                });
                 RootNavigation.navigate('Main', {
                   screen: 'MainScreen',
-                }),
-              )
+                });
+              })
               .catch(err => console.log(err));
           } catch (err) {
             console.log(err);
