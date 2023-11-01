@@ -1,7 +1,7 @@
 import {normalize} from '@rneui/themed';
 import React from 'react';
 import {useState} from 'react';
-import {View, useWindowDimensions, StyleSheet} from 'react-native';
+import {useWindowDimensions, StyleSheet} from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import fonts from '../../assets/fonts';
 import {colors} from '../../assets';
@@ -9,13 +9,14 @@ import FinishTask from '../../screens/MainTaskScreen/FinishTask';
 import WaitStartTask from '../../screens/MainTaskScreen/WaitStartTask';
 import InprogressTask from '../../screens/MainTaskScreen/InprogressTask';
 import Text from '../../components/Text';
+import {mixpanel} from '../../../mixpanel';
 
 const renderTabBar = (props: any) => (
   <TabBar
     {...props}
     indicatorStyle={{backgroundColor: colors.orange}}
     style={{backgroundColor: colors.white}}
-    renderLabel={({route, focused, color}) => (
+    renderLabel={({route, focused}) => (
       <Text
         style={[styles.label, {color: focused ? colors.orange : colors.gray}]}>
         {route.title}
@@ -45,7 +46,12 @@ const MainTaskTapNavigator: React.FC = () => {
       navigationState={{index, routes}}
       renderTabBar={renderTabBar}
       renderScene={renderScene}
-      onIndexChange={setIndex}
+      onIndexChange={(index: number) => {
+        mixpanel.track('MainTaskScreen_TabView_ChangeTab', {
+          tab: routes[index].title,
+        });
+        setIndex(index);
+      }}
       initialLayout={{width: layout.width}}
       lazy
     />

@@ -303,7 +303,7 @@ export default function MissionDetailScreen({navigation, route}: Props) {
                     fontSize: 16,
                     color: colors.decreasePoint,
                   }}>
-                  กรุณายืนยืนที่อยู่จัดส่ง เพื่อรับของรางวัล
+                  กรุณายืนที่อยู่จัดส่ง เพื่อรับของรางวัล
                 </Text>
               </View>
             )}

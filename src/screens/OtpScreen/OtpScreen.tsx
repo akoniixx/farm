@@ -124,7 +124,13 @@ const OtpScreen: React.FC<any> = ({navigation, route}) => {
             .then(async result => {
               setLoading(false);
               setErrOTP(false);
+
               await AsyncStorage.setItem('token_register', result.accessToken);
+              mixpanel.track('OtpScreen_OtpInput_typed', {
+                otp: value,
+                tel: route.params.telNumber,
+                to: 'FirstFormScreenV2',
+              });
               navigation.navigate('FirstFormScreenV2', {
                 tele: route.params.telNumber,
               });
