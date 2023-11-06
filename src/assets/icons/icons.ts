@@ -93,4 +93,5 @@ export default {
   requireBankBook: require('./requireBankBook.png'),
   infoCircleOrange: require('./infoCircleOrange.png'),
   editProfile: require('./editProfile.png'),
+  orangePlus: require('./orangePlus.png'),
 };

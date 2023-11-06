@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import Text from '../../components/Text';
+import {mixpanel} from '../../../mixpanel';
 
 export default function CustomAddressScreen({
   navigation,
@@ -189,11 +190,21 @@ export default function CustomAddressScreen({
         <View style={styles.container}>
           <AnimatedInput
             label="บ้านเลขที่"
+            onBlur={() => {
+              mixpanel.track('CustomAddressScreen_AddressNo_Input', {
+                addressNo: objInput.addressNo,
+              });
+            }}
             value={objInput.addressNo}
             onChangeText={(value: string) => onChangeText('addressNo', value)}
           />
           <AnimatedInput
             label="รายละเอียดที่อยู่ (หมู่, ถนน)"
+            onBlur={() => {
+              mixpanel.track('CustomAddressScreen_Detail_Input', {
+                detail: objInput.detail,
+              });
+            }}
             value={objInput.detail}
             onChangeText={(value: string) => onChangeText('detail', value)}
           />
@@ -202,6 +213,10 @@ export default function CustomAddressScreen({
             items={provinces}
             value={objInput.province.value}
             onChange={(v: {label: string; value: string}) => {
+              mixpanel.track('CustomAddressScreen_Province_Dropdown', {
+                province: v.label,
+                value: v.value,
+              });
               setObjInput({
                 ...objInput,
                 province: {
@@ -229,6 +244,10 @@ export default function CustomAddressScreen({
               items={districts}
               value={objInput.district.value}
               onChange={(v: {label: string; value: string}) => {
+                mixpanel.track('CustomAddressScreen_District_Dropdown', {
+                  district: v.label,
+                  value: v.value,
+                });
                 setObjInput({
                   ...objInput,
                   district: {
@@ -253,6 +272,11 @@ export default function CustomAddressScreen({
               items={subDistricts}
               value={objInput.subDistrict.value}
               onChange={(v: {label: string; value: string}) => {
+                mixpanel.track('CustomAddressScreen_SubDistrict_Dropdown', {
+                  subDistrict: v.label,
+                  value: v.value,
+                  postCode: v.value,
+                });
                 setObjInput({
                   ...objInput,
 

@@ -9,6 +9,7 @@ import {colors} from '../../assets';
 import UsedPointScreen from '../../screens/PointScreen/UsedPointScreen';
 import PendingPointScreen from '../../screens/PointScreen/PendingPointScreen';
 import Text from '../../components/Text';
+import {mixpanel} from '../../../mixpanel';
 
 const renderTabBar = (props: any) => (
   <TabBar
@@ -53,7 +54,12 @@ const PointTapNavigator: React.FC<any> = () => {
       navigationState={{index, routes}}
       renderTabBar={renderTabBar}
       renderScene={renderScene}
-      onIndexChange={setIndex}
+      onIndexChange={(index: number) => {
+        mixpanel.track('PointScreen_TabView_ChangeTab', {
+          tab: routes[index].title,
+        });
+        setIndex(index);
+      }}
       initialLayout={{width: layout.width}}
       lazy
     />

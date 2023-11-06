@@ -17,6 +17,7 @@ import {MainButton} from '../../../components/Button/MainButton';
 import {StackNativeScreenProps} from '../../../navigations/MainNavigator';
 import {useAuth} from '../../../contexts/AuthContext';
 import Text from '../../../components/Text';
+import {mixpanel} from '../../../../mixpanel';
 
 type DeleteProfileScreenProps = StackNativeScreenProps<'DeleteProfileScreen'>;
 
@@ -58,6 +59,7 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({navigation}) => {
       const data = await Authentication.genOtpDeleteAccount(
         user?.telephoneNo || '',
       );
+      mixpanel.track('DeleteProfileScreen_RequestOTP_Press');
       navigation.navigate('VerifyOTP', {
         telNumber: user?.telephoneNo,
         ...data.result,
@@ -91,7 +93,10 @@ const DeleteProfile: React.FC<DeleteProfileScreenProps> = ({navigation}) => {
       <CustomHeader
         title="ลบโปรไฟล์"
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('DeleteProfileScreen_BackPress_Press');
+          navigation.goBack();
+        }}
       />
       <View style={styles.inner}>
         <View style={styles.container}>

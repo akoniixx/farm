@@ -43,6 +43,7 @@ import AddPlantsScreen from '../screens/ProfileVerifyScreen/AddPlantsScreen';
 import CameraScreen from '../screens/CameraScreen';
 import AdditionDocumentScreen from '../screens/AdditionDocumentScreen';
 import NewAddIDCardScreen from '../screens/NewAddIDCardScreen';
+import DroneListScreen from '../screens/DroneListScreen';
 
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
@@ -142,6 +143,7 @@ export type StackParamList = {
   AdditionDocumentScreen: any;
   NewAddIDCardScreen: any;
   AddBookBankScreen: any;
+  DroneListScreen: undefined;
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
   // };
@@ -236,6 +238,7 @@ const MainNavigator: React.FC<any> = () => {
         component={AdditionDocumentScreen}
       />
       <Stack.Screen name="NewAddIDCardScreen" component={NewAddIDCardScreen} />
+      <Stack.Screen name="DroneListScreen" component={DroneListScreen} />
     </Stack.Navigator>
   );
 };

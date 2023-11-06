@@ -41,12 +41,12 @@ export default function AsyncButton({
 
   return (
     <TouchableOpacity
+      {...props}
       onPress={onPress}
       style={[
         styles({noBorder, disabled: props.disabled})[type as keyof TypeButton],
         style,
-      ]}
-      {...props}>
+      ]}>
       <View
         style={{
           flexDirection: 'row',

@@ -42,3 +42,22 @@ export const getAllPendingPoint = async (dronerId: string) => {
       console.log(err, 'err getAllPoint');
     });
 };
+
+export const getAllPendingPointPagination = async ({
+  dronerId,
+  page,
+  take,
+}: {
+  dronerId: string;
+  page: number;
+  take: number;
+}) => {
+  return httpClient
+    .get(
+      BASE_URL +
+        `/tasks/task-estimate-point/estimate-point-droner?dronerId=${dronerId}&page=${page}&take=${take}`,
+    )
+    .then(response => {
+      return response.data;
+    });
+};

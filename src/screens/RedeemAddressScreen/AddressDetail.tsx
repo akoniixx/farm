@@ -15,6 +15,7 @@ import {
 } from '../../datasource/RewardDatasource';
 import {usePoint} from '../../contexts/PointContext';
 import Text from '../../components/Text';
+import {mixpanel} from '../../../mixpanel';
 
 interface AddressType {
   id: string;
@@ -153,6 +154,11 @@ export default function AddressDetail({
 
       const result = await rewardDatasource.redeemReward(payload);
       await getCurrentPoint();
+      mixpanel.track('RedeemAddressScreen_ConfirmRedeem_pressed', {
+        screen: 'RedeemAddressScreen',
+        to: 'RedeemDetailScreen',
+        ...payload,
+      });
       setIsConfirm(false);
 
       setTimeout(() => {
@@ -382,6 +388,10 @@ export default function AddressDetail({
             <TouchableOpacity
               style={styles.buttonAddNewAddress}
               onPress={() => {
+                mixpanel.track('RedeemAddressScreen_AddNewAddress_pressed', {
+                  screen: 'RedeemAddressScreen',
+                  to: 'CustomAddressScreen',
+                });
                 navigation.navigate('CustomAddressScreen', {
                   data: null,
                   isAddMainAddress: true,

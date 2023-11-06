@@ -21,7 +21,7 @@ import CustomHeader from '../../components/CustomHeader';
 import {ScrollView} from 'react-native-gesture-handler';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import {registerReducer} from '../../hooks/registerfield';
-import {Authentication, Register} from '../../datasource/AuthDatasource';
+import {Authentication} from '../../datasource/AuthDatasource';
 // import * as ImagePicker from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import Lottie from 'lottie-react-native';
@@ -39,6 +39,7 @@ import AsyncButton from '../../components/Button/AsyncButton';
 import InfoCircle from '../../components/InfoCircle';
 import {mixValidator} from '../../function/inputValidate';
 import crashlytics from '@react-native-firebase/crashlytics';
+import {mixpanel} from '../../../mixpanel';
 
 const EditProfile: React.FC<any> = ({navigation}) => {
   const initialFormRegisterState = {
@@ -387,7 +388,10 @@ const EditProfile: React.FC<any> = ({navigation}) => {
       <CustomHeader
         title="แก้ไขโปรไฟล์"
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={() => {
+          mixpanel.track('EditProfileScreen_BackButton_Press');
+          navigation.goBack();
+        }}
       />
 
       <ScrollView>
@@ -511,9 +515,15 @@ const EditProfile: React.FC<any> = ({navigation}) => {
                     blurPosition={5}
                     maxLength={50}
                     label={el.label}
+                    onBlur={() => {
+                      mixpanel.track('EditProfileScreen_Nickname_Input', {
+                        value: formState.nickname,
+                      });
+                    }}
                     value={el.value}
                     onChangeText={value => {
                       const newValue = mixValidator(value);
+
                       dispatch({
                         type: 'Handle Input',
                         field: 'nickname',
@@ -689,6 +699,11 @@ const EditProfile: React.FC<any> = ({navigation}) => {
               <AnimatedInput
                 label="บ้านเลขที่"
                 value={formState.no}
+                onBlur={() => {
+                  mixpanel.track('EditProfileScreen_HouseNo_Input', {
+                    value: formState.no,
+                  });
+                }}
                 onChangeText={value => {
                   dispatch({
                     type: 'Handle Input',
@@ -700,6 +715,11 @@ const EditProfile: React.FC<any> = ({navigation}) => {
               <AnimatedInput
                 label="รายละเอียดที่อยู่ (หมู่, ถนน)"
                 value={formState.address}
+                onBlur={() => {
+                  mixpanel.track('EditProfileScreen_Address_Input', {
+                    value: formState.address,
+                  });
+                }}
                 onChangeText={value => {
                   dispatch({
                     type: 'Handle Input',
@@ -713,6 +733,10 @@ const EditProfile: React.FC<any> = ({navigation}) => {
                 items={items}
                 value={province?.value}
                 onChange={(v: {label: string; value: string}) => {
+                  mixpanel.track('EditProfileScreen_Province_Input', {
+                    value: v.value,
+                    label: v.label,
+                  });
                   setProvince(v);
                   setDistrict('');
                   setSubDistrict('');
@@ -738,6 +762,10 @@ const EditProfile: React.FC<any> = ({navigation}) => {
                   items={itemsDistrict}
                   value={district?.value}
                   onChange={(v: {label: string; value: string}) => {
+                    mixpanel.track('EditProfileScreen_District_Input', {
+                      value: v.value,
+                      label: v.label,
+                    });
                     setDistrict(v);
                     setSubDistrict('');
                     dispatch({
@@ -763,6 +791,13 @@ const EditProfile: React.FC<any> = ({navigation}) => {
                   items={itemsSubDistrict}
                   value={subDistrict?.value}
                   onChange={(v: {label: string; value: string}) => {
+                    mixpanel.track('EditProfileScreen_SubDistrict_Input', {
+                      value: v.value,
+                      label: v.label,
+                      postCode: itemsSubDistrict.find(
+                        el => el.value === v.value,
+                      )?.postcode,
+                    });
                     setSubDistrict(v);
                     dispatch({
                       type: 'Handle Input',

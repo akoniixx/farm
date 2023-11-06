@@ -7,7 +7,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {getAllPendingPoint} from '../../datasource/HistoryPointDatasource';
+import {getAllPendingPointPagination} from '../../datasource/HistoryPointDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {colors, font, image} from '../../assets';
 import {normalize} from '../../function/Normalize';
@@ -15,66 +15,97 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import {PendingPoint} from '../../components/point/PendingPoint';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
 import Text from '../../components/Text';
+import icons from '../../assets/icons/icons';
 
 const PendingPointScreen: React.FC<any> = () => {
-  const [dataAllPoint, setDataAllPoint] = useState<any>();
+  const [dataAllPoint, setDataAllPoint] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [row] = useState(10);
   const [current, setCurrent] = useState(1);
-  const [total] = useState(0);
-  useEffect(() => {
-    getPendingPoint();
-  }, []);
-
-  const getPendingPoint = async () => {
+  const [total, setTotal] = useState(0);
+  const getPendingPoint = useCallback(async () => {
     setLoading(true);
     const droner_id: any = await AsyncStorage.getItem('droner_id');
-    await getAllPendingPoint(droner_id)
+    await getAllPendingPointPagination({
+      dronerId: droner_id,
+      page: 1,
+      take: row,
+    })
       .then(res => {
-        setDataAllPoint(res);
+        setDataAllPoint(res.data);
+        setTotal(res.count);
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    getPendingPoint();
+    return () => {
+      setDataAllPoint([]);
+      setTotal(0);
+      setCurrent(1);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     getPendingPoint();
+    setCurrent(1);
     setTimeout(() => {
       setRefreshing(false);
     }, 1000);
   }, []);
-  // const loadMoreData = async () => {
-  //   if (dataAllPoint.length >= total) {
-  //     return;
-  //   }
-  //   try {
-  //     setLoading(true);
-  //     const droner_id: any = await AsyncStorage.getItem('droner_id');
-  //     await getAllHistoryPoint(droner_id, current, row)
-  //       .then(res => {
-  //         setDataAllPoint([...dataAllPoint, ...res.history]);
-  //         setLoading(false);
-  //       })
-  //       .catch(err => console.log(err));
-  //     setCurrent(current + 1);
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const loadMoreData = async () => {
+    if (dataAllPoint.length >= total) {
+      return;
+    }
+    try {
+      setLoading(true);
+      const droner_id: any = await AsyncStorage.getItem('droner_id');
+      await getAllPendingPointPagination({
+        dronerId: droner_id,
+        page: current + 1,
+        take: row,
+      })
+        .then(res => {
+          setDataAllPoint([...dataAllPoint, ...res.data]);
+          setLoading(false);
+        })
+        .catch(err => console.log(err));
+      setCurrent(current + 1);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <View>
-      <View style={{alignItems: 'center', paddingVertical: normalize(10)}}>
+      <View
+        style={{
+          alignItems: 'center',
+          paddingVertical: normalize(10),
+          flexDirection: 'row',
+          justifyContent: 'center',
+        }}>
+        <Image
+          source={icons.warningBlack}
+          style={{
+            width: normalize(20),
+            height: normalize(20),
+            marginRight: normalize(5),
+          }}
+        />
         <Text
           style={{
             fontFamily: font.medium,
             fontSize: normalize(12),
             color: colors.fontGrey,
           }}>
-          แต้มโดยประมาณที่ท่านจะได้รับหลังจากเกษตรกรรีวิวงานเสร็จ
+          แต้มโดยประมาณที่ท่านจะได้รับจากงานหรือกิจกรรม
         </Text>
       </View>
       <NetworkLost
@@ -89,7 +120,7 @@ const PendingPointScreen: React.FC<any> = () => {
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
-              // onEndReached={loadMoreData}
+              onEndReached={loadMoreData}
               keyExtractor={(item, index) => index.toString()}
               ListFooterComponent={<View style={{height: normalize(450)}} />}
               data={dataAllPoint}

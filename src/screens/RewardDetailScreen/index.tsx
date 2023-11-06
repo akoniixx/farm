@@ -403,13 +403,19 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         visible={isConfirm}
         disablePrimary={disableExchange}
         onPressPrimary={async () => {
-          mixpanel.track('กดยืนยันแลกแต้มแบบdigital');
+          mixpanel.track('RewardDetailScreen_ConfirmButtonDigital_press', {
+            rewardId: id,
+            rewardName: rewardDetail.rewardName,
+            rewardType: rewardDetail.rewardType,
+            rewardScore: rewardDetail.score,
+            rewardAmount: counter,
+          });
           setIsConfirm(false);
           await onRedeemDigital();
         }}
         title={'ยืนยันการแลกแต้ม'}
         onPressSecondary={() => {
-          mixpanel.track('กดยกเลิกแลกแต้มแบบdigital');
+          mixpanel.track('RewardDetailScreen_CancelButtonDigital_press');
           setIsConfirm(false);
         }}
         subTitle={'ท่านต้องการยืนยันการแลกแต้มหรือไม่'}
@@ -417,7 +423,7 @@ export default function RewardDetailScreen({navigation, route}: Props) {
       <Modal
         showClose
         onClose={() => {
-          mixpanel.track('กดปิด modal หลังจากแลกรางวัล');
+          mixpanel.track('RewardDetailScreen_SuccessExchangeModal_close');
           setShowSuccessExchangeModal(false);
         }}
         iconTop={
@@ -428,7 +434,9 @@ export default function RewardDetailScreen({navigation, route}: Props) {
         }
         visible={showSuccessExchangeModal}
         onPressPrimary={() => {
-          mixpanel.track('กดใช้คูปองทันทีหลังจากแลกรางวัล');
+          mixpanel.track('RewardDetailScreen_SuccessExchangeModal_press', {
+            to: 'RedeemScreen',
+          });
           setShowSuccessExchangeModal(false);
           navigation.navigate('RedeemScreen', {
             data: resultRedeemDigital,

@@ -115,7 +115,10 @@ export default function ListReward({
           <TouchableOpacity
             style={[styles.card]}
             onPress={() => {
-              mixpanel.track('กดดูรายละเอียดของรางวัล');
+              mixpanel.track('RewardScreen_RewardCard_Press', {
+                ...item,
+                rewardId: item.id,
+              });
               navigation.navigate('RewardDetailScreen', {
                 id: item.id,
                 isDigital: item.rewardType === 'DIGITAL',

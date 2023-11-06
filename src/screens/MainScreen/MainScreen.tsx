@@ -210,34 +210,6 @@ const MainScreen: React.FC<any> = ({navigation}) => {
       .catch(err => console.error(err));
   };
 
-  const openReceiveTask = async (isOpen: boolean) => {
-    const dronerId = await AsyncStorage.getItem('droner_id');
-    TaskDatasource.openReceiveTask(dronerId!, isOpen)
-      .then(res => {
-        setProfile({...profile, isOpenReceiveTask: res.isOpenReceiveTask});
-        if (!isOpen) {
-          TaskDatasource.getTaskById(
-            dronerId!,
-            ['WAIT_START', 'IN_PROGRESS'],
-            1,
-            999,
-          )
-            .then((res: any) => {
-              if (res.length != 0) {
-                Toast.show({
-                  type: 'taskWarningBeforeClose',
-                  onPress: () => {
-                    Toast.hide();
-                  },
-                });
-              }
-            })
-            .catch(err => console.log(err));
-        }
-      })
-      .catch(err => console.log(err));
-  };
-
   return (
     <BottomSheetModalProvider>
       <RegisterNotification
@@ -291,7 +263,7 @@ const MainScreen: React.FC<any> = ({navigation}) => {
                     สวัสดี, {profile.name}
                   </Text>
                 )}
-                <View style={styles.activeContainer}>
+                {/* <View style={styles.activeContainer}>
                   <Switch
                     trackColor={{false: '#767577', true: colors.green}}
                     thumbColor={profile.isOpenReceiveTask ? 'white' : '#f4f3f4'}
@@ -307,7 +279,7 @@ const MainScreen: React.FC<any> = ({navigation}) => {
                     disabled={profile.status !== 'ACTIVE'}
                   />
                   <Text style={styles.activeFont}>เปิดรับงาน</Text>
-                </View>
+                </View> */}
               </View>
 
               <View>
@@ -360,6 +332,7 @@ const MainScreen: React.FC<any> = ({navigation}) => {
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
+                marginTop: 16,
               }}>
               <Text
                 style={{
