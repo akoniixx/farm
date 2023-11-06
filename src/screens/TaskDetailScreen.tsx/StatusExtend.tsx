@@ -19,7 +19,6 @@ export default function StatusExtend({
   status = 'REJECTED',
   title = 'ขอขยายเวลาพ่น',
   dateDelay,
-
   delayRejectRemark,
 }: Props) {
   const obj = {

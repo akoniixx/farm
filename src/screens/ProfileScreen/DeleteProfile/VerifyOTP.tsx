@@ -28,6 +28,7 @@ import {useAuth} from '../../../contexts/AuthContext';
 import * as RootNavigation from '../../../navigations/RootNavigation';
 import {FCMtokenDatasource} from '../../../datasource/FCMDatasource';
 import Text from '../../../components/Text';
+import {mixpanel} from '../../../../mixpanel';
 
 const CELL_COUNT = 6;
 interface props {
@@ -149,6 +150,9 @@ const VerifyOTP: React.FC<any> = ({navigation, route}) => {
         Authentication.onDeleteAccount(result.data.id)
           .then(async res => {
             if (res) {
+              mixpanel.track('DeleteProfileScreen_DeleteAccount_Press', {
+                droner_id: result.data.id,
+              });
               setLoading(false);
               const fcmtoken = await AsyncStorage.getItem('fcmtoken');
               FCMtokenDatasource.deleteFCMtoken(fcmtoken!)

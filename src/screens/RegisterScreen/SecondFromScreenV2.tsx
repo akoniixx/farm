@@ -28,6 +28,7 @@ import {Linking} from 'react-native';
 import {responsiveHeigth, responsiveWidth} from '../../function/responsive';
 import {MainButton} from '../../components/Button/MainButton';
 import {useNetwork} from '../../contexts/NetworkContext';
+import {mixpanel} from '../../../mixpanel';
 interface AreaServiceEntity {
   area: string;
   latitude: number;
@@ -395,11 +396,19 @@ const SecondFormScreenV2: React.FC<any> = ({navigation, route}) => {
                     positionForm.districtId,
                     positionForm.subdistrictId,
                   )
-                    .then(() =>
+                    .then(() => {
+                      mixpanel.track('RegisterScreenStepTwo_ButtonNext_Press', {
+                        province: positionForm.provinceId,
+                        district: positionForm.districtId,
+                        subdistrict: positionForm.subdistrictId,
+                        lat: positionForm.latitude,
+                        long: positionForm.longitude,
+                        to: 'SuccessScreen',
+                      });
                       navigation.navigate('SuccessScreen', {
                         tele: route.params.telNumber,
-                      }),
-                    )
+                      });
+                    })
                     .catch(err => console.log(err));
                 }}
               />

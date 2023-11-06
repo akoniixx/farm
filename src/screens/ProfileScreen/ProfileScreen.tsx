@@ -3,8 +3,6 @@ import {
   StyleSheet,
   Image,
   ScrollView,
-  Dimensions,
-  Modal,
   TouchableOpacity,
   Platform,
   PermissionsAndroid,
@@ -20,13 +18,10 @@ import {Authentication} from '../../datasource/AuthDatasource';
 import * as RootNavigation from '../../navigations/RootNavigation';
 import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {initProfileState, profileReducer} from '../../hooks/profilefield';
-import DroneBrandingItem, {
-  StatusObject,
-} from '../../components/Drone/DroneBranding';
+import {StatusObject} from '../../components/Drone/DroneBranding';
 import * as ImagePicker from 'react-native-image-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ActionSheet from 'react-native-actions-sheet';
-import Lottie from 'lottie-react-native';
 import {useAuth} from '../../contexts/AuthContext';
 import {numberWithCommas, socket} from '../../function/utility';
 import {FCMtokenDatasource} from '../../datasource/FCMDatasource';
@@ -38,40 +33,25 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
 import {RefreshControl} from 'react-native';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import {mixpanel} from '../../../mixpanel';
+import SwitchReceiveTask from './ProfileScreenComponent/SwitchReceiveTask';
+import DronerList from './ProfileScreenComponent/DronerList';
 
 const ProfileScreen: React.FC<any> = ({navigation, route}) => {
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const {
     authContext: {getProfileAuth},
-    state: {isDoneAuth},
+    state: {isDoneAuth, user},
   } = useAuth();
 
   const backbotton = !route.params ? true : route.params.navbar;
-  const windowWidth = Dimensions.get('screen').width;
-  const windowHeight = Dimensions.get('screen').height;
-  const [items, setItems] = useState<any>([]);
-  const [brand, setBrand] = useState<any>(null);
-  const [brandtype, setBrandType] = useState<any>(null);
-  const [itemstype, setItemstype] = useState<any>([]);
-  const [image1, setImage1] = useState<any>(null);
-  const [image2, setImage2] = useState<any>(null);
-  const [open, setOpen] = useState(false);
-  const [opentype, setOpentype] = useState(false);
-  const [value, setValue] = useState(null);
-  const [valuetype, setValuetype] = useState(null);
-  const [droneno, setdroneno] = useState<any>(null);
-  const [popupPage, setpopupPage] = useState(1);
-  const actionSheet = useRef<any>(null);
+
   const [reload, setReload] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [fcmToken, setFcmToken] = useState('');
   const [notidata, setnotidata] = useState(0);
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  const showActionSheet = () => {
-    actionSheet.current.show();
-  };
   const getToken = async () => {
     const token = await AsyncStorage.getItem('fcmtoken');
     setFcmToken(token!);
@@ -88,32 +68,9 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
 
   const getInitialData = async () => {
     setLoadingProfile(true);
-    await Promise.all([
-      getProfile(),
-      getToken(),
-      getNotiList(),
-      ProfileDatasource.getDroneBrand(1, 14)
-        .then(result => {
-          const data = result.data.map((item: any) => {
-            return {
-              label: item.name,
-              value: item.id,
-              image: item.logoImagePath,
-              icon: () =>
-                item.logoImagePath != null ? (
-                  <Image
-                    source={{uri: item.logoImagePath}}
-                    style={{width: 30, height: 30, borderRadius: 15}}
-                  />
-                ) : (
-                  <></>
-                ),
-            };
-          });
-          setItems(data);
-        })
-        .catch(err => console.log(err)),
-    ]).finally(() => setLoadingProfile(false));
+    await Promise.all([getProfile(), getToken(), getNotiList()]).finally(() =>
+      setLoadingProfile(false),
+    );
   };
   const onRefresh = async () => {
     try {
@@ -133,68 +90,14 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
 
   const onLogout = async () => {
     const dronerId = await AsyncStorage.getItem('droner_id');
-
+    mixpanel.track('ProfileScreen_Logout_Press', {
+      dronerId: dronerId,
+    });
     FCMtokenDatasource.deleteFCMtoken(fcmToken)
       .then(async () => {
         socket.removeAllListeners(`send-task-${dronerId!}`);
         socket.close();
         await Authentication.logout();
-      })
-      .catch(err => console.log(err));
-  };
-
-  useEffect(() => {
-    if (brand != null) {
-      ProfileDatasource.getDroneBrandType(brand.value)
-        .then(result => {
-          const data = result.drone.map((item: any) => {
-            return {label: item.series, value: item.id};
-          });
-          setItemstype(data);
-        })
-        .catch(err => console.log(err));
-    }
-  }, [brand]);
-
-  const uploadFile1 = async () => {
-    const result = await ImagePicker.launchImageLibrary({
-      mediaType: 'photo',
-    });
-    if (!result.didCancel) {
-      setImage1(result);
-    }
-  };
-  const uploadFile2 = async () => {
-    const result = await ImagePicker.launchImageLibrary({
-      mediaType: 'photo',
-    });
-    if (!result.didCancel) {
-      setImage2(result);
-    }
-  };
-
-  const addDrone = async () => {
-    const droner_id = await AsyncStorage.getItem('droner_id');
-    const newDrone = {
-      dronerId: droner_id,
-      droneId: brandtype.value,
-      serialNo: droneno,
-      status: 'PENDING',
-    };
-    setLoading(true);
-    ProfileDatasource.addDronerDrone(newDrone)
-      .then(() => {
-        setImage1(null);
-        setImage2(null);
-        setBrand(null);
-        setBrandType(null);
-        setpopupPage(1);
-        setdroneno(null);
-        setValue(null);
-        setValuetype(null);
-        setLoading(false);
-        actionSheet.current.hide();
-        setReload(!reload);
       })
       .catch(err => console.log(err));
   };
@@ -428,7 +331,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
               <></>
             )}
 
-            <View
+            {/* <View
               style={{
                 paddingVertical: normalize(15),
               }}>
@@ -455,10 +358,25 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
               fontColor={colors.orange}
               color={'#FFEAD1'}
               onPress={showActionSheet}
-            />
+            /> */}
+            <View style={styles.rowContainer}>
+              <View style={styles.boxCard}>
+                <SwitchReceiveTask />
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('DroneListScreen');
+                }}
+                style={styles.boxCard}>
+                <DronerList />
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity
               onPress={() => {
+                mixpanel.track('ProfileScreen_Income_Press', {
+                  to: 'IncomeScreen',
+                });
                 navigation.navigate('IncomeScreen');
               }}
               style={styles.listTile}>
@@ -477,6 +395,9 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
 
             <TouchableOpacity
               onPress={() => {
+                mixpanel.track('ProfileScreen_AdditionDocument_Press', {
+                  to: 'AdditionDocumentScreen',
+                });
                 navigation.navigate('AdditionDocumentScreen');
               }}>
               <View style={[styles.listTile, {alignItems: 'flex-start'}]}>
@@ -537,7 +458,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
 
             <TouchableOpacity
               onPress={async () => {
-                // await onLogout();
+                mixpanel.track('ProfileScreen_NotificationList_Press');
                 RootNavigation.navigate('Main', {
                   screen: 'NotificationList',
                 });
@@ -591,6 +512,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={async () => {
+                mixpanel.track('ProfileScreen_ServiceArea_Press');
                 if (Platform.OS === 'ios') {
                   await Geolocation.requestAuthorization('always');
                 } else if (Platform.OS === 'android') {
@@ -644,6 +566,7 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
+                mixpanel.track('ProfileScreen_DeleteAccount_Press');
                 navigation.navigate('DeleteProfileScreen', {
                   tele: profilestate.id,
                 });
@@ -692,391 +615,6 @@ const ProfileScreen: React.FC<any> = ({navigation, route}) => {
         </View>
       </NetworkLost>
 
-      <ActionSheet ref={actionSheet}>
-        <View
-          style={{
-            backgroundColor: 'white',
-            paddingVertical: normalize(30),
-            paddingHorizontal: normalize(20),
-            width: windowWidth,
-            height: windowHeight * 0.85,
-            borderRadius: normalize(20),
-          }}>
-          <View
-            style={[
-              stylesCentral.container,
-              {
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              },
-            ]}>
-            {popupPage == 1 ? (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'space-between',
-                }}>
-                <View
-                  style={{
-                    padding: normalize(8),
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      actionSheet.current.hide();
-                    }}>
-                    <Image
-                      source={icons.close}
-                      style={{
-                        width: normalize(14),
-                        height: normalize(14),
-                      }}
-                    />
-                  </TouchableOpacity>
-
-                  <Text style={styles.hSheet}>เพิ่มโดรน</Text>
-                  <View />
-                </View>
-                <View
-                  style={{
-                    flex: 1,
-                    paddingHorizontal: 8,
-                    paddingVertical: 16,
-                  }}>
-                  <ScrollView contentContainerStyle={{flexGrow: 1}}>
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                      }}>
-                      <Text style={styles.h2}>ยี่ห้อโดรนฉีดพ่น</Text>
-                      <Text
-                        style={[
-                          styles.h2,
-                          {color: colors.gray, paddingLeft: 4},
-                        ]}>
-                        (กรุณาเพิ่มอย่างน้อย 1 รุ่น)
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        paddingTop: 12,
-                      }}>
-                      <DropDownPicker
-                        listMode="SCROLLVIEW"
-                        scrollViewProps={{
-                          nestedScrollEnabled: true,
-                        }}
-                        zIndex={3000}
-                        zIndexInverse={1000}
-                        style={{
-                          marginVertical: 10,
-                          backgroundColor: colors.white,
-                          borderColor: colors.gray,
-                        }}
-                        placeholder="เลือกยี่ห้อโดรน"
-                        placeholderStyle={{
-                          color: colors.gray,
-                        }}
-                        open={open}
-                        value={value}
-                        items={items}
-                        setOpen={setOpen}
-                        onSelectItem={v => {
-                          setBrand(v);
-                        }}
-                        setValue={setValue}
-                        dropDownDirection="BOTTOM"
-                        bottomOffset={200}
-                        dropDownContainerStyle={{
-                          borderColor: colors.disable,
-                        }}
-                      />
-                      <DropDownPicker
-                        listMode="SCROLLVIEW"
-                        scrollViewProps={{
-                          nestedScrollEnabled: true,
-                        }}
-                        zIndex={2000}
-                        zIndexInverse={2000}
-                        style={{
-                          marginVertical: 10,
-                          backgroundColor: colors.white,
-                          borderColor: colors.gray,
-                        }}
-                        placeholder="รุ่น"
-                        placeholderStyle={{
-                          color: colors.gray,
-                        }}
-                        open={opentype}
-                        value={valuetype}
-                        items={itemstype}
-                        setOpen={setOpentype}
-                        onSelectItem={v => {
-                          setBrandType(v);
-                        }}
-                        setValue={setValuetype}
-                        dropDownDirection="BOTTOM"
-                        dropDownContainerStyle={{
-                          borderColor: colors.disable,
-                        }}
-                      />
-                    </View>
-                  </ScrollView>
-                </View>
-
-                <MainButton
-                  disable={!brand || !brandtype ? true : false}
-                  label="ถัดไป"
-                  color={colors.orange}
-                  onPress={addDrone}
-                />
-              </View>
-            ) : (
-              <View
-                style={{
-                  flex: 1,
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}>
-                <View>
-                  <View>
-                    <View
-                      style={{
-                        padding: 8,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <Text style={styles.hSheet}>เพิ่มเอกสาร</Text>
-                      <View />
-                    </View>
-                    <Text style={[styles.h2, {paddingTop: 12}]}>
-                      อัพโหลดใบอนุญาตนักบิน
-                    </Text>
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                      }}>
-                      <View>
-                        <View
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            paddingVertical: 10,
-                          }}>
-                          <Image
-                            source={icons.register}
-                            style={{
-                              width: normalize(12),
-                              height: normalize(15),
-                            }}
-                          />
-                          <Text style={[styles.label, {paddingLeft: 4}]}>
-                            เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF
-                          </Text>
-                        </View>
-                        <View>
-                          {image1 != null ? (
-                            <View
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                paddingVertical: 5,
-                                width: windowWidth * 0.5,
-                              }}>
-                              <Text
-                                numberOfLines={1}
-                                style={[
-                                  styles.label,
-                                  {paddingLeft: 4, color: colors.orange},
-                                ]}>
-                                {image1.assets[0].fileName}
-                              </Text>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  setImage1(null);
-                                }}>
-                                <View
-                                  style={{
-                                    width: normalize(16),
-                                    height: normalize(16),
-                                    marginLeft: normalize(8),
-                                    borderRadius: normalize(8),
-                                    backgroundColor: colors.fontBlack,
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                  }}>
-                                  <Text
-                                    style={{
-                                      fontSize: 10,
-                                      color: colors.white,
-                                    }}>
-                                    x
-                                  </Text>
-                                </View>
-                              </TouchableOpacity>
-                            </View>
-                          ) : (
-                            <></>
-                          )}
-                        </View>
-                      </View>
-                      <MainButton
-                        fontSize={normalize(14)}
-                        label={!image1 ? 'เพิ่มเอกสาร' : 'เปลี่ยน'}
-                        color={!image1 ? colors.orange : colors.gray}
-                        onPress={uploadFile1}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        borderBottomColor: colors.gray,
-                        borderBottomWidth: StyleSheet.hairlineWidth,
-                        marginVertical: 10,
-                      }}
-                    />
-                    <Text style={[styles.h2, {paddingTop: 12}]}>
-                      อัพโหลดใบอนุญาตโดรนจาก กสทช.
-                    </Text>
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                      }}>
-                      <View>
-                        <View
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            paddingVertical: 10,
-                          }}>
-                          <Image
-                            source={icons.register}
-                            style={{
-                              width: normalize(12),
-                              height: normalize(15),
-                            }}
-                          />
-                          <Text style={[styles.label, {paddingLeft: 4}]}>
-                            เพิ่มเอกสารด้วย ไฟล์รูป หรือ PDF
-                          </Text>
-                        </View>
-                        <View>
-                          {image2 != null ? (
-                            <View
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                paddingVertical: 5,
-                                width: windowWidth * 0.5,
-                              }}>
-                              <Text
-                                numberOfLines={1}
-                                style={[
-                                  styles.label,
-                                  {paddingLeft: 4, color: colors.orange},
-                                ]}>
-                                {image2.assets[0].fileName}
-                              </Text>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  setImage2(null);
-                                }}>
-                                <View
-                                  style={{
-                                    width: normalize(16),
-                                    height: normalize(16),
-                                    marginLeft: normalize(8),
-                                    borderRadius: normalize(8),
-                                    backgroundColor: colors.fontBlack,
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                  }}>
-                                  <Text
-                                    style={{
-                                      fontSize: 10,
-                                      color: colors.white,
-                                    }}>
-                                    x
-                                  </Text>
-                                </View>
-                              </TouchableOpacity>
-                            </View>
-                          ) : (
-                            <></>
-                          )}
-                        </View>
-                      </View>
-                      <MainButton
-                        fontSize={normalize(14)}
-                        label={!image2 ? 'เพิ่มเอกสาร' : 'เปลี่ยน'}
-                        color={!image2 ? colors.orange : colors.gray}
-                        onPress={uploadFile2}
-                      />
-                    </View>
-                  </View>
-                </View>
-                <View>
-                  <MainButton
-                    disable={!image2 ? true : false}
-                    label="ถัดไป"
-                    color={colors.orange}
-                    onPress={() => {}}
-                  />
-                </View>
-              </View>
-            )}
-          </View>
-        </View>
-        <Modal transparent={true} visible={loading}>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                backgroundColor: colors.white,
-                width: normalize(50),
-                height: normalize(50),
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: normalize(8),
-              }}>
-              <Lottie
-                source={image.loading}
-                autoPlay
-                loop
-                style={{
-                  width: normalize(50),
-                  height: normalize(50),
-                }}
-              />
-            </View>
-          </View>
-        </Modal>
-      </ActionSheet>
       <Spinner
         visible={loadingProfile}
         textContent={'Loading...'}
@@ -1174,11 +712,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(16),
     color: colors.fontBlack,
   },
-  label: {
-    fontFamily: font.light,
-    fontSize: normalize(14),
-    color: colors.gray,
-  },
+
   input: {
     display: 'flex',
     paddingHorizontal: normalize(10),
@@ -1192,11 +726,7 @@ const styles = StyleSheet.create({
     borderRadius: normalize(10),
     color: colors.fontBlack,
   },
-  hSheet: {
-    fontFamily: font.bold,
-    fontSize: normalize(16),
-    color: colors.fontBlack,
-  },
+
   revenue: {
     fontFamily: font.medium,
     fontSize: normalize(16),
@@ -1214,5 +744,21 @@ const styles = StyleSheet.create({
     fontFamily: font.medium,
     fontSize: normalize(14),
     color: '#242D35',
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 16,
+  },
+  boxCard: {
+    width: '48%',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: colors.disable,
+    padding: 12,
+    borderRadius: 8,
+    minHeight: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

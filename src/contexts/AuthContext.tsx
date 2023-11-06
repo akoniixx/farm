@@ -108,12 +108,14 @@ interface State {
   isLoading: boolean;
   isDoneAuth: boolean;
   user: null | Droner;
+  droneList?: Drone[];
 }
 
 interface Action {
   type: string;
   user?: any;
   isDoneAuth?: boolean;
+  droneList?: Drone[];
 }
 interface LoginPayload {
   telNumber: string;
@@ -126,7 +128,9 @@ interface Context {
   authContext: {
     getProfileAuth: () => Promise<any>;
     login: (v: LoginPayload) => Promise<any>;
+    getDroneList: (payload: {page: number; limit: number}) => Promise<any>;
   };
+  setUser: (user: Droner) => void;
   state: State;
 }
 
@@ -134,13 +138,16 @@ const initialState = {
   user: null,
   isLoading: true,
   isDoneAuth: true,
+  droneList: [],
 };
 
 const AuthContext = React.createContext<Context>({
   authContext: {
     getProfileAuth: Promise.resolve,
     login: Promise.resolve,
+    getDroneList: Promise.resolve,
   },
+  setUser: () => {},
   state: initialState,
 });
 
@@ -158,6 +165,18 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
           isDoneAuth: action.isDoneAuth ? action.isDoneAuth : false,
         };
       case 'LOGIN': {
+        return {
+          ...prevState,
+          user: action.user,
+        };
+      }
+      case 'GET_DRONE_LIST': {
+        return {
+          ...prevState,
+          droneList: action.droneList,
+        };
+      }
+      case 'SET_USER': {
         return {
           ...prevState,
           user: action.user,
@@ -206,6 +225,16 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
         dispatch({type: 'LOGIN', user: result.data});
         return result;
       },
+      getDroneList: async ({
+        page = 1,
+        limit = 10,
+      }: {
+        page: number;
+        limit: number;
+      }) => {
+        const result = await ProfileDatasource.getDroneBrand(page, limit);
+        dispatch({type: 'GET_DRONE_LIST', droneList: result.data});
+      },
     }),
     [],
   );
@@ -222,7 +251,14 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
   }, [authContext, state.user]);
 
   return (
-    <AuthContext.Provider value={{authContext, state}}>
+    <AuthContext.Provider
+      value={{
+        authContext,
+        state,
+        setUser: (user: Droner) => {
+          dispatch({type: 'SET_USER', user});
+        },
+      }}>
       {children}
     </AuthContext.Provider>
   );

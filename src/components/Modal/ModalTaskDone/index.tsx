@@ -13,6 +13,8 @@ import ModalUploadImage from '../ModalUploadImage';
 import Modal from '../Modal';
 import {ImagePickerResponse} from 'react-native-image-picker';
 import crashlytics from '@react-native-firebase/crashlytics';
+import RNFS from 'react-native-fs';
+import SHA256 from 'crypto-js/sha256';
 
 interface Props {
   visible: boolean;
@@ -51,6 +53,12 @@ export default function ModalTaskDone({
   const [error, setError] = useState<string>('');
   const [step, setStep] = useState(0);
   const [demoModal, setDemoModal] = useState(false);
+  const [fileDataController, setFileDataController] = useState<string | null>(
+    null,
+  );
+  const [fileDataFertilizer, setFileDataFertilizer] = useState<string | null>(
+    null,
+  );
 
   const onPressToSeeDemo = useCallback(() => {
     onClose();
@@ -73,6 +81,7 @@ export default function ModalTaskDone({
     });
     if (result) {
       const fileSize = result?.size;
+      const fileData = await RNFS.readFile(result.path, 'base64');
       if (!fileSize) {
         setError('รูปภาพไม่ถูกต้อง');
         return;
@@ -105,9 +114,12 @@ export default function ModalTaskDone({
 
       if (step === 0) {
         setImgController(newResult);
+        setFileDataController(fileData);
+
         setStep(0);
       } else {
         setImgFertilizer(newResult);
+        setFileDataFertilizer(fileData);
         setStep(1);
       }
       setError('');
@@ -226,6 +238,17 @@ export default function ModalTaskDone({
     return () => <StepTwo imgFertilizer={imgFertilizer} error={error} />;
   }, [step, onPressToSeeDemo, imgController, imgFertilizer, error]);
 
+  const isImageDuplicate = useMemo(() => {
+    if (fileDataController && fileDataFertilizer) {
+      const haxController = SHA256(fileDataController).toString();
+      const haxFertilizer = SHA256(fileDataFertilizer).toString();
+
+      if (haxController === haxFertilizer) {
+        return true;
+      }
+      return false;
+    }
+  }, [fileDataController, fileDataFertilizer]);
   const styleButtonCondition =
     step === 0
       ? {
@@ -235,8 +258,12 @@ export default function ModalTaskDone({
         }
       : {
           width: '48%',
-          backgroundColor: imgFertilizer ? colors.orange : colors.greyWhite,
-          borderColor: imgFertilizer ? colors.orange : colors.disable,
+          backgroundColor:
+            imgFertilizer && !isImageDuplicate
+              ? colors.orange
+              : colors.greyWhite,
+          borderColor:
+            imgFertilizer && !isImageDuplicate ? colors.orange : colors.disable,
         };
 
   return (
@@ -341,7 +368,7 @@ export default function ModalTaskDone({
                   flex: 0.7,
                   flexDirection: 'row',
                 }}>
-                {imgFertilizer ? (
+                {imgFertilizer && !isImageDuplicate ? (
                   <View
                     style={{
                       flexDirection: 'row',
@@ -364,13 +391,26 @@ export default function ModalTaskDone({
                     />
                   </View>
                 ) : (
-                  <Text
-                    style={{
-                      fontFamily: font.semiBold,
-                      fontSize: 14,
-                    }}>
-                    อัพโหลดภาพปุ๋ย/ยา
-                  </Text>
+                  <View>
+                    <Text
+                      style={{
+                        fontFamily: font.semiBold,
+                        fontSize: 14,
+                      }}>
+                      อัพโหลดภาพปุ๋ย/ยา
+                    </Text>
+                    {isImageDuplicate && (
+                      <Text
+                        style={{
+                          fontFamily: font.medium,
+                          fontSize: 14,
+                          color: colors.decreasePoint,
+                        }}>
+                        คุณอัพโหลดภาพซ้ำกับภาพหลักฐานการบิน
+                        กรุณาอัพโหลดภาพใหม่อีกครั้ง
+                      </Text>
+                    )}
+                  </View>
                 )}
               </View>
               <AsyncButton
@@ -462,6 +502,7 @@ export default function ModalTaskDone({
                 color: colors.gray,
                 paddingLeft: 8,
                 fontSize: 12,
+                flex: 1,
 
                 alignSelf: 'flex-start',
               }}>
@@ -507,7 +548,10 @@ export default function ModalTaskDone({
                   });
                 }
               }}
-              disabled={step === 0 ? !imgController : !imgFertilizer}
+              disabled={
+                (step === 0 ? !imgController : !imgFertilizer) ||
+                (isImageDuplicate && step === 1)
+              }
             />
           </View>
         </View>
@@ -567,6 +611,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     flexDirection: 'row',
     alignSelf: 'flex-start',
+    height: 'auto',
+    width: '100%',
   },
   flexRow: {
     flexDirection: 'row',

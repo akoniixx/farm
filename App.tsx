@@ -54,12 +54,7 @@ const App = () => {
     prefixes: ['dronerapp://'],
   };
   const [actiontaskId, setActiontaskId] = useState<string | null>('');
-  const requestPermissionMedia = async () => {
-    const status = await requestMultiple([
-      'android.permission.READ_EXTERNAL_STORAGE',
-    ]);
-    console.log('status', status);
-  };
+
   const requestTracking = async () => {
     const status = await request('ios.permission.APP_TRACKING_TRANSPARENCY');
     const trackingStatus = await check(
@@ -107,7 +102,6 @@ const App = () => {
   }, []);
   useEffect(() => {
     requestTracking();
-    requestPermissionMedia();
   }, []);
 
   return (

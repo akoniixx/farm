@@ -172,7 +172,24 @@ export default function CollapseItem({navigation, mission}: Props) {
                 isFullQuota={false}
                 key={el.num}
                 onPress={() => {
-                  mixpanel.track('กดการ์ดภารกิจ');
+                  mixpanel.track('MissionScreen_CardMission_press', {
+                    ...el,
+                    current,
+                    status: el.status,
+                    isComplete,
+                    isExpired,
+                    isStatusComplete,
+                    missionName: el.missionName,
+                    reward: el.reward,
+                    endDate: mission.endDate,
+                    total: el.rai,
+                    conditionReward: el.conditionReward,
+                    descriptionReward: el.descriptionReward,
+                    num: el.num,
+                    missionId: el.missionId,
+                    isMissionPoint,
+                    missionPointDetail: el,
+                  });
                   navigation.navigate('MissionDetailScreen', {
                     data: {
                       ...el,

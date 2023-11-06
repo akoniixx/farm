@@ -10,6 +10,7 @@ export default {
   grey3: '#B0B8BF',
   greys5: '#F2F3F4',
   orangeSoft: '#FFEFDD',
+  borderInput: '#BDBDBD',
   softGrey2: '#EBEEF0',
   grayPlaceholder: '#B0B8BF',
   disable: '#DCDFE3',

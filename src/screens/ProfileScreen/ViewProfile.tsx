@@ -16,6 +16,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {QueryLocation} from '../../datasource/LocationDatasource';
 import {momentExtend} from '../../function/utility';
 import Text from '../../components/Text';
+import {mixpanel} from '../../../mixpanel';
 
 const ViewProfile: React.FC<any> = ({navigation}) => {
   const [initProfile, setInitProfile] = useState({
@@ -136,7 +137,11 @@ const ViewProfile: React.FC<any> = ({navigation}) => {
   return (
     <SafeAreaView style={[stylesCentral.container]}>
       <View style={styles.appBarBack}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => {
+            mixpanel.track('ProfileScreen_Back_Press');
+            navigation.goBack();
+          }}>
           <Image source={icons.arrowLeft} style={styles.listTileIcon} />
         </TouchableOpacity>
         <Text style={[styles.appBarHeader]}>{'ข้อมูลโปรไฟล์'}</Text>

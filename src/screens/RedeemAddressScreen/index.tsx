@@ -18,6 +18,7 @@ import Text from '../../components/Text';
 import {usePoint} from '../../contexts/PointContext';
 import RenderHTML from '../../components/RenderHTML/RenderHTML';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import {mixpanel} from '../../../mixpanel';
 
 interface Props {
   navigation: any;
@@ -62,9 +63,18 @@ export default function RedeemAddressScreen({navigation, route}: Props) {
   const [isConfirmMission, setIsConfirmMission] = React.useState(false);
   const [disableButton, setDisableButton] = React.useState(false);
   const onConfirm = () => {
+    mixpanel.track('RedeemAddressScreen_Confirm_Press', {
+      rewardName: data.rewardName,
+      amount: data.amount,
+    });
     setIsConfirm(true);
   };
   const onShowConfirmMission = () => {
+    mixpanel.track('RedeemAddressScreen_ConfirmMission_Press', {
+      rewardName: missionDetail.rewardName,
+      amount: missionDetail.amount,
+      missionName: missionDetail.missionName,
+    });
     setIsConfirmMission(true);
   };
 

@@ -36,6 +36,7 @@ import moment from 'moment';
 import analytics from '@react-native-firebase/analytics';
 import {useMaintenance} from '../../contexts/MaintenanceContext';
 import Text from '../../components/Text';
+import {mixpanel} from '../../../mixpanel';
 
 export type TabNavigatorParamList = {
   mission: undefined;
@@ -709,12 +710,20 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                   justifyContent: 'center',
                 },
                 lazy: true,
-                tabBarButton(props) {
+                tabBarButton(props: any) {
                   const isFocused = props.accessibilityState?.selected;
                   const isProfileDone = item.name === 'profile' && isDoneAuth;
+
                   return (
                     <TouchableOpacity
                       {...props}
+                      onPress={() => {
+                        props.onPress();
+                        mixpanel.track('BottomTab_Tab', {
+                          TabName: item.name,
+                          to: item.name,
+                        });
+                      }}
                       style={[
                         props?.style,
                         {

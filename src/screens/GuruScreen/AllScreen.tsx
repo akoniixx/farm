@@ -188,7 +188,9 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
               <TouchableOpacity
                 key={index}
                 onPress={async () => {
-                  mixpanel.track('กดอ่านกูรูเกษตรในหน้ารวมข่าวสาร');
+                  mixpanel.track('GuruKasetScreen_NewsCard_Press', {
+                    newsId: item.id,
+                  });
                   await AsyncStorage.setItem('guruId', `${item.id}`);
                   navigation.push('DetailGuruScreen');
                 }}>

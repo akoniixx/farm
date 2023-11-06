@@ -131,6 +131,12 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     TaskDatasource.finishTask(payload)
       .then(() => {
         setLoading(false);
+        mixpanel.track('TaskDetailScreen_FinishTaskButton_Press', {
+          taskId,
+          updateBy: `${data.droner.firstname} ${data.droner.lastname}`,
+          comment,
+          reviewFarmerScore: defaulRating,
+        });
         setTimeout(() => setTogleModalSuccess(true), 200);
         setTimeout(() => getTaskDetail(), 300);
       })
@@ -161,6 +167,11 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
         `${data.droner.firstname} ${data.droner.lastname}`,
       )
         .then(() => {
+          mixpanel.track('TaskDetailScreen_StartTaskButton_Press', {
+            taskId,
+            updateBy: `${data.droner.firstname} ${data.droner.lastname}`,
+            dronerId: data.droner.id,
+          });
           Toast.show({
             type: 'success',
             text1: `งาน ${data.taskNo}`,

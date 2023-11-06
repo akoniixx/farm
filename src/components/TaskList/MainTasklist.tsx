@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {normalize} from '@rneui/themed';
 import fonts from '../../assets/fonts';
 import {colors, icons, font} from '../../assets';
@@ -13,6 +13,7 @@ import Text from '../Text';
 import {useAuth} from '../../contexts/AuthContext';
 import BadgeStatus from '../BadgeStatus/BadgeStatus';
 import {checkDecimal} from '../../function/checkDecimal';
+import {mixpanel} from '../../../mixpanel';
 
 const MainTasklists: React.FC<any> = (props: any) => {
   const ratting = [1, 2, 3, 4, 5];
@@ -81,12 +82,16 @@ const MainTasklists: React.FC<any> = (props: any) => {
           </View>
 
           <TouchableOpacity
-            onPress={() =>
+            onPress={() => {
+              mixpanel.track('CardTask_press', {
+                to: 'TaskDetailScreen',
+                taskId: props.taskId,
+              });
               RootNavigation.navigate('Main', {
                 screen: 'TaskDetailScreen',
                 params: {taskId: props.taskId},
-              })
-            }>
+              });
+            }}>
             <View style={styles.listTile}>
               <Text
                 style={{

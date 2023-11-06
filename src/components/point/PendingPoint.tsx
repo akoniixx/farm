@@ -19,7 +19,6 @@ export const PendingPoint: React.FC<guruData> = ({
   date,
   point,
   action,
-  taskId,
   taskNo,
 }) => {
   return (
@@ -37,7 +36,10 @@ export const PendingPoint: React.FC<guruData> = ({
         </View>
 
         <View>
-          <Text style={styles.positive}>{`≈ ${numberWithCommas(point)} `}</Text>
+          <Text style={styles.positive}>{`≈${numberWithCommas(
+            point,
+            true,
+          )}`}</Text>
           <Text style={styles.textDate}>
             {momentExtend.toBuddhistYear(date, 'DD MMM YY HH:mm น.')}
           </Text>
@@ -72,15 +74,16 @@ const styles = StyleSheet.create({
   },
   textDate: {
     fontSize: normalize(14),
-    fontFamily: font.light,
-    color: colors.gray,
+    fontFamily: font.bold,
+    color: colors.grey2,
     lineHeight: 30,
   },
   positive: {
     fontSize: normalize(17),
-    fontFamily: font.medium,
-    color: '#B0B8BF',
+    fontFamily: font.bold,
+    color: colors.grey3,
     lineHeight: 30,
+    textAlign: 'right',
   },
   negative: {
     fontSize: normalize(18),

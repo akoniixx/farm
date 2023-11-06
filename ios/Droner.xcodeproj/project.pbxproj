@@ -249,6 +249,7 @@
 				35167D1783CF7AD3B3DF9D4E /* [CP] Copy Pods Resources */,
 				2E6FAB9B73B388C54B069D9B /* [CP-User] [RNFB] Core Configuration */,
 				4BC73560FF89E57FD5844B2C /* [CP-User] [RNFB] Crashlytics Configuration */,
+				E1860DB72AF0B0D000F91AA5 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -481,6 +482,25 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Droner-DronerTests/Pods-Droner-DronerTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		E1860DB72AF0B0D000F91AA5 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFO_PLIST_PATH)\n$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFO_PLIST_PATH)",
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;

@@ -25,6 +25,7 @@ import {RefreshControl} from 'react-native';
 import Loading from '../../components/Loading/Loading';
 import NetworkLost from '../../components/NetworkLost/NetworkLost';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {mixpanel} from '../../../mixpanel';
 
 interface Prop {
   navigation: any;
@@ -143,6 +144,11 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
           text1: `งาน #${dataUpdateStatus.taskNo}`,
           text2: 'อัพเดทสถานะเรียบร้อยแล้ว',
         });
+        mixpanel.track('MainScreen_TaskInProgress_StartTask_Press', {
+          taskNo: dataUpdateStatus.taskNo,
+          taskId: dataUpdateStatus.id,
+          updateBy: dataUpdateStatus.updateBy,
+        });
         setLoading(false);
         setTimeout(() => getData(), 300);
       })
@@ -180,6 +186,12 @@ const TaskScreen: React.FC<Prop> = (props: Prop) => {
     };
     await TaskDatasource.finishTask(payload)
       .then(async () => {
+        mixpanel.track('MainScreen_TaskInProgress_FinishTask_Press', {
+          taskId: idUpload,
+          updateBy: updateBy,
+          comment: comment,
+          defaultRating: defaultRating,
+        });
         setFinishImg(null);
         setDefaultRating(0);
       })

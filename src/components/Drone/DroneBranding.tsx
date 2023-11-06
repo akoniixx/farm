@@ -82,7 +82,7 @@ const DroneBrandingItem: React.FC<DroneBranding> = ({
             }}>
             {dronebrand}
           </Text>
-          <Text style={styles.label}>{serialbrand}</Text>
+          <Text style={styles.label}>{serialbrand ? serialbrand : '-'}</Text>
         </View>
         <View
           style={{

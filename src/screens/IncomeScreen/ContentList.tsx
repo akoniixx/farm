@@ -23,6 +23,7 @@ import {stylesCentral} from '../../styles/StylesCentral';
 import {DataType} from '.';
 import {checkDecimal} from '../../function/checkDecimal';
 import Text from '../../components/Text';
+import {mixpanel} from '../../../mixpanel';
 
 interface Styles {
   isFocus?: boolean;
@@ -121,6 +122,9 @@ export default function ContentList({
               onPress={() => {
                 setType(item.type);
                 setPage(1);
+                mixpanel.track('IncomeScreen_TabView_ChangeTab', {
+                  tab: item.title,
+                });
               }}>
               <Text style={styles({isFocus}).textHeader}>{item.title}</Text>
             </TouchableOpacity>

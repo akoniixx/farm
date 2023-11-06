@@ -9,6 +9,7 @@ import ReadyToUseTab from './ReadyToUseTab';
 import HistoryTab from './HistoryTab';
 import {useFocusEffect} from '@react-navigation/native';
 import Text from '../../components/Text';
+import {mixpanel} from '../../../mixpanel';
 
 export default function MyRewardScreen({
   navigation,
@@ -72,7 +73,12 @@ export default function MyRewardScreen({
         navigationState={{index: key, routes}}
         renderScene={renderScene}
         lazy
-        onIndexChange={setKey}
+        onIndexChange={(index: number) => {
+          mixpanel.track('MyRewardScreen_TabView_ChangeTab', {
+            tab: routes[index].title,
+          });
+          setKey(index);
+        }}
         renderTabBar={renderTabBar}
       />
     </SafeAreaView>

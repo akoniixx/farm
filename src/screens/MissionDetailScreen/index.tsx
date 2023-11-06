@@ -16,6 +16,7 @@ import Text from '../../components/Text';
 import {rewardDatasource} from '../../datasource/RewardDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {numberWithCommas} from '../../function/utility';
+import {mixpanel} from '../../../mixpanel';
 interface Props {
   navigation: any;
   route: RouteProp<StackParamList, 'MissionDetailScreen'>;
@@ -57,7 +58,11 @@ export default function MissionDetailScreen({navigation, route}: Props) {
   //   };
   // }, [data.reward, data.status]);
 
-  const onPress = () => {
+  const onPressConfirm = () => {
+    mixpanel.track('MissionDetailScreen_ButtonRedeem_Press', {
+      missionId: data.missionId,
+      rewardId: data.reward.id,
+    });
     navigation.navigate('RedeemAddressScreen', {
       missionData: {
         missionId: data.missionId,
@@ -303,7 +308,7 @@ export default function MissionDetailScreen({navigation, route}: Props) {
                     fontSize: 16,
                     color: colors.decreasePoint,
                   }}>
-                  กรุณายืนยืนที่อยู่จัดส่ง เพื่อรับของรางวัล
+                  กรุณายืนที่อยู่จัดส่ง เพื่อรับของรางวัล
                 </Text>
               </View>
             )}
@@ -359,7 +364,7 @@ export default function MissionDetailScreen({navigation, route}: Props) {
               style={{
                 padding: 16,
               }}>
-              <TouchableOpacity style={styles.button} onPress={onPress}>
+              <TouchableOpacity style={styles.button} onPress={onPressConfirm}>
                 <Text style={styles.textButton}>ยืนยันการแลก</Text>
               </TouchableOpacity>
             </View>

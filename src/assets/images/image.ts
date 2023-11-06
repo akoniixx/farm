@@ -57,4 +57,5 @@ export default {
   lostNetwork: require('./lostNetwork.png'),
   refresh: require('./refresh.png'),
   missionPointImage: require('./missionPointImage.png'),
+  droneList: require('./droneList.png'),
 };

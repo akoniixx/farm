@@ -46,7 +46,7 @@ const TaskTapNavigator: React.FC<Prop> = (props: Prop) => {
   const renderScene = ({route}: any) => {
     switch (route.key) {
       case 'task':
-        mixpanel.track('tab inprogress task');
+        mixpanel.track('MainScreen_TabTaskInProgress_Press');
         return (
           <TaskScreen
             dronerStatus={props.dronerStatus}
@@ -54,7 +54,7 @@ const TaskTapNavigator: React.FC<Prop> = (props: Prop) => {
           />
         );
       case 'newTask':
-        mixpanel.track('tab new task');
+        mixpanel.track('MainScreen_TabNewTask_Press');
         return (
           <NewTaskScreen
             navigation={props.navigation}

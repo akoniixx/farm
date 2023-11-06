@@ -23,6 +23,7 @@ import TextInputArea from '../TextInputArea/TextInputArea';
 import {TaskDatasource} from '../../datasource/TaskDatasource';
 import {momentExtend} from '../../function/utility';
 import Text from '../Text';
+import {mixpanel} from '../../../mixpanel';
 
 interface Props {
   isVisible: boolean;
@@ -58,9 +59,15 @@ const ExtendModal = ({
         delayRemark: note,
         taskId,
       });
+
       if (res) {
         await fetchTask();
       }
+      mixpanel.track('extendTask', {
+        taskId,
+        dateDelay: newDate.toISOString(),
+        delayRemark: note,
+      });
       Toast.show({
         type: 'taskExtendReqSuccess',
         text1: `งาน #${taskId}`,

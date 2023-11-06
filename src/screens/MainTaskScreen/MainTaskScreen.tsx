@@ -18,6 +18,7 @@ const MainTaskScreen: React.FC<any> = ({navigation}) => {
         value={openNoti}
         onClick={() => {
           setOpenNoti(false);
+
           navigation.navigate('ProfileScreen', {
             navbar: false,
           });
