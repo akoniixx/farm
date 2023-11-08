@@ -8,6 +8,7 @@ import {
   TextInput,
   Dimensions,
   Image,
+  PermissionsAndroid,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 
@@ -37,6 +38,8 @@ import InfoCircleButton from '../../../components/InfoCircleButton';
 import { Modal } from 'react-native-paper';
 import ModalMapLocation from '../../../components/Modal/ModalMapLocation';
 import Text from '../../../components/Text/Text';
+import { useNetwork } from '../../../contexts/NetworkContext';
+import ModalRequestPermission from '../../../components/Modal/ModalRequestPermission';
 interface PlotArea {
   subdistrictId: number;
   subdistrictName: string;
@@ -126,7 +129,7 @@ export default function PlotForm({
   const [lat, setLat] = useState<any>();
   const [long, setLng] = useState<any>();
   const [plotName, setPlotName] = useState<any>(null);
-
+  const [allowLocal, setAllowLocal] = useState<boolean>(false);
   const plantSheet = useRef<any>();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [visiblePlot, setVisiblePlot] = useState(false);
@@ -134,6 +137,15 @@ export default function PlotForm({
   const [defaultNamePlot, setDefaultNamePlot] = useState(
     'แปลงที่ ' + (profilestate.plotItem.length + 1),
   );
+  const { appState } = useNetwork();
+  const [permission, setPermission] = useState<
+    | 'denied'
+    | 'granted'
+    | 'disabled'
+    | 'restricted'
+    | 'never_ask_again'
+    | undefined
+  >();
 
   const searchPlotArea = (value: string) => {
     setSearchValue(value);
@@ -162,6 +174,25 @@ export default function PlotForm({
     setDataRender(newarr);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
+
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      if (Platform.OS === 'ios') {
+        const result = await Geolocation.requestAuthorization('always');
+        return result;
+      } else if (Platform.OS === 'android') {
+        const result = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+        return result;
+      }
+    };
+    if (appState === 'active') {
+      requestLocationPermission().then(result => {
+        setPermission(result);
+      });
+    }
+  }, [appState]);
 
   useEffect(() => {
     const filterLocation = () => {
@@ -274,7 +305,7 @@ export default function PlotForm({
       }
     };
 
-    const initilize = async () => {
+    const initializeData = async () => {
       try {
         await Promise.all([
           getDistrict(),
@@ -286,9 +317,14 @@ export default function PlotForm({
         console.log(e);
       }
     };
-    initilize();
+    if (permission === 'granted') {
+      initializeData();
+    } else {
+      setAllowLocal(true);
+      setPermission(undefined);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [permission]);
 
   useEffect(() => {
     if (initialData) {
@@ -313,6 +349,7 @@ export default function PlotForm({
 
   const getCurrentLocation = async () => {
     const hasPermission = await LocationPermission.hasLocationPermission();
+
     if (hasPermission) {
       Geolocation.getCurrentPosition(
         async pos => {
@@ -975,6 +1012,13 @@ export default function PlotForm({
           longitude: position.longitude,
         }}
         onSubmit={onSubmitLocation}
+      />
+      <ModalRequestPermission
+        visible={allowLocal}
+        isPlotForm={true}
+        onRequestClose={() => {
+          setAllowLocal(false);
+        }}
       />
     </>
   );

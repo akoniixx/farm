@@ -1,3 +1,7 @@
+
+## Fix [1.5.1] 2023-11-08
+- adjust style droner detail
+- adjust target spray
 ## Fix [1.5.0] 2023-10-24
 - request permission media-image & crashlytics log
 ## Log [1.4.26] 2023-10-17 

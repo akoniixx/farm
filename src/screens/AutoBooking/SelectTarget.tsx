@@ -40,9 +40,7 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
   const isSelectDroner = route.params.isSelectDroner;
   const timeSpent = useTimeSpent();
   const profile = route.params.profile;
-  const [checkBoxList, setCheckBoxList] = useState<
-    { id: number; label: string }[]
-  >(PURPOSE_SPRAY_CHECKBOX);
+
   const {
     state: { taskData },
     autoBookingContext: { setTaskData },
@@ -50,7 +48,6 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
   const [periodSpray, setPeriodSpray] = useState<any>([
     { label: '', value: '' },
   ]);
-  const [otherPlant, setOtherPlant] = useState<string>('');
   const [periodSprayValue, setPeriodSprayValue] = useState<{
     label: string;
     value: string;
@@ -187,6 +184,7 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
                       justifyContent: 'space-between',
                       width: '100%',
                       alignItems: 'center',
+                      marginBottom: 4,
                     }}>
                     <Text style={[styles.label, { marginTop: normalize(20) }]}>
                       เป้าหมาย
@@ -198,7 +196,7 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
                       <InfoCircleButton sheetId="targetSpray" />
                     </View>
                   </View>
-                  <View
+                  {/* <View
                     style={{
                       flexDirection: 'row',
                       flexWrap: 'wrap',
@@ -309,7 +307,55 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
                         </TouchableOpacity>
                       )
                     }
-                  />
+                  /> */}
+                  <TouchableOpacity
+                    style={styles.injectionInput}
+                    onPress={async () => {
+                      const currentValue: any = await SheetManager.show(
+                        'selectTargetSpray',
+                        {
+                          payload: {
+                            targetSpray: selectedOption,
+                          },
+                        },
+                      );
+                      mixpanel.track(
+                        'SelectTargetScreen_SelectPeriodSpray_tabbed',
+                        {
+                          periodSpray: currentValue,
+                        },
+                      );
+                      setSelectedOption(currentValue.targetSpray);
+                    }}>
+                    {selectedOption?.length > 0 ? (
+                      <Text
+                        style={{
+                          color: colors.fontBlack,
+                          fontFamily: fonts.SarabunMedium,
+                          fontSize: 20,
+                          lineHeight: 40,
+                        }}>
+                        {selectedOption.join(', ')}
+                      </Text>
+                    ) : (
+                      <Text
+                        style={{
+                          color: colors.disable,
+                          fontFamily: fonts.SarabunMedium,
+                          fontSize: 20,
+                          lineHeight: 40,
+                        }}>
+                        {'เลือกเป้าหมาย'}
+                      </Text>
+                    )}
+                    <Image
+                      source={icons.arrowDown}
+                      style={{
+                        width: 24,
+                        height: 24,
+                      }}
+                    />
+                  </TouchableOpacity>
 
                   <View
                     style={{
@@ -454,7 +500,7 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
                     label="ยืนยัน"
                     disable={
                       selectedOption.length < 1 ||
-                      periodSprayValue?.value === '' ||
+                      !periodSprayValue?.value ||
                       selectedCheckbox === ''
                     }
                     color={colors.greenLight}
