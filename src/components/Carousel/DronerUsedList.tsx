@@ -94,7 +94,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
           source={background === null ? image.bg_droner : { uri: background }}>
           <View key={index}>
             <Image
-              source={profile === '' ? image.empty_plot : { uri: profile }}
+              source={profile === '' ? image.empty_droner : { uri: profile }}
             />
             <View
               style={{
@@ -106,7 +106,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                 <ProgressiveImage
                   borderRadius={28}
                   source={
-                    profile === null ? image.empty_plot : { uri: profile }
+                    profile === null ? image.empty_droner : { uri: profile }
                   }
                   style={{
                     borderRadius: normalize(28),

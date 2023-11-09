@@ -88,7 +88,7 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
           type: 'InitDroner',
           name: `${res[0].firstname} ${res[0].lastname}`,
           distance: `${res[0].street_distance}`,
-          imagePro: res[0].image_droner ? res[0].image_droner : icons.avatar,
+          imagePro: res[0].image_droner,
           imageTask: res[0].image_task,
           rate: res[0].rating_avg,
           total_task: res[0].count_rating,
@@ -316,8 +316,9 @@ const DronerDetail: React.FC<any> = ({ navigation, route }) => {
         <View style={[styles.section]}>
           <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
             <ProgressiveImage
+              borderRadius={40}
               source={
-                detailState.imagePro !== null
+                detailState.imagePro
                   ? { uri: detailState.imagePro }
                   : image.empty_droner
               }
