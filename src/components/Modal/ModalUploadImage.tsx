@@ -89,11 +89,24 @@ export default function ModalUploadImage({
       }
     }
   };
+  const onTakePhotoIOS = async () => {
+    const alreadyHasPermission = await Camera.getCameraPermissionStatus();
+    if (alreadyHasPermission === 'authorized') {
+      onPressCamera();
+    } else {
+      const requested = await Camera.requestCameraPermission();
+      if (requested === 'authorized') {
+        onPressCamera();
+      } else {
+        await Linking.openSettings();
+      }
+    }
+  };
   const staticSelect = [
     {
       label: 'ถ่ายภาพ',
       onPress: () => {
-        Platform.OS === 'android' ? onOpenCamera() : onPressCamera();
+        Platform.OS === 'android' ? onOpenCamera() : onTakePhotoIOS();
       },
       icon: icons.cameraGray,
       id: 1,
