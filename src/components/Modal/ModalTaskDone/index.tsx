@@ -287,7 +287,7 @@ export default function ModalTaskDone({
               }}>
               ยืนยันการเสร็จสิ้นงาน
             </Text>
-            <Text style={styles.g19}>กรุณาอัพโหลดภาพ 2 ภาพ ดังนี้</Text>
+            <Text style={styles.g19}>กรุณาอัปโหลดภาพ 2 ภาพ ดังนี้</Text>
           </View>
           <View
             style={{
@@ -379,7 +379,7 @@ export default function ModalTaskDone({
                         fontFamily: font.semiBold,
                         fontSize: 14,
                       }}>
-                      อัพโหลดภาพปุ๋ย/ยา
+                      อัปโหลดภาพปุ๋ย/ยา
                     </Text>
                     <Image
                       source={icons.checkFillSuccess}
@@ -397,7 +397,7 @@ export default function ModalTaskDone({
                         fontFamily: font.semiBold,
                         fontSize: 14,
                       }}>
-                      อัพโหลดภาพปุ๋ย/ยา
+                      อัปโหลดภาพปุ๋ย/ยา
                     </Text>
                     {isImageDuplicate && (
                       <Text
@@ -406,8 +406,8 @@ export default function ModalTaskDone({
                           fontSize: 14,
                           color: colors.decreasePoint,
                         }}>
-                        คุณอัพโหลดภาพซ้ำกับภาพหลักฐานการบิน
-                        กรุณาอัพโหลดภาพใหม่อีกครั้ง
+                        คุณอัปโหลดภาพซ้ำกับภาพหลักฐานการบิน
+                        กรุณาอัปโหลดภาพใหม่อีกครั้ง
                       </Text>
                     )}
                   </View>
@@ -449,7 +449,7 @@ export default function ModalTaskDone({
                         fontFamily: font.semiBold,
                         fontSize: 14,
                       }}>
-                      อัพโหลดภาพหลักฐานการบิน
+                      อัปโหลดภาพหลักฐานการบิน
                     </Text>
                     <Image
                       source={icons.checkFillSuccess}
@@ -466,7 +466,7 @@ export default function ModalTaskDone({
                       fontFamily: font.semiBold,
                       fontSize: 14,
                     }}>
-                    อัพโหลดภาพหลักฐานการบิน
+                    อัปโหลดภาพหลักฐานการบิน
                   </Text>
                 )}
               </View>
@@ -507,8 +507,8 @@ export default function ModalTaskDone({
                 alignSelf: 'flex-start',
               }}>
               {step === 0
-                ? 'ลักษณะภาพที่อัพโหลดควรแสดงวัน เวลา และจำนวนไร่ของงานที่คุณบินเสร็จในครั้งนี้อย่างชัดเจน'
-                : 'ลักษณะภาพที่อัพโหลดควรเห็นบรรจุภัณฑ์ปุ๋ยหรือยาที่ใช้ในงานครั้งนี้อย่างชัดเจน'}
+                ? 'ลักษณะภาพที่อัปโหลดควรแสดงวัน เวลา และจำนวนไร่ของงานที่คุณบินเสร็จในครั้งนี้อย่างชัดเจน'
+                : 'ลักษณะภาพที่อัปโหลดควรเห็นบรรจุภัณฑ์ปุ๋ยหรือยาที่ใช้ในงานครั้งนี้อย่างชัดเจน'}
             </Text>
           </View>
           {/*  bottom */}

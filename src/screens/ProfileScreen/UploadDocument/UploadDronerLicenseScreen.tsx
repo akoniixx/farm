@@ -65,13 +65,13 @@ const UploadDronerLicenseScreen: React.FC<any> = ({navigation, route}) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={icons.arrowLeft} style={styles.listTileIcon} />
         </TouchableOpacity>
-        <Text style={[styles.appBarHeader]}>อัพโหลดใบอนุญาตนักบิน </Text>
+        <Text style={[styles.appBarHeader]}>อัปโหลดใบอนุญาตนักบิน </Text>
         <View style={styles.listTileIcon} />
       </View>
 
       <View style={styles.body}>
         <View style={{marginVertical: normalize(16), marginTop: normalize(40)}}>
-          <Text style={styles.h1}>อัพโหลดใบอนุญาตนักบิน</Text>
+          <Text style={styles.h1}>อัปโหลดใบอนุญาตนักบิน</Text>
         </View>
         <TouchableOpacity
           style={{

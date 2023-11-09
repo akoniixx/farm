@@ -247,7 +247,7 @@ export default function NewAddIDCardScreen({navigation}: Props) {
                   textAlign: 'left',
                   marginTop: 16,
                 }}>
-                อัพโหลดรูปถ่ายผู้สมัคร คู่บัตรประชาชน
+                อัปโหลดรูปถ่ายผู้สมัคร คู่บัตรประชาชน
               </Text>
               <ImageBackground
                 style={styles({isHavePic: !!images}).card}

@@ -421,7 +421,7 @@ export default function DroneListScreen({navigation}: Props) {
                       <Text style={styles.hSheet}>เพิ่มเอกสาร</Text>
                     </View>
                     <Text style={[styles.h2, {paddingTop: 12}]}>
-                      อัพโหลดใบอนุญาตนักบิน
+                      อัปโหลดใบอนุญาตนักบิน
                     </Text>
                     <View
                       style={{
@@ -512,7 +512,7 @@ export default function DroneListScreen({navigation}: Props) {
                       }}
                     />
                     <Text style={[styles.h2, {paddingTop: 12}]}>
-                      อัพโหลดใบอนุญาตโดรนจาก กสทช.
+                      อัปโหลดใบอนุญาตโดรนจาก กสทช.
                     </Text>
                     <View
                       style={{

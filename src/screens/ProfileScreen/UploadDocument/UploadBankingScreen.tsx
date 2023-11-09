@@ -168,7 +168,7 @@ const UploadBankingScreen: React.FC<PropsParams> = ({navigation, route}) => {
   return (
     <SafeAreaView style={[stylesCentral.container]}>
       <CustomHeader
-        title={'อัพโหลดสมุดบัญชีธนาคาร'}
+        title={'อัปโหลดสมุดบัญชีธนาคาร'}
         showBackBtn
         onPressBack={() => {
           navigation.goBack();
@@ -242,7 +242,7 @@ const UploadBankingScreen: React.FC<PropsParams> = ({navigation, route}) => {
           />
 
           <View style={{marginTop: 8}}>
-            <Text style={styles.h1}>อัพโหลดหน้าสมุดบัญชีธนาคาร</Text>
+            <Text style={styles.h1}>อัปโหลดหน้าสมุดบัญชีธนาคาร</Text>
           </View>
 
           <TouchableOpacity

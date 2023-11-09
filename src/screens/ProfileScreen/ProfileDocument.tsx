@@ -118,7 +118,7 @@ const ProfileDocument: React.FC<any> = ({navigation, route}) => {
               <View style={{marginTop: normalize(16)}}>
                 <Text
                   style={{fontFamily: font.medium, fontSize: normalize(16)}}>
-                  อัพโหลดรูปถ่ายผู้สมัครคู่บัตรประชาชน
+                  อัปโหลดรูปถ่ายผู้สมัครคู่บัตรประชาชน
                 </Text>
 
                 <TouchableOpacity
@@ -202,7 +202,7 @@ const ProfileDocument: React.FC<any> = ({navigation, route}) => {
                 alignItems: 'center',
               }}>
               <Text style={{fontFamily: font.medium, fontSize: normalize(16)}}>
-                อัพโหลดใบอนุญาตนักบิน{' '}
+                อัปโหลดใบอนุญาตนักบิน{' '}
               </Text>
               <Image
                 source={icons.arrowRight}
@@ -226,7 +226,7 @@ const ProfileDocument: React.FC<any> = ({navigation, route}) => {
                 alignItems: 'center',
               }}>
               <Text style={{fontFamily: font.medium, fontSize: normalize(16)}}>
-                อัพโหลดสมุดบัญชีธนาคาร
+                อัปโหลดสมุดบัญชีธนาคาร
               </Text>
 
               <Image

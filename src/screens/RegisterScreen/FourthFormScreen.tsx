@@ -79,7 +79,7 @@ const FourthFormScreen: React.FC<any> = ({route, navigation}) => {
           label="ถัดไป"
           color={colors.orange}
           onPress={() => {
-            mixpanel.track('กดไปยังหน้าอัพโหลดเอกสาร');
+            mixpanel.track('กดไปยังหน้าอัปโหลดเอกสาร');
             navigation.navigate('AddIDCardScreen', {
               tele: telNo,
               profile: Profile,
@@ -94,7 +94,7 @@ const FourthFormScreen: React.FC<any> = ({route, navigation}) => {
             color={colors.white}
             fontColor={colors.fontBlack}
             onPress={() => {
-              mixpanel.track('กดข้ามหน้าอัพโหลดเอกสาร');
+              mixpanel.track('กดข้ามหน้าอัปโหลดเอกสาร');
               Register.registerSkipStep4()
                 .then(() => navigation.navigate('SuccessScreen'))
                 .catch(err => console.log(err));
