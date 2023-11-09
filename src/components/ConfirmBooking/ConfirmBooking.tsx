@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dimensions, Image, ScrollView, StyleSheet, View } from 'react-native';
 import { normalize } from '../../functions/Normalize';
-import { colors, font, icons, image } from '../../assets';
+import { colors, font, icons } from '../../assets';
 import Text from '../Text/Text';
 import { MainButton } from '../Button/MainButton';
 import { numberWithCommas } from '../../functions/utility';
@@ -173,20 +173,20 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
           <View
             style={{
               flexDirection: 'row',
-              paddingVertical: 10,
+              paddingVertical: 5,
               alignContent: 'center',
               justifyContent: 'space-between',
             }}>
             <Text
               style={{
-                fontFamily: font.AnuphanBold,
+                fontFamily: font.AnuphanSemiBold,
                 fontSize: normalize(20),
               }}>
               รวมค่าบริการ
             </Text>
             <Text
               style={{
-                fontFamily: font.AnuphanBold,
+                fontFamily: font.AnuphanSemiBold,
                 fontSize: normalize(20),
                 color: colors.greenLight,
               }}>
@@ -199,10 +199,18 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
                 justifyContent: 'space-between',
                 flexDirection: 'row',
               }}>
-              <Text style={[styles.textDiscount, { color: colors.grey20 }]}>
+              <Text
+                style={[
+                  styles.textDiscount,
+                  { color: colors.grey20, fontSize: 16 },
+                ]}>
                 ได้รับแต้มโดยประมาณ
               </Text>
-              <Text style={[styles.textDiscount, { color: colors.grey20 }]}>
+              <Text
+                style={[
+                  styles.textDiscount,
+                  { color: colors.grey20, fontSize: 16 },
+                ]}>
                 {`≈${numberWithCommas(campaignPoint, true)} แต้ม`}
               </Text>
             </View>
@@ -213,6 +221,7 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
           onPress={submit}
           disable={loading}
           color={colors.greenLight}
+          fontFamily={font.AnuphanSemiBold}
           style={{
             height: 54,
           }}
@@ -220,6 +229,7 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
         <MainButton
           label="ยกเลิก"
           fontColor={colors.fontBlack}
+          fontFamily={font.AnuphanSemiBold}
           onPress={close}
           color={colors.white}
           borderColor={colors.fontBlack}
@@ -242,17 +252,17 @@ const styles = StyleSheet.create({
     lineHeight: normalize(30),
   },
   textPrice: {
-    fontFamily: font.SarabunBold,
+    fontFamily: font.SarabunSemiBold,
     color: colors.grey60,
     fontSize: normalize(18),
-    paddingVertical: 8,
+    paddingVertical: 5,
     alignContent: 'center',
   },
   textDiscount: {
-    fontFamily: font.SarabunBold,
+    fontFamily: font.SarabunSemiBold,
     color: colors.primary,
     fontSize: normalize(18),
-    paddingBottom: 8,
+    paddingVertical: 5,
     alignContent: 'center',
   },
 });
