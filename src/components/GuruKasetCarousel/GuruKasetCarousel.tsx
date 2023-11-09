@@ -52,8 +52,6 @@ export default function GuruKasetCarousel({
             autoplay={true}
             autoplayInterval={7000}
             autoplayDelay={5000}
-            loop={true}
-            hasParallaxImages
             ref={isCarousel}
             data={guruKaset.data.filter(el => el.pin_all)}
             sliderWidth={screen.width}
@@ -124,7 +122,6 @@ export default function GuruKasetCarousel({
               autoplay={true}
               autoplayInterval={7000}
               autoplayDelay={5000}
-              loop={true}
               ref={isCarousel}
               data={guruKasetData}
               sliderWidth={screen.width}

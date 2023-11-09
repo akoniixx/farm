@@ -62,7 +62,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   const [status, setStatus] = useState<any>();
   const isFocused = useIsFocused();
 
-  const [campaignImage, setCampaignImage] = useState<string>('');
+  // const [campaignImage, setCampaignImage] = useState<string>('');
   const {checkDataMA} = useMaintenance();
   useEffect(() => {
     const getProfile = async () => {
@@ -713,7 +713,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                 tabBarButton(props: any) {
                   const isFocused = props.accessibilityState?.selected;
                   const isProfileDone = item.name === 'profile' && isDoneAuth;
-
+                  const isMyTask = item.name === 'myTask';
                   return (
                     <TouchableOpacity
                       {...props}
@@ -727,7 +727,6 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                       style={[
                         props?.style,
                         {
-                          padding: 8,
                           justifyContent: 'center',
                           alignItems: 'center',
                         },
@@ -736,6 +735,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                         style={{
                           justifyContent: 'center',
                           alignItems: 'center',
+                          width: '100%',
                         }}>
                         <Image
                           source={
@@ -762,8 +762,11 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                                 : belowMedium
                                 ? normalize(12)
                                 : normalize(14),
+
                             color: isFocused ? colors.orange : colors.gray,
                             marginTop: isProfileDone ? 4 : 2,
+                            width: isMyTask ? 80 : 'auto',
+                            textAlign: 'center',
                           }}>
                           {item.title}
                         </Text>

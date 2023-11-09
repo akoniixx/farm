@@ -101,18 +101,20 @@ const UsedPointScreen: React.FC<any> = () => {
                 </View>
               }
               data={dataAllPoint}
-              renderItem={({item, index}) => (
-                <HistoryPoint
-                  {...item}
-                  index={index}
-                  date={item.createAt}
-                  point={item.amountValue}
-                  action={item.action}
-                  campaignName={item.campaignName}
-                  taskId={item.taskId}
-                  taskNo={item.taskNo != null ? item.taskNo : ''}
-                />
-              )}
+              renderItem={({item, index}) => {
+                return (
+                  <HistoryPoint
+                    {...item}
+                    index={index}
+                    date={item.createAt}
+                    point={item.amountValue}
+                    action={item.action}
+                    campaignName={item.campaignName}
+                    taskId={item.taskId}
+                    taskNo={item.taskNo != null ? item.taskNo : ''}
+                  />
+                );
+              }}
             />
           </View>
         ) : (

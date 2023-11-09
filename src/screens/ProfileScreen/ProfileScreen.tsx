@@ -10,8 +10,7 @@ import {
 import React, {useEffect, useReducer, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {stylesCentral} from '../../styles/StylesCentral';
-import {MainButton} from '../../components/Button/MainButton';
-import {colors, font, icons, image} from '../../assets';
+import {colors, font, icons} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Authentication} from '../../datasource/AuthDatasource';

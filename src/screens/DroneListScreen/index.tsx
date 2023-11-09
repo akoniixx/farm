@@ -160,7 +160,7 @@ export default function DroneListScreen({navigation}: Props) {
         showBackBtn={true}
         onPressBack={() => navigation.goBack()}
       />
-      <ScrollView style={styles.content}>
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <TouchableOpacity
           style={styles.addNewDronerButton}
           onPress={showActionSheet}>

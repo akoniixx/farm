@@ -68,7 +68,7 @@ export const HistoryPoint: React.FC<guruData> = ({
               style={{
                 alignItems: 'flex-end',
               }}>
-              <Text style={styles.positive}>{`+ ${numberWithCommas(
+              <Text style={styles.positive}>{`+${numberWithCommas(
                 point,
                 true,
               )} `}</Text>
@@ -81,7 +81,7 @@ export const HistoryPoint: React.FC<guruData> = ({
               style={{
                 alignItems: 'flex-end',
               }}>
-              <Text style={styles.negative}>{`- ${numberWithCommas(
+              <Text style={styles.negative}>{`-${numberWithCommas(
                 point,
                 true,
               )} `}</Text>

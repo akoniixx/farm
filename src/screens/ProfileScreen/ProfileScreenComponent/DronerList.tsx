@@ -19,7 +19,10 @@ export default function DronerList() {
           marginBottom: 10,
         }}
       />
-      <Text style={styles.text}>โดรนของฉัน ({user?.dronerDrone.length})</Text>
+      <Text style={styles.textMyDrone}>
+        {`โดรนของฉัน `}
+        <Text style={styles.text}>({user?.dronerDrone.length})</Text>
+      </Text>
     </>
   );
 }
@@ -27,5 +30,9 @@ const styles = StyleSheet.create({
   text: {
     fontSize: normalize(16),
     fontFamily: font.medium,
+  },
+  textMyDrone: {
+    fontSize: normalize(16),
+    fontFamily: font.semiBold,
   },
 });
