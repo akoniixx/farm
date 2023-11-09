@@ -319,7 +319,7 @@ export default function PlotForm({
     };
     if (permission === 'granted') {
       initializeData();
-    } else {
+    } else if (permission === 'denied') {
       setAllowLocal(true);
       setPermission(undefined);
     }

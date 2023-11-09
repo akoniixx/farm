@@ -788,7 +788,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                       vertical={false}
                       onSnapToItem={index => setIndex(index)}
                       data={newPlotList}
-                      itemWidth={screenWidth - 30}
+                      itemWidth={screenWidth - 18}
                       sliderWidth={screenWidth}
                       renderItem={({ item, index }: any) => {
                         return (
