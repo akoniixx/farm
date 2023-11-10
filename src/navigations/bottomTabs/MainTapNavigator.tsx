@@ -255,9 +255,10 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
               });
               break;
             case 'MISSION_POINT':
-              RootNavigation.navigate('Main', {
-                screen: 'MissionScreen',
-              });
+              setInitialRouteName('mission');
+              break;
+            case 'MISSION_OPENING':
+              setInitialRouteName('mission');
               break;
             default:
               break;
@@ -273,6 +274,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
       });
 
       const jumpAction = TabActions.jumpTo('profile');
+      const jumpActionMission = TabActions.jumpTo('mission');
       switch (type) {
         case 'APPROVE_DRONER_SUCCESS':
           setRegisterNoti(true);
@@ -380,9 +382,10 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           });
           break;
         case 'MISSION_POINT':
-          RootNavigation.navigate('Main', {
-            screen: 'MissionScreen',
-          });
+          navigation.dispatch(jumpActionMission);
+          break;
+        case 'MISSION_OPENING':
+          navigation.dispatch(jumpActionMission);
           break;
         default:
           break;
@@ -652,6 +655,20 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
               });
               Toast.hide();
             },
+          });
+          break;
+        case 'MISSION_OPENING':
+          Toast.show({
+            type: 'missionOpening',
+            topOffset: 40,
+            position: 'top',
+            text1: message.data?.title,
+            text2: message.data?.message,
+            onPress() {
+              const jumpAction = TabActions.jumpTo('mission');
+              navigation.dispatch(jumpAction);
+              Toast.hide();
+            }
           });
           break;
         default:

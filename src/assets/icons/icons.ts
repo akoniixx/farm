@@ -94,4 +94,5 @@ export default {
   infoCircleOrange: require('./infoCircleOrange.png'),
   editProfile: require('./editProfile.png'),
   orangePlus: require('./orangePlus.png'),
+  missionNoti: require('./missionnoti.png'),
 };
