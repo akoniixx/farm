@@ -396,6 +396,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
     });
 
     messaging().onMessage(async message => {
+      console.log(message)
       const type = message.data?.type;
       await analytics().logEvent('notification_received', {
         type: type,

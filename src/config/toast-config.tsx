@@ -65,10 +65,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
           <View />
@@ -137,10 +133,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
           <View />
@@ -157,10 +149,6 @@ export const toastConfig = {
           }}>
           <Image
             source={icons.closecircle}
-            style={{
-              width: normalize(30),
-              height: normalize(30),
-            }}
           />
           <View
             style={{
@@ -178,10 +166,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -218,10 +202,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -262,10 +242,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -305,10 +281,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -344,10 +316,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -383,10 +351,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -423,10 +387,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -469,10 +429,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -508,10 +464,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -554,10 +506,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -599,10 +547,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -642,10 +586,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -704,10 +644,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -766,10 +702,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -805,10 +737,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -908,10 +836,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -947,10 +871,6 @@ export const toastConfig = {
             }}>
             <Image
               source={icons.closewhite}
-              style={{
-                width: normalize(12),
-                height: normalize(12),
-              }}
             />
           </TouchableOpacity>
         </View>
@@ -987,10 +907,6 @@ export const toastConfig = {
               }}>
               <Image
                 source={icons.closewhite}
-                style={{
-                  width: normalize(12),
-                  height: normalize(12),
-                }}
               />
             </TouchableOpacity>
           </View>
