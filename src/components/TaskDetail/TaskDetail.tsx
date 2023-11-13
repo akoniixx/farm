@@ -187,7 +187,7 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                alignItems: 'center',
+                alignItems: 'flex-start',
                 width: '100%',
                 marginBottom: normalize(10),
               }}>

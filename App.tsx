@@ -33,12 +33,12 @@ const App = () => {
     const firebaseInit = async () => {
       try {
         if (Platform.OS === 'ios') {
+          await registerDeviceForRemoteMessages();
           if (firebase.apps.length === 0) {
             firebaseInitialize();
           } else {
             firebase.app();
           }
-          registerDeviceForRemoteMessages();
         }
       } catch (error) {
         console.log(error);

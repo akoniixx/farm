@@ -72,12 +72,13 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
               <View
                 style={{
                   flexDirection: 'row',
-                  paddingVertical: 10,
+                  paddingTop: 10,
+                  paddingBottom: 4,
                   alignItems: 'center',
                 }}>
                 <Image
                   source={icons.plot}
-                  style={{ width: normalize(42), height: normalize(42) }}
+                  style={{ width: normalize(20), height: normalize(20) }}
                 />
                 <Text style={styles.textConfirm}> {plotName} , </Text>
                 <Text style={styles.textConfirm}>{raiAmount} ไร่</Text>
@@ -85,7 +86,7 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
               <View
                 style={{
                   flexDirection: 'row',
-                  paddingVertical: 10,
+                  paddingBottom: 2,
                   alignItems: 'center',
                 }}>
                 {isSelectDrone === 'ระบบค้นหานักบินอัตโนมัติ' && (
@@ -93,19 +94,27 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
                     style={{
                       backgroundColor: '#B05E03',
                       borderRadius: 50,
-                      padding: 9,
-                      marginHorizontal: 4,
+                      padding: 4,
                     }}>
                     <Image
                       source={icons.drone_auto}
-                      style={{ width: normalize(24), height: normalize(24) }}
+                      style={{ width: normalize(16), height: normalize(16) }}
                     />
                   </View>
                 )}
-                <Text style={styles.textConfirm}>{isSelectDrone}</Text>
+                {isSelectDrone === 'ระบบค้นหานักบินอัตโนมัติ' ? (
+                  <Text style={styles.textConfirm}>{isSelectDrone}</Text>
+                ) : (
+                  isSelectDrone
+                )}
               </View>
               <View
-                style={{ backgroundColor: colors.bg, height: 0.5, margin: 10 }}
+                style={{
+                  backgroundColor: colors.bg,
+                  height: 0.5,
+                  padding: 0,
+                  marginVertical: 10,
+                }}
               />
               <View
                 style={{
@@ -156,49 +165,49 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
                 </>
               )}
             </View>
-            <View style={{ marginBottom: 16 }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  paddingVertical: 10,
-                  alignContent: 'center',
-                  justifyContent: 'space-between',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: font.AnuphanBold,
-                    fontSize: normalize(20),
-                  }}>
-                  รวมค่าบริการ
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: font.AnuphanBold,
-                    fontSize: normalize(20),
-                    color: colors.greenLight,
-                  }}>
-                  {`${numberWithCommas(price.toString(), true)} บาท`}
-                </Text>
-              </View>
-              <View>
-                <View
-                  style={{
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
-                  }}>
-                  <Text style={[styles.textDiscount, { color: colors.grey20 }]}>
-                    ได้รับแต้มโดยประมาณ
-                  </Text>
-                  <Text style={[styles.textDiscount, { color: colors.grey20 }]}>
-                    {`≈ ${numberWithCommas(campaignPoint, true)} แต้ม`}
-                  </Text>
-                </View>
-              </View>
-            </View>
           </View>
         </View>
       </ScrollView>
       <View>
+        <View style={{ marginBottom: 16 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingVertical: 10,
+              alignContent: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <Text
+              style={{
+                fontFamily: font.AnuphanBold,
+                fontSize: normalize(20),
+              }}>
+              รวมค่าบริการ
+            </Text>
+            <Text
+              style={{
+                fontFamily: font.AnuphanBold,
+                fontSize: normalize(20),
+                color: colors.greenLight,
+              }}>
+              {`${numberWithCommas(price.toString(), true)} บาท`}
+            </Text>
+          </View>
+          <View>
+            <View
+              style={{
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+              }}>
+              <Text style={[styles.textDiscount, { color: colors.grey20 }]}>
+                ได้รับแต้มโดยประมาณ
+              </Text>
+              <Text style={[styles.textDiscount, { color: colors.grey20 }]}>
+                {`≈${numberWithCommas(campaignPoint, true)} แต้ม`}
+              </Text>
+            </View>
+          </View>
+        </View>
         <MainButton
           label="ยืนยัน"
           onPress={submit}
@@ -227,9 +236,10 @@ export default ConfirmBooking;
 const styles = StyleSheet.create({
   textConfirm: {
     fontSize: normalize(18),
-    fontFamily: font.SarabunMedium,
+    fontFamily: font.SarabunLight,
     paddingLeft: 5,
     alignContent: 'center',
+    lineHeight: normalize(30),
   },
   textPrice: {
     fontFamily: font.SarabunBold,
@@ -242,7 +252,7 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunBold,
     color: colors.primary,
     fontSize: normalize(18),
-    paddingVertical: 8,
+    paddingBottom: 8,
     alignContent: 'center',
   },
 });

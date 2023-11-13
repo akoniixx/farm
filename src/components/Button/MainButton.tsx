@@ -17,12 +17,16 @@ interface MainButtonProps {
   onPress?: () => void;
   style?: ViewStyle;
   marginVertical?: number;
+  disabledStyle?: 'default' | 'light';
 }
 
 export const MainButton: React.FC<MainButtonProps> = props => {
   return (
     <Button
       disabled={props.disable}
+      disabledStyle={
+        props.disabledStyle === 'light' ? styles.disableLight : undefined
+      }
       title={props.label}
       titleProps={{
         allowFontScaling: false,
@@ -53,5 +57,11 @@ const styles = StyleSheet.create({
     width: normalize(343),
     height: normalize(54),
     borderRadius: normalize(8),
+  },
+  disableLight: {
+    backgroundColor: colors.white,
+    borderColor: colors.disable,
+    borderWidth: 0.5,
+    color: '#C0C5CA',
   },
 });

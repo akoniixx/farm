@@ -28,13 +28,13 @@ export const DronerCard: React.FC<props> = ({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: 10,
+        paddingVertical: confirmBook ? 0 : 10,
       }}>
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          alignItems: 'center',
+          alignItems: confirmBook ? 'flex-start' : 'center',
         }}>
         <View
           style={{
@@ -47,8 +47,9 @@ export const DronerCard: React.FC<props> = ({
               borderRadius: normalize(28),
               borderColor: colors.white,
               borderWidth: 1,
-              width: confirmBook !== true ? normalize(56) : normalize(44),
-              height: confirmBook !== true ? normalize(56) : normalize(44),
+              width: confirmBook !== true ? normalize(56) : normalize(20),
+              height: confirmBook !== true ? normalize(56) : normalize(20),
+              marginTop: confirmBook !== true ? 0 : normalize(2),
             }}
           />
         </View>

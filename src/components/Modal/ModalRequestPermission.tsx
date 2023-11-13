@@ -6,11 +6,13 @@ import { MainButton } from '../Button/MainButton';
 
 interface Props {
   visible: boolean;
+  isPlotForm?: boolean;
   onRequestClose: () => void;
 }
 export default function ModalRequestPermission({
   visible,
   onRequestClose,
+  isPlotForm = false,
 }: Props) {
   return (
     <Modal transparent={true} visible={visible} animationType="fade">
@@ -50,7 +52,9 @@ export default function ModalRequestPermission({
               lineHeight: 28,
               marginTop: 8,
             }}>
-            เพื่อช่วยในการค้นหานักบินโดรน
+            {isPlotForm
+              ? 'เพื่อช่วยในการค้นหาที่อยู่แปลง'
+              : 'เพื่อช่วยในการค้นหานักบินโดรน'}
           </Text>
           <MainButton
             style={{
