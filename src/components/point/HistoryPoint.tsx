@@ -45,7 +45,7 @@ export const HistoryPoint: React.FC<guruData> = ({
           paddingHorizontal: 15,
           paddingVertical: 15,
         }}>
-        <View style={{flex: 0.7}}>
+        <View style={{flex: 0.6}}>
           <Text style={styles.title}>
             {action === 'RETURN'
               ? 'คืนแต้ม'
@@ -62,7 +62,7 @@ export const HistoryPoint: React.FC<guruData> = ({
               : taskNo}
           </Text>
         </View>
-        <View style={{flex: 0.3}}>
+        <View style={{flex: 0.4}}>
           {action === 'INCREASE' || action === 'RETURN' ? (
             <View
               style={{

@@ -1,7 +1,12 @@
+## Enhance [1.10.0] 2023-11-10
+- mission opening notification
+
 ## Enhance [1.9.1] 2023-11-06
 - new ui open receive reward
 - mixpanel setup detail 
 - check duplicate image when upload task success
+  
+
 ## Enhance [1.9.0] 2023-10-24
 - show iframe in news guru
 

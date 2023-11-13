@@ -16,12 +16,12 @@ export default function DronerList() {
         style={{
           width: 64,
           height: 30,
-          marginBottom: 10,
+          marginBottom: 8,
         }}
       />
       <Text style={styles.textMyDrone}>
         {`โดรนของฉัน `}
-        <Text style={styles.text}>({user?.dronerDrone.length})</Text>
+        <Text style={styles.text}>({user?.dronerDrone?.length || 0})</Text>
       </Text>
     </>
   );
@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
   },
   textMyDrone: {
     fontSize: normalize(16),
-    fontFamily: font.semiBold,
+    fontFamily: font.bold,
   },
 });

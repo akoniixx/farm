@@ -93,6 +93,7 @@ export default function DroneListScreen({navigation}: Props) {
         setValue(null);
         setValuetype(null);
         setLoading(false);
+        setItemstype([]);
         actionSheet.current.hide();
         await getProfileAuth();
       })
