@@ -80,7 +80,6 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
       setLoading(false);
     }
   }, [current, dataAllPoint, total]);
-
   return (
     <View
       style={{
@@ -189,6 +188,8 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
                 action={item.action}
                 taskId={item.taskId}
                 taskNo={item.taskNo != null ? item.taskNo : ''}
+                campaign={item?.campaign}
+                isSpecialPointFarmer={item.isSpecialPointFarmer}
               />
             )}
           />

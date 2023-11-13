@@ -13,6 +13,7 @@ import icons from '../../assets/icons/icons';
 import Text from '../../components/Text/Text';
 
 export default function SectionBody(props: TaskDataTypeSlip) {
+  console.log('props', JSON.stringify(props, null, 2));
   return (
     <View style={styled.container}>
       <View>

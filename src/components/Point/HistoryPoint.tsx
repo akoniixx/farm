@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { font } from '../../assets';
 import colors from '../../assets/colors/colors';
@@ -13,7 +13,15 @@ interface guruData {
   action: any;
   taskId: any;
   taskNo: any;
+  campaign?: {
+    campaignName: string;
+  };
+  isSpecialPointFarmer?: boolean;
 }
+
+const objAction = {
+  RETURN: 'ได้รับแต้มคืน',
+};
 export const HistoryPoint: React.FC<guruData> = ({
   index,
   date,
@@ -21,7 +29,28 @@ export const HistoryPoint: React.FC<guruData> = ({
   action,
   taskId,
   taskNo,
+  campaign,
+  isSpecialPointFarmer = false,
 }) => {
+  const { title } = useMemo(() => {
+    let title = '';
+    if (action === 'INCREASE' && taskId !== null && !isSpecialPointFarmer) {
+      title = 'จ้างโดรนเกษตร';
+    } else if (action === 'RETURN') {
+      title = objAction[action as keyof typeof objAction];
+    } else if (action === 'INCREASE' && isSpecialPointFarmer && campaign) {
+      title = campaign?.campaignName || '';
+    } else if (action === 'RETURN_REVERT' && isSpecialPointFarmer) {
+      title = `แต้มถูกยกเลิก จาก${campaign?.campaignName || ''}`;
+    } else if (action === 'RETURN_REVERT' && !isSpecialPointFarmer) {
+      title = 'แต้มถูกยกเลิก จากจ้างโดรนเกษตร';
+    } else {
+      title = 'ส่วนลดฉีดพ่น';
+    }
+    return {
+      title,
+    };
+  }, [action, taskId, isSpecialPointFarmer, campaign]);
   return (
     <View key={index}>
       <View
@@ -36,56 +65,54 @@ export const HistoryPoint: React.FC<guruData> = ({
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          paddingHorizontal: 15,
-          paddingVertical: 15,
+          paddingHorizontal: 16,
+          paddingVertical: 16,
         }}>
-        <View>
-          <Text style={styles.title}>
-            {action === 'INCREASE' && taskId !== null
-              ? 'จ้างโดรนเกษตร'
-              : action === 'RETURN'
-              ? 'คืนแต้ม'
-              : 'ส่วนลดฉีดพ่น'}
+        <View style={{ flex: 0.6 }}>
+          <Text style={styles.title} numberOfLines={2}>
+            {title}
           </Text>
-          <Text style={styles.textDate}>{taskNo}</Text>
+          <Text style={styles.textDate}>{taskNo || ''}</Text>
         </View>
-        {action === 'INCREASE' ? (
-          <View
-            style={{
-              alignItems: 'flex-end',
-            }}>
-            <Text style={styles.positive}>{`${formatNumberWithComma(
-              point,
-            )} คะแนน`}</Text>
-            <Text style={styles.textDate}>
-              {momentExtend.toBuddhistYear(date, `DD MMM YYYY HH:mm น.`)}
-            </Text>
-          </View>
-        ) : action === 'RETURN' ? (
-          <View
-            style={{
-              alignItems: 'flex-end',
-            }}>
-            <Text style={styles.positive}>{`${formatNumberWithComma(
-              point,
-            )} คะแนน`}</Text>
-            <Text style={styles.textDate}>
-              {momentExtend.toBuddhistYear(date, `DD MMM YYYY HH:mm น.`)}
-            </Text>
-          </View>
-        ) : (
-          <View
-            style={{
-              alignItems: 'flex-end',
-            }}>
-            <Text style={styles.negative}>{`- ${formatNumberWithComma(
-              point,
-            )} แต้ม`}</Text>
-            <Text style={styles.textDate}>
-              {momentExtend.toBuddhistYear(date, `DD MMM YYYY HH:mm น.`)}
-            </Text>
-          </View>
-        )}
+        <View style={{ flex: 0.4 }}>
+          {action === 'INCREASE' ? (
+            <View
+              style={{
+                alignItems: 'flex-end',
+              }}>
+              <Text style={styles.positive}>{`${formatNumberWithComma(
+                point,
+              )} แต้ม`}</Text>
+              <Text style={styles.textDate}>
+                {momentExtend.toBuddhistYear(date, `DD MMM YYYY HH:mm น.`)}
+              </Text>
+            </View>
+          ) : action === 'RETURN' ? (
+            <View
+              style={{
+                alignItems: 'flex-end',
+              }}>
+              <Text style={styles.positive}>{`${formatNumberWithComma(
+                point,
+              )} แต้ม`}</Text>
+              <Text style={styles.textDate}>
+                {momentExtend.toBuddhistYear(date, `DD MMM YYYY HH:mm น.`)}
+              </Text>
+            </View>
+          ) : (
+            <View
+              style={{
+                alignItems: 'flex-end',
+              }}>
+              <Text style={styles.negative}>{`-${formatNumberWithComma(
+                point,
+              )} แต้ม`}</Text>
+              <Text style={styles.textDate}>
+                {momentExtend.toBuddhistYear(date, `DD MMM YYYY HH:mm น.`)}
+              </Text>
+            </View>
+          )}
+        </View>
       </View>
     </View>
   );
@@ -101,7 +128,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: normalize(16),
-    fontFamily: font.SarabunMedium,
+    fontFamily: font.SarabunSemiBold,
     fontWeight: '600',
     color: colors.fontGrey,
     lineHeight: 30,
