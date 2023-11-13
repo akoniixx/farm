@@ -788,7 +788,7 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                       vertical={false}
                       onSnapToItem={index => setIndex(index)}
                       data={newPlotList}
-                      itemWidth={screenWidth - 30}
+                      itemWidth={screenWidth - 18}
                       sliderWidth={screenWidth}
                       renderItem={({ item, index }: any) => {
                         return (
@@ -841,33 +841,51 @@ const ProfileScreen: React.FC<any> = ({ navigation, route }) => {
                         );
                       }}
                     />
-                    {newPlotList.length >= 2 ? (
-                      <View
-                        style={{
-                          alignItems: 'center',
-                          top: -5,
-                          marginVertical: -20,
-                        }}>
-                        <Pagination
-                          dotsLength={newPlotList.length}
-                          activeDotIndex={index}
-                          carouselRef={isCarousel}
-                          inactiveDotColor={colors.grey40}
-                          dotColor={colors.greenLight}
-                          dotStyle={{
-                            width: 8,
-                            height: 8,
-                            borderRadius: 5,
-                            marginHorizontal: -2,
-                          }}
-                          inactiveDotOpacity={0.4}
-                          inactiveDotScale={0.9}
-                          tappableDots={true}
-                        />
-                      </View>
-                    ) : (
-                      <View style={{ marginVertical: 2 }} />
-                    )}
+                    <View
+                      style={{
+                        width: Dimensions.get('screen').width,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      {newPlotList.length >= 2 ? (
+                        <View
+                          style={{
+                            alignItems: 'center',
+                            top: -5,
+                            marginVertical: -20,
+                            width: '100%',
+                          }}>
+                          <Pagination
+                            containerStyle={{
+                              flexWrap: 'wrap',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              height: 'auto',
+                              width: '100%',
+                            }}
+                            dotsLength={newPlotList.length}
+                            activeDotIndex={index}
+                            carouselRef={isCarousel}
+                            inactiveDotColor={colors.grey40}
+                            dotColor={colors.greenLight}
+                            dotStyle={{
+                              width: 8,
+                              height: 8,
+                              borderRadius: 5,
+                              marginHorizontal: -2,
+                            }}
+                            inactiveDotOpacity={0.4}
+                            inactiveDotScale={0.9}
+                            tappableDots={true}
+                            dotContainerStyle={{
+                              marginBottom: 8,
+                            }}
+                          />
+                        </View>
+                      ) : (
+                        <View style={{ marginVertical: 2 }} />
+                      )}
+                    </View>
                   </View>
                 </>
               )}

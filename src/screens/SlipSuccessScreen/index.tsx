@@ -89,6 +89,7 @@ export default function SlipSuccessScreen({
                     res.data.purposeSpray.purposeSprayName || '',
                   firstname: res.data.droner.firstname,
                   lastname: res.data.droner.lastname,
+                  nickname: res.data.droner.nickname,
                   telNo: res.data.droner.telephoneNo,
                   rating: parseFloat(resRating.ratingAvg).toFixed(1).toString(),
                   totalTaskReview: resRating.totalTaskReview,
@@ -101,7 +102,7 @@ export default function SlipSuccessScreen({
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [taskId]);
   if (loading) {
     return <></>;
   } else {

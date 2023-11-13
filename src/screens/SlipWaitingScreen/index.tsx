@@ -152,10 +152,11 @@ export default function SlipWaitingScreen({
   const NotiFication = () => {
     messaging().onMessage(async message => {
       const type = message.data?.type;
+      const taskId = message.data?.taskId?.toString() || '';
       if (type === 'RECEIVE_TASK_SUCCESS') {
         await AsyncStorage.removeItem('taskId');
         navigation.navigate('SlipSuccessScreen', {
-          taskId: message.data?.taskId!,
+          taskId: taskId,
         });
       } else if (type === 'DRONER_ALL_REJECT') {
         if (message.data?.countResend === '3') {

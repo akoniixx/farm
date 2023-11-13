@@ -77,7 +77,7 @@ export const DronerCard: React.FC<props> = ({
 };
 const styles = StyleSheet.create({
   name: {
-    fontFamily: fonts.SarabunMedium,
+    fontFamily: fonts.SarabunLight,
     fontSize: normalize(18),
     color: colors.fontBlack,
     lineHeight: 30,
