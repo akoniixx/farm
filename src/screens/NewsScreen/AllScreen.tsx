@@ -41,7 +41,7 @@ const filterListSelect = [
   },
 ];
 
-const AllGuruScreen: React.FC<any> = ({navigation}) => {
+const NewsScreen: React.FC<any> = ({navigation}) => {
   const isFocused = useIsFocused();
   const [sortBy, setSortBy] = useState<string>('created_at');
   const [loading, setLoading] = useState(false);
@@ -323,4 +323,4 @@ const AllGuruScreen: React.FC<any> = ({navigation}) => {
   );
 };
 
-export default AllGuruScreen;
+export default NewsScreen;

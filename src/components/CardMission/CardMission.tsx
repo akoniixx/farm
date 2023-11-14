@@ -61,7 +61,7 @@ export default function CardMission({
               fontSize: 16,
               fontFamily: font.bold,
             }}>
-            {`บินสะสมครบ ${total} ไร่`}
+            {`บินสะสมครบ ${numberWithCommas(total.toString(), true)} ไร่`}
           </Text>
         ) : (
           <Text

@@ -5,6 +5,25 @@ import {callcenterNumber} from '../definitions/callCenterNumber';
 import moment from 'moment';
 
 export const numberWithCommas = (number: string, withOutToFix = false) => {
+  const isNumberWithDot = (number.toString() || '').includes('.');
+  if (isNumberWithDot) {
+    let numSplit = number.split('.');
+    let wholePart = numSplit[0];
+    let decimalPart = numSplit.length > 1 ? numSplit[1] : '';
+
+    if (withOutToFix && decimalPart.length > 2) {
+      decimalPart = decimalPart.substring(0, 2);
+    }
+    let finalNumber = wholePart;
+    if (decimalPart) {
+      +decimalPart > 0
+        ? (finalNumber += '.' + decimalPart)
+        : (finalNumber += '');
+    }
+
+    return finalNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
   let nub = parseFloat(number).toFixed(withOutToFix ? 0 : 2);
   return nub.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };

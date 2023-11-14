@@ -20,6 +20,13 @@ interface guruData {
   redeemDetail: {
     redeemNo: string;
   };
+  isSpecialPointDroner?: boolean;
+  campaign?: {
+    campaignName: string;
+  };
+  mission?: {
+    missionType: string;
+  } | null;
 }
 export const HistoryPoint: React.FC<guruData> = ({
   index,
@@ -28,6 +35,9 @@ export const HistoryPoint: React.FC<guruData> = ({
   action,
   taskNo,
   campaignName,
+  isSpecialPointDroner = false,
+  campaign,
+  mission,
   ...props
 }) => {
   const isHaveReward = useMemo(() => {
@@ -35,7 +45,39 @@ export const HistoryPoint: React.FC<guruData> = ({
       return true;
     }
   }, [props.rewardId]);
-
+  const {title} = useMemo(() => {
+    let title = '';
+    if (isSpecialPointDroner) {
+      if (action === 'INCREASE') {
+        title = campaignName;
+      } else if (action === 'RETURN_REVERT') {
+        title = `แต้มถูกยกเลิก ${campaignName}`;
+      }
+    } else {
+      if (action === 'INCREASE') {
+        title =
+          mission?.missionType === 'MISSION_POINT'
+            ? campaignName
+            : 'รับงานบินโดรนเกษตร';
+      } else if (action === 'RETURN') {
+        title = 'ได้รับแต้มคืน';
+      } else if (action === 'DECREASE' && isHaveReward) {
+        title = `แลก ${props.rewardName}`;
+      } else if (action === 'RETURN_REVERT') {
+        title = 'แต้มถูกยกเลิก จากงานบินโดรนเกษตร';
+      }
+    }
+    return {
+      title,
+    };
+  }, [
+    action,
+    isSpecialPointDroner,
+    mission,
+    isHaveReward,
+    campaignName,
+    props.rewardName,
+  ]);
   return (
     <View key={index}>
       <View
@@ -46,13 +88,7 @@ export const HistoryPoint: React.FC<guruData> = ({
           paddingVertical: 15,
         }}>
         <View style={{flex: 0.6}}>
-          <Text style={styles.title}>
-            {action === 'RETURN'
-              ? 'คืนแต้ม'
-              : isHaveReward
-              ? `แลก${props.rewardName}`
-              : campaignName}
-          </Text>
+          <Text style={styles.title}>{title}</Text>
           <Text style={styles.textDate}>
             {/* {taskNo ? '#' : '#'} */}
             {action === 'RETURN'

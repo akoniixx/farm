@@ -24,15 +24,15 @@ import NetworkLost from '../../components/NetworkLost/NetworkLost';
 import {RefreshControl} from 'react-native';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 import Text from '../../components/Text';
-import IframeRenderer, { iframeModel } from '@native-html/iframe-plugin';
-import { WebView } from 'react-native-webview';
+import IframeRenderer, {iframeModel} from '@native-html/iframe-plugin';
+import {WebView} from 'react-native-webview';
 
 const renderers = {
-  iframe: IframeRenderer
+  iframe: IframeRenderer,
 };
 
 const customHTMLElementModels = {
-  iframe: iframeModel
+  iframe: iframeModel,
 };
 
 const DetailGuruScreen: React.FC<any> = ({navigation}) => {
@@ -130,19 +130,19 @@ const DetailGuruScreen: React.FC<any> = ({navigation}) => {
                     source={{html: data.details}}
                     contentWidth={Dimensions.get('screen').width}
                     renderersProps={{
-                      iframe : {
+                      iframe: {
                         scalesPageToFit: true,
-                        webViewProps : {
-                          width : Dimensions.get('screen').width - 30,
-                          height : Dimensions.get('screen').width * 0.3,
-                        }
+                        webViewProps: {
+                          width: Dimensions.get('screen').width - 30,
+                          height: Dimensions.get('screen').width * 0.3,
+                        },
                       },
                     }}
                     tagsStyles={{
                       img: {
-                        width : Dimensions.get('screen').width - 30,
-                        marginRight : 30,
-                        resizeMode: 'contain'                      
+                        width: Dimensions.get('screen').width - 30,
+                        marginRight: 30,
+                        resizeMode: 'contain',
                       },
                       strong: {
                         color: colors.fontGrey,
@@ -173,8 +173,8 @@ const DetailGuruScreen: React.FC<any> = ({navigation}) => {
                         fontSize: normalize(18),
                         fontWeight: '200',
                         lineHeight: 28,
-                        margin : 0,
-                        padding : 0,
+                        margin: 0,
+                        padding: 0,
                       },
                       ol: {
                         color: colors.fontGrey,

@@ -19,8 +19,7 @@ import NotificationList from '../screens/ProfileScreen/NotificationList';
 import UploadBankingScreen from '../screens/ProfileScreen/UploadDocument/UploadBankingScreen';
 import UploadDronerLicenseScreen from '../screens/ProfileScreen/UploadDocument/UploadDronerLicenseScreen';
 import ServiceArea from '../screens/ProfileScreen/ServiceArea';
-import AllGuruScreen from '../screens/GuruScreen/AllScreen';
-import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
+import DetailGuruScreen from '../screens/NewsScreen/DetailGuruScreen';
 import IncomeScreen from '../screens/IncomeScreen';
 import MyRewardScreen from '../screens/MyRewardScreen';
 import RewardDetailScreen from '../screens/RewardDetailScreen';
@@ -44,6 +43,8 @@ import CameraScreen from '../screens/CameraScreen';
 import AdditionDocumentScreen from '../screens/AdditionDocumentScreen';
 import NewAddIDCardScreen from '../screens/NewAddIDCardScreen';
 import DroneListScreen from '../screens/DroneListScreen';
+import NewsScreen from '../screens/NewsScreen/AllScreen';
+import GuruScreen from '../screens/GuruScreen';
 
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
@@ -68,7 +69,7 @@ export type StackParamList = {
     profile: any;
   };
   ServiceArea: any;
-  AllGuruScreen: any;
+  NewsScreen: any;
   DetailGuruScreen: any;
   PointHistoryScreen: any;
 
@@ -144,6 +145,8 @@ export type StackParamList = {
   NewAddIDCardScreen: any;
   AddBookBankScreen: any;
   DroneListScreen: undefined;
+  GuruScreen: undefined;
+
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
   // };
@@ -183,7 +186,7 @@ const MainNavigator: React.FC<any> = () => {
         component={UploadBankingScreen}
       />
       <Stack.Screen name="ServiceArea" component={ServiceArea} />
-      <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
+      <Stack.Screen name="NewsScreen" component={NewsScreen} />
       <Stack.Screen name="PointHistoryScreen" component={PointHistoryScreen} />
 
       <Stack.Screen name="DetailGuruScreen" component={DetailGuruScreen} />
@@ -239,6 +242,9 @@ const MainNavigator: React.FC<any> = () => {
       />
       <Stack.Screen name="NewAddIDCardScreen" component={NewAddIDCardScreen} />
       <Stack.Screen name="DroneListScreen" component={DroneListScreen} />
+      <Stack.Group>
+        <Stack.Screen name="GuruScreen" component={GuruScreen} />
+      </Stack.Group>
     </Stack.Navigator>
   );
 };

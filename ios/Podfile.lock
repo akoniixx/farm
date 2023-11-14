@@ -538,6 +538,11 @@ PODS:
     - React-Core
   - react-native-version-check (3.4.7):
     - React-Core
+  - react-native-video (5.2.1):
+    - React-Core
+    - react-native-video/Video (= 5.2.1)
+  - react-native-video/Video (5.2.1):
+    - React-Core
   - react-native-webview (13.6.2):
     - React-Core
   - React-perflogger (0.70.4)
@@ -768,6 +773,7 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-version-check (from `../node_modules/react-native-version-check`)
+  - react-native-video (from `../node_modules/react-native-video`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -928,6 +934,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-splash-screen"
   react-native-version-check:
     :path: "../node_modules/react-native-version-check"
+  react-native-video:
+    :path: "../node_modules/react-native-video"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-perflogger:
@@ -1070,6 +1078,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 7aa8e6d9d0f3100a820efb1a98af68aa747f9284
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-version-check: 6cd36aad4e30b8e3216747e3b4ddeb09e0647af8
+  react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
   react-native-webview: 8fc09f66a1a5b16bbe37c3878fda27d5982bb776
   React-perflogger: 5e41b01b35d97cc1b0ea177181eb33b5c77623b6
   React-RCTActionSheet: 48949f30b24200c82f3dd27847513be34e06a3ae

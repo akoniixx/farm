@@ -163,7 +163,7 @@ export default function ContentList({
                       alignItems: 'center',
                     }}>
                     <Text
-                      style={[styles({}).text, {width: '80%'}]}
+                      style={[styles({}).text, {width: '70%'}]}
                       numberOfLines={1}>
                       {`${
                         item?.purposeSpray?.purposeSprayName

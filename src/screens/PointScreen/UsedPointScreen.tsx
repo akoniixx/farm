@@ -17,7 +17,7 @@ import NetworkLost from '../../components/NetworkLost/NetworkLost';
 import Text from '../../components/Text';
 
 const UsedPointScreen: React.FC<any> = () => {
-  const [dataAllPoint, setDataAllPoint] = useState<any>();
+  const [dataAllPoint, setDataAllPoint] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [row] = useState(10);
@@ -67,6 +67,8 @@ const UsedPointScreen: React.FC<any> = () => {
       setLoading(false);
     }
   };
+  console.log(JSON.stringify(dataAllPoint, null, 2));
+
   return (
     <View>
       <NetworkLost
@@ -111,6 +113,7 @@ const UsedPointScreen: React.FC<any> = () => {
                     action={item.action}
                     campaignName={item.campaignName}
                     taskId={item.taskId}
+                    isSpecialPointDroner={item.isSpecialPointDroner}
                     taskNo={item.taskNo != null ? item.taskNo : ''}
                   />
                 );

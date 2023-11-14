@@ -1,6 +1,6 @@
 import {Switch} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Button, Image, StyleSheet, View} from 'react-native';
 import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
@@ -347,9 +347,9 @@ const MainScreen: React.FC<any> = ({navigation}) => {
                 onPress={() => {
                   mixpanel.track('MainScreen_ButtonSeeAllGuruKaset_Press', {
                     screen: 'MainScreen',
-                    to: 'AllGuruScreen',
+                    to: 'NewsScreen',
                   });
-                  navigation.navigate('AllGuruScreen');
+                  navigation.navigate('NewsScreen');
                 }}>
                 <Text
                   style={{

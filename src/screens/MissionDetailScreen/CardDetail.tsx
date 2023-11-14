@@ -1,11 +1,11 @@
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image, Dimensions} from 'react-native';
 import React, {useMemo} from 'react';
 import {colors} from '../../assets';
 import Text from '../../components/Text';
 import fonts from '../../assets/fonts';
 import ProgressBarAnimated from '../../components/ProgressBarAnimated/ProgressBarAnimated';
 import moment from 'moment';
-import {momentExtend} from '../../function/utility';
+import {momentExtend, numberWithCommas} from '../../function/utility';
 import icons from '../../assets/icons/icons';
 import {Grayscale} from 'react-native-color-matrix-image-filters';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
@@ -33,6 +33,7 @@ export default function CardDetail({
   const isSuccess = useMemo(() => {
     return current / total >= 1;
   }, [current, total]);
+  const isLessThanDay = moment(dateEnd).diff(moment(), 'days') <= 0;
 
   return (
     <View
@@ -126,24 +127,43 @@ export default function CardDetail({
         />
       </View>
       <View
-        style={[styles.row, {marginTop: 8, justifyContent: 'space-between'}]}>
-        <View style={styles.row}>
-          <Text>{`หมดเขต ${momentExtend.toBuddhistYear(
-            dateEnd,
-            'DD MMM YY',
-          )}`}</Text>
-          {!disabled && (
-            <Text
-              style={{
-                marginLeft: 8,
-              }}>{`(อีก ${moment(dateEnd).diff(moment(), 'days')} วัน)`}</Text>
-          )}
+        style={[
+          styles.row,
+          {
+            marginTop: 8,
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+          },
+        ]}>
+        <View
+          style={[
+            styles.row,
+            {
+              alignItems: 'flex-start',
+              flex: 0.7,
+            },
+          ]}>
+          <Text
+            style={{
+              width: '100%',
+            }}>
+            {`หมดเขต ${momentExtend.toBuddhistYear(dateEnd, 'DD MMM YY')}  `}
+            {!disabled && (
+              <Text>
+                {isLessThanDay
+                  ? `(อีก ${moment(dateEnd).fromNow()})`
+                  : `(อีก ${moment(dateEnd).diff(moment(), 'days')} วัน)`}
+              </Text>
+            )}
+          </Text>
         </View>
         <View
           style={[
             styles.row,
             {
               alignItems: 'center',
+              justifyContent: 'flex-end',
+              flex: 0.3,
             },
           ]}>
           <Text
@@ -151,7 +171,7 @@ export default function CardDetail({
               color: disabled ? colors.gray : colors.orange,
               fontFamily: fonts.bold,
             }}>
-            {current}
+            {numberWithCommas(current.toString(), true)}
           </Text>
           <Text
             style={{
@@ -159,7 +179,7 @@ export default function CardDetail({
 
               fontFamily: fonts.bold,
             }}>
-            /{total}
+            /{numberWithCommas(total.toString(), true)}
           </Text>
           {isSuccess && (
             <Image
