@@ -1,4 +1,6 @@
 
+## Fix [1.5.2] 2023-11-15
+- feature highlight news farmer
 ## Fix [1.5.1] 2023-11-08
 - adjust style droner detail
 - adjust target spray
