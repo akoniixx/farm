@@ -1,6 +1,5 @@
-import {Switch} from '@rneui/themed';
 import React, {useEffect, useState} from 'react';
-import {Button, Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import {colors, font} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import TaskTapNavigator from '../../navigations/topTabs/TaskTapNavigator';
@@ -12,7 +11,6 @@ import {ProfileDatasource} from '../../datasource/ProfileDatasource';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import icons from '../../assets/icons/icons';
 import {SheetManager} from 'react-native-actions-sheet';
-import {TaskDatasource} from '../../datasource/TaskDatasource';
 import {numberWithCommas, socket} from '../../function/utility';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import RegisterNotification from '../../components/Modal/RegisterNotification';
@@ -29,9 +27,11 @@ import {useNetwork} from '../../contexts/NetworkContext';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Text from '../../components/Text';
 import {useAuth} from '../../contexts/AuthContext';
+import {useHighlight} from '../../contexts/HighlightContext';
 
 const MainScreen: React.FC<any> = ({navigation}) => {
   const {isConnected} = useNetwork();
+  const {onShow, highlightModal} = useHighlight();
   const socketSheetRef = React.useRef(false);
   const {
     state: {user},
@@ -89,6 +89,9 @@ const MainScreen: React.FC<any> = ({navigation}) => {
     fetchImage();
     getProfile();
     getCurrentPoint();
+    if (highlightModal.isActive) {
+      onShow();
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

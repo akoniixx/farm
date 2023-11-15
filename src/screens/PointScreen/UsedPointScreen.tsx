@@ -67,7 +67,6 @@ const UsedPointScreen: React.FC<any> = () => {
       setLoading(false);
     }
   };
-  console.log(JSON.stringify(dataAllPoint, null, 2));
 
   return (
     <View>
