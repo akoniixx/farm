@@ -34,9 +34,11 @@ import CarouselMainScreen from './AuthMainScreenComponent/CarouselMainScreen';
 import { mixpanel } from '../../../mixpanel';
 import DronerNearMe from './AuthMainScreenComponent/DronerNearMe';
 import { DronerDatasource } from '../../datasource/DronerDatasource';
+import { useHighlight } from '../../contexts/HighlightContext';
 
 const AuthMainScreen: React.FC<any> = ({ navigation }) => {
   const { notiMaintenance, maintenanceData } = useMaintenance();
+  const { onShow, highlightModal, isHighlightClosed } = useHighlight();
   const { popUpIsClose } = useMaintenance();
   const [loading, setLoading] = useState<boolean>(false);
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -136,21 +138,29 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   useEffect(() => {
-    if (appState === 'active' && isConfirm) {
+    if (highlightModal.isActive) {
+      onShow();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [highlightModal.isActive]);
+
+  useEffect(() => {
+    if (appState === 'active' && isConfirm && isHighlightClosed) {
       requestLocationPermission().then(async result => {
         setPermission(result);
       });
     }
-  }, [appState, isConfirm]);
+  }, [appState, isConfirm, isHighlightClosed]);
 
   useEffect(() => {
-    if (isConfirm === null && popUpIsClose) {
+    if (isConfirm === null && popUpIsClose && isHighlightClosed) {
       setTimeout(() => {
         setShowModalPermission(true);
       }, 1500);
     }
-  }, [popUpIsClose, isConfirm]);
+  }, [popUpIsClose, isConfirm, isHighlightClosed]);
   useEffect(() => {
     const getCurrentLocation = async () => {
       if (permission === 'granted') {

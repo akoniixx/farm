@@ -268,3 +268,39 @@ export const checkMyCoupon = async (couponCode: string) => {
       });
     });
 };
+export const getHighlight = async ({
+  application = 'FARMER',
+}: {
+  application?: 'FARMER' | 'DRONER';
+}) => {
+  return httpClient
+    .get(
+      BASE_URL +
+        '/promotion/highlight-news/get-highlight-news?application=' +
+        application,
+    )
+    .then(response => {
+      return response.data;
+    })
+    .catch(err => {
+      console.log(err, 'err getHighlight');
+      crashlytics().recordError(err);
+      crashlytics().setAttributes({
+        url: BASE_URL + '/highlight-news/get-highlight-news',
+        application: application,
+      });
+    });
+};
+export const readHighlight = async (id: string) => {
+  return httpClient
+    .patch(BASE_URL + `/promotion/highlight-news/update-read/${id}`)
+    .then(response => {
+      return response.data;
+    })
+    .catch(err => {
+      crashlytics().recordError(err);
+      crashlytics().setAttributes({
+        url: BASE_URL + `/promotion/highlight-news/update-read/${id}`,
+      });
+    });
+};
