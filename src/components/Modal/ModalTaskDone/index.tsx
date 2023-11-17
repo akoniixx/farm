@@ -15,6 +15,7 @@ import {ImagePickerResponse} from 'react-native-image-picker';
 import crashlytics from '@react-native-firebase/crashlytics';
 import RNFS from 'react-native-fs';
 import SHA256 from 'crypto-js/sha256';
+import moment from 'moment';
 
 interface Props {
   visible: boolean;
@@ -80,6 +81,10 @@ export default function ModalTaskDone({
       return null;
     });
     if (result) {
+      // console.log(JSON.stringify(result, null, 2));
+      // console.log(
+      //   moment(moment.unix(result.creationDate)).format('DD/MM/YYYY HH:mm:ss'),
+      // );
       const fileSize = result?.size;
       const fileData = await RNFS.readFile(result.path, 'base64');
       if (!fileSize) {

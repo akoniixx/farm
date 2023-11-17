@@ -36,7 +36,6 @@ export const HistoryPoint: React.FC<guruData> = ({
   taskNo,
   campaignName,
   isSpecialPointDroner = false,
-  campaign,
   mission,
   ...props
 }) => {
@@ -109,7 +108,7 @@ export const HistoryPoint: React.FC<guruData> = ({
                 true,
               )} `}</Text>
               <Text style={styles.textDate}>
-                {momentExtend.toBuddhistYear(date, 'DD MMM YY HH:mm ')}
+                {momentExtend.toBuddhistYear(date, 'DD MMM YY HH:mm น.')}
               </Text>
             </View>
           ) : (
@@ -122,7 +121,7 @@ export const HistoryPoint: React.FC<guruData> = ({
                 true,
               )} `}</Text>
               <Text style={styles.textDate}>
-                {momentExtend.toBuddhistYear(date, 'DD MMM YY HH:mm ')}
+                {momentExtend.toBuddhistYear(date, 'DD MMM YY HH:mm น.')}
               </Text>
             </View>
           )}

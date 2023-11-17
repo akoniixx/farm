@@ -95,4 +95,10 @@ export default {
   editProfile: require('./editProfile.png'),
   orangePlus: require('./orangePlus.png'),
   missionNoti: require('./missionnoti.png'),
+  guruKasetIcon: require('./guruKasetIcon.png'),
+  missionIcon: require('./missionIcon.png'),
+  newsIcon: require('./newsIcon.png'),
+  commentIcon: require('./commentIcon.png'),
+  showReadIcon: require('./showReadIcon.png'),
+  loveIcon: require('./loveIcon.png'),
 };

@@ -1,15 +1,27 @@
-import {Animated, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
+import {
+  Animated,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  ScrollViewProps,
+} from 'react-native';
 import React, {useState} from 'react';
 import colors from '../../assets/colors/colors';
 import Text from '../Text';
 import {font} from '../../assets';
 export default function TabSelector({
   value,
-  tabs,
+  tabs = [],
   tabWidth = 80,
   height = 44,
   onChangeTab,
+  focusColor = colors.white,
+  color = colors.white,
+  scrollViewStyle,
+  fontSize = 16,
+  fontFamily = font.bold,
 }: {
+  fontSize?: number;
   tabWidth?: number;
   value: string;
   onChangeTab: (value: string) => void;
@@ -18,6 +30,10 @@ export default function TabSelector({
     title: string;
   }[];
   height?: number;
+  focusColor?: string;
+  color?: string;
+  scrollViewStyle?: ScrollViewProps['style'];
+  fontFamily?: string;
 }) {
   const [animation] = useState(new Animated.Value(0));
   const active = tabs.findIndex(tab => tab.value === value);
@@ -44,12 +60,15 @@ export default function TabSelector({
       showsHorizontalScrollIndicator={false}
       directionalLockEnabled
       horizontal
-      style={{
-        flexDirection: 'row',
-        paddingVertical: 8,
-        height,
-        alignSelf: 'flex-start',
-      }}>
+      style={[
+        {
+          flexDirection: 'row',
+          paddingVertical: 8,
+          height,
+          alignSelf: 'flex-start',
+        },
+        scrollViewStyle,
+      ]}>
       {[...tabs].map((tab, index) => {
         return (
           <TouchableOpacity
@@ -60,13 +79,14 @@ export default function TabSelector({
             style={[
               styles({
                 tabWidth,
+                focusColor,
               }).tab,
             ]}>
             <Text
               style={{
-                color: colors.white,
-                fontSize: 16,
-                fontFamily: font.bold,
+                color: value === tab.value ? focusColor : color,
+                fontSize,
+                fontFamily: fontFamily,
               }}>
               {tab.title}
             </Text>
@@ -75,19 +95,30 @@ export default function TabSelector({
       })}
       {active !== -1 && (
         <Animated.View
-          style={[styles({tabWidth}).tabSelector, {transform: [{translateX}]}]}
+          style={[
+            styles({
+              tabWidth,
+              focusColor,
+            }).tabSelector,
+            {transform: [{translateX}]},
+          ]}
         />
       )}
     </ScrollView>
   );
 }
 
-const styles = ({tabWidth}: {tabWidth: number}) => {
+const styles = ({
+  tabWidth,
+  focusColor,
+}: {
+  tabWidth: number;
+  focusColor: string;
+}) => {
   return StyleSheet.create({
     tab: {
       height: 24,
       width: tabWidth,
-
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -99,7 +130,7 @@ const styles = ({tabWidth}: {tabWidth: number}) => {
       left: tabWidth ? tabWidth * 0.1 : 0,
 
       height: 4,
-      backgroundColor: colors.white,
+      backgroundColor: focusColor ? focusColor : colors.white,
 
       borderRadius: 4,
     },

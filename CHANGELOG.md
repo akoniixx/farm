@@ -1,3 +1,6 @@
+## Feature [1.10.1] 2023-11-15
+- Highlight News
+
 ## Enhance [1.10.0] 2023-11-10
 - mission opening notification
 

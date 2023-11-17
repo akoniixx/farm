@@ -28,6 +28,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Text from '../../components/Text';
 import {useAuth} from '../../contexts/AuthContext';
 import {useHighlight} from '../../contexts/HighlightContext';
+import MenuList from './MainScreenComponent/MenuList';
 
 const MainScreen: React.FC<any> = ({navigation}) => {
   const {isConnected} = useNetwork();
@@ -330,6 +331,7 @@ const MainScreen: React.FC<any> = ({navigation}) => {
                 </TouchableOpacity>
               </View>
             </View>
+            <MenuList navigation={navigation} />
 
             <View
               style={{

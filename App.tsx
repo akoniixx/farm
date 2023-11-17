@@ -12,7 +12,7 @@ import buddhaEra from 'dayjs/plugin/buddhistEra';
 import dayjs from 'dayjs';
 import {AuthProvider} from './src/contexts/AuthContext';
 import {Settings} from 'react-native-fbsdk-next';
-import {check, request, requestMultiple} from 'react-native-permissions';
+import {check, request} from 'react-native-permissions';
 dayjs.extend(buddhaEra);
 import {
   firebaseInitialize,
