@@ -69,7 +69,7 @@ export const HighlightProvider: React.FC<{children: React.ReactNode}> = ({
   const getHighlightInitial = async () => {
     try {
       const result: HighlightResponse = await promotionDatasource.getHighlight({
-        application: 'FARMER',
+        application: 'DRONER',
       });
       if (result?.status === 'INACTIVE') {
         setHighlightModal(prev => ({...prev, isActive: false}));
