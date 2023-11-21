@@ -1,6 +1,5 @@
 import {Pressable, StyleSheet, View} from 'react-native';
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
 import Text from '../../../components/Text';
 import {Image} from 'react-native';
 import mockGuru from '../../../assets/mockGuru';
