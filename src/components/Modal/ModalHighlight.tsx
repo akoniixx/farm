@@ -1,4 +1,5 @@
 import {
+  Dimensions,
   Image,
   Linking,
   Modal,
@@ -20,6 +21,8 @@ export default function ModalHighlight() {
     highlightModal: {visible, uriImage, uriNavigation, id},
     onClose,
   } = useHighlight();
+  const currentWidth = Dimensions.get('window').width - 32;
+  const currentHeight = (5 / 4) * currentWidth;
   const onPressOpen = async () => {
     mixpanel.track('HighlightModal_Image_Pressed', {
       linkTo: uriNavigation,
@@ -50,16 +53,16 @@ export default function ModalHighlight() {
                 }}
                 style={{
                   width: '100%',
-                  height: 420,
+                  marginBottom: 16,
+                  height: 'auto',
                 }}>
                 <Image
                   source={{
                     uri: uriImage,
                   }}
                   style={{
-                    width: '100%',
-                    height: '100%',
-                    resizeMode: 'contain',
+                    width: currentWidth,
+                    height: currentHeight,
                   }}
                 />
               </Pressable>

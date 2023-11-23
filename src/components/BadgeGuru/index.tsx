@@ -1,19 +1,41 @@
 import {View, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useMemo} from 'react';
 import Text from '../Text';
 import {colors, font} from '../../assets';
 interface Props {
   title: string;
+  isDetail?: boolean;
 }
-export default function BadgeGuru({title}: Props) {
+export default function BadgeGuru({title, isDetail = false}: Props) {
+  const {color} = useMemo(() => {
+    return {
+      color: isDetail ? colors.orange : colors.orangeSoft,
+    };
+  }, [isDetail]);
   return (
-    <View style={styles.badge}>
-      <Text style={styles.text}>{title}</Text>
+    <View style={isDetail ? styles.badgeDetail : styles.badge}>
+      <Text
+        style={[
+          styles.text,
+          {
+            color,
+          },
+        ]}>
+        {title}
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  badgeDetail: {
+    borderRadius: 14,
+    paddingHorizontal: 6,
+    paddingVertical: 4,
+    backgroundColor: colors.orangeSoft,
+    width: 'auto',
+    alignSelf: 'flex-start',
+  },
   badge: {
     borderRadius: 14,
     position: 'absolute',

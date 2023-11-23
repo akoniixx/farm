@@ -19,14 +19,17 @@ export default function ItemContent({navigation}: Props) {
     Math.round(Math.random() * 1000),
     'hours',
   );
+  const mockId = Math.round(Math.random() * 1000);
+  const isOdd = Math.round(Math.random() * 10) % 2 === 0;
+  const onNavigateToDetail = () => {
+    navigation.navigate('GuruDetailScreen', {
+      guruId: mockId,
+    });
+  };
   return (
     <View style={styles.container}>
-      <Pressable>
-        <Image
-          source={mockGuru.imageContent}
-          style={styles.image}
-          resizeMode="contain"
-        />
+      <Pressable onPress={onNavigateToDetail}>
+        <Image source={mockGuru.imageContent} style={styles.image} />
         <BadgeGuru title="โรคพืช" />
       </Pressable>
       <View style={styles.containerFooter}>
@@ -41,7 +44,10 @@ export default function ItemContent({navigation}: Props) {
         <View style={styles.footer}>
           <View style={styles.row}>
             <View style={styles.row}>
-              <Image source={icons.loveIcon} style={styles.icon} />
+              <Image
+                source={isOdd ? icons.loveIcon : icons.loveFill}
+                style={styles.icon}
+              />
               <Text style={styles.textBold}>{loveCount}</Text>
             </View>
             <View style={styles.row}>

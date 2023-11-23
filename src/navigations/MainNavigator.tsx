@@ -46,6 +46,7 @@ import DroneListScreen from '../screens/DroneListScreen';
 import NewsScreen from '../screens/NewsScreen/AllScreen';
 import GuruScreen from '../screens/GuruScreen';
 import MissionScreen from '../screens/MissionScreen';
+import GuruDetailScreen from '../screens/GuruDetailScreen';
 
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
@@ -147,6 +148,9 @@ export type StackParamList = {
   AddBookBankScreen: any;
   DroneListScreen: undefined;
   GuruScreen: undefined;
+  GuruDetailScreen: {
+    guruId: string;
+  };
   MissionScreen: undefined;
 
   // DeleteSuccess: {
@@ -246,6 +250,13 @@ const MainNavigator: React.FC<any> = () => {
       <Stack.Screen name="DroneListScreen" component={DroneListScreen} />
       <Stack.Group>
         <Stack.Screen name="GuruScreen" component={GuruScreen} />
+        <Stack.Screen
+          name="GuruDetailScreen"
+          component={GuruDetailScreen}
+          initialParams={{
+            guruId: '',
+          }}
+        />
         <Stack.Screen name="MissionScreen" component={MissionScreen} />
       </Stack.Group>
     </Stack.Navigator>
