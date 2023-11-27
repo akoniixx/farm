@@ -26,6 +26,7 @@ import { RecoilRoot } from 'recoil';
 import { NetworkProvider } from './src/contexts/NetworkContext';
 import { MaintenanceProvider } from './src/contexts/MaintenanceContext';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { HighlightProvider } from './src/contexts/HighlightContext';
 
 crashlytics().setCrashlyticsCollectionEnabled(true);
 const App = () => {
@@ -51,7 +52,7 @@ const App = () => {
 
     requestUserPermission();
     getToken();
-    AsyncStorage.getAllKeys().then(keys => console.log(keys));
+    // AsyncStorage.getAllKeys().then(keys => console.log(keys));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -65,20 +66,22 @@ const App = () => {
     <>
       <NetworkProvider>
         <RecoilRoot>
-          <NavigationContainer ref={navigationRef}>
-            <PaperProvider>
-              <AuthProvider>
-                <MaintenanceProvider>
-                  <AutoBookingProvider>
-                    <SheetProvider>
-                      <AppNavigator />
-                    </SheetProvider>
-                  </AutoBookingProvider>
-                </MaintenanceProvider>
-              </AuthProvider>
-            </PaperProvider>
-            <Toast config={toastConfig} />
-          </NavigationContainer>
+          <HighlightProvider>
+            <NavigationContainer ref={navigationRef}>
+              <PaperProvider>
+                <AuthProvider>
+                  <MaintenanceProvider>
+                    <AutoBookingProvider>
+                      <SheetProvider>
+                        <AppNavigator />
+                      </SheetProvider>
+                    </AutoBookingProvider>
+                  </MaintenanceProvider>
+                </AuthProvider>
+              </PaperProvider>
+              <Toast config={toastConfig} />
+            </NavigationContainer>
+          </HighlightProvider>
         </RecoilRoot>
       </NetworkProvider>
     </>

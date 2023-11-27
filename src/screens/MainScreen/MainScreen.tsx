@@ -45,10 +45,14 @@ import BookedDroner from './MainScreenComponent/BookedDroner';
 import DronerSuggestion from './MainScreenComponent/DronerSuggestion';
 import { useMaintenance } from '../../contexts/MaintenanceContext';
 import ModalSelectHiring from '../../components/Modal/ModalSelectHiring';
+import ModalHighlight from '../../components/ModalHighlight';
+import { getHighlight } from '../../datasource/PromotionDatasource';
+import { useHighlight } from '../../contexts/HighlightContext';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
-  const date = new Date();
   const [fcmToken, setFcmToken] = useState('');
+  const { onShow, highlightModal } = useHighlight();
+
   const {
     authContext: { getProfileAuth },
     state: { user },
@@ -86,7 +90,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     isUnread: false,
   });
   const [reload, setReload] = useState(false);
-  const [statusFav, setStatusFav] = useState<any[]>([]);
+  // const [statusFav, setStatusFav] = useState<any[]>([]);
 
   const [reason, setReason] = useState<any>('');
   const [point, setPoint] = useState<any>();
@@ -172,7 +176,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         getNotificationData(),
         getFavDroner(),
         findAllNews(),
-      ]);
+      ]).then(() => {
+        if (highlightModal.isActive) {
+          onShow();
+        }
+      });
     } catch (error) {
       console.log('error', error);
     } finally {
@@ -220,8 +228,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           offset,
         )
           .then(async res => {
-            console.log(JSON.stringify(res, null, 2));
-
             setTaskSugUsed(res);
             await AsyncStorage.setItem('taskSugUsed', JSON.stringify(res));
           })
@@ -279,9 +285,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     const plot_id: any = await AsyncStorage.getItem('plot_id');
     FavoriteDroner.findAllFav(farmer_id, plot_id)
       .then(res => {
-        if (res != null) {
-          setStatusFav(res);
-        }
+        // if (res != null) {
+        //   setStatusFav(res);
+        // }
       })
       .catch(err => console.log(err));
   };

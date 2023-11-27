@@ -112,54 +112,67 @@ const PlotSelect: React.FC<Prop> = ({
           />
         </View>
         <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
-          <Image
-            source={
-              isPending
-                ? icons.areaDisable
-                : selected
-                ? icons.plot
-                : icons.areaNormal
-            }
+          <View
             style={{
-              width: normalize(18),
-              height: normalize(20),
-              marginRight: normalize(10),
-            }}
-          />
-          <Text
-            style={{
-              fontFamily: fonts.SarabunLight,
-              fontSize: normalize(18),
-              color: isPending ? colors.grey40 : colors.fontGrey,
-              marginRight: '40%',
-              bottom: 2,
+              flexDirection: 'row',
+              alignItems: 'center',
+              flex: 0.6,
             }}>
-            {raiAmount + ' ' + 'ไร่'}
-          </Text>
-          <Image
-            source={
-              isPending
-                ? icons.plantDisable
-                : selected
-                ? icons.plant
-                : icons.plantNormal
-            }
+            <Image
+              source={
+                isPending
+                  ? icons.areaDisable
+                  : selected
+                  ? icons.plot
+                  : icons.areaNormal
+              }
+              style={{
+                width: normalize(18),
+                height: normalize(20),
+                marginRight: normalize(10),
+              }}
+            />
+            <Text
+              style={{
+                fontFamily: fonts.SarabunLight,
+                fontSize: normalize(18),
+                color: isPending ? colors.grey40 : colors.fontGrey,
+                bottom: 2,
+              }}>
+              {raiAmount + ' ' + 'ไร่'}
+            </Text>
+          </View>
+
+          <View
             style={{
-              width: normalize(18),
-              height: normalize(20),
-              marginRight: normalize(10),
-            }}
-          />
-          <Text
-            style={{
-              fontFamily: fonts.SarabunLight,
-              fontSize: normalize(18),
-              color: isPending ? colors.grey40 : colors.fontGrey,
-              marginRight: '10%',
-              bottom: 2,
+              flexDirection: 'row',
+              alignItems: 'center',
+              flex: 0.4,
             }}>
-            {plantName}
-          </Text>
+            <Image
+              source={
+                isPending
+                  ? icons.plantDisable
+                  : selected
+                  ? icons.plant
+                  : icons.plantNormal
+              }
+              style={{
+                width: normalize(18),
+                height: normalize(20),
+                marginRight: normalize(10),
+              }}
+            />
+            <Text
+              style={{
+                fontFamily: fonts.SarabunLight,
+                fontSize: normalize(18),
+                color: isPending ? colors.grey40 : colors.fontGrey,
+                bottom: 2,
+              }}>
+              {plantName}
+            </Text>
+          </View>
         </View>
         <View style={{ flexDirection: 'row', marginTop: normalize(10) }}>
           <Image

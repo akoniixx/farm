@@ -80,7 +80,7 @@ export const HistoryPoint: React.FC<guruData> = ({
               style={{
                 alignItems: 'flex-end',
               }}>
-              <Text style={styles.positive}>{`${formatNumberWithComma(
+              <Text style={styles.positive}>{`+${formatNumberWithComma(
                 point,
               )} แต้ม`}</Text>
               <Text style={styles.textDate}>

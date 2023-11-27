@@ -52,8 +52,6 @@ export default function Counter({
     setDisabled?.(true);
   };
   const onBlur = () => {
-    console.log(currentCount > minimum);
-
     setCurrentCount(prev => {
       if (prev === currentCount && prev > minimum) {
         return Math.floor(prev / 10) * 10;

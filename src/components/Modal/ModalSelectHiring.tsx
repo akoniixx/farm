@@ -95,6 +95,7 @@ export default function ModalSelectHiring({
           {listButtons.map(el => {
             return (
               <TouchableOpacity
+                key={el.title}
                 disabled={el.disabled}
                 onPress={el.onPress}
                 style={[
