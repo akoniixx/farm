@@ -62,7 +62,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
   const [status, setStatus] = useState<any>();
   const isFocused = useIsFocused();
 
-  // const [campaignImage, setCampaignImage] = useState<string>('');
+  const [campaignImage, setCampaignImage] = useState<string>('');
   const {checkDataMA} = useMaintenance();
   useEffect(() => {
     const getProfile = async () => {
@@ -455,9 +455,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
               parseInt(
                 message.data?.dateAppointment.split('T')[0].split('-')[0]!,
               ) + 543
-            } เวลา ${String(time.getHours()).padStart(2, '0')} +
-            ':' +
-            ${String(time.getMinutes()).padStart(2, '0')}`,
+            } เวลา ${String(time.getHours()).padStart(2, '0')}:${String(time.getMinutes()).padStart(2, '0')}`,
             onPress: () => {
               RootNavigation.navigate('Main', {
                 screen: 'TaskDetailScreen',
@@ -491,17 +489,14 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           break;
         case 'SECOND_REMIND':
           let date_secondremind = message.data?.dateAppointment.split('T');
+          let timeSecondRemind = new Date(message.data?.dateAppointment!)
           Toast.show({
             type: 'taskWarningContactFarmerTowmorow',
             topOffset: 10,
             position: 'top',
             text1: `วันที่ ${date_secondremind![0].split('-')[2]}/${
               date_secondremind![0].split('-')[1]
-            }/${parseInt(date_secondremind![0].split('-')[0]) + 543} เวลา ${
-              parseInt(date_secondremind![1].split(':')[0]) + 7 > 9
-                ? `0${parseInt(date_secondremind![1].split(':')[0]) + 7}`
-                : parseInt(date_secondremind![1].split(':')[0]) + 7
-            }.${parseInt(date_secondremind![1].split(':')[1])}น.`,
+            }/${parseInt(date_secondremind![0].split('-')[0]) + 543} เวลา ${String(timeSecondRemind.getHours()).padStart(2, '0')}:${String(timeSecondRemind.getMinutes()).padStart(2, '0')}น.`,
             onPress() {
               Toast.hide();
             },
@@ -539,17 +534,14 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           break;
         case 'FORCE_SELECT_DRONER':
           let date_force_select = message.data?.dateAppointment.split('T');
+          let timeForceSelect = new Date(message.data?.dateAppointment!)
           Toast.show({
             type: 'taskJobSuccess',
             topOffset: 10,
             text1: `#${message.data?.taskNo}`,
             text2: `วันที่ ${date_force_select![0].split('-')[2]}/${
               date_force_select![0].split('-')[1]
-            }/${parseInt(date_force_select![0].split('-')[0]) + 543} เวลา ${
-              parseInt(date_force_select![1].split(':')[0]) + 7 > 9
-                ? `0${parseInt(date_force_select![1].split(':')[0]) + 7}`
-                : parseInt(date_force_select![1].split(':')[0]) + 7
-            }.${parseInt(date_force_select![1].split(':')[1])}น.`,
+            }/${parseInt(date_force_select![0].split('-')[0]) + 543} เวลา ${String(timeForceSelect.getHours()).padStart(2, '0')}:${String(timeForceSelect.getMinutes()).padStart(2, '0')}น.`,
             position: 'top',
             onPress() {
               RootNavigation.navigate('Main', {
@@ -713,7 +705,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                 tabBarButton(props: any) {
                   const isFocused = props.accessibilityState?.selected;
                   const isProfileDone = item.name === 'profile' && isDoneAuth;
-                  const isMyTask = item.name === 'myTask';
+
                   return (
                     <TouchableOpacity
                       {...props}
@@ -727,6 +719,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                       style={[
                         props?.style,
                         {
+                          padding: 8,
                           justifyContent: 'center',
                           alignItems: 'center',
                         },
@@ -735,7 +728,6 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                         style={{
                           justifyContent: 'center',
                           alignItems: 'center',
-                          width: '100%',
                         }}>
                         <Image
                           source={
@@ -762,11 +754,8 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
                                 : belowMedium
                                 ? normalize(12)
                                 : normalize(14),
-
                             color: isFocused ? colors.orange : colors.gray,
                             marginTop: isProfileDone ? 4 : 2,
-                            width: isMyTask ? 80 : 'auto',
-                            textAlign: 'center',
                           }}>
                           {item.title}
                         </Text>
