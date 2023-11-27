@@ -40,7 +40,7 @@ export const toastConfig = {
             flexDirection: 'row',
           }}>
           <Image
-            source={icons.closecircle}
+            source={icons.checkSolid}
             style={{
               width: normalize(30),
               height: normalize(30),

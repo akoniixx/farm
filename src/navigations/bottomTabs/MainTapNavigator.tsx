@@ -445,6 +445,7 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
           });
           break;
         case 'RECEIVE_TASK_SUCCESS':
+          const time = new Date(message.data?.dateAppointment!)
           Toast.show({
             type: 'receiveTaskSuccess',
             text1: `งาน #${message.data?.taskNo}`,
@@ -454,27 +455,9 @@ const MainTapNavigator: React.FC<any> = ({navigation}) => {
               parseInt(
                 message.data?.dateAppointment.split('T')[0].split('-')[0]!,
               ) + 543
-            } เวลา ${
-              parseInt(
-                message.data?.dateAppointment.split('T')[1].split(':')[0]!,
-              ) +
-                7 >
-              9
-                ? `${
-                    parseInt(
-                      message.data?.dateAppointment
-                        .split('T')[1]
-                        .split(':')[0]!,
-                    ) + 7
-                  }`
-                : `0${
-                    parseInt(
-                      message.data?.dateAppointment
-                        .split('T')[1]
-                        .split(':')[0]!,
-                    ) + 7
-                  }`
-            }:${message.data?.dateAppointment.split('T')[1].split(':')[1]}`,
+            } เวลา ${String(time.getHours()).padStart(2, '0')} +
+            ':' +
+            ${String(time.getMinutes()).padStart(2, '0')}`,
             onPress: () => {
               RootNavigation.navigate('Main', {
                 screen: 'TaskDetailScreen',
