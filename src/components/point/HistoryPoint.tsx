@@ -20,6 +20,13 @@ interface guruData {
   redeemDetail: {
     redeemNo: string;
   };
+  isSpecialPointDroner?: boolean;
+  campaign?: {
+    campaignName: string;
+  };
+  mission?: {
+    missionType: string;
+  } | null;
 }
 export const HistoryPoint: React.FC<guruData> = ({
   index,
@@ -28,6 +35,8 @@ export const HistoryPoint: React.FC<guruData> = ({
   action,
   taskNo,
   campaignName,
+  isSpecialPointDroner = false,
+  mission,
   ...props
 }) => {
   const isHaveReward = useMemo(() => {
@@ -35,7 +44,39 @@ export const HistoryPoint: React.FC<guruData> = ({
       return true;
     }
   }, [props.rewardId]);
-
+  const {title} = useMemo(() => {
+    let title = '';
+    if (isSpecialPointDroner) {
+      if (action === 'INCREASE') {
+        title = campaignName;
+      } else if (action === 'RETURN_REVERT') {
+        title = `แต้มถูกยกเลิก ${campaignName}`;
+      }
+    } else {
+      if (action === 'INCREASE') {
+        title =
+          mission?.missionType === 'MISSION_POINT'
+            ? campaignName
+            : 'รับงานบินโดรนเกษตร';
+      } else if (action === 'RETURN') {
+        title = 'ได้รับแต้มคืน';
+      } else if (action === 'DECREASE' && isHaveReward) {
+        title = `แลก ${props.rewardName}`;
+      } else if (action === 'RETURN_REVERT') {
+        title = 'แต้มถูกยกเลิก จากงานบินโดรนเกษตร';
+      }
+    }
+    return {
+      title,
+    };
+  }, [
+    action,
+    isSpecialPointDroner,
+    mission,
+    isHaveReward,
+    campaignName,
+    props.rewardName,
+  ]);
   return (
     <View key={index}>
       <View
@@ -45,14 +86,8 @@ export const HistoryPoint: React.FC<guruData> = ({
           paddingHorizontal: 15,
           paddingVertical: 15,
         }}>
-        <View style={{flex: 0.7}}>
-          <Text style={styles.title}>
-            {action === 'RETURN'
-              ? 'คืนแต้ม'
-              : isHaveReward
-              ? `แลก${props.rewardName}`
-              : campaignName}
-          </Text>
+        <View style={{flex: 0.6}}>
+          <Text style={styles.title}>{title}</Text>
           <Text style={styles.textDate}>
             {/* {taskNo ? '#' : '#'} */}
             {action === 'RETURN'
@@ -62,18 +97,18 @@ export const HistoryPoint: React.FC<guruData> = ({
               : taskNo}
           </Text>
         </View>
-        <View style={{flex: 0.3}}>
+        <View style={{flex: 0.4}}>
           {action === 'INCREASE' || action === 'RETURN' ? (
             <View
               style={{
                 alignItems: 'flex-end',
               }}>
-              <Text style={styles.positive}>{`+ ${numberWithCommas(
+              <Text style={styles.positive}>{`+${numberWithCommas(
                 point,
                 true,
               )} `}</Text>
               <Text style={styles.textDate}>
-                {momentExtend.toBuddhistYear(date, 'DD MMM YY HH:mm ')}
+                {momentExtend.toBuddhistYear(date, 'DD MMM YY HH:mm น.')}
               </Text>
             </View>
           ) : (
@@ -81,12 +116,12 @@ export const HistoryPoint: React.FC<guruData> = ({
               style={{
                 alignItems: 'flex-end',
               }}>
-              <Text style={styles.negative}>{`- ${numberWithCommas(
+              <Text style={styles.negative}>{`-${numberWithCommas(
                 point,
                 true,
               )} `}</Text>
               <Text style={styles.textDate}>
-                {momentExtend.toBuddhistYear(date, 'DD MMM YY HH:mm ')}
+                {momentExtend.toBuddhistYear(date, 'DD MMM YY HH:mm น.')}
               </Text>
             </View>
           )}

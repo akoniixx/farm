@@ -142,13 +142,13 @@ export default function Example({visible, onPressBack}: Props) {
                 color: colors.gray,
                 fontSize: 12,
               }}>
-              ลักษณะภาพที่อัพโหลดควรแสดงวัน เวลา
+              ลักษณะภาพที่อัปโหลดควรแสดงวัน เวลา
               และจำนวนไร่ของงานที่คุณบินเสร็จในครั้งนี้อย่างชัดเจน
             </Text>
           </View>
         </View>
         <AsyncButton
-          title="กลับไปอัพโหลดภาพ"
+          title="กลับไปอัปโหลดภาพ"
           type="secondary"
           onPress={onPressBack}
         />

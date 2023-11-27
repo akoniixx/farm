@@ -131,7 +131,7 @@ const PendingPointScreen: React.FC<any> = () => {
                   point={item.receivePoint}
                   action={item.campaignName}
                   taskId={item.taskId}
-                  taskNo={item.task.taskNo}
+                  taskNo={item?.task?.taskNo}
                 />
               )}
             />

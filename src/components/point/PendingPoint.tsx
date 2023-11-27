@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {font} from '../../assets';
 import colors from '../../assets/colors/colors';
@@ -13,13 +13,16 @@ interface guruData {
   action: any;
   taskId: any;
   taskNo: any;
+  campaign?: {
+    campaignName: string;
+  };
 }
 export const PendingPoint: React.FC<guruData> = ({
   index,
   date,
   point,
   action,
-  taskNo,
+  taskNo = '',
 }) => {
   return (
     <View key={index}>
@@ -37,7 +40,7 @@ export const PendingPoint: React.FC<guruData> = ({
 
         <View>
           <Text style={styles.positive}>{`≈${numberWithCommas(
-            point,
+            point.toString(),
             true,
           )}`}</Text>
           <Text style={styles.textDate}>

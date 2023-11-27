@@ -1,9 +1,17 @@
-## Enhance [1.10.1] 2023-11-27
+
+## Enhance [1.10.2] 2023-11-27
 - fixed icon size for noti
 - add close circle icon
-
+## Feature [1.10.1] 2023-11-15
+- Highlight News
 ## Enhance [1.10.0] 2023-11-10
 - mission opening notification
+
+## Enhance [1.9.1] 2023-11-06
+- new ui open receive reward
+- mixpanel setup detail 
+- check duplicate image when upload task success
+  
 
 ## Enhance [1.9.0] 2023-10-24
 - show iframe in news guru

@@ -205,7 +205,7 @@ export default function HeaderMainScreen({
         </Text>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('AllGuruScreen');
+            navigation.navigate('NewsScreen');
           }}>
           <Text
             style={{

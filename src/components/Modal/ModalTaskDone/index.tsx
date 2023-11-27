@@ -15,6 +15,7 @@ import {ImagePickerResponse} from 'react-native-image-picker';
 import crashlytics from '@react-native-firebase/crashlytics';
 import RNFS from 'react-native-fs';
 import SHA256 from 'crypto-js/sha256';
+import moment from 'moment';
 
 interface Props {
   visible: boolean;
@@ -80,6 +81,10 @@ export default function ModalTaskDone({
       return null;
     });
     if (result) {
+      // console.log(JSON.stringify(result, null, 2));
+      // console.log(
+      //   moment(moment.unix(result.creationDate)).format('DD/MM/YYYY HH:mm:ss'),
+      // );
       const fileSize = result?.size;
       const fileData = await RNFS.readFile(result.path, 'base64');
       if (!fileSize) {
@@ -287,7 +292,7 @@ export default function ModalTaskDone({
               }}>
               ยืนยันการเสร็จสิ้นงาน
             </Text>
-            <Text style={styles.g19}>กรุณาอัพโหลดภาพ 2 ภาพ ดังนี้</Text>
+            <Text style={styles.g19}>กรุณาอัปโหลดภาพ 2 ภาพ ดังนี้</Text>
           </View>
           <View
             style={{
@@ -379,7 +384,7 @@ export default function ModalTaskDone({
                         fontFamily: font.semiBold,
                         fontSize: 14,
                       }}>
-                      อัพโหลดภาพปุ๋ย/ยา
+                      อัปโหลดภาพปุ๋ย/ยา
                     </Text>
                     <Image
                       source={icons.checkFillSuccess}
@@ -397,7 +402,7 @@ export default function ModalTaskDone({
                         fontFamily: font.semiBold,
                         fontSize: 14,
                       }}>
-                      อัพโหลดภาพปุ๋ย/ยา
+                      อัปโหลดภาพปุ๋ย/ยา
                     </Text>
                     {isImageDuplicate && (
                       <Text
@@ -406,8 +411,8 @@ export default function ModalTaskDone({
                           fontSize: 14,
                           color: colors.decreasePoint,
                         }}>
-                        คุณอัพโหลดภาพซ้ำกับภาพหลักฐานการบิน
-                        กรุณาอัพโหลดภาพใหม่อีกครั้ง
+                        คุณอัปโหลดภาพซ้ำกับภาพหลักฐานการบิน
+                        กรุณาอัปโหลดภาพใหม่อีกครั้ง
                       </Text>
                     )}
                   </View>
@@ -449,7 +454,7 @@ export default function ModalTaskDone({
                         fontFamily: font.semiBold,
                         fontSize: 14,
                       }}>
-                      อัพโหลดภาพหลักฐานการบิน
+                      อัปโหลดภาพหลักฐานการบิน
                     </Text>
                     <Image
                       source={icons.checkFillSuccess}
@@ -466,7 +471,7 @@ export default function ModalTaskDone({
                       fontFamily: font.semiBold,
                       fontSize: 14,
                     }}>
-                    อัพโหลดภาพหลักฐานการบิน
+                    อัปโหลดภาพหลักฐานการบิน
                   </Text>
                 )}
               </View>
@@ -507,8 +512,8 @@ export default function ModalTaskDone({
                 alignSelf: 'flex-start',
               }}>
               {step === 0
-                ? 'ลักษณะภาพที่อัพโหลดควรแสดงวัน เวลา และจำนวนไร่ของงานที่คุณบินเสร็จในครั้งนี้อย่างชัดเจน'
-                : 'ลักษณะภาพที่อัพโหลดควรเห็นบรรจุภัณฑ์ปุ๋ยหรือยาที่ใช้ในงานครั้งนี้อย่างชัดเจน'}
+                ? 'ลักษณะภาพที่อัปโหลดควรแสดงวัน เวลา และจำนวนไร่ของงานที่คุณบินเสร็จในครั้งนี้อย่างชัดเจน'
+                : 'ลักษณะภาพที่อัปโหลดควรเห็นบรรจุภัณฑ์ปุ๋ยหรือยาที่ใช้ในงานครั้งนี้อย่างชัดเจน'}
             </Text>
           </View>
           {/*  bottom */}

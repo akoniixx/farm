@@ -104,7 +104,6 @@ export default function Body({navigation}: Props) {
   });
   const [refreshing, setRefreshing] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
-
   const getAllMission = async () => {
     try {
       setLoading(true);
