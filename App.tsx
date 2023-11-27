@@ -12,7 +12,7 @@ import buddhaEra from 'dayjs/plugin/buddhistEra';
 import dayjs from 'dayjs';
 import {AuthProvider} from './src/contexts/AuthContext';
 import {Settings} from 'react-native-fbsdk-next';
-import {check, request, requestMultiple} from 'react-native-permissions';
+import {check, request} from 'react-native-permissions';
 dayjs.extend(buddhaEra);
 import {
   firebaseInitialize,
@@ -31,6 +31,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {colors} from './src/assets';
 import {NetworkProvider} from './src/contexts/NetworkContext';
 import {MaintenanceProvider} from './src/contexts/MaintenanceContext';
+import {HighlightProvider} from './src/contexts/HighlightContext';
 
 moment.updateLocale('th', {
   relativeTime: {
@@ -107,27 +108,29 @@ const App = () => {
   return (
     <>
       <NetworkProvider>
-        <ActionContext.Provider value={{actiontaskId, setActiontaskId}}>
-          <NavigationContainer
-            ref={navigationRef}
-            linking={linking}
-            fallback={
-              <ActivityIndicator color={colors.orangeSoft} size="large" />
-            }>
-            <AuthProvider>
-              <>
-                <MaintenanceProvider>
-                  <PointProvider>
-                    <SheetProvider>
-                      <AppNavigator />
-                    </SheetProvider>
-                  </PointProvider>
-                </MaintenanceProvider>
-                <Toast config={toastConfig} />
-              </>
-            </AuthProvider>
-          </NavigationContainer>
-        </ActionContext.Provider>
+        <HighlightProvider>
+          <ActionContext.Provider value={{actiontaskId, setActiontaskId}}>
+            <NavigationContainer
+              ref={navigationRef}
+              linking={linking}
+              fallback={
+                <ActivityIndicator color={colors.orangeSoft} size="large" />
+              }>
+              <AuthProvider>
+                <>
+                  <MaintenanceProvider>
+                    <PointProvider>
+                      <SheetProvider>
+                        <AppNavigator />
+                      </SheetProvider>
+                    </PointProvider>
+                  </MaintenanceProvider>
+                  <Toast config={toastConfig} />
+                </>
+              </AuthProvider>
+            </NavigationContainer>
+          </ActionContext.Provider>
+        </HighlightProvider>
       </NetworkProvider>
     </>
   );

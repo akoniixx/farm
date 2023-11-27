@@ -760,7 +760,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                       <View />
                     </View>
                     <Text style={[styles.h2, {paddingTop: 12}]}>
-                      อัพโหลดใบอนุญาตนักบิน
+                      อัปโหลดใบอนุญาตนักบิน
                     </Text>
                     <View
                       style={{
@@ -851,7 +851,7 @@ const ThirdFormScreen: React.FC<any> = ({route, navigation}) => {
                       }}
                     />
                     <Text style={[styles.h2, {paddingTop: 12}]}>
-                      อัพโหลดใบอนุญาตโดรนจาก กสทช.
+                      อัปโหลดใบอนุญาตโดรนจาก กสทช.
                     </Text>
                     <View
                       style={{

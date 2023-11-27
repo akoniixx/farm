@@ -93,6 +93,7 @@ export default function DroneListScreen({navigation}: Props) {
         setValue(null);
         setValuetype(null);
         setLoading(false);
+        setItemstype([]);
         actionSheet.current.hide();
         await getProfileAuth();
       })
@@ -160,7 +161,7 @@ export default function DroneListScreen({navigation}: Props) {
         showBackBtn={true}
         onPressBack={() => navigation.goBack()}
       />
-      <ScrollView style={styles.content}>
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <TouchableOpacity
           style={styles.addNewDronerButton}
           onPress={showActionSheet}>
@@ -421,7 +422,7 @@ export default function DroneListScreen({navigation}: Props) {
                       <Text style={styles.hSheet}>เพิ่มเอกสาร</Text>
                     </View>
                     <Text style={[styles.h2, {paddingTop: 12}]}>
-                      อัพโหลดใบอนุญาตนักบิน
+                      อัปโหลดใบอนุญาตนักบิน
                     </Text>
                     <View
                       style={{
@@ -512,7 +513,7 @@ export default function DroneListScreen({navigation}: Props) {
                       }}
                     />
                     <Text style={[styles.h2, {paddingTop: 12}]}>
-                      อัพโหลดใบอนุญาตโดรนจาก กสทช.
+                      อัปโหลดใบอนุญาตโดรนจาก กสทช.
                     </Text>
                     <View
                       style={{

@@ -20,7 +20,8 @@ interface Prop {
   headerRight?: () => JSX.Element;
   headerLeft?: () => JSX.Element;
   headerCenter?: JSX.Element;
-  style?: ViewProps;
+  style?: ViewProps['style'];
+  styleWrapper?: ViewProps['style'];
   image?: () => JSX.Element;
 }
 
@@ -29,16 +30,16 @@ const CustomHeader: React.FC<Prop> = ({
   title,
   showBackBtn,
   titleColor,
-  backgroundColor,
   onPressBack,
   headerLeft,
   headerRight,
   image,
   headerCenter,
+  styleWrapper,
 }) => {
   return (
     <SafeAreaView style={[styles.headerSafeArea, style]}>
-      <View style={styles.headerWrapper}>
+      <View style={[styles.headerWrapper, styleWrapper]}>
         <View style={headerLeft ? styles.headerLeftWrapper : styles.noLeftSide}>
           {showBackBtn && (
             <TouchableOpacity

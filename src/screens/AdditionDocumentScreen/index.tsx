@@ -17,7 +17,7 @@ export default function AdditionDocumentScreen({navigation}: Props) {
     const list = [
       {
         id: 1,
-        title: 'อัพโหลดรูปถ่ายผู้สมัครคู่บัตรประชาชน',
+        title: 'อัปโหลดรูปถ่ายผู้สมัครคู่บัตรประชาชน',
         desc: 'บริษัทใช้เป็นหลักฐานการรับของรางวัล',
         onPress: () => {
           navigation.navigate('NewAddIDCardScreen');
@@ -26,7 +26,7 @@ export default function AdditionDocumentScreen({navigation}: Props) {
       },
       {
         id: 2,
-        title: 'อัพโหลดสมุดบัญชีธนาคาร',
+        title: 'อัปโหลดสมุดบัญชีธนาคาร',
         desc: 'บริษัทใช้เป็นหลักฐานการโอนเงินงานในระบบ',
         onPress: () => {
           const findBanking = user?.file.find(

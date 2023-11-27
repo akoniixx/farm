@@ -17,7 +17,7 @@ import NetworkLost from '../../components/NetworkLost/NetworkLost';
 import Text from '../../components/Text';
 
 const UsedPointScreen: React.FC<any> = () => {
-  const [dataAllPoint, setDataAllPoint] = useState<any>();
+  const [dataAllPoint, setDataAllPoint] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [row] = useState(10);
@@ -67,6 +67,7 @@ const UsedPointScreen: React.FC<any> = () => {
       setLoading(false);
     }
   };
+
   return (
     <View>
       <NetworkLost
@@ -101,18 +102,21 @@ const UsedPointScreen: React.FC<any> = () => {
                 </View>
               }
               data={dataAllPoint}
-              renderItem={({item, index}) => (
-                <HistoryPoint
-                  {...item}
-                  index={index}
-                  date={item.createAt}
-                  point={item.amountValue}
-                  action={item.action}
-                  campaignName={item.campaignName}
-                  taskId={item.taskId}
-                  taskNo={item.taskNo != null ? item.taskNo : ''}
-                />
-              )}
+              renderItem={({item, index}) => {
+                return (
+                  <HistoryPoint
+                    {...item}
+                    index={index}
+                    date={item.createAt}
+                    point={item.amountValue}
+                    action={item.action}
+                    campaignName={item.campaignName}
+                    taskId={item.taskId}
+                    isSpecialPointDroner={item.isSpecialPointDroner}
+                    taskNo={item.taskNo != null ? item.taskNo : ''}
+                  />
+                );
+              }}
             />
           </View>
         ) : (

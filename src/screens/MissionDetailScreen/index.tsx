@@ -161,7 +161,10 @@ export default function MissionDetailScreen({navigation, route}: Props) {
                 current={data.current}
                 dateEnd={data.endDate}
                 total={data.total}
-                missionName={`บินสะสมครบ ${data.total} ไร่`}
+                missionName={`บินสะสมครบ ${numberWithCommas(
+                  data.total.toString(),
+                  false,
+                )} ไร่`}
                 disabled={data.isExpired}
                 imagePath={image.missionPointImage}
                 isMissionPoint
@@ -308,7 +311,7 @@ export default function MissionDetailScreen({navigation, route}: Props) {
                     fontSize: 16,
                     color: colors.decreasePoint,
                   }}>
-                  กรุณายืนที่อยู่จัดส่ง เพื่อรับของรางวัล
+                  กรุณายืนยันที่อยู่จัดส่ง เพื่อรับของรางวัล
                 </Text>
               </View>
             )}
