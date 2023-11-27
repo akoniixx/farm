@@ -64,6 +64,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -111,7 +115,7 @@ export const toastConfig = {
             flexDirection: 'row',
           }}>
           <Image
-            source={icons.closecircle}
+            source={icons.checkSolid}
             style={{
               width: normalize(30),
               height: normalize(30),
@@ -132,6 +136,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -148,7 +156,7 @@ export const toastConfig = {
             flexDirection: 'row',
           }}>
           <Image
-            source={icons.closecircle}
+            source={icons.closecircle2}
           />
           <View
             style={{
@@ -165,6 +173,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -201,6 +213,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -216,7 +232,7 @@ export const toastConfig = {
             flexDirection: 'row',
           }}>
           <Image
-            source={icons.closecircle}
+            source={icons.closecircle2}
             style={{
               width: normalize(30),
               height: normalize(30),
@@ -241,6 +257,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -280,6 +300,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -295,7 +319,7 @@ export const toastConfig = {
             flexDirection: 'row',
           }}>
           <Image
-            source={icons.closecircle}
+            source={icons.closecircle2}
             style={{
               width: normalize(30),
               height: normalize(30),
@@ -315,6 +339,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -350,6 +378,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -386,6 +418,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -428,6 +464,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -463,6 +503,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -505,6 +549,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -546,6 +594,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -585,6 +637,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -643,6 +699,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -701,6 +761,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -736,6 +800,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -792,7 +860,7 @@ export const toastConfig = {
             flexDirection: 'row',
           }}>
           <Image
-            source={icons.closecircle}
+            source={icons.closecircle2}
             style={{
               width: normalize(30),
               height: normalize(30),
@@ -835,6 +903,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -870,6 +942,10 @@ export const toastConfig = {
               Toast.hide();
             }}>
             <Image
+              style={{
+                width : responsiveWidth(20),
+                height : responsiveWidth(20)
+              }}
               source={icons.closewhite}
             />
           </TouchableOpacity>
@@ -906,6 +982,10 @@ export const toastConfig = {
                 Toast.hide();
               }}>
               <Image
+                style={{
+                  width : responsiveWidth(20),
+                  height : responsiveWidth(20)
+                }}
                 source={icons.closewhite}
               />
             </TouchableOpacity>
@@ -945,10 +1025,10 @@ export const toastConfig = {
               }}>
               <Image
                 source={icons.closewhite}
-                // style={{
-                //   width: normalize(20),
-                //   height: normalize(20),
-                // }}
+                style={{
+                  width : responsiveWidth(20),
+                  height : responsiveWidth(20)
+                }}
               />
             </TouchableOpacity>
           </View>

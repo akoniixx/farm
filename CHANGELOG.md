@@ -1,3 +1,7 @@
+## Enhance [1.10.1] 2023-11-27
+- fixed icon size for noti
+- add close circle icon
+
 ## Enhance [1.10.0] 2023-11-10
 - mission opening notification
 
