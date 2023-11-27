@@ -20,6 +20,7 @@ export default {
   close: require('./x.png'),
   closewhite: require('./closewhite.png'),
   closecircle: require('./close.png'),
+  closecircle2: require('./closecircle.png'),
   register: require('./register.png'),
   direction: require('./direction.png'),
   callSolid: require('./Calling-solid.png'),
