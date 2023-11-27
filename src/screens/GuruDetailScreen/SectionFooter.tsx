@@ -3,6 +3,7 @@ import React from 'react';
 import Text from '../../components/Text';
 import {colors, font, icons} from '../../assets';
 import {numberWithCommas} from '../../function/utility';
+import {SheetManager} from 'react-native-actions-sheet';
 
 interface Props {
   loveCount: number;
@@ -13,6 +14,9 @@ export default function SectionFooter({loveCount, commentCount}: Props) {
   const [isLoved, setIsLoved] = React.useState(isOdd);
   const onPressLove = () => {
     setIsLoved(prev => !prev);
+  };
+  const onOpenComment = () => {
+    SheetManager.show('commentSheet');
   };
   const mockText = `
   “ยาเหลือง” ใช้แล้วติดถังพ่น!! นักบินโดรนสามารถใช้ยาอะไร ทดแทนได้บ้าง!! วันนี้กูรูเกษตรมีคำตอบ ?
@@ -43,7 +47,7 @@ export default function SectionFooter({loveCount, commentCount}: Props) {
             )}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.row}>
+        <TouchableOpacity style={styles.row} onPress={onOpenComment}>
           <Image source={icons.commentIcon} style={styles.icon} />
           <Text style={styles.textMedium}>
             ความคิดเห็น
