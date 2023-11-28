@@ -18,6 +18,7 @@
 		25CF6150BC874D98B80FDC7E /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF83F8BDB28F4FCAA12DCD39 /* Entypo.ttf */; };
 		2BC7B07EC9034DAAAB6366B2 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9603BDE0B1F8417FBE9CE02A /* Ionicons.ttf */; };
 		306A7BD0E8C74767B59CFA0D /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B61B979E6E7A4D8FBB33C734 /* FontAwesome5_Regular.ttf */; };
+		3B437D866CF24136AA555623 /* Sarabun-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13C23CBE32734CFBB17B648D /* Sarabun-SemiBold.ttf */; };
 		4E0E688E542C429A8E49A91D /* Sarabun-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3CB3D555E4984153AE4BA2D5 /* Sarabun-Medium.ttf */; };
 		5074541692BF49118BE96830 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E354E12A922F4E29915ECEC5 /* EvilIcons.ttf */; };
 		60F1F01829266B65007549EB /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 60F1F01729266B63007549EB /* fonts */; };
@@ -41,7 +42,6 @@
 		E138B9AA2A70D7BA000A08B8 /* iconkaset.wav in Resources */ = {isa = PBXBuildFile; fileRef = E138B9A92A70D7BA000A08B8 /* iconkaset.wav */; };
 		E138B9AC2A70D7C9000A08B8 /* receivetasksuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = E138B9AB2A70D7C9000A08B8 /* receivetasksuccess.wav */; };
 		FF11CFA2DF534E158972B845 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F4087F42B2843228EE8D8D8 /* Octicons.ttf */; };
-		3B437D866CF24136AA555623 /* Sarabun-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13C23CBE32734CFBB17B648D /* Sarabun-SemiBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +66,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = farmer/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = farmer/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = farmer/main.m; sourceTree = "<group>"; };
+		13C23CBE32734CFBB17B648D /* Sarabun-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-SemiBold.ttf"; path = "../src/assets/fonts/Sarabun-SemiBold.ttf"; sourceTree = "<group>"; };
 		21B86FBDE532CEE75CBF6A20 /* libPods-farmer-farmerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-farmer-farmerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		26E973754BE244C08A903311 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = ../src/assets/fonts/Feather.ttf; sourceTree = "<group>"; };
 		2F34C825585D4F1793462504 /* Anuphan-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Anuphan-SemiBold.ttf"; path = "../src/assets/fonts/Anuphan-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -102,7 +103,6 @@
 		F1C865AEF1074351B752CE88 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = ../src/assets/fonts/SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		F42BE3F7CD644E84B362FE49 /* Anuphan-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Anuphan-Bold.otf"; path = "../src/assets/fonts/Anuphan-Bold.otf"; sourceTree = "<group>"; };
 		F74FFD5E50E64D30A149CE0C /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = ../src/assets/fonts/Foundation.ttf; sourceTree = "<group>"; };
-		13C23CBE32734CFBB17B648D /* Sarabun-SemiBold.ttf */ = {isa = PBXFileReference; name = "Sarabun-SemiBold.ttf"; path = "../src/assets/fonts/Sarabun-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -680,7 +680,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.26;
+				MARKETING_VERSION = 1.5.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -715,7 +715,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.26;
+				MARKETING_VERSION = 1.5.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
