@@ -331,7 +331,7 @@ const MainScreen: React.FC<any> = ({navigation}) => {
                 </TouchableOpacity>
               </View>
             </View>
-            <MenuList navigation={navigation} />
+            {/* <MenuList navigation={navigation} /> */}
 
             <View
               style={{
