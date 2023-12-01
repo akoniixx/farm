@@ -1,12 +1,12 @@
 import {Image, ScrollView, StyleSheet, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import Text from '../../components/Text';
 import CustomHeader from '../../components/CustomHeader';
 import {
   StackNavigationHelpers,
   StackNavigationProp,
 } from '@react-navigation/stack/lib/typescript/src/types';
-import {RouteProp} from '@react-navigation/native';
+import {RouteProp, useIsFocused} from '@react-navigation/native';
 import mockGuru from '../../assets/mockGuru';
 import {colors, font} from '../../assets';
 import {numberWithCommas} from '../../function/utility';
@@ -15,21 +15,66 @@ import BadgeGuru from '../../components/BadgeGuru';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import SectionFooter from './SectionFooter';
 import {StackParamList} from '../../navigations/MainNavigator';
+import {GuruKaset} from '../../datasource/GuruDatasource';
+import FastImage from 'react-native-fast-image';
+import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 
 interface Props {
   navigation: StackNavigationProp<StackParamList, 'GuruDetailScreen'>;
   route: RouteProp<StackParamList, 'GuruDetailScreen'>;
 }
+interface GuruDetailData {
+  _id: string;
+  type: string;
+  name: string;
+  view: number;
+  like: number;
+  commentCount: number;
+  read: number;
+  application: string;
+  status: string;
+  grouping: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  description: string;
+  image: string;
+  startDateCronJob: null | string;
+  startDate: null | string;
+  favorite: boolean;
+  groupName: string;
+}
+
 const GuruDetailScreen: React.FC<Props> = ({navigation, route}) => {
   const {guruId} = route.params;
-  const loveCount = Math.round(Math.random() * 1000);
-  const commentCount = Math.round(Math.random() * 1000);
-  const readCount = Math.round(Math.random() * 10000);
-  const dateCreate = moment().subtract(
-    Math.round(Math.random() * 1000),
-    'hours',
-  );
-  console.log('guruId', guruId);
+  const isFocused = useIsFocused();
+  const [guruDetail, setGuruDetail] = React.useState<GuruDetailData>({
+    view: 0,
+    commentCount: 0,
+    like: 0,
+  } as GuruDetailData);
+  const [isLoved, setIsLoved] = React.useState(false);
+
+  const loveCount = guruDetail.like;
+  const commentCount = guruDetail.commentCount;
+  const readCount = guruDetail.view;
+  const dateCreate = moment(guruDetail.createdAt);
+
+  useEffect(() => {
+    const getGuRuDetail = async () => {
+      try {
+        const result = await GuruKaset.getGuruById({
+          guruId: guruId || '',
+        });
+        setGuruDetail(result);
+        setIsLoved(result.favorite);
+      } catch (error) {
+        console.log('error guruDetail', error);
+      }
+    };
+
+    getGuRuDetail();
+  }, [guruId, isFocused]);
 
   return (
     <SafeAreaView style={{flex: 1}} edges={['top', 'left', 'right']}>
@@ -43,14 +88,23 @@ const GuruDetailScreen: React.FC<Props> = ({navigation, route}) => {
           navigation.goBack();
         }}
       />
-      <ScrollView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        scrollIndicatorInsets={{
+          right: 1,
+        }}>
         <View style={styles.containerHeader}>
-          <Image source={mockGuru.imageContent} style={styles.imageHeader} />
+          <ProgressiveImage
+            borderRadius={0}
+            source={{
+              uri: guruDetail.image,
+            }}
+            style={styles.imageHeader}
+          />
         </View>
         <View style={styles.containerFooter}>
           <Text numberOfLines={2} style={styles.textTitle}>
-            3 หลักการแก้ปัญหาหญ้าข้าวนกดื้อยา หญ้าตัวร้ายปราบเซียนมืออาชีพ
-            หญ้าตัวร้ายปราบเซียนมืออาชีพ หญ้าตัวร้ายปราบเซียนมืออาชีพ
+            {guruDetail.name}
           </Text>
           <View style={[styles.row, {marginTop: 8}]}>
             <Text style={styles.textNormal}>{dateCreate.fromNow()}</Text>
@@ -64,9 +118,16 @@ const GuruDetailScreen: React.FC<Props> = ({navigation, route}) => {
             </View>
           </View>
           <View style={styles.badge}>
-            <BadgeGuru title="โรคพืช" isDetail />
+            <BadgeGuru title={guruDetail.groupName} isDetail />
           </View>
-          <SectionFooter loveCount={loveCount} commentCount={commentCount} />
+          <SectionFooter
+            loveCount={loveCount}
+            commentCount={commentCount}
+            description={guruDetail?.description}
+            isLoved={isLoved}
+            guruId={guruDetail._id}
+            setIsLoved={setIsLoved}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
