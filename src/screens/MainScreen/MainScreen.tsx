@@ -484,47 +484,85 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   }}>
                   <LinearGradient
                     colors={['#61E097', '#3B996E']}
+                    start={{ x: 0.25, y: 0.5 }}
                     style={{
-                      paddingVertical: normalize(10),
-                      width: normalize(166),
+                      paddingVertical: 10,
+                      width: Dimensions.get('window').width / 2 - 24,
                       height: normalize(137),
                       borderRadius: 24,
                       alignItems: 'center',
+                      justifyContent: 'space-between',
                       borderWidth: 1,
                       borderColor: colors.greenLight,
                     }}>
                     <Image
                       source={icons.drone}
-                      style={{ height: normalize(76), width: normalize(105) }}
+                      style={{ height: normalize(86), width: '100%' }}
+                      resizeMode="contain"
                     />
                     <Text style={styles.font}>จ้างโดรนเกษตร</Text>
                   </LinearGradient>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    mixpanel.track('MainScreen_ButtonMyPlot_Press', {
-                      navigateTo: 'AllPlotScreen',
-                    });
-                    navigation.navigate('AllPlotScreen');
+                <View
+                  style={{
+                    justifyContent: 'space-between',
+                    height: normalize(137),
                   }}>
-                  <LinearGradient
-                    colors={['#FFFFFF', '#ECFBF2']}
-                    style={{
-                      paddingVertical: normalize(10),
-                      width: normalize(166),
-                      height: normalize(137),
-                      borderRadius: 24,
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      borderColor: colors.greenLight,
+                  <TouchableOpacity
+                    onPress={() => {
+                      mixpanel.track('MainScreen_ButtonGuRu_Press', {
+                        navigateTo: 'GuruKasetScreen',
+                      });
+                      navigation.navigate('GuruKasetScreen');
                     }}>
-                    <Image
-                      source={icons.plots}
-                      style={{ height: normalize(76), width: normalize(105) }}
-                    />
-                    <Text style={styles.font1}>แปลงของคุณ</Text>
-                  </LinearGradient>
-                </TouchableOpacity>
+                    <LinearGradient
+                      colors={['#FFFFFF', '#ECFBF2']}
+                      style={{
+                        paddingVertical: normalize(10),
+                        width: Dimensions.get('window').width / 2 - 24,
+                        height: normalize(63),
+                        borderRadius: 12,
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: colors.greenLight,
+                        flexDirection: 'row',
+                        paddingHorizontal: 16,
+                      }}>
+                      <Image
+                        source={icons.guruKasetIcon}
+                        style={{ height: normalize(44), width: normalize(44) }}
+                      />
+                      <Text style={styles.font1}>กูรูเกษตร</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      mixpanel.track('MainScreen_ButtonMyPlot_Press', {
+                        navigateTo: 'AllPlotScreen',
+                      });
+                      navigation.navigate('AllPlotScreen');
+                    }}>
+                    <LinearGradient
+                      colors={['#FFFFFF', '#ECFBF2']}
+                      style={{
+                        paddingVertical: normalize(10),
+                        width: Dimensions.get('window').width / 2 - 24,
+                        height: normalize(63),
+                        borderRadius: 12,
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: colors.greenLight,
+                        flexDirection: 'row',
+                        paddingHorizontal: 16,
+                      }}>
+                      <Image
+                        source={icons.plots}
+                        style={{ height: normalize(44), width: normalize(44) }}
+                      />
+                      <Text style={styles.font1}>แปลง</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </View>
               </View>
               <View>
                 <MaintenanceHeader
@@ -554,14 +592,14 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         color: colors.fontGrey,
                         paddingHorizontal: 20,
                       }}>
-                      กูรูเกษตร
+                      ข่าวสาร
                     </Text>
                     <TouchableOpacity
                       onPress={() => {
                         mixpanel.track('MainScreen_ButtonAllGuru_Press', {
-                          navigateTo: 'AllGuruScreen',
+                          navigateTo: 'AllNewsScreen',
                         });
-                        navigation.navigate('AllGuruScreen');
+                        navigation.navigate('AllNewsScreen');
                       }}>
                       <Text
                         style={{
@@ -873,13 +911,14 @@ const styles = StyleSheet.create({
   },
   font: {
     fontFamily: font.AnuphanBold,
-    fontSize: normalize(18),
+    fontSize: normalize(20),
     color: colors.white,
   },
   font1: {
     fontFamily: font.AnuphanBold,
-    fontSize: normalize(18),
-    color: colors.greenDark,
+    fontSize: normalize(20),
+    color: colors.primary70,
+    marginLeft: 10,
   },
   footer: {
     width: '100%',

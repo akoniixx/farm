@@ -40,7 +40,7 @@ const filterListSelect = [
     mixpanel: 'เลือกฟิลเตอร์กูรูเกษตรนิยมมากสุด',
   },
 ];
-const AllGuruScreen: React.FC<any> = ({ navigation }) => {
+const AllNewsScreen: React.FC<any> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const filterNews = useRef<any>();
   const windowWidth = Dimensions.get('window').width;
@@ -431,4 +431,4 @@ const AllGuruScreen: React.FC<any> = ({ navigation }) => {
   );
 };
 
-export default AllGuruScreen;
+export default AllNewsScreen;

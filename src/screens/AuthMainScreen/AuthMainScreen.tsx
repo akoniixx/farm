@@ -331,9 +331,9 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                       <TouchableOpacity
                         onPress={() => {
                           mixpanel.track('MainScreen_ButtonAllGuru_Press', {
-                            navigateTo: 'AllGuruScreen',
+                            navigateTo: 'AllNewsScreen',
                           });
-                          navigation.navigate('AllGuruScreen');
+                          navigation.navigate('AllNewsScreen');
                         }}>
                         <Text
                           style={{

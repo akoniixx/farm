@@ -24,14 +24,14 @@ import Text from '../../components/Text/Text';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
 
 const renderers = {
-  iframe: IframeRenderer
+  iframe: IframeRenderer,
 };
 
 const customHTMLElementModels = {
-  iframe: iframeModel
+  iframe: iframeModel,
 };
 
-const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
+const DetailNewsScreen: React.FC<any> = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>();
@@ -113,12 +113,12 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
                   WebView={WebView}
                   customHTMLElementModels={customHTMLElementModels}
                   renderersProps={{
-                    iframe : {
+                    iframe: {
                       scalesPageToFit: true,
-                      webViewProps : {
-                        width : Dimensions.get('screen').width - 30,
-                        height : Dimensions.get('screen').width * 0.3
-                      }
+                      webViewProps: {
+                        width: Dimensions.get('screen').width - 30,
+                        height: Dimensions.get('screen').width * 0.3,
+                      },
                     },
                   }}
                   source={{ html: data.details }}
@@ -128,9 +128,9 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
                   contentWidth={Dimensions.get('screen').width}
                   tagsStyles={{
                     img: {
-                      width : Dimensions.get('screen').width - 30,
-                      marginRight : 30,
-                      resizeMode: 'contain'                       
+                      width: Dimensions.get('screen').width - 30,
+                      marginRight: 30,
+                      resizeMode: 'contain',
                     },
                     strong: {
                       color: colors.grey60,
@@ -161,8 +161,8 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
                       fontSize: normalize(18),
                       fontWeight: '200',
                       lineHeight: 28,
-                      margin : 0,
-                      padding : 0,
+                      margin: 0,
+                      padding: 0,
                     },
                     ol: {
                       color: colors.grey60,
@@ -192,7 +192,12 @@ const DetailGuruScreen: React.FC<any> = ({ navigation }) => {
   );
 };
 
-const ImageRenderer = (htmlAttribs : any, children : any, convertedCSSStyles : any, passProps : any) => {
+const ImageRenderer = (
+  htmlAttribs: any,
+  children: any,
+  convertedCSSStyles: any,
+  passProps: any,
+) => {
   const { src } = htmlAttribs;
   return (
     <View style={styles.centeredImageView}>
@@ -201,7 +206,7 @@ const ImageRenderer = (htmlAttribs : any, children : any, convertedCSSStyles : a
   );
 };
 
-export default DetailGuruScreen;
+export default DetailNewsScreen;
 const styles = StyleSheet.create({
   card: {
     width: Dimensions.get('window').width - normalize(25),
@@ -226,10 +231,10 @@ const styles = StyleSheet.create({
   centeredImageView: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   centeredImageContent: {
-    width: '100%', 
-    resizeMode: 'contain' 
-  }
+    width: '100%',
+    resizeMode: 'contain',
+  },
 });

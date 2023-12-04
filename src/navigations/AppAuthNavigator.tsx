@@ -18,13 +18,13 @@ import MyPlotScreen from '../screens/MyPlotScreen/MyPlotScreen';
 import EditFarmerPlot from '../screens/RegisterScreen/EditFarmerPlot';
 import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 import PrivacyScreen from '../screens/ProfileScreen/PrivacyScreen';
-import AllGuruScreen from '../screens/GuruScreen/AllGuruScreen';
+import AllNewsScreen from '../screens/NewsScreen/AllNewsScreen';
 import BeforeLoginScreen from '../screens/BeforeLoginScreen';
 import CameraScreen from '../screens/CameraScreen';
 import AddPlotScreen from '../screens/ProfileScreen/PlotScreen/AddPlotScreen';
 import EditPlotScreen from '../screens/ProfileScreen/PlotScreen/EditPlotScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
+import DetailGuruScreen from '../screens/NewsScreen/DetailNewsScreen';
 
 const Stack = createStackNavigator();
 
@@ -48,7 +48,7 @@ const AppAuthNavigator: React.FC = () => {
       <Stack.Screen name="Onboarding" component={Onboarding} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="BeforeLoginScreen" component={BeforeLoginScreen} />
-      <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
+      <Stack.Screen name="AllNewsScreen" component={AllNewsScreen} />
       <Stack.Screen name="CameraScreen" component={CameraScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="ConditionScreen" component={ConditionScreen} />

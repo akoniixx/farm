@@ -61,4 +61,5 @@ export default {
   disableManualBooking: require('./disableManualBooking.png'),
   closedHired: require('./closedHired.png'),
   emptyDronerList: require('./emptyDronerList.png'),
+  emptyGuru: require('./emptyGuru.png'),
 };
