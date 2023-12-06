@@ -27,7 +27,6 @@ import EmptyGuru from '../../components/EmptyGuru';
 interface Props {
   navigation: any;
 }
-const mockData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 // const initialListsHeader = [
 //   {
 //     title: 'ทั้งหมด',

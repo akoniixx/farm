@@ -28,6 +28,7 @@ const Desc = ({text}: {text: string}) => {
   return (
     <RenderHTML
       source={{html: text}}
+      ignoredDomTags={['br', 'iframe']}
       defaultTextProps={{
         allowFontScaling: false,
         numberOfLines: 1,

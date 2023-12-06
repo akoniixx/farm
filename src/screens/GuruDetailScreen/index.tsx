@@ -1,13 +1,9 @@
-import {Image, ScrollView, StyleSheet, View} from 'react-native';
+import {Dimensions, Image, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
 import Text from '../../components/Text';
 import CustomHeader from '../../components/CustomHeader';
-import {
-  StackNavigationHelpers,
-  StackNavigationProp,
-} from '@react-navigation/stack/lib/typescript/src/types';
+import {StackNavigationProp} from '@react-navigation/stack/lib/typescript/src/types';
 import {RouteProp, useIsFocused} from '@react-navigation/native';
-import mockGuru from '../../assets/mockGuru';
 import {colors, font} from '../../assets';
 import {numberWithCommas} from '../../function/utility';
 import moment from 'moment';
@@ -16,8 +12,8 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import SectionFooter from './SectionFooter';
 import {StackParamList} from '../../navigations/MainNavigator';
 import {GuruKaset} from '../../datasource/GuruDatasource';
-import FastImage from 'react-native-fast-image';
 import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 interface Props {
   navigation: StackNavigationProp<StackParamList, 'GuruDetailScreen'>;
@@ -59,17 +55,22 @@ const GuruDetailScreen: React.FC<Props> = ({navigation, route}) => {
   const commentCount = guruDetail.commentCount;
   const readCount = guruDetail.view;
   const dateCreate = moment(guruDetail.createdAt);
+  const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
     const getGuRuDetail = async () => {
       try {
+        setLoading(true);
         const result = await GuruKaset.getGuruById({
           guruId: guruId || '',
         });
         setGuruDetail(result);
         setIsLoved(result.favorite);
+        setLoading(false);
       } catch (error) {
         console.log('error guruDetail', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -102,33 +103,70 @@ const GuruDetailScreen: React.FC<Props> = ({navigation, route}) => {
             style={styles.imageHeader}
           />
         </View>
-        <View style={styles.containerFooter}>
-          <Text numberOfLines={2} style={styles.textTitle}>
-            {guruDetail.name}
-          </Text>
-          <View style={[styles.row, {marginTop: 8}]}>
-            <Text style={styles.textNormal}>{dateCreate.fromNow()}</Text>
-            <View style={[styles.row, {marginLeft: 16}]}>
-              <Text style={styles.textNormal}>
-                {`อ่านแล้ว ${numberWithCommas(
-                  readCount.toString(),
-                  true,
-                )} ครั้ง`}
-              </Text>
+        {loading ? (
+          <View style={styles.containerFooter}>
+            <SkeletonPlaceholder
+              backgroundColor={colors.skeleton}
+              borderRadius={10}
+              speed={2000}>
+              <SkeletonPlaceholder.Item width="100%">
+                <SkeletonPlaceholder.Item
+                  height={16}
+                  width={Dimensions.get('window').width - 64}
+                  alignSelf="flex-start"
+                  borderRadius={10}
+                  marginBottom={8}
+                />
+                <SkeletonPlaceholder.Item
+                  height={16}
+                  width={Dimensions.get('window').width - 100}
+                  borderRadius={10}
+                  marginBottom={8}
+                />
+                <SkeletonPlaceholder.Item
+                  height={16}
+                  width={Dimensions.get('window').width - 200}
+                  borderRadius={10}
+                  marginBottom={12}
+                />
+                <SkeletonPlaceholder.Item
+                  height={16}
+                  width={30}
+                  borderRadius={10}
+                  marginBottom={12}
+                />
+              </SkeletonPlaceholder.Item>
+            </SkeletonPlaceholder>
+          </View>
+        ) : (
+          <View style={styles.containerFooter}>
+            <Text numberOfLines={2} style={styles.textTitle}>
+              {guruDetail.name}
+            </Text>
+            <View style={[styles.row, {marginTop: 8}]}>
+              <Text style={styles.textNormal}>{dateCreate.fromNow()}</Text>
+              <View style={[styles.row, {marginLeft: 16}]}>
+                <Text style={styles.textNormal}>
+                  {`อ่านแล้ว ${numberWithCommas(
+                    readCount.toString(),
+                    true,
+                  )} ครั้ง`}
+                </Text>
+              </View>
             </View>
+            <View style={styles.badge}>
+              <BadgeGuru title={guruDetail.groupName} isDetail />
+            </View>
+            <SectionFooter
+              loveCount={loveCount}
+              commentCount={commentCount}
+              description={guruDetail?.description}
+              isLoved={isLoved}
+              guruId={guruDetail._id}
+              setIsLoved={setIsLoved}
+            />
           </View>
-          <View style={styles.badge}>
-            <BadgeGuru title={guruDetail.groupName} isDetail />
-          </View>
-          <SectionFooter
-            loveCount={loveCount}
-            commentCount={commentCount}
-            description={guruDetail?.description}
-            isLoved={isLoved}
-            guruId={guruDetail._id}
-            setIsLoved={setIsLoved}
-          />
-        </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

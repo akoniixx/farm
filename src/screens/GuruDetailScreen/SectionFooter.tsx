@@ -13,7 +13,15 @@ import {SheetManager} from 'react-native-actions-sheet';
 import RenderHTML from 'react-native-render-html';
 import {useDebounce} from '../../hooks/useDebounce';
 import {GuruKaset} from '../../datasource/GuruDatasource';
+import IframeRenderer, {iframeModel} from '@native-html/iframe-plugin';
+import WebView from 'react-native-webview';
+const renderers = {
+  iframe: IframeRenderer,
+};
 
+const customHTMLElementModels = {
+  iframe: iframeModel,
+};
 interface Props {
   loveCount: number;
   commentCount: number;
@@ -31,6 +39,7 @@ export default function SectionFooter({
   setIsLoved,
   guruId,
 }: Props) {
+  console.log('desc', JSON.stringify(description, null, 2));
   const [isFirst, setIsFirst] = React.useState(true);
   const onPressLove = () => {
     setIsLoved(prev => !prev);
@@ -50,7 +59,6 @@ export default function SectionFooter({
         await GuruKaset.updateFavoriteGuru({
           guruId,
         });
-        console.log('success :>>  liked');
       } catch (error) {
         console.log('error_like', error);
       }
@@ -95,10 +103,23 @@ export default function SectionFooter({
       <View style={styles.content}>
         {/* <Text style={styles.textContent}>{}</Text> */}
         <RenderHTML
+          renderers={renderers}
+          WebView={WebView}
+          // ignoredDomTags={['br']}
+          customHTMLElementModels={customHTMLElementModels}
           source={{html: description}}
           defaultTextProps={{
             allowFontScaling: false,
             style: styles.textContent,
+          }}
+          renderersProps={{
+            iframe: {
+              scalesPageToFit: true,
+              webViewProps: {
+                width: Dimensions.get('screen').width - 30,
+                height: Dimensions.get('screen').width * 0.3,
+              },
+            },
           }}
           contentWidth={Dimensions.get('window').width - 64}
           tagsStyles={{
@@ -106,6 +127,11 @@ export default function SectionFooter({
               fontSize: 16,
               color: colors.fontBlack,
               fontFamily: font.light,
+            },
+            img: {
+              width: Dimensions.get('screen').width - 30,
+              marginRight: 30,
+              resizeMode: 'contain',
             },
           }}
           systemFonts={[font.light, font.semiBold, font.medium, font.bold]}
