@@ -32,6 +32,7 @@ const Desc = ({ text }: { text: string }) => {
         allowFontScaling: false,
         numberOfLines: 1,
       }}
+      ignoredDomTags={['br', 'iframe']}
       contentWidth={Dimensions.get('window').width - 64}
       tagsStyles={htmlCss}
       systemFonts={[
