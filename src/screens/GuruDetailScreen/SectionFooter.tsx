@@ -10,11 +10,12 @@ import Text from '../../components/Text';
 import {colors, font, icons} from '../../assets';
 import {numberWithCommas} from '../../function/utility';
 import {SheetManager} from 'react-native-actions-sheet';
-import RenderHTML from 'react-native-render-html';
+import RenderHTML, {defaultSystemFonts} from 'react-native-render-html';
 import {useDebounce} from '../../hooks/useDebounce';
 import {GuruKaset} from '../../datasource/GuruDatasource';
 import IframeRenderer, {iframeModel} from '@native-html/iframe-plugin';
 import WebView from 'react-native-webview';
+import {normalize} from '../../function/Normalize';
 const renderers = {
   iframe: IframeRenderer,
 };
@@ -121,7 +122,7 @@ export default function SectionFooter({
               },
             },
           }}
-          contentWidth={Dimensions.get('window').width - 64}
+          contentWidth={Dimensions.get('window').width - 36}
           tagsStyles={{
             body: {
               fontSize: 16,
@@ -133,8 +134,67 @@ export default function SectionFooter({
               marginRight: 30,
               resizeMode: 'contain',
             },
+            strong: {
+              color: colors.fontGrey,
+              fontSize: normalize(18),
+              fontWeight: '400',
+              lineHeight: 28,
+              fontFamily: font.medium,
+            },
+            em: {
+              color: colors.fontGrey,
+              fontSize: normalize(18),
+              lineHeight: 28,
+              fontStyle: 'italic',
+              fontFamily: font.light,
+            },
+            i: {
+              color: colors.fontGrey,
+              fontSize: normalize(18),
+              fontFamily: font.light,
+              fontStyle: 'italic',
+              lineHeight: 28,
+            },
+            ul: {
+              color: colors.fontGrey,
+              fontSize: normalize(18),
+              fontWeight: '200',
+              lineHeight: 28,
+            },
+            u: {
+              color: colors.fontGrey,
+              fontSize: normalize(18),
+              fontWeight: '200',
+              lineHeight: 28,
+            },
+            p: {
+              color: colors.fontGrey,
+              fontSize: normalize(18),
+              fontWeight: '200',
+              lineHeight: 28,
+              margin: 0,
+              padding: 0,
+            },
+            ol: {
+              color: colors.fontGrey,
+              fontSize: normalize(18),
+              fontWeight: '200',
+              lineHeight: 28,
+            },
+            li: {
+              color: colors.fontGrey,
+              fontSize: normalize(18),
+              fontWeight: '200',
+              lineHeight: 28,
+            },
           }}
-          systemFonts={[font.light, font.semiBold, font.medium, font.bold]}
+          systemFonts={[
+            ...defaultSystemFonts,
+            font.light,
+            font.semiBold,
+            font.medium,
+            font.bold,
+          ]}
         />
       </View>
     </View>

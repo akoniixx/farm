@@ -497,6 +497,8 @@ PODS:
     - React-Core
   - react-native-document-picker (8.2.1):
     - React-Core
+  - react-native-exif (0.5.0):
+    - React
   - react-native-fbsdk-next (11.3.0):
     - React-Core
     - react-native-fbsdk-next/Core (= 11.3.0)
@@ -760,6 +762,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-color-matrix-image-filters (from `../node_modules/react-native-color-matrix-image-filters`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
+  - react-native-exif (from `../node_modules/react-native-exif`)
   - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
@@ -908,6 +911,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-color-matrix-image-filters"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
+  react-native-exif:
+    :path: "../node_modules/react-native-exif"
   react-native-fbsdk-next:
     :path: "../node_modules/react-native-fbsdk-next"
   react-native-geolocation-service:
@@ -1065,6 +1070,7 @@ SPEC CHECKSUMS:
   React-logger: f8071ad48248781d5afdb8a07f778758529d3019
   react-native-color-matrix-image-filters: c945260077dabac82d8e25af937c18fff4021707
   react-native-document-picker: 69ca2094d8780cfc1e7e613894d15290fdc54bba
+  react-native-exif: c43e7c18af8bfa133c79145671a0f036e413468e
   react-native-fbsdk-next: 16e652b5f1236492631185c58ec2ae15b029119d
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
   react-native-google-maps: dd12cdd86b8e3fedbbb671676aedaa2f656e2ccd

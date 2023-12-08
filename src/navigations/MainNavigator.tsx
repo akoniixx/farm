@@ -47,6 +47,7 @@ import NewsScreen from '../screens/NewsScreen/AllScreen';
 import GuruScreen from '../screens/GuruScreen';
 import MissionScreen from '../screens/MissionScreen';
 import GuruDetailScreen from '../screens/GuruDetailScreen';
+import FinishTaskScreen from '../screens/FinishTaskScreen';
 
 // import DeleteSuccess from '../screens/ProfileScreen/DeleteProfile/DeleteSuccess';
 
@@ -152,6 +153,10 @@ export type StackParamList = {
     guruId: string;
   };
   MissionScreen: undefined;
+  FinishTaskScreen: {
+    taskId: string;
+    taskAppointment: string;
+  };
 
   // DeleteSuccess: {
   //   navigation: StackNavigationHelpers;
@@ -259,6 +264,7 @@ const MainNavigator: React.FC<any> = () => {
         />
         <Stack.Screen name="MissionScreen" component={MissionScreen} />
       </Stack.Group>
+      <Stack.Screen name="FinishTaskScreen" component={FinishTaskScreen} />
     </Stack.Navigator>
   );
 };

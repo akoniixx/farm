@@ -59,4 +59,6 @@ export default {
   missionPointImage: require('./missionPointImage.png'),
   droneList: require('./droneList.png'),
   emptyGuru: require('./emptyGuru.png'),
+  previewController: require('./previewController.png'),
+  lineChat: require('./LineChat.png'),
 };

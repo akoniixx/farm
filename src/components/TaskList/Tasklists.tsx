@@ -324,8 +324,15 @@ const Tasklists: React.FC<any> = (props: Props) => {
                 props.setShowModalStartTask();
                 setToggleModalStartTask(true);
               } else {
-                props.openModalUpload();
-                setToggleModalUpload(true);
+                // props.openModalUpload();
+                // setToggleModalUpload(true);
+                RootNavigation.navigate('Main', {
+                  screen: 'FinishTaskScreen',
+                  params: {
+                    taskId: props.taskId,
+                    taskAppointment: props.dateAppointment,
+                  },
+                });
               }
             }}
             style={{
