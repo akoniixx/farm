@@ -38,6 +38,7 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
 }) => {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
+
   return (
     <View
       style={{

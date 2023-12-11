@@ -108,7 +108,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const couponInfo = useRecoilValue(couponState);
 
   const [modalCoupon, setModalCoupon] = useState<boolean>(false);
-  const [point, setPoint] = useState<any>();
+  const [point, setPoint] = useState<number>(0);
   const [disableEdit, setDisableEdit] = useState(false);
   const [currentTel] = useState('');
   const [showModalCall, setShowModalCall] = useState(false);
@@ -120,7 +120,10 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
     const getPointCamp = () => {
       getPointCampaign.getPoint().then(res => {
         if (res) {
-          setPoint(res.data[0].condition[0].point);
+          if (res.data.count < 1) {
+            setPoint(0);
+          }
+          setPoint(res.data[0].condition[0].point || 0);
         }
       });
     };
@@ -1456,9 +1459,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           couponInfo={couponInfo.name}
           discountPoint={calPrice.discountPoint.toString()}
           discountCoupon={couponInfo.discount.toString()}
-          campaignPoint={
-            parseFloat(taskData?.farmAreaAmount) * parseFloat(point)
-          }
+          campaignPoint={+taskData?.farmAreaAmount * +point}
         />
       </ActionSheet>
       <Spinner
