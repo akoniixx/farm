@@ -117,6 +117,7 @@ export default {
   selectImage: require('./selectImage.png'),
   locationOrange: require('./locationOrange.png'),
   guruKasetIcon: require('./guruKasetIcon.png'),
+  guruKasetDot: require('./guruKasetIcon.png'),
   commentIcon: require('./commentIcon.png'),
   showReadIcon: require('./showReadIcon.png'),
   loveIcon: require('./loveIcon.png'),

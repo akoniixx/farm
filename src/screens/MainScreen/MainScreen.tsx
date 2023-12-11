@@ -28,7 +28,7 @@ import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { useAuth } from '../../contexts/AuthContext';
-import { mixpanel, mixpanel_token } from '../../../mixpanel';
+import { mixpanel } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
@@ -45,8 +45,7 @@ import BookedDroner from './MainScreenComponent/BookedDroner';
 import DronerSuggestion from './MainScreenComponent/DronerSuggestion';
 import { useMaintenance } from '../../contexts/MaintenanceContext';
 import ModalSelectHiring from '../../components/Modal/ModalSelectHiring';
-import ModalHighlight from '../../components/ModalHighlight';
-import { getHighlight } from '../../datasource/PromotionDatasource';
+
 import { useHighlight } from '../../contexts/HighlightContext';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
@@ -69,7 +68,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [showFinding, setShowFinding] = useState(false);
   const [showModalCall, setShowModalCall] = useState(false);
   const [refresh, setRefresh] = useState<boolean>(false);
-  const [guruKaset, setGuruKaset] = useState<any>();
+  const [newsList, setNewsList] = useState<any>();
   const [refreshing, setRefreshing] = useState(false);
   const [visibleSelectHire, setVisibleSelectHire] = useState(false);
   const [dataFinding, setDataFinding] = useState({
@@ -79,6 +78,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     cropName: '',
     purposeSprayName: '',
   });
+  const [haveNewGuruContent, setHaveNewGuruContent] = useState(false);
   const [showBell, setShowBell] = useState(false);
   const [notiData, setNotiData] = useState<{
     count: Number;
@@ -90,6 +90,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     isUnread: false,
   });
   const [reload, setReload] = useState(false);
+  const [isAlreadyRead, setIsAlreadyRead] = useState(true);
   // const [statusFav, setStatusFav] = useState<any[]>([]);
 
   const [reason, setReason] = useState<any>('');
@@ -98,7 +99,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
 
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
-    const farmerId = await AsyncStorage.getItem('farmer_id');
+    const farmerId = (await AsyncStorage.getItem('farmer_id')) || null;
     if (farmerId) {
       setShowBell(true);
     }
@@ -163,10 +164,23 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   };
 
   const getInitialData = async () => {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    if (!farmer_id) {
+      return;
+    }
     const getTaskId = async () => {
       const value = await AsyncStorage.getItem('taskId');
       setTaskId(value);
     };
+    const getHaveNewGuruContent = async () => {
+      const result = await GuruKaset.getHaveNewGuruContent({
+        farmerId: farmer_id,
+      });
+      if (result) {
+        setIsAlreadyRead(result.acknowledge);
+      }
+    };
+
     try {
       setLoading(true);
       await Promise.all([
@@ -175,6 +189,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         getProfile(),
         getNotificationData(),
         getFavDroner(),
+        getHaveNewGuruContent(),
         findAllNews(),
       ]).then(() => {
         if (highlightModal.isActive) {
@@ -234,9 +249,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           .catch(err => console.log(err));
       }
     };
-    dronerSug();
-    dronerSugUsed();
     if (user) {
+      dronerSug();
+      dronerSugUsed();
       setDisableBooking(user.status === 'ACTIVE' ? false : true);
     }
 
@@ -295,7 +310,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const findAllNews = async () => {
     GuruKaset.findAllNewsPin('ACTIVE', 'FARMER', 5, 0, 'MAIN')
       .then(res => {
-        setGuruKaset(res);
+        setNewsList(res);
       })
       .catch(err => console.log(err));
   };
@@ -344,6 +359,19 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const onPressManualBooking = async () => {
     setVisibleSelectHire(false);
     navigation.navigate('DronerHiredScreen');
+  };
+  const onPressGuruKaset = async () => {
+    try {
+      await GuruKaset.updateHaveNewGuruContent({
+        farmerId: profilestate.id,
+      });
+      mixpanel.track('MainScreen_ButtonGuRu_Press', {
+        navigateTo: 'GuruKasetScreen',
+      });
+      navigation.navigate('GuruKasetScreen');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -508,13 +536,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     justifyContent: 'space-between',
                     height: normalize(137),
                   }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      mixpanel.track('MainScreen_ButtonGuRu_Press', {
-                        navigateTo: 'GuruKasetScreen',
-                      });
-                      navigation.navigate('GuruKasetScreen');
-                    }}>
+                  <TouchableOpacity onPress={onPressGuruKaset}>
                     <LinearGradient
                       colors={['#FFFFFF', '#ECFBF2']}
                       style={{
@@ -614,10 +636,10 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       </Text>
                     </TouchableOpacity>
                   </View>
-                  {guruKaset !== undefined ? (
+                  {newsList !== undefined ? (
                     <CarouselMainScreen
                       navigation={navigation}
-                      data={guruKaset}
+                      data={newsList}
                       isLoading={loading}
                     />
                   ) : null}

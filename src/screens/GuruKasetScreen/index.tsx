@@ -146,7 +146,6 @@ export default function GuruKasetScreen({ navigation }: Props) {
         limit: limit,
         groupId: currentTabHeader === 'all' ? undefined : currentTabHeader,
       });
-      console.log(JSON.stringify(result, null, 2));
       setGuruKasetData(result);
       setLoading(false);
     } catch (e) {

@@ -91,6 +91,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
       if (findFarmer) {
         setTaskPointDetail(findFarmer);
       }
+      return findFarmer;
     }
   };
   const submitReview = () => {
@@ -117,10 +118,13 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
 
   const submitReviewSuccess = async () => {
     setToggleModalSuccess(false);
-    await getReceivePoint().then(() => {
-      setTimeout(() => {
-        setShowGetPoint(true);
-      }, 500);
+    await getReceivePoint().then(res => {
+      if (res && res?.receivePoint > 0) {
+        setTimeout(() => {
+          setShowGetPoint(true);
+        }, 500);
+        return;
+      }
     });
   };
   const onCloseGetPoint = () => {

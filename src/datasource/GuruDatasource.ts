@@ -108,6 +108,7 @@ export class GuruKaset {
         query += `${key}=${payload[key as keyof GuruKasetAll]}&`;
       }
     }
+    query = query.slice(0, -1);
 
     return axios.get(BASE_URL + `/guru/guru/query-app?${query}`).then(res => {
       return res.data;
@@ -139,6 +140,32 @@ export class GuruKaset {
       .post(BASE_URL + '/guru/like-guru', {
         guruId,
         farmerId: farmerId,
+      })
+      .then(res => {
+        return res.data;
+      });
+  }
+  static async getHaveNewGuruContent({
+    farmerId,
+  }: {
+    farmerId: string;
+  }): Promise<any> {
+    return axios
+      .post(BASE_URL + '/guru/acknowledge-update/check-update', {
+        farmerId,
+      })
+      .then(res => {
+        return res.data;
+      });
+  }
+  static async updateHaveNewGuruContent({
+    farmerId,
+  }: {
+    farmerId: string;
+  }): Promise<any> {
+    return axios
+      .post(BASE_URL + '/guru/acknowledge-update/acknowledge-guru', {
+        farmerId,
       })
       .then(res => {
         return res.data;
