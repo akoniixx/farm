@@ -52,6 +52,10 @@ import {checkDecimal} from '../../function/checkDecimal';
 
 const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const taskId = route.params.taskId;
+  const isFinishTask = route.params.isFinishTask;
+  const isFromTaskDetail = route.params.isFromTaskDetail || false;
+  const isGoBack = route.params.isGoBack || false;
+
   const [data, setData] = useState<any>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [dateAppointment, setDateAppointment] = useState<any>();
@@ -114,8 +118,13 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   useEffect(() => {
     getDronerId();
     getTaskDetail();
+    if (isFinishTask) {
+      setTimeout(() => {
+        setTogleModalSuccess(true);
+      }, 1000);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [taskId]);
 
   const onFinishTask = () => {
     setTogleModalReview(false);
@@ -150,10 +159,11 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   const onFinishTaskSuccess = () => {
-    mixpanel.track('Task success');
-    setTogleModalSuccess(false);
-    setTimeout(() => getTaskDetail(), 200);
-    getTaskDetail();
+    navigation.navigate('FinishTaskScreen', {
+      taskId: taskId,
+      isFromTaskDetail: true,
+      taskAppointment: data.dateAppointment,
+    });
   };
 
   const updateTask = (status: string) => {
@@ -192,7 +202,6 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
     TaskDatasource.getTaskDetail(taskId, droner_Id)
       .then(res => {
         if (res.success) {
-          console.log('res', JSON.stringify(res.responseData.data, null, 2));
           setData(res.responseData.data);
           let date = new Date(res.responseData.data.dateAppointment);
           setDateAppointment(date);
@@ -265,13 +274,29 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   const getDronerId = async () => {
     setDronerId((await AsyncStorage.getItem('droner_id')) ?? '');
   };
+  const onPressBack = () => {
+    if (isFromTaskDetail) {
+      navigation.navigate('MainScreen', {
+        screen: 'myTask',
+      });
+    } else {
+      navigation.goBack();
+    }
+  };
 
+  const onPressFinishTask = () => {
+    navigation.navigate('FinishTaskScreen', {
+      taskId: taskId,
+      isFromTaskDetail: true,
+      taskAppointment: data.dateAppointment,
+    });
+  };
   return (
     <View style={{flex: 1}}>
       <CustomHeader
         title="รายละเอียดงาน"
         showBackBtn
-        onPressBack={() => navigation.goBack()}
+        onPressBack={onPressBack}
       />
       <NetworkLost onPress={onRefresh}>
         {data ? (
@@ -866,7 +891,7 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 }}
                 isProblem={data.isProblem || false}
                 statusDelay={data.statusDelay || null}
-                mainFunc={() => setTogleModalUpload(true)}
+                mainFunc={onPressFinishTask}
                 togleModal={() =>
                   SheetManager.show('CallingSheet', {
                     payload: {tel: data.farmer.telephoneNo},

@@ -156,6 +156,7 @@ export type StackParamList = {
   FinishTaskScreen: {
     taskId: string;
     taskAppointment: string;
+    isFromTaskDetail: boolean;
   };
 
   // DeleteSuccess: {
@@ -264,7 +265,15 @@ const MainNavigator: React.FC<any> = () => {
         />
         <Stack.Screen name="MissionScreen" component={MissionScreen} />
       </Stack.Group>
-      <Stack.Screen name="FinishTaskScreen" component={FinishTaskScreen} />
+      <Stack.Screen
+        name="FinishTaskScreen"
+        component={FinishTaskScreen}
+        initialParams={{
+          taskId: '',
+          taskAppointment: '',
+          isFromTaskDetail: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };

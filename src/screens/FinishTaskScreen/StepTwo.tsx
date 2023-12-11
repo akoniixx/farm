@@ -1,6 +1,8 @@
 import {
   Dimensions,
   Image,
+  Linking,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -14,12 +16,19 @@ import ModalUploadImage from '../../components/Modal/ModalUploadImage';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import {ImageSprayType} from '.';
 import ModalImageThumbnail from '../../components/Modal/ModalImageThumbnail';
+import moment from 'moment';
+import {lineOfficialURI} from '../../definitions/externalLink';
 
 interface Props {
   imageSpray: ImageSprayType;
   setImageSpray: React.Dispatch<React.SetStateAction<ImageSprayType>>;
+  taskAppointment: string;
 }
-export default function StepTwo({imageSpray, setImageSpray}: Props) {
+export default function StepTwo({
+  imageSpray,
+  setImageSpray,
+  taskAppointment,
+}: Props) {
   const [showModalSelectImage, setShowModalSelectImage] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const onAddImageController = async () => {
@@ -45,18 +54,40 @@ export default function StepTwo({imageSpray, setImageSpray}: Props) {
           return;
         }
         const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
-        // const isFileMoreThan3MB = fileSize > 3 * 1024 * 1024;
-        //   const newResult = {
-        //     ...result,
-        //     assets: [
-        //       {
-        //         fileSize: result.size,
-        //         type: result.mime,
-        //         fileName: result?.filename,
-        //         uri: result.path,
-        //       },
-        //     ],
-        //   };
+        const modifedDate =
+          (Platform.OS === 'ios'
+            ? result.creationDate
+            : result.modificationDate) || moment().unix();
+        const date = result?.modificationDate
+          ? moment(moment.unix(+modifedDate))
+          : moment();
+        const isDateBefore48Hours = moment()
+          .subtract(48, 'hours')
+          .isAfter(date);
+        const isDateAfter48Hours = moment(taskAppointment)
+          .add(48, 'hours')
+          .isBefore(date);
+
+        if (isDateBefore48Hours) {
+          setImageSpray({
+            isError: true,
+            errorMessage:
+              'อัพโหลดภาพที่เกินระยะเวลางาน 48 ชั่วโมง กรุณาติดต่อเจ้าหน้าที่',
+            assets: [],
+          });
+          setShowModalSelectImage(false);
+          return;
+        }
+        if (isDateAfter48Hours) {
+          setImageSpray({
+            isError: true,
+            errorMessage:
+              'อัพโหลดภาพที่เกินระยะเวลางาน 48 ชั่วโมง กรุณาติดต่อเจ้าหน้าที่',
+            assets: [],
+          });
+          setShowModalSelectImage(false);
+          return;
+        }
 
         if (isFileMoreThan20MB) {
           // setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
@@ -106,32 +137,35 @@ export default function StepTwo({imageSpray, setImageSpray}: Props) {
     });
   };
 
-  const onFinishedTakePhoto = useCallback(async (v: any) => {
-    const isFileMoreThan5MB = v.assets[0].fileSize > 5 * 1024 * 1024;
-    if (isFileMoreThan5MB) {
+  const onFinishedTakePhoto = useCallback(
+    async (v: any) => {
+      const isFileMoreThan5MB = v.assets[0].fileSize > 5 * 1024 * 1024;
+      if (isFileMoreThan5MB) {
+        setImageSpray({
+          isError: true,
+          errorMessage: 'กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 5 MB',
+          assets: [],
+        });
+        setShowModalSelectImage(false);
+        return false;
+      }
       setImageSpray({
-        isError: true,
-        errorMessage: 'กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 5 MB',
-        assets: [],
-      });
-      setShowModalSelectImage(false);
-      return false;
-    }
-    setImageSpray({
-      isError: false,
-      errorMessage: '',
-      assets: [
-        {
-          fileSize: v.assets[0].fileSize,
-          type: v.assets[0].type,
-          fileName: v.assets[0].fileName,
-          uri: v.assets[0].uri,
-        },
-      ],
-    } as any);
+        isError: false,
+        errorMessage: '',
+        assets: [
+          {
+            fileSize: v.assets[0].fileSize,
+            type: v.assets[0].type,
+            fileName: v.assets[0].fileName,
+            uri: v.assets[0].uri,
+          },
+        ],
+      } as any);
 
-    setShowModalSelectImage(false);
-  }, []);
+      setShowModalSelectImage(false);
+    },
+    [setImageSpray, setShowModalSelectImage],
+  );
   const onTakeImageController = async () => {
     const result = await ImageCropPicker.openCamera({
       mediaType: 'photo',
@@ -168,7 +202,15 @@ export default function StepTwo({imageSpray, setImageSpray}: Props) {
       });
     }
   };
-
+  const onOpenLinkLineOfficial = () => {
+    Linking.canOpenURL(lineOfficialURI).then(supported => {
+      if (supported) {
+        Linking.openURL(lineOfficialURI);
+      } else {
+        console.log("Don't know how to open URI: " + lineOfficialURI);
+      }
+    });
+  };
   return (
     <View style={styles.container}>
       <Image
@@ -202,40 +244,52 @@ export default function StepTwo({imageSpray, setImageSpray}: Props) {
           <View style={styles.leftFooter}>
             <Text style={styles.leftTitle}>อัพโหลดภาพปุ๋ย/ยา</Text>
             <Text style={styles.subTitle}>จำนวน 1 ภาพ</Text>
-
-            {/* <TouchableOpacity
-              onPress={onOpenLinkLineOfficial}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: 8,
-                borderWidth: 1,
-                borderColor: colors.green,
-                padding: 10,
-                borderRadius: 8,
-              }}>
+            {imageSpray.errorMessage && (
               <Text
                 style={{
-                  color: colors.green,
+                  color: colors.decreasePoint,
                   fontSize: 16,
                   lineHeight: 20,
-                  fontFamily: font.bold,
                 }}>
-                ติดต่อเจ้าหน้าที่ผ่าน
+                {imageSpray.errorMessage}
               </Text>
-              <Image
-                source={image.lineChat}
+            )}
+            {imageSpray.isError && (
+              <TouchableOpacity
+                onPress={onOpenLinkLineOfficial}
                 style={{
-                  width: 20,
-                  height: 20,
-                  resizeMode: 'contain',
-                  marginLeft: 4,
-                }}
-              />
-            </TouchableOpacity> */}
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginTop: 8,
+                  borderWidth: 1,
+                  borderColor: colors.green,
+                  padding: 10,
+                  borderRadius: 8,
+                }}>
+                <Text
+                  style={{
+                    color: colors.green,
+                    fontSize: 16,
+                    lineHeight: 20,
+                    fontFamily: font.bold,
+                  }}>
+                  ติดต่อเจ้าหน้าที่ผ่าน
+                </Text>
+                <Image
+                  source={image.lineChat}
+                  style={{
+                    width: 20,
+                    height: 20,
+                    resizeMode: 'contain',
+                    marginLeft: 4,
+                  }}
+                />
+              </TouchableOpacity>
+            )}
           </View>
           <View style={styles.rightFooter}>
             <AsyncButton
+              disabled={imageSpray.assets.length > 0}
               onPress={() => {
                 setShowModalSelectImage(true);
               }}
@@ -244,7 +298,7 @@ export default function StepTwo({imageSpray, setImageSpray}: Props) {
                 borderRadius: 30,
                 paddingVertical: 2,
                 paddingHorizontal: 16,
-                minHeight: 46,
+                height: 46,
                 alignSelf: 'flex-start',
                 width: 'auto',
               }}
@@ -366,7 +420,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    height: 200,
+    height: 160,
     borderRadius: 12,
     marginTop: 16,
   },

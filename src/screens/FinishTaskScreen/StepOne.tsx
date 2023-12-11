@@ -176,9 +176,33 @@ export default function StepOne({
       compressImageMaxHeight: 1000,
       compressImageQuality: 0.8,
       forceJpg: true,
-      multiple: true,
-      maxFiles: 5,
     });
+    if (result) {
+      const fileSize = result.size;
+      const isFileMoreThan20MB = fileSize > 20 * 1024 * 1024;
+      if (isFileMoreThan20MB) {
+        setShowModalSelectImage(false);
+        setImageData(prev => ({
+          isError: true,
+          assets: prev.assets,
+          errorMessage: 'อัพโหลดภาพที่มีขนาดเกิน 20 MB',
+        }));
+        return false;
+      }
+      const newAssets = {
+        fileSize: result.size,
+        type: result.mime,
+        fileName: result?.filename,
+        uri: result.path,
+        isError: false,
+      } as ImageDataType['assets'][0];
+      setShowModalSelectImage(false);
+      setImageData(prev => ({
+        assets: [...prev.assets, newAssets],
+        isError: false,
+        errorMessage: null,
+      }));
+    }
   };
 
   const onFinishedTakePhoto = useCallback(async (v: any) => {
@@ -325,13 +349,13 @@ export default function StepOne({
               onPress={() => {
                 setShowModalSelectImage(true);
               }}
+              disabled={imageData.assets?.length >= 5}
               title={'+ เลือกรูป'}
               style={{
                 borderRadius: 30,
                 paddingVertical: 2,
                 paddingHorizontal: 16,
-                minHeight: 46,
-                alignSelf: 'flex-start',
+                height: 46,
                 width: 'auto',
               }}
               styleText={{

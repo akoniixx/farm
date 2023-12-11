@@ -12,13 +12,13 @@ import Text from '../../components/Text';
 const MainTaskScreen: React.FC<any> = ({navigation}) => {
   const insets = useSafeAreaInsets();
   const [openNoti, setOpenNoti] = useState(false);
+
   return (
     <View style={[stylesCentral.container, {paddingTop: insets.top}]}>
       <RegisterNotification
         value={openNoti}
         onClick={() => {
           setOpenNoti(false);
-
           navigation.navigate('ProfileScreen', {
             navbar: false,
           });

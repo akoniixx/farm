@@ -331,6 +331,7 @@ const Tasklists: React.FC<any> = (props: Props) => {
                   params: {
                     taskId: props.taskId,
                     taskAppointment: props.dateAppointment,
+                    isFromTaskDetail: true,
                   },
                 });
               }

@@ -1,17 +1,30 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   BASE_URL,
   httpClient,
   taskFormDataClient,
 } from '../config/develop-config';
 import crashlytics from '@react-native-firebase/crashlytics';
+import moment from 'moment';
 
 interface PayloadTask {
   taskId: string;
   reviewFarmerScore: number;
   reviewFarmerComment: string;
   updateBy: string;
-  file: any;
+  file?: any;
   fileDrug: any;
+}
+interface PayloadUploadImage {
+  taskId: string;
+  updateBy: string;
+  orderImage?: number;
+  file: {
+    fileSize: number;
+    uri: string;
+    type: string;
+    fileName?: string;
+  };
 }
 export class TaskDatasource {
   static getTaskById(
@@ -125,27 +138,34 @@ export class TaskDatasource {
   static async finishTask(payload: PayloadTask) {
     const data = new FormData();
 
-    const [fileName, fileNameDrug] = [payload.file, payload.fileDrug].map(
-      el => {
-        const filePathSplit = el.assets[0].uri.split('/');
-        const fileName = el.assets[0].fileName
-          ? el.assets[0].fileName
-          : filePathSplit[filePathSplit.length - 1];
-        return fileName;
-      },
-    );
+    // const [fileName, fileNameDrug] = [payload.file, payload.fileDrug].map(
+    //   el => {
+    //     const filePathSplit = el.assets[0].uri.split('/');
+    //     const fileName = el.assets[0].fileName
+    //       ? el.assets[0].fileName
+    //       : filePathSplit[filePathSplit.length - 1];
+    //     return fileName;
+    //   },
+    // );
+    const [fileNameDrug] = [payload.fileDrug].map(el => {
+      const filePathSplit = el.assets[0].uri.split('/');
+      const fileName = el.assets[0]?.fileName
+        ? el.assets[0].fileName
+        : filePathSplit[filePathSplit.length - 1];
+      return fileName;
+    });
 
     data.append('taskId', payload.taskId);
     data.append('reviewFarmerScore', payload.reviewFarmerScore);
     data.append('reviewFarmerComment', payload.reviewFarmerComment);
-    data.append('file', {
-      uri: payload.file.assets[0].uri,
-      name: fileName,
-      type: payload.file.assets[0].type,
-    });
+    // data.append('file', {
+    //   uri: payload.file.assets[0].uri,
+    //   name: fileName,
+    //   type: payload.file.assets[0].type,
+    // });
     data.append('fileDrug', {
       uri: payload.fileDrug.assets[0].uri,
-      name: fileNameDrug,
+      name: fileNameDrug + moment().unix(),
       type: payload.fileDrug.assets[0].type,
     });
     data.append('updateBy', payload.updateBy);
@@ -212,6 +232,42 @@ export class TaskDatasource {
         crashlytics().setAttributes({
           id: id,
           isOpen: isOpen ? 'true' : 'false',
+        });
+        throw err;
+      });
+  }
+
+  static async multiUploadImage({
+    file,
+    taskId,
+    updateBy,
+  }: PayloadUploadImage): Promise<any> {
+    const data = new FormData();
+    const dronerId = await AsyncStorage.getItem('droner_id');
+    const filePathSplit = file.uri.split('/');
+    const fileName = file.fileName
+      ? file.fileName
+      : filePathSplit[filePathSplit.length - 1];
+    data.append('dronerId', dronerId);
+    data.append('taskId', taskId);
+    data.append('updateBy', updateBy);
+    data.append('file', {
+      uri: file.uri,
+      name: fileName[fileName.length - 1] + moment().unix(),
+      type: file.type,
+    });
+    return httpClient
+      .post(BASE_URL + '/tasks/task-image/image-finish-task', data)
+      .then(response => {
+        return response.data;
+      })
+      .catch(err => {
+        crashlytics().log('multiUploadImage');
+        crashlytics().recordError(err);
+        crashlytics().setAttributes({
+          dronerId: dronerId ? dronerId : '',
+          taskId: taskId,
+          updateBy: updateBy,
         });
         throw err;
       });

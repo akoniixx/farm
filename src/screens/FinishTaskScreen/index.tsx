@@ -10,6 +10,10 @@ import Text from '../../components/Text';
 import StepOne from './StepOne';
 import AsyncButton from '../../components/Button/AsyncButton';
 import StepTwo from './StepTwo';
+import ReviewStep from './ReviewStep';
+import {TaskDatasource} from '../../datasource/TaskDatasource';
+import {useAuth} from '../../contexts/AuthContext';
+import {mixpanel} from '../../../mixpanel';
 
 const staticData = [
   {
@@ -52,6 +56,9 @@ interface Props {
   route: RouteProp<StackParamList, 'FinishTaskScreen'>;
 }
 export default function FinishTaskScreen({navigation, route}: Props) {
+  const {
+    state: {user},
+  } = useAuth();
   const [imageData, setImageData] = React.useState<ImageDataType>({
     isError: false,
     assets: [],
@@ -60,7 +67,7 @@ export default function FinishTaskScreen({navigation, route}: Props) {
     isError: false,
     assets: [],
   });
-  const {taskAppointment} = route.params;
+  const {taskAppointment, taskId, isFromTaskDetail} = route.params;
   const onPressBack = () => {
     navigation.goBack();
   };
@@ -75,8 +82,13 @@ export default function FinishTaskScreen({navigation, route}: Props) {
         />
       );
     }
+
     return () => (
-      <StepTwo imageSpray={imageSpray} setImageSpray={setImageSpray} />
+      <StepTwo
+        imageSpray={imageSpray}
+        setImageSpray={setImageSpray}
+        taskAppointment={taskAppointment}
+      />
     );
   }, [
     step,
@@ -90,131 +102,186 @@ export default function FinishTaskScreen({navigation, route}: Props) {
     setStep(step + 1);
   };
   const onCancel = () => {
-    setStep(0);
-    setImageData({
-      isError: false,
-      assets: [],
-    });
+    if (step < 1) {
+      setStep(0);
+      setImageData({
+        isError: false,
+        assets: [],
+      });
+      onPressBack();
+    } else {
+      setStep(step - 1);
+    }
+  };
+  const onSubmitTask = async ({
+    rating,
+    comment,
+  }: {
+    rating: number;
+    comment: string;
+  }) => {
+    try {
+      const multiList = (imageData.assets || []).map(item => {
+        return TaskDatasource.multiUploadImage({
+          file: item,
+          taskId: taskId,
+          updateBy: user?.firstname + ' ' + user?.lastname,
+        });
+      });
+      await Promise.all(multiList);
+
+      const result = await TaskDatasource.finishTask({
+        fileDrug: imageSpray,
+        taskId: taskId,
+        updateBy: user?.firstname + ' ' + user?.lastname,
+        reviewFarmerComment: comment,
+        reviewFarmerScore: rating,
+      });
+      console.log('result :>> ', result);
+      mixpanel.track('FinishTaskScreen_ReviewStep_Submit', {
+        rating,
+        comment,
+        taskId,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <SafeAreaView style={styles.safeView}>
-      <CustomHeader
-        title={'งานเสร็จสิ้น'}
-        onPressBack={onPressBack}
-        showBackBtn
-      />
-      <Text style={styles.subTitle}>กรุณาอัพโหลดภาพงานเสร็จสิ้น 2 ภาพ</Text>
+      {step > 1 ? (
+        <ReviewStep
+          onPressBack={onCancel}
+          onSubmit={onSubmitTask}
+          navigation={navigation}
+          taskId={taskId}
+          isFromTaskDetail={isFromTaskDetail}
+        />
+      ) : (
+        <>
+          <CustomHeader
+            title={'งานเสร็จสิ้น'}
+            onPressBack={step < 1 ? onPressBack : onCancel}
+            showBackBtn
+          />
+          <Text style={styles.subTitle}>กรุณาอัพโหลดภาพงานเสร็จสิ้น 2 ภาพ</Text>
 
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'space-between',
-          }}>
-          <View>
+          <ScrollView
+            style={styles.container}
+            contentContainerStyle={{
+              flexGrow: 1,
+            }}>
             <View
               style={{
-                flexDirection: 'row',
+                flex: 1,
                 justifyContent: 'space-between',
-                alignItems: 'center',
-                marginTop: 16,
-                borderBottomColor: colors.disable,
-                borderBottomWidth: 1,
               }}>
-              {staticData.map((item, index) => {
-                const isActive = index === step;
-                return (
-                  <View
-                    key={index}
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: isActive
-                        ? colors.orangeSoft
-                        : colors.white,
-
-                      flex: 1,
-                      minHeight: 60,
-                      paddingHorizontal: 8,
-
-                      borderTopLeftRadius: 8,
-                      borderTopRightRadius: 8,
-                    }}>
-                    <View
-                      style={{
-                        backgroundColor: isActive
-                          ? colors.orange
-                          : colors.white,
-                        width: 28,
-                        height: 28,
-                        borderRadius: 14,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginRight: 8,
-                        borderWidth: isActive ? 0 : 1,
-                        borderColor: colors.grey3,
-                      }}>
-                      <Text
+              <View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginTop: 16,
+                    borderBottomColor: colors.disable,
+                    borderBottomWidth: 1,
+                  }}>
+                  {staticData.map((item, index) => {
+                    const isActive = index === step;
+                    return (
+                      <View
+                        key={index}
                         style={{
-                          lineHeight: Platform.OS === 'android' ? 24 : 24,
-                          fontFamily: font.semiBold,
-                          fontSize: 18,
-                          textAlign: 'center',
-                          textAlignVertical: 'center',
-                          color: isActive ? colors.white : colors.grey3,
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: isActive
+                            ? colors.orangeSoft
+                            : colors.white,
+
+                          flex: 1,
+                          minHeight: 60,
+                          paddingHorizontal: 8,
+
+                          borderTopLeftRadius: 8,
+                          borderTopRightRadius: 8,
                         }}>
-                        {index + 1}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flex: 1,
-                      }}>
-                      <Text
-                        style={{
-                          fontFamily: font.semiBold,
-                          fontSize: 16,
-                          color: isActive ? colors.fontBlack : colors.grey3,
-                        }}>
-                        {item.title}
-                      </Text>
-                    </View>
-                  </View>
-                );
-              })}
+                        <View
+                          style={{
+                            backgroundColor: isActive
+                              ? colors.orange
+                              : colors.white,
+                            width: 28,
+                            height: 28,
+                            borderRadius: 14,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginRight: 8,
+                            borderWidth: isActive ? 0 : 1,
+                            borderColor: colors.grey3,
+                          }}>
+                          <Text
+                            style={{
+                              lineHeight: Platform.OS === 'android' ? 24 : 24,
+                              fontFamily: font.semiBold,
+                              fontSize: 18,
+                              textAlign: 'center',
+                              textAlignVertical: 'center',
+                              color: isActive ? colors.white : colors.grey3,
+                            }}>
+                            {index + 1}
+                          </Text>
+                        </View>
+                        <View
+                          style={{
+                            flex: 1,
+                          }}>
+                          <Text
+                            style={{
+                              fontFamily: font.semiBold,
+                              fontSize: 16,
+                              color: isActive ? colors.fontBlack : colors.grey3,
+                            }}>
+                            {item.title}
+                          </Text>
+                        </View>
+                      </View>
+                    );
+                  })}
+                </View>
+                <RenderStep />
+              </View>
+              <View style={styles.rowFooter}>
+                <AsyncButton
+                  onPress={onCancel}
+                  type="secondary"
+                  title={step < 1 ? 'ยกเลิก' : 'ย้อนกลับ'}
+                  style={{
+                    flex: 1,
+                  }}
+                />
+                <View
+                  style={{
+                    width: 16,
+                  }}
+                />
+                <AsyncButton
+                  onPress={onNextStep}
+                  title="ถัดไป"
+                  style={{
+                    flex: 1,
+                  }}
+                  disabled={
+                    step === 0
+                      ? imageData?.assets?.length < 1 || imageData?.isError
+                      : imageSpray?.assets?.length < 1 || imageSpray?.isError
+                  }
+                />
+              </View>
             </View>
-            <RenderStep />
-          </View>
-          <View style={styles.rowFooter}>
-            <AsyncButton
-              onPress={onCancel}
-              type="secondary"
-              title={step === 0 ? 'ยกเลิก' : 'ย้อนกลับ'}
-              style={{
-                flex: 1,
-              }}
-            />
-            <View
-              style={{
-                width: 16,
-              }}
-            />
-            <AsyncButton
-              onPress={onNextStep}
-              title="ถัดไป"
-              style={{
-                flex: 1,
-              }}
-              disabled={imageData?.assets?.length < 1}
-            />
-          </View>
-        </View>
-      </ScrollView>
+          </ScrollView>
+        </>
+      )}
     </SafeAreaView>
   );
 }

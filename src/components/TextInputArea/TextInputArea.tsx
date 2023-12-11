@@ -14,6 +14,7 @@ import {font} from '../../assets';
 
 interface Props extends TextInputProps {
   label?: string;
+  placeholder?: string;
 }
 export default function TextInputArea({label, ...props}: Props) {
   return (
@@ -43,15 +44,15 @@ export default function TextInputArea({label, ...props}: Props) {
           style={[
             {
               minHeight: Platform.OS === 'ios' ? 4 * 20 : 4 * 20,
-
               width: '100%',
               padding: normalize(5),
-              paddingTop: normalize(10),
+              paddingTop: normalize(12),
               textAlignVertical: 'top',
               borderRadius: 8,
               borderWidth: 1,
               borderColor: colors.grayPlaceholder,
               marginVertical: normalize(10),
+              fontFamily: font.medium,
             },
             props.style,
           ]}
