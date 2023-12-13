@@ -122,8 +122,6 @@ export default function FinishTaskScreen({navigation, route}: Props) {
   }) => {
     try {
       const multiList = (imageData.assets || []).map((item, index) => {
-        // console.log('item :>> ', JSON.stringify(item, null, 2), index);
-        console.log(taskId, user?.firstname + ' ' + user?.lastname);
         return TaskDatasource.multiUploadImage({
           file: item,
           taskId: taskId,
@@ -131,7 +129,6 @@ export default function FinishTaskScreen({navigation, route}: Props) {
         });
       });
       await Promise.all(multiList);
-      //   console.log('passed');
       const result = await TaskDatasource.finishTask({
         fileDrug: imageSpray,
         taskId: taskId,
@@ -139,7 +136,6 @@ export default function FinishTaskScreen({navigation, route}: Props) {
         reviewFarmerComment: comment,
         reviewFarmerScore: rating,
       });
-      console.log('result :>> ', result);
       mixpanel.track('FinishTaskScreen_ReviewStep_Submit', {
         rating,
         comment,
