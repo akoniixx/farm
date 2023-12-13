@@ -253,10 +253,11 @@ export class TaskDatasource {
     data.append('updateBy', updateBy);
     data.append('file', {
       uri: file.uri,
-      name: fileName[fileName.length - 1] + moment().unix(),
+      name: 'Hello',
+      // name: fileName[fileName.length - 1] + moment().unix(),
       type: file.type,
     });
-    return httpClient
+    return taskFormDataClient
       .post(BASE_URL + '/tasks/task-image/image-finish-task', data)
       .then(response => {
         return response.data;
@@ -269,6 +270,7 @@ export class TaskDatasource {
           taskId: taskId,
           updateBy: updateBy,
         });
+        console.log('err :>> ', JSON.stringify(err, null, 2));
         throw err;
       });
   }

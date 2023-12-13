@@ -56,7 +56,7 @@ export default function ModalUploadImage({
     onFinishedTakePhoto({
       assets: [
         {
-          uri: 'file://' + value.path,
+          uri: value.path,
           fileName,
           type,
           fileSize: size,

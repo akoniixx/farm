@@ -68,26 +68,26 @@ export default function StepTwo({
           .add(48, 'hours')
           .isBefore(date);
 
-        if (isDateBefore48Hours) {
-          setImageSpray({
-            isError: true,
-            errorMessage:
-              'อัพโหลดภาพที่เกินระยะเวลางาน 48 ชั่วโมง กรุณาติดต่อเจ้าหน้าที่',
-            assets: [],
-          });
-          setShowModalSelectImage(false);
-          return;
-        }
-        if (isDateAfter48Hours) {
-          setImageSpray({
-            isError: true,
-            errorMessage:
-              'อัพโหลดภาพที่เกินระยะเวลางาน 48 ชั่วโมง กรุณาติดต่อเจ้าหน้าที่',
-            assets: [],
-          });
-          setShowModalSelectImage(false);
-          return;
-        }
+        // if (isDateBefore48Hours) {
+        //   setImageSpray({
+        //     isError: true,
+        //     errorMessage:
+        //       'อัพโหลดภาพที่เกินระยะเวลางาน 48 ชั่วโมง กรุณาติดต่อเจ้าหน้าที่',
+        //     assets: [],
+        //   });
+        //   setShowModalSelectImage(false);
+        //   return;
+        // }
+        // if (isDateAfter48Hours) {
+        //   setImageSpray({
+        //     isError: true,
+        //     errorMessage:
+        //       'อัพโหลดภาพที่เกินระยะเวลางาน 48 ชั่วโมง กรุณาติดต่อเจ้าหน้าที่',
+        //     assets: [],
+        //   });
+        //   setShowModalSelectImage(false);
+        //   return;
+        // }
 
         if (isFileMoreThan20MB) {
           // setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 20 MB');
@@ -299,6 +299,7 @@ export default function StepTwo({
                 paddingVertical: 2,
                 paddingHorizontal: 16,
                 height: 46,
+                minHeight: 46,
                 alignSelf: 'flex-start',
                 width: 'auto',
               }}
@@ -335,6 +336,7 @@ export default function StepTwo({
 
                     overflow: 'hidden',
                     marginBottom: 4,
+                    borderRadius: 12,
 
                     marginRight: 12,
                     shadowColor: '#000',

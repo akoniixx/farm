@@ -73,6 +73,7 @@ interface Props {
   setImageData: React.Dispatch<React.SetStateAction<ImageDataType>>;
   taskAppointment: string;
 }
+const limitPhoto = 5;
 export default function StepOne({
   imageData,
   setImageData,
@@ -90,11 +91,12 @@ export default function StepOne({
       compressImageQuality: 0.8,
       forceJpg: true,
       multiple: true,
-      maxFiles: 5,
+      maxFiles: limitPhoto - imageData.assets.length,
       minFiles: 1,
     });
     if (result && result.length > 0) {
       const hashMap: {[key: string]: boolean} = {};
+
       const array = result.map(async (item: ImageType) => {
         const fileData = await RNFS.readFile(item.path, 'base64');
         const convertSha = SHA256(fileData).toString();
@@ -120,14 +122,14 @@ export default function StepOne({
           .add(48, 'hours')
           .isBefore(date);
 
-        if (isDateBefore48Hours) {
-          errorMessages.push('เกินเวลา');
-          errorTypeList.push('isAfter');
-        }
-        if (isDateAfter48Hours) {
-          errorMessages.push('เกินเวลา');
-          errorTypeList.push('isBefore');
-        }
+        // if (isDateBefore48Hours) {
+        //   errorMessages.push('เกินเวลา');
+        //   errorTypeList.push('isAfter');
+        // }
+        // if (isDateAfter48Hours) {
+        //   errorMessages.push('เกินเวลา');
+        //   errorTypeList.push('isBefore');
+        // }
 
         if (item?.size) {
           const isFileMoreThan20MB = item.size > 20 * 1024 * 1024;
@@ -148,9 +150,15 @@ export default function StepOne({
           errorTypeList,
         };
       });
+      const currentListPhoto = [...imageData.assets, ...array];
+
       setShowModalSelectImage(false);
       setLoading(true);
-      const newAssets = await Promise.all([...array]).finally(() => {
+      if (currentListPhoto.length > 5) {
+        currentListPhoto.splice(5, currentListPhoto.length - 5);
+      }
+
+      const newAssets = await Promise.all([...currentListPhoto]).finally(() => {
         setLoading(false);
       });
       const errorTypeList = newAssets.reduce((acc: any, item: any) => {
@@ -205,16 +213,39 @@ export default function StepOne({
     }
   };
 
-  const onFinishedTakePhoto = useCallback(async (v: any) => {
-    const isFileMoreThan5MB = v.assets[0].fileSize > 5 * 1024 * 1024;
-    if (isFileMoreThan5MB) {
-      //   setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 5 MB');
+  const onFinishedTakePhoto = useCallback(
+    async (v: any) => {
+      const isFileMoreThan5MB = v.assets[0].fileSize > 5 * 1024 * 1024;
+      if (isFileMoreThan5MB) {
+        //   setError('กรุณาอับโหลดรูปที่มีขนาดใหญ่ไม่เกิน 5 MB');
+        setImageData(prev => ({
+          isError: true,
+          assets: prev.assets,
+          errorMessage: 'อัพโหลดภาพที่มีขนาดเกิน 5 MB',
+        }));
 
-      return false;
-    }
+        return false;
+      }
+      const newPhoto = {
+        errorMessage: [],
+        isError: false,
+        uri: v.assets[0].uri,
+        fileSize: v.assets[0].fileSize,
+        type: v.assets[0].type,
+        errorTypeList: [],
+        fileName: v.assets[0].fileName ? v.assets[0].fileName : moment().unix(),
+      } as ImageDataType['assets'][0];
 
-    setShowModalSelectImage(false);
-  }, []);
+      setImageData(prev => ({
+        assets: [...prev.assets, newPhoto],
+        isError: false,
+        errorMessage: null,
+      }));
+
+      setShowModalSelectImage(false);
+    },
+    [setImageData],
+  );
   const onDeletedImage = async (index: number) => {
     const hashMap: {[key: string]: boolean} = {};
 
@@ -227,8 +258,8 @@ export default function StepOne({
         const fileData = await RNFS.readFile(item.uri, 'base64');
         const convertSha = SHA256(fileData).toString();
         const isDupImage = !!hashMap[convertSha];
-        const errorMessages = [...item.errorMessage];
-        const errorTypeList = [...item.errorTypeList];
+        const errorMessages = [...item?.errorMessage];
+        const errorTypeList = [...item?.errorTypeList];
         if (isDupImage) {
           errorMessages.push('ซ้ำ');
           errorTypeList.push('isDuplicate');
@@ -246,7 +277,13 @@ export default function StepOne({
           errorTypeList,
         };
       });
-      const newFormat = await Promise.all([...array]);
+      const newFormat = await Promise.all([...array]).catch(err => {
+        console.log(err);
+        return;
+      });
+      if (!newFormat) {
+        return;
+      }
       const errorTypeList = newFormat.reduce((acc: any, item: any) => {
         if (item.errorTypeList) {
           return [...acc, ...item.errorTypeList];
@@ -357,6 +394,7 @@ export default function StepOne({
                 paddingHorizontal: 16,
                 height: 46,
                 width: 'auto',
+                minHeight: 46,
               }}
               styleText={{
                 fontSize: 16,
@@ -395,6 +433,7 @@ export default function StepOne({
                   key={index}
                   style={{
                     marginTop: 8,
+                    borderRadius: 12,
 
                     overflow: 'hidden',
                     marginBottom: 4,
@@ -539,7 +578,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   rightFooter: {
-    flex: 0.3,
+    flex: 0.4,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'flex-end',

@@ -11,6 +11,7 @@ import React from 'react';
 import colors from '../../assets/colors/colors';
 import {normalize} from '../../function/Normalize';
 import {font} from '../../assets';
+import {mixValidator} from '../../function/inputValidate';
 
 interface Props extends TextInputProps {
   label?: string;
@@ -57,6 +58,11 @@ export default function TextInputArea({label, ...props}: Props) {
             props.style,
           ]}
           {...props}
+          onChangeText={text => {
+            const newValue = mixValidator(text);
+
+            props.onChangeText && props.onChangeText(newValue);
+          }}
         />
       </ScrollView>
     </View>

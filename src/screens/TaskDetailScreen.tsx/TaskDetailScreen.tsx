@@ -122,6 +122,9 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
       setTimeout(() => {
         setTogleModalSuccess(true);
       }, 1000);
+      setTimeout(() => {
+        setTogleModalSuccess(false);
+      }, 3000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId]);
@@ -159,11 +162,12 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
   };
 
   const onFinishTaskSuccess = () => {
-    navigation.navigate('FinishTaskScreen', {
-      taskId: taskId,
-      isFromTaskDetail: true,
-      taskAppointment: data.dateAppointment,
-    });
+    // navigation.navigate('FinishTaskScreen', {
+    //   taskId: taskId,
+    //   isFromTaskDetail: true,
+    //   taskAppointment: data.dateAppointment,
+    // });
+    setTogleModalSuccess(false);
   };
 
   const updateTask = (status: string) => {
@@ -1101,18 +1105,18 @@ const TaskDetailScreen: React.FC<any> = ({navigation, route}) => {
                 color: 'black',
                 marginBottom: normalize(10),
               }}>
-              รีวิวสำเร็จ
+              ส่งงานสำเร็จ
             </Text>
             <Image
               source={image.reviewSuccess}
               style={{width: normalize(170), height: normalize(168)}}
             />
           </View>
-          <MainButton
+          {/* <MainButton
             label="ตกลง"
             color={colors.orange}
             onPress={onFinishTaskSuccess}
-          />
+          /> */}
         </View>
       </CModal>
       <CModal isVisible={showModalStartTask} backdropOpacity={0.2}>

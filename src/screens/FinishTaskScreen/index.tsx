@@ -121,7 +121,9 @@ export default function FinishTaskScreen({navigation, route}: Props) {
     comment: string;
   }) => {
     try {
-      const multiList = (imageData.assets || []).map(item => {
+      const multiList = (imageData.assets || []).map((item, index) => {
+        // console.log('item :>> ', JSON.stringify(item, null, 2), index);
+        console.log(taskId, user?.firstname + ' ' + user?.lastname);
         return TaskDatasource.multiUploadImage({
           file: item,
           taskId: taskId,
@@ -129,7 +131,7 @@ export default function FinishTaskScreen({navigation, route}: Props) {
         });
       });
       await Promise.all(multiList);
-
+      //   console.log('passed');
       const result = await TaskDatasource.finishTask({
         fileDrug: imageSpray,
         taskId: taskId,
@@ -293,6 +295,7 @@ const styles = StyleSheet.create({
   safeView: {
     flex: 1,
     backgroundColor: colors.white,
+    paddingBottom: Platform.OS === 'android' ? 16 : 0,
   },
   subTitle: {
     fontSize: 16,

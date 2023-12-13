@@ -1,17 +1,10 @@
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import Text from '../../components/Text';
 import CustomHeader from '../../components/CustomHeader';
 import {colors, font, icons} from '../../assets';
 import {normalize} from '../../function/Normalize';
 import AsyncButton from '../../components/Button/AsyncButton';
-import {mixpanel} from '../../../mixpanel';
 import TextInputArea from '../../components/TextInputArea/TextInputArea';
 import {StackParamList} from '../../navigations/MainNavigator';
 import {StackNavigationProp} from '@react-navigation/stack';
