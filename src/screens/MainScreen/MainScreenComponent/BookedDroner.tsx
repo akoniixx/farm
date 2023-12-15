@@ -44,6 +44,7 @@ export default function BookedDroner({
               fontSize: normalize(16),
               fontWeight: '300',
               color: colors.gray,
+              marginBottom: normalize(16),
             }}>
             ไม่มีนักบินโดรนที่เคยจ้าง
           </Text>
