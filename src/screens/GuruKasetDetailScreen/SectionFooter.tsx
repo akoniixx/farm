@@ -77,7 +77,13 @@ export default function SectionFooter({
             source={isLoved ? icons.loveFill : icons.loveIcon}
             style={styles.icon}
           />
-          <Text style={styles.textMedium}>
+          <Text
+            style={[
+              styles.textMedium,
+              {
+                color: isLoved ? colors.primary : colors.fontBlack,
+              },
+            ]}>
             ถูกใจได้เลย
             {loveCount > 0 && (
               <Text style={styles.textCount}>{` ${numberWithCommas(
@@ -117,11 +123,11 @@ export default function SectionFooter({
             body: {
               fontSize: 16,
               color: colors.fontBlack,
-              fontFamily: font.SarabunLight,
+              fontFamily: font.SarabunRegular,
             },
           }}
           systemFonts={[
-            font.SarabunLight,
+            font.SarabunRegular,
             font.SarabunMedium,
             font.SarabunSemiBold,
             font.SarabunBold,

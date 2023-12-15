@@ -144,7 +144,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
                       color: colors.fontBlack,
 
                       fontSize: normalize(20),
-                      fontFamily: font.SarabunLight,
+                      fontFamily: font.SarabunRegular,
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}
@@ -185,7 +185,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
                     style={{
                       color: colors.fontBlack,
                       fontSize: normalize(20),
-                      fontFamily: font.SarabunLight,
+                      fontFamily: font.SarabunRegular,
 
                       justifyContent: 'center',
                       alignItems: 'center',
@@ -250,7 +250,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
                   width: '100%',
                   color: colors.fontBlack,
                   fontSize: normalize(20),
-                  fontFamily: font.SarabunLight,
+                  fontFamily: font.SarabunRegular,
                   alignItems: 'center',
                   flexDirection: 'row',
                   borderColor: colors.disable,
@@ -325,7 +325,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
               style={{
                 textAlign: 'center',
                 color: colors.greenLight,
-                fontFamily: font.SarabunLight,
+                fontFamily: font.SarabunRegular,
                 fontSize: normalize(18),
                 marginTop: normalize(4),
 
@@ -411,7 +411,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
               style={{
                 textAlign: 'center',
                 color: colors.greenLight,
-                fontFamily: font.SarabunLight,
+                fontFamily: font.SarabunRegular,
                 fontSize: normalize(18),
                 marginTop: normalize(4),
                 lineHeight: normalize(30),
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   input: {
-    fontFamily: font.SarabunLight,
+    fontFamily: font.SarabunRegular,
     height: normalize(56),
     paddingHorizontal: 16,
     borderColor: colors.grey20,

@@ -90,8 +90,15 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
             height: normalize(50),
             paddingVertical: 4,
             paddingHorizontal: 12,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 1,
+            },
+            elevation: 1,
+            shadowOpacity: 0.12,
           }}
-          source={background === null ? image.bg_droner : { uri: background }}>
+          source={image.dronerBgDefault}>
           <View key={index}>
             <Image
               source={profile === '' ? image.empty_droner : { uri: profile }}

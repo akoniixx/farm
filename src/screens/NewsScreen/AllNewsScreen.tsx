@@ -151,7 +151,7 @@ const AllNewsScreen: React.FC<any> = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <CustomHeader
-        title="กูรูเกษตร"
+        title="ข่าวสาร"
         showBackBtn
         onPressBack={() => {
           mixpanel.track('Tab back from All Guru Screen');

@@ -247,7 +247,7 @@ export default ConfirmBooking;
 const styles = StyleSheet.create({
   textConfirm: {
     fontSize: normalize(18),
-    fontFamily: font.SarabunLight,
+    fontFamily: font.SarabunRegular,
     paddingLeft: 5,
     alignContent: 'center',
     lineHeight: normalize(30),

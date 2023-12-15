@@ -9,6 +9,7 @@ import {
   Platform,
   PermissionsAndroid,
   Modal,
+  Linking,
 } from 'react-native';
 import { colors, font } from '../../assets';
 import { stylesCentral } from '../../styles/StylesCentral';
@@ -131,6 +132,9 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
         .catch(err => console.log(err));
     }
   };
+  const onPressSetting = async () => {
+    await Linking.openSettings();
+  };
 
   useEffect(() => {
     getProfile();
@@ -209,12 +213,12 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                     source={image.bgHead}
                     style={{
                       width: (width * 380) / 375,
-                      height: (height * 250) / 812,
+                      height: (height * 280) / 812,
                       position: 'absolute',
                     }}
                   />
                   <SafeAreaView edges={['top']} style={styles.headCard}>
-                    <View style={styles.headCard}>
+                    <View>
                       <View>
                         <Text
                           style={{
@@ -246,7 +250,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                   <View
                     style={{
                       flexDirection: 'row',
-                      paddingTop: 90,
+                      paddingTop: 40,
                       paddingBottom: 10,
                       alignSelf: 'center',
                     }}>
@@ -290,7 +294,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                           borderColor: colors.greenLight,
                         }}>
                         <Image
-                          source={icons.plots}
+                          source={image.plotsNotLogin}
                           style={{
                             height: normalize(76),
                             width: normalize(105),
@@ -316,8 +320,9 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
+                        alignItems: 'center',
                         marginTop: 0,
-                        paddingVertical: 10,
+                        paddingTop: 4,
                       }}>
                       <Text
                         style={{
@@ -326,7 +331,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                           color: colors.fontGrey,
                           paddingHorizontal: 20,
                         }}>
-                        กูรูเกษตร
+                        ข่าวสาร
                       </Text>
                       <TouchableOpacity
                         onPress={() => {
@@ -337,7 +342,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                         }}>
                         <Text
                           style={{
-                            fontFamily: font.SarabunLight,
+                            fontFamily: font.SarabunRegular,
                             fontSize: normalize(16),
                             color: colors.fontGrey,
                             height: 30,
@@ -355,59 +360,59 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                     />
                   </View>
 
-                  {dronerNearMe.data.length > 0 && (
-                    <View style={{ paddingHorizontal: 16 }}>
-                      <Text
-                        style={{
-                          fontFamily: font.AnuphanSemiBold,
-                          fontSize: 20,
-                        }}>
-                        นักบินโดรนใกล้คุณ
-                      </Text>
+                  <View style={{ paddingHorizontal: 16 }}>
+                    <Text
+                      style={{
+                        fontFamily: font.AnuphanSemiBold,
+                        fontSize: 20,
+                      }}>
+                      นักบินโดรนใกล้คุณ
+                    </Text>
+                    {dronerNearMe.data.length > 0 && (
                       <DronerNearMe
                         data={dronerNearMe.data}
                         isLoading={false}
                         navigation={navigation}
                       />
+                    )}
+                  </View>
+                  {permission !== 'granted' && (
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        marginTop: 32,
+                      }}>
+                      <Image
+                        source={image.empty_droner}
+                        style={{
+                          width: normalize(126),
+                          height: normalize(120),
+                          marginBottom: normalize(32),
+                        }}
+                      />
+                      <Text style={[styles.textEmpty]}>
+                        เพื่อให้สามารถจ้างนักบินโดรนใกล้คุณได้
+                      </Text>
+                      <Text style={[styles.textEmpty]}>
+                        กรุณาเปิดการเข้าถึงตำแหน่งในโทรศัพท์
+                      </Text>
+                      <TouchableOpacity
+                        style={{ margin: '3%' }}
+                        onPress={onPressSetting}>
+                        <Text
+                          style={[
+                            styles.textEmpty,
+                            {
+                              color: colors.greenLight,
+                              textDecorationLine: 'underline',
+                              lineHeight: 28,
+                            },
+                          ]}>
+                          กดเพื่อตั้งค่า
+                        </Text>
+                      </TouchableOpacity>
                     </View>
                   )}
-
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      marginTop: 32,
-                    }}>
-                    <Image
-                      source={image.empty_droner}
-                      style={{
-                        width: normalize(126),
-                        height: normalize(120),
-                        marginBottom: normalize(32),
-                      }}
-                    />
-                    <Text style={[styles.textEmpty]}>
-                      เพื่อให้สามารถจ้างงานนักบินโดรนได้
-                    </Text>
-                    <Text style={[styles.textEmpty]}>
-                      กรุณาลงทะเบียน/เข้าสู่ระบบ
-                    </Text>
-                    <TouchableOpacity
-                      style={{ margin: '3%' }}
-                      onPress={() => {
-                        navigation.navigate('BeforeLoginScreen');
-                      }}>
-                      <Text
-                        style={[
-                          styles.textEmpty,
-                          {
-                            color: colors.greenLight,
-                            textDecorationLine: 'underline',
-                          },
-                        ]}>
-                        คลิกเลย!
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
                 </View>
               </View>
             </View>
@@ -504,7 +509,7 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
   },
   textEmpty: {
-    fontFamily: font.SarabunLight,
+    fontFamily: font.SarabunRegular,
     fontSize: normalize(18),
     color: colors.gray,
   },
@@ -523,7 +528,7 @@ const styles = StyleSheet.create({
   headCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: normalize(23),
+    paddingHorizontal: 16,
     paddingTop: normalize(5),
   },
   activeContainer: {
@@ -548,6 +553,6 @@ const styles = StyleSheet.create({
   font1: {
     fontFamily: font.AnuphanBold,
     fontSize: normalize(18),
-    color: colors.greenDark,
+    color: colors.primary,
   },
 });

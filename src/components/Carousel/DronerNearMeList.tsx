@@ -72,8 +72,16 @@ const DronerNearMeList: React.FC<dronerUsedData> = ({
             height: normalize(50),
             paddingVertical: 4,
             paddingHorizontal: 12,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.15,
+            shadowRadius: 3.84,
+            elevation: 1,
           }}
-          source={background === null ? image.bg_droner : { uri: background }}>
+          source={image.dronerBgDefault}>
           <View key={index}>
             <Image
               source={profile === '' ? image.empty_plot : { uri: profile }}

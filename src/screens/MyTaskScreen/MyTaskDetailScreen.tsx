@@ -794,7 +794,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
                         width: '100%',
                         color: colors.fontBlack,
                         fontSize: normalize(20),
-                        fontFamily: font.SarabunLight,
+                        fontFamily: font.SarabunRegular,
                         alignItems: 'center',
                         flexDirection: 'row',
                         borderColor: '#2EC46D',
@@ -1007,7 +1007,7 @@ const styles = StyleSheet.create({
     width: '70%',
   },
   plot: {
-    fontFamily: fonts.SarabunLight,
+    fontFamily: fonts.SarabunRegular,
     fontSize: normalize(18),
     color: colors.fontBlack,
   },
@@ -1016,7 +1016,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(19),
   },
   unitPrice: {
-    fontFamily: fonts.SarabunLight,
+    fontFamily: fonts.SarabunRegular,
     fontSize: normalize(20),
     color: '#2EC46D',
   },

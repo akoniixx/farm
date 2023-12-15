@@ -14,6 +14,8 @@ import { MainStackParamList } from '../../navigations/MainNavigator';
 import { numberWithCommas } from '../../functions/utility';
 import Text from '../../components/Text/Text';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import FastImage from 'react-native-fast-image';
+import { momentExtend } from '../../utils/moment-buddha-year';
 
 interface Props {
   navigation: StackNavigationProp<MainStackParamList, 'GuruKasetDetailScreen'>;
@@ -56,6 +58,8 @@ const GuruKasetDetailScreen: React.FC<Props> = ({ navigation, route }) => {
   const commentCount = guruDetail.commentCount;
   const readCount = guruDetail.view;
   const dateCreate = moment(guruDetail.createdAt);
+  const isMoreThanOneDay = moment().diff(dateCreate, 'days') > 0;
+  const dateFormat = momentExtend.toBuddhistYear(dateCreate, 'DD MMMM YYYY');
 
   useEffect(() => {
     const getGuRuDetail = async () => {
@@ -79,7 +83,9 @@ const GuruKasetDetailScreen: React.FC<Props> = ({ navigation, route }) => {
   }, [guruId, isFocused]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: colors.white }}
+      edges={['top', 'left', 'right']}>
       <CustomHeader
         styleWrapper={{
           height: 50,
@@ -96,8 +102,7 @@ const GuruKasetDetailScreen: React.FC<Props> = ({ navigation, route }) => {
           right: 1,
         }}>
         <View style={styles.containerHeader}>
-          <ProgressiveImage
-            borderRadius={0}
+          <FastImage
             source={{
               uri: guruDetail.image,
             }}
@@ -145,7 +150,9 @@ const GuruKasetDetailScreen: React.FC<Props> = ({ navigation, route }) => {
               {guruDetail.name}
             </Text>
             <View style={[styles.row, { marginTop: 8 }]}>
-              <Text style={styles.textNormal}>{dateCreate.fromNow()}</Text>
+              <Text style={styles.textNormal}>
+                {isMoreThanOneDay ? dateFormat : dateCreate.fromNow()}
+              </Text>
               <View style={[styles.row, { marginLeft: 16 }]}>
                 <Text style={styles.textNormal}>
                   {`อ่านแล้ว ${numberWithCommas(
@@ -181,6 +188,7 @@ const styles = StyleSheet.create({
   textNormal: {
     fontSize: 14,
     color: colors.grey40,
+    fontFamily: font.SarabunRegular,
   },
   row: {
     flexDirection: 'row',
@@ -193,8 +201,8 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   imageHeader: {
-    width: '100%',
-    height: '100%',
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').width,
   },
   textTitle: {
     fontSize: 20,

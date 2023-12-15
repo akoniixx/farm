@@ -386,15 +386,14 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         refreshControl={
           <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
         }>
-        <View
-          style={[stylesCentral.container, { paddingBottom: normalize(30) }]}>
+        <View style={[stylesCentral.container, { paddingBottom: 10 }]}>
           <View style={{ backgroundColor: colors.white }}>
             <View style={{ height: 'auto' }}>
               <Image
                 source={image.bgHead}
                 style={{
                   width: (width * 380) / 375,
-                  height: (height * 350) / 812,
+                  height: (height * 280) / 812,
                   position: 'absolute',
                 }}
               />
@@ -491,7 +490,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               <View
                 style={{
                   flexDirection: 'row',
-                  paddingTop: 130,
+                  paddingTop: '10%',
                   paddingHorizontal: 16,
                   paddingBottom:
                     profilestate.status === 'REJECTED' ||
@@ -604,8 +603,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
-                      marginTop: 16,
-                      paddingVertical: 10,
+                      alignItems: 'center',
+                      marginTop: 4,
+                      paddingTop: 10,
                     }}>
                     <Text
                       style={{
@@ -625,7 +625,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       }}>
                       <Text
                         style={{
-                          fontFamily: font.SarabunLight,
+                          fontFamily: font.SarabunRegular,
                           fontSize: normalize(16),
                           color: colors.fontGrey,
                           height: 30,
@@ -644,6 +644,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     />
                   ) : null}
                 </View>
+
                 <View
                   style={{
                     flexDirection: 'row',
@@ -665,7 +666,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     }}>
                     <Text
                       style={{
-                        fontFamily: font.SarabunLight,
+                        fontFamily: font.SarabunRegular,
                         fontSize: normalize(16),
                         color: colors.fontGrey,
                         height: 30,
@@ -687,7 +688,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    marginTop: 16,
                     paddingVertical: 10,
                   }}>
                   <Text
@@ -889,13 +889,13 @@ export default MainScreen;
 
 const styles = StyleSheet.create({
   textAlert: {
-    fontFamily: font.SarabunLight,
+    fontFamily: font.SarabunRegular,
     fontSize: normalize(16),
     color: colors.fontBlack,
     lineHeight: 26,
   },
   textEmpty: {
-    fontFamily: font.SarabunLight,
+    fontFamily: font.SarabunRegular,
     fontSize: normalize(18),
     color: colors.gray,
   },
@@ -914,8 +914,8 @@ const styles = StyleSheet.create({
   headCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: normalize(23),
-    top: '5%',
+    alignItems: 'flex-start',
+    paddingHorizontal: 16,
   },
   activeContainer: {
     flexDirection: 'row',

@@ -11,7 +11,7 @@ export const CardGuruKaset: React.FC<guruData> = ({ background }) => {
   return (
     <View
       style={{
-        padding: 10,
+        paddingHorizontal: 10,
       }}>
       <View style={styles.card}>
         <ProgressiveImage

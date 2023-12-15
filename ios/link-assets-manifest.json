@@ -18,6 +18,10 @@
       "sha1": "4c5c4db31dd91394054b85252003ec6fa9ba043d"
     },
     {
+      "path": "src/assets/fonts/Anuphan-Regular.ttf",
+      "sha1": "fa46ecec139222545b1207e293c9d43d63c4c851"
+    },
+    {
       "path": "src/assets/fonts/Anuphan-SemiBold.ttf",
       "sha1": "e8f41ac4870ed1e748d17f0672416e40c25efa65"
     },
@@ -84,6 +88,10 @@
     {
       "path": "src/assets/fonts/Sarabun-Medium.ttf",
       "sha1": "39c5f343e03df2db76283f8b07125e15ffff0b75"
+    },
+    {
+      "path": "src/assets/fonts/Sarabun-Regular.ttf",
+      "sha1": "a9b65e36ee8224b459b9dcdb8bf55ef41b4ab867"
     },
     {
       "path": "src/assets/fonts/Sarabun-SemiBold.ttf",

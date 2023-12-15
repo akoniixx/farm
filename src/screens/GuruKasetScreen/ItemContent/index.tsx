@@ -9,6 +9,7 @@ import { GuruData } from '..';
 import Text from '../../../components/Text/Text';
 import BadgeGuru from '../../../components/BadgeGuru';
 import { numberWithCommas } from '../../../functions/utility';
+import { momentExtend } from '../../../utils/moment-buddha-year';
 
 interface Props {
   navigation: any;
@@ -19,9 +20,10 @@ const Desc = ({ text }: { text: string }) => {
     return {
       body: {
         color: colors.fontBlack,
-        fontSize: 16,
-        fontFamily: font.SarabunLight,
+        fontSize: 18,
+        fontFamily: font.SarabunRegular,
         width: Dimensions.get('window').width - 100,
+        lineHeight: 26,
       },
     };
   }, []);
@@ -36,7 +38,7 @@ const Desc = ({ text }: { text: string }) => {
       contentWidth={Dimensions.get('window').width - 64}
       tagsStyles={htmlCss}
       systemFonts={[
-        font.SarabunLight,
+        font.SarabunRegular,
         font.SarabunMedium,
         font.SarabunSemiBold,
         font.SarabunBold,
@@ -50,6 +52,8 @@ export default function ItemContent({ navigation, item }: Props) {
   // const commentCount =  item.commentCount;
   const readCount = item.view;
   const dateCreate = moment(item.createdAt);
+  const isMoreThanOneDay = moment().diff(dateCreate, 'days') > 0;
+  const dateFormat = momentExtend.toBuddhistYear(dateCreate, 'DD MMMM YYYY');
 
   const onNavigateToDetail = () => {
     navigation.navigate('GuruKasetDetailScreen', {
@@ -97,7 +101,9 @@ export default function ItemContent({ navigation, item }: Props) {
             </View> */}
           </View>
           <View style={styles.row}>
-            <Text style={styles.textNormal}>{dateCreate.fromNow()}</Text>
+            <Text style={styles.textNormal}>
+              {isMoreThanOneDay ? dateFormat : dateCreate.fromNow()}
+            </Text>
             <Text style={styles.textNormal}>・</Text>
             <View style={[styles.row, { marginRight: 0 }]}>
               <Image source={icons.showReadIcon} style={styles.icon} />
@@ -115,19 +121,20 @@ export default function ItemContent({ navigation, item }: Props) {
 
 const styles = StyleSheet.create({
   image: {
-    width: '100%',
+    width: Dimensions.get('window').width - 32,
+    height: Dimensions.get('window').width - 32,
     borderRadius: 10,
-    height: 350,
   },
   container: {
     marginBottom: 16,
   },
   containerFooter: {
     width: '100%',
-    paddingVertical: 8,
+    paddingTop: 10,
+    paddingBottom: 0,
   },
   textTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontFamily: font.AnuphanSemiBold,
     paddingRight: 32,
   },
@@ -157,8 +164,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   textNormal: {
-    fontSize: 12,
-    color: colors.grey20,
+    fontSize: 13,
+    color: colors.grey40,
+    fontFamily: font.SarabunRegular,
   },
   separator: {
     width: '100%',

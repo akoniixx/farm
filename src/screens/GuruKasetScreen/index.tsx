@@ -16,7 +16,6 @@ import {
 import React, { useEffect, useRef } from 'react';
 // import Video, {OnProgressData} from 'react-native-video';
 import { colors, font, icons } from '../../assets';
-import GuruTapNavigator from './GuruTapNavigator';
 import ItemContent from './ItemContent';
 import { GuruKaset } from '../../datasource/GuruDatasource';
 import { useIsFocused } from '@react-navigation/native';
@@ -77,7 +76,12 @@ interface GuruKasetData {
 }
 const initialPage = 1;
 export default function GuruKasetScreen({ navigation }: Props) {
-  const [listsHeader, setListsHeader] = React.useState([]);
+  const [listsHeader, setListsHeader] = React.useState<
+    {
+      title: string;
+      value: string;
+    }[]
+  >([]);
   const isFocused = useIsFocused();
   const [loading, setLoading] = React.useState(false);
   const [page, setPage] = React.useState(initialPage);
@@ -129,8 +133,12 @@ export default function GuruKasetScreen({ navigation }: Props) {
             value: item._id,
           };
         });
+        const all = {
+          title: 'ทั้งหมด',
+          value: 'all',
+        };
 
-        setListsHeader(formatGroupGuru);
+        setListsHeader([all, ...formatGroupGuru]);
       } catch (e) {
         console.log(e);
       }
@@ -382,10 +390,9 @@ const HeaderFlatList = ({
         horizontal
         showsHorizontalScrollIndicator={false}
         style={{
-          paddingVertical: 8,
+          paddingVertical: 10,
           paddingHorizontal: 16,
           height: 'auto',
-          marginBottom: 16,
         }}>
         {lists.map((item, index) => {
           const isActive = value === item.value;
