@@ -28,7 +28,7 @@ import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import { FCMtokenDatasource } from '../../datasource/FCMDatasource';
 import { useAuth } from '../../contexts/AuthContext';
-import { mixpanel, mixpanel_token } from '../../../mixpanel';
+import { mixpanel } from '../../../mixpanel';
 import { callcenterNumber } from '../../definitions/callCenterNumber';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
@@ -45,8 +45,7 @@ import BookedDroner from './MainScreenComponent/BookedDroner';
 import DronerSuggestion from './MainScreenComponent/DronerSuggestion';
 import { useMaintenance } from '../../contexts/MaintenanceContext';
 import ModalSelectHiring from '../../components/Modal/ModalSelectHiring';
-import ModalHighlight from '../../components/ModalHighlight';
-import { getHighlight } from '../../datasource/PromotionDatasource';
+
 import { useHighlight } from '../../contexts/HighlightContext';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
@@ -69,7 +68,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [showFinding, setShowFinding] = useState(false);
   const [showModalCall, setShowModalCall] = useState(false);
   const [refresh, setRefresh] = useState<boolean>(false);
-  const [guruKaset, setGuruKaset] = useState<any>();
+  const [newsList, setNewsList] = useState<any>();
   const [refreshing, setRefreshing] = useState(false);
   const [visibleSelectHire, setVisibleSelectHire] = useState(false);
   const [dataFinding, setDataFinding] = useState({
@@ -79,6 +78,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     cropName: '',
     purposeSprayName: '',
   });
+  const [haveNewGuruContent, setHaveNewGuruContent] = useState(false);
   const [showBell, setShowBell] = useState(false);
   const [notiData, setNotiData] = useState<{
     count: Number;
@@ -90,6 +90,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     isUnread: false,
   });
   const [reload, setReload] = useState(false);
+  const [isAlreadyRead, setIsAlreadyRead] = useState(true);
   // const [statusFav, setStatusFav] = useState<any[]>([]);
 
   const [reason, setReason] = useState<any>('');
@@ -98,7 +99,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
 
   const getData = async () => {
     const value = await AsyncStorage.getItem('token');
-    const farmerId = await AsyncStorage.getItem('farmer_id');
+    const farmerId = (await AsyncStorage.getItem('farmer_id')) || null;
     if (farmerId) {
       setShowBell(true);
     }
@@ -163,10 +164,23 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   };
 
   const getInitialData = async () => {
+    const farmer_id = await AsyncStorage.getItem('farmer_id');
+    if (!farmer_id) {
+      return;
+    }
     const getTaskId = async () => {
       const value = await AsyncStorage.getItem('taskId');
       setTaskId(value);
     };
+    const getHaveNewGuruContent = async () => {
+      const result = await GuruKaset.getHaveNewGuruContent({
+        farmerId: farmer_id,
+      });
+      if (result) {
+        setIsAlreadyRead(result.acknowledge);
+      }
+    };
+
     try {
       setLoading(true);
       await Promise.all([
@@ -175,6 +189,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         getProfile(),
         getNotificationData(),
         getFavDroner(),
+        getHaveNewGuruContent(),
         findAllNews(),
       ]).then(() => {
         if (highlightModal.isActive) {
@@ -234,9 +249,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
           .catch(err => console.log(err));
       }
     };
-    dronerSug();
-    dronerSugUsed();
     if (user) {
+      dronerSug();
+      dronerSugUsed();
       setDisableBooking(user.status === 'ACTIVE' ? false : true);
     }
 
@@ -295,7 +310,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const findAllNews = async () => {
     GuruKaset.findAllNewsPin('ACTIVE', 'FARMER', 5, 0, 'MAIN')
       .then(res => {
-        setGuruKaset(res);
+        setNewsList(res);
       })
       .catch(err => console.log(err));
   };
@@ -345,6 +360,19 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     setVisibleSelectHire(false);
     navigation.navigate('DronerHiredScreen');
   };
+  const onPressGuruKaset = async () => {
+    try {
+      await GuruKaset.updateHaveNewGuruContent({
+        farmerId: profilestate.id,
+      });
+      mixpanel.track('MainScreen_ButtonGuRu_Press', {
+        navigateTo: 'GuruKasetScreen',
+      });
+      navigation.navigate('GuruKasetScreen');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <SafeAreaView
@@ -358,15 +386,14 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
         refreshControl={
           <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
         }>
-        <View
-          style={[stylesCentral.container, { paddingBottom: normalize(30) }]}>
+        <View style={[stylesCentral.container, { paddingBottom: 10 }]}>
           <View style={{ backgroundColor: colors.white }}>
             <View style={{ height: 'auto' }}>
               <Image
                 source={image.bgHead}
                 style={{
                   width: (width * 380) / 375,
-                  height: (height * 350) / 812,
+                  height: (height * 240) / 812,
                   position: 'absolute',
                 }}
               />
@@ -463,7 +490,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               <View
                 style={{
                   flexDirection: 'row',
-                  paddingTop: 130,
+                  paddingTop: '12%',
                   paddingHorizontal: 16,
                   paddingBottom:
                     profilestate.status === 'REJECTED' ||
@@ -484,47 +511,79 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   }}>
                   <LinearGradient
                     colors={['#61E097', '#3B996E']}
+                    start={{ x: 0.25, y: 0.5 }}
                     style={{
-                      paddingVertical: normalize(10),
-                      width: normalize(166),
+                      paddingVertical: 10,
+                      width: Dimensions.get('window').width / 2 - 24,
                       height: normalize(137),
                       borderRadius: 24,
                       alignItems: 'center',
+                      justifyContent: 'space-between',
                       borderWidth: 1,
                       borderColor: colors.greenLight,
                     }}>
                     <Image
                       source={icons.drone}
-                      style={{ height: normalize(76), width: normalize(105) }}
+                      style={{ height: normalize(86), width: '100%' }}
+                      resizeMode="contain"
                     />
                     <Text style={styles.font}>จ้างโดรนเกษตร</Text>
                   </LinearGradient>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    mixpanel.track('MainScreen_ButtonMyPlot_Press', {
-                      navigateTo: 'AllPlotScreen',
-                    });
-                    navigation.navigate('AllPlotScreen');
+                <View
+                  style={{
+                    justifyContent: 'space-between',
+                    height: normalize(137),
                   }}>
-                  <LinearGradient
-                    colors={['#FFFFFF', '#ECFBF2']}
-                    style={{
-                      paddingVertical: normalize(10),
-                      width: normalize(166),
-                      height: normalize(137),
-                      borderRadius: 24,
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      borderColor: colors.greenLight,
+                  <TouchableOpacity onPress={onPressGuruKaset}>
+                    <LinearGradient
+                      colors={['#FFFFFF', '#ECFBF2']}
+                      style={{
+                        paddingVertical: normalize(10),
+                        width: Dimensions.get('window').width / 2 - 24,
+                        height: normalize(63),
+                        borderRadius: 12,
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: colors.greenLight,
+                        flexDirection: 'row',
+                        paddingHorizontal: 16,
+                      }}>
+                      <Image
+                        source={icons.guruKasetIcon}
+                        style={{ height: normalize(44), width: normalize(44) }}
+                      />
+                      <Text style={styles.font1}>กูรูเกษตร</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      mixpanel.track('MainScreen_ButtonMyPlot_Press', {
+                        navigateTo: 'AllPlotScreen',
+                      });
+                      navigation.navigate('AllPlotScreen');
                     }}>
-                    <Image
-                      source={icons.plots}
-                      style={{ height: normalize(76), width: normalize(105) }}
-                    />
-                    <Text style={styles.font1}>แปลงของคุณ</Text>
-                  </LinearGradient>
-                </TouchableOpacity>
+                    <LinearGradient
+                      colors={['#FFFFFF', '#ECFBF2']}
+                      style={{
+                        paddingVertical: normalize(10),
+                        width: Dimensions.get('window').width / 2 - 24,
+                        height: normalize(63),
+                        borderRadius: 12,
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: colors.greenLight,
+                        flexDirection: 'row',
+                        paddingHorizontal: 16,
+                      }}>
+                      <Image
+                        source={icons.plots}
+                        style={{ height: normalize(44), width: normalize(44) }}
+                      />
+                      <Text style={styles.font1}>แปลง</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </View>
               </View>
               <View>
                 <MaintenanceHeader
@@ -544,8 +603,9 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
-                      marginTop: 16,
-                      paddingVertical: 10,
+                      alignItems: 'center',
+                      marginTop: 4,
+                      paddingTop: 10,
                     }}>
                     <Text
                       style={{
@@ -554,18 +614,18 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                         color: colors.fontGrey,
                         paddingHorizontal: 20,
                       }}>
-                      กูรูเกษตร
+                      ข่าวสาร
                     </Text>
                     <TouchableOpacity
                       onPress={() => {
                         mixpanel.track('MainScreen_ButtonAllGuru_Press', {
-                          navigateTo: 'AllGuruScreen',
+                          navigateTo: 'AllNewsScreen',
                         });
-                        navigation.navigate('AllGuruScreen');
+                        navigation.navigate('AllNewsScreen');
                       }}>
                       <Text
                         style={{
-                          fontFamily: font.SarabunLight,
+                          fontFamily: font.SarabunRegular,
                           fontSize: normalize(16),
                           color: colors.fontGrey,
                           height: 30,
@@ -576,14 +636,15 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       </Text>
                     </TouchableOpacity>
                   </View>
-                  {guruKaset !== undefined ? (
+                  {newsList !== undefined ? (
                     <CarouselMainScreen
                       navigation={navigation}
-                      data={guruKaset}
+                      data={newsList}
                       isLoading={loading}
                     />
                   ) : null}
                 </View>
+
                 <View
                   style={{
                     flexDirection: 'row',
@@ -605,7 +666,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                     }}>
                     <Text
                       style={{
-                        fontFamily: font.SarabunLight,
+                        fontFamily: font.SarabunRegular,
                         fontSize: normalize(16),
                         color: colors.fontGrey,
                         height: 30,
@@ -627,7 +688,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    marginTop: 16,
                     paddingVertical: 10,
                   }}>
                   <Text
@@ -829,13 +889,13 @@ export default MainScreen;
 
 const styles = StyleSheet.create({
   textAlert: {
-    fontFamily: font.SarabunLight,
+    fontFamily: font.SarabunRegular,
     fontSize: normalize(16),
     color: colors.fontBlack,
     lineHeight: 26,
   },
   textEmpty: {
-    fontFamily: font.SarabunLight,
+    fontFamily: font.SarabunRegular,
     fontSize: normalize(18),
     color: colors.gray,
   },
@@ -854,8 +914,9 @@ const styles = StyleSheet.create({
   headCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: normalize(23),
-    top: '5%',
+    alignItems: 'flex-start',
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
   activeContainer: {
     flexDirection: 'row',
@@ -873,13 +934,14 @@ const styles = StyleSheet.create({
   },
   font: {
     fontFamily: font.AnuphanBold,
-    fontSize: normalize(18),
+    fontSize: normalize(20),
     color: colors.white,
   },
   font1: {
     fontFamily: font.AnuphanBold,
-    fontSize: normalize(18),
-    color: colors.greenDark,
+    fontSize: normalize(20),
+    color: colors.primary70,
+    marginLeft: 10,
   },
   footer: {
     width: '100%',

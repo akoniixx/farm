@@ -92,13 +92,18 @@ export default function CarouselMainScreen({
       <View
         style={{
           alignItems: 'center',
-          top: -15,
-          marginVertical: -10,
         }}>
         <Pagination
           dotsLength={data.data.length}
           activeDotIndex={index}
           carouselRef={isCarousel}
+          containerStyle={{
+            paddingVertical: 0,
+            paddingHorizontal: 0,
+            marginTop: 4,
+            marginBottom: 12,
+            marginHorizontal: 0,
+          }}
           dotStyle={{
             width: 8,
             height: 8,
@@ -108,7 +113,7 @@ export default function CarouselMainScreen({
           inactiveDotOpacity={0.4}
           inactiveDotScale={0.9}
           tappableDots={true}
-          dotContainerStyle={{ marginHorizontal: 4 }}
+          dotContainerStyle={{ marginHorizontal: 5 }}
         />
       </View>
     </View>

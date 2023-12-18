@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   ScrollView,
@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { colors, font } from '../../assets';
-import { _monthName, build12Year } from '../../definitions/constants';
+import { _monthName } from '../../definitions/constants';
 import { normalize } from '../../functions/Normalize';
 import Text from '../Text/Text';
 

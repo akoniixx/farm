@@ -108,7 +108,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const couponInfo = useRecoilValue(couponState);
 
   const [modalCoupon, setModalCoupon] = useState<boolean>(false);
-  const [point, setPoint] = useState<any>();
+  const [point, setPoint] = useState<number>(0);
   const [disableEdit, setDisableEdit] = useState(false);
   const [currentTel] = useState('');
   const [showModalCall, setShowModalCall] = useState(false);
@@ -120,7 +120,10 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
     const getPointCamp = () => {
       getPointCampaign.getPoint().then(res => {
         if (res) {
-          setPoint(res.data[0].condition[0].point);
+          if (res.data.count < 1) {
+            setPoint(0);
+          }
+          setPoint(res.data[0].condition[0].point || 0);
         }
       });
     };
@@ -756,7 +759,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             <Text
               style={{
                 fontSize: 18,
-                fontFamily: fonts.SarabunLight,
+                fontFamily: fonts.SarabunRegular,
               }}>
               อัตราค่าจ้าง
             </Text>
@@ -1015,7 +1018,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             <Text
               style={{
                 fontSize: 16,
-                fontFamily: fonts.SarabunLight,
+                fontFamily: fonts.SarabunRegular,
               }}>
               แต้มสะสมคงเหลือ
             </Text>
@@ -1118,7 +1121,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 style={{
                   color: colors.grey40,
                   fontSize: 18,
-                  fontFamily: fonts.SarabunLight,
+                  fontFamily: fonts.SarabunRegular,
                 }}>
                 ราคาต่อไร่
               </Text>
@@ -1126,7 +1129,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 style={{
                   color: colors.grey40,
                   fontSize: 18,
-                  fontFamily: fonts.SarabunLight,
+                  fontFamily: fonts.SarabunRegular,
                 }}>
                 {` ${numberWithCommas(
                   calPrice.pricePerRai.toString(),
@@ -1145,7 +1148,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 style={{
                   color: colors.grey40,
                   fontSize: 18,
-                  fontFamily: fonts.SarabunLight,
+                  fontFamily: fonts.SarabunRegular,
                 }}>
                 ราคารวม
               </Text>
@@ -1153,7 +1156,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 style={{
                   color: colors.grey40,
                   fontSize: 18,
-                  fontFamily: fonts.SarabunLight,
+                  fontFamily: fonts.SarabunRegular,
                 }}>
                 {`${numberWithCommas(
                   calPrice.priceBefore.toString(),
@@ -1321,7 +1324,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
                 style={{
                   textDecorationStyle: 'solid',
                   textDecorationLine: 'line-through',
-                  fontFamily: fonts.AnuphanLight,
+                  fontFamily: fonts.AnuphanRegular,
                   color: colors.grey40,
                   textAlign: 'right',
                 }}>
@@ -1456,9 +1459,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           couponInfo={couponInfo.name}
           discountPoint={calPrice.discountPoint.toString()}
           discountCoupon={couponInfo.discount.toString()}
-          campaignPoint={
-            parseFloat(taskData?.farmAreaAmount) * parseFloat(point)
-          }
+          campaignPoint={+taskData?.farmAreaAmount * +point}
         />
       </ActionSheet>
       <Spinner
@@ -1489,7 +1490,7 @@ const styles = StyleSheet.create({
     color: colors.fontBlack,
   },
   plot: {
-    fontFamily: fonts.SarabunLight,
+    fontFamily: fonts.SarabunRegular,
     fontSize: normalize(18),
     color: colors.fontBlack,
   },
@@ -1498,7 +1499,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(19),
   },
   unitPrice: {
-    fontFamily: fonts.SarabunLight,
+    fontFamily: fonts.SarabunRegular,
     fontSize: normalize(20),
     color: '#2EC46D',
   },

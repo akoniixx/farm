@@ -25,11 +25,7 @@ import NotificationScreen from '../screens/NotificationScreen/NotificationScreen
 import MyTaskDetailScreenNoti from '../screens/MyTaskScreen/MyTaskDetailScreenNoti';
 import VerifyOTP from '../screens/ProfileScreen/DeleteProfile/VerifyOTP';
 import { StackNavigationHelpers } from '@react-navigation/stack/lib/typescript/src/types';
-import {
-  RouteProp,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import DeleteProfile from '../screens/ProfileScreen/DeleteProfile/DeleteProfile';
 import AddPlotScreen from '../screens/ProfileScreen/PlotScreen/AddPlotScreen';
@@ -44,11 +40,13 @@ import MyCouponScreen from '../screens/PromotionScreen/MyCouponScreen';
 import SearchCouponScreen from '../screens/PromotionScreen/SearchCouponScreen';
 import UseCouponScreen from '../screens/PromotionScreen/UseCouponScreen';
 import AllCouponScreen from '../screens/PromotionScreen/AllCouponScreen';
-import AllGuruScreen from '../screens/GuruScreen/AllGuruScreen';
-import DetailGuruScreen from '../screens/GuruScreen/DetailGuruScreen';
+import AllNewsScreen from '../screens/NewsScreen/AllNewsScreen';
+import DetailGuruScreen from '../screens/NewsScreen/DetailNewsScreen';
 import DetailPointScreen from '../screens/PointScreen/DetailPointScreen';
 import { DronerHiredScreen } from '../screens/DronerHiredScreen';
 import CameraScreen from '../screens/CameraScreen';
+import GuruKasetScreen from '../screens/GuruKasetScreen';
+import GuruKasetDetailScreen from '../screens/GuruKasetDetailScreen';
 
 export type MainStackParamList = {
   MainScreen: undefined;
@@ -95,11 +93,15 @@ export type MainStackParamList = {
   SearchCouponScreen: undefined;
   UseCouponScreen: undefined;
   AllCouponScreen: undefined;
-  AllGuruScreen: undefined;
+  AllNewsScreen: undefined;
   DetailGuruScreen: undefined;
   DetailPointScreen: undefined;
   DronerHiredScreen: undefined;
   CameraScreen: undefined;
+  GuruKasetScreen: undefined;
+  GuruKasetDetailScreen: {
+    guruId: string;
+  };
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
   NativeStackScreenProps<MainStackParamList, T>;
@@ -183,10 +185,18 @@ const MainNavigator: React.FC<any> = () => {
         <Stack.Screen name="AllCouponScreen" component={AllCouponScreen} />
 
         <Stack.Screen name="DetailPointScreen" component={DetailPointScreen} />
-        <Stack.Screen name="AllGuruScreen" component={AllGuruScreen} />
+        <Stack.Screen name="AllNewsScreen" component={AllNewsScreen} />
         <Stack.Screen name="DetailGuruScreen" component={DetailGuruScreen} />
         <Stack.Screen name="DronerHiredScreen" component={DronerHiredScreen} />
         <Stack.Screen name="CameraScreen" component={CameraScreen} />
+        <Stack.Screen name="GuruKasetScreen" component={GuruKasetScreen} />
+        <Stack.Screen
+          initialParams={{
+            guruId: '',
+          }}
+          name="GuruKasetDetailScreen"
+          component={GuruKasetDetailScreen}
+        />
       </Stack.Navigator>
     </>
   );

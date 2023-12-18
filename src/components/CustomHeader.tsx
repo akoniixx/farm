@@ -20,6 +20,7 @@ interface Prop {
   headerRight?: () => React.ReactNode;
   headerLeft?: () => JSX.Element;
   style?: ViewProps;
+  styleWrapper?: ViewProps['style'];
   image?: (() => JSX.Element) | (() => boolean);
 }
 
@@ -33,11 +34,12 @@ const CustomHeader: React.FC<Prop> = ({
   headerLeft,
   headerRight,
   image,
+  styleWrapper,
 }) => {
   return (
     <SafeAreaView
       style={[{ backgroundColor: backgroundColor ?? colors.white }, style]}>
-      <View style={styles.headerWraper}>
+      <View style={[styles.headerWraper, styleWrapper]}>
         <View style={styles.headerLeftWrapper}>
           {showBackBtn && (
             <TouchableOpacity

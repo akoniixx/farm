@@ -38,6 +38,7 @@ const ConfirmBooking: React.FC<ConfirmBookingProps> = ({
 }) => {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
+
   return (
     <View
       style={{
@@ -246,7 +247,7 @@ export default ConfirmBooking;
 const styles = StyleSheet.create({
   textConfirm: {
     fontSize: normalize(18),
-    fontFamily: font.SarabunLight,
+    fontFamily: font.SarabunRegular,
     paddingLeft: 5,
     alignContent: 'center',
     lineHeight: normalize(30),

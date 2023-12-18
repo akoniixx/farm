@@ -92,12 +92,21 @@ export default function CarouselMainScreen({
       <View
         style={{
           alignItems: 'center',
-          top: -15,
-          marginVertical: -10,
+          width: '100%',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          height: 'auto',
         }}>
         <Pagination
           dotsLength={data.data.length}
           activeDotIndex={index}
+          containerStyle={{
+            paddingVertical: 0,
+            paddingHorizontal: 0,
+            marginTop: 4,
+            marginBottom: 12,
+            marginHorizontal: 0,
+          }}
           carouselRef={isCarousel}
           dotStyle={{
             width: 8,
