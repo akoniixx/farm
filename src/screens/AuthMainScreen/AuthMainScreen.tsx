@@ -42,6 +42,8 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
   const { onShow, highlightModal, isHighlightClosed } = useHighlight();
   const { popUpIsClose } = useMaintenance();
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDronerNearMe, setLoadingDronerNearMe] =
+    useState<boolean>(false);
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
   const [dronerNearMe, setDronerNearMe] = useState<{
     count: number;
@@ -122,6 +124,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
   };
   const getDronerNearMe = async () => {
     if (position.latitude && position.longitude) {
+      setLoadingDronerNearMe(true);
       DronerDatasource.getDronerNearMe({
         lat: position.latitude,
         long: position.longitude,
@@ -129,7 +132,8 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
         .then(res => {
           setDronerNearMe(res);
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log(err))
+        .finally(() => setLoadingDronerNearMe(false));
     }
   };
   const onPressSetting = async () => {
@@ -151,7 +155,6 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
   }, [highlightModal.isActive]);
 
   useEffect(() => {
-    console.log('isHighlightClosed', isHighlightClosed);
     if (appState === 'active' && isConfirm && isHighlightClosed) {
       requestLocationPermission().then(async result => {
         setPermission(result);
@@ -214,7 +217,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                     source={image.bgHead}
                     style={{
                       width: (width * 380) / 375,
-                      height: (height * 280) / 812,
+                      height: (height * 270) / 812,
                       position: 'absolute',
                     }}
                   />
@@ -251,7 +254,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                   <View
                     style={{
                       flexDirection: 'row',
-                      paddingTop: 40,
+                      paddingTop: '16%',
                       paddingBottom: 10,
                       alignSelf: 'center',
                     }}>
@@ -369,13 +372,11 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                       }}>
                       นักบินโดรนใกล้คุณ
                     </Text>
-                    {dronerNearMe.data.length > 0 && (
-                      <DronerNearMe
-                        data={dronerNearMe.data}
-                        isLoading={false}
-                        navigation={navigation}
-                      />
-                    )}
+                    <DronerNearMe
+                      data={dronerNearMe.data || []}
+                      isLoading={loadingDronerNearMe}
+                      navigation={navigation}
+                    />
                   </View>
                   {permission !== 'granted' && (
                     <View
@@ -530,7 +531,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingTop: normalize(5),
+    paddingTop: normalize(16),
   },
   activeContainer: {
     flexDirection: 'row',

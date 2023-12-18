@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   containerFooter: {
-    paddingVertical: 10,
+    paddingBottom: 8,
     paddingHorizontal: 20,
     width: '100%',
     backgroundColor: colors.white,

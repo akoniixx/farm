@@ -15,6 +15,7 @@ import * as RootNavigation from '../../navigations/RootNavigation';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { mixpanel } from '../../../mixpanel';
 import useTimeSpent from '../../hook/useTimeSpent';
+import { useIsFocused } from '@react-navigation/native';
 
 const initialPage = 1;
 const limit = 10;
@@ -40,6 +41,7 @@ const FinishScreen: React.FC<any> = ({}) => {
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState(initialPage);
+  const isFocused = useIsFocused();
 
   const getTaskList = async () => {
     setLoading(true);
@@ -64,7 +66,8 @@ const FinishScreen: React.FC<any> = ({}) => {
 
   useEffect(() => {
     getTaskList();
-  }, [selectedField, selectedStatus]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedField, selectedStatus, isFocused]);
 
   const onLoadMore = async () => {
     try {

@@ -393,7 +393,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 source={image.bgHead}
                 style={{
                   width: (width * 380) / 375,
-                  height: (height * 280) / 812,
+                  height: (height * 240) / 812,
                   position: 'absolute',
                 }}
               />
@@ -490,7 +490,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
               <View
                 style={{
                   flexDirection: 'row',
-                  paddingTop: '10%',
+                  paddingTop: '12%',
                   paddingHorizontal: 16,
                   paddingBottom:
                     profilestate.status === 'REJECTED' ||
@@ -916,6 +916,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     paddingHorizontal: 16,
+    paddingTop: 16,
   },
   activeContainer: {
     flexDirection: 'row',
