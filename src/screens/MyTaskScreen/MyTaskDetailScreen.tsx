@@ -118,12 +118,15 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
 
   const submitReviewSuccess = async () => {
     setToggleModalSuccess(false);
+
     await getReceivePoint().then(res => {
       if (res && res?.receivePoint > 0) {
         setTimeout(() => {
           setShowGetPoint(true);
         }, 500);
         return;
+      } else {
+        navigation.goBack();
       }
     });
   };

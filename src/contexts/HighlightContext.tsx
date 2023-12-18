@@ -73,6 +73,7 @@ export const HighlightProvider: React.FC<{ children: React.ReactNode }> = ({
       });
       if (result?.status === 'INACTIVE') {
         setHighlightModal(prev => ({ ...prev, isActive: false }));
+        setIsHighlightClosed(true);
         return;
       }
       setHighlightModal({

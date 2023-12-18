@@ -151,6 +151,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
   }, [highlightModal.isActive]);
 
   useEffect(() => {
+    console.log('isHighlightClosed', isHighlightClosed);
     if (appState === 'active' && isConfirm && isHighlightClosed) {
       requestLocationPermission().then(async result => {
         setPermission(result);
@@ -405,7 +406,7 @@ const AuthMainScreen: React.FC<any> = ({ navigation }) => {
                             {
                               color: colors.greenLight,
                               textDecorationLine: 'underline',
-                              lineHeight: 28,
+                              lineHeight: 32,
                             },
                           ]}>
                           กดเพื่อตั้งค่า
