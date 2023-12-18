@@ -1,4 +1,6 @@
-
+## Change [1.6.0] 2023-12-18
+- add Guru Kaset
+- fix bug
 ## Fix [1.5.2] 2023-11-15
 - feature highlight news farmer
 ## Fix [1.5.1] 2023-11-08
