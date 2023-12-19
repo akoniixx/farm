@@ -34,6 +34,8 @@
 		9D4520479D6C44EE844AF082 /* Anuphan-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = F42BE3F7CD644E84B362FE49 /* Anuphan-Bold.otf */; };
 		AC582E29205C4EEBADF6BE27 /* Sarabun-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D1F2C604491F47C6A563A689 /* Sarabun-Light.ttf */; };
 		C1E515026A6643FFA49D87D6 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4230E2C5E05F42A28CAB7E2C /* AntDesign.ttf */; };
+		C50E16D81F9B42CB891C5EFB /* Anuphan-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD55AD4E9BC441C98B2CC2A5 /* Anuphan-Regular.ttf */; };
+		CA6E85CC30544F7F9AA49A6D /* Sarabun-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45B9A7C962BE415A843238BE /* Sarabun-Regular.ttf */; };
 		CCEA98409320D34ED6BE4CBE /* libPods-farmer-farmerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21B86FBDE532CEE75CBF6A20 /* libPods-farmer-farmerTests.a */; };
 		D2A29406BA87492A95CA8BA4 /* Anuphan-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 828C0E280D604EFE8C155856 /* Anuphan-Light.otf */; };
 		D2D981DE0F334CA5987D66DB /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F1C865AEF1074351B752CE88 /* SimpleLineIcons.ttf */; };
@@ -42,8 +44,6 @@
 		E138B9AA2A70D7BA000A08B8 /* iconkaset.wav in Resources */ = {isa = PBXBuildFile; fileRef = E138B9A92A70D7BA000A08B8 /* iconkaset.wav */; };
 		E138B9AC2A70D7C9000A08B8 /* receivetasksuccess.wav in Resources */ = {isa = PBXBuildFile; fileRef = E138B9AB2A70D7C9000A08B8 /* receivetasksuccess.wav */; };
 		FF11CFA2DF534E158972B845 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F4087F42B2843228EE8D8D8 /* Octicons.ttf */; };
-		C50E16D81F9B42CB891C5EFB /* Anuphan-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD55AD4E9BC441C98B2CC2A5 /* Anuphan-Regular.ttf */; };
-		CA6E85CC30544F7F9AA49A6D /* Sarabun-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45B9A7C962BE415A843238BE /* Sarabun-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +75,7 @@
 		2FE69C8B24DA43A3A19E6C72 /* Sarabun-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Bold.ttf"; path = "../src/assets/fonts/Sarabun-Bold.ttf"; sourceTree = "<group>"; };
 		3CB3D555E4984153AE4BA2D5 /* Sarabun-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Medium.ttf"; path = "../src/assets/fonts/Sarabun-Medium.ttf"; sourceTree = "<group>"; };
 		4230E2C5E05F42A28CAB7E2C /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = ../src/assets/fonts/AntDesign.ttf; sourceTree = "<group>"; };
+		45B9A7C962BE415A843238BE /* Sarabun-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Regular.ttf"; path = "../src/assets/fonts/Sarabun-Regular.ttf"; sourceTree = "<group>"; };
 		4B8F08C6ABB4465FB8F65BD3 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = ../src/assets/fonts/FontAwesome5_Solid.ttf; sourceTree = "<group>"; };
 		4F4087F42B2843228EE8D8D8 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = ../src/assets/fonts/Octicons.ttf; sourceTree = "<group>"; };
 		50A411CBB8631D30BDB91777 /* Pods-farmer-farmerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-farmer-farmerTests.release.xcconfig"; path = "Target Support Files/Pods-farmer-farmerTests/Pods-farmer-farmerTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -105,8 +106,7 @@
 		F1C865AEF1074351B752CE88 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = ../src/assets/fonts/SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		F42BE3F7CD644E84B362FE49 /* Anuphan-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Anuphan-Bold.otf"; path = "../src/assets/fonts/Anuphan-Bold.otf"; sourceTree = "<group>"; };
 		F74FFD5E50E64D30A149CE0C /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = ../src/assets/fonts/Foundation.ttf; sourceTree = "<group>"; };
-		FD55AD4E9BC441C98B2CC2A5 /* Anuphan-Regular.ttf */ = {isa = PBXFileReference; name = "Anuphan-Regular.ttf"; path = "../src/assets/fonts/Anuphan-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		45B9A7C962BE415A843238BE /* Sarabun-Regular.ttf */ = {isa = PBXFileReference; name = "Sarabun-Regular.ttf"; path = "../src/assets/fonts/Sarabun-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FD55AD4E9BC441C98B2CC2A5 /* Anuphan-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Anuphan-Regular.ttf"; path = "../src/assets/fonts/Anuphan-Regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -688,7 +688,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.6.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -723,7 +723,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.6.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
