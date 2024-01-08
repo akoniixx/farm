@@ -7,6 +7,7 @@ import { image } from '../../assets';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
 import Text from '../Text/Text';
+import PreparationRemark from '../PreparationRemark';
 export interface TaskDataTypeSlip {
   id: string;
   taskNo: string;
@@ -31,6 +32,7 @@ export interface TaskDataTypeSlip {
   rating?: string;
   totalTaskReview?: string;
   taskDronerTemp?: string[];
+  preparationRemark?: string;
 }
 interface Props extends TaskDataTypeSlip {}
 
@@ -43,6 +45,7 @@ export default function SlipCard({
   preparationBy,
   comment,
   totalPrice,
+  preparationRemark,
 }: Props) {
   const listDataObj = {
     date: {
@@ -105,6 +108,45 @@ export default function SlipCard({
       <View style={styles.shadow}>
         <View style={styles.card}>
           {listArray.map((item, index) => {
+            if (item === 'prepareType' && preparationRemark) {
+              return (
+                <>
+                  <View
+                    key={index}
+                    style={{
+                      marginBottom: 8,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <Text
+                      style={{
+                        color: colors.fontBlack,
+                        fontSize: 18,
+                        fontFamily: fonts.SarabunLight,
+                      }}>
+                      {listDataObj[item as keyof typeof listDataObj].label}
+                    </Text>
+                    <View
+                      style={{
+                        width: '60%',
+                        justifyContent: 'flex-end',
+                        alignItems: 'flex-end',
+                      }}>
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          color: colors.fontBlack,
+                          fontSize: 18,
+                          fontFamily: fonts.SarabunMedium,
+                        }}>
+                        {listDataObj[item as keyof typeof listDataObj].value}
+                      </Text>
+                    </View>
+                  </View>
+                  <PreparationRemark preparationRemark={preparationRemark} />
+                </>
+              );
+            }
             return (
               <View
                 key={index}

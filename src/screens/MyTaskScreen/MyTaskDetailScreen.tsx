@@ -156,7 +156,6 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
       isWaitReview,
     };
   }, [task.status]);
-
   return (
     <View style={{ flex: 1 }}>
       <CustomHeader
@@ -290,6 +289,7 @@ const MyTaskDetailScreen: React.FC<any> = ({ navigation, route }) => {
               target={task.target_spray.join(' , ') || '-'}
               periodSpray={task.purpose_spray_name}
               preparationBy={task.preparation_by}
+              preparationRemark={task?.preparation_remark}
             />
           </View>
         </View>
@@ -1002,6 +1002,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.AnuphanMedium,
     fontSize: normalize(20),
     color: '#2EC46D',
+    maxWidth: '30%',
   },
   plant: {
     fontFamily: fonts.AnuphanMedium,

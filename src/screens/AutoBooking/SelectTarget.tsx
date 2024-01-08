@@ -1,11 +1,13 @@
 import { normalize } from '@rneui/themed';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
   TouchableOpacity,
   StyleSheet,
   Image,
   ScrollView,
+  Platform,
+  Keyboard,
 } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
@@ -25,6 +27,8 @@ import InfoCircleButton from '../../components/InfoCircleButton';
 import crashlytics from '@react-native-firebase/crashlytics';
 import HeadDronerCardForCreatTask from '../../components/HeadDronerCardForCreatTask';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { TextInput } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const PrepareByLists = [
   {
@@ -58,6 +62,7 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string[]>([]);
   const [selectedCheckbox, setSelectedCheckbox] = useState<any>(null);
+  const [remark, setRemark] = useState('');
   const onSubmit = () => {
     if (periodSprayValue.value === '') {
       return;
@@ -70,6 +75,7 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
         id: periodSprayValue.value,
         name: periodSprayValue.label,
       },
+      preparationRemark: remark,
     }));
     mixpanel.track('SelectTargetScreen_ButtonNext_tabbed', {
       ...taskData,
@@ -97,6 +103,7 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
           label: taskData?.purposeSpray?.name || '',
           value: taskData?.purposeSpray?.id || '',
         });
+        setRemark(taskData?.preparationRemark || '');
         setLoading(false);
       })
       .catch(err => {
@@ -110,6 +117,16 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const isDisableButton = useMemo(() => {
+    let disable = true;
+    if (selectedOption?.length > 0 && periodSprayValue.value !== '') {
+      disable = false;
+    }
+    // if (selectedCheckbox === 'นักบินโดรนเตรียมให้' && remark === '') {
+    //   disable = true;
+    // }
+    return disable;
+  }, [periodSprayValue?.value, selectedOption.length]);
 
   return (
     <>
@@ -152,7 +169,10 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
           </SkeletonPlaceholder>
         </View>
       ) : (
-        <>
+        <KeyboardAwareScrollView
+          extraScrollHeight={100}
+          contentContainerStyle={{ flexGrow: 1 }}
+          style={{ flex: 1, backgroundColor: colors.white }}>
           {isSelectDroner && (
             <HeadDronerCardForCreatTask
               navigation={navigation}
@@ -164,39 +184,42 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
               }
             />
           )}
-          <View
+
+          <SafeAreaView
+            edges={['left', 'right']}
             style={{
               flex: 1,
-              backgroundColor: 'white',
+              justifyContent: 'space-between',
+              paddingHorizontal: normalize(16),
             }}>
-            <SafeAreaView
-              edges={['left', 'right']}
-              style={{
-                flex: 1,
+            <ScrollView
+              contentContainerStyle={{
+                flexGrow: 1,
                 justifyContent: 'space-between',
-                paddingHorizontal: normalize(16),
               }}>
-              <ScrollView>
-                <View>
+              <View
+                style={{
+                  flex: 1,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    alignItems: 'center',
+                    marginBottom: 4,
+                  }}>
+                  <Text style={[styles.label, { marginTop: normalize(20) }]}>
+                    เป้าหมาย
+                  </Text>
                   <View
                     style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      width: '100%',
-                      alignItems: 'center',
-                      marginBottom: 4,
+                      marginTop: normalize(20),
                     }}>
-                    <Text style={[styles.label, { marginTop: normalize(20) }]}>
-                      เป้าหมาย
-                    </Text>
-                    <View
-                      style={{
-                        marginTop: normalize(20),
-                      }}>
-                      <InfoCircleButton sheetId="targetSpray" />
-                    </View>
+                    <InfoCircleButton sheetId="targetSpray" />
                   </View>
-                  {/* <View
+                </View>
+                {/* <View
                     style={{
                       flexDirection: 'row',
                       flexWrap: 'wrap',
@@ -308,217 +331,260 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
                       )
                     }
                   /> */}
-                  <TouchableOpacity
-                    style={styles.injectionInput}
-                    onPress={async () => {
-                      const currentValue: any = await SheetManager.show(
-                        'selectTargetSpray',
-                        {
-                          payload: {
-                            targetSpray: selectedOption,
-                          },
+                <TouchableOpacity
+                  style={styles.injectionInput}
+                  onPress={async () => {
+                    const currentValue: any = await SheetManager.show(
+                      'selectTargetSpray',
+                      {
+                        payload: {
+                          targetSpray: selectedOption,
                         },
-                      );
-                      mixpanel.track(
-                        'SelectTargetScreen_SelectPeriodSpray_tabbed',
-                        {
-                          periodSpray: currentValue,
-                        },
-                      );
-                      setSelectedOption(currentValue.targetSpray);
-                    }}>
-                    {selectedOption?.length > 0 ? (
-                      <Text
-                        style={{
-                          color: colors.fontBlack,
-                          fontFamily: fonts.SarabunMedium,
-                          fontSize: 20,
-                          lineHeight: 40,
-                        }}>
-                        {selectedOption.join(', ')}
-                      </Text>
-                    ) : (
-                      <Text
-                        style={{
-                          color: colors.disable,
-                          fontFamily: fonts.SarabunMedium,
-                          fontSize: 20,
-                          lineHeight: 40,
-                        }}>
-                        {'เลือกเป้าหมาย'}
-                      </Text>
-                    )}
-                    <Image
-                      source={icons.arrowDown}
-                      style={{
-                        width: 24,
-                        height: 24,
-                      }}
-                    />
-                  </TouchableOpacity>
-
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      width: '100%',
-                      alignItems: 'center',
-                      marginBottom: 4,
-                    }}>
-                    <Text style={[styles.label, { marginTop: normalize(20) }]}>
-                      ช่วงเวลาการพ่น
-                    </Text>
-                    <View style={{ marginTop: normalize(20) }}>
-                      <InfoCircleButton sheetId="injectTime" />
-                    </View>
-                  </View>
-                  <TouchableOpacity
-                    style={styles.injectionInput}
-                    onPress={async () => {
-                      const currentValue: any = await SheetManager.show(
-                        'sheet-select-injection',
-                        {
-                          payload: {
-                            periodSpray,
-                            currentVal: periodSprayValue,
-                          },
-                        },
-                      );
-                      mixpanel.track(
-                        'SelectTargetScreen_SelectPeriodSpray_tabbed',
-                        {
-                          periodSpray: currentValue,
-                        },
-                      );
-
-                      setPeriodSprayValue(currentValue);
-                    }}>
-                    {periodSprayValue?.label ? (
-                      <Text
-                        style={{
-                          color: colors.fontBlack,
-                          fontFamily: fonts.SarabunMedium,
-                          fontSize: 20,
-                          lineHeight: 40,
-                        }}>
-                        {periodSprayValue.label}
-                      </Text>
-                    ) : (
-                      <Text
-                        style={{
-                          color: colors.disable,
-                          fontFamily: fonts.SarabunMedium,
-                          fontSize: 20,
-                          lineHeight: 40,
-                        }}>
-                        {'เลือกช่วงเวลา'}
-                      </Text>
-                    )}
-                    <Image
-                      source={icons.arrowDown}
-                      style={{
-                        width: 24,
-                        height: 24,
-                      }}
-                    />
-                  </TouchableOpacity>
-                  <Text style={[styles.label, { marginTop: normalize(20) }]}>
-                    ยาที่ต้องใช้
-                  </Text>
-                  {PrepareByLists.map(el => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() => {
-                          mixpanel.track(
-                            'SelectTargetScreen_SelectPreparationBy_tabbed',
-                            {
-                              preparationBy: el.label,
-                            },
-                          );
-                          setSelectedCheckbox(el.label);
-                        }}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            marginTop: normalize(10),
-                            alignItems: 'center',
-                          }}>
-                          {selectedCheckbox === el.label ? (
-                            <View
-                              style={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: 12,
-                                borderWidth: 2,
-                                borderColor: colors.greenLight,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                              }}>
-                              <View
-                                style={{
-                                  width: 12,
-                                  height: 12,
-                                  borderRadius: 6,
-                                  backgroundColor: colors.greenLight,
-                                }}
-                              />
-                            </View>
-                          ) : (
-                            <View
-                              style={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: 12,
-                                borderWidth: 2,
-                                borderColor: colors.grey20,
-                              }}
-                            />
-                          )}
-                          <Text
-                            style={[
-                              {
-                                color: colors.fontBlack,
-                                fontSize: 20,
-                                fontFamily: fonts.SarabunLight,
-
-                                marginLeft: normalize(10),
-                              },
-                            ]}>
-                            {el.label}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
+                      },
                     );
-                  })}
-                </View>
+                    mixpanel.track(
+                      'SelectTargetScreen_SelectPeriodSpray_tabbed',
+                      {
+                        periodSpray: currentValue,
+                      },
+                    );
+                    setSelectedOption(currentValue.targetSpray);
+                  }}>
+                  {selectedOption?.length > 0 ? (
+                    <Text
+                      style={{
+                        color: colors.fontBlack,
+                        fontFamily: fonts.SarabunMedium,
+                        fontSize: 20,
+                        lineHeight: 32,
+                        width: '80%',
+                      }}>
+                      {selectedOption.join(', ')}
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        color: colors.grey30,
+                        fontFamily: fonts.SarabunMedium,
+                        fontSize: 20,
+                        lineHeight: 40,
+                      }}>
+                      {'เลือกเป้าหมาย'}
+                    </Text>
+                  )}
+                  <Image
+                    source={icons.arrowDown}
+                    style={{
+                      width: 24,
+                      height: 24,
+                    }}
+                  />
+                </TouchableOpacity>
+
                 <View
                   style={{
-                    paddingVertical: 16,
-                    marginBottom: 8,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    alignItems: 'center',
+                    marginBottom: 4,
                   }}>
-                  <MainButton
-                    label="ยืนยัน"
-                    disable={
-                      selectedOption.length < 1 ||
-                      !periodSprayValue?.value ||
-                      selectedCheckbox === ''
-                    }
-                    color={colors.greenLight}
-                    onPress={() => {
-                      onSubmit();
-                    }}
-                    style={{}}
-                  />
+                  <Text style={[styles.label, { marginTop: normalize(20) }]}>
+                    ช่วงเวลาการพ่น
+                  </Text>
+                  <View style={{ marginTop: normalize(20) }}>
+                    <InfoCircleButton sheetId="injectTime" />
+                  </View>
                 </View>
-              </ScrollView>
-            </SafeAreaView>
-          </View>
+                <TouchableOpacity
+                  style={styles.injectionInput}
+                  onPress={async () => {
+                    const currentValue: any = await SheetManager.show(
+                      'sheet-select-injection',
+                      {
+                        payload: {
+                          periodSpray,
+                          currentVal: periodSprayValue,
+                        },
+                      },
+                    );
+                    if (!currentValue?.value) {
+                      return;
+                    }
+                    mixpanel.track(
+                      'SelectTargetScreen_SelectPeriodSpray_tabbed',
+                      {
+                        periodSpray: currentValue,
+                      },
+                    );
+
+                    setPeriodSprayValue(currentValue);
+                  }}>
+                  {periodSprayValue?.label ? (
+                    <Text
+                      style={{
+                        color: colors.fontBlack,
+                        fontFamily: fonts.SarabunMedium,
+                        fontSize: 20,
+                        lineHeight: 40,
+                      }}>
+                      {periodSprayValue.label}
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        color: colors.grey30,
+
+                        fontFamily: fonts.SarabunMedium,
+                        fontSize: 20,
+                        lineHeight: 40,
+                      }}>
+                      {'เลือกช่วงเวลา'}
+                    </Text>
+                  )}
+                  <Image
+                    source={icons.arrowDown}
+                    style={{
+                      width: 24,
+                      height: 24,
+                    }}
+                  />
+                </TouchableOpacity>
+                <Text style={[styles.label, { marginTop: normalize(20) }]}>
+                  ยาที่ต้องใช้
+                </Text>
+                {PrepareByLists.map(el => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        mixpanel.track(
+                          'SelectTargetScreen_SelectPreparationBy_tabbed',
+                          {
+                            preparationBy: el.label,
+                          },
+                        );
+                        setSelectedCheckbox(el.label);
+                      }}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          marginTop: normalize(10),
+                          alignItems: 'center',
+                        }}>
+                        {selectedCheckbox === el.label ? (
+                          <View
+                            style={{
+                              width: 24,
+                              height: 24,
+                              borderRadius: 12,
+                              borderWidth: 2,
+                              borderColor: colors.greenLight,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <View
+                              style={{
+                                width: 12,
+                                height: 12,
+                                borderRadius: 6,
+                                backgroundColor: colors.greenLight,
+                              }}
+                            />
+                          </View>
+                        ) : (
+                          <View
+                            style={{
+                              width: 24,
+                              height: 24,
+                              borderRadius: 12,
+                              borderWidth: 2,
+                              borderColor: colors.grey20,
+                            }}
+                          />
+                        )}
+                        <Text
+                          style={[
+                            {
+                              color: colors.fontBlack,
+                              fontSize: 20,
+                              fontFamily: fonts.SarabunLight,
+
+                              marginLeft: normalize(10),
+                            },
+                          ]}>
+                          {el.label}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
+                {selectedCheckbox === 'นักบินโดรนเตรียมให้' && (
+                  <TextInput
+                    scrollEnabled={false}
+                    allowFontScaling={false}
+                    numberOfLines={6}
+                    onChangeText={t => {
+                      const removeSpaceFront = t.replace(/^\s+/, '');
+                      setRemark(removeSpaceFront);
+                    }}
+                    value={remark}
+                    returnKeyType="done"
+                    multiline
+                    blurOnSubmit={true}
+                    onSubmitEditing={() => {
+                      mixpanel.track('SelectTargetScreen_InputRemark_tabbed', {
+                        preparationRemark: remark,
+                      });
+                      const newRemark = remark.replace(/(\r\n|\n|\r)/gm, '');
+                      setRemark(newRemark);
+                      Keyboard.dismiss();
+                    }}
+                    placeholder={'จำเป็นต้องระบุชื่อยา/ปุ๋ย และจำนวนที่ใช้'}
+                    placeholderTextColor={colors.grey30}
+                    style={{
+                      width: '100%',
+                      color: colors.fontBlack,
+                      fontSize: normalize(18),
+                      fontFamily: font.SarabunRegular,
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                      borderColor: colors.disable,
+                      borderWidth: 1,
+                      paddingHorizontal: 16,
+                      marginTop: 16,
+                      paddingTop: 10,
+                      borderRadius: 8,
+                      textAlignVertical: 'top',
+                      writingDirection: 'ltr',
+                      height: Platform.OS === 'ios' ? 6 * 20 : 120,
+                    }}
+                  />
+                )}
+              </View>
+              <View
+                style={{
+                  paddingVertical: 16,
+                  marginBottom: 8,
+                }}>
+                <MainButton
+                  label="ยืนยัน"
+                  disable={isDisableButton}
+                  color={colors.greenLight}
+                  onPress={() => {
+                    onSubmit();
+                  }}
+                  style={{}}
+                />
+              </View>
+            </ScrollView>
+          </SafeAreaView>
+
           <Spinner
             visible={loading}
             textContent={'Loading...'}
             textStyle={{ color: '#FFF' }}
           />
-        </>
+        </KeyboardAwareScrollView>
       )}
     </>
   );
@@ -550,7 +616,7 @@ const styles = StyleSheet.create({
     borderColor: '#A7AEB5',
     borderRadius: 6,
     paddingHorizontal: 16,
-    height: 52,
+    minHeight: 52,
     fontSize: 20,
     fontFamily: fonts.SarabunMedium,
     justifyContent: 'space-between',

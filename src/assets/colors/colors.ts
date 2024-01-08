@@ -1,10 +1,13 @@
 export default {
   orange: '#FB8705', // primary
   orangeLight: '#FF981E', // secondary
+  orangeDarkest: '#B05E03',
   blueDark: '#036EAF',
   blueLight: '#2BB0ED',
   blueMedium: '#048EE2',
   blueBorder: '#37ABFF',
+  skyDark: '#0C648D',
+  skySoft: '#DCF1FE',
   primary: '#1F8449',
   primaryContainer: '#ECFBF2',
   greenBackground: '#F7FFF0',
@@ -20,6 +23,7 @@ export default {
   yellowBorder: '#EAC01A',
   yellowBg: '#FFE685',
   darkOrange: '#E85737',
+  lightOrange: '#FFF7F0',
   redDark: '#AB091E',
   error: '#EF4E4E',
   errorText: '#DE350B',

@@ -19,6 +19,8 @@ interface taskListProps {
     date_appointment: string;
     plot_name: string;
     rai_amount: string;
+    preparation_remark?: string;
+
     droner: {
       image_profile: string;
       firstname: string;

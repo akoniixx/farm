@@ -145,6 +145,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         createBy: `${user?.firstname} ${user?.lastname}`,
         farmerId: taskData.farmerId,
         preparationBy: taskData.preparationBy,
+        preparationRemark: taskData.preparationRemark,
         status: taskData.status || 'WAIT_RECEIVE',
         targetSpray: taskData.targetSpray,
         taskDronerTemp: isSelectDroner
@@ -636,6 +637,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
             periodSpray={taskData?.purposeSpray.name || '-'}
             target={taskData?.targetSpray.join(' , ') || '-'}
             preparationBy={taskData?.preparationBy}
+            preparationRemark={taskData?.preparationRemark}
           />
         </View>
         <View

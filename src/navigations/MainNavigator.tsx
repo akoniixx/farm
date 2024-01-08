@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import AllPlotScreen from '../screens/ProfileScreen/PlotScreen/AllPlotScreen';
@@ -47,6 +40,8 @@ import { DronerHiredScreen } from '../screens/DronerHiredScreen';
 import CameraScreen from '../screens/CameraScreen';
 import GuruKasetScreen from '../screens/GuruKasetScreen';
 import GuruKasetDetailScreen from '../screens/GuruKasetDetailScreen';
+import MyRewardScreen from '../screens/MyRewardScreen';
+import RewardDetailScreen from '../screens/RewardDetailScreen';
 
 export type MainStackParamList = {
   MainScreen: undefined;
@@ -101,6 +96,11 @@ export type MainStackParamList = {
   GuruKasetScreen: undefined;
   GuruKasetDetailScreen: {
     guruId: string;
+  };
+  MyRewardScreen: undefined;
+  RewardDetailScreen: {
+    id: string;
+    isDigital: boolean;
   };
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
@@ -197,6 +197,13 @@ const MainNavigator: React.FC<any> = () => {
           name="GuruKasetDetailScreen"
           component={GuruKasetDetailScreen}
         />
+        <Stack.Group>
+          <Stack.Screen name="MyRewardScreen" component={MyRewardScreen} />
+          <Stack.Screen
+            name="RewardDetailScreen"
+            component={RewardDetailScreen}
+          />
+        </Stack.Group>
       </Stack.Navigator>
     </>
   );

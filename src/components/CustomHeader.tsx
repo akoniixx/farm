@@ -39,7 +39,7 @@ const CustomHeader: React.FC<Prop> = ({
   return (
     <SafeAreaView
       style={[{ backgroundColor: backgroundColor ?? colors.white }, style]}>
-      <View style={[styles.headerWraper, styleWrapper]}>
+      <View style={[styles.headerWrapper, styleWrapper]}>
         <View style={styles.headerLeftWrapper}>
           {showBackBtn && (
             <TouchableOpacity
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     right: '5%',
   },
-  headerWraper: {
+  headerWrapper: {
     flexDirection: 'row',
     justifyContent: 'center',
     height: normalize(75),

@@ -1,7 +1,7 @@
 import { normalize } from '@rneui/themed';
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { colors, icons } from '../../assets';
+import { colors, icons, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { dialCall } from '../../functions/utility';
 import Text from '../Text/Text';
@@ -42,7 +42,9 @@ export const DronerCard: React.FC<props> = ({
           }}>
           <ProgressiveImage
             borderRadius={28}
-            source={profile === null ? icons.avatar : { uri: profile }}
+            source={
+              profile === null ? image.defaultDronerImage : { uri: profile }
+            }
             style={{
               borderRadius: normalize(28),
               borderColor: colors.white,
