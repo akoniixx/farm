@@ -14,6 +14,7 @@ type Props = {
   isOverRemain?: boolean;
   notEnoughPoint?: boolean;
   requirePoint?: number;
+  onPressPrimary?: () => void;
 };
 
 const ModalCasePhysical = ({
@@ -24,13 +25,15 @@ const ModalCasePhysical = ({
   isOverRemain = false,
   notEnoughPoint = false,
   requirePoint = 0,
+  onPressPrimary,
 }: Props) => {
   return (
     <>
       <Modal
         visible={showCounter}
         disablePrimary={counter === 0 || isOverRemain || notEnoughPoint}
-        onPressPrimary={() => {
+        onPressPrimary={async () => {
+          await onPressPrimary?.();
           setShowCounter(false);
         }}
         onPressSecondary={() => {

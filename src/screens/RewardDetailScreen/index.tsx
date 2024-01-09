@@ -1,7 +1,6 @@
 import {
   View,
   StyleSheet,
-  Image,
   useWindowDimensions,
   ScrollView,
   TouchableOpacity,
@@ -149,7 +148,7 @@ export default function RewardDetailScreen({ navigation, route }: Props) {
     }
   }, [rewardDetail.remain, counter]);
   const onPressExchange = () => {
-    navigation.navigate('RedeemAddressScreen', {
+    navigation.navigate('RedeemSelectAddressScreen', {
       data: {
         ...rewardDetail,
         amountExchange: counter,
@@ -448,6 +447,7 @@ export default function RewardDetailScreen({ navigation, route }: Props) {
         isOverRemain={isOverRemain}
         notEnoughPoint={notEnoughPoint}
         requirePoint={requirePoint * counter}
+        onPressPrimary={onPressExchange}
       />
     </SafeAreaView>
   );

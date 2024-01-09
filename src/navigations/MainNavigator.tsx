@@ -42,7 +42,13 @@ import GuruKasetScreen from '../screens/GuruKasetScreen';
 import GuruKasetDetailScreen from '../screens/GuruKasetDetailScreen';
 import MyRewardScreen from '../screens/MyRewardScreen';
 import RewardDetailScreen from '../screens/RewardDetailScreen';
+import { RewardListType } from '../types/RewardType';
+import RedeemSelectAddressScreen from '../screens/RedeemSelectAddressScreen';
 
+export type RedeemSelectAddressScreenType = RewardListType & {
+  amountExchange: number;
+  usePoint: number;
+};
 export type MainStackParamList = {
   MainScreen: undefined;
   ProfileScreen: undefined;
@@ -101,6 +107,9 @@ export type MainStackParamList = {
   RewardDetailScreen: {
     id: string;
     isDigital: boolean;
+  };
+  RedeemSelectAddressScreen: {
+    data: RedeemSelectAddressScreenType;
   };
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
@@ -202,6 +211,10 @@ const MainNavigator: React.FC<any> = () => {
           <Stack.Screen
             name="RewardDetailScreen"
             component={RewardDetailScreen}
+          />
+          <Stack.Screen
+            name="RedeemSelectAddressScreen"
+            component={RedeemSelectAddressScreen}
           />
         </Stack.Group>
       </Stack.Navigator>
