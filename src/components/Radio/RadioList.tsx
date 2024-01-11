@@ -73,10 +73,10 @@ const RadioList = ({
             {isSelected && (
               <Animated.View
                 style={{
-                  width: 8,
-                  height: 8,
+                  width: 12,
+                  height: 12,
                   borderRadius: 10,
-                  backgroundColor: colors.white,
+                  backgroundColor: colors.greenLight,
                   transform: [
                     {
                       scale: scaleValue.interpolate({
@@ -134,9 +134,9 @@ const styles = (isSelected?: boolean) =>
       width: 24,
       height: 24,
       borderRadius: 12,
-      backgroundColor: isSelected ? colors.orange : colors.white,
-      borderWidth: isSelected ? 0 : 0.5,
-      borderColor: colors.grey20,
+      backgroundColor: isSelected ? colors.white : colors.white,
+      borderWidth: isSelected ? 1 : 1,
+      borderColor: isSelected ? colors.greenLight : colors.grey20,
       alignItems: 'center',
       justifyContent: 'center',
       marginRight: 10,
