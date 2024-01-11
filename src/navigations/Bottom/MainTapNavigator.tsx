@@ -327,7 +327,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
                 ),
             }}
           />
-          <Tab.Screen
+          {/* <Tab.Screen
             name="รางวัล"
             listeners={{
               tabPress: e => {
@@ -380,7 +380,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
                   />
                 ),
             }}
-          />
+          /> */}
           <Tab.Screen
             listeners={{
               tabPress: e => {
