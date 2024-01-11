@@ -21,6 +21,7 @@ import { font } from '../../assets';
 import RenderHTML from 'react-native-render-html';
 import { numberWithCommas } from '../../functions/utility';
 import { usePoint } from '../../contexts/PointContext';
+import AddressDetail from './AddressDetail';
 
 type ScreenType = {
   navigation: StackNavigationProp<
@@ -30,10 +31,42 @@ type ScreenType = {
   route: RouteProp<MainStackParamList, 'RedeemSelectAddressScreen'>;
 };
 
+export interface RewardParams {
+  id: string;
+  rewardName: string;
+  imagePath: string | null;
+
+  rewardType: string;
+  rewardExchange: string;
+  rewardNo: string;
+  score: number | null;
+  amount: number;
+  used: number;
+  remain: number;
+  description: string;
+  condition: string;
+  startExchangeDate: string | null;
+  expiredExchangeDate: string | null;
+  startUsedDate: string | null;
+  expiredUsedDate: string | null;
+  startExchangeDateCronJob: string | null;
+  expiredExchangeDateCronJob: string | null;
+  startUsedDateCronJob: string | null;
+  expiredUsedDateCronJob: string | null;
+  digitalCode: string | null;
+  status: string;
+  statusUsed: string | null;
+  createAt: string;
+  updateAt: string;
+  amountExchange: number;
+  usePoint: number;
+}
 const RedeemSelectAddressScreen = ({ navigation, route }: ScreenType) => {
   const { data } = route.params;
   const { width } = Dimensions.get('window');
   const { currentPoint } = usePoint();
+  const [isConfirm, setIsConfirm] = React.useState<boolean>(false);
+  const [disableButton, setDisableButton] = React.useState<boolean>(false);
   const [exchangeDetail, setExchangeDetail] =
     React.useState<RedeemSelectAddressScreenType>({
       amountExchange: 0,
@@ -209,6 +242,13 @@ const RedeemSelectAddressScreen = ({ navigation, route }: ScreenType) => {
             </View>
           </>
         )}
+        <AddressDetail
+          setDisableButton={setDisableButton}
+          data={data}
+          navigation={navigation}
+          setIsConfirm={setIsConfirm}
+          isConfirm={isConfirm}
+        />
       </ScrollView>
     </SafeAreaView>
   );

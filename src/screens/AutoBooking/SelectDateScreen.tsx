@@ -36,9 +36,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
     autoBookingContext: { setTaskData, setPlotDisable },
   } = useAutoBookingContext();
   const [openCalendar, setOpenCalendar] = useState(false);
-  const [date, setDate] = useState(
-    moment().add(1, 'days').startOf('day').toDate(),
-  );
+  const [date, setDate] = useState(moment().startOf('day').toDate());
   const [openTimePicker, setopenTimePicker] = useState(false);
   const [note, setNote] = useState('');
   const [hour, setHour] = useState(6);

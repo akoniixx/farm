@@ -4,6 +4,19 @@ interface GetRewardType {
   page?: number;
   take?: number;
 }
+export interface RedeemPayload {
+  dronerId: string;
+  rewardId: string;
+  quantity: number;
+  receiverDetail: {
+    firstname: string;
+    lastname: string;
+    tel: string;
+    address: string;
+    addressId: string;
+  };
+  updateBy: string;
+}
 const getRewardList = async (payload: GetRewardType) => {
   let query = '?';
   for (let key in payload) {
