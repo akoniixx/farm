@@ -334,10 +334,7 @@ const SelectDateScreen: React.FC<any> = ({ navigation, route }) => {
             <View>
               <DatePickerCustom
                 value={date}
-                startDate={moment()
-                  .add(isSelectDroner ? 0 : 1, 'days')
-                  .startOf('day')
-                  .toDate()}
+                startDate={moment().startOf('day').toDate()}
                 startYear={moment().get('year') + 543}
                 endYear={moment().add(1, 'year').get('year') + 543}
                 onHandleChange={(d: Date) => {
