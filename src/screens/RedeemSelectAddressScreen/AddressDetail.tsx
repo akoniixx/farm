@@ -178,24 +178,6 @@ export default function AddressDetail({
     dataList.push({
       label: 'ค่าเริ่มต้น',
       value: 'default',
-      extra: (
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('CustomAddressScreen', {
-              isAddMainAddress: true,
-              initialValue: mainAddress,
-              data: data,
-            });
-          }}>
-          <Image
-            source={icons.edit}
-            style={{
-              width: 24,
-              height: 24,
-            }}
-          />
-        </TouchableOpacity>
-      ),
       disabled: false,
       belowComponent: (
         <View>
@@ -232,6 +214,15 @@ export default function AddressDetail({
               height: 24,
             }}
           />
+          <Text
+            style={{
+              fontSize: 14,
+              lineHeight: 24,
+              fontFamily: font.SarabunRegular,
+              color: colors.grey50,
+            }}>
+            แก้ไข
+          </Text>
         </TouchableOpacity>
       ) : (
         <></>
@@ -288,16 +279,16 @@ export default function AddressDetail({
       <View style={styles.container}>
         <Text
           style={{
-            fontSize: 16,
-            fontFamily: font.AnuphanBold,
+            fontSize: 20,
+            fontFamily: font.AnuphanSemiBold,
           }}>
-          ที่อยู่ในการจัดส่ง
+          ที่อยู่จัดส่ง
         </Text>
         <Text
           style={{
             color: colors.grey60,
             fontFamily: font.SarabunSemiBold,
-            fontSize: 16,
+            fontSize: 18,
             marginTop: 8,
           }}>
           ชื่อ-นามสกุล :{' '}
@@ -305,7 +296,7 @@ export default function AddressDetail({
             style={{
               color: colors.fontBlack,
               fontFamily: font.SarabunSemiBold,
-              fontSize: 16,
+              fontSize: 18,
             }}>
             {user?.firstname} {user?.lastname}
           </Text>
@@ -314,7 +305,7 @@ export default function AddressDetail({
           style={{
             color: colors.grey60,
             fontFamily: font.SarabunRegular,
-            fontSize: 16,
+            fontSize: 18,
             marginTop: 8,
           }}>
           เบอร์โทรศัพท์ :{' '}
@@ -466,7 +457,7 @@ export default function AddressDetail({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    paddingVertical: 16,
   },
 
   textButton: {
