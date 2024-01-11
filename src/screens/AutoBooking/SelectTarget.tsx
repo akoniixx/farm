@@ -16,11 +16,9 @@ import { mixpanel } from '../../../mixpanel';
 import { colors, font, icons } from '../../assets';
 import fonts from '../../assets/fonts';
 import { MainButton } from '../../components/Button/MainButton';
-import InputWithSuffix from '../../components/InputText/InputWithSuffix';
 import StepIndicatorHead from '../../components/StepIndicatorHead';
 import { useAutoBookingContext } from '../../contexts/AutoBookingContext';
 import { CropDatasource } from '../../datasource/CropDatasource';
-import { PURPOSE_SPRAY_CHECKBOX } from '../../definitions/timeSpray';
 import Text from '../../components/Text/Text';
 import useTimeSpent from '../../hook/useTimeSpent';
 import InfoCircleButton from '../../components/InfoCircleButton';
@@ -122,11 +120,16 @@ const SelectTarget: React.FC<any> = ({ navigation, route }) => {
     if (selectedOption?.length > 0 && periodSprayValue.value !== '') {
       disable = false;
     }
-    // if (selectedCheckbox === 'นักบินโดรนเตรียมให้' && remark === '') {
-    //   disable = true;
-    // }
+    if (selectedCheckbox === 'นักบินโดรนเตรียมให้' && remark === '') {
+      disable = true;
+    }
     return disable;
-  }, [periodSprayValue?.value, selectedOption.length]);
+  }, [
+    periodSprayValue?.value,
+    selectedOption.length,
+    selectedCheckbox,
+    remark,
+  ]);
 
   return (
     <>
