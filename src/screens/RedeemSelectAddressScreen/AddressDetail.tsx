@@ -14,7 +14,6 @@ import { mixpanel } from '../../../mixpanel';
 import Text from '../../components/Text/Text';
 import RadioList from '../../components/Radio/RadioList';
 import { insertHyphenInTelNumber } from '../../functions/mutateText';
-import { RewardParams } from '.';
 import { RedeemSelectAddressScreenType } from '../../navigations/MainNavigator';
 
 interface AddressType {
@@ -253,18 +252,18 @@ export default function AddressDetail({
                 fontSize: 24,
                 lineHeight: 30,
                 fontFamily: font.AnuphanSemiBold,
-                color: colors.orange,
+                color: colors.greenLight,
               }}>
               +{' '}
-              <Text
-                style={{
-                  fontSize: 14,
-                  lineHeight: 24,
-                  fontFamily: font.AnuphanSemiBold,
-                  color: colors.orange,
-                }}>
-                เพิ่มที่อยู่ใหม่
-              </Text>
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                lineHeight: 24,
+                fontFamily: font.AnuphanSemiBold,
+                color: colors.greenLight,
+              }}>
+              เพิ่มที่อยู่ใหม่
             </Text>
           </TouchableOpacity>
         </View>
@@ -357,18 +356,18 @@ export default function AddressDetail({
                   fontSize: 24,
                   lineHeight: 30,
                   fontFamily: font.SarabunSemiBold,
-                  color: colors.orange,
+                  color: colors.greenLight,
                 }}>
-                +{' '}
-                <Text
-                  style={{
-                    fontSize: 14,
-                    lineHeight: 24,
-                    fontFamily: font.SarabunSemiBold,
-                    color: colors.orange,
-                  }}>
-                  เพิ่มที่อยู่
-                </Text>
+                +
+              </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  lineHeight: 24,
+                  fontFamily: font.SarabunSemiBold,
+                  color: colors.greenLight,
+                }}>
+                เพิ่มที่อยู่
               </Text>
             </TouchableOpacity>
           </View>
@@ -512,13 +511,15 @@ const styles = StyleSheet.create({
   buttonAddNewAddress: {
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 8,
-    padding: 8,
-    height: 54,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    height: 'auto',
     width: 'auto',
     alignSelf: 'flex-start',
     borderWidth: 1,
-    borderColor: '#FB8705',
+    borderColor: colors.greenLight,
     borderRadius: 8,
   },
 });

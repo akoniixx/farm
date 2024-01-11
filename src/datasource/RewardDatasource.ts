@@ -62,6 +62,12 @@ const onRedeemReward = async (payload: any) => {
     .then(res => res.data)
     .catch(err => err);
 };
+const redeemReward = async (payload: RedeemPayload) => {
+  return await httpClient
+    .post(BASE_URL + '/reward/redeem', payload)
+    .then(res => res.data)
+    .catch(err => err);
+};
 export const rewardDatasource = {
   getRewardList,
   getHistoryRedeem,
@@ -69,4 +75,5 @@ export const rewardDatasource = {
   getRedeemDetail,
   getReadyToUseReward,
   onRedeemReward,
+  redeemReward,
 };
