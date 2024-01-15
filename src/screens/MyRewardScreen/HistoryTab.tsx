@@ -2,13 +2,12 @@
 import {
   View,
   StyleSheet,
-  SectionList,
   RefreshControl,
   TouchableOpacity,
   Dimensions,
   FlatList,
 } from 'react-native';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { colors, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import { rewardDatasource } from '../../datasource/RewardDatasource';
@@ -34,7 +33,7 @@ const mappingStatusColor = {
   PREPARE: colors.orange,
   USED: colors.greenLight,
   DONE: colors.greenLight,
-  EXPIRED: colors.gray,
+  EXPIRED: colors.grey50,
   CANCEL: colors.errorText,
 };
 // const mappingStatusColorText = {
@@ -45,38 +44,29 @@ const mappingStatusColor = {
 //   EXPIRED: colors.gray,
 //   CANCEL: colors.decreasePoint,
 // };
+interface HistoryData {
+  count: number;
+  data: RedemptionTransaction[];
+}
 
 export default function HistoryTab({ navigation }: { navigation: any }) {
   const take = 10;
-  const [prepareData, setPrepareData] = React.useState<RedemptionTransaction[]>(
-    [],
-  );
-  const [doneData, setDoneData] = React.useState<RedemptionTransaction[]>([]);
-  const [total, setTotal] = React.useState(0);
+
+  const [historyData, setHistoryData] = React.useState<HistoryData>({
+    count: 0,
+    data: [],
+  } as HistoryData);
+
   const [refreshing, setRefreshing] = React.useState(false);
   const getHistoryReward = useCallback(async () => {
     try {
-      const dronerId = await AsyncStorage.getItem('droner_id');
+      const farmerId = await AsyncStorage.getItem('farmer_id');
       const result = await rewardDatasource.getHistoryRedeem({
-        dronerId: dronerId || '',
+        farmerId: farmerId || '',
         page: 1,
         take,
       });
-      setTotal(result.count);
-      // const curPrepareData: RedemptionTransaction[] = [];
-      // const curDoneData: RedemptionTransaction[] = [];
-      // (result.data || []).forEach((el: RedemptionTransaction) => {
-      //   const isPrepare =
-      //     el.redeemDetail.redeemStatus === 'PREPARE' ||
-      //     el.redeemDetail.redeemStatus === 'REQUEST';
-      //   if (isPrepare) {
-      //     curPrepareData.push(el);
-      //   } else {
-      //     curDoneData.push(el);
-      //   }
-      // });
-      // setPrepareData(curPrepareData);
-      // setDoneData(curDoneData);
+      setHistoryData(result);
     } catch (error) {
       console.log('error', error);
     }
@@ -91,54 +81,26 @@ export default function HistoryTab({ navigation }: { navigation: any }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const historyData = useMemo(() => {
-    const sectionData = [];
-
-    if (prepareData.length > 0) {
-      sectionData.push({
-        title: 'กำลังดำเนินการ',
-        data: prepareData || [],
-        sectionName: 'progress',
-      });
-    }
-    if (doneData.length > 0) {
-      sectionData.push({
-        title: 'เสร็จสิ้น',
-        data: doneData || [],
-        sectionName: 'complete',
-      });
-    }
-    return sectionData;
-  }, [prepareData, doneData]);
   const onLoadingMore = async () => {
-    if (doneData.length + prepareData.length < total) {
-      const dronerId = await AsyncStorage.getItem('droner_id');
-      const result = await rewardDatasource.getHistoryRedeem({
-        dronerId: dronerId || '',
-        page: Math.ceil((doneData.length + prepareData.length) / take) + 1,
-        take,
-      });
-      // const curPrepareData: RedemptionTransaction[] = [];
-      // const curDoneData: RedemptionTransaction[] = [];
-      // (result.data || []).forEach((el: RedemptionTransaction) => {
-      //   const isPrepare =
-      //     el.redeemDetail.redeemStatus === 'PREPARE' ||
-      //     el.redeemDetail.redeemStatus === 'REQUEST';
-      //   if (isPrepare) {
-      //     curPrepareData.push(el);
-      //   } else {
-      //     curDoneData.push(el);
-      //   }
-      // });
-      // setPrepareData([...prepareData, ...curPrepareData]);
-      // setDoneData([...doneData, ...curDoneData]);
-    } else {
-      console.log('end');
+    if (historyData.data.length < historyData.count) {
+      try {
+        const farmerId = await AsyncStorage.getItem('farmer_id');
+        const result = await rewardDatasource.getHistoryRedeem({
+          farmerId: farmerId || '',
+          page: Math.ceil(historyData.data.length / take) + 1,
+          take,
+        });
+        setHistoryData({
+          count: result.count,
+          data: [...historyData.data, ...result.data],
+        });
+      } catch (error) {
+        console.log('error', error);
+      }
     }
   };
   const onPressItem = (id: string) => {
-    // console.log(id);
-    navigation.navigate('RedeemDetailScreen', { id });
+    navigation.navigate('RedeemDetailPhysicalScreen', { id });
   };
   const EmptyState = () => {
     return (
@@ -185,19 +147,19 @@ export default function HistoryTab({ navigation }: { navigation: any }) {
         />
       }
       keyExtractor={(item, index) => `-${index}`}
-      data={historyData || []}
+      data={historyData.data || []}
       ListEmptyComponent={EmptyState()}
-      renderItem={({ item }: any) => {
+      renderItem={({ item }) => {
         const statusRedeem = item.redeemDetail.redeemStatus;
         const isDigital = item.rewardType === 'DIGITAL';
         return (
           <TouchableOpacity
             onPress={() => {
               isDigital
-                ? navigation.navigate('RedeemDetailDigitalScreen', {
-                    id: item.dronerTransactionsId,
+                ? navigation.navigate('RedeemDetailDigitalReadOnlyScreen', {
+                    id: item.farmerTransactionsId,
                   })
-                : onPressItem(item.dronerTransactionsId);
+                : onPressItem(item.farmerTransactionsId);
             }}
             style={styles({ type: statusRedeem }).card}>
             <ProgressiveImage
@@ -224,12 +186,15 @@ export default function HistoryTab({ navigation }: { navigation: any }) {
                     fontFamily: fonts.AnuphanMedium,
                   },
                 }}
+                systemFonts={[fonts.AnuphanMedium]}
               />
               <Text
                 style={{
                   marginTop: 4,
                   fontSize: 14,
-                  fontFamily: fonts.AnuphanRegular,
+                  fontFamily: fonts.SarabunRegular,
+                  color: colors.grey50,
+                  lineHeight: 26,
                 }}>
                 {`แลกเมื่อ ${momentExtend.toBuddhistYear(
                   item.redeemDate,
@@ -256,7 +221,7 @@ export default function HistoryTab({ navigation }: { navigation: any }) {
                       width: 6,
                       height: 6,
                       borderRadius: 3,
-                      marginRight: 4,
+                      marginRight: 6,
                       backgroundColor:
                         mappingStatusColor[
                           statusRedeem as keyof typeof mappingStatusColor
@@ -267,7 +232,7 @@ export default function HistoryTab({ navigation }: { navigation: any }) {
                     style={{
                       fontSize: 14,
                       fontFamily: fonts.SarabunRegular,
-                      color: colors.gray,
+                      color: colors.grey50,
                     }}>
                     {
                       mappingStatusText[
@@ -285,25 +250,15 @@ export default function HistoryTab({ navigation }: { navigation: any }) {
   );
 }
 const styles = ({ type }: { type: string }) => {
-  const isRequest = type === 'REQUEST';
-  const isPrepare = type === 'PREPARE';
   return StyleSheet.create({
     card: {
-      backgroundColor: isPrepare
-        ? colors.lightOrange
-        : isRequest
-        ? '#FFF8DC'
-        : colors.white,
+      backgroundColor: colors.white,
       padding: 16,
       borderRadius: 10,
-      marginBottom: 16,
+      marginBottom: 8,
       flexDirection: 'row',
       borderWidth: 1,
-      borderColor: isPrepare
-        ? colors.darkOrange
-        : isRequest
-        ? mappingStatusColor.REQUEST
-        : colors.disable,
+      borderColor: colors.disable,
     },
   });
 };

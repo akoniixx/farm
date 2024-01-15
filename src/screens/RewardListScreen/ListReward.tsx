@@ -37,6 +37,7 @@ export default function ListReward({ navigation }: { navigation: any }) {
       const result = await rewardDatasource.getRewardList({
         page: 1,
         take,
+        application: 'FARMER',
       });
       setListReward(result);
     } catch (error) {
@@ -62,6 +63,7 @@ export default function ListReward({ navigation }: { navigation: any }) {
         const result = await rewardDatasource.getRewardList({
           page: Math.ceil(listReward.data.length / take) + 1,
           take,
+          application: 'FARMER',
         });
         setListReward({
           count: result.count,
@@ -104,25 +106,37 @@ export default function ListReward({ navigation }: { navigation: any }) {
             />
             <View
               style={{
-                paddingVertical: 10,
+                paddingTop: 10,
                 paddingHorizontal: 8,
+                justifyContent: 'space-between',
+                height: 90,
               }}>
               <RenderHTML
                 source={{ html: item.rewardName }}
                 contentWidth={Dimensions.get('window').width / 2}
-                tagsStyles={{
-                  body: {
-                    fontFamily: font.SarabunRegular,
+                defaultTextProps={{
+                  numberOfLines: 2,
+                  style: {
+                    fontFamily: font.AnuphanSemiBold,
                     fontSize: 18,
                     color: colors.fontBlack,
                   },
                 }}
+                tagsStyles={{
+                  body: {
+                    fontFamily: font.AnuphanSemiBold,
+                    fontSize: 16,
+                    color: colors.fontBlack,
+                  },
+                }}
+                systemFonts={[font.AnuphanSemiBold]}
               />
               <Text
                 style={{
-                  fontFamily: font.SarabunRegular,
-                  fontSize: 14,
+                  fontFamily: font.SarabunSemiBold,
+                  fontSize: 16,
                   paddingVertical: 4,
+                  marginTop: 4,
                   color: colors.fontBlack,
                 }}>
                 {numberWithCommas((item.score || 0).toString(), true)}{' '}
@@ -135,15 +149,6 @@ export default function ListReward({ navigation }: { navigation: any }) {
                   แต้ม
                 </Text>
               </Text>
-              {isExpired && (
-                <Text
-                  style={{
-                    fontFamily: font.SarabunRegular,
-                    fontSize: 14,
-                  }}>
-                  หมดอายุอีก {dateDiff}
-                </Text>
-              )}
             </View>
           </TouchableOpacity>
         </>

@@ -105,15 +105,19 @@ export default function Modal({
             {React.isValidElement(subTitle) ? (
               subTitle
             ) : (
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontFamily: font.SarabunMedium,
-                  color: colors.inkLight,
-                  marginTop: 8,
-                }}>
-                {subTitle}
-              </Text>
+              <>
+                {subTitle ? (
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontFamily: font.SarabunMedium,
+                      color: colors.inkLight,
+                      marginTop: 8,
+                    }}>
+                    {subTitle}
+                  </Text>
+                ) : null}
+              </>
             )}
             <AsyncButton
               style={{

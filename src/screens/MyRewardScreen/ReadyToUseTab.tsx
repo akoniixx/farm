@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   LogBox,
 } from 'react-native';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { colors, image } from '../../assets';
 import fonts from '../../assets/fonts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,6 +19,7 @@ import ProgressiveImage from '../../components/ProgressingImage/ProgressingImage
 import Text from '../../components/Text/Text';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import RenderHTML from 'react-native-render-html';
+import { DigitalRewardType, FarmerTransaction } from '../../types/RewardType';
 const mappingStatusText = {
   REQUEST: 'พร้อมใช้',
   PREPARE: 'เตรียมจัดส่ง',
@@ -42,9 +43,9 @@ export default function ReadyToUseTab({ navigation }: { navigation: any }) {
   const [data, setData] = React.useState<RedemptionTransaction[]>([]);
   const getHistoryRewardReadyToUse = useCallback(async () => {
     try {
-      const dronerId = await AsyncStorage.getItem('droner_id');
+      const farmerId = await AsyncStorage.getItem('farmer_id');
       const result = await rewardDatasource.getReadyToUseReward({
-        dronerId: dronerId || '',
+        farmerId: farmerId || '',
         page: 1,
         take,
       });
@@ -58,22 +59,25 @@ export default function ReadyToUseTab({ navigation }: { navigation: any }) {
   useEffect(() => {
     getHistoryRewardReadyToUse();
     LogBox.ignoreLogs([]);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onNavigation = async (item: RedemptionTransaction) => {
     try {
       const result = await rewardDatasource.getRedeemDetail(
-        item.dronerTransactionsId,
+        item.farmerTransactions,
       );
-      navigation.navigate('RedeemScreen', {
-        imagePath: item.imagePath,
-        data: {
-          dronerTransaction: {
-            ...result,
-          },
+      const data = {
+        farmerTransaction: {
+          ...result,
+          id: result.id,
+          redeemDetail: result.redeemDetail,
         },
+      };
+
+      navigation.navigate('RedeemDetailDigitalScreen', {
+        imagePath: item.imagePath,
+        data,
         expiredUsedDate: result.reward.expiredUsedDate,
       });
     } catch (error) {
@@ -89,9 +93,9 @@ export default function ReadyToUseTab({ navigation }: { navigation: any }) {
   const onLoadMore = useCallback(async () => {
     if (data?.length < total) {
       try {
-        const dronerId = await AsyncStorage.getItem('droner_id');
+        const farmerId = await AsyncStorage.getItem('farmer_id');
         const result = await rewardDatasource.getReadyToUseReward({
-          dronerId: dronerId || '',
+          farmerId: farmerId || '',
           page: Math.ceil(data.length / take) + 1,
           take,
         });
@@ -101,6 +105,14 @@ export default function ReadyToUseTab({ navigation }: { navigation: any }) {
       }
     }
   }, [total, data?.length]);
+  const tagStyles = useMemo(() => {
+    return {
+      body: {
+        fontSize: 16,
+        fontFamily: fonts.AnuphanMedium,
+      },
+    };
+  }, []);
   return (
     <FlatList
       onEndReached={onLoadMore}
@@ -130,6 +142,8 @@ export default function ReadyToUseTab({ navigation }: { navigation: any }) {
                 width: 76,
                 height: 76,
                 marginRight: 16,
+                borderWidth: 1,
+                borderColor: colors.grey5,
               }}
             />
             <View
@@ -139,18 +153,19 @@ export default function ReadyToUseTab({ navigation }: { navigation: any }) {
               <RenderHTML
                 source={{ html: item.rewardName }}
                 contentWidth={500}
-                tagsStyles={{
-                  body: {
-                    fontSize: 16,
-                    fontFamily: fonts.AnuphanMedium,
-                  },
+                defaultTextProps={{
+                  numberOfLines: 2,
                 }}
+                tagsStyles={tagStyles}
+                systemFonts={[fonts.AnuphanMedium]}
               />
               <Text
                 style={{
                   marginTop: 4,
                   fontSize: 14,
                   fontFamily: fonts.SarabunRegular,
+                  color: colors.grey50,
+                  lineHeight: 22,
                 }}>
                 {`แลกเมื่อ ${momentExtend.toBuddhistYear(
                   item.redeemDate,
@@ -176,7 +191,7 @@ export default function ReadyToUseTab({ navigation }: { navigation: any }) {
                       width: 6,
                       height: 6,
                       borderRadius: 3,
-                      marginRight: 4,
+                      marginRight: 6,
                       backgroundColor:
                         mappingStatusColor[
                           statusRedeem as keyof typeof mappingStatusColor
@@ -241,7 +256,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     padding: 16,
     borderRadius: 10,
-    marginBottom: 16,
+    marginBottom: 8,
     flexDirection: 'row',
     borderWidth: 1,
     borderColor: colors.disable,

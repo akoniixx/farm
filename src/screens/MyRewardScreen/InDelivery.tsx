@@ -20,7 +20,7 @@ import Text from '../../components/Text/Text';
 import { momentExtend } from '../../utils/moment-buddha-year';
 import RenderHTML from 'react-native-render-html';
 const mappingStatusText = {
-  REQUEST: 'พร้อมใช้',
+  REQUEST: 'คำร้องขอแลก',
   PREPARE: 'เตรียมจัดส่ง',
   USED: 'ใช้แล้ว',
   DONE: 'ส่งแล้ว',
@@ -28,23 +28,23 @@ const mappingStatusText = {
   CANCEL: 'ยกเลิก',
 };
 const mappingStatusColor = {
-  REQUEST: colors.orange,
+  REQUEST: '#EBBB00',
   PREPARE: colors.orange,
   USED: colors.greenLight,
   DONE: colors.greenLight,
   EXPIRED: colors.gray,
   CANCEL: colors.errorText,
 };
+const take = 10;
 export default function InDelivery({ navigation }: { navigation: any }) {
-  const take = 10;
   const [total, setTotal] = React.useState<number>(0);
   const [refreshing, setRefreshing] = React.useState(false);
   const [data, setData] = React.useState<RedemptionTransaction[]>([]);
   const getHistoryRewardReadyToUse = useCallback(async () => {
     try {
-      const dronerId = await AsyncStorage.getItem('droner_id');
-      const result = await rewardDatasource.getReadyToUseReward({
-        dronerId: dronerId || '',
+      const farmerId = await AsyncStorage.getItem('farmer_id');
+      const result = await rewardDatasource.getPrepareRewardList({
+        farmerId: farmerId || '',
         page: 1,
         take,
       });
@@ -65,16 +65,18 @@ export default function InDelivery({ navigation }: { navigation: any }) {
   const onNavigation = async (item: RedemptionTransaction) => {
     try {
       const result = await rewardDatasource.getRedeemDetail(
-        item.dronerTransactionsId,
+        item.farmerTransactionsId,
       );
-      navigation.navigate('RedeemScreen', {
-        imagePath: item.imagePath,
-        data: {
-          dronerTransaction: {
-            ...result,
-          },
-        },
-        expiredUsedDate: result.reward.expiredUsedDate,
+      // const data = {
+      //   farmerTransaction: {
+      //     ...result,
+      //     id: result.id,
+      //     redeemDetail: result.redeemDetail,
+      //   },
+      // };
+      navigation.navigate('RedeemDetailPhysicalScreen', {
+        id: result.id,
+        tab: 'delivery',
       });
     } catch (error) {
       console.log('error', error);
@@ -89,9 +91,9 @@ export default function InDelivery({ navigation }: { navigation: any }) {
   const onLoadMore = useCallback(async () => {
     if (data?.length < total) {
       try {
-        const dronerId = await AsyncStorage.getItem('droner_id');
-        const result = await rewardDatasource.getReadyToUseReward({
-          dronerId: dronerId || '',
+        const farmerId = await AsyncStorage.getItem('farmer_id');
+        const result = await rewardDatasource.getPrepareRewardList({
+          farmerId: farmerId || '',
           page: Math.ceil(data.length / take) + 1,
           take,
         });
@@ -116,10 +118,9 @@ export default function InDelivery({ navigation }: { navigation: any }) {
       data={data}
       renderItem={({ item }) => {
         const statusRedeem = item.redeemDetail.redeemStatus;
-
         return (
           <TouchableOpacity
-            style={styles.card}
+            style={styles[statusRedeem as keyof typeof styles]}
             onPress={() => onNavigation(item)}>
             <ProgressiveImage
               source={{
@@ -176,7 +177,7 @@ export default function InDelivery({ navigation }: { navigation: any }) {
                       width: 6,
                       height: 6,
                       borderRadius: 3,
-                      marginRight: 4,
+                      marginRight: 6,
                       backgroundColor:
                         mappingStatusColor[
                           statusRedeem as keyof typeof mappingStatusColor
@@ -245,5 +246,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderWidth: 1,
     borderColor: colors.disable,
+  },
+  REQUEST: {
+    backgroundColor: '#FFFFEB',
+    padding: 16,
+    borderRadius: 10,
+    marginBottom: 8,
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: '#EBBB00',
+  },
+  PREPARE: {
+    backgroundColor: '#FFF9F2',
+    padding: 16,
+    borderRadius: 10,
+    marginBottom: 8,
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: colors.orange,
   },
 });

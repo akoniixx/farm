@@ -15,6 +15,7 @@ import Text from '../../components/Text/Text';
 import RadioList from '../../components/Radio/RadioList';
 import { insertHyphenInTelNumber } from '../../functions/mutateText';
 import { RedeemSelectAddressScreenType } from '../../navigations/MainNavigator';
+import { navigationRef } from '../../navigations/RootNavigation';
 
 interface AddressType {
   id: string;
@@ -74,6 +75,8 @@ export default function AddressDetail({
   const [radioAddress, setRadioAddress] = React.useState<'default' | 'custom'>(
     'default',
   );
+  const [transactionId, setTransactionId] = React.useState<string>('');
+  const [isSuccess, setIsSuccess] = React.useState<boolean>(false);
   const [disabled, setDisabled] = React.useState<boolean>(true);
   const [addressList, setAddressList] = React.useState<AddressType[]>([]);
   const [mainAddress, secondAddress] = useMemo(() => {
@@ -101,7 +104,7 @@ export default function AddressDetail({
         radioAddress === 'default' ? mainAddress?.id : secondAddress?.id;
       const payload: RedeemPayload = {
         rewardId: data?.id,
-        dronerId: user?.id || '',
+        farmerId: user?.id || '',
         quantity: data.amountExchange,
         updateBy: `${user?.firstname} ${user?.lastname}`,
         receiverDetail: {
@@ -118,16 +121,13 @@ export default function AddressDetail({
       await getCurrentPoint();
       mixpanel.track('RedeemAddressScreen_ConfirmRedeem_pressed', {
         screen: 'RedeemAddressScreen',
-        to: 'RedeemDetailScreen',
+        to: 'RedeemDetailDigitalScreen',
         ...payload,
       });
       setIsConfirm(false);
 
-      setTimeout(() => {
-        navigation.navigate('RedeemDetailScreen', {
-          id: result?.dronerTransaction?.id,
-        });
-      }, 400);
+      setTransactionId(result?.farmerTransaction?.id);
+      setIsSuccess(true);
     } catch (e) {
       console.log(e);
     } finally {
@@ -152,6 +152,23 @@ export default function AddressDetail({
       getAddressListById();
     }, [user?.id]),
   );
+
+  const onPressToDetail = () => {
+    setIsSuccess(false);
+    setTimeout(() => {
+      navigation.navigate('RedeemDetailPhysicalScreen', {
+        id: transactionId,
+      });
+    }, 400);
+    setTransactionId('');
+  };
+  const onPressToRewardList = () => {
+    setIsSuccess(false);
+    setTimeout(() => {
+      navigation.navigate('รางวัล');
+    }, 400);
+    setTransactionId('');
+  };
 
   useEffect(() => {
     const checkAddress = async () => {
@@ -183,7 +200,7 @@ export default function AddressDetail({
           <Text
             style={{
               color: colors.fontBlack,
-              fontFamily: font.AnuphanLight,
+              fontFamily: font.SarabunRegular,
               fontSize: 16,
               marginTop: 8,
               marginLeft: 8,
@@ -199,6 +216,10 @@ export default function AddressDetail({
       disabled: !!secondAddress,
       extra: secondAddress ? (
         <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+          }}
           onPress={() => {
             navigation.navigate('CustomAddressScreen', {
               isEdit: true,
@@ -207,10 +228,12 @@ export default function AddressDetail({
             });
           }}>
           <Image
-            source={icons.edit}
+            source={icons.editGrey}
+            resizeMode="contain"
             style={{
-              width: 24,
-              height: 24,
+              width: 18,
+              height: 18,
+              marginRight: 8,
             }}
           />
           <Text
@@ -355,8 +378,10 @@ export default function AddressDetail({
                 style={{
                   fontSize: 24,
                   lineHeight: 30,
-                  fontFamily: font.SarabunSemiBold,
+                  fontFamily: font.SarabunRegular,
                   color: colors.greenLight,
+                  marginRight: 8,
+                  marginBottom: 4,
                 }}>
                 +
               </Text>
@@ -367,7 +392,7 @@ export default function AddressDetail({
                   fontFamily: font.SarabunSemiBold,
                   color: colors.greenLight,
                 }}>
-                เพิ่มที่อยู่
+                เพิ่มที่อยู่ใหม่
               </Text>
             </TouchableOpacity>
           </View>
@@ -403,7 +428,7 @@ export default function AddressDetail({
           <Text
             style={{
               fontSize: 20,
-              fontFamily: font.SarabunSemiBold,
+              fontFamily: font.AnuphanSemiBold,
               color: colors.fontBlack,
             }}>
             กรุณาตรวจสอบข้อมูลของท่าน
@@ -411,14 +436,14 @@ export default function AddressDetail({
           <Text
             style={{
               fontSize: 20,
-              fontFamily: font.SarabunSemiBold,
+              fontFamily: font.AnuphanSemiBold,
               color: colors.fontBlack,
             }}>
-            ก่อนยืนยันการแลกของรางวัล
+            ก่อนยืนยันการแลกรางวัล
           </Text>
           <Text
             style={{
-              fontSize: 14,
+              fontSize: 18,
               fontFamily: font.SarabunRegular,
               color: colors.inkLight,
               marginTop: 8,
@@ -427,7 +452,7 @@ export default function AddressDetail({
           </Text>
           <Text
             style={{
-              fontSize: 14,
+              fontSize: 18,
               fontFamily: font.SarabunRegular,
               color: colors.inkLight,
             }}>
@@ -450,6 +475,37 @@ export default function AddressDetail({
           </TouchableOpacity>
         </View>
       </Modal>
+      <Modal
+        iconTop={
+          <Image
+            source={icons.correct}
+            style={{ width: 24, height: 24, marginBottom: 16 }}
+          />
+        }
+        visible={isSuccess}
+        onPressPrimary={() => {
+          mixpanel.track(
+            'RedeemSelectAddressScreen_ModalSuccess_PressPrimary',
+            {
+              to: 'RedeemDetailPhysicalScreen',
+            },
+          );
+          onPressToDetail();
+        }}
+        onPressSecondary={() => {
+          mixpanel.track(
+            'RedeemSelectAddressScreen_ModalSuccess_PressSecondary',
+            {
+              to: 'RewardListScreen',
+            },
+          );
+          onPressToRewardList();
+        }}
+        title={'แลกสำเร็จ!'}
+        titlePrimary="ดูรายละเอียดของที่แลก"
+        titleSecondary="กลับไปหน้ารางวัล"
+        subButtonType="border"
+      />
     </>
   );
 }
@@ -466,12 +522,12 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    backgroundColor: colors.orange,
+    backgroundColor: colors.greenLight,
     borderRadius: 12,
     height: 54,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#F86820',
+    shadowColor: colors.greenLight,
     shadowOffset: {
       width: 0,
       height: 4,

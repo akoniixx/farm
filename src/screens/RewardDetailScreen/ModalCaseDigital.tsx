@@ -43,8 +43,12 @@ const ModalCaseDigital = ({
             rewardScore: rewardDetail.score,
             rewardAmount: 1,
           });
-          setIsConfirm(false);
-          await onRedeemDigital();
+          try {
+            setIsConfirm(false);
+            await onRedeemDigital();
+          } catch (error) {
+            console.log(error);
+          }
         }}
         title={'ยืนยันการแลก'}
         onPressSecondary={() => {
@@ -61,17 +65,17 @@ const ModalCaseDigital = ({
         }}
         iconTop={
           <Image
-            source={icons.successModalIcon}
+            source={icons.correct}
             style={{ width: 24, height: 24, marginBottom: 16 }}
           />
         }
         visible={showSuccessExchangeModal}
         onPressPrimary={() => {
           mixpanel.track('RewardDetailScreen_SuccessExchangeModal_press', {
-            to: 'RedeemScreen',
+            to: 'RedeemDetailDigitalScreen',
           });
           setShowSuccessExchangeModal(false);
-          navigation.navigate('RedeemScreen', {
+          navigation.navigate('RedeemDetailDigitalScreen', {
             data: resultRedeemDigital,
             imagePath: rewardDetail.imagePath,
             expiredUsedDate: rewardDetail.expiredUsedDate,

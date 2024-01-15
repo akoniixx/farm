@@ -16,6 +16,24 @@ interface PayloadUpdateFarmer {
   };
   nickname: string;
 }
+interface PayloadAddress {
+  farmerId: string;
+  provinceId: string;
+  districtId: string;
+  subdistrictId: string;
+  postcode: string;
+  address1: string;
+  address2: string;
+}
+interface PayloadAddressPatch {
+  provinceId: string;
+  districtId: string;
+  subdistrictId: string;
+  postcode: string;
+  address1: string;
+  address2: string;
+  addressId: string;
+}
 export class ProfileDatasource {
   static async getProfile(farmer_id: string): Promise<any> {
     return httpClient
@@ -151,5 +169,26 @@ export class ProfileDatasource {
       .catch(error => {
         console.log('removeProfileImage', error);
       });
+  }
+  static async postMainAddressList(payload: PayloadAddress) {
+    return httpClient
+      .post(BASE_URL + '/farmer/add-main-address/' + payload.farmerId, payload)
+      .then(res => res.data)
+      .catch(err => console.log(err));
+  }
+  static async postOtherAddressList(payload: PayloadAddress) {
+    return httpClient
+      .post(BASE_URL + '/farmer/add-other-address/' + payload.farmerId, payload)
+      .then(res => res.data)
+      .catch(err => console.log(err));
+  }
+  static async updateOtherAddressList(payload: PayloadAddressPatch) {
+    return httpClient
+      .patch(
+        BASE_URL + '/farmer/update-other-address/' + payload.addressId,
+        payload,
+      )
+      .then(res => res.data)
+      .catch(err => console.log(err));
   }
 }

@@ -20,10 +20,7 @@ export class QueryLocation {
       .catch(err => console.log(err));
   }
 
-  static QuerySubDistrict(
-    districtId: number,
-    districtName: string,
-  ): Promise<any> {
+  static QuerySubDistrict(districtId: number): Promise<any> {
     return registerClient
       .get(BASE_URL + `/location/sub-district?districtId=${districtId}`)
       .then(res => {

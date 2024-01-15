@@ -4,9 +4,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   MainStackParamList,
   RedeemSelectAddressScreenType,
@@ -81,7 +82,9 @@ const RedeemSelectAddressScreen = ({ navigation, route }: ScreenType) => {
       }
     }, [data]),
   );
-
+  const onConfirm = () => {
+    setIsConfirm(true);
+  };
   return (
     <SafeAreaView style={styles.safeArea} edges={['right', 'top', 'left']}>
       <CustomHeader
@@ -250,6 +253,14 @@ const RedeemSelectAddressScreen = ({ navigation, route }: ScreenType) => {
           isConfirm={isConfirm}
         />
       </ScrollView>
+      <View style={styles.footer}>
+        <TouchableOpacity
+          disabled={disableButton}
+          style={disableButton ? styles.disabledButton : styles.button}
+          onPress={onConfirm}>
+          <Text style={styles.textButton}>ยืนยันการแลก</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -277,5 +288,45 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderTopColor: colors.greyDivider,
     borderTopWidth: 1,
+  },
+  footer: {
+    backgroundColor: colors.white,
+    paddingHorizontal: 16,
+    paddingBottom: 32,
+  },
+  textButton: {
+    fontSize: 20,
+    fontFamily: font.AnuphanSemiBold,
+    color: colors.white,
+  },
+  button: {
+    width: '100%',
+    backgroundColor: colors.greenLight,
+    borderRadius: 12,
+    height: 54,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: colors.greenLight,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+  },
+  disabledButton: {
+    width: '100%',
+    backgroundColor: colors.disable,
+    borderRadius: 12,
+    height: 54,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#DCDFE3',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
   },
 });

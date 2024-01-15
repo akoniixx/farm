@@ -17,7 +17,6 @@ import Text from '../../components/Text/Text';
 import { numberWithCommas } from '../../functions/utility';
 import image from '../../assets/images/image';
 import ListReward from './ListReward';
-import AsyncButton from '../../components/Button/AsyncButton';
 
 type Props = {
   navigation: StackNavigationHelpers;
@@ -145,15 +144,7 @@ const RewardListScreen = ({ navigation }: Props) => {
             }}>
             รางวัลทั้งหมด
           </Text>
-          <AsyncButton
-            title="test"
-            onPress={() => {
-              navigation.navigate('RewardDetailScreen', {
-                id: '1',
-                isDigital: false,
-              });
-            }}
-          />
+
           <ListReward navigation={navigation} />
         </View>
       </View>

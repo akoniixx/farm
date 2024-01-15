@@ -67,4 +67,7 @@ export default {
   defaultDronerImage: require('./defaultDronerImage.png'),
   bgMyReward: require('./bgMyReward.png'),
   emptyReward: require('./emptyReward.png'),
+  usedBanner: require('./usedBanner.png'),
+  expiredBanner: require('./expiredBanner.png'),
+  cancelBanner: require('./cancelBanner.png'),
 };

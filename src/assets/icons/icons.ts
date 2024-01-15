@@ -17,6 +17,7 @@ export default {
   dangercirclered: require('./dangercirclered.png'),
   checkdisable: require('./checkdisable.png'),
   close: require('./x.png'),
+  closeGrey: require('./closeGrey.png'),
   register: require('./register.png'),
   plot: require('./plot.png'),
   plant: require('./plant.png'),
@@ -128,4 +129,7 @@ export default {
   minusButtonIcon: require('./minusButtonIcon.png'),
   minusButtonDisableIcon: require('./minusButtonDisableIcon.png'),
   plusButtonIcon: require('./plusButtonIcon.png'),
+  editGrey: require('./editGrey.png'),
+  warningRed: require('./warningRed.png'),
+  copyClipboard: require('./copyClipboard.png'),
 };
