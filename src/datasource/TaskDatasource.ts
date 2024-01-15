@@ -8,6 +8,7 @@ export interface PayloadCreateTask {
   dateAppointment: any;
   targetSpray: string[];
   preparationBy: string;
+  preparationRemark?: string;
   purposeSprayId: string;
   taskDronerTemp: {
     dronerId: string;

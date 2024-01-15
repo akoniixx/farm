@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -34,7 +34,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FavoriteDroner } from '../../datasource/FavoriteDroner';
 
 import { GuruKaset } from '../../datasource/GuruDatasource';
-import { historyPoint } from '../../datasource/HistoryPointDatasource';
 import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
 import VerifyStatus from '../../components/Modal/VerifyStatus';
 import Text from '../../components/Text/Text';
@@ -47,6 +46,7 @@ import { useMaintenance } from '../../contexts/MaintenanceContext';
 import ModalSelectHiring from '../../components/Modal/ModalSelectHiring';
 
 import { useHighlight } from '../../contexts/HighlightContext';
+import { usePoint } from '../../contexts/PointContext';
 
 const MainScreen: React.FC<any> = ({ navigation, route }) => {
   const [fcmToken, setFcmToken] = useState('');
@@ -78,7 +78,6 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     cropName: '',
     purposeSprayName: '',
   });
-  const [haveNewGuruContent, setHaveNewGuruContent] = useState(false);
   const [showBell, setShowBell] = useState(false);
   const [notiData, setNotiData] = useState<{
     count: Number;
@@ -91,10 +90,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
   });
   const [reload, setReload] = useState(false);
   const [isAlreadyRead, setIsAlreadyRead] = useState(true);
+
+  const { currentPoint, getCurrentPoint } = usePoint();
   // const [statusFav, setStatusFav] = useState<any[]>([]);
 
   const [reason, setReason] = useState<any>('');
-  const [point, setPoint] = useState<any>();
   const { notiMaintenance, maintenanceData } = useMaintenance();
 
   const getData = async () => {
@@ -299,7 +299,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
     const farmer_id: any = await AsyncStorage.getItem('farmer_id');
     const plot_id: any = await AsyncStorage.getItem('plot_id');
     FavoriteDroner.findAllFav(farmer_id, plot_id)
-      .then(res => {
+      .then(() => {
         // if (res != null) {
         //   setStatusFav(res);
         // }
@@ -315,18 +315,11 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
       .catch(err => console.log(err));
   };
 
-  useFocusEffect(() => {
-    const getPointFarmer = async () => {
-      const farmer_id: any = await AsyncStorage.getItem('farmer_id');
-      await historyPoint
-        .getPoint(farmer_id)
-        .then(res => {
-          setPoint(res.balance);
-        })
-        .catch(err => console.log(err));
-    };
-    getPointFarmer();
-  });
+  useFocusEffect(
+    useCallback(() => {
+      getCurrentPoint();
+    }, [getCurrentPoint]),
+  );
 
   const sendProfilesToMixpanel = async (profiles: any) => {
     // const options = {
@@ -480,7 +473,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                           fontSize: normalize(16),
                           paddingHorizontal: 8,
                         }}>
-                        {formatNumberWithComma(point)}
+                        {formatNumberWithComma(currentPoint)}
                       </Text>
                     </LinearGradient>
                   </TouchableOpacity>

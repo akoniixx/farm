@@ -64,4 +64,7 @@ export default {
   emptyGuru: require('./emptyGuru.png'),
   dronerBgDefault: require('./dronerBgDefault.png'),
   plotsNotLogin: require('./plotsNotLogin.png'),
+  defaultDronerImage: require('./defaultDronerImage.png'),
+  bgMyReward: require('./bgMyReward.png'),
+  emptyReward: require('./emptyReward.png'),
 };

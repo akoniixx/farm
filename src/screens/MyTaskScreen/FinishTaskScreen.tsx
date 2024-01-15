@@ -1,7 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { normalize } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
-import { FlatList, RefreshControl, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  Pressable,
+  RefreshControl,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import colors from '../../assets/colors/colors';
 import { CardTask } from '../../components/Mytask/CardTask';
@@ -168,7 +174,7 @@ const FinishScreen: React.FC<any> = ({}) => {
                   }
                   data={taskList.data}
                   renderItem={({ item, index }) => (
-                    <TouchableOpacity
+                    <Pressable
                       key={index}
                       onPress={() => {
                         mixpanel.track('MyTaskScreen_CardTask_tapped', {
@@ -181,7 +187,7 @@ const FinishScreen: React.FC<any> = ({}) => {
                         });
                       }}>
                       <CardTask task={item} />
-                    </TouchableOpacity>
+                    </Pressable>
                   )}
                 />
               ) : (

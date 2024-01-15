@@ -13,7 +13,7 @@ import icons from '../../assets/icons/icons';
 import Text from '../../components/Text/Text';
 
 export default function SectionBody(props: TaskDataTypeSlip) {
-  console.log('props', JSON.stringify(props, null, 2));
+  const isHaveNickname = props.nickname ? true : false;
   return (
     <View style={styled.container}>
       <View>
@@ -44,39 +44,57 @@ export default function SectionBody(props: TaskDataTypeSlip) {
                 alignItems: 'center',
               }}>
               <Image
-                source={!props.img ? image.bg_droner : { uri: props.img }}
+                source={
+                  !props.img ? image.defaultDronerImage : { uri: props.img }
+                }
                 style={{
                   width: 48,
                   height: 48,
                   borderRadius: 24,
                 }}
               />
-              <View
-                style={{
-                  marginLeft: 16,
-                }}>
-                <Text
-                  style={{
-                    color: colors.fontBlack,
-                    fontFamily: fonts.SarabunMedium,
-                    fontSize: 18,
-                  }}>
-                  {props.nickname}
-                </Text>
+              {isHaveNickname ? (
                 <View
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
+                    marginLeft: 16,
                   }}>
                   <Text
                     style={{
-                      marginLeft: 4,
-                      color: colors.gray,
+                      color: colors.fontBlack,
+                      fontFamily: fonts.SarabunMedium,
+                      fontSize: 18,
+                    }}>
+                    {props.nickname}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        marginLeft: 4,
+                        color: colors.gray,
+                      }}>
+                      {props.firstname + ' ' + props.lastname}
+                    </Text>
+                  </View>
+                </View>
+              ) : (
+                <View
+                  style={{
+                    marginLeft: 16,
+                  }}>
+                  <Text
+                    style={{
+                      color: colors.fontBlack,
+                      fontFamily: fonts.SarabunMedium,
+                      fontSize: 18,
                     }}>
                     {props.firstname + ' ' + props.lastname}
                   </Text>
                 </View>
-              </View>
+              )}
             </View>
             <TouchableOpacity
               onPress={() => {

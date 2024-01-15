@@ -9,6 +9,7 @@ export interface TaskDataType {
   dateAppointment: string;
   targetSpray: string[];
   preparationBy: string;
+  preparationRemark?: string;
   purposeSpray: {
     id: string;
     name: string;

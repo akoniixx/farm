@@ -27,6 +27,7 @@ import { NetworkProvider } from './src/contexts/NetworkContext';
 import { MaintenanceProvider } from './src/contexts/MaintenanceContext';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { HighlightProvider } from './src/contexts/HighlightContext';
+import { PointProvider } from './src/contexts/PointContext';
 
 crashlytics().setCrashlyticsCollectionEnabled(true);
 const App = () => {
@@ -66,22 +67,24 @@ const App = () => {
     <>
       <NetworkProvider>
         <RecoilRoot>
-          <HighlightProvider>
-            <NavigationContainer ref={navigationRef}>
-              <PaperProvider>
-                <AuthProvider>
-                  <MaintenanceProvider>
-                    <AutoBookingProvider>
-                      <SheetProvider>
-                        <AppNavigator />
-                      </SheetProvider>
-                    </AutoBookingProvider>
-                  </MaintenanceProvider>
-                </AuthProvider>
-              </PaperProvider>
-              <Toast config={toastConfig} />
-            </NavigationContainer>
-          </HighlightProvider>
+          <PointProvider>
+            <HighlightProvider>
+              <NavigationContainer ref={navigationRef}>
+                <PaperProvider>
+                  <AuthProvider>
+                    <MaintenanceProvider>
+                      <AutoBookingProvider>
+                        <SheetProvider>
+                          <AppNavigator />
+                        </SheetProvider>
+                      </AutoBookingProvider>
+                    </MaintenanceProvider>
+                  </AuthProvider>
+                </PaperProvider>
+                <Toast config={toastConfig} />
+              </NavigationContainer>
+            </HighlightProvider>
+          </PointProvider>
         </RecoilRoot>
       </NetworkProvider>
     </>

@@ -130,6 +130,12 @@ export class ProfileDatasource {
       ...payload,
     });
   }
+  static async getAddressListById(id: string) {
+    return httpClient
+      .get(BASE_URL + `/farmer/farmer-address/${id}`)
+      .then(res => res.data)
+      .catch(err => console.log(err));
+  }
   static async removeProfileImage({
     id,
     path,

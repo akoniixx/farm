@@ -1,3 +1,6 @@
+## Fix [1.6.1] 2024-01-11
+- fix ui smooth 
+- improve create task have textarea preparation
 ## Change [1.6.0] 2023-12-18
 - add Guru Kaset
 - fix bug

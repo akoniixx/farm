@@ -122,4 +122,10 @@ export default {
   showReadIcon: require('./showReadIcon.png'),
   loveIcon: require('./loveIcon.png'),
   loveFill: require('./loveFill.png'),
+  gift: require('./gift.png'),
+  giftActive: require('./giftActive.png'),
+  successModalIcon: require('./successModalIcon.png'),
+  minusButtonIcon: require('./minusButtonIcon.png'),
+  minusButtonDisableIcon: require('./minusButtonDisableIcon.png'),
+  plusButtonIcon: require('./plusButtonIcon.png'),
 };

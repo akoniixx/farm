@@ -4,6 +4,7 @@ import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { colors, font, icons } from '../../assets';
 import { normalize } from '../../functions/Normalize';
 import Text from '../Text/Text';
+import PreparationRemark from '../PreparationRemark';
 
 interface DateTimeProp {
   date: string;
@@ -23,6 +24,7 @@ interface TargetSprayProp {
   target: string;
   periodSpray: string;
   preparationBy: string;
+  preparationRemark?: string;
 }
 
 export const DateTimeDetail: React.FC<DateTimeProp> = ({
@@ -151,20 +153,21 @@ export const PlotDetail: React.FC<PlotDetailProp> = ({
       <View
         style={{
           flexDirection: 'row',
-          alignItems: 'baseline',
+          alignItems: 'center',
           justifyContent: 'space-between',
+          flex: 1,
         }}>
-        <View style={{ width: '60%' }}>
+        <View style={{ flex: 1 }}>
           <Text
             numberOfLines={1}
             style={[
               styles.label,
-              { color: '#1F8449', marginBottom: normalize(10) },
+              { color: '#1F8449', marginBottom: normalize(10), width: '80%' },
             ]}>
             {plotName}
           </Text>
         </View>
-        <View style={{ alignItems: 'flex-end', width: '40%' }}>
+        <View style={{ alignItems: 'flex-end' }}>
           <View
           // onPress={onPressMap}
           >
@@ -232,6 +235,7 @@ export const TargetSpray: React.FC<TargetSprayProp> = ({
   target,
   periodSpray,
   preparationBy,
+  preparationRemark,
 }) => {
   return (
     <View
@@ -275,6 +279,7 @@ export const TargetSpray: React.FC<TargetSprayProp> = ({
             </Text>
           </View>
         </View>
+        <PreparationRemark preparationRemark={preparationRemark} />
       </View>
     </View>
   );

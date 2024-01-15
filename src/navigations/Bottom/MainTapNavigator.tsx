@@ -3,16 +3,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { colors, font, icons } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize } from '@rneui/themed';
-import { Image } from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import PromotionScreen from '../../screens/PromotionScreen/PromotionScreen';
 import TaskScreen from '../../screens/MyTaskScreen/MyTaskScreen';
 import messaging from '@react-native-firebase/messaging';
 import * as RootNavigation from '../RootNavigation';
-import FarmerPlotSuccess from '../../components/Modal/FarmerPlotSuccess';
 import FarmerRegisterSuccess from '../../components/Modal/FarmerRegisterSuccess';
 import FarmerRegisterFailed from '../../components/Modal/FarmerRegisterFailed';
-import FarmerPlotFailed from '../../components/Modal/FarmerPlotFailed';
 import { TaskDatasource } from '../../datasource/TaskDatasource';
 import { TabActions } from '@react-navigation/native';
 import MainScreen from '../../screens/MainScreen/MainScreen';
@@ -21,6 +19,7 @@ import { mixpanel } from '../../../mixpanel';
 import Text from '../../components/Text/Text';
 import { useMaintenance } from '../../contexts/MaintenanceContext';
 import analytics from '@react-native-firebase/analytics';
+import RewardListScreen from '../../screens/RewardListScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -217,7 +216,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
           initialRouteName={initialRouteName}
           screenOptions={{
             headerShown: false,
-            tabBarStyle: { height: '9%', borderBottomColor: colors.white },
+            tabBarStyle: { height: '10%', borderBottomColor: colors.white },
           }}>
           <Tab.Screen
             listeners={{
@@ -235,6 +234,18 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             options={{
               tabBarLabelStyle: {
                 fontFamily: font.AnuphanMedium,
+              },
+              tabBarButton(props) {
+                return (
+                  <TouchableOpacity
+                    {...props}
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flex: 1,
+                    }}
+                  />
+                );
               },
 
               lazy: true,
@@ -263,10 +274,10 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             }}
           />
           <Tab.Screen
-            name="งานของฉัน"
+            name="งาน"
             listeners={{
               tabPress: e => {
-                const jumpAction = TabActions.jumpTo('งานของฉัน');
+                const jumpAction = TabActions.jumpTo('งาน');
                 mixpanel.track('MainBottomTab_BottomTab_tapped', {
                   tabName: 'งานของฉัน',
                   changeTo: 'TaskScreen',
@@ -276,6 +287,18 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             }}
             component={TaskScreen}
             options={{
+              tabBarButton(props) {
+                return (
+                  <TouchableOpacity
+                    {...props}
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flex: 1,
+                    }}
+                  />
+                );
+              },
               tabBarLabelStyle: {
                 fontFamily: font.AnuphanMedium,
               },
@@ -287,7 +310,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
                     fontSize: normalize(16),
                     color: focused ? colors.greenLight : '#8D96A0',
                   }}>
-                  งานของฉัน
+                  งาน
                 </Text>
               ),
               tabBarIcon: i =>
@@ -304,6 +327,60 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
                 ),
             }}
           />
+          {/* <Tab.Screen
+            name="รางวัล"
+            listeners={{
+              tabPress: e => {
+                const jumpAction = TabActions.jumpTo('รางวัล');
+                mixpanel.track('MainBottomTab_BottomTab_tapped', {
+                  tabName: 'รางวัล',
+                  changeTo: 'RewardListScreen',
+                });
+                navigation.dispatch(jumpAction);
+              },
+            }}
+            component={RewardListScreen}
+            options={{
+              tabBarLabelStyle: {
+                fontFamily: font.AnuphanMedium,
+              },
+              tabBarButton(props) {
+                return (
+                  <TouchableOpacity
+                    {...props}
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flex: 1,
+                    }}
+                  />
+                );
+              },
+              lazy: true,
+              tabBarLabel: ({ focused }) => (
+                <Text
+                  style={{
+                    fontFamily: fonts.AnuphanMedium,
+                    fontSize: normalize(16),
+                    color: focused ? colors.greenLight : '#8D96A0',
+                  }}>
+                  รางวัล
+                </Text>
+              ),
+              tabBarIcon: i =>
+                i.focused ? (
+                  <Image
+                    source={icons.giftActive}
+                    style={{ width: 22, height: 22, top: normalize(3) }}
+                  />
+                ) : (
+                  <Image
+                    source={icons.gift}
+                    style={{ width: 22, height: 22, top: normalize(3) }}
+                  />
+                ),
+            }}
+          /> */}
           <Tab.Screen
             listeners={{
               tabPress: e => {
@@ -320,6 +397,18 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             options={{
               tabBarLabelStyle: {
                 fontFamily: font.AnuphanMedium,
+              },
+              tabBarButton(props) {
+                return (
+                  <TouchableOpacity
+                    {...props}
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flex: 1,
+                    }}
+                  />
+                );
               },
               lazy: true,
               tabBarLabel: ({ focused }) => (
@@ -347,12 +436,12 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
             }}
           />
           <Tab.Screen
-            name="บัญชีของฉัน"
+            name="บัญชี"
             listeners={{
               tabPress: e => {
-                const jumpAction = TabActions.jumpTo('บัญชีของฉัน');
+                const jumpAction = TabActions.jumpTo('บัญชี');
                 mixpanel.track('MainBottomTab_BottomTab_tapped', {
-                  tabName: 'บัญชีของฉัน',
+                  tabName: 'บัญชี',
                   changeTo: 'ProfileScreen',
                 });
                 navigation.dispatch(jumpAction);
@@ -363,6 +452,18 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
               tabBarLabelStyle: {
                 fontFamily: font.AnuphanMedium,
               },
+              tabBarButton(props) {
+                return (
+                  <TouchableOpacity
+                    {...props}
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flex: 1,
+                    }}
+                  />
+                );
+              },
               tabBarLabel: ({ focused }) => (
                 <Text
                   style={{
@@ -370,7 +471,7 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
                     fontSize: normalize(16),
                     color: focused ? colors.greenLight : '#8D96A0',
                   }}>
-                  บัญชีของฉัน
+                  บัญชี
                 </Text>
               ),
               tabBarIcon: i =>

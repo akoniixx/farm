@@ -19,28 +19,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { formatNumberWithComma } from '../../utils/ formatNumberWithComma';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import Text from '../../components/Text/Text';
+import { usePoint } from '../../contexts/PointContext';
+import ShowCurrentPoint from '../../components/ShowCurrentPoint/ShowCurrentPoint';
 
 const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
-  const [dataPoint, setDataPoint] = useState<any>();
   const [dataAllPoint, setDataAllPoint] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [total, setTotal] = useState(0);
   const row = 10;
   const [current, setCurrent] = useState(1);
+  const { getCurrentPoint } = usePoint();
   useEffect(() => {
-    getPointFarmer();
+    getCurrentPoint();
     getAllPoint();
   }, []);
-  const getPointFarmer = async () => {
-    const farmer_id: any = await AsyncStorage.getItem('farmer_id');
-    await historyPoint
-      .getPoint(farmer_id)
-      .then(res => {
-        setDataPoint(res.balance);
-      })
-      .catch(err => console.log(err));
-  };
+
   const getAllPoint = async () => {
     setLoading(true);
     const farmer_id: any = await AsyncStorage.getItem('farmer_id');
@@ -113,39 +107,7 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
             height: normalize(50),
             alignSelf: 'center',
           }}>
-          <View
-            style={{
-              borderRadius: normalize(10),
-              borderWidth: normalize(1),
-              borderColor: colors.greenLight,
-              height: '100%',
-              width: normalize(330),
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-              shadowRadius: normalize(30),
-              backgroundColor: colors.white,
-              shadowColor: colors.greenLight,
-              shadowOpacity: 0.4,
-            }}>
-            <Image
-              source={icons.ICKPoint}
-              style={{
-                width: normalize(35),
-                height: normalize(35),
-              }}
-            />
-            <Text
-              style={{
-                fontFamily: font.AnuphanBold,
-                color: colors.fontBlack,
-                fontSize: normalize(18),
-                marginLeft: normalize(15),
-                marginRight: normalize(5),
-              }}>
-              {formatNumberWithComma(dataPoint || '0')} แต้ม
-            </Text>
-          </View>
+          <ShowCurrentPoint />
         </View>
       </View>
       <View style={styles.inner}>

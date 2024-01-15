@@ -113,7 +113,9 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                 <ProgressiveImage
                   borderRadius={28}
                   source={
-                    profile === null ? image.empty_droner : { uri: profile }
+                    profile === null
+                      ? image.defaultDronerImage
+                      : { uri: profile }
                   }
                   style={{
                     borderRadius: normalize(28),

@@ -4,7 +4,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  TouchableWithoutFeedback,
   Pressable,
 } from 'react-native';
 import React, { useState } from 'react';
@@ -26,6 +25,7 @@ interface Props {
   iconTop?: JSX.Element;
   disablePrimary?: boolean;
   noBackdrop?: boolean;
+  subButtonType?: 'noBorder' | 'border';
 }
 export default function Modal({
   visible,
@@ -41,6 +41,7 @@ export default function Modal({
   disablePrimary = false,
   iconTop,
   noBackdrop = false,
+  subButtonType = 'noBorder',
 }: Props) {
   function isPromise(func: any) {
     return Promise.resolve(func) instanceof Promise;
@@ -65,7 +66,7 @@ export default function Modal({
               backgroundColor: colors.white,
               borderRadius: 12,
               paddingHorizontal: 16,
-              paddingTop: 32,
+              paddingTop: 20,
               paddingBottom: 16,
               width: '100%',
               alignItems: 'center',
@@ -74,15 +75,15 @@ export default function Modal({
               <TouchableOpacity
                 style={{
                   position: 'absolute',
-                  top: 16,
-                  right: 24,
+                  top: 8,
+                  right: 8,
                 }}
                 onPress={onClose}>
                 <Image
                   source={icons.closeBlack}
                   style={{
-                    width: 18,
-                    height: 18,
+                    width: 32,
+                    height: 32,
                   }}
                 />
               </TouchableOpacity>
@@ -94,8 +95,8 @@ export default function Modal({
             ) : (
               <Text
                 style={{
-                  fontSize: 20,
-                  fontFamily: font.AnuphanMedium,
+                  fontSize: 22,
+                  fontFamily: font.AnuphanSemiBold,
                   color: colors.fontBlack,
                 }}>
                 {title}
@@ -106,8 +107,8 @@ export default function Modal({
             ) : (
               <Text
                 style={{
-                  fontSize: 14,
-                  fontFamily: font.AnuphanLight,
+                  fontSize: 18,
+                  fontFamily: font.SarabunMedium,
                   color: colors.inkLight,
                   marginTop: 8,
                 }}>
@@ -138,7 +139,11 @@ export default function Modal({
               }}
             />
             <TouchableOpacity
-              style={styles.subButton}
+              style={
+                subButtonType === 'border'
+                  ? styles.subButton
+                  : styles.subButtonNoBorder
+              }
               onPress={() => {
                 onPressSecondary && onPressSecondary();
               }}>
@@ -153,7 +158,8 @@ export default function Modal({
 const styles = StyleSheet.create({
   textButton: {
     fontSize: 18,
-    fontFamily: font.AnuphanBold,
+    fontFamily: font.AnuphanSemiBold,
+
     color: colors.white,
   },
   button: {
@@ -163,7 +169,7 @@ const styles = StyleSheet.create({
     height: 54,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#F86820',
+    shadowColor: colors.greenLight,
     shadowOffset: {
       width: 0,
       height: 4,
@@ -173,7 +179,7 @@ const styles = StyleSheet.create({
   },
   textSubButton: {
     fontSize: 18,
-    fontFamily: font.AnuphanBold,
+    fontFamily: font.AnuphanSemiBold,
     color: colors.fontBlack,
   },
   subButton: {
@@ -183,6 +189,17 @@ const styles = StyleSheet.create({
     height: 54,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 16,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: colors.grey40,
+  },
+  subButtonNoBorder: {
+    width: '100%',
+    backgroundColor: 'transparent',
+    borderRadius: 8,
+    height: 54,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
   },
 });
