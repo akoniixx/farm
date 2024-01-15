@@ -53,7 +53,7 @@ const CustomHeader: React.FC<Prop> = ({
         <View style={styles.headerTitleWraper}>
           <Text
             style={{
-              fontFamily: font.AnuphanBold,
+              fontFamily: font.AnuphanSemiBold,
               fontSize: normalize(20),
               color: titleColor ?? colors.fontBlack,
               textAlign: 'center',

@@ -42,8 +42,13 @@ import GuruKasetScreen from '../screens/GuruKasetScreen';
 import GuruKasetDetailScreen from '../screens/GuruKasetDetailScreen';
 import MyRewardScreen from '../screens/MyRewardScreen';
 import RewardDetailScreen from '../screens/RewardDetailScreen';
-import { RewardListType } from '../types/RewardType';
+import { DigitalRewardType, RewardListType } from '../types/RewardType';
 import RedeemSelectAddressScreen from '../screens/RedeemSelectAddressScreen';
+import CustomAddressScreen from '../screens/CustomAddressScreen';
+import RewardDetailReadOnlyScreen from '../screens/RewardDetailReadOnlyScreen';
+import RedeemDetailDigitalReadOnlyScreen from '../screens/RedeemDetailDigitalReadOnlyScreen';
+import RedeemDetailDigitalScreen from '../screens/RedeemDetailDigitalScreen';
+import RedeemDetailPhysicalScreen from '../screens/RedeemDetailPhysicalScreen';
 
 export type RedeemSelectAddressScreenType = RewardListType & {
   amountExchange: number;
@@ -108,8 +113,30 @@ export type MainStackParamList = {
     id: string;
     isDigital: boolean;
   };
+  RewardDetailReadOnlyScreen: {
+    id: string;
+    isDigital: boolean;
+  };
   RedeemSelectAddressScreen: {
     data: RedeemSelectAddressScreenType;
+  };
+  CustomAddressScreen: {
+    data: any;
+    isEdit?: boolean;
+    initialValues?: any;
+  };
+  RedeemDetailDigitalScreen: {
+    data: DigitalRewardType;
+    imagePath: string;
+    expiredUsedDate: string;
+  };
+  RedeemDetailDigitalReadOnlyScreen: {
+    id: string;
+    isFromHistory?: boolean;
+  };
+  RedeemDetailPhysicalScreen: {
+    id: string;
+    tab?: string;
   };
 };
 export type StackNativeScreenProps<T extends keyof MainStackParamList> =
@@ -213,8 +240,28 @@ const MainNavigator: React.FC<any> = () => {
             component={RewardDetailScreen}
           />
           <Stack.Screen
+            name="RewardDetailReadOnlyScreen"
+            component={RewardDetailReadOnlyScreen}
+          />
+          <Stack.Screen
             name="RedeemSelectAddressScreen"
             component={RedeemSelectAddressScreen}
+          />
+          <Stack.Screen
+            name="CustomAddressScreen"
+            component={CustomAddressScreen}
+          />
+          <Stack.Screen
+            name="RedeemDetailDigitalScreen"
+            component={RedeemDetailDigitalScreen}
+          />
+          <Stack.Screen
+            name="RedeemDetailDigitalReadOnlyScreen"
+            component={RedeemDetailDigitalReadOnlyScreen}
+          />
+          <Stack.Screen
+            name="RedeemDetailPhysicalScreen"
+            component={RedeemDetailPhysicalScreen}
           />
         </Stack.Group>
       </Stack.Navigator>

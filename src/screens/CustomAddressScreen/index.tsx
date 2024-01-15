@@ -8,15 +8,19 @@ import {
 import React, { useEffect, useMemo } from 'react';
 import { colors, font } from '../../assets';
 import CustomHeader from '../../components/CustomHeader';
-import AnimatedInput from '../../components/Input/AnimatedInput';
-import Dropdown from '../../components/Dropdown/Dropdown';
 import { QueryLocation } from '../../datasource/LocationDatasource';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProfileDatasource } from '../../datasource/ProfileDatasource';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
-import Text from '../../components/Text';
 import { mixpanel } from '../../../mixpanel';
+import InputTextLabel from '../../components/InputText/InputTextLabel';
+import Text from '../../components/Text/Text';
+import InputSelectSheet from '../../components/InputText/InputSelectSheet';
 
+type StateAddress = {
+  label: string;
+  value: string;
+};
 export default function CustomAddressScreen({
   navigation,
   route,
@@ -46,17 +50,17 @@ export default function CustomAddressScreen({
     },
     postCode: '',
   });
-  const [provinces, setProvinces] = React.useState([]);
-  const [districts, setDistricts] = React.useState([]);
+  const [provinces, setProvinces] = React.useState<StateAddress[]>([]);
+  const [districts, setDistricts] = React.useState<StateAddress[]>([]);
   const [subDistricts, setSubDistricts] = React.useState([]);
   const [postCode, setPostCode] = React.useState<any>([]);
   const [loading, setLoading] = React.useState(false);
   const onConfirm = async () => {
     try {
       setLoading(true);
-      const dronerId = await AsyncStorage.getItem('droner_id');
+      const farmerId = await AsyncStorage.getItem('farmer_id');
       const payload = {
-        dronerId: dronerId || '',
+        farmerId: farmerId || '',
         address1: objInput.addressNo,
         address2: objInput.detail,
         provinceId: objInput.province.value,
@@ -74,9 +78,9 @@ export default function CustomAddressScreen({
       }
 
       if (!isEdit) {
-        await ProfileDatasource.postAddressList(payload);
+        await ProfileDatasource.postOtherAddressList(payload);
       } else {
-        await ProfileDatasource.editAddressList({
+        await ProfileDatasource.updateOtherAddressList({
           ...payload,
           addressId: initialValue.id,
         });
@@ -86,6 +90,7 @@ export default function CustomAddressScreen({
         navigation.goBack();
       }, 300);
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   };
@@ -184,125 +189,124 @@ export default function CustomAddressScreen({
         onPressBack={() => {
           navigation.goBack();
         }}
-        title="ที่อยู่จัดส่ง"
+        title="เพิ่มที่อยู่"
       />
       <ScrollView>
         <View style={styles.container}>
-          <AnimatedInput
+          <InputTextLabel
             label="บ้านเลขที่"
+            placeholder="ระบุบ้านเลขที่"
             onBlur={() => {
               mixpanel.track('CustomAddressScreen_AddressNo_Input', {
                 addressNo: objInput.addressNo,
               });
             }}
+            required
             value={objInput.addressNo}
             onChangeText={(value: string) => onChangeText('addressNo', value)}
           />
-          <AnimatedInput
-            label="รายละเอียดที่อยู่ (หมู่, ถนน)"
+          <InputTextLabel
+            required
+            label="รายละเอียดที่อยู่"
             onBlur={() => {
               mixpanel.track('CustomAddressScreen_Detail_Input', {
                 detail: objInput.detail,
               });
             }}
+            placeholder="ระบุรายละเอียด"
             value={objInput.detail}
             onChangeText={(value: string) => onChangeText('detail', value)}
           />
-          <Dropdown
-            placeholder="จังหวัด"
-            items={provinces}
-            value={objInput.province.value}
-            onChange={(v: { label: string; value: string }) => {
-              mixpanel.track('CustomAddressScreen_Province_Dropdown', {
-                province: v.label,
-                value: v.value,
-              });
-              setObjInput({
-                ...objInput,
-                province: {
-                  label: v.label,
-                  value: v.value,
-                },
-                district: {
-                  label: '',
-                  value: '',
-                },
-                subDistrict: {
-                  label: '',
-                  value: '',
-                },
-                postCode: '',
-              });
-            }}
-          />
-          <View
-            style={{
-              zIndex: -10,
-            }}>
-            <Dropdown
-              placeholder="อำเภอ"
-              items={districts}
-              value={objInput.district.value}
-              onChange={(v: { label: string; value: string }) => {
-                mixpanel.track('CustomAddressScreen_District_Dropdown', {
-                  district: v.label,
-                  value: v.value,
-                });
-                setObjInput({
-                  ...objInput,
+
+          <InputSelectSheet
+            required
+            label="จังหวัด"
+            placeholder="เลือกจังหวัด"
+            value={objInput.province}
+            listData={provinces}
+            sheetId="selectAddress"
+            titleSheet="จังหวัด"
+            onChange={(value: any) => {
+              setObjInput(prev => {
+                return {
+                  ...prev,
+                  province: value,
                   district: {
-                    label: v.label,
-                    value: v.value,
+                    label: '',
+                    value: '',
                   },
                   subDistrict: {
                     label: '',
                     value: '',
                   },
                   postCode: '',
-                });
-              }}
-            />
-          </View>
-          <View
-            style={{
-              zIndex: -20,
-            }}>
-            <Dropdown
-              placeholder="ตำบล"
-              items={subDistricts}
-              value={objInput.subDistrict.value}
-              onChange={(v: { label: string; value: string }) => {
-                mixpanel.track('CustomAddressScreen_SubDistrict_Dropdown', {
-                  subDistrict: v.label,
-                  value: v.value,
-                  postCode: v.value,
-                });
-                setObjInput({
-                  ...objInput,
+                };
+              });
+            }}
+          />
+          <InputSelectSheet
+            required
+            label="อำเภอ"
+            placeholder="เลือกอำเภอ"
+            value={objInput.district}
+            listData={districts}
+            sheetId="selectAddress"
+            titleSheet="อำเภอ"
+            onChange={(value: any) => {
+              setObjInput(prev => {
+                return {
+                  ...prev,
 
-                  subDistrict: {
-                    label: v.label,
-                    value: v.value,
+                  district: {
+                    label: value.label,
+                    value: value.value,
                   },
-                  postCode: v.value
-                    ? postCode.find(
-                        (item: any) => item.subdistrictId === v.value,
-                      )?.postcode
-                    : '',
-                });
-              }}
-            />
-          </View>
-          <View
+                  subDistrict: {
+                    label: '',
+                    value: '',
+                  },
+                  postCode: '',
+                };
+              });
+            }}
+          />
+          <InputSelectSheet
+            required
+            label="ตำบล"
+            placeholder="เลือกตำบล"
+            value={objInput.subDistrict}
+            listData={subDistricts}
+            sheetId="selectAddress"
+            titleSheet="ตำบล"
+            onChange={(value: any) => {
+              const findPostCode = value.value
+                ? postCode.find(
+                    (item: any) => item.subdistrictId === value.value,
+                  )?.postcode
+                : '';
+              setObjInput({
+                ...objInput,
+                subDistrict: {
+                  label: value.label,
+                  value: value.value,
+                },
+                postCode: findPostCode,
+              });
+              setPostCode(findPostCode);
+            }}
+          />
+
+          <InputTextLabel
             style={{
-              zIndex: -30,
-            }}>
-            <AnimatedInput
-              editable={false}
-              label="รหัสไปรษณีย์"
-              value={objInput.postCode}
-            />
-          </View>
+              backgroundColor: colors.grey5,
+              borderColor: colors.grey5,
+            }}
+            placeholder="รหัสไปรษณีย์"
+            editable={false}
+            label="รหัสไปรษณีย์"
+            value={objInput.postCode}
+            required
+          />
         </View>
       </ScrollView>
 
@@ -311,7 +315,15 @@ export default function CustomAddressScreen({
           style={validate ? styles.button : styles.disabledButton}
           onPress={onConfirm}
           disabled={validate ? false : true}>
-          <Text style={styles.textButton}>บันทึก</Text>
+          <Text
+            style={[
+              styles.textButton,
+              {
+                color: validate ? colors.white : colors.grey20,
+              },
+            ]}>
+            บันทึก
+          </Text>
         </TouchableOpacity>
       </View>
       <Spinner
@@ -327,23 +339,15 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   footer: {
-    height: 100,
+    height: 80,
     backgroundColor: colors.white,
 
     flexDirection: 'row',
     padding: 16,
-    elevation: 8,
-    shadowColor: '#242D35',
-    shadowOffset: {
-      width: 0,
-      height: -8,
-    },
-    shadowOpacity: 0.04,
-    shadowRadius: 16,
   },
   textButton: {
     fontSize: 18,
-    fontFamily: font.bold,
+    fontFamily: font.AnuphanSemiBold,
     color: colors.white,
   },
   disabledButton: {
@@ -363,12 +367,12 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    backgroundColor: colors.orange,
+    backgroundColor: colors.greenLight,
     borderRadius: 12,
     height: 54,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#F86820',
+    shadowColor: colors.greenLight,
     shadowOffset: {
       width: 0,
       height: 4,

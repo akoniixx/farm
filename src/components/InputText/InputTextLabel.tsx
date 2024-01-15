@@ -21,7 +21,14 @@ export default function InputTextLabel({
       <Text style={styles.label}>
         {label}{' '}
         {required ? (
-          <Text style={{ color: colors.errorText, fontSize: 24 }}>*</Text>
+          <Text
+            style={{
+              color: colors.errorText,
+              fontSize: 24,
+              fontFamily: font.AnuphanRegular,
+            }}>
+            *
+          </Text>
         ) : optional ? (
           <Text style={{ color: colors.grey30 }}> (ไม่ระบุก็ได้)</Text>
         ) : null}
@@ -29,12 +36,14 @@ export default function InputTextLabel({
       <TextInput
         allowFontScaling={false}
         editable={true}
-        placeholderTextColor={colors.gray}
+        placeholderTextColor={colors.grey30}
         style={[styles.input, style]}
         {...props}
         onChangeText={text => {
-          const newTextRemoveSpace = text.replace(/\s+/g, '');
-          props.onChangeText?.(newTextRemoveSpace);
+          if (text.length > 0 && text[0] === ' ') {
+            text = text.slice(1);
+          }
+          props.onChangeText?.(text);
         }}
       />
     </View>
@@ -43,7 +52,7 @@ export default function InputTextLabel({
 
 const styles = StyleSheet.create({
   label: {
-    fontFamily: font.AnuphanBold,
+    fontFamily: font.AnuphanSemiBold,
     fontSize: normalize(20),
     color: colors.fontBlack,
     lineHeight: normalize(28),
@@ -55,7 +64,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingVertical: 6,
     paddingHorizontal: 12,
-    borderColor: colors.disable,
+    borderColor: colors.grey20,
     borderWidth: 1,
     borderRadius: normalize(10),
     color: colors.fontBlack,
