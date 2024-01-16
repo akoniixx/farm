@@ -215,6 +215,8 @@ export default function RewardDetailScreen({ navigation, route }: Props) {
               height: width,
               width: width,
               borderRadius: 12,
+              borderWidth: 1,
+              borderColor: colors.greyDivider,
             }}
           />
         </View>

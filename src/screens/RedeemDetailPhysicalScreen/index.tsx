@@ -15,7 +15,7 @@ interface Props {
 
 export interface RedeemDetail {
   id: string;
-  dronerId: string;
+  farmerId: string;
   campaignId: string | null;
   campaignName: string | null;
   allValue: number;
@@ -46,7 +46,7 @@ export interface RedeemDetail {
     missionName?: string | null;
     rewardQuantity: number;
   };
-  dronerRedeemHistories: {
+  farmerRedeemHistories: {
     id: string;
     dronerTransactionId: string;
     status: string;
@@ -57,32 +57,6 @@ export interface RedeemDetail {
     createAt: string;
     updateAt: string;
     updateBy: string;
-
-    dronerTransaction: {
-      id: string;
-      dronerId: string;
-      campaignId: string | null;
-      campaignName: string | null;
-      allValue: number;
-      amountValue: number;
-      beforeValue: number;
-      balance: number;
-      beforeRai: number;
-      afterRai: number;
-      raiAmount: number;
-      rewardId: string;
-      rewardName: string;
-      rewardQuantity: number;
-      rewardCode: string;
-      receiverDetail: {
-        tel: string;
-        address: string;
-        lastname: string;
-        firstname: string;
-      };
-      createAt: string;
-      updateAt: string;
-    };
   }[];
   campaign: string | null;
   reward: {
@@ -143,6 +117,7 @@ export default function RedeemDetailPhysicalScreen({
   const [redeemDetail, setRedeemDetail] = useState<RedeemDetail>(
     {} as RedeemDetail,
   );
+  console.log('redeemDetail', JSON.stringify(redeemDetail, null, 2));
 
   useEffect(() => {
     const getRedeemDetail = async () => {
@@ -165,9 +140,10 @@ export default function RedeemDetailPhysicalScreen({
   const onPressBack = () => {
     const currentTab = tab
       ? tab
-      : redeemDetail.redeemDetail.rewardType === 'PHYSICAL'
-      ? 'history'
-      : 'readyToUse';
+      : redeemDetail.redeemDetail.rewardType === 'PHYSICAL' &&
+        redeemDetail.redeemDetail.redeemStatus === 'REQUEST'
+      ? 'delivery'
+      : 'history';
     navigation.navigate('MyRewardScreen', {
       tab: currentTab,
     });
@@ -183,7 +159,11 @@ export default function RedeemDetailPhysicalScreen({
         onPressBack={onPressBack}
         title="สรุปรายละเอียดการแลก"
       />
-      {loading ? <View /> : <Content redeemDetail={redeemDetail} />}
+      {loading ? (
+        <View />
+      ) : (
+        <Content redeemDetail={redeemDetail} navigation={navigation} />
+      )}
 
       <Spinner
         visible={loading}
