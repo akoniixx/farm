@@ -1,3 +1,7 @@
+## Current Version [1.7.0] 2024-01-16
+- 
+
+
 ## Fix [1.6.1] 2024-01-11
 - fix ui smooth 
 - improve create task have textarea preparation
