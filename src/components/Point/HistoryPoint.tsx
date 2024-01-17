@@ -17,6 +17,16 @@ interface guruData {
     campaignName: string;
   };
   isSpecialPointFarmer?: boolean;
+  redeemNo?: string | null;
+  rewardName?: string;
+  redeemDetail: {
+    redeemNo: string;
+    rewardId: string;
+    rewardName: string;
+    rewardType: string;
+    redeemStatus: string;
+    redeemTransactionId: string;
+  };
 }
 
 const objAction = {
@@ -31,9 +41,13 @@ export const HistoryPoint: React.FC<guruData> = ({
   taskNo,
   campaign,
   isSpecialPointFarmer = false,
+  redeemNo = null,
+  rewardName,
+  redeemDetail,
 }) => {
   const { title } = useMemo(() => {
     let title = '';
+
     if (action === 'INCREASE' && taskId !== null && !isSpecialPointFarmer) {
       title = 'จ้างโดรนเกษตร';
     } else if (action === 'RETURN') {
@@ -44,13 +58,26 @@ export const HistoryPoint: React.FC<guruData> = ({
       title = `แต้มถูกยกเลิก จาก${campaign?.campaignName || ''}`;
     } else if (action === 'RETURN_REVERT' && !isSpecialPointFarmer) {
       title = 'แต้มถูกยกเลิก จากจ้างโดรนเกษตร';
+    } else if (action === 'DECREASE' && redeemNo !== null) {
+      title = `แลก ${rewardName}`;
     } else {
-      title = 'ส่วนลดฉีดพ่น';
+      title = 'แลกส่วนลดฉีดพ่น';
     }
     return {
       title,
     };
-  }, [action, taskId, isSpecialPointFarmer, campaign]);
+  }, [action, taskId, isSpecialPointFarmer, campaign, redeemNo, rewardName]);
+
+  const codeNo = useMemo(() => {
+    const redeemStatusCancel =
+      redeemDetail?.redeemStatus && redeemDetail?.redeemStatus === 'CANCEL';
+    if (redeemStatusCancel) {
+      return redeemDetail?.redeemNo || redeemNo;
+    } else if (action === 'DECREASE' && redeemNo !== null) {
+      return redeemNo;
+    }
+    return taskNo;
+  }, [redeemDetail, taskNo, action, redeemNo]);
   return (
     <View key={index}>
       <View
@@ -72,7 +99,7 @@ export const HistoryPoint: React.FC<guruData> = ({
           <Text style={styles.title} numberOfLines={2}>
             {title}
           </Text>
-          <Text style={styles.textDate}>{taskNo || ''}</Text>
+          <Text style={styles.textDate}>{codeNo}</Text>
         </View>
         <View style={{ flex: 0.4 }}>
           {action === 'INCREASE' ? (

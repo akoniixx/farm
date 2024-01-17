@@ -74,6 +74,7 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
       setLoading(false);
     }
   }, [current, dataAllPoint, total]);
+  console.log(JSON.stringify(dataAllPoint, null, 2));
   return (
     <View
       style={{
@@ -151,7 +152,10 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
                 taskId={item.taskId}
                 taskNo={item.taskNo != null ? item.taskNo : ''}
                 campaign={item?.campaign}
+                redeemNo={item?.redeemNo}
                 isSpecialPointFarmer={item.isSpecialPointFarmer}
+                rewardName={item?.rewardName}
+                redeemDetail={item?.redeemDetail}
               />
             )}
           />

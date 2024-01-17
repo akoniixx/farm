@@ -99,6 +99,9 @@ export default function RewardDetailReadOnlyScreen({
       </View>
 
       <ScrollView
+        scrollIndicatorInsets={{
+          right: 1,
+        }}
         style={{
           flex: 1,
           backgroundColor: colors.white,

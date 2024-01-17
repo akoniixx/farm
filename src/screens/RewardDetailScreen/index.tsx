@@ -13,12 +13,9 @@ import { RouteProp } from '@react-navigation/native';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import { StackNavigationHelpers } from '@react-navigation/stack/lib/typescript/src/types';
 import CustomHeader from '../../components/CustomHeader';
-import Counter from '../../components/Counter/Counter';
-import Modal from '../../components/Modal/Modal';
 import { rewardDatasource } from '../../datasource/RewardDatasource';
 import { usePoint } from '../../contexts/PointContext';
 
-import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../../contexts/AuthContext';
 import { mixpanel } from '../../../mixpanel';
@@ -195,6 +192,9 @@ export default function RewardDetailScreen({ navigation, route }: Props) {
       </View>
 
       <ScrollView
+        scrollIndicatorInsets={{
+          right: 1,
+        }}
         style={{
           flex: 1,
           backgroundColor: colors.white,
