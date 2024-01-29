@@ -95,13 +95,21 @@ export const HistoryPoint: React.FC<guruData> = ({
           paddingHorizontal: 16,
           paddingVertical: 16,
         }}>
-        <View style={{ flex: 0.6 }}>
+        <View style={{ flex: 0.5 }}>
           <Text style={styles.title} numberOfLines={2}>
             {title}
           </Text>
-          <Text style={styles.textDate}>{codeNo}</Text>
+          <Text
+            style={[
+              styles.textDate,
+              {
+                lineHeight: 26,
+              },
+            ]}>
+            {codeNo}
+          </Text>
         </View>
-        <View style={{ flex: 0.4 }}>
+        <View style={{ flex: 0.5 }}>
           {action === 'INCREASE' ? (
             <View
               style={{
@@ -122,7 +130,15 @@ export const HistoryPoint: React.FC<guruData> = ({
               <Text style={styles.positive}>{`${formatNumberWithComma(
                 point,
               )} แต้ม`}</Text>
-              <Text style={styles.textDate}>
+              <Text
+                style={[
+                  styles.textDate,
+                  {
+                    maxWidth: Dimensions.get('window').width / 2 - 16,
+                    minWidth: normalize(150),
+                    textAlign: 'right',
+                  },
+                ]}>
                 {momentExtend.toBuddhistYear(date, `DD MMM YYYY HH:mm น.`)}
               </Text>
             </View>
@@ -134,7 +150,15 @@ export const HistoryPoint: React.FC<guruData> = ({
               <Text style={styles.negative}>{`-${formatNumberWithComma(
                 point,
               )} แต้ม`}</Text>
-              <Text style={styles.textDate}>
+              <Text
+                style={[
+                  styles.textDate,
+                  {
+                    maxWidth: Dimensions.get('window').width / 2 - 16,
+                    minWidth: normalize(150),
+                    textAlign: 'right',
+                  },
+                ]}>
                 {momentExtend.toBuddhistYear(date, `DD MMM YYYY HH:mm น.`)}
               </Text>
             </View>
@@ -158,13 +182,13 @@ const styles = StyleSheet.create({
     fontFamily: font.SarabunSemiBold,
     fontWeight: '600',
     color: colors.fontGrey,
-    lineHeight: 30,
+    lineHeight: 26,
   },
   textDate: {
     fontSize: normalize(14),
     fontFamily: font.SarabunLight,
     color: colors.gray,
-    lineHeight: 30,
+    lineHeight: 20,
   },
   positive: {
     fontSize: normalize(18),

@@ -36,7 +36,6 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [showModalCall, setShowModalCall] = useState(false);
   const [farmerPlot, setFarmerPlot] = useState<any>([]);
-  const [firstRender, setFirstRender] = useState(true);
   const getProfile = useCallback(async () => {
     setLoading(true);
     const farmer_id = await AsyncStorage.getItem('farmer_id');
@@ -76,14 +75,13 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
       .catch(err => console.log(err))
       .finally(() => {
         setLoading(false);
-        setFirstRender(false);
       });
   }, []);
-  useFocusEffect(() => {
-    if (firstRender) {
+  useFocusEffect(
+    React.useCallback(() => {
       getProfile();
-    }
-  });
+    }, [getProfile]),
+  );
 
   const inventory = farmerPlot.map((x: any) => x.status);
   const result = inventory.find((x: any) => x === 'PENDING');
@@ -234,7 +232,6 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
  กดเพิ่มแปลงเกษตรได้เลย!`}</Text>
                   <TouchableOpacity
                     onPress={() => {
-                      setFirstRender(true);
                       mixpanel.track('AllPlotScreen_ButtonAddPlot_tapped', {
                         timeSpent: timeSpent,
                         navigateTo: 'AddPlotScreen',
@@ -264,7 +261,6 @@ const AllPlotScreen: React.FC<any> = ({ navigation }) => {
                           height: normalize(80),
                         }}
                         onPress={() => {
-                          setFirstRender(true);
                           mixpanel.track('AllPlotScreen_ButtonAddPlot_tapped', {
                             timeSpent: timeSpent,
                             navigateTo: 'AddPlotScreen',

@@ -23,6 +23,7 @@ import CardRedeemDigital from '../../components/CardRedeemDigital/CardRedeemDigi
 import { shopDatasource } from '../../datasource/ShopDatasource';
 import { rewardDatasource } from '../../datasource/RewardDatasource';
 import { useAuth } from '../../contexts/AuthContext';
+import { normalize } from '../../functions/Normalize';
 
 interface Props {
   navigation: any;
@@ -85,13 +86,14 @@ export default function RedeemDetailDigitalScreen({
     try {
       const result: {
         selected: Branch;
+        isCancel?: boolean;
       } = await SheetManager.show('selectReceiver', {
         payload: {
           shopList: dataBranch,
           rewardData: data,
         },
       });
-      if (result) {
+      if (result && !result.isCancel) {
         await onSelected(result?.selected);
       }
     } catch (e) {
@@ -205,8 +207,8 @@ export default function RedeemDetailDigitalScreen({
                 onPress={onPressSeeDetail}>
                 <Text
                   style={{
-                    color: colors.blueBorder,
-                    fontSize: 20,
+                    color: colors.grey80,
+                    fontSize: normalize(18),
                     fontFamily: font.AnuphanSemiBold,
                   }}>
                   รายละเอียด
@@ -214,7 +216,7 @@ export default function RedeemDetailDigitalScreen({
               </TouchableOpacity>
               <View
                 style={{
-                  width: 16,
+                  width: 10,
                 }}
               />
               <TouchableOpacity
@@ -223,7 +225,7 @@ export default function RedeemDetailDigitalScreen({
                 <Text
                   style={{
                     color: colors.white,
-                    fontSize: 20,
+                    fontSize: normalize(18),
                     fontFamily: font.AnuphanSemiBold,
                   }}>
                   ใช้สิทธิ์ (เฉพาะเจ้าหน้าที่)
@@ -263,7 +265,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonDetail: {
-    borderColor: colors.blueBorder,
+    borderColor: colors.grey80,
     borderWidth: 1,
     backgroundColor: colors.white,
     paddingHorizontal: 8,

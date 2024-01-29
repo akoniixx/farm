@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, ScrollView } from 'react-native';
+import { View, ScrollView, Pressable } from 'react-native';
 import React from 'react';
 import { colors, font } from '../../../assets';
 import { normalize } from '../../../functions/Normalize';
@@ -54,7 +54,7 @@ export default function BookedDroner({
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {(isLoading ? [1, 2] : taskSugUsed).map(
               (item: any, index: number) => (
-                <TouchableOpacity
+                <Pressable
                   key={index}
                   onPress={async () => {
                     await AsyncStorage.setItem(
@@ -115,7 +115,7 @@ export default function BookedDroner({
                       }, 500);
                     }}
                   />
-                </TouchableOpacity>
+                </Pressable>
               ),
             )}
           </ScrollView>

@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { colors, font, icons } from '../../assets';
 import fonts from '../../assets/fonts';
 import { normalize } from '@rneui/themed';
-import { Image, TouchableOpacity } from 'react-native';
+import { Image, Platform, TouchableOpacity } from 'react-native';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import PromotionScreen from '../../screens/PromotionScreen/PromotionScreen';
 import TaskScreen from '../../screens/MyTaskScreen/MyTaskScreen';
@@ -216,7 +216,11 @@ const MainTapNavigator: React.FC<any> = ({ navigation }) => {
           initialRouteName={initialRouteName}
           screenOptions={{
             headerShown: false,
-            tabBarStyle: { height: '10%', borderBottomColor: colors.white },
+            tabBarStyle: {
+              height: Platform.OS === 'android' ? '8%' : '10%',
+              borderBottomColor: colors.white,
+              paddingBottom: 4,
+            },
           }}>
           <Tab.Screen
             listeners={{

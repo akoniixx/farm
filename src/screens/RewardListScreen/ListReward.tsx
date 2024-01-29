@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Dimensions,
   RefreshControl,
+  Platform,
 } from 'react-native';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -109,7 +110,7 @@ export default function ListReward({ navigation }: { navigation: any }) {
                 paddingTop: 10,
                 paddingHorizontal: 8,
                 justifyContent: 'space-between',
-                height: 90,
+                height: Platform.OS === 'ios' ? 90 : 100,
               }}>
               <RenderHTML
                 source={{ html: item.rewardName }}
@@ -136,7 +137,7 @@ export default function ListReward({ navigation }: { navigation: any }) {
                   fontFamily: font.SarabunSemiBold,
                   fontSize: 16,
                   paddingVertical: 4,
-                  marginTop: 4,
+                  marginTop: Platform.OS === 'ios' ? 4 : 0,
                   color: colors.fontBlack,
                 }}>
                 {numberWithCommas((item.score || 0).toString(), true)}{' '}

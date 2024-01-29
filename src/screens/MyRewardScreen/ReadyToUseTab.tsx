@@ -109,7 +109,8 @@ export default function ReadyToUseTab({ navigation }: { navigation: any }) {
     return {
       body: {
         fontSize: 16,
-        fontFamily: fonts.AnuphanMedium,
+        fontFamily: fonts.AnuphanSemiBold,
+        color: colors.fontBlack,
       },
     };
   }, []);
@@ -128,7 +129,6 @@ export default function ReadyToUseTab({ navigation }: { navigation: any }) {
       data={data}
       renderItem={({ item }) => {
         const statusRedeem = item.redeemDetail.redeemStatus;
-
         return (
           <TouchableOpacity
             style={styles.card}
@@ -157,15 +157,15 @@ export default function ReadyToUseTab({ navigation }: { navigation: any }) {
                   numberOfLines: 2,
                 }}
                 tagsStyles={tagStyles}
-                systemFonts={[fonts.AnuphanMedium]}
+                systemFonts={[fonts.AnuphanSemiBold]}
               />
               <Text
                 style={{
-                  marginTop: 4,
+                  marginTop: 2,
                   fontSize: 14,
                   fontFamily: fonts.SarabunRegular,
                   color: colors.grey50,
-                  lineHeight: 22,
+                  lineHeight: 24,
                 }}>
                 {`แลกเมื่อ ${momentExtend.toBuddhistYear(
                   item.redeemDate,
@@ -174,8 +174,6 @@ export default function ReadyToUseTab({ navigation }: { navigation: any }) {
               </Text>
               <View
                 style={{
-                  marginTop: 4,
-
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',

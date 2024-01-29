@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Dimensions,
+  Platform,
 } from 'react-native';
 import React, { useState } from 'react';
 import { normalize } from '../../functions/Normalize';
@@ -266,7 +267,7 @@ const DronerUsedList: React.FC<dronerUsedData> = ({
                     backgroundColor: '#fff',
                     height: 26,
                     width: 'auto',
-                    marginTop: 8,
+                    marginTop: 10,
                     paddingHorizontal: 4,
                     alignSelf: 'flex-start',
                   }}>
@@ -311,7 +312,7 @@ const styles = StyleSheet.create({
     lineHeight: 30,
   },
   cards: {
-    minHeight: normalize(250),
+    minHeight: Platform.OS === 'ios' ? normalize(250) : normalize(254),
     width: Dimensions.get('window').width * 0.6 - 32,
     borderRadius: 10,
     borderWidth: 1,
@@ -327,7 +328,7 @@ const styles = StyleSheet.create({
     shadowRadius: 0.22,
   },
   cardsTaskSug: {
-    minHeight: normalize(210),
+    minHeight: Platform.OS === 'ios' ? normalize(210) : normalize(216),
     width: Dimensions.get('window').width * 0.6 - 32,
     borderRadius: 10,
     borderWidth: 1,

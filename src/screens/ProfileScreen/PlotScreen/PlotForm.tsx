@@ -128,7 +128,7 @@ export default function PlotForm({
   const [landmark, setlandmark] = useState<any>('');
   const [lat, setLat] = useState<any>();
   const [long, setLng] = useState<any>();
-  const [plotName, setPlotName] = useState<any>(null);
+  const [plotName, setPlotName] = useState<string | null>(null);
   const [allowLocal, setAllowLocal] = useState<boolean>(false);
   const plantSheet = useRef<any>();
   const [profilestate, dispatch] = useReducer(profileReducer, initProfileState);
@@ -418,7 +418,13 @@ export default function PlotForm({
                   plotName: plotName,
                   timeSpent,
                 });
+                if (!plotName) {
+                  setPlotName(
+                    `${defaultNamePlot} ${plantName ? plantName : ''}`,
+                  );
+                }
               }}
+              value={plotName || ''}
               defaultValue={
                 !plotName
                   ? `${defaultNamePlot} ${plantName ? plantName : ''}`

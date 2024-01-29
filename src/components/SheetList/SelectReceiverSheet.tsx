@@ -4,6 +4,7 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Platform,
 } from 'react-native';
 import React from 'react';
 import { colors, font, icons } from '../../assets';
@@ -12,6 +13,7 @@ import ActionSheet, {
   SheetProps,
 } from 'react-native-actions-sheet';
 import Text from '../Text/Text';
+import { normalize } from '../../functions/Normalize';
 
 interface Branch {
   createdAt: string;
@@ -36,6 +38,7 @@ const SelectReceiverSheet = (props: SheetProps) => {
   return (
     <ActionSheet
       closeOnTouchBackdrop={false}
+      useBottomSafeAreaPadding={false}
       id={props.sheetId}
       containerStyle={{
         height: '80%',
@@ -71,7 +74,7 @@ const SelectReceiverSheet = (props: SheetProps) => {
               <Text
                 style={{
                   fontFamily: font.SarabunMedium,
-                  fontSize: 20,
+                  fontSize: normalize(18),
                 }}>
                 {item.name}
               </Text>
@@ -114,12 +117,13 @@ const SelectReceiverSheet = (props: SheetProps) => {
             await SheetManager.hide(props.sheetId, {
               payload: {
                 selected: selectedArea,
+                isCancel: true,
               },
             });
           }}>
           <Text style={styles().textSubButton}>ยกเลิก</Text>
         </TouchableOpacity>
-        <View style={{ height: 32 }} />
+        <View style={{ height: 8 }} />
       </View>
     </ActionSheet>
   );
@@ -150,7 +154,7 @@ const styles = (props?: any) =>
     },
     list: {
       width: '100%',
-      paddingVertical: 16,
+      paddingVertical: Platform.OS === 'android' ? 10 : 16,
       minHeight: 60,
       flexDirection: 'row',
       alignItems: 'center',
@@ -186,7 +190,7 @@ const styles = (props?: any) =>
       justifyContent: 'center',
       marginTop: 16,
       borderWidth: 1,
-      borderColor: colors.fontBlack,
+      borderColor: colors.grey40,
     },
   });
 export default SelectReceiverSheet;

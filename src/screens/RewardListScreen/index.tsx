@@ -1,6 +1,7 @@
 import {
   Image,
   ImageBackground,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -167,5 +168,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-  container: {},
+  container: {
+    paddingTop: Platform.OS === 'android' ? 16 : 8,
+  },
 });

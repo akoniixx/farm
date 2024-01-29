@@ -93,7 +93,7 @@ const RedeemSelectAddressScreen = ({ navigation, route }: ScreenType) => {
         onPressBack={() => {
           navigation.goBack();
         }}
-        styleWrapper={{ backgroundColor: colors.greenLight }}
+        styleWrapper={{ backgroundColor: colors.greenLight, height: 52 }}
         titleColor={colors.white}
       />
       <ScrollView

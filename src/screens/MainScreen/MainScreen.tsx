@@ -484,7 +484,7 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                 style={{
                   flexDirection: 'row',
                   paddingTop: '12%',
-                  paddingHorizontal: 16,
+                  paddingHorizontal: 10,
                   paddingBottom:
                     profilestate.status === 'REJECTED' ||
                     profilestate.status === 'INACTIVE' ||
@@ -492,8 +492,8 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       ? 32
                       : 0,
                   alignItems: 'center',
-
                   justifyContent: 'space-between',
+                  width: '100%',
                 }}>
                 <TouchableOpacity
                   onPress={() => {
@@ -533,14 +533,14 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       colors={['#FFFFFF', '#ECFBF2']}
                       style={{
                         paddingVertical: normalize(10),
-                        width: Dimensions.get('window').width / 2 - 24,
+                        width: Dimensions.get('window').width / 2 - 16,
                         height: normalize(63),
                         borderRadius: 12,
                         alignItems: 'center',
                         borderWidth: 1,
                         borderColor: colors.greenLight,
                         flexDirection: 'row',
-                        paddingHorizontal: 16,
+                        paddingHorizontal: 10,
                       }}>
                       <Image
                         source={icons.guruKasetIcon}
@@ -560,14 +560,14 @@ const MainScreen: React.FC<any> = ({ navigation, route }) => {
                       colors={['#FFFFFF', '#ECFBF2']}
                       style={{
                         paddingVertical: normalize(10),
-                        width: Dimensions.get('window').width / 2 - 24,
+                        width: Dimensions.get('window').width / 2 - 16,
                         height: normalize(63),
                         borderRadius: 12,
                         alignItems: 'center',
                         borderWidth: 1,
                         borderColor: colors.greenLight,
                         flexDirection: 'row',
-                        paddingHorizontal: 16,
+                        paddingHorizontal: 10,
                       }}>
                       <Image
                         source={icons.plots}

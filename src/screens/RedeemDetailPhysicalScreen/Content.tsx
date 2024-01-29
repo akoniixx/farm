@@ -452,18 +452,37 @@ export default function Content({ redeemDetail, navigation }: Props) {
             }}>
             เบอร์โทรศัพท์ : {redeemDetail?.receiverDetail.tel}
           </Text>
-          <Text
+          <View
             style={{
-              fontSize: 18,
-              fontFamily: font.SarabunRegular,
-              color: colors.grey60,
-              marginVertical: 4,
-              alignSelf: 'flex-start',
+              flexDirection: 'row',
+              alignItems: 'flex-start',
               width: '90%',
-              lineHeight: 24,
             }}>
-            ที่อยู่ : {redeemDetail?.receiverDetail?.address}
-          </Text>
+            <Text
+              style={{
+                fontSize: 18,
+                fontFamily: font.SarabunRegular,
+                color: colors.grey60,
+                marginVertical: 4,
+                alignSelf: 'flex-start',
+                lineHeight: 24,
+                textAlignVertical: 'top',
+              }}>
+              ที่อยู่ :
+            </Text>
+            <Text
+              style={{
+                fontSize: 18,
+                fontFamily: font.SarabunRegular,
+                color: colors.grey60,
+                marginVertical: 4,
+                alignSelf: 'flex-start',
+                lineHeight: 24,
+                textAlignVertical: 'top',
+              }}>
+              {redeemDetail?.receiverDetail?.address}
+            </Text>
+          </View>
         </View>
 
         <PopUp setIsVisible={setIsCopy} isVisible={isCopy}>
@@ -510,7 +529,7 @@ export default function Content({ redeemDetail, navigation }: Props) {
           onPress={onPressSeeDetail}>
           <Text
             style={{
-              color: colors.blueBorder,
+              color: colors.fontBlack,
               fontSize: 20,
               fontFamily: font.AnuphanSemiBold,
             }}>
@@ -575,7 +594,7 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
   },
   buttonDetail: {
-    borderColor: colors.blueBorder,
+    borderColor: colors.grey60,
     borderWidth: 1,
     backgroundColor: colors.white,
     paddingHorizontal: 8,
@@ -584,5 +603,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+    marginBottom: 8,
   },
 });

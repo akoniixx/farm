@@ -1,4 +1,4 @@
-import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import React from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -26,7 +26,7 @@ export default function DronerSuggestion({
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         {taskSug.length !== undefined &&
           (isLoading ? [1, 2] : taskSug).map((item: any, index: any) => (
-            <TouchableOpacity
+            <Pressable
               key={index}
               onPress={async () => {
                 await AsyncStorage.setItem(
@@ -88,7 +88,7 @@ export default function DronerSuggestion({
                   }, 500);
                 }}
               />
-            </TouchableOpacity>
+            </Pressable>
           ))}
       </ScrollView>
     </View>

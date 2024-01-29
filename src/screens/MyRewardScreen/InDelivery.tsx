@@ -143,13 +143,15 @@ export default function InDelivery({ navigation }: { navigation: any }) {
                 tagsStyles={{
                   body: {
                     fontSize: 16,
-                    fontFamily: fonts.AnuphanMedium,
+                    fontFamily: fonts.AnuphanSemiBold,
+                    color: colors.fontBlack,
                   },
                 }}
+                systemFonts={[fonts.AnuphanSemiBold]}
               />
               <Text
                 style={{
-                  marginTop: 4,
+                  marginTop: 2,
                   fontSize: 14,
                   fontFamily: fonts.SarabunRegular,
                 }}>
@@ -160,8 +162,6 @@ export default function InDelivery({ navigation }: { navigation: any }) {
               </Text>
               <View
                 style={{
-                  marginTop: 4,
-
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',

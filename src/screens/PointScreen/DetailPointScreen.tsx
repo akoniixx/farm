@@ -74,7 +74,6 @@ const DetailPointScreen: React.FC<any> = ({ navigation, route }) => {
       setLoading(false);
     }
   }, [current, dataAllPoint, total]);
-  console.log(JSON.stringify(dataAllPoint, null, 2));
   return (
     <View
       style={{

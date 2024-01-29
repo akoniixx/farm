@@ -105,7 +105,7 @@ const RadioList = ({
                 fontSize: 16,
                 fontFamily: font.SarabunRegular,
                 marginLeft: 8,
-                lineHeight: 24,
+                lineHeight: 28,
               }}>
               {label}
             </Text>

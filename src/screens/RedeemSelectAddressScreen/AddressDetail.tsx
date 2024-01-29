@@ -309,7 +309,7 @@ export default function AddressDetail({
         <Text
           style={{
             color: colors.grey60,
-            fontFamily: font.SarabunSemiBold,
+            fontFamily: font.SarabunRegular,
             fontSize: 18,
             marginTop: 8,
           }}>
@@ -328,7 +328,7 @@ export default function AddressDetail({
             color: colors.grey60,
             fontFamily: font.SarabunRegular,
             fontSize: 18,
-            marginTop: 8,
+            marginTop: 0,
           }}>
           เบอร์โทรศัพท์ :{' '}
           <Text
@@ -346,6 +346,7 @@ export default function AddressDetail({
             fontFamily: font.SarabunSemiBold,
             fontSize: 16,
             marginTop: 8,
+            marginBottom: 4,
           }}>
           ที่อยู่ :{' '}
           {notHaveAddress && (
@@ -558,6 +559,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 16,
+    borderWidth: 1,
+    borderColor: colors.grey40,
   },
   textSubButton: {
     fontSize: 18,

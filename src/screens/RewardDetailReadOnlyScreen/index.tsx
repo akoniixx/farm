@@ -89,12 +89,12 @@ export default function RewardDetailReadOnlyScreen({
           showBackBtn
           styleWrapper={{
             backgroundColor: colors.white,
-            paddingBottom: 16,
+            height: 52,
           }}
           onPressBack={() => {
             navigation.goBack();
           }}
-          title="แลกรางวัล"
+          title="รายละเอียดรางวัล"
         />
       </View>
 
@@ -105,7 +105,6 @@ export default function RewardDetailReadOnlyScreen({
         style={{
           flex: 1,
           backgroundColor: colors.white,
-          paddingTop: 48,
         }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
