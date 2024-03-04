@@ -51,7 +51,10 @@ import {
   PayloadCreateTask,
   TaskDatasource,
 } from '../../datasource/TaskDatasource';
-import { callcenterNumber } from '../../definitions/callCenterNumber';
+import {
+  callcenterNumber,
+  lineOfficialURI,
+} from '../../definitions/callCenterNumber';
 import { numberWithCommas } from '../../functions/utility';
 import { couponState } from '../../recoil/CouponAtom';
 import { Switch } from '@rneui/base';
@@ -62,6 +65,7 @@ import useTimeSpent from '../../hook/useTimeSpent';
 import ActionSheet from 'react-native-actions-sheet';
 import ConfirmBooking from '../../components/ConfirmBooking/ConfirmBooking';
 import { getPointCampaign } from '../../datasource/HistoryPointDatasource';
+import AsyncButton from '../../components/Button/AsyncButton';
 interface CampaignDetail {
   id: string;
   point: number;
@@ -80,6 +84,7 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
   const timeSpent = useTimeSpent();
   const [disabled, setDisabled] = useState(false);
   const [currentCount, setCurrentCount] = useState(0);
+  const [showModalServerDown, setShowModalServerDown] = useState(false);
   const [myPoint, setMyPoint] = useState(0);
   const [campaignDetail, setCampaignDetail] = useState<CampaignDetail>({
     id: '',
@@ -160,6 +165,14 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
           : taskData.taskDronerTemp,
         statusRemark: '',
       };
+      if (
+        !calPrice.netPrice ||
+        isNaN(calPrice.netPrice) ||
+        calPrice.netPrice <= 0
+      ) {
+        setShowModalServerDown(true);
+        return;
+      }
       const res = await TaskDatasource.createTask(payload);
 
       if (res && res.success) {
@@ -1469,6 +1482,91 @@ const DetailTaskScreen: React.FC<any> = ({ navigation, route }) => {
         textContent={'Loading...'}
         textStyle={{ color: '#FFF' }}
       />
+      <Modal visible={showModalServerDown} transparent animationType="fade">
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingHorizontal: 16,
+            paddingBottom: 32,
+          }}>
+          <View style={styles.modalContent}>
+            <Text
+              style={{
+                fontFamily: fonts.AnuphanSemiBold,
+                fontSize: normalize(22),
+                color: colors.fontBlack,
+                textAlign: 'center',
+              }}>{`ระบบขัดข้อง!\nทีมงานกำลังเร่งดำเนินการแก้ไข`}</Text>
+            <View
+              style={{
+                marginTop: 16,
+                alignItems: 'flex-start',
+                justifyContent: 'flex-end',
+                alignSelf: 'flex-start',
+              }}>
+              <Text
+                fontFamily="SarabunRegular"
+                style={{
+                  fontSize: normalize(16),
+                }}>
+                วิธีเบื้องต้น
+              </Text>
+              <Text
+                fontFamily="SarabunRegular"
+                style={{
+                  fontSize: normalize(16),
+                }}>
+                • กรุณารอทีมงานแก้ไขสักครู่ และกลับมาใช้งานอีกครั้ง
+              </Text>
+              <Text
+                fontFamily="SarabunRegular"
+                style={{
+                  fontSize: normalize(16),
+                }}>
+                • หากท่านไม่สามารถดำเนินการขั้นตอนถัดไปได้เป็น ระยะเวลานาน
+                กรุณาติดต่อเจ้าหน้าที่{' '}
+                <Text
+                  fontFamily="SarabunRegular"
+                  style={styles.textDecoration}
+                  onPress={() => {
+                    mixpanel.track('CreateTaskScreen_ContactPress');
+                    Linking.openURL(`tel:${callcenterNumber}`);
+                  }}>
+                  02-233-6000
+                </Text>{' '}
+                หรือ{' '}
+                <Text
+                  fontFamily="SarabunRegular"
+                  style={styles.textDecoration}
+                  onPress={() => {
+                    mixpanel.track('CreateTaskScreen_ContactPress');
+                    Linking.openURL(lineOfficialURI);
+                  }}>
+                  Line Official
+                </Text>
+              </Text>
+            </View>
+            <View
+              style={{
+                marginTop: 16,
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+              }}>
+              <AsyncButton
+                title="ตกลง"
+                onPress={() => {
+                  mixpanel.track('CreateTaskScreen_buttonCloseModal_tapped');
+                  setShowModalServerDown(false);
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 };
@@ -1549,5 +1647,16 @@ const styles = StyleSheet.create({
   textConfirm: {
     fontSize: normalize(18),
     fontFamily: font.SarabunMedium,
+  },
+  modalContent: {
+    backgroundColor: colors.white,
+    padding: 16,
+    borderRadius: 12,
+    width: '100%',
+  },
+  textDecoration: {
+    color: colors.blueDark,
+    fontSize: normalize(16),
+    textDecorationLine: 'underline',
   },
 });
